@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-<base href="./">
 <meta charset="utf-8">
 <title>Flowiee</title>
 
@@ -12,17 +11,17 @@
     	th:fragment="homeHeader" >
     <div class="container-fluid">
     			<ul class="header-nav d-none d-md-flex">
-    				<li class="nav-item"><b>FLOWIEE - Há» THá»NG QUáº¢N LÃ Cá»¬A HÃNG</b></li>
+    				<li class="nav-item"><b>FLOWIEE - HỆ THỐNG QUẢN LÝ CỬA HÀNG</b></li>
     			</ul>
 
     			<ul class="header-nav ms-auto">
-    				<!-- ChuÃ´ng thÃ´ng bÃ¡o -->
+    				<!-- Chuông thông báo -->
     				<li class="nav-item"><button type="button"
     						class="btn btn-sm btn-outline position-relative"
     						data-coreui-toggle="modal" data-coreui-target="#Notification">
     						<svg class="icon icon-lg">
                     <use
-    								xlink:href="${pageContext.request.contextPath}/admin/vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
+    						th:href="@{vendors/@coreui/icons/svg/free.svg#cil-bell}"></use>
                   </svg>
     						<span
     							class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger badge-sm">
@@ -36,20 +35,18 @@
     					aria-haspopup="true" aria-expanded="false">
     						<div class="avatar avatar-md">
     							<img class="avatar-img"
-    								src="${pageContext.request.contextPath}/admin/assets/img/avatars/${sessionScope.profileid}.png"
+    								th:src="@assets/img/avatars/${sessionScope.profileid}.png}"
     								alt="#">
     						</div> <strong style="font-size: 14px; margin-left: 10px">${sessionScope.name}</strong>
     				</a>
     					<div class="dropdown-menu dropdown-menu-end pt-0">
     						<button type="button" class="dropdown-item btn btn-sm"
     							data-coreui-toggle="modal"
-    							data-coreui-target="#staticBackdropProfile">ThÃ´ng tin cÃ¡
-    							nhÃ¢n</button>
+    							data-coreui-target="#staticBackdropProfile">Thông tin cá nhân</button>
 
     						<button type="button" class="dropdown-item btn btn-sm"
     							data-coreui-toggle="modal"
-    							data-coreui-target="#staticBackdropChangePassword">Äá»i
-    							máº­t kháº©u</button>
+    							data-coreui-target="#staticBackdropChangePassword">Đổi mật khẩu</button>
 
     						<div class="dropdown-divider"></div>
     						<a class="dropdown-item" style="font-size: 14px"
@@ -57,7 +54,7 @@
     								class="icon me-2">
                       <use
     									xlink:href="${pageContext.request.contextPath}/admin/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
-                    </svg> ÄÄng xuáº¥t
+                    </svg> Đăng xuất
     						</a>
     					</div></li>
     			</ul>
