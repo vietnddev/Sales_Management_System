@@ -15,7 +15,6 @@ public class HomeController {
 
     @RequestMapping(value = "/")
     public String homePage() {
-
         return "home";
     }
 }
