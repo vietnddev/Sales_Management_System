@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.admin;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.model.admin.Account;
 import com.flowiee.app.services.AccountService;
@@ -7,18 +7,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Clock;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "/admin/account/")
+@RequestMapping(path = "/admin/accounts")
 public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @GetMapping(value = "")
+    @GetMapping(value = "/")
     @ResponseBody
     public List<Account> getAccount(){
+        System.out.println(accountService.getAllAccount());
         return accountService.getAllAccount();
     }
 }
