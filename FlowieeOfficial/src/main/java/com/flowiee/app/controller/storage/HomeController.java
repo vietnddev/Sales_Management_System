@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
     @GetMapping(value = "")
     public String getAllCategory(ModelMap modelMap){
-
+        //
         return "pages/category/home";
     }
 }
