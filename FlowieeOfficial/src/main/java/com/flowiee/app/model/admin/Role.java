@@ -16,10 +16,10 @@ public class Role implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private int ID;
-	private int Sort;
-	private int Type;
-	private String Name;
-	private String Describes;
-	private boolean Status;
-	private String Code;
+	private int sort;
+	private int type;
+	private String name;
+	private String describes;
+	private boolean status;
+	private String code;
 }

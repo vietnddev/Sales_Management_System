@@ -11,10 +11,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
+@RequestMapping(value = "")
 public class HomeController {
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "")
     public String homePage() {
-        return "home";
+        return "index";
+    }
+
+    @GetMapping(value = "/login")
+    public void showLoginPage(){
+        //
+    }
+
+    @GetMapping(value = "/login", params = "submit")
+    public void submitLogin(){
+        //
+    }
+
+    @GetMapping(value = "/change-password")
+    public void showPageChangePassword(){
+        //
+    }
+    @GetMapping(value = "/change-password", params = "submit")
+    public void submitChangePassword(){
+        //
+    }
+
+    @GetMapping(value = "/forgot-password")
+    public void showPageForgotPassword(){
+        //Send password to email register
+    }
+
+    @GetMapping(value = "/reset-password")
+    public void resetPassword(){
+        //Send password to email register
     }
 }

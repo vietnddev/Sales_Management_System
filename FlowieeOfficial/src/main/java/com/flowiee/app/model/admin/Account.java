@@ -18,14 +18,14 @@ public class Account implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)
     private int ID;
-    private String Username;
-    private String Password;
-    private String Name;
-    private boolean Gender;
-    private String Phone;
-    private String Email;
-    private boolean IsAdmin;
-    private String Avatar;
-    private String Notes;
-    private boolean Status;
+    private String username;
+    private String password;
+    private String name;
+    private boolean gender;
+    private String phone;
+    private String email;
+    private boolean isAdmin;
+    private String avatar;
+    private String notes;
+    private boolean status;
 }
