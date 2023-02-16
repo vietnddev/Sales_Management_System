@@ -16,13 +16,13 @@ public class SystemConfig implements java.io.Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private int ID;
-	private String Code;
-	private String Name;
-	private String Address;
-	private String Email;
-	private String Phone;
-	private String Logo;
-	private String Favicon;
-	private int LoginLock;
-	private String Describes;
+	private String code;
+	private String name;
+	private String address;
+	private String email;
+	private String phone;
+	private String logo;
+	private String favicon;
+	private int loginLock;
+	private String describes;
 }

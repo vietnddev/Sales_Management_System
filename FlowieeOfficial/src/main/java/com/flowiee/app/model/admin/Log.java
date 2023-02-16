@@ -15,11 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class Log implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	private int ID;
-	private String Users;
-	private String Action;
-	private String Url;
-	private String Created;
-	private String IP;
+	private String users;
+	private String action;
+	private String url;
+	private String created;
+	private String ip;
 }

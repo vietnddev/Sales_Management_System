@@ -15,6 +15,6 @@ public class UserRole implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private int ID;
-	private int IDUser;
-	private int IDRole;
+	private int idUser;
+	private int idRole;
 }
