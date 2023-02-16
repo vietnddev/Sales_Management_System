@@ -1,11 +1,4 @@
-# The-Flowiee-Official
-
-- Frontend:
-+ HTML, CSS, Javascript
-+ Bootstrap, thymeleaf
-
-- Backend
-+ Java
-+ Spring boot, Spring data jpa, Lombok, Maven,...
-
-- Database: MySQL
+Công nghệ được sử dụng:
++ Frontend: HTML, CSS, Javascript, Bootstrap, Thymeleaf
++ Backend: Java, Spring boot, Spring data jpa, Lombok, Maven
++ Database: MySQL
