@@ -5,7 +5,6 @@ import com.flowiee.app.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ public class AccountService{
     @Autowired
     AccountRepository accountRepository;
 
-    public List<Account> getAllAccount(){
+    public List<Account> getAll(){
         return accountRepository.findAll();
     }
 

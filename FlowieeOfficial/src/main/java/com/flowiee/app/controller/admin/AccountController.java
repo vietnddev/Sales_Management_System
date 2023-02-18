@@ -13,17 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(path = "/admin/accounts")
+@RequestMapping(path = "/admin/account")
 public class AccountController {
     @Autowired
     AccountService accountService;
 
     @GetMapping(value = "")
-    @ResponseBody
-    public List<Account> getAccounts(ModelMap modelMap){
-        System.out.println(accountService.getAllAccount());
-        modelMap.addAttribute("listAccount", accountService.getAllAccount());
-        return accountService.getAllAccount();
+    public String getAccounts(ModelMap modelMap){
+        modelMap.addAttribute("listAccount", accountService.getAll());
+        return "pages/admin/account";
     }
 
     @GetMapping(value = "/detail-{ID}")

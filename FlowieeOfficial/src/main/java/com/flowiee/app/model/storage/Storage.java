@@ -3,8 +3,10 @@ package com.flowiee.app.model.storage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -13,16 +15,16 @@ import lombok.NoArgsConstructor;
 public class Storage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Storage", unique = true, nullable = false)
-	private int ID;
-	private int IDParent;
-	private int Type;
-	private String Name;
-	private String StgName;
-	private String Describes;
-	private String Extension;
-	private double Size;
-	private String Author;
-	private String Path;
-	private int IDDocType;
+	@Column(name = "storageID", unique = true, nullable = false)
+	private int storageID;
+	private int idParent;
+	private boolean isFolder;
+	private String name;
+	private String stgName;
+	private String describes;
+	private String extension;
+	private double size;
+	private String author;
+	private String path;
+	private int idDocType;
 }

@@ -17,21 +17,21 @@ public class LogController {
     @GetMapping(value = "")
     public String getLogLogin(ModelMap modelMap){
         String action = "Đăng nhập hệ thống";
-        modelMap.addAttribute("listLog", logService.findByAction(action));
+        modelMap.addAttribute("listLog", logService.getAll());
         return "pages/admin/log";
     }
 
     @GetMapping(value = "/access")
     public String getLogAccess(ModelMap modelMap){
         String action = "Truy cập chức năng";
-        modelMap.addAttribute("listLog", logService.findByAction(action));
+        modelMap.addAttribute("listLog", logService.getByAction(action));
         return "pages/admin/log";
     }
 
     @GetMapping(value = "/modify")
     public String getAllLog(ModelMap modelMap){
         String action = "Cập nhật dữ liệu";
-        modelMap.addAttribute("listLog", logService.findByAction(action));
+        modelMap.addAttribute("listLog", logService.getByAction(action));
         return "pages/admin/log";
     }
 }

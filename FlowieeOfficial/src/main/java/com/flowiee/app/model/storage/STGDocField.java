@@ -3,22 +3,24 @@ package com.flowiee.app.model.storage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "DocType")
+@Table(name = "DocField")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class DocType {
+public class STGDocField {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	private int ID;
-	private String Name;
-	private String Describes;
-	private int FileCount;
-	private int SizeSum;
-	private int Sort;
-	private boolean Status;
+	@Column(name = "docFieldID", unique = true, nullable = false)
+	private int docFieldID;
+	@Column(name = "IDDocType")
+	private int idDocType;
+	private String type;
+	private String name;
+	private boolean required;
+	private int sort;
 }

@@ -3,8 +3,10 @@ package com.flowiee.app.model.sales;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -15,10 +17,10 @@ public class Customer implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private int ID;
-	private String Password;
-	private String Name;
-	private String Phone;
-	private String Email;
-	private String Address;
-	private boolean Status;
+	private String password;
+	private String name;
+	private String phone;
+	private String email;
+	private String address;
+	private boolean status;
 }
