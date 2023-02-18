@@ -313,7 +313,7 @@
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
-                <i class="nav-icon"></i>
+                <i class="fa-solid fa-shirt nav-icon"></i>
                 <p>
                   Sản phẩm
                   <i class="fas fa-angle-left right"></i>
@@ -322,25 +322,25 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="pages/mailbox/mailbox.html" class="nav-link">
-                    <i class="nav-icon"></i>
+                    <i class="far nav-icon"></i>
                     <p>Loại sản phẩm</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="pages/mailbox/compose.html" class="nav-link">
-                    <i class="nav-icon"></i>
+                    <i class="far nav-icon"></i>
                     <p>Loại màu sắc</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="pages/mailbox/read-mail.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="far nav-icon"></i>
                     <p>Loại kích cỡ</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/mailbox/read-mail.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                  <a th:href="@{/sales/product}" class="nav-link">
+                    <i class="far nav-icon"></i>
                     <p>Danh sách sản phẩm</p>
                   </a>
                 </li>
@@ -357,7 +357,7 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="pages/mailbox/mailbox.html" class="nav-link">
-                    <i class="nav-icon"></i>
+                    <i class="fa-solid fa-cart-shopping-fast nav-icon"></i>
                     <p>Tất cả đơn hàng</p>
                   </a>
                 </li>
@@ -388,7 +388,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
+              <a th:href="@{/sales/customer}" class="nav-link">
                 <i class="nav-icon"></i>
                 <p>
                   Khách hàng
@@ -407,7 +407,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
+              <a th:href="@{/storage/doctype}" class="nav-link">                
                 <i class="nav-icon"></i>
                 <p>
                   Loại tài liệu
@@ -415,8 +415,8 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
-                <i class="nav-icon"></i>
+              <a th:href="@{/storage/root}" class="nav-link">                
+                <i class="nav-icon fas fa-file"></i>
                 <p>
                   Tài liệu
                 </p>
@@ -449,8 +449,8 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
-                <i class="nav-icon"></i>
+              <a th:href="@{/admin/account}" class="nav-link">
+                <i class="fa-solid fa-users nav-icon"></i>
                 <p>
                   Tài khoản hệ thống
                 </p>
@@ -472,13 +472,13 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/mailbox/compose.html" class="nav-link">
+                  <a th:href="@{/admin/log/access}" class="nav-link">
                     <i class="nav-icon"></i>
                     <p>Nhật ký truy cập</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/mailbox/read-mail.html" class="nav-link">
+                  <a th:href="@{/admin/log/modify}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Nhật ký thay đổi nội dung</p>
                   </a>

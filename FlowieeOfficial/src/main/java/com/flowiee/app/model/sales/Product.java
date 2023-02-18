@@ -3,8 +3,10 @@ package com.flowiee.app.model.sales;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -15,18 +17,18 @@ public class Product implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private int ID;
-	private String Code;
+	private String code;
 	private int IDBrand;
-	private String Type;
-	private String Name;
-	private String Color;
-	private Double Price;
-	private String Size;
-	private String Date;
-	private int Storage;
-	private int Quantity;
-	private boolean HighLight;
-	private String Describes;
-	private boolean Status;
-	private int Promotion;
+	private String type;
+	private String name;
+	private String color;
+	private Double price;
+	private String size;
+	private String date;
+	private int storage;
+	private int quantity;
+	private boolean highLight;
+	private String describes;
+	private boolean status;
+	private int promotion;
 }

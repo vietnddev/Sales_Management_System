@@ -12,11 +12,11 @@ public class LogService {
     @Autowired
     LogRepository logRepository;
 
-    public List<Log> findAll(){
+    public List<Log> getAll(){
         return logRepository.findAll();
     }
 
-    public List<Log> findByAction(String action){
+    public List<Log> getByAction(String action){
         return logRepository.findByAction(action);
     }
 }
