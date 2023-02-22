@@ -28,4 +28,18 @@ public class Account implements Serializable {
     private String avatar;
     private String notes;
     private boolean status;
+
+    public Account(String username, String password, String name, boolean gender, String phone, String email,
+                   boolean isAdmin, String avatar, String notes, boolean status) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.isAdmin = isAdmin;
+        this.avatar = avatar;
+        this.notes = notes;
+        this.status = status;
+    }
 }

@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 public class DetailOrder implements java.io.Serializable { // ok
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	private int ID;
-	private int IDOrders;
-	private int IDProduct;
-	private String Name;
-	private Double UnitPrice;
-	private int Quantity;
-	private Double TotalMoney;
-	private String Note;
-	private boolean Status;
+	@Column(name = "detailOrderID", unique = true, nullable = false)
+	private int detailOrderID;
+	private int ordersID;
+	private int idProduct;
+	private String name;
+	private Double unitPrice;
+	private int quantity;
+	private Double totalMoney;
+	private String note;
+	private boolean status;
 }

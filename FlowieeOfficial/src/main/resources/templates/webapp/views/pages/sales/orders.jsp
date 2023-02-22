@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quản lý khách hàng</title>
+  <title>Quản lý đơn hàng</title>
   <div th:replace="header :: stylesheets">
     <!--Nhúng các file css, icon,...-->
   </div>
@@ -29,44 +29,56 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title"><strong>DANH SÁCH KHÁCH HÀNG ĐÃ MUA SẢN PHẨM</strong></h3>
+                  <h3 class="card-title"><strong th:text="${status}"></strong></h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th>ID</th>
-                        <th>Tên khách hàng</th>
-                        <th>Số điện thoại</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Mã đơn hàng</th>
+                        <th scope="col">Tên khách hàng</th>
+                        <th scope="col" class="text-start">Số điện thoại</th>
+                        <th scope="col" class="text-start">Địa chỉ nhận hàng</th>
+                        <th scope="col">Ngày đặt hàng</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Kênh mua hàng</th>
+                        <th scope="col">Ghi chú</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thao tác</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <th:block th:each="list : ${listCustomer}">
+                      <th:block th:each="list : ${listOrders}">
                         <tr>
-                          <td th:text="${list.ID}"></td>
-                          <td th:text="${list.name}"></td>
-                          <td th:text="${list.phone}"></td>
-                          <td th:text="${list.email}"></td>
+                          <td th:text="${list.ordersID}"></td>
+                          <td th:text="${list.code}"></td>
+                          <td th:text="${list.name}">
+                          <td th:text="${list.phone}">
                           <td th:text="${list.address}"></td>
-                          <td th:text="${list.status}"></td>                          
+                          <td th:text="${list.date}"></td>
+                          <td th:text="${list.totalMoney}"></td>
+                          <td th:text="${list.channel}">
+                            <td th:text="${list.note}">
+                          <td th:text="${list.status}">
                           <td>update, delete</td>
                         </tr>
                       </th:block>
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>ID</th>
-                        <th>Tên khách hàng</th>
-                        <th>Số điện thoại</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>                        
+                        <th scope="col">ID</th>
+                        <th scope="col">Mã đơn hàng</th>
+                        <th scope="col">Tên khách hàng</th>
+                        <th scope="col" class="text-start">Số điện thoại</th>
+                        <th scope="col" class="text-start">Địa chỉ nhận hàng</th>
+                        <th scope="col">Ngày đặt hàng</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Kênh mua hàng</th>
+                        <th scope="col">Ghi chú</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thao tác</th>
                       </tr>
                     </tfoot>
                   </table>

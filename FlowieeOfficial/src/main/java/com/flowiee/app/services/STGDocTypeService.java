@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class STGDocTypeService {
     @Autowired
-    STGDocTypeRepository stgDocTypeRepository;
+    private  STGDocTypeRepository stgDocTypeRepository;
 
     public List<STGDocType> getAllSTGDocType(){
 

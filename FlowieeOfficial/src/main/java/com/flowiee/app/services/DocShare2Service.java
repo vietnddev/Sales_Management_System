@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class DocShare2Service {
     @Autowired
-    DocShare2Repository docShare2Repository;
+    private DocShare2Repository docShare2Repository;
 
     public List<DocShare2> getAllDocShare2(){
         return docShare2Repository.findAll();

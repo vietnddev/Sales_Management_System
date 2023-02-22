@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class StorageService {
     @Autowired
-    StorageRepository storageRepository;
+    private StorageRepository storageRepository;
 
     public List<Storage> getRootDoc(int IDParent, int IDUer){
         return storageRepository.getRootDoc(IDParent, IDUer);
