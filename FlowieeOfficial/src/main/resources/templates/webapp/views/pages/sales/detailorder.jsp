@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quản lý khách hàng</title>
+  <title>Quản lý kho tài liệu</title>
   <div th:replace="header :: stylesheets">
     <!--Nhúng các file css, icon,...-->
   </div>
@@ -29,7 +29,7 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title"><strong>DANH SÁCH KHÁCH HÀNG ĐÃ MUA SẢN PHẨM</strong></h3>
+                  <h3 class="card-title"><strong>KHO TÀI LIỆU</strong></h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -37,23 +37,19 @@
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>Tên khách hàng</th>
-                        <th>Số điện thoại</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Trạng thái</th>
+                        <th>Tên tài liệu</th>
+                        <th>Loại tài liệu</th>
+                        <th>Mô tả</th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <th:block th:each="list : ${listCustomer}">
+                      <th:block th:each="list : ${listDoc}">
                         <tr>
-                          <td th:text="${list.ID}"></td>
+                          <td th:text="${list.storageID}"></td>
                           <td th:text="${list.name}"></td>
-                          <td th:text="${list.phone}"></td>
-                          <td th:text="${list.email}"></td>
-                          <td th:text="${list.address}"></td>
-                          <td th:text="${list.status}"></td>                          
+                          <td th:text="${list.idDocType}">
+                          <td th:text="${list.describes}">                          
                           <td>update, delete</td>
                         </tr>
                       </th:block>
@@ -61,12 +57,10 @@
                     <tfoot>
                       <tr>
                         <th>ID</th>
-                        <th>Tên khách hàng</th>
-                        <th>Số điện thoại</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>                        
+                        <th>Tên tài liệu</th>
+                        <th>Loại tài liệu</th>
+                        <th>Mô tả</th>
+                        <th>Thao tác</th>
                       </tr>
                     </tfoot>
                   </table>

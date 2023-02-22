@@ -21,6 +21,10 @@ public class AccountService{
         return Optional.of(accountRepository.getById(ID));
     }
 
+    public void save(Account account){
+        accountRepository.save(account);
+    }
+
     public void deleteAccountByID(int ID){
         Account account = accountRepository.findById(ID).orElse(null);
         if (account != null) {

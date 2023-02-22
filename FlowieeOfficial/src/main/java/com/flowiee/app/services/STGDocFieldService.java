@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class STGDocFieldService {
     @Autowired
-    STGDocFieldRepository stgDocFieldRepository;
+    private STGDocFieldRepository stgDocFieldRepository;
 
     public List<STGDocField> getByIDDocType(int idDocType){
         return stgDocFieldRepository.findByidDocType(idDocType);

@@ -3,8 +3,10 @@ package com.flowiee.app.model.category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -13,13 +15,13 @@ import lombok.NoArgsConstructor;
 public class Category implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	private int ID;
-	private String Code;
-	private String Type;
-	private String Name;
-	private String Link;
-	private int Sort;
-	private String Note;
-	private int Status;
+	@Column(name = "categoryID", unique = true, nullable = false)
+	private int categoryID;
+	private String code;
+	private String type;
+	private String name;
+	private String link;
+	private int sort;
+	private String note;
+	private boolean status;
 }

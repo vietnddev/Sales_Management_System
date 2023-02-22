@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class LogService {
     @Autowired
-    LogRepository logRepository;
+    private LogRepository logRepository;
 
     public List<Log> getAll(){
         return logRepository.findAll();
