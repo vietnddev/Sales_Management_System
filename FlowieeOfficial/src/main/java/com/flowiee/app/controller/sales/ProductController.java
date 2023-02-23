@@ -1,9 +1,12 @@
 package com.flowiee.app.controller.sales;
 
+import com.flowiee.app.model.admin.Log;
 import com.flowiee.app.model.sales.Product;
 import com.flowiee.app.services.CategoryService;
+import com.flowiee.app.services.LogService;
 import com.flowiee.app.services.ProductService;
 import com.flowiee.app.utils.Crawlers2;
+import com.flowiee.app.utils.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,17 +19,18 @@ public class ProductController {
     private ProductService productService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private LogService logService;
 
     @GetMapping(value = "")
     public String GetAllProducts(ModelMap modelMap){
+        logService.insertLog(new Log("User - update later", "Truy cập chức năng", "Xem danh sách sản phẩm", "URL - update later", DatetimeUtil.now(), "192.168.x.x"));
+
         modelMap.addAttribute("listProduct", productService.getAll());
         modelMap.addAttribute("product", new Product());
-        modelMap.addAttribute("listTypeProduct", categoryService.getListCategory("typeProduct", 1));
-        System.out.println(categoryService.getListCategory("typeProduct", 1));
-        modelMap.addAttribute("listColorProduct", categoryService.getListCategory("colorProduct", 1));
-        System.out.println(categoryService.getListCategory("colorProduct", 1));
-        modelMap.addAttribute("listSizeProduct", categoryService.getListCategory("sizeProduct", 1));
-        System.out.println(categoryService.getListCategory("sizeProduct", 1));
+        modelMap.addAttribute("listTypeProduct", categoryService.getListCategory("typeProduct"));
+        modelMap.addAttribute("listColorProduct", categoryService.getListCategory("colorProduct"));
+        modelMap.addAttribute("listSizeProduct", categoryService.getListCategory("sizeProduct"));
         return "pages/sales/product";
     }
 

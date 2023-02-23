@@ -3,6 +3,7 @@ package com.flowiee.app.services;
 import com.flowiee.app.model.admin.Log;
 import com.flowiee.app.repositories.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,10 @@ public class LogService {
     }
 
     public List<Log> getByAction(String action){
-        return logRepository.findByAction(action);
+        return logRepository.findByType(action);
+    }
+
+    public void insertLog(Log log){
+        logRepository.save(log);
     }
 }

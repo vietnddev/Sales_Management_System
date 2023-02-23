@@ -38,7 +38,8 @@
                       <tr>
                         <th>ID</th>
                         <th>Tài khoản</th>
-                        <th>Hành động</th>
+                        <th>Loại</th>
+                        <th>Nội dung</th>
                         <th>URL</th>
                         <th>Thời gian</th>
                         <th>IP</th>
@@ -47,9 +48,10 @@
                     <tbody>
                       <th:block th:each="log : ${listLog}">
                         <tr>
-                          <td th:text="${log.ID}"></td>
+                          <td th:text="${log.logID}"></td>
                           <td th:text="${log.users}"></td>
-                          <td th:text="${log.action}"></td>
+                          <td th:text="${log.type}"></td>
+                          <td th:text="${log.content}"></td>
                           <td th:text="${log.url}"></td>
                           <td th:text="${log.created}"></td>
                           <td th:text="${log.ip}"></td>
@@ -60,7 +62,8 @@
                       <tr>
                         <th>ID</th>
                         <th>Tài khoản</th>
-                        <th>Hành động</th>
+                        <th>Loại</th>
+                        <th>Nội dung</th>
                         <th>URL</th>
                         <th>Thời gian</th>
                         <th>IP</th>
