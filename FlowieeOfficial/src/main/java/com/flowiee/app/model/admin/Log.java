@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -15,11 +14,20 @@ import org.springframework.web.multipart.MultipartFile;
 public class Log implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private int ID;
+	@Column(name = "LogID", unique = true, nullable = false)
+	private int logID;
 	private String users;
-	private String action;
+	private String type;
+	private String content;
 	private String url;
 	private String created;
 	private String ip;
+	public Log(String users, String type, String content, String url, String created, String ip) {
+		this.users = users;
+		this.type = type;
+		this.content = content;
+		this.url = url;
+		this.created = created;
+		this.ip = ip;
+	}
 }

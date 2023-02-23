@@ -69,19 +69,19 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a th:href="@{/category/typeProduct}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Loại sản phẩm</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/mailbox/compose.html" class="nav-link">
+                  <a th:href="@{/category/colorProduct}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Loại màu sắc</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/mailbox/read-mail.html" class="nav-link">
+                  <a th:href="@{/category/sizeProduct}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Loại kích cỡ</p>
                   </a>
@@ -182,7 +182,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
+              <a th:href="@{/category}" class="nav-link">
                 <i class="nav-icon"></i>
                 <p>
                   Danh mục hệ thống

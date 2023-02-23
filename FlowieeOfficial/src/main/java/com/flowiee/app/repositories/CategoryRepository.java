@@ -8,6 +8,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    @Query(value = "Select * from Category Where Code =  '' :code and Type = :type", nativeQuery = true)
-    public List<Category> findByCodeAndType(@Param("code") String code, @Param("type") int type);
+    @Query(value = "Select * from Category Where Code =  '' :code and Type = '' :type", nativeQuery = true)
+    public List<Category> findByCodeAndType(@Param("code") String code, @Param("type") String type);
+
+    public List<Category> findByType(String type);
+
+    @Query(value = "Select Name from Category Where Code =  '' :code and Type = '' :type", nativeQuery = true)
+    public String findNameItem(String code, String type);
 }

@@ -20,7 +20,6 @@ public class Category implements java.io.Serializable {
 	private String code;
 	private String type;
 	private String name;
-	private String link;
 	private int sort;
 	private String note;
 	private boolean status;
