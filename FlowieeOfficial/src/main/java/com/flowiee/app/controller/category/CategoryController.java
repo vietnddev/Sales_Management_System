@@ -74,7 +74,6 @@ public class CategoryController {
         /*
          * Thêm mới danh mục
          * */
-        System.out.println(category.toString());
         categoryService.updateCategory(category);
         return "redirect:" + request.getHeader("referer");
     }

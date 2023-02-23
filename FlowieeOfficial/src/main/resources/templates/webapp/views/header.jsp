@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,6 +32,12 @@
     <link rel="stylesheet" th:href="@{/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/datatables-buttons/css/buttons.bootstrap4.min.css}">
+
+    <!-- summernote -->
+    <link rel="stylesheet" th:href="@{/plugins/summernote/summernote-bs4.min.css}">
+
+    <!-- SimpleMDE -->
+    <link rel="stylesheet" th:href="@{/plugins/simplemde/simplemde.min.css}">
   </th:block>
 </head>
 
@@ -224,6 +231,8 @@
     <script th:src="@{/plugins/datatables-buttons/js/buttons.html5.min.js}"></script>
     <script th:src="@{/plugins/datatables-buttons/js/buttons.print.min.js}"></script>
     <script th:src="@{/plugins/datatables-buttons/js/buttons.colVis.min.js}"></script>
+    <!-- Summernote -->
+    <script th:src="@{/plugins/summernote/summernote-bs4.min.js}"></script>
     <!-- Page specific script -->
     <script>
       $(function () {

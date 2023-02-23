@@ -26,6 +26,10 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    public void updateProruct(Product product){
+        productRepository.save(product);
+    }
+
     public void deleteProruct(int id){
         productRepository.deleteById(id);
     }

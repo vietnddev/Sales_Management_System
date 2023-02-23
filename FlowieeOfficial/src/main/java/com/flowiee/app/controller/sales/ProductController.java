@@ -7,6 +7,7 @@ import com.flowiee.app.services.LogService;
 import com.flowiee.app.services.ProductService;
 import com.flowiee.app.utils.Crawlers2;
 import com.flowiee.app.utils.DatetimeUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,6 +39,10 @@ public class ProductController {
     public String GetDetailByID(ModelMap modelMap, @PathVariable int id){
         //List<Product> list = productService.getByID(id);
         modelMap.addAttribute("detailProduct", productService.getByID(id));
+        modelMap.addAttribute("product", new Product());
+        modelMap.addAttribute("listTypeProduct", categoryService.getListCategory("typeProduct"));
+        modelMap.addAttribute("listColorProduct", categoryService.getListCategory("colorProduct"));
+        modelMap.addAttribute("listSizeProduct", categoryService.getListCategory("sizeProduct"));
         return "pages/sales/detailproduct";
     }
 
@@ -45,6 +50,12 @@ public class ProductController {
     public String InsertProruct(@ModelAttribute("product") Product product) {
         productService.insertProruct(product);
         return "redirect:/sales/product";
+    }
+
+    @PostMapping(value = "/update", params = "update")
+    public String UpdateProruct(@ModelAttribute("product") Product product, HttpServletRequest request) {
+        productService.updateProruct(product);
+        return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping(value = "/delete-{id}")
@@ -63,4 +74,6 @@ public class ProductController {
         System.out.println(crawlers.getListImage());
         //return "pages/sales/product";
     }
+    
+    
 }
