@@ -8,6 +8,12 @@
   <div th:replace="header :: stylesheets">
     <!--Nhúng các file css, icon,...-->
   </div>
+  <style>
+    .row {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -27,35 +33,103 @@
       <section class="content">
 
         <!-- Default box -->
-        <div class="card card-solid">
+        <div class="card card-solid" style="background-color: #f4f6f9;">
           <div class="card-body">
-            <div class="row">
+            <div class="row" style="background-color: #fff; border-radius: 15px; padding: 15px;">
               <div class="col-sm-12">
                 <h3 class="text-center"><b th:text="${detailProduct.isPresent() ? detailProduct.get().name : 'N/A'}"
                     style="text-transform: uppercase;"></b></h3>
               </div>
               <hr>
-              <div class="col-sm-5">
-                <img src="../../dist/img/prod-1.jpg" class="product-image" alt="Product Image">
+              <div class="col-sm-4">
+                <div class="row">
+                  <img src="../../dist/img/prod-1.jpg" class="product-image" alt="Product Image"
+                    style="max-width: 90%;">
+                </div>
               </div>
-              <div class="col-sm-5 product-image-thumbs">
-                <div class="col-sm-12">
-                  <div class="row product-image-thumb">
+              <div class="col-sm-8">
+                <div class="row mt-2">
+                  <div class="product-image-thumb">
                     <img src="../../dist/img/prod-2.jpg" alt="Product Image">
                   </div>
-                  <div class="row product-image-thumb">
-                    <img src="../../dist/img/prod-3.jpg" alt="Product Image">
-                  </div>
-                  <div class="row product-image-thumb">
-                    <img src="../../dist/img/prod-4.jpg" alt="Product Image">
-                  </div>
-                  <div class="row product-image-thumb">
-                    <img src="../../dist/img/prod-5.jpg" alt="Product Image">
+                </div>
+                <div class="row mt-3">
+                  <div class="card col-sm-12">
+                    <div class="card-header">
+                      <h3 class="card-title"><label>Upload ảnh</label></h3>
+                    </div>
+                    <div class="card-body">
+                      <div id="actions" class="row">
+                        <div class="col-lg-6">
+                          <div class="btn-group w-100">
+                            <span class="btn btn-sm btn-success col fileinput-button">
+                              <i class="fas fa-plus"></i>
+                              <span>Chọn files</span>
+                            </span>
+                            <button type="submit" class="btn btn-sm btn-primary col start">
+                              <i class="fas fa-upload"></i>
+                              <span>Tải lên</span>
+                            </button>
+                            <button type="reset" class="btn btn-sm btn-warning col cancel">
+                              <i class="fas fa-times-circle"></i>
+                              <span>Hủy</span>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center">
+                          <div class="fileupload-process w-100">
+                            <div id="total-progress" class="progress progress-striped active" role="progressbar"
+                              aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                              <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="table table-striped files" id="previews">
+                        <div id="template" class="row mt-2">
+                          <div class="col-auto">
+                            <span class="preview"><img src="data:," alt="" data-dz-thumbnail /></span>
+                          </div>
+                          <div class="col d-flex align-items-center">
+                            <p class="mb-0">
+                              <span class="lead" data-dz-name></span>
+                              (<span data-dz-size></span>)
+                            </p>
+                            <strong class="error text-danger" data-dz-errormessage></strong>
+                          </div>
+                          <div class="col-4 d-flex align-items-center">
+                            <div class="progress progress-striped active w-100" role="progressbar" aria-valuemin="0"
+                              aria-valuemax="100" aria-valuenow="0">
+                              <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-auto d-flex align-items-center">
+                            <div class="btn-group">
+                              <button class="btn btn-sm btn-primary start">
+                                <i class="fas fa-upload"></i>
+                                <span>Tải lên</span>
+                              </button>
+                              <button data-dz-remove class="btn btn-sm btn-warning cancel">
+                                <i class="fas fa-times-circle"></i>
+                                <span>Hủy</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                      <i>Lưu ý: Kích thước file không được lớn hơn ?MB</i>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row mt-5">
+
+            <div class="row mt-3" style="background-color: #fff; border-radius: 15px; padding: 15px;">
               <form th:action="@{/sales/product/update}" th:object="${product}" method="post" class="col-sm-8">
                 <div class="row">
                   <div class="col-sm-12 text-center">
@@ -172,18 +246,16 @@
               </div>
             </div>
 
-
-            <div class="row col-sm-12 mt-2">
-              <nav class="w-100">
-                <div class="nav nav-tabs" id="product-tab" role="tablist">
-                  <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab" href="#product-desc"
-                    role="tab" aria-controls="product-desc" aria-selected="true">Mô tả sản phẩm</a>
-                  <a class="nav-item nav-link" id="product-comments-tab" data-toggle="tab" href="#product-comments"
-                    role="tab" aria-controls="product-comments" aria-selected="false">Comments</a>
-                  <a class="nav-item nav-link" id="product-rating-tab" data-toggle="tab" href="#product-rating"
-                    role="tab" aria-controls="product-rating" aria-selected="false">Rating</a>
-                </div>
-              </nav>
+            <div class="row col-sm-12 mt-3"
+              style="background-color: #fff; border-radius: 15px; padding: 15px; margin-right: 0px;">
+              <div class="nav nav-tabs" id="product-tab" role="tablist">
+                <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab" href="#product-desc"
+                  role="tab" aria-controls="product-desc" aria-selected="true"><label>Mô tả sản phẩm</label></a>
+                <a class="nav-item nav-link" id="product-comments-tab" data-toggle="tab" href="#product-comments"
+                  role="tab" aria-controls="product-comments" aria-selected="false">Comments</a>
+                <a class="nav-item nav-link" id="product-rating-tab" data-toggle="tab" href="#product-rating" role="tab"
+                  aria-controls="product-rating" aria-selected="false">Rating</a>
+              </div>
               <div class="tab-content w-100 mt-3" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="product-desc" role="tabpanel"
                   aria-labelledby="product-desc-tab">
@@ -239,7 +311,7 @@
   <script>
     $(document).ready(function () {
       $('#summernote').summernote({
-        height: 300, // chiều cao của trình soạn thảo
+        height: 500, // chiều cao của trình soạn thảo
         callbacks: {
           onChange: function (contents, $editable) {
             // Lưu nội dung của trình soạn thảo vào trường ẩn
@@ -247,7 +319,62 @@
           }
         }
       });
-    });
+    })
+  </script>
+
+  <script> // Upload file
+    // DropzoneJS Demo Code Start
+    Dropzone.autoDiscover = true
+
+    // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+    var previewNode = document.querySelector("#template")
+    previewNode.id = ""
+    var previewTemplate = previewNode.parentNode.innerHTML
+    previewNode.parentNode.removeChild(previewNode)
+
+    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+      url: "/sales/product/upload", // Gọi tới function trong spring để xử lý file
+      thumbnailWidth: 80,
+      thumbnailHeight: 80,
+      parallelUploads: 20,
+      previewTemplate: previewTemplate,
+      autoQueue: false, // Make sure the files aren't queued until manually added
+      previewsContainer: "#previews", // Define the container to display the previews
+      clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+    })
+
+    myDropzone.on("addedfile", function (file) {
+      // Hookup the start button
+      file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
+    })
+
+    // Update the total progress bar
+    myDropzone.on("totaluploadprogress", function (progress) {
+      document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+    })
+
+    myDropzone.on("sending", function (file) {
+      // Show the total progress bar when upload starts
+      document.querySelector("#total-progress").style.opacity = "1"
+      // And disable the start button
+      file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+    })
+
+    // Hide the total progress bar when nothing's uploading anymore
+    myDropzone.on("queuecomplete", function (progress) {
+      document.querySelector("#total-progress").style.opacity = "0"
+    })
+
+    // Setup the buttons for all transfers
+    // The "add files" button doesn't need to be setup because the config
+    // `clickable` has already been specified.
+    document.querySelector("#actions .start").onclick = function () {
+      myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+    }
+    document.querySelector("#actions .cancel").onclick = function () {
+      myDropzone.removeAllFiles(true)
+    }
+    // DropzoneJS Demo Code End
   </script>
 </body>
 

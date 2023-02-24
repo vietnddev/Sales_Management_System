@@ -26,18 +26,14 @@
     <link rel="stylesheet" th:href="@{/plugins/daterangepicker/daterangepicker.css}">
     <!-- summernote -->
     <link rel="stylesheet" th:href="@{/plugins/summernote/summernote-bs4.min.css}">
-
-
     <!-- DataTables -->
     <link rel="stylesheet" th:href="@{/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/datatables-buttons/css/buttons.bootstrap4.min.css}">
-
-    <!-- summernote -->
-    <link rel="stylesheet" th:href="@{/plugins/summernote/summernote-bs4.min.css}">
-
     <!-- SimpleMDE -->
     <link rel="stylesheet" th:href="@{/plugins/simplemde/simplemde.min.css}">
+    <!-- dropzonejs -->
+    <link rel="stylesheet" th:href="@{/plugins/dropzone/min/dropzone.min.css}">
   </th:block>
 </head>
 
@@ -233,6 +229,8 @@
     <script th:src="@{/plugins/datatables-buttons/js/buttons.colVis.min.js}"></script>
     <!-- Summernote -->
     <script th:src="@{/plugins/summernote/summernote-bs4.min.js}"></script>
+    <!-- dropzonejs -->
+    <script th:src="@{/plugins/dropzone/min/dropzone.min.js}"></script>
     <!-- Page specific script -->
     <script>
       $(function () {
