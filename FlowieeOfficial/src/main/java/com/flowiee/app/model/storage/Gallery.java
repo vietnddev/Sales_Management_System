@@ -1,10 +1,10 @@
 package com.flowiee.app.model.storage;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -18,9 +18,24 @@ public class Gallery {
     @Column(name = "galleryId", unique = true, nullable = false)
     private int galleryId;
     private int productID;
-    private boolean type;
+    private String type;
     private String url;
     private int sort;
     private String note;
     private boolean status;
+    private boolean isMain;
+    private String extension;
+    private String fileName;
+    
+	public Gallery(int productID, String type, String url, int sort, String note, boolean status, boolean isMain, String extension, String fileName) {		
+		this.productID = productID;
+		this.type = type;
+		this.url = url;
+		this.sort = sort;
+		this.note = note;
+		this.status = status;
+		this.isMain = isMain;
+		this.extension = extension;
+		this.fileName = fileName;
+	}      
 }

@@ -10,18 +10,18 @@ public class HomeController {
 
     @RequestMapping(value = "")
     public String homePage() {
-        return "pages/sales/customer";
+        return "pages/sales/product";
     }
 
     @GetMapping(value = "/login")
-    public void showLoginPage(){
-        //
+    public String showLoginPage(){
+        return "login";
     }
 
-    @GetMapping(value = "/login", params = "submit")
-    public void submitLogin(){
-        //
-    }
+//    @GetMapping(value = "/login", params = "submit")
+//    public void submitLogin(){
+//        //
+//    }
 
     @GetMapping(value = "/change-password")
     public void showPageChangePassword(){

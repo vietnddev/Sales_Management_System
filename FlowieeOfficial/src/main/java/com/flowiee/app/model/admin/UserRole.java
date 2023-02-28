@@ -1,9 +1,10 @@
 package com.flowiee.app.model.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

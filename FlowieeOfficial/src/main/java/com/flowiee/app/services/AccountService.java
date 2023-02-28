@@ -21,6 +21,10 @@ public class AccountService{
         return Optional.of(accountRepository.getById(ID));
     }
 
+//    public Account getAccountByUsername(String username){
+//        return accountRepository.findByUsername(username);
+//    }
+
     public void save(Account account){
         accountRepository.save(account);
     }
