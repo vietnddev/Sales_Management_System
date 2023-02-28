@@ -1,8 +1,9 @@
 package com.flowiee.app.model.storage;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 
 @Data

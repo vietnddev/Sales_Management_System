@@ -41,42 +41,39 @@
                     style="text-transform: uppercase;"></b></h3>
               </div>
               <hr>
-              <div class="col-sm-4">
+              <div class="col-sm-5">
                 <div class="row">
                   <img src="../../dist/img/prod-1.jpg" class="product-image" alt="Product Image"
                     style="max-width: 90%;">
                 </div>
               </div>
-              <div class="col-sm-8">
-                <div class="row mt-2">
+              <div class="col-sm-7" style="max-height: 450px; overflow: scroll">
+                <div class="row mt-2" th:each="list : ${listSubImage}">
                   <div class="product-image-thumb">
-                    <img src="../../dist/img/prod-2.jpg" alt="Product Image">
+                    <img th:src="@{/upload/{fileName}(fileName=${list.fileName})}" alt="Product Image">
                   </div>
                 </div>
                 <div class="row mt-3">
                   <div class="card col-sm-12">
-                    <div class="card-header">
-                      <h3 class="card-title"><label>Upload ảnh</label></h3>
-                    </div>
                     <div class="card-body">
                       <div id="actions" class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-7"> 
                           <div class="btn-group w-100">
-                            <span class="btn btn-sm btn-success col fileinput-button">
+                            <span class="btn btn-sm btn-success col fileinput-button" title="Chọn file từ máy tính">
                               <i class="fas fa-plus"></i>
-                              <span>Chọn files</span>
+                              <span><!--Chọn file--></span>
                             </span>
                             <button type="submit" class="btn btn-sm btn-primary col start">
                               <i class="fas fa-upload"></i>
-                              <span>Tải lên</span>
+                              <span><!--Tải lên SV--></span>
                             </button>
                             <button type="reset" class="btn btn-sm btn-warning col cancel">
                               <i class="fas fa-times-circle"></i>
-                              <span>Hủy</span>
+                              <span><!--Hủy--></span>
                             </button>
                           </div>
                         </div>
-                        <div class="col-lg-6 d-flex align-items-center">
+                        <div class="col-lg-5 d-flex align-items-center">
                           <div class="fileupload-process w-100">
                             <div id="total-progress" class="progress progress-striped active" role="progressbar"
                               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -98,7 +95,7 @@
                             </p>
                             <strong class="error text-danger" data-dz-errormessage></strong>
                           </div>
-                          <div class="col-4 d-flex align-items-center">
+                          <div class="col-3 d-flex align-items-center">
                             <div class="progress progress-striped active w-100" role="progressbar" aria-valuemin="0"
                               aria-valuemax="100" aria-valuenow="0">
                               <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress>
@@ -109,11 +106,11 @@
                             <div class="btn-group">
                               <button class="btn btn-sm btn-primary start">
                                 <i class="fas fa-upload"></i>
-                                <span>Tải lên</span>
+                                <span><!--Tải lên SV--></span>
                               </button>
                               <button data-dz-remove class="btn btn-sm btn-warning cancel">
                                 <i class="fas fa-times-circle"></i>
-                                <span>Hủy</span>
+                                <span><!--Hủy--></span>
                               </button>
                             </div>
                           </div>
@@ -122,15 +119,16 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
-                      <i>Lưu ý: Kích thước file không được lớn hơn ?MB</i>
+                      <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và tổng dung lượng không vượt 50MB cho mỗi lượt.</i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="row mt-3" style="background-color: #fff; border-radius: 15px; padding: 15px;">
-              <form th:action="@{/sales/product/update}" th:object="${product}" method="post" class="col-sm-8">
+            <div class="row justify-content-between">
+              <form th:action="@{/sales/product/update}" th:object="${product}" method="post" class="col-8 mt-3"
+                style="background-color: #fff; border-radius: 15px; padding: 15px; max-width: 90%;">
                 <div class="row">
                   <div class="col-sm-12 text-center">
                     <h4><b>THÔNG TIN CHUNG</b></h4>
@@ -237,7 +235,7 @@
                   <input type="hidden" name="describes" id="describes_virtual" />
                 </div>
               </form>
-              <div class="col-sm-4">
+              <div class="col-4 mt-3" style="background-color: #fff; border-radius: 15px; padding: 15px;">
                 <div class="row">
                   <div class="col-sm-12 text-center">
                     <h4><b>SẢN PHẨM CÓ LIÊN QUAN</b></h4>
@@ -333,14 +331,14 @@
     previewNode.parentNode.removeChild(previewNode)
 
     var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-      url: "/sales/product/upload", // Gọi tới function trong spring để xử lý file
+      url: "/gallery/upload-idproduct=[[${detailProduct.get().productID}]]", // Gọi tới function trong spring để xử lý file
       thumbnailWidth: 80,
       thumbnailHeight: 80,
       parallelUploads: 20,
       previewTemplate: previewTemplate,
       autoQueue: false, // Make sure the files aren't queued until manually added
       previewsContainer: "#previews", // Define the container to display the previews
-      clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+      clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.      
     })
 
     myDropzone.on("addedfile", function (file) {
@@ -369,12 +367,13 @@
     // The "add files" button doesn't need to be setup because the config
     // `clickable` has already been specified.
     document.querySelector("#actions .start").onclick = function () {
-      myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+      myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))      
     }
     document.querySelector("#actions .cancel").onclick = function () {
       myDropzone.removeAllFiles(true)
     }
     // DropzoneJS Demo Code End
+    
   </script>
 </body>
 
