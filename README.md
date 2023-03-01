@@ -1,4 +1,4 @@
 Công nghệ được sử dụng:
-+ Frontend: HTML, CSS, Javascript, Bootstrap, Thymeleaf
-+ Backend: Java, Spring boot, Spring data jpa, Lombok, Maven
++ Frontend: HTML, CSS, Javascript, Bootstrap
++ Backend: Java, Spring boot, Spring data jpa, Spring secutiry, Lombok, Maven, Thymeleaf
 + Database: MySQL
