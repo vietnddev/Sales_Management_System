@@ -1,7 +1,7 @@
 package com.flowiee.app.services;
 
 import com.flowiee.app.model.storage.Gallery;
-import com.flowiee.app.repositories.GalleryRepository;
+import com.flowiee.app.repositories.FilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -9,25 +9,25 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GalleryService {
+public class FilesService {
     @Autowired
-    private GalleryRepository galleryRepository;
+    private FilesRepository filesRepository;
 
     private final ResourceLoader resourceLoader;
 
-    public GalleryService(ResourceLoader resourceLoader) {
+    public FilesService(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
     public List<Gallery> getAllGallery(){
-        return galleryRepository.findAll();
+        return filesRepository.findAll();
     }
 
-    public List<Gallery> getSubImage(int productID){
-        return galleryRepository.findByProductID(productID);
+    public List<Gallery> getSubImage(int productVariantID){
+        return filesRepository.findByProductVariantID(productVariantID);
     }
 
     public void insertGallery(Gallery gallery) {
-    	galleryRepository.save(gallery);
+    	filesRepository.save(gallery);
     }
 }

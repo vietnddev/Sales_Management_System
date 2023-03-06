@@ -1,4 +1,4 @@
-package com.flowiee.app.services;
+package com.flowiee.app.authentication;
 
 import com.flowiee.app.model.admin.Account;
 import com.flowiee.app.repositories.AccountRepository;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CustomUserDetailService implements UserDetailsService {
+public class AccountDetailService implements UserDetailsService {
     @Autowired
     AccountRepository accountRepository;
 
@@ -23,7 +23,6 @@ public class CustomUserDetailService implements UserDetailsService {
         List<Account> list = accountRepository.findByUsername(username);
         UserDetails userDetails = null;
         if (list.size() > 0) {
-            System.out.println("Thành công");
             Account account = list.get(0);
 
             List<GrantedAuthority> grantlist = new ArrayList<GrantedAuthority>();
@@ -34,8 +33,10 @@ public class CustomUserDetailService implements UserDetailsService {
 
             System.out.println("account.getUsername() " + account.getUsername());
             System.out.println("account.getPassword() " + account.getPassword());
+
+            System.out.println("Login thành công");
         } else {
-            System.out.println("Thất bại");
+            System.out.println("Login thất bại");
         }
         return userDetails;
     }
