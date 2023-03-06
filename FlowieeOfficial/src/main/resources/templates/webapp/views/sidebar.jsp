@@ -87,7 +87,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/sales/product}" class="nav-link">
+                  <a th:href="@{/sales/products}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Danh sách sản phẩm</p>
                   </a>
@@ -144,34 +144,6 @@
                 </p>
               </a>
             </li>
-            <li class="nav-header"><strong>QUẢN LÝ CÔNG VIỆC</strong></li>
-            <li class="nav-header"><strong>QUẢN LÝ CHI TIÊU</strong></li>
-            <li class="nav-header"><strong>KHO TÀI LIỆU</strong></li>
-            <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="nav-icon"></i>
-                <p>
-                  Tổng quan
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a th:href="@{/storage/doctype}" class="nav-link">
-                <i class="nav-icon"></i>
-                <p>
-                  Loại tài liệu
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a th:href="@{/storage/root}" class="nav-link">
-                <i class="nav-icon fas fa-file"></i>
-                <p>
-                  Tài liệu
-                </p>
-              </a>
-            </li>
-            <li class="nav-header"><strong>QUẢN LÝ HỌC TẬP</strong></li>
             <li class="nav-header"><strong>QUẢN TRỊ HỆ THỐNG</strong></li>
             <li class="nav-item">
               <a href="pages/gallery.html" class="nav-link">

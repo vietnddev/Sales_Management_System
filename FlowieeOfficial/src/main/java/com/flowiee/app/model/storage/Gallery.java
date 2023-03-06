@@ -15,9 +15,9 @@ import javax.persistence.*;
 public class Gallery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "galleryId", unique = true, nullable = false)
+    @Column(name = "ID", unique = true, nullable = false)
     private int galleryId;
-    private int productID;
+    private int productVariantID;
     private String type;
     private String url;
     private int sort;
@@ -27,8 +27,8 @@ public class Gallery {
     private String extension;
     private String fileName;
     
-	public Gallery(int productID, String type, String url, int sort, String note, boolean status, boolean isMain, String extension, String fileName) {		
-		this.productID = productID;
+	public Gallery(int productVariantID, String type, String url, int sort, String note, boolean status, boolean isMain, String extension, String fileName) {
+		this.productVariantID = productVariantID;
 		this.type = type;
 		this.url = url;
 		this.sort = sort;
