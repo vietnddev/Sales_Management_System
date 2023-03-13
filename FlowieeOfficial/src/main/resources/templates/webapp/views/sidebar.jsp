@@ -25,9 +25,9 @@
             <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a th:href="@{/profile}" class="d-block">Alexander Pierce</a>
           </div>
-        </div>
+        </div> 
 
         <!-- SidebarSearch Form -->
         <div class="form-inline">
@@ -144,6 +144,14 @@
                 </p>
               </a>
             </li>
+            <li class="nav-item">
+              <a th:href="@{/files}" class="nav-link">
+                <i class="nav-icon"></i>
+                <p>
+                  Thư viện
+                </p>
+              </a>
+            </li>
             <li class="nav-header"><strong>QUẢN TRỊ HỆ THỐNG</strong></li>
             <li class="nav-item">
               <a href="pages/gallery.html" class="nav-link">
@@ -187,21 +195,15 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a th:href="@{/admin/log}" class="nav-link">
+                  <a th:href="@{/admin/log/login}" class="nav-link">
                     <i class="nav-icon"></i>
                     <p>Nhật ký đăng nhập</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/admin/log/access}" class="nav-link">
+                  <a th:href="@{/admin/log}" class="nav-link">
                     <i class="nav-icon"></i>
-                    <p>Nhật ký truy cập</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{/admin/log/modify}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Nhật ký thay đổi nội dung</p>
+                    <p>Nhật ký hoạt động</p>
                   </a>
                 </li>
               </ul>

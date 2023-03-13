@@ -21,5 +21,6 @@ public class Product_Attributes implements Serializable {
     private int productVariantID;
     private String name;
     private String value;
+    private int sort;
     private boolean status;
 }
