@@ -21,11 +21,11 @@ public class ProductService {
         
         return productRepository.findById(id);
     }
-
+   
     public void insertProruct(Product product){
         productRepository.save(product);
     }
-
+ 
     public void updateProruct(Product product){
         productRepository.save(product);
     }

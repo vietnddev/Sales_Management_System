@@ -17,15 +17,15 @@ public class AccountService{
         return accountRepository.findAll();
     }
 
-    public Optional<Account> getAccountByID(int ID){
-        return Optional.of(accountRepository.getById(ID));
+    public Account getAccountByUsername(String username){
+        return accountRepository.findByUsername(username);
     }
 
-//    public Account getAccountByUsername(String username){
-//        return accountRepository.findByUsername(username);
-//    }
+    public Optional<Account> getAccountByID(int ID){
+        return accountRepository.findById(ID);
+    }
 
-    public void save(Account account){
+    public void SaveOrUpdate(Account account){
         accountRepository.save(account);
     }
 
@@ -35,9 +35,5 @@ public class AccountService{
             accountRepository.delete(account);
             System.out.println("Successfully deleted the account with id: " + ID);
         }
-    }
-
-    public void updateOrSave(){
-
     }
 }

@@ -3,10 +3,7 @@ package com.flowiee.app.controller.product;
 import com.flowiee.app.model.sales.Product_Attributes;
 import com.flowiee.app.model.sales.Product_Variants;
 import com.flowiee.app.model.sales.Products;
-import com.flowiee.app.services.CategoryService;
-import com.flowiee.app.services.ProductAttributeService;
-import com.flowiee.app.services.ProductVariantService;
-import com.flowiee.app.services.ProductsService;
+import com.flowiee.app.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,6 +22,8 @@ public class ProductsController {
     private ProductAttributeService productAttributeService;
     @Autowired
     private CategoryService categoryService;
+//    @Autowired
+//    private FilesService filesService;
 
     @GetMapping(value = "")
     public String getAllProducts(ModelMap modelMap){;
@@ -58,6 +57,8 @@ public class ProductsController {
         modelMap.addAttribute("product_attributes", new Product_Attributes());
         modelMap.addAttribute("listAttributes", productAttributeService.getAllAttributes(productVariantID));
         modelMap.addAttribute("productVariantID", productVariantID);
+        //Lấy danh sách hình ảnh của biến thể
+        //modelMap.addAttribute("listFiles", filesService.getFilesByProductVariant(productVariantID));
         return "pages/sales/product_variant";
     }
 

@@ -34,6 +34,8 @@
     <link rel="stylesheet" th:href="@{/plugins/simplemde/simplemde.min.css}">
     <!-- dropzonejs -->
     <link rel="stylesheet" th:href="@{/plugins/dropzone/min/dropzone.min.css}">
+    <!-- Ekko Lightbox -->
+    <link rel="stylesheet" th:href="@{/plugins/ekko-lightbox/ekko-lightbox.css}">
   </th:block>
 </head>
 
@@ -77,6 +79,15 @@
             </form>
           </div>
         </li>
+
+        <!-- Cart -->
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/sales/cart}" role="button">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge badge-danger navbar-badge">3</span>
+          </a>
+        </li>
+        <!--./ Cart-->
 
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
@@ -231,6 +242,10 @@
     <script th:src="@{/plugins/summernote/summernote-bs4.min.js}"></script>
     <!-- dropzonejs -->
     <script th:src="@{/plugins/dropzone/min/dropzone.min.js}"></script>
+    <!-- Filterizr-->
+    <script th:src="@{/plugins/filterizr/jquery.filterizr.min.js}"></script>
+    <!-- Ekko Lightbox -->
+    <script th:src="@{/plugins/ekko-lightbox/ekko-lightbox.min.js}"></script>
     <!-- Page specific script -->
     <script>
       $(function () {
