@@ -1,0 +1,27 @@
+package com.flowiee.app.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "Comment")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Comment {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", unique = true, nullable = false)
+	private int ID;
+	private int IDProduct;
+	private String Name;
+	private String Email;
+	private String Phone;
+	private String Created;
+	private String Describes;
+	private boolean Status;
+	private int Code;
+}

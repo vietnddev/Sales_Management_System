@@ -132,58 +132,60 @@
                                       </button>
                                     </div>
                                     <div class="modal-body">
-                                      <div class="card-body">
-                                        <input type="hidden" name="categoryID" th:value="${list.categoryID}" />
-                                        <div class="form-group">
-                                          <label>Tên danh mục</label>
-                                          <input type="text" class="form-control" placeholder="Tên danh mục" required
-                                            name="name" th:value="${list.name}" />
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <input type="hidden" name="categoryID" th:value="${list.categoryID}" />
+                                          <div class="form-group">
+                                            <label>Tên danh mục</label>
+                                            <input type="text" class="form-control" placeholder="Tên danh mục" required
+                                              name="name" th:value="${list.name}" />
+                                          </div>
+                                          <div class="form-group" th:if="${#lists.isEmpty(listRootName)}">
+                                            <label>Mã danh mục</label>
+                                            <input type="text" class="form-control" placeholder="Mã danh mục" required
+                                              name="code" th:value="${list.code}" />
+                                            <input type="hidden" name="type" value="0" />
+                                          </div>
+                                          <div class="form-group" th:if="${not #lists.isEmpty(listRootName)}">
+                                            <label>Thuộc loại</label>
+                                            <select class="custom-select" name="code">
+                                              <option selected th:value="${list.code}" th:text="${nameItem}"></option>
+                                              <option th:each="rootName, iterStat : ${listRootName}"
+                                                th:value="${rootName.code}" th:text="${rootName.name}"></option>
+                                            </select>
+                                            <input type="hidden" name="type" value="1" />
+                                          </div>
+                                          <div class="form-group">
+                                            <label>Ghi chú</label>
+                                            <textarea class="form-control" rows="5" placeholder="Ghi chú" name="note"
+                                              th:text="${list.note}"></textarea>
+                                          </div>
+                                          <div class="form-group">
+                                            <label>Thứ tự hiển thị</label>
+                                            <input type="number" class="form-control" placeholder="0" required
+                                              name="sort" th:value="${list.sort}" />
+                                          </div>
+                                          <div class="form-group" th:if="${list.status}">
+                                            <label>Trạng thái</label>
+                                            <select class="custom-select" name="status">
+                                              <option value="true" selected>Sử dụng</option>
+                                              <option value="false">Ngừng sử dụng</option>
+                                            </select>
+                                          </div>
+                                          <div class="form-group" th:if="not ${list.status}">
+                                            <label>Trạng thái</label>
+                                            <select class="custom-select" name="status">
+                                              <option value="true">Sử dụng</option>
+                                              <option value="false" selected>Ngừng sử dụng</option>
+                                            </select>
+                                          </div>
                                         </div>
-                                        <div class="form-group" th:if="${#lists.isEmpty(listRootName)}">
-                                          <label>Mã danh mục</label>
-                                          <input type="text" class="form-control" placeholder="Mã danh mục" required
-                                            name="code" th:value="${list.code}" />
-                                          <input type="hidden" name="type" value="0" />
-                                        </div>
-                                        <div class="form-group" th:if="${not #lists.isEmpty(listRootName)}">
-                                          <label>Thuộc loại</label>
-                                          <select class="custom-select" name="code">
-                                            <option selected th:value="${list.code}" th:text="${nameItem}"></option>
-                                            <option th:each="rootName, iterStat : ${listRootName}"
-                                              th:value="${rootName.code}" th:text="${rootName.name}"></option>                                              
-                                          </select>
-                                          <input type="hidden" name="type" value="1" />
-                                        </div>
-                                        <div class="form-group">
-                                          <label>Ghi chú</label>
-                                          <textarea class="form-control" rows="5" placeholder="Ghi chú" name="note"
-                                            th:text="${list.note}"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                          <label>Thứ tự hiển thị</label>
-                                          <input type="number" class="form-control" placeholder="0" required name="sort"
-                                            th:value="${list.sort}" />
-                                        </div>
-                                        <div class="form-group" th:if="${list.status}">
-                                          <label>Trạng thái</label>
-                                          <select class="custom-select" name="status">
-                                            <option value="true" selected>Sử dụng</option>
-                                            <option value="false">Ngừng sử dụng</option>
-                                          </select>
-                                        </div>
-                                        <div class="form-group" th:if="not ${list.status}">
-                                          <label>Trạng thái</label>
-                                          <select class="custom-select" name="status">
-                                            <option value="true">Sử dụng</option>
-                                            <option value="false" selected>Ngừng sử dụng</option>
-                                          </select>
-                                        </div>
-                                        <!-- /.card-body -->
                                       </div>
                                       <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                                         <button type="submit" class="btn btn-primary">Lưu</button>
                                       </div>
+                                    </div>
                                   </form>
                                 </div>
                                 <!-- /.modal-content -->
@@ -221,46 +223,48 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <div class="card-body">
-                              <div class="form-group">
-                                <label>Tên danh mục</label>
-                                <input type="text" class="form-control" placeholder="Tên danh mục" required
-                                  name="name" />
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="form-group">
+                                  <label>Tên danh mục</label>
+                                  <input type="text" class="form-control" placeholder="Tên danh mục" required
+                                    name="name" />
+                                </div>
+                                <div class="form-group" th:if="${#lists.isEmpty(listRootName)}">
+                                  <label>Mã danh mục</label>
+                                  <input type="text" class="form-control" placeholder="Mã danh mục" required
+                                    name="code" />
+                                </div>
+                                <div class="form-group" th:if="${not #lists.isEmpty(listRootName)}">
+                                  <label>Thuộc loại</label>
+                                  <select class="custom-select" name="type">
+                                    <option selected th:value="${codeItem}" th:text="${nameItem}"></option>
+                                    <option th:each="rootName, iterStat : ${listRootName}" th:value="${rootName.code}"
+                                      th:text="${rootName.name}"></option>
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>Ghi chú</label>
+                                  <textarea class="form-control" rows="5" placeholder="Ghi chú" name="note"></textarea>
+                                </div>
+                                <div class="form-group">
+                                  <label>Thứ tự hiển thị</label>
+                                  <input type="number" class="form-control" placeholder="0" required name="sort" />
+                                </div>
+                                <div class="form-group">
+                                  <label>Trạng thái</label>
+                                  <select class="custom-select" name="status">
+                                    <option value="true" selected>Sử dụng</option>
+                                    <option value="false">Ngừng sử dụng</option>
+                                  </select>
+                                </div>
                               </div>
-                              <div class="form-group" th:if="${#lists.isEmpty(listRootName)}">
-                                <label>Mã danh mục</label>
-                                <input type="text" class="form-control" placeholder="Mã danh mục" required
-                                  name="code" />
-                              </div>
-                              <div class="form-group" th:if="${not #lists.isEmpty(listRootName)}">
-                                <label>Thuộc loại</label>
-                                <select class="custom-select" name="type">
-                                  <option selected th:value="${codeItem}" th:text="${nameItem}"></option>
-                                  <option th:each="rootName, iterStat : ${listRootName}" th:value="${rootName.code}"
-                                    th:text="${rootName.name}"></option>
-                                </select>
-                              </div>
-                              <div class="form-group">
-                                <label>Ghi chú</label>
-                                <textarea class="form-control" rows="5" placeholder="Ghi chú" name="note"></textarea>
-                              </div>
-                              <div class="form-group">
-                                <label>Thứ tự hiển thị</label>
-                                <input type="number" class="form-control" placeholder="0" required name="sort" />
-                              </div>
-                              <div class="form-group">
-                                <label>Trạng thái</label>
-                                <select class="custom-select" name="status">
-                                  <option value="true" selected>Sử dụng</option>
-                                  <option value="false">Ngừng sử dụng</option>
-                                </select>
-                              </div>
-                              <!-- /.card-body -->
                             </div>
                             <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                               <button type="submit" class="btn btn-primary">Lưu</button>
                             </div>
+                          </div>
                         </form>
                       </div>
                       <!-- /.modal-content -->

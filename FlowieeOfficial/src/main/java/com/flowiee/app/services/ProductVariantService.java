@@ -1,6 +1,6 @@
 package com.flowiee.app.services;
 
-import com.flowiee.app.model.sales.Product_Variants;
+import com.flowiee.app.model.Product_Variants;
 import com.flowiee.app.repositories.ProductVariantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
