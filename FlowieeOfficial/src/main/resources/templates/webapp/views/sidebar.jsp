@@ -27,7 +27,7 @@
           <div class="info">
             <a th:href="@{/profile}" class="d-block">Alexander Pierce</a>
           </div>
-        </div> 
+        </div>
 
         <!-- SidebarSearch Form -->
         <div class="form-inline">
@@ -186,27 +186,12 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon"></i>
+              <a th:href="@{/admin/log}" class="nav-link">
+                <i class="fa-solid fa-users nav-icon"></i>
                 <p>
                   Nhật ký hệ thống
-                  <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a th:href="@{/admin/log/login}" class="nav-link">
-                    <i class="nav-icon"></i>
-                    <p>Nhật ký đăng nhập</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{/admin/log}" class="nav-link">
-                    <i class="nav-icon"></i>
-                    <p>Nhật ký hoạt động</p>
-                  </a>
-                </li>
-              </ul>
             </li>
           </ul>
         </nav>

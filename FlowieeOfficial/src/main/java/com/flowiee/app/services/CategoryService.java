@@ -1,6 +1,6 @@
 package com.flowiee.app.services;
 
-import com.flowiee.app.model.category.Category;
+import com.flowiee.app.model.Category;
 import com.flowiee.app.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

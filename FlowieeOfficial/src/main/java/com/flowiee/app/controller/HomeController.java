@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "")
 public class HomeController {
 
-    @RequestMapping(value = "")
-    public String homePage() {
-        return "pages/sales/product";
-    }
+//    @RequestMapping(value = "")
+//    public String homePage() {
+//        return "pages/sales/product";
+//    }
 
     @GetMapping(value = "/login")
     public String showLoginPage(HttpServletRequest request){

@@ -1,10 +1,13 @@
 package com.flowiee.app.repositories;
 
-import com.flowiee.app.model.admin.Account;
+import com.flowiee.app.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public interface AccountRepository extends JpaRepository<Account, Integer>{
-    public Account findByUsername(String username);
+    Account findByUsername(String username);
+
+    String findUsernameByID(int id);
+
 }

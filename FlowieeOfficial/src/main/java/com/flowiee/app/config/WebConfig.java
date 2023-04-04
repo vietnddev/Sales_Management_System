@@ -12,6 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
                 // Địa chỉ tài nguyên tĩnh
                 .addResourceHandler("/uploads/**")
                 // Thư mục lưu trữ
-                .addResourceLocations("file:/E:/FLOWIEE/SpringBoot/FlowieeOfficial/src/main/resources/static/uploads/");
+                .addResourceLocations("file:/D:/VietND/Project/Flowiee WebApp/FlowieeOfficial/src/main/resources/static/uploads/");
     }
 }

@@ -24,6 +24,23 @@
       max-width: 6.5rem;
       margin-right: 0rem;
     }
+
+    /* Ẩn mũi tên tăng giảm trên trình duyệt Safari và Chrome */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Ẩn mũi tên tăng giảm trên trình duyệt Firefox */
+    input[type="number"]::-moz-number-spinners {
+      display: none;
+    }
+
+    /* Ẩn nút xóa giá trị đầu vào trên trình duyệt Edge */
+    input[type="number"]::-ms-clear {
+      display: none;
+    }
   </style>
 </head>
 
@@ -68,22 +85,121 @@
             <!--./ End Image-->
 
             <!--Attributes-->
-            <div class="row col-sm-7 mt-3">
-              <form th:action="@{/sales/products/variant/attribute/update}" method="post" class="w-100">
-                <div class="form-group" th:each="list : ${listAttributes}">
-                  <label style="margin-left: 7px;" th:text="${list.name}"></label>
-                  <div class="input-group row col-sm-12">
-                    <input type="text" class="form-control col-sm-11" th:placeholder="${list.name}" name="name" required
-                      th:value="${list.value}" />
-                    <input type="number" class="form-control col-sm-1" th:placeholder="${list.sort}" name="sort"
-                      required th:value="${list.sort}" />
-                    <span class="input-group-append">
-                      <button type="submit" name="update" class="btn btn-info"><i class="fas fa-check"></i></button>
-                      <button type="submit" name="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                    </span>
+            <div class="row col-sm-7 mt-3"
+              style="max-height: 480px; overflow: overlay; padding-left: 10px; padding-right: 20px;">
+              <div class="col-sm-12 w-100 p-0" th:each="list : ${listAttributes}">
+                <form th:action="@{/sales/products/attribute/update/{ID}(ID=${list.productAttributeID})}"
+                  th:object="${attribute}" method="post">
+                  <div class="form-group">
+                    <div class="form-group row">
+                      <label class="col-sm-2 col-form-label">Thuộc tính</label>
+                      <div class="col-sm-5">
+                        <div class="input-group row col-sm-12 p-0">
+                          <input type="text" class="form-control" placeholder="Tên thuộc tính" name="name"
+                            th:value="${list.name}" required />
+                        </div>
+                      </div>
+                      <label class="col-sm-1 col-form-label" th:if="${list.status}">
+                        <i class="fas fa-lock" style="color: orange;"></i>
+                      </label>
+                      <label class="col-sm-1 col-form-label" th:if="not ${list.status}">
+                        <i class="fas fa-unlock" style="color: green;"></i>
+                      </label>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 col-form-label">Giá trị</label>
+                      <div class="col-sm-10">
+                        <div class="input-group row col-sm-12 p-0">
+                          <input type="text" class="form-control col-sm-11" placeholder="Giá trị" name="value"
+                            th:value="${list.value}" required />
+                          <input type="number" class="form-control col-sm-1" placeholder="0" name="sort"
+                            th:value="${list.sort}" required />
+                          <span class="input-group-append">
+                            <input type="hidden" name="productVariantID" th:value="${productVariantID}" />
+                            <input type="hidden" name="status" th:value="${list.status}" />
+                            <button type="submit" name="update" class="btn btn-info"><i
+                                class="fas fa-check"></i></button>
+
+                            <!--Button lock-->
+                            <th:block th:if="${list.status}">
+                              <button type="button" class="btn btn-warning" data-toggle="modal"
+                                th:data-target="'#lock-' + ${list.productAttributeID}"><i class="fas fa-unlock"
+                                  style="color: green;"></i></button>
+                            </th:block>
+                            <th:block th:if="not ${list.status}">
+                              <button type="button" class="btn btn-warning" data-toggle="modal"
+                                th:data-target="'#lock-' + ${list.productAttributeID}"><i
+                                  class="fas fa-lock"></i></button>
+                            </th:block>
+                            <!--./Button lock-->
+
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                              th:data-target="'#delete-' + ${list.productAttributeID}"><i
+                                class="fas fa-trash"></i></button>
+                            <!--Popup lock thuộc tính-->
+                            <div class="modal fade" th:id="'lock-' + ${list.productAttributeID}">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <strong class="modal-title" th:if="${list.status}">Xác nhận mở khóa thuộc
+                                      tính</strong>
+                                    <strong class="modal-title" th:if="not ${list.status}">Xác nhận khóa thuộc
+                                      tính</strong>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="card-body" th:if="${list.status}">
+                                      Thuộc tính <strong class="badge text-bg-info" th:text="${list.name}"
+                                        style="font-size: 16px;"></strong> sẽ được mở khóa!
+                                    </div>
+                                    <div class="card-body" th:if="not ${list.status}">
+                                      Thuộc tính <strong class="badge text-bg-info" th:text="${list.name}"
+                                        style="font-size: 16px;"></strong> sẽ bị khóa!
+                                    </div>
+                                    <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                      <button type="submit" name="lock" class="btn btn-primary">Đồng ý</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!--./ Đóng popup lock thuộc tính-->
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </form>
+                </form>
+                <hr>
+                <th:block>
+                  <div class="modal fade" th:id="'delete-' + ${list.productAttributeID}">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <form th:action="@{/sales/products/attribute/delete/{ID}(ID=${list.productAttributeID})}"
+                          method="post">
+                          <div class="modal-header">
+                            <strong class="modal-title">Xác nhận xóa thuộc tính</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="card-body">
+                              Thuộc tính <strong class="badge text-bg-info" th:text="${list.name}"
+                                style="font-size: 16px;"></strong> sẽ bị xóa vĩnh viễn!
+                            </div>
+                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                              <button type="submit" class="btn btn-primary">Đồng ý</button>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </th:block>
+              </div>
             </div>
             <div class="row col-sm-12 justify-content-between mt-3">
               <div class="col-sm-12 text-right">
