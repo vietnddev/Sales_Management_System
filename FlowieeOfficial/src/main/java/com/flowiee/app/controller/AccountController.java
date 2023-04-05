@@ -39,7 +39,7 @@ public class AccountController {
         return PagesUtil.PAGE_LOGIN;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @GetMapping(value = "/{ID}")
     public String getDetailAccount(HttpServletRequest request, @PathVariable int ID) {
         String username = accountService.getUserName();
@@ -92,7 +92,7 @@ public class AccountController {
         return PagesUtil.PAGE_LOGIN;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @PostMapping(value = "/delete/{ID}")
     public String deleteAccount(HttpServletRequest request, @PathVariable int ID) {
         String username = accountService.getUserName();
