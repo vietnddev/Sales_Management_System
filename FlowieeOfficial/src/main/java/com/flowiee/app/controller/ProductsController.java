@@ -1,9 +1,6 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.model.Image;
-import com.flowiee.app.model.Product_Attributes;
-import com.flowiee.app.model.Product_Variants;
-import com.flowiee.app.model.Products;
+import com.flowiee.app.model.*;
 import com.flowiee.app.services.*;
 import com.flowiee.app.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,8 @@ public class ProductsController {
     private AccountService accountService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private PriceHistoryService priceHistoryService;
 
     @GetMapping(value = "")
     public String getAllProducts(ModelMap modelMap) {
@@ -90,12 +89,17 @@ public class ProductsController {
         return PagesUtil.PAGE_LOGIN;
     }
 
+    @Transactional
     @PostMapping(value = "/variants/insert") // Thêm mới biến thể cho sản phẩm
     public String insertVariants(HttpServletRequest request, @ModelAttribute("product_variants") Product_Variants productVariant) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             productVariant.setName("Color");
             productVariantService.insertVariant(productVariant);
+
+            //Thêm giá bán
+            priceHistoryService.save(new PriceHistory(productVariant.getProductVariantID(), 0));
+
             return "redirect:" + request.getHeader("referer");
         }
         return PagesUtil.PAGE_LOGIN;
@@ -111,7 +115,7 @@ public class ProductsController {
         return PagesUtil.PAGE_LOGIN;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @PostMapping(value = "/update/{ID}")
     public String updateProduct(HttpServletRequest request, @ModelAttribute("products") Products products) {
         String username = accountService.getUserName();
@@ -123,7 +127,7 @@ public class ProductsController {
     }
 
     //Cập nhật thuộc tính cho sản phẩm
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @PostMapping(value = "/attribute/update/{ID}", params = "update")
     public String updateAttribute(@ModelAttribute("attribute") Product_Attributes attribute,
                                   HttpServletRequest request, @PathVariable("ID") int attributeID) {
