@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -91,16 +92,17 @@ public class ProductsController {
 
     @Transactional
     @PostMapping(value = "/variants/insert") // Thêm mới biến thể cho sản phẩm
-    public String insertVariants(HttpServletRequest request, @ModelAttribute("product_variants") Product_Variants productVariant) {
+    public String insertVariants(HttpServletRequest request, RedirectAttributes redirectAttributes,
+                                 @ModelAttribute("product_variants") Product_Variants productVariant) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             productVariant.setName("Color");
             productVariantService.insertVariant(productVariant);
 
             //Thêm giá bán
-            priceHistoryService.save(new PriceHistory(productVariant.getProductVariantID(), 0));
-
-            return "redirect:" + request.getHeader("referer");
+            redirectAttributes.addAttribute("productVariantID", productVariant.getProductVariantID());
+            redirectAttributes.addAttribute("productID", productVariant.getProductID());
+            return "redirect:/sales/products/price/create";
         }
         return PagesUtil.PAGE_LOGIN;
     }
