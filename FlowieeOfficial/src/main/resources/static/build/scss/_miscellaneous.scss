@@ -115,7 +115,7 @@
   }
 }
 
-// Image sizes
+// FileEntity sizes
 .img-sm,
 .img-md,
 .img-lg {
@@ -149,7 +149,7 @@
   }
 }
 
-// Image bordered
+// FileEntity bordered
 .img-bordered {
   border: 3px solid $gray-500;
   padding: 3px;
@@ -169,7 +169,7 @@
   @include border-radius(50%);
 }
 
-// Image sizes
+// FileEntity sizes
 .img-size-64,
 .img-size-50,
 .img-size-32 {

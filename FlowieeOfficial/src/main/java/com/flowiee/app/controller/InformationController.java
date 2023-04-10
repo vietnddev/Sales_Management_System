@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.model.Account;
 import com.flowiee.app.services.AccountService;
-import com.flowiee.app.services.ImageService;
+import com.flowiee.app.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +23,7 @@ public class InformationController {
 	private AccountService accountService;
 
 	@Autowired
-	private ImageService filessService;
+	private FileService filessService;
 
 	BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 

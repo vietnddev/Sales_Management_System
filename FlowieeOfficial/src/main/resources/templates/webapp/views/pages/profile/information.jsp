@@ -46,7 +46,7 @@
           <div class="row">
             <div class="col-md-3">
 
-              <!-- Profile Image -->
+              <!-- Profile FileEntity -->
               <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                   <div class="text-center">
@@ -329,7 +329,7 @@
     var previewTemplate = previewNode.parentNode.innerHTML
     previewNode.parentNode.removeChild(previewNode)
 
-    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone            
+    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
       url: "/upload/sales/products/variants/[[${productVariantID}]]", // Gọi tới function trong spring để xử lý file
       thumbnailWidth: 80,
       thumbnailHeight: 80,
@@ -337,7 +337,7 @@
       previewTemplate: previewTemplate,
       autoQueue: false, // Make sure the files aren't queued until manually added
       previewsContainer: "#previews", // Define the container to display the previews
-      clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.      
+      clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
     })
 
     myDropzone.on("addedfile", function (file) {

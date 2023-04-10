@@ -38,5 +38,5 @@ public class Product_Variants implements Serializable {
     private boolean status;
            
     @OneToMany(mappedBy = "productVariant")
-    private List<Image> image;
+    private List<FileEntity> image;
 }
