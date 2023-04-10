@@ -37,11 +37,9 @@ public class PriceHistory implements Serializable {
     @PreUpdate
     @PrePersist
     public void updateTimeStamps() {
+        updatedAt = new Date();
         if (createdAt == null) {
             createdAt = new Date();
-        }
-        if (updatedAt == null) {
-            updatedAt = new Date();
         }
     }
 

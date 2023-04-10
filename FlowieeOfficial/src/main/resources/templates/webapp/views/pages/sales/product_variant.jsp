@@ -71,18 +71,18 @@
               <div class="col-sm-5 text-center"><b>Hình ảnh sản phẩm</b></div>
               <div class="col-sm-7 text-center"><b>Thuộc tính</b></div>
             </div>
-            <!--Image-->
+            <!--FileEntity-->
             <div class="col-sm-5 mt-3">
               <div class="row">
                 <img th:src="@{/dist/img/photo1.png}" class="product-image" alt="Product Image">
               </div>
               <div class="row mt-3" style="max-height: 350px;overflow: overlay;">
                 <div class="col-sm-3 product-image-thumb mb-2" th:each="list : ${listFiles}">
-                  <img th:src="@{/uploads/products/{fileName}(fileName=${list.fileName})}" alt="Product Image">
+                  <img th:src="@{/uploads/products/{storageName}(storageName=${list.storageName})}" alt="Product Image">
                 </div>
               </div>
             </div>
-            <!--./ End Image-->
+            <!--./ End FileEntity-->
 
             <!--Attributes-->
             <div class="row col-sm-7 mt-3"
@@ -283,7 +283,7 @@
           <div class="col-sm-12 mt-3" style="max-height: 450px; overflow: overlay">
             <div class="row" th:each="list : ${listSubImage}">
               <div class="product-image-thumb">
-                <img th:src="@{/upload/{fileName}(fileName=${list.fileName})}" alt="Product Image">
+                <img th:src="@{/upload/{storageName}(storageName=${list.storageName})}" alt="Product Image">
               </div>
             </div>
             <div class="row mt-3">
@@ -436,7 +436,7 @@
     var previewTemplate = previewNode.parentNode.innerHTML
     previewNode.parentNode.removeChild(previewNode)
 
-    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone         
+    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
       url: "/files/uploads/products/[[${productVariantID}]]", // Gọi tới function trong spring để xử lý file
       thumbnailWidth: 80,
       thumbnailHeight: 80,
@@ -444,7 +444,7 @@
       previewTemplate: previewTemplate,
       autoQueue: false, // Make sure the files aren't queued until manually added
       previewsContainer: "#previews", // Define the container to display the previews
-      clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.      
+      clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
     })
 
     myDropzone.on("addedfile", function (file) {

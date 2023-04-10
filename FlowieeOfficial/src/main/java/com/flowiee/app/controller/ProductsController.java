@@ -27,10 +27,13 @@ public class ProductsController {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private ImageService imageService;
+    private FileService fileService;
     @Autowired
     private PriceHistoryService priceHistoryService;
 
+    /**
+     * Quản lý sản phẩm core
+     * */
     @GetMapping(value = "")
     public String getAllProducts(ModelMap modelMap) {
         String username = accountService.getUserName();
@@ -63,6 +66,46 @@ public class ProductsController {
         return PagesUtil.PAGE_LOGIN;
     }
 
+    @PostMapping(value = "/insert") // Thêm mới sản phẩm
+    public String insertProduct(HttpServletRequest request, @ModelAttribute("products") Products products) {
+        String username = accountService.getUserName();
+        if (username != null && !username.isEmpty()) {
+            productsService.insertProduct(products);
+            return "redirect:" + request.getHeader("referer");
+        }
+        return PagesUtil.PAGE_LOGIN;
+    }
+
+    @Transactional
+    @PostMapping(value = "/update/{ID}") //update sản phẩm gốc
+    public String updateProduct(HttpServletRequest request, @ModelAttribute("products") Products products) {
+        String username = accountService.getUserName();
+        if (username != null && !username.isEmpty()) {
+            productsService.updateProduct(products);
+            return "redirect:" + request.getHeader("referer");
+        }
+        return PagesUtil.PAGE_LOGIN;
+    }
+
+    @Transactional
+    @PostMapping(value = "/delete/{productID}") //delete sản phẩm gốc
+    public String deleteProduct(HttpServletRequest request, @PathVariable("productID") int productID) {
+        String username = accountService.getUserName();
+        if (username != null && !username.isEmpty()) {
+            if (productsService.getProductByID(productID).isPresent()) {
+                productsService.deleteProduct(productID);
+                System.out.println("Delete successfully");
+            } else {
+                System.out.println("Product not found!");
+            }
+            return "redirect:" + request.getHeader("referer");
+        }
+        return PagesUtil.PAGE_LOGIN;
+    }
+
+    /**
+     * Quản lý biến thể sản phẩm (variants)
+     * */
     @GetMapping(value = "{productID}/variants/{productVariantID}") // Show trang chi tiết của biến thể
     public String getDetailProductVariant(ModelMap modelMap, @PathVariable("productVariantID") int productVariantID) {
         /* Show trang chi tiết của biến thể
@@ -74,18 +117,8 @@ public class ProductsController {
             modelMap.addAttribute("listAttributes", productAttributeService.getAllAttributes(productVariantID));
             modelMap.addAttribute("productVariantID", productVariantID);
             //Lấy danh sách hình ảnh của biến thể
-            modelMap.addAttribute("listFiles", imageService.getFilesByProductVariant(productVariantID));
+            modelMap.addAttribute("listFiles", fileService.getFilesByProductVariant(productVariantID));
             return "pages/sales/product_variant";
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    @PostMapping(value = "/insert") // Thêm mới sản phẩm
-    public String insertProduct(HttpServletRequest request, @ModelAttribute("products") Products products) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            productsService.insertProduct(products);
-            return "redirect:" + request.getHeader("referer");
         }
         return PagesUtil.PAGE_LOGIN;
     }
@@ -99,30 +132,38 @@ public class ProductsController {
             productVariant.setName("Color");
             productVariantService.insertVariant(productVariant);
 
-            //Thêm giá bán
-            redirectAttributes.addAttribute("productVariantID", productVariant.getProductVariantID());
-            redirectAttributes.addAttribute("productID", productVariant.getProductID());
-            return "redirect:/sales/products/price/create";
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
+            //Khởi tạo giá default của giá bán
+            priceHistoryService.save(new PriceHistory(productVariant.getProductVariantID(), 199));
 
-    @PostMapping(value = "/variants/attributes/insert") // Thêm mới thuộc tính cho biến thể
-    public String insertAttributes(HttpServletRequest request, @ModelAttribute("product_attributes") Product_Attributes productAttribute) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            productAttributeService.saveAttribute(productAttribute);
             return "redirect:" + request.getHeader("referer");
         }
         return PagesUtil.PAGE_LOGIN;
     }
 
-    @Transactional
-    @PostMapping(value = "/update/{ID}")
-    public String updateProduct(HttpServletRequest request, @ModelAttribute("products") Products products) {
+    @PostMapping(value = "/variants/delete/{variantID}") //delete biến thể
+    public String deleteVariants(HttpServletRequest request, @PathVariable("variantID") int variantID) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            productsService.updateProduct(products);
+            if (productVariantService.getByVariantID(variantID).isPresent()) {
+                productVariantService.deteleVariant(variantID);
+                System.out.println("Delete successfully");
+            } else {
+                System.out.println("Record not found!");
+            }
+            return "redirect:" + request.getHeader("referer");
+        }
+        return PagesUtil.PAGE_LOGIN;
+    }
+
+    /**
+    * Quản lý thuộc tính sản phẩm (attributes)
+    * */
+    //Thêm mới thuộc tính
+    @PostMapping(value = "/variants/attributes/insert") // Thêm mới thuộc tính cho biến thể
+    public String insertAttributes(HttpServletRequest request, @ModelAttribute("product_attributes") Product_Attributes productAttribute) {
+        String username = accountService.getUserName();
+        if (username != null && !username.isEmpty()) {
+            productAttributeService.saveAttribute(productAttribute);
             return "redirect:" + request.getHeader("referer");
         }
         return PagesUtil.PAGE_LOGIN;
@@ -142,11 +183,11 @@ public class ProductsController {
         return PagesUtil.PAGE_LOGIN;
     }
 
-    //Lock attribute
-    @Transactional(rollbackFor = Exception.class)
+    //Khóa lock attribute
+    @Transactional
     @PostMapping(value = "/attribute/update/{ID}", params = "lock")
     public String lockAttribute(@ModelAttribute("attribute") Product_Attributes attribute,
-                                  HttpServletRequest request, @PathVariable("ID") int attributeID) {
+                                HttpServletRequest request, @PathVariable("ID") int attributeID) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             attribute.setProductAttributeID(attributeID);
@@ -162,60 +203,16 @@ public class ProductsController {
     }
 
     //Xóa thuộc tính
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @PostMapping(value = "/attribute/delete/{ID}")
     public String deleteAttribute(@ModelAttribute("attribute") Product_Attributes attribute,
                                   HttpServletRequest request, @PathVariable("ID") int attributeID) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            productAttributeService.deleteAttribute(attributeID);
-            return "redirect:" + request.getHeader("referer");
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @PostMapping(value = "/delete/{productID}")
-    public String deleteProduct(HttpServletRequest request, @PathVariable("productID") int productID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            if (productsService.getProductByID(productID).isPresent()) {
-                productsService.deleteProduct(productID);
-                System.out.println("Delete successfully");
-            } else {
-                System.out.println("Product not found!");
-            }
-            return "redirect:" + request.getHeader("referer");
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    @PostMapping(value = "/variants/delete/{variantID}")
-    public String deleteVariants(HttpServletRequest request, @PathVariable("variantID") int variantID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            if (productVariantService.getByVariantID(variantID).isPresent()) {
-                productVariantService.deteleVariant(variantID);
-                System.out.println("Delete successfully");
-            } else {
-                System.out.println("Record not found!");
-            }
-            return "redirect:" + request.getHeader("referer");
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    @PostMapping(value = "/variants/attributes/delete/{attributeID}")
-    public String deleteAttributes(HttpServletRequest request, @PathVariable("attributeID") int attributeID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            if (productAttributeService.getByAttributeID(attributeID).isPresent()) {
+            if (productAttributeService.getByAttributeID(attributeID).isPresent()){
                 productAttributeService.deleteAttribute(attributeID);
-                System.out.println("Delete successfully");
-            } else {
-                System.out.println("Record not found!");
+                return "redirect:" + request.getHeader("referer");
             }
-            return "redirect:" + request.getHeader("referer");
         }
         return PagesUtil.PAGE_LOGIN;
     }
