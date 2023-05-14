@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="538f8ace-ca1b-4462-b3d2-88b11c1e1f40" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/config/WebSecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/mvnw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/authentication/AccountDetailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/config/AccountDetailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/authentication/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/admin/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/AccountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/admin/LogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/LogController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/admin/RoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/RoleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/admin/SystemConfigController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/SystemConfigController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/category/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/files/FilesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/FilesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/product/ProductsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/ProductsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/profile/InformationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/InformationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/sales/CartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/CartController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/sales/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/CustomerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/sales/OrdersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/OrdersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/storage/STGDocFieldController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/storage/STGDocTypeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/storage/StorageController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/system/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/controller/Notification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/admin/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Account.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/admin/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/SystemLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/admin/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/admin/SystemConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/SystemConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/admin/UserRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/UserRole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/category/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Category.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/learn/Learning.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Cart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/CartItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/CartItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/DetailOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/DetailOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Orders.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Orders.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Price_History.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Price_History.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Product.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/ProductDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Product_Attributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Product_Attributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Product_Variants.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Product_Variants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/sales/Products.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Products.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/DocData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/DocField_DocData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/DocShare.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/DocShare2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/DocShare_Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/Filess.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/Image.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/Product_Files.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/STGDocField.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/STGDocType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/model/storage/Storage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/AccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/AccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/CategoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/CustomerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/CustomerRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/DetailOrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/DetailOrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/DocShare2Repository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/FilessRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/FilessRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/LogRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/SystemLogRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/OrdersRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/OrdersRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/ProductAttributeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/ProductAttributeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/ProductRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/ProductVariantRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/ProductVariantRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/ProductsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/ProductsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/STGDocFieldRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/STGDocTypeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/repositories/StorageRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ABCProductRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ABCProductService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ABCProductServiceIlmplcccc.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/CategoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/CustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/CustomerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/DetailOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/DetailOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/DocShare2Service.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/FilessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/FilessService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/LogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/SystemLogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/OrdersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/OrdersService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ProductAttributeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ProductAttributeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ProductService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ProductVariantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ProductVariantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ProductsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/ProductsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/STGDocFieldService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/STGDocTypeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/services/StorageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/utils/Crawlers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/java/com/flowiee/app/utils/Crawlers2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/.github/workflows/codeql.yml" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/.github/workflows/codeql.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/.lgtm.yml" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/.lgtm.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/docs/_includes/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/docs/_includes/navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/docs/components/cards.md" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/docs/components/cards.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/pages/layout/top-nav-sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/pages/layout/top-nav-sidebar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/pages/layout/top-nav.html" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/pages/layout/top-nav.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/starter.html" beforeDir="false" afterPath="$PROJECT_DIR$/FlowieeOfficial/src/main/resources/templates/webapp/views/starter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Nd3V79LZ9qbluFY7D2CSUImV71" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/VietND/Project/Flowiee WebApp/FlowieeOfficial",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="FlowieeOfficialApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.flowiee.FlowieeOfficialApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.flowiee.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Flowiee WebApp" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Flowiee WebApp" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.FlowieeOfficialApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="538f8ace-ca1b-4462-b3d2-88b11c1e1f40" name="Changes" comment="" />
+      <created>1679980153835</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679980153835</updated>
+      <workItem from="1679980154922" duration="13000" />
+      <workItem from="1680145727928" duration="379000" />
+      <workItem from="1680257427294" duration="89000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
