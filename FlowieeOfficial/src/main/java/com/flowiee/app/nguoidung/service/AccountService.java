@@ -1,6 +1,6 @@
 package com.flowiee.app.nguoidung.service;
 
-import com.flowiee.app.nguoidung.entity.AccountEntity;
+import com.flowiee.app.nguoidung.entity.TaiKhoan;
 import com.flowiee.app.nguoidung.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,15 +17,15 @@ public class AccountService{
     @Autowired
     AccountRepository accountRepository;
 
-    public List<AccountEntity> getAll(){
+    public List<TaiKhoan> getAll(){
         return accountRepository.findAll();
     }
 
-    public AccountEntity getAccountByUsername(String username){
+    public TaiKhoan getAccountByUsername(String username){
         return accountRepository.findByUsername(username);
     }
 
-    public Optional<AccountEntity> getAccountByID(int ID){
+    public Optional<TaiKhoan> getAccountByID(int ID){
         return accountRepository.findById(ID);
     }
 
@@ -33,12 +33,12 @@ public class AccountService{
         return accountRepository.findIdByUsername(username);
     }
 
-    public AccountEntity saveAccount(AccountEntity accountEntity){
+    public TaiKhoan saveAccount(TaiKhoan accountEntity){
         return accountRepository.save(accountEntity);
     }
 
     public void deleteAccountByID(int ID){
-        AccountEntity accountEntity = accountRepository.findById(ID).orElse(null);
+        TaiKhoan accountEntity = accountRepository.findById(ID).orElse(null);
         if (accountEntity != null) {
             accountRepository.delete(accountEntity);
             System.out.println("Successfully deleted the accountEntity with id: " + ID);

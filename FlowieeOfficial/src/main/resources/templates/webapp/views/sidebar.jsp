@@ -152,6 +152,31 @@
                 </p>
               </a>
             </li>
+            <li class="nav-header"><strong>KHO TÀI LIỆU</strong></li>
+            <li class="nav-item">
+              <a th:href="@{/kho-tai-lieu/document}" class="nav-link">
+                <i class="fa-solid fa- nav-icon"></i>
+                <p>
+                  Tổng quan
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a th:href="@{/danh-muc/loai-tai-lieu}" class="nav-link">
+                <i class="fa-solid fa- nav-icon"></i>
+                <p>
+                  Loại tài liệu
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a th:href="@{/kho-tai-lieu/document}" class="nav-link">
+                <i class="fa-solid fa- nav-icon"></i>
+                <p>
+                  Danh sách tài liệu
+                </p>
+              </a>
+            </li>
             <li class="nav-header"><strong>QUẢN TRỊ HỆ THỐNG</strong></li>
             <li class="nav-item">
               <a href="pages/gallery.html" class="nav-link">
