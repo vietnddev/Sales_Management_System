@@ -23,10 +23,12 @@ public class DonHang implements java.io.Serializable {
 	@Column(name = "ma_don_hang", length = 20, nullable = false)
 	private String maDonHang;
 
-	@Column(name = "khach_hang_id", nullable = false)
-	private int idKhachHang;
+	@JsonIgnoreProperties("listDonHang")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "khach_hang_id", nullable = false)
+	private KhachHang khachHang;
 
-	@Column(name = "ghi_chu", length = 255, nullable = true)
+	@Column(name = "ghi_chu", length = 500)
 	private String ghiChu;
 
 	@Column(name = "thoi_gian_dat_hang", nullable = false)

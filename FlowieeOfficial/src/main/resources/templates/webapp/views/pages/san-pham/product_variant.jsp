@@ -165,6 +165,7 @@
                                   </div>
                                 </div>
                               </div>
+                            </div>
                               <!--./ Đóng popup lock thuộc tính-->
                           </span>
                         </div>
@@ -212,7 +213,7 @@
                         <span class="input-group-append">
                           <button type="submit" name="update" class="btn btn-info"><i class="fas fa-check"></i></button>
                           <button type="button" class="btn btn-secondary" data-toggle="modal"
-                          data-target="#priceHistory"><i class="fas fa-history"></i></button>                          
+                          data-target="#priceHistory"><i class="fas fa-history"></i></button>
                         </span>
                       </div>
                     </div>

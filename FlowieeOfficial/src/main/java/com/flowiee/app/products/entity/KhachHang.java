@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,9 +32,13 @@ public class KhachHang implements java.io.Serializable {
 	@Column(name = "email", length = 50, nullable = true)
 	private String email;
 
-	@Column(name = "dia_chi", length = 255, nullable = false)
+	@Column(name = "dia_chi", length = 500, nullable = false)
 	private String diaChi;
 
 	@Column(name = "trang_thai", nullable = false)
 	private boolean trangThai;
+
+	@JsonIgnoreProperties("khachHang")
+	@OneToMany(mappedBy = "khachHang", fetch = FetchType.LAZY)
+	private List<DonHang> listDonHang;
 }

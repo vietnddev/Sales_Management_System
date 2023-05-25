@@ -1,6 +1,9 @@
 package com.flowiee.app.danhmuc.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
+import com.flowiee.app.common.utils.IPUtil;
+import com.flowiee.app.log.model.SystemLogAction;
+import com.flowiee.app.nguoidung.entity.TaiKhoan;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleAccount;
 import com.flowiee.app.common.exception.BadRequestException;
@@ -15,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -70,7 +74,14 @@ public class LoaiSanPhamController {
             System.out.println("Error: " + bindingResult.getFieldError());
         }
         loaiSanPhamService.save(loaiSanPham);
-        systemLogService.writeLog(new SystemLog("dm_loai_san_pham", username, "Thêm mới danh mục loại sản phẩm", request.getRemoteAddr()));
+        SystemLog systemLog = SystemLog.builder()
+            .module("Danh mục - Loại sản phẩm")
+            .action(SystemLogAction.THEM_MOI.name())
+            .noiDung(loaiSanPham.toString())
+            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .ip(IPUtil.getClientIpAddress(request))
+            .build();
+        systemLogService.writeLog(systemLog);
         return "redirect:";
     }
 
@@ -85,11 +96,15 @@ public class LoaiSanPhamController {
             throw new BadRequestException();
         }
         loaiSanPhamService.update(loaiSanPham, id);
-
-        StringBuilder action = new StringBuilder("Cập nhật danh mục loại sản phẩm.");
-        action.append(" Danh mục trước khi cập nhật: " + loaiSanPham.toString());
-        action.append(" .Danh mục trước khi cập nhật: " + loaiSanPhamService.findById(id).toString());
-        systemLogService.writeLog(new SystemLog("dm_loai_san_pham", username, action.toString(), request.getRemoteAddr()));
+        //Ghi log
+        SystemLog systemLog = SystemLog.builder()
+            .module("Danh mục - Loại sản phẩm")
+            .action(SystemLogAction.CAP_NHAT.name())
+            .noiDung(loaiSanPham.toString())
+            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .ip(IPUtil.getClientIpAddress(request))
+            .build();
+        systemLogService.writeLog(systemLog);
 
         return "redirect:" + request.getHeader("referer");
     }
@@ -100,11 +115,20 @@ public class LoaiSanPhamController {
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (id <= 0) {
+        LoaiSanPham loaiSanPham = loaiSanPhamService.findById(id);
+        if (id <= 0 || loaiSanPham == null) {
             throw new BadRequestException();
         }
         loaiSanPhamService.delete(id);
-        systemLogService.writeLog(new SystemLog("dm_loai_san_pham", username, "Xóa danh mục loại sản phẩm", request.getRemoteAddr()));
+        //Lưu log
+        SystemLog systemLog = SystemLog.builder()
+            .module("Danh mục - Loại sản phẩm")
+            .action(SystemLogAction.XOA.name())
+            .noiDung(loaiSanPham.toString())
+            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .ip(IPUtil.getClientIpAddress(request))
+            .build();
+        systemLogService.writeLog(systemLog);
 
         return "redirect:" + request.getHeader("referer");
     }

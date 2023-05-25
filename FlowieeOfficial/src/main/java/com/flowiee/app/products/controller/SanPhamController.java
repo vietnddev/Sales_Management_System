@@ -1,6 +1,7 @@
 package com.flowiee.app.products.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.danhmuc.service.DanhMucService;
@@ -33,7 +34,7 @@ public class SanPhamController {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private FileService fileService;
+    private FileStorageService fileService;
     @Autowired
     private GiaSanPhamService priceHistoryService;
     @Autowired
