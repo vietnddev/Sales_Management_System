@@ -1,5 +1,6 @@
 package com.flowiee.app.common.authorization;
 
+import com.flowiee.app.common.utils.TaiKhoanUtil;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.role.service.AccountRoleService;
 import com.flowiee.app.system.action.AccountAction;
@@ -18,7 +19,7 @@ public class KiemTraQuyenModuleSanPham {
     private final String module = SystemModule.SAN_PHAM.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.READ.name();
@@ -30,7 +31,7 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     public boolean kiemTraQuyenThemMoi() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.CREATE.name();
@@ -42,7 +43,7 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.UPDATE.name();
@@ -54,7 +55,7 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     public boolean kiemTraQuyenXoa() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.DELETE.name();
@@ -66,7 +67,7 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     public boolean kiemTraQuyenImport() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.IMPORT.name();
@@ -78,7 +79,7 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     public boolean kiemTraQuyenUploadHinhAnh() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.UPLOAD_IMAGE.name();
@@ -90,7 +91,7 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     public boolean kiemTraQuyenQuanLyGiaBan() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.PRICE.name();
@@ -102,7 +103,7 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     public boolean kiemTraQuyenBaoCaoThongKe() {
-        if (accountService.getUserName().equals("superadmin")) {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = SanPhamAction.REPORT.name();

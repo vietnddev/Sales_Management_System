@@ -1,18 +1,22 @@
 package com.flowiee.app.log.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.flowiee.app.log.model.SystemLogAction;
+import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
+@Builder
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 @Entity(name = "nhat_ky_he_thong")
+@ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SystemLog implements java.io.Serializable {
 	@Id
@@ -23,13 +27,21 @@ public class SystemLog implements java.io.Serializable {
 	@Column(name = "module", length = 50, nullable = false)
 	private String module;
 
-	@Column(name = "created_by", length = 50, nullable = false)
-	private String createdBy;
+	@JsonIgnoreProperties("listLog")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false)
+	private TaiKhoan taiKhoan;
 
-	@Column(name = "action", length = 2000, nullable = false)
+	@Column(name = "action",nullable = false)
 	private String action;
 
-	@Column(name = "ip", length = 20, nullable = true)
+	@Column(name = "noi_dung", length = 2000, nullable = false)
+	private String noiDung;
+
+	@Column(name = "noi_dung_cap_nhat", length = 2000)
+	private String noiDungCapNhat;
+
+	@Column(name = "ip", length = 20)
 	private String ip;
 
 	@CreatedDate
@@ -42,12 +54,5 @@ public class SystemLog implements java.io.Serializable {
 		if (createdAt == null) {
 			createdAt = new Date();
 		}
-	}
-
-	public SystemLog(String module, String createdBy, String action, String ip) {
-		this.module = module;
-		this.createdBy = createdBy;
-		this.action = action;
-		this.ip = ip;
 	}
 }

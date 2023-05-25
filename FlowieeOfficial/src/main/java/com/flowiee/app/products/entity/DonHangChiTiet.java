@@ -24,13 +24,13 @@ public class DonHangChiTiet implements java.io.Serializable {
 
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bien_the_id", nullable = false)
+	@JoinColumn(name = "bien_the_san_pham_id", nullable = false)
 	private BienTheSanPham bienTheSanPham;
 
 	@Column(name = "so_luong", nullable = false)
 	private int soLuong;
 
-	@Column(name = "ghi_chu", length = 255, nullable = true)
+	@Column(name = "ghi_chu", length = 500)
 	private String ghiChu;
 
 	@Column(name = "trang_thai", nullable = false)
