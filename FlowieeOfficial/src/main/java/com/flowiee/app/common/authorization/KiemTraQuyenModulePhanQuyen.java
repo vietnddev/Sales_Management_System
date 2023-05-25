@@ -1,6 +1,5 @@
 package com.flowiee.app.common.authorization;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.role.service.AccountRoleService;
 import com.flowiee.app.system.action.AccountAction;
@@ -18,7 +17,7 @@ public class KiemTraQuyenModulePhanQuyen {
     private final String module = SystemModule.PHAN_QUYEN.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.READ.name();
@@ -30,7 +29,7 @@ public class KiemTraQuyenModulePhanQuyen {
     }
 
     public boolean kiemTraQuyenThemMoi() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.CREATE.name();
@@ -42,7 +41,7 @@ public class KiemTraQuyenModulePhanQuyen {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.UPDATE.name();
@@ -54,7 +53,7 @@ public class KiemTraQuyenModulePhanQuyen {
     }
 
     public boolean kiemTraQuyenXoa() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.DELETE.name();
@@ -66,7 +65,7 @@ public class KiemTraQuyenModulePhanQuyen {
     }
 
     public boolean kiemTraQuyenDoiMatKhau() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.RESET_PASSWORD.name();
@@ -78,7 +77,7 @@ public class KiemTraQuyenModulePhanQuyen {
     }
 
     public boolean kiemTraQuyenPhanQuyen() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.SHARE_ROLE.name();

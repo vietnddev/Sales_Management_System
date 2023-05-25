@@ -1,8 +1,8 @@
 package com.flowiee.app.products.controller;
 
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.nguoidung.entity.AccountEntity;
 import com.flowiee.app.nguoidung.service.AccountService;
-import com.flowiee.app.file.service.FileStorageService;
+import com.flowiee.app.products.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,26 +23,26 @@ public class ProfileController {
 	private AccountService accountService;
 
 	@Autowired
-	private FileStorageService filessService;
+	private FileService filessService;
 
 	BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
 	@GetMapping("")
 	public String showInformation(@AuthenticationPrincipal UserDetails userDetails, ModelMap modelMap) {
 		// Lấy thông tin của user đã đăng nhập
-		TaiKhoan accountEntity = accountService.getAccountByUsername(userDetails.getUsername());
+		AccountEntity accountEntity = accountService.getAccountByUsername(userDetails.getUsername());
 		if (accountEntity != null) {
 			modelMap.addAttribute("information", accountEntity);
 		}
 		
-		modelMap.addAttribute("account", new TaiKhoan());
+		modelMap.addAttribute("account", new AccountEntity());
 
 		return "pages/profile/information";
 	}
 
 	@PostMapping("/update")
 	public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
-			@ModelAttribute("account") TaiKhoan accountEntity) {
+			@ModelAttribute("account") AccountEntity accountEntity) {
 		String username = userDetails.getUsername();
 		String password = accountService.getAccountByUsername(username).getPassword();
 		int accountID = accountService.getAccountByUsername(username).getId();
@@ -58,7 +58,7 @@ public class ProfileController {
 
 	@PostMapping("/change-password")
 	public String changePassword(HttpServletRequest request, @AuthenticationPrincipal UserDetails userDetails,
-                                 @ModelAttribute("account") TaiKhoan accountEntity, ModelMap modelMap) {
+                                 @ModelAttribute("account") AccountEntity accountEntity, ModelMap modelMap) {
 		String password_old = request.getParameter("password_old");
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");

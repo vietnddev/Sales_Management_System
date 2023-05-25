@@ -1,6 +1,6 @@
 package com.flowiee.app.products.controller;
 
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.nguoidung.entity.AccountEntity;
 import com.flowiee.app.nguoidung.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class HomeController {
     @GetMapping(value = "/login")
     public String showLoginPage(HttpServletRequest request){
         if (accountService.getAccountByUsername("admin") == null){
-            TaiKhoan account = new TaiKhoan();
+            AccountEntity account = new AccountEntity();
             account.setUsername("admin");
             account.setPassword("$2a$12$UGPx1eE9SzfvCDniYtwoZuQRzVdjHKkjbZcDKXO4.1Z/uGpOsFFVu");
             account.setHoTen("Quản trị hệ thống");

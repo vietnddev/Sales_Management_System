@@ -2,7 +2,7 @@ package com.flowiee.app.products.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.danhmuc.entity.LoaiSanPham;
-import com.flowiee.app.file.entity.FileStorage;
+import com.flowiee.app.file.entity.FileEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,8 +40,4 @@ public class SanPham implements Serializable {
     @JsonIgnoreProperties("sanPham")
     @OneToMany(mappedBy = "sanPham", fetch = FetchType.LAZY)
     private List<BienTheSanPham> listBienThe;
-
-    @JsonIgnoreProperties("sanPham")
-    @OneToMany(mappedBy = "sanPham", fetch = FetchType.LAZY)
-    private List<FileStorage> listFileStorage;
 }

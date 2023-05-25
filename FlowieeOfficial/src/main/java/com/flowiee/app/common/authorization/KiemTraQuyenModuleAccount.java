@@ -1,6 +1,5 @@
 package com.flowiee.app.common.authorization;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.role.service.AccountRoleService;
 import com.flowiee.app.system.action.AccountAction;
@@ -18,7 +17,7 @@ public class KiemTraQuyenModuleAccount {
     private final String module = SystemModule.NGUOI_DUNG.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.READ.name();
@@ -30,7 +29,7 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenThemMoi() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.CREATE.name();
@@ -42,7 +41,7 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.UPDATE.name();
@@ -54,7 +53,7 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenXoa() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = AccountAction.DELETE.name();

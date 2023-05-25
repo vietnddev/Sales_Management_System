@@ -1,8 +1,6 @@
 package com.flowiee.app.common.config;
 
-import com.flowiee.app.common.utils.IPUtil;
-import com.flowiee.app.log.model.SystemLogAction;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.nguoidung.entity.AccountEntity;
 import com.flowiee.app.log.entity.SystemLog;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.log.service.SystemLogService;
@@ -30,7 +28,7 @@ public class AccountDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		TaiKhoan accountEntity = accountService.getAccountByUsername(username);
+		AccountEntity accountEntity = accountService.getAccountByUsername(username);
 		UserDetails userDetails = null; // Đây là class hỗ trợ sẵn của Spring Security
 
 		if (accountEntity != null) {
@@ -50,13 +48,11 @@ public class AccountDetailService implements UserDetailsService {
 					details = (WebAuthenticationDetails) authDetails;
 				}
 			}
-			SystemLog systemLog = SystemLog.builder()
-				.module("Hệ thống")
-				.action(SystemLogAction.LOGIN.name())
-				.noiDung(accountEntity.toString())
-				.taiKhoan(TaiKhoan.builder().id(accountEntity.getId()).build())
-				.ip(details != null ? details.getRemoteAddress() : "unknown").build();
-				systemLogService.writeLog(systemLog);
+
+			systemLogService.writeLog(new SystemLog("Hệ thống", accountEntity.getUsername(), "Đăng nhập", details != null ? details.getRemoteAddress() : "unknown"));
+
+			System.out.println("Login thành công");
+
 		} else {
 			System.out.println("Login thất bại");
 		}

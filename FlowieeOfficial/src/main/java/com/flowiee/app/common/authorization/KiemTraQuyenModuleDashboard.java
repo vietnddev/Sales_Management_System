@@ -1,6 +1,5 @@
 package com.flowiee.app.common.authorization;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.role.service.AccountRoleService;
 import com.flowiee.app.system.action.AccountAction;
@@ -19,7 +18,7 @@ public class KiemTraQuyenModuleDashboard {
     private final String module = SystemModule.DASHBOARD.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals("superadmin")) {
             return true;
         }
         final String action = DashboardAction.READ.name();

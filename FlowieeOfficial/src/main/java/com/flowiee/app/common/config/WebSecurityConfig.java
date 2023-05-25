@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 				.and()
 				.formLogin().loginPage("/login").permitAll()
-				.defaultSuccessUrl("/san-pham")
+				.defaultSuccessUrl("/sales/products")
 				.failureUrl("/login?success=fail")
 				.loginProcessingUrl("/j_spring_security_check")
 				.authenticationDetailsSource(authenticationDetailsSource())

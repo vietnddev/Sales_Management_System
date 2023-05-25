@@ -1,7 +1,6 @@
 package com.flowiee.app.nguoidung.controller;
 
-import com.flowiee.app.log.model.SystemLogAction;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.nguoidung.entity.AccountEntity;
 import com.flowiee.app.log.entity.SystemLog;
 import com.flowiee.app.nguoidung.service.AccountService;
 import com.flowiee.app.log.service.SystemLogService;
@@ -30,7 +29,7 @@ public class AccountController {
     public String getAccounts(HttpServletRequest request, ModelMap modelMap) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            modelMap.addAttribute("account", new TaiKhoan());
+            modelMap.addAttribute("account", new AccountEntity());
             modelMap.addAttribute("listAccount", accountService.getAll());
 
             return "pages/admin/account";
@@ -42,7 +41,7 @@ public class AccountController {
     @GetMapping(value = "/{ID}")
     public String getDetailAccount(HttpServletRequest request, @PathVariable int ID) {
         String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
+        if (username != null && !username.isEmpty()){
 
             return "";
         }
@@ -50,7 +49,7 @@ public class AccountController {
     }
 
     @PostMapping(value = "/insert")
-    public String save(HttpServletRequest request, @ModelAttribute("account") TaiKhoan accountEntity) {
+    public String save(HttpServletRequest request, @ModelAttribute("account") AccountEntity accountEntity) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
@@ -59,14 +58,8 @@ public class AccountController {
 
             accountService.saveAccount(accountEntity);
 
-            SystemLog systemLog = SystemLog.builder()
-                .module("Tài khoản hệ thống")
-                .action(SystemLogAction.THEM_MOI.name())
-                .noiDung(accountEntity.toString())
-                .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
-                .ip(IPUtil.getClientIpAddress(request))
-                .build();
-            systemLogService.writeLog(systemLog);
+            String actionLog = "Thêm mới tài khoản " + accountEntity.getUsername();
+            systemLogService.writeLog(new SystemLog("Hệ thống", username, actionLog, IPUtil.getClientIpAddress(request)));
 
             return "redirect:/admin/account";
         }
@@ -74,25 +67,22 @@ public class AccountController {
     }
 
     @PostMapping(value = "/update/{ID}")
-    public String update(HttpServletRequest request, @ModelAttribute("account") TaiKhoan accountEntity, @PathVariable("ID") int id) {
+    public String update(HttpServletRequest request, @ModelAttribute("account") AccountEntity accountEntity, @PathVariable("ID") int id) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            Optional<TaiKhoan> acc = accountService.getAccountByID(id);
+            Optional<AccountEntity> acc = accountService.getAccountByID(id);
             if (acc.isPresent()) {
                 accountEntity.setId(id);
                 accountEntity.setUsername(acc.get().getUsername());
                 accountEntity.setPassword(acc.get().getPassword());
                 accountEntity.setUpdatedBy(username);
                 accountService.saveAccount(accountEntity);
-                //Ghi log
-                SystemLog systemLog = SystemLog.builder()
-                    .module("Tài khoản hệ thống")
-                    .action(SystemLogAction.CAP_NHAT.name())
-                    .noiDung(accountEntity.toString())
-                    .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
-                    .ip(IPUtil.getClientIpAddress(request))
-                    .build();
-                systemLogService.writeLog(systemLog);
+
+                String actionLog = "Cập nhật tài khoản hệ thống. " +
+                        "Thông tin cũ: " + acc.get().toString() +
+                        ". Thông tin mới: " + accountEntity.toString();
+                systemLogService.writeLog(new SystemLog("Hệ thống", username, actionLog, IPUtil.getClientIpAddress(request)));
+
                 return "redirect:/admin/account";
             } else {
                 return "redirect:/admin/account";
@@ -106,17 +96,11 @@ public class AccountController {
     public String deleteAccount(HttpServletRequest request, @PathVariable int ID) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            TaiKhoan account = accountService.getAccountByID(ID).get();
+            String actionLog = "Xóa tài khoản " + accountService.getAccountByID(ID).get().getUsername();
+
             accountService.deleteAccountByID(ID);
-            //Ghi log
-            SystemLog systemLog = SystemLog.builder()
-                .module("Tài khoản hệ thống")
-                .action(SystemLogAction.XOA.name())
-                .noiDung(account.toString())
-                .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
-                .ip(IPUtil.getClientIpAddress(request))
-                .build();
-            systemLogService.writeLog(systemLog);
+
+            systemLogService.writeLog(new SystemLog("Hệ thống", username, actionLog, IPUtil.getClientIpAddress(request)));
 
             return "redirect:/admin/account";
         }
