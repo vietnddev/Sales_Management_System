@@ -3,9 +3,12 @@ The Flowiee Official
 
 Url: http://localhost:8085/login
 
-#Frontend:
+Frontend:
 + HTML, CSS, JavaScript
 + JQuery, Bootstrap
 
-# Backend:
+Backend:
 + Java
++ Spring Boot, Spring Security, Spring Data JPA
++ Maven, Thymeleaf, Log4j
++ Oracle
