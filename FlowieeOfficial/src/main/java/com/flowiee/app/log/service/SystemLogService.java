@@ -7,16 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class SystemLogService {
-    @Autowired
-    private SystemLogRepository logRepository;
+public interface SystemLogService {
 
-    public List<SystemLog> getAll(){
-        return logRepository.findAll();
-    }
+    List<SystemLog> getAll();
 
-    public void writeLog(SystemLog log){
-        logRepository.save(log);
-    }
+    void writeLog(SystemLog log);
 }

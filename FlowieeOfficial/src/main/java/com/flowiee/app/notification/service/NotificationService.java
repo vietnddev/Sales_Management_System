@@ -1,10 +1,10 @@
 package com.flowiee.app.notification.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.flowiee.app.notification.entity.Notification;
 
-@Service
-public class NotificationService {
-    @Autowired
-    private NotificationService notificationService;
+import java.util.List;
+
+public interface NotificationService {
+
+    List<Notification> findAll();
 }

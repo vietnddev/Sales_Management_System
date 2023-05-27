@@ -7,41 +7,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class LoaiSanPhamService {
-    @Autowired
-    private LoaiSanPhamRepository loaiSanPhamRepository;
+public interface LoaiSanPhamService {
 
-    public List<LoaiSanPham> findAll() {
-        return loaiSanPhamRepository.findAll();
-    }
+    List<LoaiSanPham> findAll();
 
-    public LoaiSanPham findById(int id) {
-        return loaiSanPhamRepository.findById(id).orElse(null);
-    }
+    LoaiSanPham findById(int id);
 
-    public LoaiSanPham findByTen(String tenLoai) {
-        return loaiSanPhamRepository.findByTen(tenLoai);
-    }
+    LoaiSanPham findByTen(String tenLoai);
 
-    public LoaiSanPham save(LoaiSanPham loaiSanPham) {
-        if (findByTen(loaiSanPham.getTenLoai()) != null) {
-            return null;
-        }
-        return loaiSanPhamRepository.save(loaiSanPham);
-    }
+    LoaiSanPham save(LoaiSanPham loaiSanPham);
 
-    public void update(LoaiSanPham loaiSanPham, int id) {
-        loaiSanPham.setId(id);
-        loaiSanPhamRepository.save(loaiSanPham);
-    }
+    void update(LoaiSanPham loaiSanPham, int id);
 
-    public boolean delete(int id) {
-        loaiSanPhamRepository.deleteById(id);
-        if (findById(id) == null){
-            return true;
-        } else {
-            return false;
-        }
-    }
+    boolean delete(int id);
 }
