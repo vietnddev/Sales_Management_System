@@ -13,66 +13,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AccountService{
-    @Autowired
-    AccountRepository accountRepository;
+public interface AccountService{
 
-    public List<TaiKhoan> getAll(){
-        return accountRepository.findAll();
-    }
+    List<TaiKhoan> getAll();
 
-    public TaiKhoan getAccountByUsername(String username){
-        return accountRepository.findByUsername(username);
-    }
+    TaiKhoan getAccountByUsername(String username);
 
-    public Optional<TaiKhoan> getAccountByID(int ID){
-        return accountRepository.findById(ID);
-    }
+    Optional<TaiKhoan> getAccountByID(int ID);
 
-    public int findIdByUsername(String username){
-        return accountRepository.findIdByUsername(username);
-    }
+    int findIdByUsername(String username);
 
-    public TaiKhoan saveAccount(TaiKhoan accountEntity){
-        return accountRepository.save(accountEntity);
-    }
+    TaiKhoan saveAccount(TaiKhoan accountEntity);
 
-    public void deleteAccountByID(int ID){
-        TaiKhoan accountEntity = accountRepository.findById(ID).orElse(null);
-        if (accountEntity != null) {
-            accountRepository.delete(accountEntity);
-            System.out.println("Successfully deleted the accountEntity with id: " + ID);
-        }
-    }
+    void deleteAccountByID(int ID);
 
-    public String getUserName(){
-        String username = "";
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String getUserName();
 
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        return username.toLowerCase();
-    }
+    String getUserNameByID(int id);
 
-    public String getUserNameByID(int id){
-        return accountRepository.findUsernameById(id);
-    }
-
-    public String getIP(){
-        WebAuthenticationDetails details = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Object authDetails = authentication.getDetails();
-            if (authDetails instanceof WebAuthenticationDetails) {
-                details = (WebAuthenticationDetails) authDetails;
-            }
-        }
-        if (details != null){
-            return details.getRemoteAddress();
-        }
-        return "unknown";
-    }
+    String getIP();
 }

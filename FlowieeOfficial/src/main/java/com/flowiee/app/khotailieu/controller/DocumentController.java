@@ -162,7 +162,7 @@ public class DocumentController {
                                                  .contentType(file.getContentType())
                                                  .document(Document.builder().id(documentSaved.getId()).build())
                                                  .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build()).build();
-            fileStorageService.save(file, fileStorage);
+            //fileStorageService.save(file, fileStorage);
             List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(document.getLoaiTaiLieu().getId()).build());
             for (DocField docField: listDocField) {
                 DocData docData = DocData.builder()
