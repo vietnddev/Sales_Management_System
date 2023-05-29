@@ -145,7 +145,7 @@
                                        th:each="color : ${listColorVariant}">
                                     [[${color.value}]]
                                     <br>
-                                    <a th:href="@{/sales/products/} + ${idSanPham} + '/variants/' + ${color.productVariantID}">
+                                    <a th:href="@{/sales/products/} + ${sanPham} + '/variants/' + ${color.id}">
                                         <i class="fas fa-circle fa-2x text-blue"></i></a>
                                 </label>
                             </div>
@@ -155,8 +155,8 @@
                             <div class="modal fade" id="insertColor">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form th:action="@{/sales/products/variants/insert}"
-                                              th:object="${product_variants}"
+                                        <form th:action="@{/san-pham/bien-the/insert}"
+                                              th:object="${bienTheSanPham}"
                                               method="post">
                                             <div class="modal-header">
                                                 <strong class="modal-title">Thêm mới màu sắc sản phẩm</strong>
@@ -168,13 +168,12 @@
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <input type="hidden" name="id" th:value="${detailProducts.id}"/>
-                                                        <input type="hidden" name="trangThai" value="true"/>
+                                                        <input type="hidden" name="sanPham" th:value="${detailProducts.id}"/>
                                                         <input type="hidden" name="maSanPham" value=""/>
                                                         <div class="form-group">
                                                             <label>Chọn màu sắc</label>
                                                             <select class="custom-select" name="value">
-                                                                <option th:each="lstype, iterStat : ${listColorProducts}"
+                                                                <option th:each="lstype, iterStat : ${listDmMauSacSanPham}"
                                                                         th:value="${lstype.tenDanhMuc}"
                                                                         th:text="${lstype.tenDanhMuc}"
                                                                         th:selected="${iterStat.index == 0}"></option>
