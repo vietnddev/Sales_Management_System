@@ -14,6 +14,7 @@
             vertical-align: middle;
         }
     </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/pdf-js/web/viewer.css}">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -65,7 +66,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-7">
-                                <iframe width="100%" height="500px"></iframe>
+                                <div id="pdfContainer"></div>
                             </div>
                             <div class="col-sm-5">
                                 <div class="card">
@@ -240,6 +241,41 @@
     <div th:replace="header :: scripts">
         <!-- Nhúng các file JavaScript vào -->
     </div>
+
+    <!--View file pdf-->
+    <script th:src="@{/plugins/pdf-js/src/pdf.js}"></script>
+    <script>
+        // Đường dẫn tới file PDF
+        var pdfPath = "/uploads/kho-tai-lieu/2023/05/22/KhoTaiLieu.pdf";
+
+        // Tạo một phiên bản mới của PDF.js
+        var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+        // Khởi tạo PDF Viewer
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/plugins/pdf-js/src/pdf.worker.js';
+        var loadingTask = pdfjsLib.getDocument(pdfPath);
+        loadingTask.promise.then(function (pdf) {
+            // Lấy trang đầu tiên của file PDF
+            pdf.getPage(1).then(function (page) {
+                var scale = 1.5;
+                var viewport = page.getViewport({scale: scale});
+
+                // Tạo một canvas để hiển thị nội dung PDF
+                var canvas = document.createElement('canvas');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                document.getElementById('pdfContainer').appendChild(canvas);
+
+                // Vẽ trang PDF lên canvas
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        });
+    </script>
 </div>
 
 </body>

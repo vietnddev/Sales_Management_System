@@ -1,8 +1,7 @@
 package com.flowiee.app.danhmuc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.products.entity.DonHangChiTiet;
-import com.flowiee.app.products.entity.SanPham;
+import com.flowiee.app.sanpham.entity.SanPham;
 import lombok.*;
 
 import javax.persistence.*;

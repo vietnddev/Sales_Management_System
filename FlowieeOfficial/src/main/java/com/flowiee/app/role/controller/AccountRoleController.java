@@ -2,7 +2,7 @@ package com.flowiee.app.role.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModulePhanQuyen;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.service.AccountService;
 import com.flowiee.app.role.service.AccountRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,45 +1,32 @@
 package com.flowiee.app.log.controller;
 
-import com.flowiee.app.log.entity.SystemLog;
-import com.flowiee.app.nguoidung.service.AccountService;
-import com.flowiee.app.products.services.MailService;
+import com.flowiee.app.account.service.AccountService;
 import com.flowiee.app.log.service.SystemLogService;
-import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 
-import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayOutputStream;
-import java.util.*;
 
 @Controller
-@RequestMapping(value = "/admin/log")
+@RequestMapping(value = "/he-thong/nhat-ky")
 public class LogController {
 
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private MailService mailService;
 
     @GetMapping(value = "")
     public String getLog(HttpServletRequest request, ModelMap modelMap){
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()){
             modelMap.addAttribute("listLog", systemLogService.getAll());
-            return "pages/admin/log";
+            return PagesUtil.PAGE_HETHONG_NHATKY;
         }
         return PagesUtil.PAGE_LOGIN;
     }

@@ -1,6 +1,5 @@
 package com.flowiee.app.khotailieu.controller;
 
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.DataExistsException;
@@ -13,8 +12,8 @@ import com.flowiee.app.khotailieu.service.DocFieldService;
 import com.flowiee.app.log.entity.SystemLog;
 import com.flowiee.app.log.model.SystemLogAction;
 import com.flowiee.app.log.service.SystemLogService;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.entity.Account;
+import com.flowiee.app.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -105,7 +104,7 @@ public class DocTypeController {
             .module("Danh mục - Loại tài liệu")
             .action(SystemLogAction.THEM_MOI.name())
             .noiDung(loaiTaiLieu.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);
@@ -128,7 +127,7 @@ public class DocTypeController {
             .module("Danh mục - Loại tài liệu")
             .action(SystemLogAction.CAP_NHAT.name())
             .noiDung(loaiTaiLieu.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);
@@ -151,7 +150,7 @@ public class DocTypeController {
             .module("Danh mục - Loại tài liệu")
             .action(SystemLogAction.XOA.name())
             .noiDung(loaiTaiLieu.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);

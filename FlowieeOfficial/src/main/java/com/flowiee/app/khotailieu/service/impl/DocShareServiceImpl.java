@@ -4,7 +4,7 @@ import com.flowiee.app.common.utils.TaiKhoanUtil;
 import com.flowiee.app.khotailieu.entity.DocShare;
 import com.flowiee.app.khotailieu.repository.DocShareRepository;
 import com.flowiee.app.khotailieu.service.DocShareService;
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

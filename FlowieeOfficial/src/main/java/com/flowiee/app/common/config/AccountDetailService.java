@@ -1,10 +1,9 @@
 package com.flowiee.app.common.config;
 
-import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.log.model.SystemLogAction;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.account.entity.Account;
 import com.flowiee.app.log.entity.SystemLog;
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.service.AccountService;
 import com.flowiee.app.log.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,7 +29,7 @@ public class AccountDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		TaiKhoan accountEntity = accountService.getAccountByUsername(username);
+		Account accountEntity = accountService.getAccountByUsername(username);
 		UserDetails userDetails = null; // Đây là class hỗ trợ sẵn của Spring Security
 
 		if (accountEntity != null) {
@@ -54,7 +53,7 @@ public class AccountDetailService implements UserDetailsService {
 				.module("Hệ thống")
 				.action(SystemLogAction.LOGIN.name())
 				.noiDung(accountEntity.toString())
-				.taiKhoan(TaiKhoan.builder().id(accountEntity.getId()).build())
+				.account(Account.builder().id(accountEntity.getId()).build())
 				.ip(details != null ? details.getRemoteAddress() : "unknown").build();
 				systemLogService.writeLog(systemLog);
 		} else {

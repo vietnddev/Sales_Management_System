@@ -1,7 +1,7 @@
 package com.flowiee.app.khotailieu.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.account.entity.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,5 +27,5 @@ public class DocShare implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
-    private TaiKhoan taiKhoan;
+    private Account account;
 }

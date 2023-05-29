@@ -1,8 +1,7 @@
 package com.flowiee.app.log.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.log.model.SystemLogAction;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.account.entity.Account;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -30,7 +29,7 @@ public class SystemLog implements java.io.Serializable {
 	@JsonIgnoreProperties("listLog")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable = false)
-	private TaiKhoan taiKhoan;
+	private Account account;
 
 	@Column(name = "action",nullable = false)
 	private String action;

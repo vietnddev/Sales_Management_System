@@ -3,9 +3,8 @@ package com.flowiee.app.danhmuc.controller;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.log.model.SystemLogAction;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
-import com.flowiee.app.nguoidung.service.AccountService;
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleAccount;
+import com.flowiee.app.account.entity.Account;
+import com.flowiee.app.account.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.LoaiSanPham;
@@ -18,7 +17,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -78,7 +76,7 @@ public class LoaiSanPhamController {
             .module("Danh mục - Loại sản phẩm")
             .action(SystemLogAction.THEM_MOI.name())
             .noiDung(loaiSanPham.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);
@@ -101,7 +99,7 @@ public class LoaiSanPhamController {
             .module("Danh mục - Loại sản phẩm")
             .action(SystemLogAction.CAP_NHAT.name())
             .noiDung(loaiSanPham.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);
@@ -125,7 +123,7 @@ public class LoaiSanPhamController {
             .module("Danh mục - Loại sản phẩm")
             .action(SystemLogAction.XOA.name())
             .noiDung(loaiSanPham.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);

@@ -1,7 +1,7 @@
 package com.flowiee.app.common.authorization;
 
 import com.flowiee.app.common.utils.TaiKhoanUtil;
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.service.AccountService;
 import com.flowiee.app.role.service.AccountRoleService;
 import com.flowiee.app.system.action.AccountAction;
 import com.flowiee.app.system.module.SystemModule;

@@ -2,14 +2,13 @@ package com.flowiee.app.file.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.khotailieu.entity.Document;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
-import com.flowiee.app.products.entity.BienTheSanPham;
-import com.flowiee.app.products.entity.SanPham;
+import com.flowiee.app.account.entity.Account;
+import com.flowiee.app.sanpham.entity.BienTheSanPham;
+import com.flowiee.app.sanpham.entity.SanPham;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -94,5 +93,5 @@ public class FileStorage implements Serializable{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
-    private TaiKhoan taiKhoan;
+    private Account account;
 }
