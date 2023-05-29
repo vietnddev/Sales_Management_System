@@ -5,7 +5,7 @@ import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.service.DocFieldService;
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

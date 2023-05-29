@@ -1,6 +1,6 @@
 package com.flowiee.app.role.service;
 
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.service.AccountService;
 import com.flowiee.app.role.entity.AccountRoleEntity;
 import com.flowiee.app.role.repository.AccountRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;

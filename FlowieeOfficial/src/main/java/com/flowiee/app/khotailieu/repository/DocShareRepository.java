@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface DocShareRepository extends JpaRepository<DocShare, Integer> {
-    @Query("from DocShare d where d.document=:documentId and d.taiKhoan=:taiKhoanId")
-    DocShare findByDocmentAndTaiKhoan(int documentId, int taiKhoanId);
+    @Query("from DocShare d where d.document=:documentId and d.account=:accountId")
+    DocShare findByDocmentAndTaiKhoan(int documentId, int accountId);
 }

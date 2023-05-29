@@ -137,7 +137,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a th:href="@{/sales/customer}" class="nav-link">
+              <a th:href="@{/khach-hang}" class="nav-link">
                 <i class="nav-icon"></i>
                 <p>
                   Khách hàng
@@ -145,7 +145,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/files}" class="nav-link">
+              <a th:href="@{/san-pham/thu-vien-hinh-anh}" class="nav-link">
                 <i class="nav-icon"></i>
                 <p>
                   Thư viện
@@ -179,7 +179,7 @@
             </li>
             <li class="nav-header"><strong>QUẢN TRỊ HỆ THỐNG</strong></li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
+              <a th:href="@{/he-thong/config}" class="nav-link">
                 <i class="fa-solid fa-gear nav-icon"></i>
                 <p>
                   Cấu hình
@@ -195,7 +195,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
+              <a th:href="@{/he-thong/nhom-quyen}" class="nav-link">
                 <i class="nav-icon"></i>
                 <p>
                   Nhóm quyền
@@ -203,7 +203,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/admin/account}" class="nav-link">
+              <a th:href="@{/he-thong/tai-khoan}" class="nav-link">
                 <i class="fa-solid fa-users nav-icon"></i>
                 <p>
                   Tài khoản hệ thống
@@ -211,7 +211,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/admin/log}" class="nav-link">
+              <a th:href="@{/he-thong/nhat-ky}" class="nav-link">
                 <i class="fa-solid fa-users nav-icon"></i>
                 <p>
                   Nhật ký hệ thống

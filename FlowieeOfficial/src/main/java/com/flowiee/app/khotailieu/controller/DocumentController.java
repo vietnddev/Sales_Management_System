@@ -23,8 +23,8 @@ import com.flowiee.app.khotailieu.service.DocumentService;
 import com.flowiee.app.log.entity.SystemLog;
 import com.flowiee.app.log.model.SystemLogAction;
 import com.flowiee.app.log.service.SystemLogService;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
-import com.flowiee.app.nguoidung.service.AccountService;
+import com.flowiee.app.account.entity.Account;
+import com.flowiee.app.account.service.AccountService;
 import com.flowiee.app.system.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,11 +33,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+@CrossOrigin
 @Controller
 @RequestMapping("/kho-tai-lieu/document")
 public class DocumentController {
@@ -91,7 +93,7 @@ public class DocumentController {
     }
 
     @GetMapping("/{aliasPath}")
-    public String getListDocument(ModelMap modelMap, @PathVariable("aliasPath") String aliasPath) {
+    public String getListDocument(@PathVariable("aliasPath") String aliasPath, ModelMap modelMap) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
@@ -147,7 +149,7 @@ public class DocumentController {
             throw new NotFoundException();
         }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
-        document.setTaiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build());
+        document.setAccount(Account.builder().id(accountService.findIdByUsername(username)).build());
         Document documentSaved = documentService.save(document);
         //Nếu document là FILE -> Lưu giá trị default vào DocData
         if (document.getLoai().equals(DocumentType.FILE.name()) && file != null) {
@@ -161,7 +163,7 @@ public class DocumentController {
                                                  .tenFileKhiLuu(DateUtil.now("yyyy.MM.dd.HH.mm.ss") + "_" + file.getOriginalFilename())
                                                  .contentType(file.getContentType())
                                                  .document(Document.builder().id(documentSaved.getId()).build())
-                                                 .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build()).build();
+                                                 .account(Account.builder().id(accountService.findIdByUsername(username)).build()).build();
             //fileStorageService.save(file, fileStorage);
             List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(document.getLoaiTaiLieu().getId()).build());
             for (DocField docField: listDocField) {
@@ -177,7 +179,7 @@ public class DocumentController {
             .module(SystemModule.KHO_TAI_LIEU.name())
             .action(SystemLogAction.THEM_MOI.name())
             .noiDung(document.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);
@@ -237,7 +239,7 @@ public class DocumentController {
             .module(SystemModule.KHO_TAI_LIEU.name())
             .action(SystemLogAction.CAP_NHAT.name())
             .noiDung(document.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);
@@ -260,7 +262,7 @@ public class DocumentController {
             .module(SystemModule.KHO_TAI_LIEU.name())
             .action(SystemLogAction.XOA.name())
             .noiDung(document.toString())
-            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
+            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
             .ip(IPUtil.getClientIpAddress(request))
             .build();
         systemLogService.writeLog(systemLog);

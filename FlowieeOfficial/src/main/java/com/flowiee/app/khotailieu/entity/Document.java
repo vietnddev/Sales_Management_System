@@ -3,7 +3,7 @@ package com.flowiee.app.khotailieu.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.file.entity.FileStorage;
-import com.flowiee.app.nguoidung.entity.TaiKhoan;
+import com.flowiee.app.account.entity.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,7 +42,7 @@ public class Document implements Serializable {
     @JsonIgnoreProperties("listDocument")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false, insertable = true, updatable = true)
-    private TaiKhoan taiKhoan;
+    private Account account;
 
     @JsonIgnoreProperties("listDocument")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,7 +67,7 @@ public class Document implements Serializable {
             ", ten='" + ten + '\'' +
             ", aliasName='" + aliasName + '\'' +
             ", moTa='" + moTa + '\'' +
-            ", taiKhoan=" + taiKhoan +
+            ", taiKhoan=" + account +
             ", loaiTaiLieu=" + loaiTaiLieu +
             '}';
     }
