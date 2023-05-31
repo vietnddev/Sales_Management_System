@@ -36,6 +36,7 @@ public class DonHangController {
             modelMap.addAttribute("listDonHang", donHangService.findAll());
             modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
             modelMap.addAttribute("donHangRequest", new DonHangRequest());
+            modelMap.addAttribute("donHang", new DonHang());
             return PagesUtil.PAGE_DONHANG;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
@@ -43,14 +44,41 @@ public class DonHangController {
     }
 
     @PostMapping("/insert")
-    public String insert(@ModelAttribute("donHangRequest") DonHangRequest request,
-                         ModelMap modelMap) {
+    public String insert(@ModelAttribute("donHangRequest") DonHangRequest request) {
         String username = accountService.getUserName();
         if (username == null || username.isEmpty()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
             donHangService.save(request);
+            return "redirect:/don-hang";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@ModelAttribute("donHang") DonHang donHang, @PathVariable("id") int id) {
+        String username = accountService.getUserName();
+        if (username == null || username.isEmpty()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
+            donHangService.update(donHang, id);
+            return "redirect:/don-hang";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable("id") int id) {
+        String username = accountService.getUserName();
+        if (username == null || username.isEmpty()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
+            donHangService.delete(id);
             return "redirect:/don-hang";
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;

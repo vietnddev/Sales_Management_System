@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.model;
 
+import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,5 +15,6 @@ public class DonHangRequest implements Serializable {
     private int kenhBanHang;
     private String diaChiGiaoHang;
     private Date thoiGianDatHang;
+    private TrangThaiDonHang trangThaiDonHang;
     private String ghiChu;
 }
