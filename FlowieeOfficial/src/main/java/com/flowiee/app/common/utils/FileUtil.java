@@ -1,14 +1,19 @@
 package com.flowiee.app.common.utils;
 
-import com.flowiee.app.system.module.SystemModule;
-import org.springframework.web.multipart.MultipartFile;
+import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.hethong.model.module.SystemModule;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
 public class FileUtil {
+    public static String rootPath = "src/main/resources/static/";
+
     public static String getExtension(String fileName) {
         String extension = "";
         int lastIndex = fileName.lastIndexOf('.');
@@ -18,21 +23,33 @@ public class FileUtil {
         return extension;
     }
 
-    public static String pathDirectotyToSave(SystemModule systemModule, String fileName) {
-        StringBuilder path = new StringBuilder("\\uploads");
-        switch (systemModule) {
-            case KHO_TAI_LIEU:
-                path.append("\\kho-tai-lieu");
-                break;
-            case SAN_PHAM:
-                path.append("\\san-pham");
-                break;
+    public static String pathDirectoty(SystemModule systemModule) {
+        try {
+            StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
+            switch (systemModule) {
+                case KHO_TAI_LIEU:
+                    path.append("/kho-tai-lieu");
+                    break;
+                case SAN_PHAM:
+                    path.append("/san-pham");
+                    break;
+                default:
+                    throw new NotFoundException();
+            }
+            path.append("/" + DateUtil.getNamHienTai());
+            path.append("/" + DateUtil.getThangHienTai());
+            path.append("/" + DateUtil.getNgayHienTai());
+            File folder = new File(path.toString());
+            if (!folder.exists()) {
+                if (folder.mkdirs()) {
+                    System.out.println("mkdirs OK");
+                }
+            }
+            return path.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
         }
-        path.append("\\" + DateUtil.getNamHienTai());
-        path.append("\\" + DateUtil.getThangHienTai());
-        path.append("\\" + DateUtil.getNgayHienTai());
-        path.append("\\" + DateUtil.now("yyyy.MM.dd.HH.mm.ss") + fileName);
-        return path.toString();
     }
 
     public static String generateAliasName(String text) {

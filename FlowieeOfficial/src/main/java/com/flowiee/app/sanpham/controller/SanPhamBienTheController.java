@@ -1,6 +1,8 @@
 package com.flowiee.app.sanpham.controller;
 
-import com.flowiee.app.account.service.AccountService;
+import com.flowiee.app.danhmuc.entity.LoaiKichCo;
+import com.flowiee.app.danhmuc.entity.LoaiMauSac;
+import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
@@ -19,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping(path = "/san-pham/bien-the")
+@RequestMapping(path = "/san-pham/variant")
 public class SanPhamBienTheController {
     @Autowired
     private AccountService accountService;
@@ -30,28 +32,28 @@ public class SanPhamBienTheController {
     @Autowired
     private GiaSanPhamService giaSanPhamService;
 
-    @GetMapping(value = "{productID}/variants/{productVariantID}") // Show trang chi tiết của biến thể
-    public String getDetailProductVariant(ModelMap modelMap, @PathVariable("productVariantID") int productVariantID) {
+    @GetMapping(value = "{id}")
+    public String showDetailProduct(ModelMap modelMap, @PathVariable("id") int id) {
         /* Show trang chi tiết của biến thể
          * */
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             modelMap.addAttribute("bienTheSanPham", new BienTheSanPham());
-            modelMap.addAttribute("product_attributes", new ThuocTinhSanPham());
-            modelMap.addAttribute("price_history", new GiaSanPham());
-            modelMap.addAttribute("listAttributes", thuocTinhSanPhamService.getAllAttributes(productVariantID));
-            modelMap.addAttribute("productVariantID", productVariantID);
+            modelMap.addAttribute("thuocTinhSanPham", new ThuocTinhSanPham());
+            modelMap.addAttribute("giaBanSanPham", new GiaSanPham());
+            modelMap.addAttribute("listThuocTinh", thuocTinhSanPhamService.getAllAttributes(id));
+            modelMap.addAttribute("bienTheSanPhamId", id);
             //Lấy danh sách hình ảnh của biến thể
             //modelMap.addAttribute("listFiles", fileService.getFilesByProductVariant(productVariantID));
             //
-            modelMap.addAttribute("listPrices", giaSanPhamService.getListPriceByPVariantID(productVariantID));
-            return "pages/sales/product_variant";
+            modelMap.addAttribute("listPrices", giaSanPhamService.getListPriceByPVariantID(BienTheSanPham.builder().id(id).build()));
+            return PagesUtil.PAGE_SANPHAM_BIENTHE;
         }
         return PagesUtil.PAGE_LOGIN;
     }
 
     @Transactional
-    @PostMapping(value = "/insert") // Thêm mới biến thể cho sản phẩm
+    @PostMapping(value = "/insert")
     public String insertVariants(HttpServletRequest request, RedirectAttributes redirectAttributes,
                                  @ModelAttribute("bienTheSanPham") BienTheSanPham bienTheSanPham) {
         String username = accountService.getUserName();
@@ -59,20 +61,37 @@ public class SanPhamBienTheController {
             bienTheSanPham.setLoaiBienThe("MAU_SAC");
             bienTheSanPham.setTrangThai(TrangThai.KINH_DOANH.name());
             bienTheSanPham.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
-            bienTheSanPhamService.insertVariant(bienTheSanPham);
+            bienTheSanPham.setLoaiKichCo(LoaiKichCo.builder().id(1).build());
+            bienTheSanPham.setLoaiMauSac(LoaiMauSac.builder().id(1).build());
+            bienTheSanPhamService.create(bienTheSanPham);
             //Khởi tạo giá default của giá bán
-            //priceHistoryService.save(new GiaSanPham(productVariant.getProductVariantID(), 199));
+            giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(499).build());
             return "redirect:" + request.getHeader("referer");
         }
         return PagesUtil.PAGE_LOGIN;
     }
 
-    @PostMapping(value = "/bien-the/delete/{variantID}") //delete biến thể
-    public String deleteVariants(HttpServletRequest request, @PathVariable("variantID") int variantID) {
+    @PostMapping(value = "/update/{id}")
+    public String update(HttpServletRequest request, @PathVariable("id") int id) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            if (bienTheSanPhamService.getByVariantID(variantID).isPresent()) {
-                bienTheSanPhamService.deteleVariant(variantID);
+            if (bienTheSanPhamService.findById(id) != null) {
+                //
+                System.out.println("Update successfully");
+            } else {
+                System.out.println("Record not found!");
+            }
+            return "redirect:" + request.getHeader("referer");
+        }
+        return PagesUtil.PAGE_LOGIN;
+    }
+
+    @PostMapping(value = "/delete/{id}")
+    public String delete(HttpServletRequest request, @PathVariable("variantID") int variantID) {
+        String username = accountService.getUserName();
+        if (username != null && !username.isEmpty()) {
+            if (bienTheSanPhamService.findById(variantID) != null) {
+                bienTheSanPhamService.detele(variantID);
                 System.out.println("Delete successfully");
             } else {
                 System.out.println("Record not found!");

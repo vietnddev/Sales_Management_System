@@ -19,24 +19,33 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
     private SanPhamService sanPhamService;
 
     @Override
+    public List<BienTheSanPham> findAll() {
+        return bienTheSanPhamRepository.findAll();
+    }
+
+    @Override
     public List<BienTheSanPham> getListVariantOfProduct(String loaiBienThe, int sanPhamId) {
         // Lấy danh sách biến thể theo loại biến thể
         return bienTheSanPhamRepository.findListBienTheOfsanPham(loaiBienThe, sanPhamService.findById(sanPhamId));
     }
 
     @Override
-    public void insertVariant(BienTheSanPham productVariant){
-        // Thêm mới biển thế sản phẩm
+    public void create(BienTheSanPham productVariant){
         bienTheSanPhamRepository.save(productVariant);
     }
 
     @Override
-    public Optional<BienTheSanPham> getByVariantID(int productVariantID){
-    	return bienTheSanPhamRepository.findById(productVariantID);
+    public void update(BienTheSanPham productVariant, int id){
+        bienTheSanPhamRepository.save(productVariant);
     }
 
     @Override
-    public void deteleVariant(int productVariantID) {
+    public BienTheSanPham findById(int id){
+    	return bienTheSanPhamRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void detele(int productVariantID) {
         bienTheSanPhamRepository.deleteById(productVariantID);
     }    
 }

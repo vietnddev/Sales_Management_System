@@ -95,46 +95,12 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fa-duotone fa-cart-shopping-fast nav-icon"></i>
+              <a th:href="@{/don-hang}" class="nav-link">
+                <i class="fa-solid fa-cart-shopping nav-icon"></i>
                 <p>
                   Đơn hàng
-                  <i class="fas fa-angle-left right"></i>
-                  <span class="badge badge-info right">10</span>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a th:href="@{/sales/orders/status=0}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Tất cả đơn hàng</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{/sales/orders/status=1}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Chờ xác nhận</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{/sales/orders/status=2}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Đang giao hàng</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{/sales/orders/status=3}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Đã hoàn thành</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{/sales/orders/status=4}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Đã hủy</p>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
               <a th:href="@{/khach-hang}" class="nav-link">
@@ -146,7 +112,7 @@
             </li>
             <li class="nav-item">
               <a th:href="@{/san-pham/thu-vien-hinh-anh}" class="nav-link">
-                <i class="nav-icon"></i>
+                <i class="fa-solid fa-image nav-icon"></i>
                 <p>
                   Thư viện
                 </p>
@@ -171,7 +137,7 @@
             </li>
             <li class="nav-item">
               <a th:href="@{/kho-tai-lieu/document}" class="nav-link">
-                <i class="fa-solid fa- nav-icon"></i>
+                <i class="fa-solid fa-file-pdf nav-icon"></i>
                 <p>
                   Danh sách tài liệu
                 </p>
@@ -212,7 +178,7 @@
             </li>
             <li class="nav-item">
               <a th:href="@{/he-thong/nhat-ky}" class="nav-link">
-                <i class="fa-solid fa-users nav-icon"></i>
+                <i class="fa-solid fa-clock nav-icon"></i>
                 <p>
                   Nhật ký hệ thống
                 </p>

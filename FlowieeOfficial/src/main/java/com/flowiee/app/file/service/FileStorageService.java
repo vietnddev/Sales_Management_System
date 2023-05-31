@@ -1,16 +1,21 @@
 package com.flowiee.app.file.service;
 
 import com.flowiee.app.file.entity.FileStorage;
-import com.flowiee.app.system.module.SystemModule;
+import com.flowiee.app.hethong.model.module.SystemModule;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface FileStorageService {
 
-    List<FileStorage> getAllImage();
+    List<FileStorage> getAllImageSanPham(String module);
+
+    void saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException;
+
+    void saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException;
 
     void save(MultipartFile fileUpload, SystemModule module);
 
-    void deleteFiles(int fileID);
+    String delete(int id);
 }

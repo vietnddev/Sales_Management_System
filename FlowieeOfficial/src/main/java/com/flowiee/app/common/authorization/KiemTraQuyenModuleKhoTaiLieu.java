@@ -1,17 +1,17 @@
 package com.flowiee.app.common.authorization;
 
 import com.flowiee.app.common.utils.TaiKhoanUtil;
-import com.flowiee.app.account.service.AccountService;
-import com.flowiee.app.role.service.AccountRoleService;
-import com.flowiee.app.system.action.KhoTaiLieuAction;
-import com.flowiee.app.system.module.SystemModule;
+import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.RoleService;
+import com.flowiee.app.hethong.model.action.KhoTaiLieuAction;
+import com.flowiee.app.hethong.model.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KiemTraQuyenModuleKhoTaiLieu {
     @Autowired
-    private AccountRoleService roleService;
+    private RoleService roleService;
     @Autowired
     private AccountService accountService;
 
@@ -21,7 +21,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.READ.name();
+        final String action = KhoTaiLieuAction.READ_DOCUMENT.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -33,7 +33,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.CREATE.name();
+        final String action = KhoTaiLieuAction.CREATE_FOLDER.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -45,7 +45,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.UPDATE.name();
+        final String action = KhoTaiLieuAction.UPDATE_FOLDER.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -57,7 +57,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.DELETE.name();
+        final String action = KhoTaiLieuAction.DELETE_FOLDER.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -69,7 +69,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.IMPORT.name();
+        final String action = KhoTaiLieuAction.IMPORT_DOCUMENT.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -81,7 +81,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.MOVE.name();
+        final String action = KhoTaiLieuAction.MOVE_DOCUMENT.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -93,7 +93,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.COPY.name();
+        final String action = KhoTaiLieuAction.COPY_DOCUMENT.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -105,7 +105,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.DOWNLOAD.name();
+        final String action = KhoTaiLieuAction.DOWNLOAD_DOCUMENT.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -117,7 +117,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.SHARE.name();
+        final String action = KhoTaiLieuAction.SHARE_DOCUMENT.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;

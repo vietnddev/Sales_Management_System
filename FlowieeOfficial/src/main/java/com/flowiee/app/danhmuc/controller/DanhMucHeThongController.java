@@ -1,7 +1,7 @@
 package com.flowiee.app.danhmuc.controller;
 
 import com.flowiee.app.danhmuc.entity.DanhMuc;
-import com.flowiee.app.account.service.AccountService;
+import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.danhmuc.service.DanhMucService;
 import com.flowiee.app.common.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,0 +1,64 @@
+package com.flowiee.app.hethong.model.module;
+
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+public enum SystemModule {
+    SAN_PHAM("SẢN PHẨM"),
+
+    THU_VIEN_ANH("THƯ VIỆN ẢNH"),
+
+    KHO_TAI_LIEU("KHO TÀI LIỆU"),
+
+    CONG_VIEC("CÔNG VIỆC"),
+
+    HOC_TAP("HỌC TẬP"),
+
+    CHI_TIEU("CHI TIÊU"),
+
+    HE_THONG("HỆ THỐNG"),
+
+    DANH_MUC("DANH MỤC"),
+
+    FILE("FILE"),
+
+    DASHBOARD("DASHBOARD");
+
+    private final String label;
+
+    SystemModule(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public static SystemModule valueOfLabel(String label) {
+        for (SystemModule e : values()) {
+            if (e.label.equals(label)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    public static List<String> getAllValue() {
+        List<String> listValue = new ArrayList<>();
+        for (SystemModule e : values()) {
+            listValue.add(e.label);
+        }
+        return listValue;
+    }
+
+    public static LinkedHashMap<String, String> getAll() {
+        LinkedHashMap<String, String> hm = new LinkedHashMap<>();
+        for (SystemModule e : values()) {
+            hm.put(e.name(), e.label);
+        }
+        return hm;
+    }
+}

@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.controller;
 
-import com.flowiee.app.account.entity.Account;
-import com.flowiee.app.account.service.AccountService;
+import com.flowiee.app.hethong.entity.Account;
+import com.flowiee.app.hethong.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class HomeController {
 
     @GetMapping(value = "/login")
     public String showLoginPage(HttpServletRequest request){
-        if (accountService.getAccountByUsername("admin") == null){
+        if (accountService.findByUsername("admin") == null){
             Account account = new Account();
             account.setUsername("admin");
             account.setPassword("$2a$12$UGPx1eE9SzfvCDniYtwoZuQRzVdjHKkjbZcDKXO4.1Z/uGpOsFFVu");
@@ -32,7 +32,7 @@ public class HomeController {
             account.setGioiTinh(true);
             account.setTrangThai(true);
             account.setCreatedBy("System");
-            accountService.saveAccount(account);
+            accountService.save(account);
         }
         return "login";
     }

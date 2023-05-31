@@ -2,7 +2,7 @@ package com.flowiee.app.file.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.khotailieu.entity.Document;
-import com.flowiee.app.account.entity.Account;
+import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
 import lombok.AllArgsConstructor;
@@ -54,9 +54,6 @@ public class FileStorage implements Serializable{
 
     @Column(name = "directory_path", length = 500)
     private String directoryPath;
-
-    @Column(name = "created_by")
-    private String createdBy;
 
     @CreatedDate
     @Column(name = "CreatedAt",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)

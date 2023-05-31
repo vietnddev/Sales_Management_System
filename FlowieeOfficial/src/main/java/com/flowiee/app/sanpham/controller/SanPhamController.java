@@ -2,7 +2,7 @@ package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.file.service.FileStorageService;
-import com.flowiee.app.account.service.AccountService;
+import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.danhmuc.service.DanhMucService;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
@@ -126,68 +126,6 @@ public class SanPhamController {
                 System.out.println("Product not found!");
             }
             return "redirect:" + request.getHeader("referer");
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    /**
-     * Quản lý thuộc tính sản phẩm (attributes)
-     */
-    //Thêm mới thuộc tính
-    @PostMapping(value = "/variants/attributes/insert") // Thêm mới thuộc tính cho biến thể
-    public String insertAttributes(HttpServletRequest request, @ModelAttribute("product_attributes") ThuocTinhSanPham productAttribute) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            productAttributeService.saveAttribute(productAttribute);
-            return "redirect:" + request.getHeader("referer");
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    //Cập nhật thuộc tính cho sản phẩm
-    @Transactional
-    @PostMapping(value = "/attribute/update/{ID}", params = "update")
-    public String updateAttribute(@ModelAttribute("attribute") ThuocTinhSanPham attribute,
-                                  HttpServletRequest request, @PathVariable("ID") int attributeID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            attribute.setId(attributeID);
-            productAttributeService.saveAttribute(attribute);
-            return "redirect:" + request.getHeader("referer");
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    //Khóa lock attribute
-    @Transactional
-    @PostMapping(value = "/attribute/update/{ID}", params = "lock")
-    public String lockAttribute(HttpServletRequest request, @PathVariable("ID") int attributeID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            ThuocTinhSanPham attribute = productAttributeService.getByAttributeID(attributeID).get();
-            attribute.setId(attributeID);
-            if (attribute.isTrangThai()) {
-                attribute.setTrangThai(false);
-            } else {
-                attribute.setTrangThai(true);
-            }
-            productAttributeService.saveAttribute(attribute);
-            return "redirect:" + request.getHeader("referer");
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    //Xóa thuộc tính
-    @Transactional
-    @PostMapping(value = "/attribute/delete/{ID}")
-    public String deleteAttribute(@ModelAttribute("attribute") ThuocTinhSanPham attribute,
-                                  HttpServletRequest request, @PathVariable("ID") int attributeID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            if (productAttributeService.getByAttributeID(attributeID).isPresent()) {
-                productAttributeService.deleteAttribute(attributeID);
-                return "redirect:" + request.getHeader("referer");
-            }
         }
         return PagesUtil.PAGE_LOGIN;
     }

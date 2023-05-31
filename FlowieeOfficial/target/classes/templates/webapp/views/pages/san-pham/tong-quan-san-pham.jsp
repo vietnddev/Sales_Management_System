@@ -143,9 +143,9 @@
                                 </label>
                                 <label class="btn text-center" style="border: none;"
                                        th:each="color : ${listColorVariant}">
-                                    [[${color.value}]]
+                                    [[${color.tenBienThe}]]
                                     <br>
-                                    <a th:href="@{/sales/products/} + ${sanPham} + '/variants/' + ${color.id}">
+                                    <a th:href="@{/san-pham/variant/{id}(id=${color.id})}">
                                         <i class="fas fa-circle fa-2x text-blue"></i></a>
                                 </label>
                             </div>
@@ -155,7 +155,7 @@
                             <div class="modal fade" id="insertColor">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form th:action="@{/san-pham/bien-the/insert}"
+                                        <form th:action="@{/san-pham/variant/insert}"
                                               th:object="${bienTheSanPham}"
                                               method="post">
                                             <div class="modal-header">
@@ -172,7 +172,7 @@
                                                         <input type="hidden" name="maSanPham" value=""/>
                                                         <div class="form-group">
                                                             <label>Chọn màu sắc</label>
-                                                            <select class="custom-select" name="value">
+                                                            <select class="custom-select" name="tenBienThe">
                                                                 <option th:each="lstype, iterStat : ${listDmMauSacSanPham}"
                                                                         th:value="${lstype.tenDanhMuc}"
                                                                         th:text="${lstype.tenDanhMuc}"
@@ -332,7 +332,7 @@ var previewTemplate = previewNode.parentNode.innerHTML
 previewNode.parentNode.removeChild(previewNode)
 
 var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/gallery/upload-idproduct=[[${detailProducts.id}]]", // Gọi tới function trong spring để xử lý file
+    url: "/uploads/san-pham/[[${detailProducts.id}]]", // Gọi tới function trong spring để xử lý file
     thumbnailWidth: 80,
     thumbnailHeight: 80,
     parallelUploads: 20,

@@ -2,19 +2,21 @@ package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.flowiee.app.danhmuc.entity.LoaiKichCo;
+import com.flowiee.app.danhmuc.entity.LoaiMauSac;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.sanpham.model.TrangThai;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "san_pham_bien_the")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -24,7 +26,6 @@ public class BienTheSanPham implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private int id;
 
-    @JsonIgnoreProperties("listBienThe")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "san_pham_id", nullable = false)
     private SanPham sanPham;
@@ -41,19 +42,23 @@ public class BienTheSanPham implements Serializable {
     @Column(name = "trang_thai", nullable = false)
     private String trangThai;
 
-    @JsonIgnoreProperties("bienTheSanPham")
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<ThuocTinhSanPham> listThuocTinh;
 
-    @JsonIgnoreProperties("bienTheSanPham")
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<GiaSanPham> listGiaBan;
 
-    @JsonIgnoreProperties("bienTheSanPham")
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<DonHangChiTiet> listDonHangChiTiet;
 
-    @JsonIgnoreProperties("bienTheSanPham")
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mau_sac_id", nullable = false)
+    private LoaiMauSac loaiMauSac;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "kich_co_id", nullable = false)
+    private LoaiKichCo loaiKichCo;
 }

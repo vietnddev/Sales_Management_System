@@ -8,12 +8,16 @@ import java.util.Optional;
 
 public interface BienTheSanPhamService {
 
+    List<BienTheSanPham> findAll();
+
     List<BienTheSanPham> getListVariantOfProduct(String loaiBienThe, int sanPhamId);
 
-    void insertVariant(BienTheSanPham productVariant);
-    
-    Optional<BienTheSanPham> getByVariantID(int productVariantID);
+    void create(BienTheSanPham bienTheSanPham);
 
-    void deteleVariant(int productVariantID);
+    void update(BienTheSanPham bienTheSanPham, int id);
+    
+    BienTheSanPham findById(int productVariantID);
+
+    void detele(int productVariantID);
 
 }

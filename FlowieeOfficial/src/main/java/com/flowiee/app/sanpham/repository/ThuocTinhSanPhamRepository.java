@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ThuocTinhSanPhamRepository extends JpaRepository<ThuocTinhSanPham, Integer> {
-    @Query(value = "from ThuocTinhSanPham tt where tt.bienTheSanPham=:productVariantID order by tt.thuTuHienThi asc")
+    @Query(value = "from ThuocTinhSanPham t where t.bienTheSanPham=:productVariantID order by t.sort asc")
     List<ThuocTinhSanPham> findByBienTheSanPham(BienTheSanPham productVariantID);
 }

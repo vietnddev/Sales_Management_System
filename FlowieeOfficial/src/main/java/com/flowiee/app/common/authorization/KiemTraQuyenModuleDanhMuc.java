@@ -1,17 +1,17 @@
 package com.flowiee.app.common.authorization;
 
 import com.flowiee.app.common.utils.TaiKhoanUtil;
-import com.flowiee.app.account.service.AccountService;
-import com.flowiee.app.role.service.AccountRoleService;
-import com.flowiee.app.system.action.DanhMucAction;
-import com.flowiee.app.system.module.SystemModule;
+import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.RoleService;
+import com.flowiee.app.hethong.model.action.DanhMucAction;
+import com.flowiee.app.hethong.model.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KiemTraQuyenModuleDanhMuc {
     @Autowired
-    private AccountRoleService roleService;
+    private RoleService roleService;
     @Autowired
     private AccountService accountService;
 
@@ -21,7 +21,7 @@ public class KiemTraQuyenModuleDanhMuc {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DanhMucAction.READ.name();
+        final String action = DanhMucAction.READ_DANHMUC.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -33,7 +33,7 @@ public class KiemTraQuyenModuleDanhMuc {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DanhMucAction.CREATE.name();
+        final String action = DanhMucAction.CREATE_DANHMUC.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -45,7 +45,7 @@ public class KiemTraQuyenModuleDanhMuc {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DanhMucAction.UPDATE.name();
+        final String action = DanhMucAction.UPDATE_DANHMUC.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -57,7 +57,7 @@ public class KiemTraQuyenModuleDanhMuc {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DanhMucAction.DELETE.name();
+        final String action = DanhMucAction.DELETE_DANHMUC.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
