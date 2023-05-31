@@ -71,7 +71,7 @@ public class Account extends DateAudit implements Serializable{
     private List<DocShare> listDocShare;
 
     @OneToMany(mappedBy = "nhanVienBanHang", fetch = FetchType.LAZY)
-    private List<DonHang> listDocHang;
+    private List<DonHang> listDonHang;
 
     @Override
     public String toString() {

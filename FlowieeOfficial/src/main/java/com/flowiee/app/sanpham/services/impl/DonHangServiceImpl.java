@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.hethong.entity.Account;
@@ -14,7 +15,6 @@ import com.flowiee.app.sanpham.services.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,43 +35,57 @@ public class DonHangServiceImpl implements DonHangService {
     }
 
     @Override
+    public List<DonHang> search() {
+        return null;
+    }
+
+    @Override
     public DonHang findById(int id) {
         return null;
     }
 
     @Override
     public DonHang save(DonHangRequest request) {
-        DonHang donHang = new DonHang();
-        donHang.setMaDonHang(FlowieeUtil.maDonHang());
-        donHang.setKhachHang(KhachHang.builder().id(request.getKhachHang()).build());
-        donHang.setKenhBanHang(KenhBanHang.builder().id(request.getKenhBanHang()).build());
-        donHang.setNhanVienBanHang(Account.builder().id(request.getNhanVienBanHang()).build());
-        donHang.setGhiChu(request.getGhiChu());
-        donHang.setThoiGianDatHang(request.getThoiGianDatHang());
-        donHang.setTrangThai(TrangThaiDonHang.CHUA_XAC_NHAN.name());
-        donHangRepository.save(donHang);
+        try {
+            DonHang donHang = new DonHang();
+            donHang.setMaDonHang(FlowieeUtil.maDonHang());
+            donHang.setKhachHang(KhachHang.builder().id(request.getKhachHang()).build());
+            donHang.setKenhBanHang(KenhBanHang.builder().id(request.getKenhBanHang()).build());
+            donHang.setNhanVienBanHang(Account.builder().id(request.getNhanVienBanHang()).build());
+            donHang.setGhiChu(request.getGhiChu());
+            donHang.setThoiGianDatHang(request.getThoiGianDatHang());
+            donHang.setTrangThaiDonHang(request.getTrangThaiDonHang());
+            donHangRepository.save(donHang);
 
-        for (int idBienThe : request.getListBienTheSanPham()) {
-            DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
-            donHangChiTiet.setDonHang(donHang);
-            donHangChiTiet.setBienTheSanPham(bienTheSanPhamService.findById(idBienThe));
-            donHangChiTiet.setTrangThai(true);
-
-
+            for (int idBienThe : request.getListBienTheSanPham()) {
+                DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
+                donHangChiTiet.setDonHang(donHang);
+                donHangChiTiet.setBienTheSanPham(bienTheSanPhamService.findById(idBienThe));
+                donHangChiTiet.setGhiChu("");
+                donHangChiTiet.setSoLuong(1);
+                donHangChiTiet.setTrangThai(true);
+            }
+            return donHang;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-
-
-
-        return donHang;
     }
 
     @Override
-    public DonHang update(DonHang donHang) {
+    public DonHang update(DonHang donHang, int id) {
         return null;
     }
 
     @Override
-    public void delete(int id) {
-
+    public String delete(int id) {
+        if (id <= 0 || this.findById(id) == null) {
+            throw new NotFoundException();
+        }
+        donHangRepository.deleteById(id);
+        if (this.findById(id) == null) {
+            return "OK";
+        }
+        return "NOK";
     }
 }

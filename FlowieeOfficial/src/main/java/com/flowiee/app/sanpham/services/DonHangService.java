@@ -11,11 +11,13 @@ public interface DonHangService {
 
     List<DonHang> findByTrangThai(String status);
 
+    List<DonHang> search();
+
     DonHang findById(int id);
 
     DonHang save(DonHangRequest request);
 
-    DonHang update(DonHang donHang);
+    DonHang update(DonHang donHang, int id);
 
-    void delete(int id);
+    String delete(int id);
 }

@@ -42,18 +42,6 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenThemMoiDonHang() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = DonHangAction.CREATE_DONHANG.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
     public boolean kiemTraQuyenCapNhat() {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
@@ -119,6 +107,44 @@ public class KiemTraQuyenModuleSanPham {
             return true;
         }
         final String action = SanPhamAction.REPORT_SANPHAM.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* KIỂM TRA QUYỀN ĐƠN HÀNG */
+
+    public boolean kiemTraQuyenThemMoiDonHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = DonHangAction.CREATE_DONHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenCapNhatDonHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = DonHangAction.UPDATE_DONHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenXoaDonHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = DonHangAction.DELETE_DONHANG.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
