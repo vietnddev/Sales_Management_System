@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.GiaSanPham;
 import com.flowiee.app.sanpham.repository.GiaSanPhamRepository;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
@@ -19,7 +20,7 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
     }
 
     @Override
-    public List<GiaSanPham> getListPriceByPVariantID(int pVariantID){
+    public List<GiaSanPham> getListPriceByPVariantID(BienTheSanPham pVariantID){
         return priceHistoryRepository.findByproductVariantID(pVariantID);
     }
 }

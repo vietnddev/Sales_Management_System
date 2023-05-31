@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DonHangRepository extends JpaRepository<DonHang, Integer> {
-    public List<DonHang> findByTrangThai(String trangThai);
+    List<DonHang> findByTrangThai(String trangThai);
 }

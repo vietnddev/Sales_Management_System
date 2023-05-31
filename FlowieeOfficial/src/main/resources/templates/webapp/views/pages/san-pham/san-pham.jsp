@@ -60,7 +60,9 @@
                                     <th:block th:each="list : ${listSanPham}">
                                         <tr>
                                             <td th:text="${list.id}"></td>
-                                            <td th:text="${list.tenSanPham}"></td>
+                                            <td>
+                                                <a th:href="@{/san-pham/{id}(id=${list.id})}" th:text="${list.tenSanPham}"></a>
+                                            </td>
                                             <td th:text="${list.loaiSanPham.tenLoai}">
                                             </td>
                                             <td th:text="${list.moTaSanPham}"></td>

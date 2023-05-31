@@ -25,14 +25,14 @@ public class ThuocTinhSanPham implements Serializable {
     @JoinColumn(name = "bien_the_id", nullable = false)
     private BienTheSanPham bienTheSanPham;
 
-    @Column(name = "ten_thuoc_tinh", length = 255, nullable = false)
+    @Column(name = "ten_thuoc_tinh", nullable = false)
     private String tenThuocTinh;
 
-    @Column(name = "gia_tri_thuoc_tinh", length = 500, nullable = true)
+    @Column(name = "gia_tri_thuoc_tinh", length = 500)
     private String giaTriThuocTinh;
 
-    @Column(name = "thu_tu_hien_thi", nullable = false)
-    private int thuTuHienThi;
+    @Column(name = "sort", nullable = false)
+    private int sort;
 
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;

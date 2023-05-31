@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "san_pham")
 @Getter(AccessLevel.PUBLIC)
@@ -44,4 +45,15 @@ public class SanPham implements Serializable {
     @JsonIgnoreProperties("sanPham")
     @OneToMany(mappedBy = "sanPham", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
+
+    @Override
+    public String toString() {
+        return "SanPham{" +
+            "id=" + id +
+            ", loaiSanPham=" + loaiSanPham +
+            ", tenSanPham='" + tenSanPham + '\'' +
+            ", moTaSanPham='" + moTaSanPham + '\'' +
+            ", trangThai=" + trangThai +
+            '}';
+    }
 }

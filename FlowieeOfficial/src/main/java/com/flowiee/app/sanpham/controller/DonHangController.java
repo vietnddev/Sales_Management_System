@@ -1,56 +1,59 @@
 package com.flowiee.app.sanpham.controller;
 
+import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.sanpham.entity.DonHang;
+import com.flowiee.app.sanpham.model.DonHangRequest;
+import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
-@RequestMapping(path = "/sales/orders")
+@RequestMapping("/don-hang")
 public class DonHangController {
     @Autowired
-    DonHangService ordersService;
+    private DonHangService donHangService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private BienTheSanPhamService bienTheSanPhamService;
+    @Autowired
+    private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
-    @GetMapping("/status={status}")
-    public String getOrdersByStatus(@PathVariable String status, ModelMap modelMap){
-        /*
-         * Lấy ra danh sách đơn đặt hàng theo trạng thái được truyền vào
-         * Status = 0: Lấy toàn bộ danh sách bao gồm tất cả trạng thái
-         * Status = 1: Lấy danh sách đơn hàng chờ shop xác nhận
-         * Status = 2: Lấy danh sách đơn hàng đang giao
-         * Status = 3: Lấy danh sách đơn hàng đã hoàn thành
-         * Status = 4: Lấy danh sách đơn hàng đã bị hủy
-         * */
-        switch (status) {
-            case "0" :
-                modelMap.addAttribute("listOrders", ordersService.getAllOrders());
-                modelMap.addAttribute("status", "DANH SÁCH TẤT CẢ ĐƠN ĐẶT HÀNG");
-                System.out.println(ordersService.getAllOrders());
-                break;
-            case "1" :
-                modelMap.addAttribute("listOrders", ordersService.getByStatus("1"));
-                modelMap.addAttribute("status", "DANH SÁCH ĐƠN HÀNG CHỜ XÁC NHẬN");
-                System.out.println(ordersService.getByStatus("1"));
-                break;
-            case "2" :
-                modelMap.addAttribute("listOrders", ordersService.getByStatus("2"));
-                modelMap.addAttribute("status", "DANH SÁCH ĐƠN HÀNG ĐANG GIAO");
-                System.out.println(ordersService.getByStatus("2"));
-                break;
-            case "3" :
-                modelMap.addAttribute("listOrders", ordersService.getByStatus("3"));
-                modelMap.addAttribute("status", "DANH SÁCH ĐƠN HÀNG ĐÃ HOÀN THÀNH");
-                System.out.println(ordersService.getByStatus("3"));
-                break;
-            case "4" :
-                modelMap.addAttribute("listOrders", ordersService.getByStatus("4"));
-                modelMap.addAttribute("status", "DANH SÁCH ĐƠN HÀNG ĐÃ BỊ HỦY");
-                System.out.println(ordersService.getByStatus("4"));
-                break;
+    @GetMapping
+    public String getAllDonHang(ModelMap modelMap) {
+        String username = accountService.getUserName();
+        if (username == null || username.isEmpty()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return "pages/sales/orders";
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
+            modelMap.addAttribute("listDonHang", donHangService.findAll());
+            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelMap.addAttribute("donHangRequest", new DonHangRequest());
+            return PagesUtil.PAGE_DONHANG;
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/insert")
+    public String insert(@ModelAttribute("donHangRequest") DonHangRequest request,
+                         ModelMap modelMap) {
+        String username = accountService.getUserName();
+        if (username == null || username.isEmpty()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
+            donHangService.save(request);
+            return "redirect:/don-hang";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
     }
 }

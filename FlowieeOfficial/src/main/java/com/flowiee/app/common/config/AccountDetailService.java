@@ -1,10 +1,11 @@
 package com.flowiee.app.common.config;
 
-import com.flowiee.app.log.model.SystemLogAction;
-import com.flowiee.app.account.entity.Account;
-import com.flowiee.app.log.entity.SystemLog;
-import com.flowiee.app.account.service.AccountService;
-import com.flowiee.app.log.service.SystemLogService;
+import com.flowiee.app.hethong.model.SystemLogAction;
+import com.flowiee.app.hethong.entity.Account;
+import com.flowiee.app.hethong.entity.SystemLog;
+import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,7 +30,7 @@ public class AccountDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Account accountEntity = accountService.getAccountByUsername(username);
+		Account accountEntity = accountService.findByUsername(username);
 		UserDetails userDetails = null; // Đây là class hỗ trợ sẵn của Spring Security
 
 		if (accountEntity != null) {
@@ -50,7 +51,7 @@ public class AccountDetailService implements UserDetailsService {
 				}
 			}
 			SystemLog systemLog = SystemLog.builder()
-				.module("Hệ thống")
+				.module(SystemModule.HE_THONG.name())
 				.action(SystemLogAction.LOGIN.name())
 				.noiDung(accountEntity.toString())
 				.account(Account.builder().id(accountEntity.getId()).build())

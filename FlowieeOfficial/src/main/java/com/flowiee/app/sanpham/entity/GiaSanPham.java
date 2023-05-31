@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
 @Entity
 @Table(name = "san_pham_gia")
 @Data
@@ -28,7 +30,7 @@ public class GiaSanPham implements Serializable {
     private BienTheSanPham bienTheSanPham;
 
     @Column(name = "gia_ban", nullable = false)
-    private float price;
+    private float giaBan;
 
     @CreatedDate
     @Column(name = "created_at",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
