@@ -107,6 +107,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account getCurrentAccount() {
+        return this.findByUsername(this.getUserName());
+    }
+
+    @Override
     public String getUserNameByID(int id) {
         return accountRepository.findUsernameById(id);
     }
@@ -121,7 +126,7 @@ public class AccountServiceImpl implements AccountService {
                 details = (WebAuthenticationDetails) authDetails;
             }
         }
-        if (details != null){
+        if (details != null) {
             return details.getRemoteAddress();
         }
         return "unknown";

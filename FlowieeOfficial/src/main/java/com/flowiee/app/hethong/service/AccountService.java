@@ -25,6 +25,8 @@ public interface AccountService{
 
     String getUserName();
 
+    Account getCurrentAccount();
+
     String getUserNameByID(int id);
 
     String getIP();

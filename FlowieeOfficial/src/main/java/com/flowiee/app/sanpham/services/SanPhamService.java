@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface SanPhamService {
 
-    List<SanPham> getAllProducts();
+    List<SanPham> findAll();
 
     SanPham findById(int productID);
 
-    void insertProduct(SanPham sanPham);
+    String save(SanPham sanPham);
 
-    void update(SanPham sanPham, int id);
+    String update(SanPham sanPham, int id);
 
-    void deleteProduct(int productID);
+    String delete(int productID);
 }

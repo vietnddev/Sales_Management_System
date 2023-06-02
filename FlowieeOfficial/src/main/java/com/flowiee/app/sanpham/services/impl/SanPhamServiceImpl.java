@@ -1,5 +1,7 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
@@ -24,7 +26,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     private AccountService accountService;
 
     @Override
-    public List<SanPham> getAllProducts() {
+    public List<SanPham> findAll() {
         return productsRepository.findAll();
     }
 
@@ -34,29 +36,73 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public void insertProduct(SanPham sanPham) {
-        productsRepository.save(sanPham);
+    public String save(SanPham sanPham) {
+        if (sanPham.getLoaiSanPham() == null ||
+            sanPham.getTenSanPham() == null) {
+            throw new BadRequestException();
+        }
+        try {
+            productsRepository.save(sanPham);
+            SystemLog systemLog = new SystemLog();
+            systemLog.setModule(SystemModule.SAN_PHAM.name());
+            systemLog.setAction(SanPhamAction.DELETE_SANPHAM.name());
+            systemLog.setNoiDung(sanPham.toString());
+            systemLog.setAccount(accountService.getCurrentAccount());
+            systemLog.setIp(accountService.getIP());
+            systemLogService.writeLog(systemLog);
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NOK";
+        }
     }
 
     @Override
-    public void update(SanPham sanPham, int id) {
-        SanPham sanPhamBefore = productsRepository.findById(id).get();
-        sanPham.setId(id);
-        productsRepository.save(sanPham);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-            .module(SystemModule.SAN_PHAM.name())
-            .action(SanPhamAction.UPDATE_SANPHAM.name())
-            .noiDung(sanPhamBefore.toString())
-            .noiDungCapNhat(sanPham.toString())
-            .ip("")
-            .account(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build())
-            .build();
-        systemLogService.writeLog(systemLog);
+    public String update(SanPham sanPham, int id) {
+        if (id <= 0 || this.findById(id) == null) {
+            throw new NotFoundException();
+        }
+        SanPham sanPhamBefore = this.findById(id);
+        try {
+            sanPham.setId(id);
+            productsRepository.save(sanPham);
+            SystemLog systemLog = new SystemLog();
+            systemLog.setModule(SystemModule.SAN_PHAM.name());
+            systemLog.setAction(SanPhamAction.UPDATE_SANPHAM.name());
+            systemLog.setNoiDung(sanPhamBefore.toString());
+            systemLog.setNoiDungCapNhat(sanPham.toString());
+            systemLog.setAccount(accountService.getCurrentAccount());
+            systemLog.setIp(accountService.getIP());
+            systemLogService.writeLog(systemLog);
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NOK";
+        }
     }
 
     @Override
-    public void deleteProduct(int productID) {
-        productsRepository.deleteById(productID);
+    public String delete(int id) {
+        if (id <= 0) {
+            throw new NotFoundException();
+        }
+        SanPham sanPhamToDelete = this.findById(id);
+        if (sanPhamToDelete == null) {
+            throw new NotFoundException();
+        }
+        try {
+            productsRepository.deleteById(id);
+            SystemLog systemLog = new SystemLog();
+            systemLog.setModule(SystemModule.SAN_PHAM.name());
+            systemLog.setAction(SanPhamAction.DELETE_SANPHAM.name());
+            systemLog.setNoiDung(sanPhamToDelete.toString());
+            systemLog.setAccount(accountService.getCurrentAccount());
+            systemLog.setIp(accountService.getIP());
+            systemLogService.writeLog(systemLog);
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NOK";
+        }
     }
 }

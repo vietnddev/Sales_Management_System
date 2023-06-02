@@ -28,7 +28,7 @@ public class ThuVienHinhAnhController {
             // Lấy tất cả ảnh cho page thư viện
             modelMap.addAttribute("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
             // Lấy danh sách tên sản phẩm
-            modelMap.addAttribute("listSanPham", sanPhamService.getAllProducts());
+            modelMap.addAttribute("listSanPham", sanPhamService.findAll());
             return PagesUtil.PAGE_THUVIEN;
         }
         return PagesUtil.PAGE_LOGIN;
