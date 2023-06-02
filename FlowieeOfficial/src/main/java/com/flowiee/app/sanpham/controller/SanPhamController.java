@@ -1,12 +1,11 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
-import com.flowiee.app.file.service.FileStorageService;
+import com.flowiee.app.danhmuc.service.LoaiKichCoService;
+import com.flowiee.app.danhmuc.service.LoaiMauSacService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.danhmuc.service.DanhMucService;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
-import com.flowiee.app.sanpham.entity.ThuocTinhSanPham;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.services.*;
@@ -26,17 +25,15 @@ public class SanPhamController {
     @Autowired
     private SanPhamService productsService;
     @Autowired
-    private BienTheSanPhamService productVariantService;
+    private BienTheSanPhamService bienTheSanPhamService;
     @Autowired
-    private ThuocTinhSanPhamService productAttributeService;
+    private ThuocTinhSanPhamService thuocTinhSanPhamService;
     @Autowired
-    private DanhMucService categoryService;
+    private LoaiMauSacService loaiMauSacService;
+    @Autowired
+    private LoaiKichCoService loaiKichCoService;
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private FileStorageService fileService;
-    @Autowired
-    private GiaSanPhamService priceHistoryService;
     @Autowired
     private LoaiSanPhamService loaiSanPhamService;
     @Autowired
@@ -53,7 +50,7 @@ public class SanPhamController {
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
             modelMap.addAttribute("sanPham", new SanPham());
-            modelMap.addAttribute("listSanPham", productsService.getAllProducts());
+            modelMap.addAttribute("listSanPham", productsService.findAll());
             modelMap.addAttribute("listLoaiSanPham", loaiSanPhamService.findAll());
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelMap.addAttribute("action_create", "enable");
@@ -70,38 +67,40 @@ public class SanPhamController {
         }
     }
 
-    @GetMapping(value = "/{id}") // Show trang tổng quan chi tiết của một sản phẩm
-    public String getDetailProduct(ModelMap modelMap, @PathVariable("id") int id) {
+    @GetMapping(value = "/{id}")
+    public String getDetailProduct(ModelMap modelMap, @PathVariable("id") int sanPhamId) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             modelMap.addAttribute("sanPham", new SanPham());
             modelMap.addAttribute("bienTheSanPham", new BienTheSanPham());
-            modelMap.addAttribute("idSanPham", id);
+            modelMap.addAttribute("idSanPham", sanPhamId);
             // Load chi tiết thông tin sản phẩm
-            modelMap.addAttribute("detailProducts", productsService.findById(id));
+            modelMap.addAttribute("detailProducts", productsService.findById(sanPhamId));
             // Danh sách loại sản phẩm từ danh mục hệ thống
             modelMap.addAttribute("listTypeProducts", loaiSanPhamService.findAll());
             // Danh sách màu sắc từ danh mục hệ thống
-            modelMap.addAttribute("listDmMauSacSanPham", categoryService.getListCategory("colorProduct"));
+            modelMap.addAttribute("listDmMauSacSanPham", loaiMauSacService.findAll());
+            // Danh sách kích cỡ từ danh mục hệ thống
+            modelMap.addAttribute("listDmKichCoSanPham", loaiKichCoService.findAll());
             // Load danh sách biến thể màu sắc
-            modelMap.addAttribute("listColorVariant", productVariantService.getListVariantOfProduct("MAU_SAC", id));
+            modelMap.addAttribute("listColorVariant", bienTheSanPhamService.getListVariantOfProduct(sanPhamId));
             return PagesUtil.PAGE_SANPHAM_TONG_QUAN;
         }
         return PagesUtil.PAGE_LOGIN;
     }
 
-    @PostMapping(value = "/insert") // Thêm mới sản phẩm -> ok
+    @PostMapping(value = "/insert")
     public String insertProduct(HttpServletRequest request, @ModelAttribute("sanPham") SanPham sanPham) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            productsService.insertProduct(sanPham);
+            productsService.save(sanPham);
             return "redirect:" + request.getHeader("referer");
         }
         return PagesUtil.PAGE_LOGIN;
     }
 
     @Transactional
-    @PostMapping(value = "/update/{id}") //update sản phẩm gốc
+    @PostMapping(value = "/update/{id}")
     public String updateProduct(HttpServletRequest request, @ModelAttribute("sanPham") SanPham sanPham, @PathVariable("id") int id) {
         String username = accountService.getUserName();
         if (username == null || username.isEmpty()) {
@@ -115,12 +114,12 @@ public class SanPhamController {
     }
 
     @Transactional
-    @PostMapping(value = "/delete/{id}") //delete sản phẩm gốc
+    @PostMapping(value = "/delete/{id}")
     public String deleteProduct(HttpServletRequest request, @PathVariable("id") int id) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             if (productsService.findById(id) != null) {
-                productsService.deleteProduct(id);
+                productsService.delete(id);
                 System.out.println("Delete successfully");
             } else {
                 System.out.println("Product not found!");

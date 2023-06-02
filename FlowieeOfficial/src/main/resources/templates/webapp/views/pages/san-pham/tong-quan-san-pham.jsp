@@ -60,18 +60,18 @@
                                     <div id="actions" class="row">
                                         <div class="col-lg-7">
                                             <div class="btn-group w-100">
-                          <span class="btn btn-sm btn-success col fileinput-button" title="Chọn file từ máy tính">
-                            <i class="fas fa-plus"></i>
-                            <span><!--Chọn file--></span>
-                          </span>
-                                                <button type="submit" class="btn btn-sm btn-primary col start">
+                                              <span class="btn btn-sm btn-success col fileinput-button" title="Chọn file từ máy tính">
+                                                <i class="fas fa-plus"></i>
+                                                <span><!--Chọn file--></span>
+                                              </span>
+                                              <button type="submit" class="btn btn-sm btn-primary col start">
                                                     <i class="fas fa-upload"></i>
                                                     <span><!--Tải lên SV--></span>
-                                                </button>
-                                                <button type="reset" class="btn btn-sm btn-warning col cancel">
-                                                    <i class="fas fa-times-circle"></i>
-                                                    <span><!--Hủy--></span>
-                                                </button>
+                                              </button>
+                                              <button type="reset" class="btn btn-sm btn-warning col cancel">
+                                                <i class="fas fa-times-circle"></i>
+                                                <span><!--Hủy--></span>
+                                              </button>
                                             </div>
                                         </div>
                                         <div class="col-lg-5 d-flex align-items-center">
@@ -159,7 +159,7 @@
                                               th:object="${bienTheSanPham}"
                                               method="post">
                                             <div class="modal-header">
-                                                <strong class="modal-title">Thêm mới màu sắc sản phẩm</strong>
+                                                <strong class="modal-title">Thêm mới sản phẩm</strong>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -174,8 +174,17 @@
                                                             <label>Chọn màu sắc</label>
                                                             <select class="custom-select" name="tenBienThe">
                                                                 <option th:each="lstype, iterStat : ${listDmMauSacSanPham}"
-                                                                        th:value="${lstype.tenDanhMuc}"
-                                                                        th:text="${lstype.tenDanhMuc}"
+                                                                        th:value="${lstype.tenLoai}"
+                                                                        th:text="${lstype.tenLoai}"
+                                                                        th:selected="${iterStat.index == 0}"></option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Chọn kích cỡ</label>
+                                                            <select class="custom-select" name="tenBienThe">
+                                                                <option th:each="lstype, iterStat : ${listDmMauSacSanPham}"
+                                                                        th:value="${lstype.tenLoai}"
+                                                                        th:text="${lstype.tenLoai}"
                                                                         th:selected="${iterStat.index == 0}"></option>
                                                             </select>
                                                         </div>
@@ -188,6 +197,7 @@
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">Lưu</button>
                                                 </div>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -237,7 +247,7 @@
                         <input type="hidden" name="moTaSanPham" id="describes_virtual" th:value="${detailProducts.moTaSanPham}"/>
                     </form>
 
-                    <div class="row col-sm-12 mt-3"
+                    <div class="row col-sm-12"
                          style="background-color: #fff; border-radius: 15px; padding: 15px; margin-right: 0px;">
                         <div class="nav nav-tabs" id="product-tab" role="tablist">
                             <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab"
@@ -254,13 +264,8 @@
                         <div class="tab-content w-100 mt-3" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="product-desc" role="tabpanel"
                                  aria-labelledby="product-desc-tab">
-                                <!--Text editor--><textarea id="summernote"
-                                                            th:text="${detailProducts.moTaSanPham}">
-                    <!-- Place <em>some</em> <u>text</u> <strong>here</strong> -->
-                  </textarea>
-                                <!-- /.Text editor-->
+                                <textarea id="summernote" th:text="${detailProducts.moTaSanPham}"></textarea>
                             </div>
-
                             <div class="tab-pane fade" id="product-comments" role="tabpanel"
                                  aria-labelledby="product-comments-tab">
                                 About comment ...
@@ -271,10 +276,8 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- /.card-body -->
-
-
+                </div>
+            </div>
         </section>
         <!-- /.content -->
     </div>

@@ -10,16 +10,16 @@ public interface BienTheSanPhamService {
 
     List<BienTheSanPham> findAll();
 
-    List<BienTheSanPham> getListVariantOfProduct(String loaiBienThe, int sanPhamId);
+    List<BienTheSanPham> getListVariantOfProduct(int sanPhamId);
 
     Double getGiaBan(int id);
 
-    void save(BienTheSanPham bienTheSanPham);
+    String save(BienTheSanPham bienTheSanPham);
 
-    void update(BienTheSanPham bienTheSanPham, int id);
+    String update(BienTheSanPham bienTheSanPham, int id);
     
-    BienTheSanPham findById(int productVariantID);
+    BienTheSanPham findById(int id);
 
-    void detele(int productVariantID);
+    String detele(int id);
 
 }

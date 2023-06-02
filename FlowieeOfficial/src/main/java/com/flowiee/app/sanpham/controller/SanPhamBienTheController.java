@@ -57,7 +57,6 @@ public class SanPhamBienTheController {
     public String insertVariants(HttpServletRequest request, @ModelAttribute("bienTheSanPham") BienTheSanPham bienTheSanPham) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            bienTheSanPham.setLoaiBienThe("MAU_SAC");
             bienTheSanPham.setTrangThai(TrangThai.KINH_DOANH.name());
             bienTheSanPham.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
             bienTheSanPham.setLoaiKichCo(LoaiKichCo.builder().id(1).build());

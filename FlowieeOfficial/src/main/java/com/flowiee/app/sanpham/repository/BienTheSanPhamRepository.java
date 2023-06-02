@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface BienTheSanPhamRepository extends JpaRepository <BienTheSanPham, Integer>{
-    // Lấy danh sách biến thể theo id sản phẩm
-    @Query("from BienTheSanPham v where v.loaiBienThe=:loaiBienThe and v.sanPham=:sanPham")
-    List<BienTheSanPham> findListBienTheOfsanPham(String loaiBienThe, SanPham sanPham);
+    @Query("from BienTheSanPham b where b.sanPham.id=:sanPhamId")
+    List<BienTheSanPham> findListBienTheOfsanPham(int sanPhamId);
+
+    @Query("from BienTheSanPham b where b.loaiMauSac.id=:mauSacId and b.loaiKichCo.id=:kichCoId")
+    BienTheSanPham findByMauSacAndKichCo(int mauSacId, int kichCoId);
 }

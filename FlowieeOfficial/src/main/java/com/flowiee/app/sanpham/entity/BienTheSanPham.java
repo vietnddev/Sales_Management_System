@@ -33,9 +33,6 @@ public class BienTheSanPham implements Serializable {
     @Column(name = "ma_san_pham", length = 50, nullable = false)
     private String maSanPham;
     
-    @Column(name = "loai_bien_the")
-    private String loaiBienThe;
-    
     @Column(name = "ten_bien_the")
     private String tenBienThe;
 
@@ -44,6 +41,14 @@ public class BienTheSanPham implements Serializable {
 
     @Column(name = "trang_thai", nullable = false)
     private String trangThai;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mau_sac_id", nullable = false)
+    private LoaiMauSac loaiMauSac;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "kich_co_id", nullable = false)
+    private LoaiKichCo loaiKichCo;
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<ThuocTinhSanPham> listThuocTinh;
@@ -56,12 +61,4 @@ public class BienTheSanPham implements Serializable {
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mau_sac_id", nullable = false)
-    private LoaiMauSac loaiMauSac;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kich_co_id", nullable = false)
-    private LoaiKichCo loaiKichCo;
 }

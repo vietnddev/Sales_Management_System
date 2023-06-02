@@ -18,6 +18,6 @@ public class APISanPhamController {
     @GetMapping
     public List<SanPham> getAllSanPham() {
         //Check thêm 401, 403, phân trang
-        return sanPhamService.getAllProducts();
+        return sanPhamService.findAll();
     }
 }
