@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     private SystemLogService systemLogService;
 
     @Override
-    public List<Account> getAll(){
+    public List<Account> findAll(){
         return accountRepository.findAll();
     }
 

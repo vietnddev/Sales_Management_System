@@ -9,7 +9,7 @@ import java.util.Optional;
 @Service
 public interface AccountService{
 
-    List<Account> getAll();
+    List<Account> findAll();
 
     Account findByUsername(String username);
 

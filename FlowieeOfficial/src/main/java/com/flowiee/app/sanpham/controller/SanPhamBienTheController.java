@@ -46,7 +46,7 @@ public class SanPhamBienTheController {
             //Lấy danh sách hình ảnh của biến thể
             //modelMap.addAttribute("listFiles", fileService.getFilesByProductVariant(productVariantID));
             //
-            modelMap.addAttribute("listPrices", giaSanPhamService.getListPriceByPVariantID(BienTheSanPham.builder().id(id).build()));
+            modelMap.addAttribute("listPrices", giaSanPhamService.findByBienTheSanPhamId(id));
             return PagesUtil.PAGE_SANPHAM_BIENTHE;
         }
         return PagesUtil.PAGE_LOGIN;
@@ -54,8 +54,7 @@ public class SanPhamBienTheController {
 
     @Transactional
     @PostMapping(value = "/insert")
-    public String insertVariants(HttpServletRequest request, RedirectAttributes redirectAttributes,
-                                 @ModelAttribute("bienTheSanPham") BienTheSanPham bienTheSanPham) {
+    public String insertVariants(HttpServletRequest request, @ModelAttribute("bienTheSanPham") BienTheSanPham bienTheSanPham) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             bienTheSanPham.setLoaiBienThe("MAU_SAC");
@@ -63,7 +62,7 @@ public class SanPhamBienTheController {
             bienTheSanPham.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
             bienTheSanPham.setLoaiKichCo(LoaiKichCo.builder().id(1).build());
             bienTheSanPham.setLoaiMauSac(LoaiMauSac.builder().id(1).build());
-            bienTheSanPhamService.create(bienTheSanPham);
+            bienTheSanPhamService.save(bienTheSanPham);
             //Khởi tạo giá default của giá bán
             giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(499).build());
             return "redirect:" + request.getHeader("referer");

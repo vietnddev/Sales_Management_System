@@ -29,11 +29,11 @@ public class AccountController {
     private SystemLogService systemLogService;
 
     @GetMapping(value = "")
-    public String getAccounts(HttpServletRequest request, ModelMap modelMap) {
+    public String findAll(HttpServletRequest request, ModelMap modelMap) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             modelMap.addAttribute("account", new Account());
-            modelMap.addAttribute("listAccount", accountService.getAll());
+            modelMap.addAttribute("listAccount", accountService.findAll());
 
             return PagesUtil.PAGE_HETHONG_TAIKHOAN;
         }

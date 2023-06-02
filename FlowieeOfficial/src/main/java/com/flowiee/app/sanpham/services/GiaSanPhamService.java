@@ -6,8 +6,17 @@ import com.flowiee.app.sanpham.entity.GiaSanPham;
 import java.util.List;
 
 public interface GiaSanPhamService {
+    List<GiaSanPham> findAll();
 
-    void save(GiaSanPham priceHistory);
+    List<GiaSanPham> findByBienTheSanPhamId(int bienTheSanPhamId);
 
-    List<GiaSanPham> getListPriceByPVariantID(BienTheSanPham pVariantID);
+    GiaSanPham findById(int id);
+
+    Double findGiaHienTai(int bienTheSanPhamId);
+
+    String save(GiaSanPham giaSanPham);
+
+    String update(GiaSanPham giaSanPham, int id);
+
+    String delete(int id);
 }

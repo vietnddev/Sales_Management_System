@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface LoaiTaiLieuService {
 
     List<LoaiTaiLieu> findAll();

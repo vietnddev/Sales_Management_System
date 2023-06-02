@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "/khach-hang")
 public class CustomerController {
     @Autowired
-    KhachHangService customerService;
+    KhachHangService khachHangService;
 
     @GetMapping(value = "")
     public String getAllCustomer(ModelMap modelMap){
-        modelMap.addAttribute("listCustomer", customerService.getAll());
+        modelMap.addAttribute("listKhachHang", khachHangService.findAll());
         return PagesUtil.PAGE_KHACHHANG;
     }
 }

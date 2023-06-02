@@ -38,7 +38,10 @@ public class BienTheSanPham implements Serializable {
     
     @Column(name = "ten_bien_the")
     private String tenBienThe;
-    
+
+    @Column(name = "so_luong_kho", nullable = false)
+    private int soLuongKho;
+
     @Column(name = "trang_thai", nullable = false)
     private String trangThai;
 

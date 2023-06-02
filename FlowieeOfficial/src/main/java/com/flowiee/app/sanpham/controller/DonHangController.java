@@ -2,13 +2,20 @@ package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
+import com.flowiee.app.danhmuc.repository.KenhBanHangRepository;
+import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
+import com.flowiee.app.danhmuc.service.KenhBanHangService;
+import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.model.DonHangRequest;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.DonHangService;
+import com.flowiee.app.sanpham.services.KhachHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +31,18 @@ public class DonHangController {
     @Autowired
     private BienTheSanPhamService bienTheSanPhamService;
     @Autowired
+    private KenhBanHangService kenhBanHangService;
+    @Autowired
+    private HinhThucThanhToanService hinhThucThanhToanService;
+    @Autowired
+    private KhachHangService khachHangService;
+    @Autowired
+    private TrangThaiDonHangService trangThaiDonHangService;
+    @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping
-    public String getAllDonHang(ModelMap modelMap) {
+    public String findAllDonHang(ModelMap modelMap) {
         String username = accountService.getUserName();
         if (username == null || username.isEmpty()) {
             return PagesUtil.PAGE_LOGIN;
@@ -35,6 +50,11 @@ public class DonHangController {
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
             modelMap.addAttribute("listDonHang", donHangService.findAll());
             modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
+            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelMap.addAttribute("listKhachHang", khachHangService.findAll());
+            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
+            modelMap.addAttribute("listTrangThaiDonHang", trangThaiDonHangService.findAll());
             modelMap.addAttribute("donHangRequest", new DonHangRequest());
             modelMap.addAttribute("donHang", new DonHang());
             return PagesUtil.PAGE_DONHANG;
@@ -43,6 +63,32 @@ public class DonHangController {
         }
     }
 
+    @PostMapping
+    public String FilterListDonHang(ModelMap modelMap, @ModelAttribute("donHangRequest") DonHangRequest request) {
+        String username = accountService.getUserName();
+        if (username == null || username.isEmpty()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
+            modelMap.addAttribute("listDonHang", donHangService.findAll(request.getSearchTxt(),
+                                                                                   request.getThoiGianDatHangSearch(),
+                                                                                   request.getKenhBanHang(),
+                                                                                   request.getTrangThaiDonHang()));
+            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
+            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelMap.addAttribute("listKhachHang", khachHangService.findAll());
+            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
+            modelMap.addAttribute("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelMap.addAttribute("donHangRequest", new DonHangRequest());
+            modelMap.addAttribute("donHang", new DonHang());
+            return PagesUtil.PAGE_DONHANG;
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @Transactional
     @PostMapping("/insert")
     public String insert(@ModelAttribute("donHangRequest") DonHangRequest request) {
         String username = accountService.getUserName();

@@ -1,9 +1,9 @@
 package com.flowiee.app.danhmuc.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import com.flowiee.app.danhmuc.repository.TrangThaiDonHangRepository;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
-import com.flowiee.app.sanpham.model.TrangThaiDonHang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

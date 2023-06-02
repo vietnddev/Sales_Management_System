@@ -2,19 +2,23 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
+import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
+import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.DonHangChiTiet;
 import com.flowiee.app.sanpham.entity.KhachHang;
 import com.flowiee.app.sanpham.model.DonHangRequest;
-import com.flowiee.app.sanpham.model.TrangThaiDonHang;
 import com.flowiee.app.sanpham.repository.DonHangRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
+import com.flowiee.app.sanpham.services.ChiTietDonHangService;
 import com.flowiee.app.sanpham.services.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -23,15 +27,23 @@ public class DonHangServiceImpl implements DonHangService {
     private DonHangRepository donHangRepository;
     @Autowired
     private BienTheSanPhamService bienTheSanPhamService;
+    @Autowired
+    private ChiTietDonHangService chiTietDonHangService;
+    @Autowired
+    private TrangThaiDonHangService trangThaiDonHangService;
 
     @Override
     public List<DonHang> findAll() {
-        return null;
+        return donHangRepository.findAll();
+    }
+    @Override
+    public List<DonHang> findAll(String searchTxt, String thoiGianDatHang, int kenhBanHangId, int trangThaiDonHangId) {
+        return donHangRepository.findAll(searchTxt, kenhBanHangId, trangThaiDonHangId);
     }
 
     @Override
-    public List<DonHang> findByTrangThai(String status) {
-        return null;
+    public List<DonHang> findByTrangThai(int trangThaiDonHangId) {
+        return donHangRepository.findByTrangThaiDonHang(trangThaiDonHangService.findById(trangThaiDonHangId));
     }
 
     @Override
@@ -41,10 +53,11 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public DonHang findById(int id) {
-        return null;
+        return donHangRepository.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public DonHang save(DonHangRequest request) {
         try {
             DonHang donHang = new DonHang();
@@ -54,18 +67,28 @@ public class DonHangServiceImpl implements DonHangService {
             donHang.setNhanVienBanHang(Account.builder().id(request.getNhanVienBanHang()).build());
             donHang.setGhiChu(request.getGhiChu());
             donHang.setThoiGianDatHang(request.getThoiGianDatHang());
-            donHang.setTrangThaiDonHang(request.getTrangThaiDonHang());
+            donHang.setHinhThucThanhToan(HinhThucThanhToan.builder().id(request.getHinhThucThanhToan()).build());
+            donHang.setTrangThaiDonHang(TrangThaiDonHang.builder().id(request.getTrangThaiDonHang()).build());
+            donHang.setTongTienDonHang(0D);
             donHangRepository.save(donHang);
 
-            for (int idBienThe : request.getListBienTheSanPham()) {
+            DonHang donHangSaved = donHangRepository.findDonHangMoiNhat().get(0);
+
+            Double totalMoneyOfDonHang = 0D;
+            for (int idBienTheSP : request.getListBienTheSanPham()) {
                 DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
-                donHangChiTiet.setDonHang(donHang);
-                donHangChiTiet.setBienTheSanPham(bienTheSanPhamService.findById(idBienThe));
+                donHangChiTiet.setDonHang(donHangSaved);
+                donHangChiTiet.setBienTheSanPham(bienTheSanPhamService.findById(idBienTheSP));
                 donHangChiTiet.setGhiChu("");
                 donHangChiTiet.setSoLuong(1);
                 donHangChiTiet.setTrangThai(true);
+                chiTietDonHangService.save(donHangChiTiet);
+                totalMoneyOfDonHang += bienTheSanPhamService.getGiaBan(idBienTheSP);
             }
-            return donHang;
+            donHangSaved.setTongTienDonHang(totalMoneyOfDonHang);
+            donHangRepository.save(donHangSaved);
+
+            return donHangSaved;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -74,7 +97,11 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public DonHang update(DonHang donHang, int id) {
-        return null;
+        if (id <= 0 || this.findById(id) == null) {
+            throw new NotFoundException();
+        }
+        donHang.setId(id);
+        return donHangRepository.save(donHang);
     }
 
     @Override

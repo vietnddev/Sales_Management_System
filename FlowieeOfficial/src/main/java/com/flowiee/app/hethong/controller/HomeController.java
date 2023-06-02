@@ -1,5 +1,6 @@
-package com.flowiee.app.sanpham.controller;
+package com.flowiee.app.hethong.controller;
 
+import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping(value = "")
+@RequestMapping("")
 public class HomeController {
     @Autowired
     private AccountService accountService;
 
-//    @RequestMapping(value = "")
-//    public String homePage() {
-//        return "pages/sales/product";
-//    }
+    @GetMapping
+    public String homeController() {
+        if (accountService.getUserName() == null) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        return "redirect:/don-hang";
+    }
 
     @GetMapping(value = "/login")
     public String showLoginPage(HttpServletRequest request){
@@ -36,11 +40,6 @@ public class HomeController {
         }
         return "login";
     }
-
-//    @GetMapping(value = "/login", params = "submit")
-//    public void submitLogin(){
-//        //
-//    }
 
     @GetMapping(value = "/change-password")
     public void showPageChangePassword(){

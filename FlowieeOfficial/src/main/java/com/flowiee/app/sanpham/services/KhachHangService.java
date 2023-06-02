@@ -5,7 +5,7 @@ import com.flowiee.app.sanpham.entity.KhachHang;
 import java.util.List;
 
 public interface KhachHangService {
+    List<KhachHang> findAll();
 
-    List<KhachHang> getAll();
-
+    KhachHang findById(int id);
 }

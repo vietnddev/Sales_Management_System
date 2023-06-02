@@ -19,6 +19,11 @@ public class PagesUtil {
     public static final String PAGE_DANHMUC_HETHONG = "/pages/danh-muc/danh-muc-he-thong";
     public static final String PAGE_DANHMUC_LOAISANPHAM = "/pages/danh-muc/loai-san-pham";
     public static final String PAGE_DANHMUC_LOAITAILIEU = "/pages/danh-muc/loai-tai-lieu";
+    public static final String PAGE_DANHMUC_HINHTHUC_THANHTOAN = "/pages/danh-muc/hinh-thuc-thanh-toan";
+    public static final String PAGE_DANHMUC_KENHBANHANG = "/pages/danh-muc/kenh-ban-hang";
+    public static final String PAGE_DANHMUC_TRANGTHAI_DONHANG = "/pages/danh-muc/trang-thai-don-hang";
+    public static final String PAGE_DANHMUC_MAUSAC = "/pages/danh-muc/mau-sac";
+    public static final String PAGE_DANHMUC_KICHCO = "/pages/danh-muc/kich-co";
 
     public static final String PAGE_STORAGE_DOCUMENT = "/pages/kho-tai-lieu/document";
     public static final String PAGE_STORAGE_DOCUMENT_DETAIL = "/pages/kho-tai-lieu/document-detail";

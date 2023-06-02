@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface KenhBanHangService {
-
     List<KenhBanHang> findAll();
 
     KenhBanHang findById(int id);

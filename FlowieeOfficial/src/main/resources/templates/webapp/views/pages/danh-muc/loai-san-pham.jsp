@@ -36,7 +36,7 @@
               <div class="card">
                 <div class="card-header">
                   <div class="row justify-content-between">
-                    <div class="col-4">
+                    <div class="col-4" style="display: flex; align-items: center">
                       <h3 class="card-title"><strong>DANH MỤC LOẠI SẢN PHẨM</strong></h3>
                     </div>
                     <div class="col-4 text-right">
@@ -46,7 +46,6 @@
                       </button>
                     </div>
                   </div>
-                  <!-- modal-content (Thêm mới loại sản phẩm)-->
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body align-items-center">
@@ -79,9 +78,6 @@
                             </th:block>
                           </td>
                           <td>
-                            <button class="btn btn-outline-info btn-sm" style="margin-bottom: 4px;"><a
-                                th:href="@{/category/{code}(code=${list.maLoai})}"><i
-                                  class="fa-solid fa-eye"></i></a></button>
                             <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
                               th:data-target="'#update-' + ${list.id}" style="margin-bottom: 4px;"
                               th:if="${action_update == 'enable'}">

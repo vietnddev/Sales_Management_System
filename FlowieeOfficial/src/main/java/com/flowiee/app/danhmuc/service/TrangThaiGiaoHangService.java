@@ -3,7 +3,6 @@ package com.flowiee.app.danhmuc.service;
 import com.flowiee.app.danhmuc.entity.TrangThaiGiaoHang;
 
 import java.util.List;
-
 public interface TrangThaiGiaoHangService {
     List<TrangThaiGiaoHang> findAll();
 

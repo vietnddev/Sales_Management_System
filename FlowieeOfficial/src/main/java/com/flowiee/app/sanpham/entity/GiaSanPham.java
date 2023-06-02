@@ -40,6 +40,9 @@ public class GiaSanPham implements Serializable {
     @Column(name = "updated_at",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updatedAt;
 
+    @Column(name = "trang_thai", nullable = false)
+    private boolean trangThai;
+
     @PreUpdate
     @PrePersist
     public void updateTimeStamps() {

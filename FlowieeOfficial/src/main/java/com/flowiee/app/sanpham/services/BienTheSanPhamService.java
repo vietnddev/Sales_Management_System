@@ -12,7 +12,9 @@ public interface BienTheSanPhamService {
 
     List<BienTheSanPham> getListVariantOfProduct(String loaiBienThe, int sanPhamId);
 
-    void create(BienTheSanPham bienTheSanPham);
+    Double getGiaBan(int id);
+
+    void save(BienTheSanPham bienTheSanPham);
 
     void update(BienTheSanPham bienTheSanPham, int id);
     

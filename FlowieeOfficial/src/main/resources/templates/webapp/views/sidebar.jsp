@@ -153,12 +153,57 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/danh-muc}" class="nav-link">
-                <i class="nav-icon"></i>
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa- nav-icon"></i>
                 <p>
                   Danh mục hệ thống
+                  <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/loai-san-pham}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Loại sản phẩm</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/loai-tai-lieu}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Loại tài liệu</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/kenh-ban-hang}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Kênh bán hàng</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/trang-thai-don-hang}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Trạng thái đơn hàng</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/hinh-thuc-thanh-toan}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Hình thức thanh toán</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/loai-mau-sac}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Màu sắc</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/kich-co}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Kích cỡ</p>
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <a th:href="@{/he-thong/nhom-quyen}" class="nav-link">

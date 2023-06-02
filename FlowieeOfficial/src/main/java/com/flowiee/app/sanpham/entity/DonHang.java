@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import com.flowiee.app.danhmuc.entity.TrangThaiGiaoHang;
@@ -48,6 +49,10 @@ public class DonHang implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "kenh_ban_hang", nullable = false)
 	private KenhBanHang kenhBanHang;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "hinh_thuc_thanh_toan", nullable = false)
+	private HinhThucThanhToan hinhThucThanhToan;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trang_thai_don_hang", nullable = false)
