@@ -1,35 +1,66 @@
 package com.flowiee.app.danhmuc.service.impl;
 
+import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.danhmuc.entity.LoaiMauSac;
+import com.flowiee.app.danhmuc.repository.LoaiMauSacRepository;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class LoaiMauSacServiceImpl implements LoaiMauSacService {
+    @Autowired
+    private LoaiMauSacRepository loaiMauSacRepository;
+
     @Override
     public List<LoaiMauSac> findAll() {
-        return null;
+        return loaiMauSacRepository.findAll();
     }
 
     @Override
     public LoaiMauSac findById(int id) {
-        return null;
+        if (id <= 0) {
+            throw new NotFoundException();
+        }
+        return loaiMauSacRepository.findById(id).orElse(null);
     }
 
     @Override
     public String save(LoaiMauSac loaiMauSac) {
-        return null;
+        try {
+            loaiMauSacRepository.save(loaiMauSac);
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NOK";
+        }
     }
 
     @Override
     public String update(LoaiMauSac loaiMauSac, int id) {
-        return null;
+        try {
+            if (id <= 0 || this.findById(id) == null) {
+                throw new NotFoundException();
+            }
+            loaiMauSacRepository.save(loaiMauSac);
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NOK";
+        }
     }
 
     @Override
     public String delete(int id) {
-        return null;
+        if (id <= 0 || this.findById(id) == null) {
+            throw new NotFoundException();
+        }
+        loaiMauSacRepository.deleteById(id);
+        if (this.findById(id) == null) {
+            return "OK";
+        }
+        return "NOK";
     }
 }

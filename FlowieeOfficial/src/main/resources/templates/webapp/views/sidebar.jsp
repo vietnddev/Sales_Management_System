@@ -198,7 +198,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/danh-muc/kich-co}" class="nav-link">
+                  <a th:href="@{/danh-muc/loai-kich-co}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Kích cỡ</p>
                   </a>

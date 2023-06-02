@@ -26,7 +26,7 @@
     <div th:replace="sidebar :: sidebar"></div>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper mt-3">
+    <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
       <!-- Main content -->
       <section class="content">
         <div class="container-fluid">
@@ -78,12 +78,12 @@
                             </th:block>
                           </td>
                           <td>
-                            <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
-                              th:data-target="'#update-' + ${list.id}" style="margin-bottom: 4px;"
+                            <button class="btn btn-info btn-sm" data-toggle="modal"
+                              th:data-target="'#update-' + ${list.id}"
                               th:if="${action_update == 'enable'}">
                               <i class="fa-solid fa-pencil"></i>
                             </button>
-                            <button class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                            <button class="btn btn-danger btn-sm" data-toggle="modal"
                               th:data-target="'#delete-' + ${list.id}"
                               th:if="${action_delete == 'enable'}">
                               <i class="fa-solid fa-trash"></i>
@@ -250,6 +250,7 @@
               </div>
             </div>
           </div>
+        </div>
       </section>
       <!-- /.content -->
     </div>

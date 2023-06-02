@@ -22,8 +22,8 @@ public class PagesUtil {
     public static final String PAGE_DANHMUC_HINHTHUC_THANHTOAN = "/pages/danh-muc/hinh-thuc-thanh-toan";
     public static final String PAGE_DANHMUC_KENHBANHANG = "/pages/danh-muc/kenh-ban-hang";
     public static final String PAGE_DANHMUC_TRANGTHAI_DONHANG = "/pages/danh-muc/trang-thai-don-hang";
-    public static final String PAGE_DANHMUC_MAUSAC = "/pages/danh-muc/mau-sac";
-    public static final String PAGE_DANHMUC_KICHCO = "/pages/danh-muc/kich-co";
+    public static final String PAGE_DANHMUC_MAUSAC = "/pages/danh-muc/loai-mau-sac";
+    public static final String PAGE_DANHMUC_KICHCO = "/pages/danh-muc/loai-kich-co";
 
     public static final String PAGE_STORAGE_DOCUMENT = "/pages/kho-tai-lieu/document";
     public static final String PAGE_STORAGE_DOCUMENT_DETAIL = "/pages/kho-tai-lieu/document-detail";

@@ -2,23 +2,17 @@ package com.flowiee.app.danhmuc.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.danhmuc.entity.LoaiSanPham;
-import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
-import com.flowiee.app.hethong.entity.Account;
-import com.flowiee.app.hethong.entity.SystemLog;
-import com.flowiee.app.hethong.model.SystemLogAction;
+import com.flowiee.app.danhmuc.entity.LoaiKichCo;
+import com.flowiee.app.danhmuc.service.LoaiKichCoService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -26,10 +20,8 @@ import java.util.List;
 public class LoaiKichCoController {
     @Autowired
     private AccountService accountService;
-
     @Autowired
-    private LoaiSanPhamService loaiSanPhamService;
-
+    private LoaiKichCoService loaiKichCoService;
     @Autowired
     private SystemLogService systemLogService;
 
@@ -37,15 +29,15 @@ public class LoaiKichCoController {
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModule;
 
     @GetMapping("")
-    public String findAllSanPham(ModelMap modelMap) {
+    public String findAll(ModelMap modelMap) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
-            List<LoaiSanPham> listLoaiSP = loaiSanPhamService.findAll();
-            modelMap.addAttribute("listLoaiSP", listLoaiSP);
-            modelMap.addAttribute("loaiSanPham", new LoaiSanPham());
+            List<LoaiKichCo> list = loaiKichCoService.findAll();
+            modelMap.addAttribute("listDanhMuc", list);
+            modelMap.addAttribute("loaiKichCo", new LoaiKichCo());
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelMap.addAttribute("action_create", "enable");
             }
@@ -55,36 +47,24 @@ public class LoaiKichCoController {
             if (kiemTraQuyenModule.kiemTraQuyenXoa()) {
                 modelMap.addAttribute("action_delete", "enable");
             }
-            return PagesUtil.PAGE_DANHMUC_LOAISANPHAM;
+            return PagesUtil.PAGE_DANHMUC_KICHCO;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
     }
 
     @PostMapping("/insert")
-    public String insert(@Valid @ModelAttribute("loaiSanPham") LoaiSanPham loaiSanPham,
-                         BindingResult bindingResult, HttpServletRequest request) {
+    public String insert(@ModelAttribute("loaiKichCo") LoaiKichCo loaiKichCo) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (bindingResult.hasErrors()) {
-            System.out.println("Error: " + bindingResult.getFieldError());
-        }
-        loaiSanPhamService.save(loaiSanPham);
-        SystemLog systemLog = SystemLog.builder()
-                .module("Danh mục - Loại sản phẩm")
-                .action(SystemLogAction.THEM_MOI.name())
-                .noiDung(loaiSanPham.toString())
-                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-                .ip(IPUtil.getClientIpAddress(request))
-                .build();
-        systemLogService.writeLog(systemLog);
+        loaiKichCoService.save(loaiKichCo);
         return "redirect:";
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute("loaiSanPham") LoaiSanPham loaiSanPham,
+    public String update(@ModelAttribute("loaiKichCo") LoaiKichCo loaiKichCo,
                          @PathVariable("id") int id, HttpServletRequest request) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
@@ -93,17 +73,7 @@ public class LoaiKichCoController {
         if (id <= 0) {
             throw new BadRequestException();
         }
-        loaiSanPhamService.update(loaiSanPham, id);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-                .module("Danh mục - Loại sản phẩm")
-                .action(SystemLogAction.CAP_NHAT.name())
-                .noiDung(loaiSanPham.toString())
-                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-                .ip(IPUtil.getClientIpAddress(request))
-                .build();
-        systemLogService.writeLog(systemLog);
-
+        loaiKichCoService.update(loaiKichCo, id);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -113,21 +83,7 @@ public class LoaiKichCoController {
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        LoaiSanPham loaiSanPham = loaiSanPhamService.findById(id);
-        if (id <= 0 || loaiSanPham == null) {
-            throw new BadRequestException();
-        }
-        loaiSanPhamService.delete(id);
-        //Lưu log
-        SystemLog systemLog = SystemLog.builder()
-                .module("Danh mục - Loại sản phẩm")
-                .action(SystemLogAction.XOA.name())
-                .noiDung(loaiSanPham.toString())
-                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-                .ip(IPUtil.getClientIpAddress(request))
-                .build();
-        systemLogService.writeLog(systemLog);
-
+        loaiKichCoService.delete(id);
         return "redirect:" + request.getHeader("referer");
     }
 }
