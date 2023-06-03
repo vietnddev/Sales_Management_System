@@ -114,7 +114,7 @@
                                                                         <div class="card card-primary card-tabs"
                                                                              style="min-height: 550px; margin-bottom: 0px">
                                                                             <div class="row justify-content-center mt-2 mb-2">
-                                                                                <button type="button" class="btn btn-info col-3">
+                                                                                <button type="button" class="btn btn-primary col-3">
                                                                                     Lưu
                                                                                 </button>
                                                                             </div>
