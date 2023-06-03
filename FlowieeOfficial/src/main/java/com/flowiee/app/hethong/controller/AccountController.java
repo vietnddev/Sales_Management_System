@@ -6,6 +6,7 @@ import com.flowiee.app.hethong.model.SystemLogAction;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -22,11 +23,12 @@ import java.util.Optional;
 @Controller
 @RequestMapping(path = "/he-thong/tai-khoan")
 public class AccountController {
-
     @Autowired
     private AccountService accountService;
     @Autowired
     private SystemLogService systemLogService;
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping(value = "")
     public String findAll(HttpServletRequest request, ModelMap modelMap) {
@@ -34,7 +36,7 @@ public class AccountController {
         if (username != null && !username.isEmpty()) {
             modelMap.addAttribute("account", new Account());
             modelMap.addAttribute("listAccount", accountService.findAll());
-
+            modelMap.addAttribute("listRole", roleService.findAllRole());
             return PagesUtil.PAGE_HETHONG_TAIKHOAN;
         }
         return PagesUtil.PAGE_LOGIN;
