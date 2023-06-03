@@ -20,61 +20,26 @@
     <div th:replace="sidebar :: sidebar"></div>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper mt-3">
+    <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <!-- Small boxes (Stat box) -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title"><strong>NHẬT KÝ HỆ THỐNG</strong></h3>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Tài khoản</th>
-                                        <th>Module</th>
-                                        <th>Thao tác</th>
-                                        <th>Nội dung</th>
-                                        <th>Nội dung cập nhật</th>
-                                        <th>Thời gian</th>
-                                        <th>IP</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <th:block th:each="log : ${listLog}">
-                                        <tr>
-                                            <td th:text="${log.id}"></td>
-                                            <td th:text="${log.account.username}"></td>
-                                            <td th:text="${log.module}"></td>
-                                            <td th:text="${log.action}"></td>
-                                            <td th:text="${log.noiDung}"></td>
-                                            <td th:text="${log.noiDungCapNhat}"></td>
-                                            <td th:text="${log.createdAt}"></td>
-                                            <td th:text="${log.ip}"></td>
-                                        </tr>
-                                    </th:block>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Tài khoản</th>
-                                        <th>Module</th>
-                                        <th>Thao tác</th>
-                                        <th>Nội dung</th>
-                                        <th>Nội dung cập nhật</th>
-                                        <th>Thời gian</th>
-                                        <th>IP</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
+                <div class="card" th:each="role : ${listRole}">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse"
+                                    th:data-target="'#module-' + ${role.module.entrySet().iterator().next().key}">
+                                <span th:text="${role.module.entrySet().iterator().next().value}"></span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div th:id="'module-' + ${role.module.entrySet().iterator().next().key}" class="collapse">
+                        <div class="card-body">
+                            <ul>
+                                <li th:each="action : ${role.action}">
+                                    <span th:text="${action.valueAction}"></span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
