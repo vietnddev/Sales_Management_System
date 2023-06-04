@@ -26,7 +26,7 @@
     <div th:replace="sidebar :: sidebar"></div>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper mt-3">
+    <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">

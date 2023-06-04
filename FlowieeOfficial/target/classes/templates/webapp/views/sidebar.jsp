@@ -75,18 +75,6 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/category/colorProduct}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Loại màu sắc</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{/category/sizeProduct}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Loại kích cỡ</p>
-                  </a>
-                </li>
-                <li class="nav-item">
                   <a th:href="@{/san-pham}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Danh sách sản phẩm</p>
@@ -162,15 +150,21 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
+                  <a th:href="@{/danh-muc/loai-tai-lieu}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Loại tài liệu</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a th:href="@{/danh-muc/loai-san-pham}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Loại sản phẩm</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/danh-muc/loai-tai-lieu}" class="nav-link">
+                  <a th:href="@{/danh-muc/don-vi-tinh}" class="nav-link">
                     <i class="far nav-icon"></i>
-                    <p>Loại tài liệu</p>
+                    <p>Đơn vị tính</p>
                   </a>
                 </li>
                 <li class="nav-item">

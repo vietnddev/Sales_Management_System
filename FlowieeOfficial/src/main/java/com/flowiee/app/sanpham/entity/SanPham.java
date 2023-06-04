@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.danhmuc.entity.DonViTinh;
 import com.flowiee.app.danhmuc.entity.LoaiSanPham;
 import com.flowiee.app.file.entity.FileStorage;
 import lombok.*;
@@ -23,13 +24,16 @@ public class SanPham implements Serializable {
     @Column(name = "id", nullable = false)
     private  int id;
 
-    @JsonIgnoreProperties("listSanPham")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loai_san_pham", nullable = false, insertable = true, updatable = true)
     private LoaiSanPham loaiSanPham;
 
-    @Column(name = "ten_san_pham", length = 255, nullable = false)
+    @Column(name = "ten_san_pham", nullable = false)
     private String tenSanPham;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "don_vi_tinh", nullable = false)
+    private DonViTinh donViTinh;
 
     @Lob
     @Column(name = "mo_ta_san_pham", length = 30000, nullable = true, columnDefinition = "CLOB")

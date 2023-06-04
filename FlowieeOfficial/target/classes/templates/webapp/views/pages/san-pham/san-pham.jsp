@@ -51,6 +51,7 @@
                                         <th>ID</th>
                                         <th>Tên sản phẩm</th>
                                         <th>Loại sản phẩm</th>
+                                        <th>Đơn vị tính</th>
                                         <th>Mô tả sản phẩm</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
@@ -64,6 +65,8 @@
                                                 <a th:href="@{/san-pham/{id}(id=${list.id})}" th:text="${list.tenSanPham}"></a>
                                             </td>
                                             <td th:text="${list.loaiSanPham.tenLoai}">
+                                            </td>
+                                            <td th:text="${list.donViTinh.tenLoai}">
                                             </td>
                                             <td th:text="${list.moTaSanPham}"></td>
                                             <td>
@@ -163,6 +166,19 @@
                                                                                 </select>
                                                                             </div>
                                                                             <div class="form-group">
+                                                                                <label>Đơn vị tính</label>
+                                                                                <select class="custom-select"
+                                                                                        name="donViTinh">
+                                                                                    <option th:each="lsDvt, iterStat : ${listDonViTinh}"
+                                                                                            th:value="${lsDvt.id}"
+                                                                                            th:text="${lsDvt.tenLoai}">
+                                                                                    </option>
+                                                                                    <option th:text="${list.donViTinh.tenLoai}"
+                                                                                            th:value="${list.donViTinh.id}"
+                                                                                            selected></option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group">
                                                                                 <label>Mô tả sản phẩm</label>
                                                                                 <textarea class="form-control" rows="5"
                                                                                           placeholder="Mô tả sản phẩm"
@@ -212,6 +228,7 @@
                                         <th>ID</th>
                                         <th>Tên sản phẩm</th>
                                         <th>Loại sản phẩm</th>
+                                        <th>Đơn vị tính</th>
                                         <th>Mô tả sản phẩm</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
@@ -247,6 +264,17 @@
                                                                             th:value="${lstype.id}"
                                                                             th:text="${lstype.tenLoai}"
                                                                             th:selected="${iterStat.index == 0}"></option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Đơn vị tính</label>
+                                                                <select class="custom-select"
+                                                                        name="donViTinh">
+                                                                    <option th:each="lsDvt, iterStat : ${listDonViTinh}"
+                                                                            th:value="${lsDvt.id}"
+                                                                            th:text="${lsDvt.tenLoai}"
+                                                                            th:selected="${iterStat.index == 0}">
+                                                                    </option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">

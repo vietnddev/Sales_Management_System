@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.sanpham.entity.DonHangChiTiet;
+import com.flowiee.app.sanpham.model.DonHangChiTietResponse;
 import com.flowiee.app.sanpham.repository.ChiTietDonHangRepository;
 import com.flowiee.app.sanpham.services.ChiTietDonHangService;
 import com.flowiee.app.sanpham.services.DonHangService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -78,5 +80,22 @@ public class ChiTietDonHangServiceImpl implements ChiTietDonHangService {
             e.printStackTrace();
             return "NOK";
         }
+    }
+
+    public List<DonHangChiTietResponse> convertToDonHangChiTietResponse(List<DonHangChiTiet> listDonHangChiTiet) {
+        List<DonHangChiTietResponse> listReturn = new ArrayList<>();
+        int i = 1;
+        for (DonHangChiTiet donHangChiTiet : listDonHangChiTiet) {
+            DonHangChiTietResponse response = new DonHangChiTietResponse();
+            response.setStt(i);
+            response.setId(donHangChiTiet.getId());
+            response.setDonHang(donHangChiTiet.getDonHang());
+            response.setBienTheSanPham(donHangChiTiet.getBienTheSanPham());
+            response.setSoLuong(donHangChiTiet.getSoLuong());
+            response.setGhiChu(donHangChiTiet.getGhiChu());
+            listReturn.add(response);
+            i++;
+        }
+        return listReturn;
     }
 }

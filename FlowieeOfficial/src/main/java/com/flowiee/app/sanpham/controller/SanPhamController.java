@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.danhmuc.service.LoaiKichCoService;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
 import com.flowiee.app.hethong.service.AccountService;
@@ -37,6 +38,8 @@ public class SanPhamController {
     @Autowired
     private LoaiSanPhamService loaiSanPhamService;
     @Autowired
+    private DonViTinhService donViTinhService;
+    @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModule;
 
     /**
@@ -52,6 +55,7 @@ public class SanPhamController {
             modelMap.addAttribute("sanPham", new SanPham());
             modelMap.addAttribute("listSanPham", productsService.findAll());
             modelMap.addAttribute("listLoaiSanPham", loaiSanPhamService.findAll());
+            modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelMap.addAttribute("action_create", "enable");
             }

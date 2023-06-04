@@ -17,8 +17,9 @@ public class PagesUtil {
     public static final String PAGE_PROFILE = "pages/profile/profile";
 
     public static final String PAGE_DANHMUC_HETHONG = "/pages/danh-muc/danh-muc-he-thong";
-    public static final String PAGE_DANHMUC_LOAISANPHAM = "/pages/danh-muc/loai-san-pham";
     public static final String PAGE_DANHMUC_LOAITAILIEU = "/pages/danh-muc/loai-tai-lieu";
+    public static final String PAGE_DANHMUC_LOAISANPHAM = "/pages/danh-muc/loai-san-pham";
+    public static final String PAGE_DANHMUC_DONVITINH = "/pages/danh-muc/don-vi-tinh";
     public static final String PAGE_DANHMUC_HINHTHUC_THANHTOAN = "/pages/danh-muc/hinh-thuc-thanh-toan";
     public static final String PAGE_DANHMUC_KENHBANHANG = "/pages/danh-muc/kenh-ban-hang";
     public static final String PAGE_DANHMUC_TRANGTHAI_DONHANG = "/pages/danh-muc/trang-thai-don-hang";
