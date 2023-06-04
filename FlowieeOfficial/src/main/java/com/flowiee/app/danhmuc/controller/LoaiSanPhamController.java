@@ -38,8 +38,7 @@ public class LoaiSanPhamController {
 
     @GetMapping("")
     public String findAllSanPham(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
@@ -64,53 +63,32 @@ public class LoaiSanPhamController {
     @PostMapping("/insert")
     public String insert(@Valid @ModelAttribute("loaiSanPham") LoaiSanPham loaiSanPham,
                          BindingResult bindingResult, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (bindingResult.hasErrors()) {
             System.out.println("Error: " + bindingResult.getFieldError());
         }
         loaiSanPhamService.save(loaiSanPham);
-        SystemLog systemLog = SystemLog.builder()
-            .module("Danh mục - Loại sản phẩm")
-            .action(SystemLogAction.THEM_MOI.name())
-            .noiDung(loaiSanPham.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
-        systemLogService.writeLog(systemLog);
         return "redirect:";
     }
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("loaiSanPham") LoaiSanPham loaiSanPham,
                          @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (id <= 0) {
             throw new BadRequestException();
         }
         loaiSanPhamService.update(loaiSanPham, id);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-            .module("Danh mục - Loại sản phẩm")
-            .action(SystemLogAction.CAP_NHAT.name())
-            .noiDung(loaiSanPham.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
-        systemLogService.writeLog(systemLog);
-
-        return "redirect:" + request.getHeader("referer");
+         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         LoaiSanPham loaiSanPham = loaiSanPhamService.findById(id);
@@ -118,16 +96,6 @@ public class LoaiSanPhamController {
             throw new BadRequestException();
         }
         loaiSanPhamService.delete(id);
-        //Lưu log
-        SystemLog systemLog = SystemLog.builder()
-            .module("Danh mục - Loại sản phẩm")
-            .action(SystemLogAction.XOA.name())
-            .noiDung(loaiSanPham.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
-        systemLogService.writeLog(systemLog);
-
         return "redirect:" + request.getHeader("referer");
     }
 }

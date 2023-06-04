@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -43,8 +44,7 @@ public class DonHangController {
 
     @GetMapping
     public String findAllDonHang(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
@@ -65,14 +65,14 @@ public class DonHangController {
 
     @PostMapping
     public String FilterListDonHang(ModelMap modelMap, @ModelAttribute("donHangRequest") DonHangRequest request) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
             modelMap.addAttribute("listDonHang", donHangService.findAll(request.getSearchTxt(),
                                                                                    request.getThoiGianDatHangSearch(),
                                                                                    request.getKenhBanHang(),
+                                                                                   request.getHinhThucThanhToan(),
                                                                                    request.getTrangThaiDonHang()));
             modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
             modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
@@ -88,11 +88,24 @@ public class DonHangController {
         }
     }
 
+    @GetMapping("/{id}")
+    public String findDonHangDetail(@PathVariable("id") int id, HttpServletRequest request, ModelMap modelMap) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
+            modelMap.addAttribute("donHangDetail", donHangService.findById(id));
+            modelMap.addAttribute("donHang", new DonHang());
+            return "redirect:/don-hang";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
     @Transactional
     @PostMapping("/insert")
     public String insert(@ModelAttribute("donHangRequest") DonHangRequest request) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
@@ -105,8 +118,7 @@ public class DonHangController {
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("donHang") DonHang donHang, @PathVariable("id") int id) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
@@ -119,8 +131,7 @@ public class DonHangController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {

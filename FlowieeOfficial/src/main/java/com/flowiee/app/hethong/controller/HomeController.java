@@ -18,15 +18,15 @@ public class HomeController {
 
     @GetMapping
     public String homeController() {
-        if (accountService.getUserName() == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         return "redirect:/don-hang";
     }
 
     @GetMapping(value = "/login")
-    public String showLoginPage(HttpServletRequest request){
-        if (accountService.findByUsername("admin") == null){
+    public String showLoginPage(HttpServletRequest request) {
+        if (accountService.findByUsername("admin") == null) {
             Account account = new Account();
             account.setUsername("admin");
             account.setPassword("$2a$12$UGPx1eE9SzfvCDniYtwoZuQRzVdjHKkjbZcDKXO4.1Z/uGpOsFFVu");
@@ -42,8 +42,11 @@ public class HomeController {
     }
 
     @GetMapping(value = "/change-password")
-    public void showPageChangePassword(){
-        //
+    public String showPageChangePassword() {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        return PagesUtil.PAGE_UNAUTHORIZED;
     }
     @GetMapping(value = "/change-password", params = "submit")
     public void submitChangePassword(){

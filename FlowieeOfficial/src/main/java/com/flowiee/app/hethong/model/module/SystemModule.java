@@ -13,12 +13,6 @@ public enum SystemModule {
 
     KHO_TAI_LIEU("KHO TÀI LIỆU"),
 
-    CONG_VIEC("CÔNG VIỆC"),
-
-    HOC_TAP("HỌC TẬP"),
-
-    CHI_TIEU("CHI TIÊU"),
-
     HE_THONG("HỆ THỐNG"),
 
     DANH_MUC("DANH MỤC"),

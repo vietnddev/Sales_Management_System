@@ -1,7 +1,9 @@
 package com.flowiee.app.hethong.service.impl;
 
+import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.hethong.entity.AccountRole;
 import com.flowiee.app.hethong.model.Role;
+import com.flowiee.app.hethong.model.RoleResponse;
 import com.flowiee.app.hethong.model.action.*;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.repository.RoleRepository;
@@ -64,6 +66,7 @@ public class RoleServiceImpl implements RoleService {
                         listActionKhoTaiLieu.add(action);
                     }
                     response.setAction(listActionKhoTaiLieu);
+                    break;
                 case DANH_MUC:
                     List<Role.Action> listActionDanhMuc = new ArrayList<>();
                     for (DanhMucAction actionDanhMuc : DanhMucAction.values()) {
@@ -155,4 +158,19 @@ public class RoleServiceImpl implements RoleService {
         }
         return false;
     }
+
+//    @Override
+//    public List<RoleResponse> convertToRoleResponse(List<Role> listRole) {
+//        if (listRole == null) {
+//            throw new BadRequestException();
+//        }
+//        List<RoleResponse> listReturn = new ArrayList<>();
+//        for (Role role : listRole) {
+//            RoleResponse roleResponse = new RoleResponse();
+//            roleResponse.setModule(role.getModule());
+//            roleResponse.setAction(role.getAction());
+//            listReturn.add(roleResponse);
+//        }
+//        return listReturn;
+//    }
 }

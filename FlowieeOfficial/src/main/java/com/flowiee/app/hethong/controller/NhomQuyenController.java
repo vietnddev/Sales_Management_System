@@ -26,8 +26,7 @@ public class NhomQuyenController {
 
     @GetMapping
     public String showAllRole(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
@@ -38,26 +37,6 @@ public class NhomQuyenController {
             return PagesUtil.PAGE_HETHONG_ROLE;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
-        }
-    }
-
-    @ResponseBody
-    @GetMapping("/json")
-    public List<Role> showAllRoleJson(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
-            //return PagesUtil.PAGE_LOGIN;
-        }
-        if (kiemTraQuyenModule.kiemTraQuyenXem()) {
-            //modelMap.addAttribute("listRole", roleService.findAllRole());
-            if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
-            }
-            //return PagesUtil.PAGE_HETHONG_ROLE;
-            return roleService.findAllRole();
-        } else {
-            //return PagesUtil.PAGE_UNAUTHORIZED;
-            return null;
         }
     }
 }

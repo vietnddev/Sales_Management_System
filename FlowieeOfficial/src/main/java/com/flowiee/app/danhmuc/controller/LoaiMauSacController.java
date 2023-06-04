@@ -30,8 +30,7 @@ public class LoaiMauSacController {
 
     @GetMapping("")
     public String findAll(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
@@ -55,8 +54,7 @@ public class LoaiMauSacController {
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("loaiMauSac") LoaiMauSac loaiMauSac) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         loaiMauSacService.save(loaiMauSac);
@@ -66,8 +64,7 @@ public class LoaiMauSacController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("loaiMauSac") LoaiMauSac loaiMauSac,
                          @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (id <= 0) {
@@ -79,8 +76,7 @@ public class LoaiMauSacController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         loaiMauSacService.delete(id);

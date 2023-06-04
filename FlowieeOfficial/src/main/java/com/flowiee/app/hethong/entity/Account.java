@@ -3,6 +3,8 @@ package com.flowiee.app.hethong.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.common.model.DateAudit;
 import com.flowiee.app.file.entity.FileStorage;
+import com.flowiee.app.hethong.model.Role;
+import com.flowiee.app.hethong.model.RoleResponse;
 import com.flowiee.app.khotailieu.entity.DocShare;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.sanpham.entity.DonHang;
@@ -73,19 +75,22 @@ public class Account extends DateAudit implements Serializable{
     @OneToMany(mappedBy = "nhanVienBanHang", fetch = FetchType.LAZY)
     private List<DonHang> listDonHang;
 
+    @Transient
+    private List<Role> role;
+
     @Override
     public String toString() {
-        return "TaiKhoan{" +
-            "id=" + id +
-            ", username='" + username + '\'' +
-            ", password='" + password + '\'' +
-            ", hoTen='" + hoTen + '\'' +
-            ", gioiTinh=" + gioiTinh +
-            ", soDienThoai='" + soDienThoai + '\'' +
-            ", email='" + email + '\'' +
-            ", avatar='" + avatar + '\'' +
-            ", ghiChu='" + ghiChu + '\'' +
-            ", trangThai=" + trangThai +
-            '}';
+        return "Account{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", hoTen='" + hoTen + '\'' +
+                ", gioiTinh=" + gioiTinh +
+                ", soDienThoai='" + soDienThoai + '\'' +
+                ", email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", ghiChu='" + ghiChu + '\'' +
+                ", trangThai=" + trangThai +
+                '}';
     }
 }

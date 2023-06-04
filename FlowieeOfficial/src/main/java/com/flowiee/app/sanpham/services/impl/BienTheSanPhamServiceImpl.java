@@ -71,7 +71,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             bienTheSanPhamRepository.save(bienTheSanPham);
             SystemLog systemLog = new SystemLog();
             systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.CREATE_SANPHAM_BIENTHE.name());
+            systemLog.setAction(SanPhamAction.CREATE_SANPHAM.name());
             systemLog.setNoiDung(bienTheSanPham.toString());
             systemLog.setAccount(accountService.getCurrentAccount());
             systemLog.setIp(accountService.getIP());
@@ -94,7 +94,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             bienTheSanPhamRepository.save(bienTheSanPham);
             SystemLog systemLog = new SystemLog();
             systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.UPDATE_SANPHAM_BIENTHE.name());
+            systemLog.setAction(SanPhamAction.UPDATE_SANPHAM.name());
             systemLog.setNoiDung(bienTheSanPhamBefore.toString());
             systemLog.setNoiDungCapNhat(bienTheSanPham.toString());
             systemLog.setAccount(accountService.getCurrentAccount());
@@ -117,7 +117,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             bienTheSanPhamRepository.deleteById(bienTheSanPhamId);
             SystemLog systemLog = new SystemLog();
             systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.DELETE_SANPHAM_BIENTHE.name());
+            systemLog.setAction(SanPhamAction.DELETE_SANPHAM.name());
             systemLog.setNoiDung(bienTheSanPhamToDelete.toString());
             systemLog.setAccount(accountService.getCurrentAccount());
             systemLog.setIp(accountService.getIP());

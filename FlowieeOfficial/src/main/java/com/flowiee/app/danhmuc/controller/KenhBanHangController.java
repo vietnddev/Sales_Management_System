@@ -26,8 +26,7 @@ public class KenhBanHangController {
 
     @GetMapping("")
     public String findAll(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
@@ -51,8 +50,7 @@ public class KenhBanHangController {
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("kenhBanHang") KenhBanHang kenhBanHang) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         kenhBanHangService.save(kenhBanHang);
@@ -62,8 +60,7 @@ public class KenhBanHangController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("kenhBanHang") KenhBanHang kenhBanHang,
                          @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (id <= 0) {
@@ -75,8 +72,7 @@ public class KenhBanHangController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         kenhBanHangService.delete(id);

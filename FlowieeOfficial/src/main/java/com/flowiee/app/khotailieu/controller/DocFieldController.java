@@ -30,7 +30,7 @@ public class DocFieldController {
         if (username == null || username.isEmpty()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleCreateDocField()) {
+        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleThemMoiDocument()) {
             docField.setTrangThai(false);
             docFieldService.save(docField);
             return "redirect:" + request.getHeader("referer");
@@ -45,7 +45,7 @@ public class DocFieldController {
         if (username == null || username.isEmpty()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleUpdateDocField()) {
+        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleCapNhatDocument()) {
             docFieldService.save(docField);
             return "redirect:" + request.getHeader("referer");
         } else {
@@ -62,7 +62,7 @@ public class DocFieldController {
         if (docFieldService.findById(id) == null){
             throw new BadRequestException();
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleDeleteDocField()) {
+        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleXoaDocument()) {
             docFieldService.delete(id);
             return "redirect:" + request.getHeader("referer");
         } else {

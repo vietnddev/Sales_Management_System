@@ -97,88 +97,97 @@
                                                     <i class="fa-solid fa-lock"></i>
                                                 </button>
                                                 <!-- MODAL ROLE -->
-                                                <th:block>
-                                                    <div class="modal fade" th:id="'role-' + ${list.id}">
-                                                        <div class="modal-dialog modal-xl">
-                                                            <div class="modal-content">
-                                                                <form th:action="@{/he-thong/tai-khoan/update-role/{id}}"
-                                                                      method="post">
-                                                                    <div class="modal-header">
-                                                                        <strong class="modal-title">Phân quyền</strong>
-                                                                        <button type="button" class="close"
-                                                                                data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="card card-primary card-tabs"
-                                                                             style="min-height: 550px; margin-bottom: 0px">
-                                                                            <div class="row justify-content-center mt-2 mb-2">
-                                                                                <button type="button" class="btn btn-primary col-3">
-                                                                                    Lưu
-                                                                                </button>
-                                                                            </div>
-                                                                            <div class="card-header p-0 pt-1">
-                                                                                <ul class="nav nav-tabs"
-                                                                                    id="custom-tabs-one-tab"
-                                                                                    role="tablist">
-                                                                                    <li class="nav-item" th:each="role : ${listRole}">
-                                                                                        <a class="nav-link"
-                                                                                           th:id="123"
-                                                                                           data-toggle="pill"
-                                                                                           th:href="'#' + ${role.module.entrySet().iterator().next().key}"
-                                                                                           role="tab"
-                                                                                           aria-controls="custom-tabs-one-home"
-                                                                                           aria-selected="true"
-                                                                                           style="font-weight: bold"
-                                                                                           th:text="${role.module.entrySet().iterator().next().value}">
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <div class="card-body" style="max-height: 485px; overflow: overlay">
-                                                                                <div class="tab-content"
-                                                                                     id="custom-tabs-one-tabContent">
-                                                                                    <div class="tab-pane fade"
-                                                                                         role="tabpanel"
-                                                                                         aria-labelledby="custom-tabs-one-home-tab"
-                                                                                         th:each="role : ${listRole}"
-                                                                                         th:id="${role.module.entrySet().iterator().next().key}">
-                                                                                        <table class="table table-bordered table-striped w-100">
-                                                                                            <thead>
-                                                                                                <tr>
-                                                                                                    <th>STT</th>
-                                                                                                    <th></th>
-                                                                                                    <th>Key</th>
-                                                                                                    <th>Tên quyền</th>
-                                                                                                </tr>
-                                                                                            </thead>
-                                                                                            <tbody>
-                                                                                                <tr th:each="action : ${role.action}">
-                                                                                                    <td></td>
-                                                                                                    <td class="text-center">
-                                                                                                        <div class="form-group clearfix" style="margin: 0 auto">
-                                                                                                            <div class="icheck-primary">
-                                                                                                                <input type="checkbox" th:id="'unchecked_' + ${action.keyAction}">
-                                                                                                                <label th:for="'unchecked_' + ${action.keyAction}"></label>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </td>
-                                                                                                    <td th:text="${action.keyAction}"></td>
-                                                                                                    <td th:text="${action.valueAction}"></td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </div>
+                                                <div class="modal fade" th:id="'role-' + ${list.id}">
+                                                    <div class="modal-dialog modal-xl">
+                                                        <div class="modal-content">
+                                                            <form th:action="@{/he-thong/tai-khoan/update-role/{id}}"
+                                                                  method="post">
+                                                                <div class="modal-header">
+                                                                    <strong class="modal-title">Phân quyền</strong>
+                                                                    <button type="button" class="close"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="card card-primary card-tabs"
+                                                                         style="min-height: 550px; margin-bottom: 0px">
+                                                                        <div class="row justify-content-center mt-2 mb-2">
+                                                                            <button type="button"
+                                                                                    class="btn btn-primary col-3">
+                                                                                Lưu
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="card-header p-0 pt-1">
+                                                                            <ul class="nav nav-tabs"
+                                                                                id="custom-tabs-one-tab"
+                                                                                role="tablist">
+                                                                                <li class="nav-item" th:each="role : ${list.role}">
+                                                                                    <a class="nav-link"
+                                                                                       th:id="'#' + ${role.module.entrySet().iterator().next().key} + '_' + ${list.id}"
+                                                                                       data-toggle="pill"
+                                                                                       th:href="'#' + ${role.module.entrySet().iterator().next().key} + '_' + ${list.id}"
+                                                                                       role="tab"
+                                                                                       aria-controls="custom-tabs-one-home"
+                                                                                       aria-selected="true"
+                                                                                       style="font-weight: bold"
+                                                                                       th:text="${role.module.entrySet().iterator().next().value}">
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                        <div class="card-body"
+                                                                             style="max-height: 485px; overflow: overlay">
+                                                                            <div class="tab-content"
+                                                                                 id="custom-tabs-one-tabContent">
+                                                                                <div class="tab-pane fade"
+                                                                                     role="tabpanel"
+                                                                                     aria-labelledby="custom-tabs-one-home-tab"
+                                                                                     th:each="role : ${list.role}"
+                                                                                     th:id="${role.module.entrySet().iterator().next().key} + '_' + ${list.id}">
+                                                                                    <table class="table table-bordered table-striped w-100">
+                                                                                        <thead>
+                                                                                        <tr>
+                                                                                            <th>STT</th>
+                                                                                            <th></th>
+                                                                                            <th>Key</th>
+                                                                                            <th>Tên quyền</th>
+                                                                                        </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                        <tr th:each="action : ${role.action}">
+                                                                                            <td></td>
+                                                                                            <td class="text-center">
+                                                                                                <div class="form-group clearfix"
+                                                                                                     style="margin: 0 auto">
+                                                                                                    <div class="icheck-primary"
+                                                                                                         th:if="${action.isChecked}">
+                                                                                                        <input type="checkbox" checked
+                                                                                                               th:id="'unchecked_' + ${action.keyAction}">
+                                                                                                        <label th:for="'unchecked_' + ${action.keyAction}"></label>
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary"
+                                                                                                         th:if="not ${action.isChecked}">
+                                                                                                        <input type="checkbox"
+                                                                                                               th:id="'unchecked_' + ${action.keyAction}">
+                                                                                                        <label th:for="'unchecked_' + ${action.keyAction}"></label>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                            <td th:text="${action.keyAction}"></td>
+                                                                                            <td th:text="${action.valueAction}"></td>
+                                                                                        </tr>
+                                                                                        </tbody>
+                                                                                    </table>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </form>
-                                                            </div>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </div>
-                                                </th:block>
+                                                </div>
                                                 <!-- /.END MODAL ROLE -->
                                                 <!-- MODAL XÓA -->
                                                 <div class="modal fade" th:id="'delete-' + ${list.id}">

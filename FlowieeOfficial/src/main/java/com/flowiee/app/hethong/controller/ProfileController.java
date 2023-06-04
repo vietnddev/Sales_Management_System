@@ -1,5 +1,6 @@
 package com.flowiee.app.hethong.controller;
 
+import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.file.service.FileStorageService;
@@ -22,14 +23,13 @@ public class ProfileController {
 	@Autowired
 	private AccountService accountService;
 
-	@Autowired
-	private FileStorageService filessService;
-
 	BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
 	@GetMapping("")
 	public String showInformation(@AuthenticationPrincipal UserDetails userDetails, ModelMap modelMap) {
-		// Lấy thông tin của user đã đăng nhập
+		if (!accountService.isLogin()) {
+			return PagesUtil.PAGE_LOGIN;
+		}
 		Account accountEntity = accountService.findByUsername(userDetails.getUsername());
 		if (accountEntity != null) {
 			modelMap.addAttribute("information", accountEntity);
@@ -43,6 +43,9 @@ public class ProfileController {
 	@PostMapping("/update")
 	public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
 			@ModelAttribute("account") Account accountEntity) {
+		if (!accountService.isLogin()) {
+			return PagesUtil.PAGE_LOGIN;
+		}
 		String username = userDetails.getUsername();
 		String password = accountService.findByUsername(username).getPassword();
 		int accountID = accountService.findByUsername(username).getId();
@@ -59,6 +62,9 @@ public class ProfileController {
 	@PostMapping("/change-password")
 	public String changePassword(HttpServletRequest request, @AuthenticationPrincipal UserDetails userDetails,
                                  @ModelAttribute("account") Account accountEntity, ModelMap modelMap) {
+		if (!accountService.isLogin()) {
+			return PagesUtil.PAGE_LOGIN;
+		}
 		String password_old = request.getParameter("password_old");
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");
@@ -80,6 +86,5 @@ public class ProfileController {
 		modelMap.addAttribute("successMessage", "OK rồi nhée");
 		
 		return "redirect:/profile";
-		//return "pages/profile/information";
 	}  
 }   

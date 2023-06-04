@@ -1,5 +1,6 @@
 package com.flowiee.app.khotailieu.controller;
 
+import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.DataExistsException;
@@ -32,7 +33,7 @@ public class DocTypeController {
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
-    private KiemTraQuyenModuleKhoTaiLieu kiemTraQuyenModuleKhoTaiLieu;
+    private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
     @Autowired
     private DocFieldService docFieldService;
 
@@ -42,17 +43,17 @@ public class DocTypeController {
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleReadDocType()) {
+        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
             List<LoaiTaiLieu> listLoaiTaiLieu = loaiTaiLieuService.findAll();
             modelMap.addAttribute("listLoaiTaiLieu", listLoaiTaiLieu);
             modelMap.addAttribute("loaiTaiLieu", new LoaiTaiLieu());
-            if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleCreateDocType()) {
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelMap.addAttribute("action_create", "enable");
             }
-            if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleUpdateDocType()) {
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
                 modelMap.addAttribute("action_update", "enable");
             }
-            if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleDeleteDocType()) {
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
                 modelMap.addAttribute("action_delete", "enable");
             }
             return PagesUtil.PAGE_DANHMUC_LOAITAILIEU;
@@ -67,19 +68,19 @@ public class DocTypeController {
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleReadDocType()) {
+        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
             List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(id).build());
             modelMap.addAttribute("listDocField", listDocField);
             modelMap.addAttribute("docField", new DocField());
             modelMap.addAttribute("nameDocType", loaiTaiLieuService.findById(id).getTen().toUpperCase());
             modelMap.addAttribute("docTypeId", id);
-            if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleCreateDocField()) {
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelMap.addAttribute("action_create", "enable");
             }
-            if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleUpdateDocField()) {
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
                 modelMap.addAttribute("action_update", "enable");
             }
-            if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleDeleteDocField()) {
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
                 modelMap.addAttribute("action_delete", "enable");
             }
             return PagesUtil.PAGE_STORAGE_DOCTYPE_DETAIL;

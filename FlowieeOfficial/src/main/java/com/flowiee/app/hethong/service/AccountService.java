@@ -27,7 +27,7 @@ public interface AccountService{
 
     Account getCurrentAccount();
 
-    String getUserNameByID(int id);
-
     String getIP();
+
+    boolean isLogin();
 }

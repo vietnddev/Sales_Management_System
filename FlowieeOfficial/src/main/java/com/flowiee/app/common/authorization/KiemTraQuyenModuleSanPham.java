@@ -82,7 +82,7 @@ public class KiemTraQuyenModuleSanPham {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.UPLOAD_IMAGE_SANPHAM.name();
+        final String action = SanPhamAction.UPDATE_SANPHAM.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -115,6 +115,17 @@ public class KiemTraQuyenModuleSanPham {
     }
 
     /* KIỂM TRA QUYỀN ĐƠN HÀNG */
+    public boolean kiemTraQuyenXemDonHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = DonHangAction.READ_DONHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
 
     public boolean kiemTraQuyenThemMoiDonHang() {
         if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {

@@ -1,14 +1,12 @@
 package com.flowiee.app.hethong.model;
 
 import lombok.Data;
-import lombok.ToString;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @Data
-public class Role {
+public class RoleResponse {
     @Data
     public static class Action {
         private boolean isChecked;
@@ -17,5 +15,5 @@ public class Role {
     }
 
     private Map<String, String> module;
-    private List<Action> action;
+    private List<RoleResponse.Action> action;
 }

@@ -30,8 +30,7 @@ public class TrangThaiGiaoHangController {
 
     @GetMapping("")
     public String findAll(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
@@ -55,8 +54,7 @@ public class TrangThaiGiaoHangController {
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("trangThaiGiaoHang") TrangThaiGiaoHang trangThaiGiaoHang) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         trangThaiGiaoHangService.save(trangThaiGiaoHang);
@@ -67,7 +65,7 @@ public class TrangThaiGiaoHangController {
     public String update(@ModelAttribute("trangThaiGiaoHang") TrangThaiGiaoHang trangThaiGiaoHang,
                          @PathVariable("id") int id, HttpServletRequest request) {
         String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (id <= 0) {
@@ -80,7 +78,7 @@ public class TrangThaiGiaoHangController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
         String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         trangThaiGiaoHangService.delete(id);

@@ -15,20 +15,18 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(value = "/he-thong/nhat-ky")
 public class LogController {
-
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
     private AccountService accountService;
 
     @GetMapping(value = "")
-    public String getLog(HttpServletRequest request, ModelMap modelMap){
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()){
-            modelMap.addAttribute("listLog", systemLogService.getAll());
-            return PagesUtil.PAGE_HETHONG_NHATKY;
+    public String getLog(ModelMap modelMap) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        modelMap.addAttribute("listLog", systemLogService.getAll());
+        return PagesUtil.PAGE_HETHONG_NHATKY;
     }
 
 //    @GetMapping(value = "export")

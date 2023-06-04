@@ -2,6 +2,8 @@ package com.flowiee.app.hethong.controller;
 
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.hethong.model.Role;
+import com.flowiee.app.hethong.model.RoleResponse;
 import com.flowiee.app.hethong.model.SystemLogAction;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
@@ -11,6 +13,8 @@ import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +22,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/he-thong/tai-khoan")
@@ -31,24 +36,12 @@ public class AccountController {
     private RoleService roleService;
 
     @GetMapping(value = "")
-    public String findAll(HttpServletRequest request, ModelMap modelMap) {
+    public String findAll(ModelMap modelMap) {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
             modelMap.addAttribute("account", new Account());
             modelMap.addAttribute("listAccount", accountService.findAll());
-            modelMap.addAttribute("listRole", roleService.findAllRole());
             return PagesUtil.PAGE_HETHONG_TAIKHOAN;
-        }
-        return PagesUtil.PAGE_LOGIN;
-    }
-
-    @Transactional
-    @GetMapping(value = "/{id}")
-    public String getDetailAccount(HttpServletRequest request, @PathVariable int id) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-
-            return "";
         }
         return PagesUtil.PAGE_LOGIN;
     }
@@ -90,15 +83,6 @@ public class AccountController {
                 accountEntity.setPassword(acc.getPassword());
                 accountEntity.setUpdatedBy(username);
                 accountService.update(accountEntity);
-                //Ghi log
-                SystemLog systemLog = SystemLog.builder()
-                    .module("Tài khoản hệ thống")
-                    .action(SystemLogAction.CAP_NHAT.name())
-                    .noiDung(accountEntity.toString())
-                    .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-                    .ip(IPUtil.getClientIpAddress(request))
-                    .build();
-                systemLogService.writeLog(systemLog);
                 return "redirect:/he-thong/tai-khoan";
             } else {
                 return "redirect:/he-thong/tai-khoan";

@@ -26,8 +26,7 @@ public class HinhThucThanhToanController {
 
     @GetMapping("")
     public String findAll(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
@@ -51,8 +50,7 @@ public class HinhThucThanhToanController {
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("hinhThucThanhToan") HinhThucThanhToan hinhThucThanhToan) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         hinhThucThanhToanService.save(hinhThucThanhToan);
@@ -62,8 +60,7 @@ public class HinhThucThanhToanController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("hinhThucThanhToan") HinhThucThanhToan hinhThucThanhToan,
                          @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (id <= 0) {
@@ -75,8 +72,7 @@ public class HinhThucThanhToanController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         hinhThucThanhToanService.delete(id);

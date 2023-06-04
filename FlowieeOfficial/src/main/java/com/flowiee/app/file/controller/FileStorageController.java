@@ -24,8 +24,7 @@ public class FileStorageController {
     @PostMapping("/uploads/san-pham/{id}")
     public String sanPhamUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                      @PathVariable("id") int id) throws Exception {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (!file.isEmpty()) {
@@ -37,8 +36,7 @@ public class FileStorageController {
     @PostMapping("/uploads/san-pham/variant/{id}")
     public String bienTheSanPhamUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                      @PathVariable("id") int id) throws Exception {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (!file.isEmpty()) {
@@ -49,8 +47,7 @@ public class FileStorageController {
 
     @PostMapping("/file-storage/delete/{id}")
     public String delete(HttpServletRequest request, @PathVariable("id") int id) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         fileService.delete(id);

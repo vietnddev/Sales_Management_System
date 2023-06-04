@@ -37,8 +37,9 @@ public class DonHangServiceImpl implements DonHangService {
         return donHangRepository.findAll();
     }
     @Override
-    public List<DonHang> findAll(String searchTxt, String thoiGianDatHang, int kenhBanHangId, int trangThaiDonHangId) {
-        return donHangRepository.findAll(searchTxt, kenhBanHangId, trangThaiDonHangId);
+    public List<DonHang> findAll(String searchTxt, String thoiGianDatHang,
+                                 int kenhBanHangId, int hinhThucThanhToanId, int trangThaiDonHangId) {
+        return donHangRepository.findAll(searchTxt, kenhBanHangId, hinhThucThanhToanId, trangThaiDonHangId);
     }
 
     @Override

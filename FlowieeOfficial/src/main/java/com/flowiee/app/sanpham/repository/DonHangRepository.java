@@ -19,9 +19,11 @@ public interface DonHangRepository extends JpaRepository<DonHang, Integer> {
 
     @Query("from DonHang d " +
            "where (:searchTxt is null or (d.khachHang.soDienThoai like %:searchTxt% or d.maDonHang like %:searchTxt%)) " +
-           "and (:kenhBanHangId is null or d.kenhBanHang.id=:kenhBanHangId) " +
-           "and (:trangThaiDonDangId is null or d.trangThaiDonHang.id=:trangThaiDonDangId)")
+           "and (:kenhBanHangId = 0 or d.kenhBanHang.id=:kenhBanHangId) " +
+           "and (:hinhThucThanhToanId = 0 or d.hinhThucThanhToan.id=:hinhThucThanhToanId) " +
+           "and (:trangThaiDonDangId = 0 or d.trangThaiDonHang.id=:trangThaiDonDangId)")
     List<DonHang> findAll(@Param("searchTxt") String searchTxt,
                           @Param("kenhBanHangId") int kenhBanHangId,
+                          @Param("hinhThucThanhToanId") int hinhThucThanhToanId,
                           @Param("trangThaiDonDangId") int trangThaiDonDangId);
 }

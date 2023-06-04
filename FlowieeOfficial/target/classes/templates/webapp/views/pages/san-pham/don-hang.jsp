@@ -71,13 +71,23 @@
                                             </div>
                                             <select class="custom-select col-sm" name="kenhBanHang"
                                                     data-placeholder="Chọn kênh bán hàng">
+                                                <option selected value="0">Chọn kênh bán hàng</option>
                                                 <option th:each="channel : ${listKenhBanHang}"
                                                         th:value="${channel.id}"
                                                         th:text="${channel.tenLoai}">
                                                 </option>
                                             </select>
+                                            <select class="custom-select col-sm" name="hinhThucThanhToan"
+                                                    data-placeholder="Chọn hình thức thanh toán">
+                                                <option selected value="0">Chọn hình thức thanh toán</option>
+                                                <option th:each="typePayment : ${listHinhThucThanhToan}"
+                                                        th:value="${typePayment.id}"
+                                                        th:text="${typePayment.tenLoai}">
+                                                </option>
+                                            </select>
                                             <select class="custom-select col-sm" name="trangThaiDonHang"
                                                     data-placeholder="Chọn trạng thái đơn hàng">
+                                                <option selected value="0">Trạng thái đơn hàng</option>
                                                 <option th:each="status, iterStat : ${listTrangThaiDonHang}"
                                                         th:value="${status.id}"
                                                         th:text="${status.ten}"
@@ -111,7 +121,9 @@
                                     <th:block th:each="list : ${listDonHang}">
                                         <tr>
                                             <td th:text="${list.id}"></td>
-                                            <td th:text="${list.maDonHang}"></td>
+                                            <td>
+                                                <a th:href="@{/don-hang/{id}(id=${list.id})}" th:text="${list.maDonHang}"></a>
+                                            </td>
                                             <td th:text="${list.thoiGianDatHang}"></td>
                                             <td th:text="${list.khachHang.diaChi}"></td>
                                             <td th:text="${list.khachHang.tenKhachHang}"></td>
@@ -121,7 +133,7 @@
                                             <td th:text="${list.trangThaiDonHang.ten}"></td>
                                             <td>
                                                 <button class="btn btn-outline-info btn-sm" style="margin-bottom: 4px;">
-                                                    <a th:href="@{/san-pham/{id}(id=${list.id})}">
+                                                    <a th:href="@{/don-hang/{id}(id=${list.id})}">
                                                         <i class="fa-solid fa-eye"></i>
                                                     </a></button>
                                                 <button class="btn btn-outline-warning btn-sm" data-toggle="modal"

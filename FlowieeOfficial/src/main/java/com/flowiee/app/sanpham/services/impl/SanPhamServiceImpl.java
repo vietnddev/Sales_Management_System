@@ -31,8 +31,13 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public SanPham findById(int productID) {
-        return productsRepository.findById(productID).orElse(null);
+    public SanPham findById(int id) {
+        SanPham sanPham = productsRepository.findById(id).orElse(null);
+        if (sanPham == null) {
+            throw new NotFoundException();
+        } else {
+            return sanPham;
+        }
     }
 
     @Override
