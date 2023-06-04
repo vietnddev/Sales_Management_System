@@ -60,18 +60,19 @@
                                     <div id="actions" class="row">
                                         <div class="col-lg-7">
                                             <div class="btn-group w-100">
-                                              <span class="btn btn-sm btn-success col fileinput-button" title="Chọn file từ máy tính">
+                                              <span class="btn btn-sm btn-success col fileinput-button"
+                                                    title="Chọn file từ máy tính">
                                                 <i class="fas fa-plus"></i>
                                                 <span><!--Chọn file--></span>
                                               </span>
-                                              <button type="submit" class="btn btn-sm btn-primary col start">
+                                                <button type="submit" class="btn btn-sm btn-primary col start">
                                                     <i class="fas fa-upload"></i>
                                                     <span><!--Tải lên SV--></span>
-                                              </button>
-                                              <button type="reset" class="btn btn-sm btn-warning col cancel">
-                                                <i class="fas fa-times-circle"></i>
-                                                <span><!--Hủy--></span>
-                                              </button>
+                                                </button>
+                                                <button type="reset" class="btn btn-sm btn-warning col cancel">
+                                                    <i class="fas fa-times-circle"></i>
+                                                    <span><!--Hủy--></span>
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="col-lg-5 d-flex align-items-center">
@@ -132,94 +133,41 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-sm-12">
-                            <h5>Màu sắc</h5>
-                            <div class="btn-group btn-sm" style="padding: 0;">
-                                <label class="btn text-center active" data-toggle="modal" data-target="#insertColor">
-                                    Thêm
-                                    <br>
-                                    <i class="fas fa-plus fa-2x text-green"></i>
-                                </label>
-                                <label class="btn text-center" style="border: none;"
-                                       th:each="color : ${listColorVariant}">
-                                    [[${color.tenBienThe}]]
-                                    <br>
-                                    <a th:href="@{/san-pham/variant/{id}(id=${color.id})}">
-                                        <i class="fas fa-circle fa-2x text-blue"></i></a>
-                                </label>
-                            </div>
-                        </div>
-                        <!--Popup thêm biến thể-->
-                        <th:block>
-                            <div class="modal fade" id="insertColor">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form th:action="@{/san-pham/variant/insert}"
-                                              th:object="${bienTheSanPham}"
-                                              method="post">
-                                            <div class="modal-header">
-                                                <strong class="modal-title">Thêm mới sản phẩm</strong>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <input type="hidden" name="sanPham" th:value="${detailProducts.id}"/>
-                                                        <input type="hidden" name="maSanPham" value=""/>
-                                                        <div class="form-group">
-                                                            <label>Chọn màu sắc</label>
-                                                            <select class="custom-select" name="loaiMauSac">
-                                                                <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
-                                                                        th:value="${lsColor.id}"
-                                                                        th:text="${lsColor.tenLoai}"
-                                                                        th:selected="${iterStat.index == 0}"></option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Chọn kích cỡ</label>
-                                                            <select class="custom-select" name="loaiKichCo">
-                                                                <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
-                                                                        th:value="${lsSize.id}"
-                                                                        th:text="${lsSize.tenLoai}"
-                                                                        th:selected="${iterStat.index == 0}"></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer justify-content-end"
-                                                     style="margin-bottom: -15px;">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                        Hủy
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Lưu</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </th:block>
-                        <!--/.Popup thêm biến thể-->
-                    </div>
-                    <form class="row col-sm-12 mt-3" th:action="@{/san-pham/update/{id}(id=${detailProducts.id})}"
-                          th:object="${sanPham}" method="post"
-                          style="background-color: #fff; border-radius: 15px; padding: 15px;">
-                        <div class="col-sm-12 text-center">
-                            <h4><b>THÔNG TIN CHUNG</b></h4>
-                        </div>
+                    <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
+                    <div class="row col-sm-12 mt-3">
+                        <hr>
                         <div class="col-sm-6">
+                            <table class="table">
+                                <thead>
+                                <th>#</th>
+                                <th>Tên biến thể</th>
+                                <th>Thao tác</th>
+                                </thead>
+                                <tbody>
+                                <tr th:each="var : ${listColorVariant}">
+                                    <td></td>
+                                    <td>
+                                        <a th:href="@{/san-pham/variant/{id}(id=${var.id})}"
+                                           th:text="${var.tenBienThe}">
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-info"> Cập nhật</button>
+                                        <button type="button" class="btn btn-sm btn-danger"> Xóa</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <form class="col-sm-6" th:action="@{/san-pham/update/{id}(id=${detailProducts.id})}"
+                              th:object="${sanPham}" method="post"
+                              style="background-color: #fff; border-radius: 15px; padding: 15px;">
                             <div class="form-group">
                                 <label>Tên sản phẩm</label>
                                 <input type="text" class="form-control" placeholder="Tên sản phẩm" name="tenSanPham"
                                        required
                                        th:value="${detailProducts.tenSanPham}"/>
                             </div>
-                        </div>
-                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label>Loại sản phẩm</label>
                                 <select class="custom-select" name="loaiSanPham">
@@ -231,21 +179,90 @@
                                             th:text="${detailProducts.loaiSanPham.tenLoai}" selected></option>
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>Đơn vị tính</label>
+                                <select class="custom-select" name="donViTinh">
+                                    <option
+                                            th:each="lsDvt, iterStat : ${listDonViTinh}"
+                                            th:value="${lsDvt.id}"
+                                            th:text="${lsDvt.tenLoai}"></option>
+                                    <option th:value="${detailProducts.donViTinh.id}"
+                                            th:text="${detailProducts.donViTinh.tenLoai}" selected></option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label>Thao tác</label>
                                 <div class="col-sm-12">
-                                    <button class="btn btn-info" type="submit" name="update">Cập nhật</button>
-                                    <button class="btn btn-danger" type="submit" name="delete">Xóa</button>
+                                    <button class="btn btn-sm btn-success" type="button"
+                                            data-toggle="modal" data-target="#insertColor">Thêm mới biến thể
+                                    </button>
+                                    <button class="btn btn-sm btn-info" type="submit" name="update">Cập nhật</button>
+                                    <button class="btn btn-sm btn-danger" type="submit" name="delete">Xóa</button>
+
+                                    <th:block>
+                                        <div class="modal fade" id="insertColor">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{/san-pham/variant/insert}"
+                                                          th:object="${bienTheSanPham}"
+                                                          method="post">
+                                                        <div class="modal-header">
+                                                            <strong class="modal-title">Thêm mới sản phẩm</strong>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <input type="hidden" name="sanPham"
+                                                                           th:value="${detailProducts.id}"/>
+                                                                    <input type="hidden" name="maSanPham" value=""/>
+                                                                    <div class="form-group">
+                                                                        <label>Chọn màu sắc</label>
+                                                                        <select class="custom-select" name="loaiMauSac">
+                                                                            <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
+                                                                                    th:value="${lsColor.id}"
+                                                                                    th:text="${lsColor.tenLoai}"
+                                                                                    th:selected="${iterStat.index == 0}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Chọn kích cỡ</label>
+                                                                        <select class="custom-select" name="loaiKichCo">
+                                                                            <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
+                                                                                    th:value="${lsSize.id}"
+                                                                                    th:text="${lsSize.tenLoai}"
+                                                                                    th:selected="${iterStat.index == 0}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-end"
+                                                                 style="margin-bottom: -15px;">
+                                                                <button type="button" class="btn btn-default"
+                                                                        data-dismiss="modal">
+                                                                    Hủy
+                                                                </button>
+                                                                <button type="submit" class="btn btn-primary">Lưu
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th:block>
                                 </div>
                             </div>
-                        </div>
-                        <input type="hidden" name="id"
-                               th:value="${detailProducts.id}"/>
-                        <input type="hidden" name="moTaSanPham" id="describes_virtual" th:value="${detailProducts.moTaSanPham}"/>
-                    </form>
+                            <input type="hidden" name="id"
+                                   th:value="${detailProducts.id}"/>
+                            <input type="hidden" name="moTaSanPham" id="describes_virtual"
+                                   th:value="${detailProducts.moTaSanPham}"/>
+                        </form>
+                    </div>
+                    <!--/. END DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
 
                     <div class="row col-sm-12"
                          style="background-color: #fff; border-radius: 15px; padding: 15px; margin-right: 0px;">
