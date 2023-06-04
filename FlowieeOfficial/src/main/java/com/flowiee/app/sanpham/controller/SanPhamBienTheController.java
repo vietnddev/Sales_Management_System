@@ -59,8 +59,7 @@ public class SanPhamBienTheController {
         if (username != null && !username.isEmpty()) {
             bienTheSanPham.setTrangThai(TrangThai.KINH_DOANH.name());
             bienTheSanPham.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
-            bienTheSanPham.setLoaiKichCo(LoaiKichCo.builder().id(1).build());
-            bienTheSanPham.setLoaiMauSac(LoaiMauSac.builder().id(1).build());
+            bienTheSanPham.setTenBienThe(bienTheSanPham.getSanPham().getTenSanPham() + " - " + bienTheSanPham.getLoaiMauSac().getTenLoai() + " - " + bienTheSanPham.getLoaiKichCo().getTenLoai());
             bienTheSanPhamService.save(bienTheSanPham);
             //Khởi tạo giá default của giá bán
             giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(499).build());

@@ -32,7 +32,7 @@
         <div class="content" style="padding-left: 20px; padding-right: 20px">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="card col-12">
+                <div class="card col-12" style="font-size: 14px">
                     <div class="card-header">
                         <div class="row justify-content-between">
                             <div class="col-4">

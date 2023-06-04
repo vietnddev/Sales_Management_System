@@ -172,19 +172,19 @@
                                                         <input type="hidden" name="maSanPham" value=""/>
                                                         <div class="form-group">
                                                             <label>Chọn màu sắc</label>
-                                                            <select class="custom-select" name="tenBienThe">
-                                                                <option th:each="lstype, iterStat : ${listDmMauSacSanPham}"
-                                                                        th:value="${lstype.tenLoai}"
-                                                                        th:text="${lstype.tenLoai}"
+                                                            <select class="custom-select" name="loaiMauSac">
+                                                                <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
+                                                                        th:value="${lsColor.id}"
+                                                                        th:text="${lsColor.tenLoai}"
                                                                         th:selected="${iterStat.index == 0}"></option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Chọn kích cỡ</label>
-                                                            <select class="custom-select" name="tenBienThe">
-                                                                <option th:each="lstype, iterStat : ${listDmMauSacSanPham}"
-                                                                        th:value="${lstype.tenLoai}"
-                                                                        th:text="${lstype.tenLoai}"
+                                                            <select class="custom-select" name="loaiKichCo">
+                                                                <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
+                                                                        th:value="${lsSize.id}"
+                                                                        th:text="${lsSize.tenLoai}"
                                                                         th:selected="${iterStat.index == 0}"></option>
                                                             </select>
                                                         </div>

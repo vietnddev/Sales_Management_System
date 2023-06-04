@@ -91,6 +91,22 @@
               </a>
             </li>
             <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa- nav-icon"></i>
+                <p>
+                  Bán hàng
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa- nav-icon"></i>
+                <p>
+                  Tạo mã voucher
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a th:href="@{/khach-hang}" class="nav-link">
                 <i class="nav-icon"></i>
                 <p>
