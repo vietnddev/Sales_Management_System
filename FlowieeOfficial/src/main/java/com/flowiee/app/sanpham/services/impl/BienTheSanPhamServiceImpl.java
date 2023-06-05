@@ -10,7 +10,10 @@ import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
+import com.flowiee.app.sanpham.entity.DonHangChiTiet;
 import com.flowiee.app.sanpham.entity.SanPham;
+import com.flowiee.app.sanpham.model.BienTheSanPhamResponse;
+import com.flowiee.app.sanpham.model.DonHangChiTietResponse;
 import com.flowiee.app.sanpham.repository.BienTheSanPhamRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
@@ -18,6 +21,7 @@ import com.flowiee.app.sanpham.services.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +66,8 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         if (bienTheSanPham.getLoaiMauSac() == null || bienTheSanPham.getLoaiKichCo() == null) {
             throw new BadRequestException();
         }
-        if (bienTheSanPhamRepository.findByMauSacAndKichCo(bienTheSanPham.getLoaiMauSac().getId(),
+        if (bienTheSanPhamRepository.findByMauSacAndKichCo(bienTheSanPham.getSanPham().getId(),
+                                                           bienTheSanPham.getLoaiMauSac().getId(),
                                                            bienTheSanPham.getLoaiKichCo().getId()) != null)
         {
             throw new DataExistsException();
@@ -127,5 +132,26 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             e.printStackTrace();
             return "NOK";
         }
-    }    
+    }
+
+    @Override
+    public List<BienTheSanPhamResponse> convertToBienTheSanPhamResponse(List<BienTheSanPham> listBienTheSanPham) {
+        List<BienTheSanPhamResponse> listReturn = new ArrayList<>();
+        int i = 1;
+        for (BienTheSanPham bienTheSanPham : listBienTheSanPham) {
+            BienTheSanPhamResponse response = new BienTheSanPhamResponse();
+            response.setStt(i);
+            response.setId(bienTheSanPham.getId());
+            response.setSanPham(bienTheSanPham.getSanPham());
+            response.setMaSanPham(bienTheSanPham.getMaSanPham());
+            response.setTenBienThe(bienTheSanPham.getTenBienThe());
+            response.setLoaiMauSac(bienTheSanPham.getLoaiMauSac());
+            response.setLoaiKichCo(bienTheSanPham.getLoaiKichCo());
+            response.setSoLuongKho(bienTheSanPham.getSoLuongKho());
+            response.setTrangThai(bienTheSanPham.getTrangThai());
+            listReturn.add(response);
+            i++;
+        }
+        return listReturn;
+    }
 }

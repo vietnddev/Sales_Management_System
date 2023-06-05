@@ -87,7 +87,7 @@ public class SanPhamController {
             // Danh sách kích cỡ từ danh mục hệ thống
             modelMap.addAttribute("listDmKichCoSanPham", loaiKichCoService.findAll());
             // Load danh sách biến thể sản phẩm
-            modelMap.addAttribute("listColorVariant", bienTheSanPhamService.getListVariantOfProduct(sanPhamId));
+            modelMap.addAttribute("listColorVariant", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.getListVariantOfProduct(sanPhamId)));
             // Danh sách đơn vị tính từ danh mục hệ thống
             modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
             return PagesUtil.PAGE_SANPHAM_TONG_QUAN;

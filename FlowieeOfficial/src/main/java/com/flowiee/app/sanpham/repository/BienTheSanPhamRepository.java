@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface BienTheSanPhamRepository extends JpaRepository <BienTheSanPham, Integer>{
-    @Query("from BienTheSanPham b where b.sanPham.id=:sanPhamId")
+    @Query("from BienTheSanPham b where b.sanPham.id=:sanPhamId order by b.loaiMauSac.tenLoai")
     List<BienTheSanPham> findListBienTheOfsanPham(int sanPhamId);
 
-    @Query("from BienTheSanPham b where b.loaiMauSac.id=:mauSacId and b.loaiKichCo.id=:kichCoId")
-    BienTheSanPham findByMauSacAndKichCo(int mauSacId, int kichCoId);
+    @Query("from BienTheSanPham b where b.sanPham.id=:sanPhamId and b.loaiMauSac.id=:mauSacId and b.loaiKichCo.id=:kichCoId")
+    BienTheSanPham findByMauSacAndKichCo(int sanPhamId, int mauSacId, int kichCoId);
 }

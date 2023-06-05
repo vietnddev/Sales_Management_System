@@ -136,21 +136,25 @@
                     <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
                     <div class="row col-sm-12 mt-3">
                         <hr>
-                        <div class="col-sm-6">
+                        <div class="col-sm-8">
                             <table class="table">
                                 <thead>
                                 <th>#</th>
                                 <th>Tên biến thể</th>
+                                <th>Màu sắc</th>
+                                <th>Kích cỡ</th>
                                 <th>Thao tác</th>
                                 </thead>
                                 <tbody>
                                 <tr th:each="var : ${listColorVariant}">
-                                    <td></td>
+                                    <td th:text="${var.stt}"></td>
                                     <td>
                                         <a th:href="@{/san-pham/variant/{id}(id=${var.id})}"
                                            th:text="${var.tenBienThe}">
                                         </a>
                                     </td>
+                                    <td th:text="${var.loaiMauSac.tenLoai}"></td>
+                                    <td th:text="${var.loaiKichCo.tenLoai}"></td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-info"> Cập nhật</button>
                                         <button type="button" class="btn btn-sm btn-danger"> Xóa</button>
@@ -159,7 +163,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <form class="col-sm-6" th:action="@{/san-pham/update/{id}(id=${detailProducts.id})}"
+                        <form class="col-sm-4" th:action="@{/san-pham/update/{id}(id=${detailProducts.id})}"
                               th:object="${sanPham}" method="post"
                               style="background-color: #fff; border-radius: 15px; padding: 15px;">
                             <div class="form-group">
@@ -194,66 +198,10 @@
                                 <label>Thao tác</label>
                                 <div class="col-sm-12">
                                     <button class="btn btn-sm btn-success" type="button"
-                                            data-toggle="modal" data-target="#insertColor">Thêm mới biến thể
+                                            data-toggle="modal" data-target="#insertBTSP">Thêm mới biến thể
                                     </button>
                                     <button class="btn btn-sm btn-info" type="submit" name="update">Cập nhật</button>
                                     <button class="btn btn-sm btn-danger" type="submit" name="delete">Xóa</button>
-
-                                    <th:block>
-                                        <div class="modal fade" id="insertColor">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form th:action="@{/san-pham/variant/insert}"
-                                                          th:object="${bienTheSanPham}"
-                                                          method="post">
-                                                        <div class="modal-header">
-                                                            <strong class="modal-title">Thêm mới sản phẩm</strong>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <input type="hidden" name="sanPham"
-                                                                           th:value="${detailProducts.id}"/>
-                                                                    <input type="hidden" name="maSanPham" value=""/>
-                                                                    <div class="form-group">
-                                                                        <label>Chọn màu sắc</label>
-                                                                        <select class="custom-select" name="loaiMauSac">
-                                                                            <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
-                                                                                    th:value="${lsColor.id}"
-                                                                                    th:text="${lsColor.tenLoai}"
-                                                                                    th:selected="${iterStat.index == 0}"></option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Chọn kích cỡ</label>
-                                                                        <select class="custom-select" name="loaiKichCo">
-                                                                            <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
-                                                                                    th:value="${lsSize.id}"
-                                                                                    th:text="${lsSize.tenLoai}"
-                                                                                    th:selected="${iterStat.index == 0}"></option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer justify-content-end"
-                                                                 style="margin-bottom: -15px;">
-                                                                <button type="button" class="btn btn-default"
-                                                                        data-dismiss="modal">
-                                                                    Hủy
-                                                                </button>
-                                                                <button type="submit" class="btn btn-primary">Lưu
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </th:block>
                                 </div>
                             </div>
                             <input type="hidden" name="id"
@@ -261,6 +209,60 @@
                             <input type="hidden" name="moTaSanPham" id="describes_virtual"
                                    th:value="${detailProducts.moTaSanPham}"/>
                         </form>
+                        <div class="modal fade" id="insertBTSP">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form th:action="@{/san-pham/variant/insert}"
+                                          th:object="${bienTheSanPham}"
+                                          method="post">
+                                        <div class="modal-header">
+                                            <strong class="modal-title">Thêm mới biến thể sản phẩm</strong>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <input type="hidden" name="sanPham"
+                                                           th:value="${detailProducts.id}"/>
+                                                    <input type="hidden" name="maSanPham" value=""/>
+                                                    <div class="form-group">
+                                                        <label>Chọn màu sắc</label>
+                                                        <select class="custom-select" name="loaiMauSac">
+                                                            <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
+                                                                    th:value="${lsColor.id}"
+                                                                    th:text="${lsColor.tenLoai}"
+                                                                    th:selected="${iterStat.index == 0}"></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Chọn kích cỡ</label>
+                                                        <select class="custom-select" name="loaiKichCo">
+                                                            <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
+                                                                    th:value="${lsSize.id}"
+                                                                    th:text="${lsSize.tenLoai}"
+                                                                    th:selected="${iterStat.index == 0}"></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer justify-content-end"
+                                                 style="margin-bottom: -15px;">
+                                                <button type="button" class="btn btn-default"
+                                                        data-dismiss="modal">
+                                                    Hủy
+                                                </button>
+                                                <button type="submit" name="create_bienTheSP" class="btn btn-primary">
+                                                    Lưu
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!--/. END DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
 

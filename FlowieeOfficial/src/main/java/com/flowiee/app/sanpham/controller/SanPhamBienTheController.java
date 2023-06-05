@@ -52,7 +52,6 @@ public class SanPhamBienTheController {
         return PagesUtil.PAGE_LOGIN;
     }
 
-    @Transactional
     @PostMapping(value = "/insert")
     public String insertVariants(HttpServletRequest request, @ModelAttribute("bienTheSanPham") BienTheSanPham bienTheSanPham) {
         String username = accountService.getUserName();
