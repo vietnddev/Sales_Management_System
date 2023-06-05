@@ -238,44 +238,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4 text-right">
-                                <div class="btn-group btn-sm" style="padding: 0;">
-                                    <label class="btn text-center" style="border: none;">
-                                        S
-                                        <br>
-                                        <a th:href="@{/sales/products/}">
-                                            <i class="fas fa-circle fa-2x text-blue"></i></a>
-                                    </label>
-                                    <label class="btn text-center" style="border: none;">
-                                        M
-                                        <br>
-                                        <a th:href="@{/sales/products/}">
-                                            <i class="fas fa-circle fa-2x text-blue"></i></a>
-                                    </label>
-                                </div>
-                                <label class="btn text-center" style="border: none;">
-                                    L
-                                    <br>
-                                    <a th:href="@{/sales/products/}">
-                                        <i class="fas fa-circle fa-2x text-blue"></i></a>
-                                </label>
-                            </div>
                         </div>
                         <div class="col-sm-12 text-right">
-                            <button type="button" class="btn btn-primary mb-1" name="addToFavourite"><i
+                            <button type="button" class="btn btn-sm btn-primary mb-1" name="addToFavourite"><i
                                     class="fas fa-heart fa-lg mr-2"></i>Thêm vào yêu
                                 thích
                             </button>
-                            <button type="button" class="btn btn-warning mb-1" data-toggle="modal"
+                            <button type="button" class="btn btn-sm btn-warning mb-1" data-toggle="modal"
                                     data-target="#addToCart"><i
                                     class="fas fa-cart-plus fa-lg mr-2"></i>Thêm vào
                                 giỏ hàng
                             </button>
-                            <button type="button" class="btn btn-info mb-1" data-toggle="modal"
+                            <button type="button" class="btn btn-sm btn-info mb-1" data-toggle="modal"
                                     data-target="#insertSizes">Thêm kích
                                 cỡ
                             </button>
-                            <button type="button" class="btn btn-success mb-1" data-toggle="modal"
+                            <button type="button" class="btn btn-sm btn-success mb-1" data-toggle="modal"
                                     data-target="#insertAttributes">Thêm thuộc
                                 tính
                             </button>
