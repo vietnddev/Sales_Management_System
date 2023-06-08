@@ -8,8 +8,7 @@
         <!--Nhúng các file css, icon,...-->
     </div>
     <style rel="stylesheet">
-        .table td,
-        th {
+        .table td, th {
             vertical-align: middle;
         }
     </style>
@@ -33,376 +32,320 @@
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
                     <div class="col-12">
-                        <div class="card">
+                        <div class="card" style="min-height: 605px">
                             <div class="card-header">
                                 <div class="row justify-content-between">
-                                    <div class="col-4" style="display: flex; align-items: center">
-                                        <h3 class="card-title"><strong>DANH SÁCH ĐƠN HÀNG</strong></h3>
+                                    <div class="col-sm-10" style="display: flex; align-items: center">
+                                        <ul class="nav nav-tabs"
+                                            id="custom-tabs-one-tab"
+                                            role="tablist">
+                                            <li th:each="cart, cartIndex : ${listCart}"
+                                                th:class="${cartIndex.index == 0} ? 'nav-item active' : 'nav-item'">
+                                                <a class="nav-link"
+                                                   data-toggle="pill"
+                                                   role="tab"
+                                                   aria-controls="custom-tabs-one-home"
+                                                   aria-selected="true"
+                                                   th:id="${cartIndex.index + 1}"
+                                                   th:href="'#tab_' + ${cartIndex.index + 1}"
+                                                   style="font-weight: bold">Giỏ hàng [[${cartIndex.index + 1}]]</a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <div class="col-4 text-right">
+                                    <div class="col-sm-2 text-right">
                                         <button type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#insert">
-                                            Thêm mới
+                                                data-target="#modalCreateCart">
+                                            Thêm mới giỏ hàng
                                         </button>
-                                    </div>
-                                </div>
-                                <!-- modal-content (Thêm mới sản phẩm)-->
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body align-items-center">
-                                <div class="row justify-content-between">
-                                    <form class="col-sm-12 ml-2 mr-2 mb-3"
-                                          style="display: flex; align-items: center"
-                                          th:action="@{/don-hang}" th:object="${donHangRequest}"
-                                          method="POST">
-                                        <div class="input-group row col-sm-12 p-0">
-                                            <input type="text" class="form-control col-sm"
-                                                   style="min-width: 300px"
-                                                   name="searchTxt"/>
-                                            <div class="input-group col-sm" style="min-width: 240px">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text">
-                                                    <i class="far fa-calendar-alt"></i>
-                                                  </span>
+                                        <div class="modal fade" id="modalCreateCart">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{/don-hang/ban-hang/cart/create}" method="POST">
+                                                        <div class="modal-header">
+                                                            <strong class="modal-title">Thêm mới giỏ hàng</strong>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-end">
+                                                            <button type="button" class="btn btn-default"
+                                                                    data-dismiss="modal">Hủy
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary">Đồng ý
+                                                            </button>
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                                <input type="text" id="reservation"
-                                                       class="form-control float-right"
-                                                       name="thoiGianDatHangSearch" />
                                             </div>
-                                            <select class="custom-select col-sm" name="kenhBanHang"
-                                                    data-placeholder="Chọn kênh bán hàng">
-                                                <option selected value="0">Chọn kênh bán hàng</option>
-                                                <option th:each="channel : ${listKenhBanHang}"
-                                                        th:value="${channel.id}"
-                                                        th:text="${channel.tenLoai}">
-                                                </option>
-                                            </select>
-                                            <select class="custom-select col-sm" name="hinhThucThanhToan"
-                                                    data-placeholder="Chọn hình thức thanh toán">
-                                                <option selected value="0">Chọn hình thức thanh toán</option>
-                                                <option th:each="typePayment : ${listHinhThucThanhToan}"
-                                                        th:value="${typePayment.id}"
-                                                        th:text="${typePayment.tenLoai}">
-                                                </option>
-                                            </select>
-                                            <select class="custom-select col-sm" name="trangThaiDonHang"
-                                                    data-placeholder="Chọn trạng thái đơn hàng">
-                                                <option selected value="0">Trạng thái đơn hàng</option>
-                                                <option th:each="status, iterStat : ${listTrangThaiDonHang}"
-                                                        th:value="${status.id}"
-                                                        th:text="${status.ten}"
-                                                        th:selected="${iterStat.index == 0}">
-                                                </option>
-                                            </select>
-                                            <span class="input-group-append col-sm">
-                                                <button type="submit" name="search" class="btn btn-info">
-                                                    Tìm kiếm
-                                                </button>
-                                            </span>
                                         </div>
-                                    </form>
-                                </div>
-                                <table class="table table-bordered table-striped align-items-center">
-                                    <thead class="align-self-center">
-                                    <tr class="align-self-center">
-                                        <th>ID</th>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Thời gian đặt hàng</th>
-                                        <th>Địa chỉ giao hàng</th>
-                                        <th>Khách hàng</th>
-                                        <th>Số tiền</th>
-                                        <th>Kênh bán hàng</th>
-                                        <th>Ghi chú</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <th:block th:each="list : ${listDonHang}">
-                                        <tr>
-                                            <td th:text="${list.id}"></td>
-                                            <td>
-                                                <a th:href="@{/don-hang/{id}(id=${list.id})}" th:text="${list.maDonHang}"></a>
-                                            </td>
-                                            <td th:text="${list.thoiGianDatHang}"></td>
-                                            <td th:text="${list.khachHang.diaChi}"></td>
-                                            <td th:text="${list.khachHang.tenKhachHang}"></td>
-                                            <td th:text="${list.tongTienDonHang}"></td>
-                                            <td th:text="${list.kenhBanHang.tenLoai}"></td>
-                                            <td th:text="${list.ghiChu}"></td>
-                                            <td th:text="${list.trangThaiDonHang.ten}"></td>
-                                            <td>
-                                                <button class="btn btn-outline-info btn-sm" style="margin-bottom: 4px;">
-                                                    <a th:href="@{/don-hang/{id}(id=${list.id})}">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </a></button>
-                                                <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
-                                                        style="margin-bottom: 4px;"
-                                                        th:data-target="'#update-' + ${list.id}">
-                                                    <i class="fa-solid fa-pencil"></i>
-                                                </button>
-                                                <button class="btn btn-outline-danger btn-sm" data-toggle="modal"
-                                                        th:data-target="'#delete-' + ${list.id}">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
-                                                <div class="modal fade" th:id="'delete-' + ${list.id}">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <form th:action="@{/don-hang/delete/{id}(id=${list.id})}"
-                                                                  th:object="${donHang}" method="post">
-                                                                <div class="modal-header">
-                                                                    <strong class="modal-title">Xác nhận xóa sản
-                                                                        phẩm</strong>
-                                                                    <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="card-body">
-                                                                        Sản phẩm <strong class="badge text-bg-info"
-                                                                                         th:text="${list.maDonHang}"
-                                                                                         style="font-size: 16px;"></strong>
-                                                                        sẽ bị xóa vĩnh viễn!
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-end"
-                                                                         style="margin-bottom: -15px;">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Đồng ý
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <!-- Update -->
-                                            <th:block>
-                                                <!-- Modal update -->
-                                                <div class="modal fade" th:id="'update-' + ${list.id}">
-                                                    <div class="modal-dialog modal-lg">
-                                                        <div class="modal-content">
-                                                            <form th:action="@{/don-hang/update/{id}(id=${list.id})}"
-                                                                  th:object="${donHang}" method="post">
-                                                                <div class="modal-header">
-                                                                    <strong class="modal-title">Cập nhật sản
-                                                                        phẩm</strong>
-                                                                    <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="row">
-
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-end"
-                                                                         style="margin-bottom: -15px;">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Lưu
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <!-- /.modal-content -->
-                                                    </div>
-                                                    <!-- /.modal-dialog -->
-                                                </div>
-                                                <!-- /.end modal update-->
-                                            </th:block>
-                                            <!-- End update -->
-                                        </tr>
-                                    </th:block>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr class="align-self-center">
-                                        <th>ID</th>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Thời gian đặt hàng</th>
-                                        <th>Địa chỉ giao hàng</th>
-                                        <th>Khách hàng</th>
-                                        <th>Số tiền</th>
-                                        <th>Kênh bán hàng</th>
-                                        <th>Ghi chú</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                            <th:block>
-                                <div class="modal fade" id="insert">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <form th:action="@{/don-hang/insert}" method="POST" th:object="${donHangRequest}">
-                                                <div class="modal-header">
-                                                    <strong class="modal-title">Thêm mới đơn hàng</strong>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group">
-                                                                <label>Sản phẩm</label>
-                                                                <select class="select2" multiple="multiple"
-                                                                        data-placeholder="Chọn sản phẩm"
-                                                                        style="width: 100%;"  required
-                                                                        name="listBienTheSanPham">
-                                                                    <option th:each="option : ${listBienTheSanPham}"
-                                                                            th:value="${option.id}"
-                                                                            th:text="${option.sanPham.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Khách hàng</label>
-                                                                <select class="custom-select" name="khachHang"
-                                                                        data-placeholder="Chọn khách hàng" required>
-                                                                    <option th:each="cus : ${listKhachHang}"
-                                                                            th:value="${cus.id}"
-                                                                            th:text="${cus.tenKhachHang} + ' - ' + ${cus.soDienThoai} + ' - ' + ${cus.diaChi}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Thời gian đặt hàng</label>
-                                                                <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                                                                    <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" name="thoiGianDatHang"/>
-                                                                    <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
-                                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Kênh bán hàng</label>
-                                                                <select class="custom-select" name="kenhBanHang"
-                                                                        data-placeholder="Chọn kênh bán hàng" required>
-                                                                    <option th:each="channel : ${listKenhBanHang}"
-                                                                            th:value="${channel.id}"
-                                                                            th:text="${channel.tenLoai}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Hình thức thanh toán</label>
-                                                                <select class="custom-select" name="hinhThucThanhToan"
-                                                                        data-placeholder="Chọn hình thức thanh toán" required>
-                                                                    <option th:each="payment : ${listHinhThucThanhToan}"
-                                                                            th:value="${payment.id}"
-                                                                            th:text="${payment.tenLoai}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Nhân viên bán hàng</label>
-                                                                <select class="custom-select" name="nhanVienBanHang"
-                                                                        data-placeholder="Chọn nhân viên bán hàng" required>
-                                                                    <option th:each="sales : ${listNhanVienBanHang}"
-                                                                            th:value="${sales.id}"
-                                                                            th:text="${sales.hoTen}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Ghi chú</label>
-                                                                <textarea class="form-control" rows="3"
-                                                                          placeholder="Ghi chú"
-                                                                          name="ghiChu"></textarea>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Trạng thái đơn đặt hàng</label>
-                                                                <select class="custom-select" name="trangThaiDonHang"
-                                                                        data-placeholder="Chọn trạng thái đơn hàng" required>
-                                                                    <option th:each="status, iterStat : ${listTrangThaiDonHang}"
-                                                                            th:value="${status.id}"
-                                                                            th:text="${status.ten}"
-                                                                            th:selected="${iterStat.index == 0}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer justify-content-end"
-                                                         style="margin-bottom: -15px;">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">Hủy
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <!-- /.modal-content -->
                                     </div>
-                                    <!-- /.modal-dialog -->
                                 </div>
-                            </th:block>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="tabContent">
+                                    <div th:class="${cartIndex.index == 0} ? 'tab-pane fade show active' : 'tab-pane fade show'"
+                                         th:each="cart, cartIndex : ${listCart}"
+                                         th:id="'tab_' + ${cartIndex.index + 1}"
+                                         role="tabpanel"
+                                         aria-labelledby="custom-tabs-one-home-tab">
+                                        <div class="row">
+                                            <div class="col-sm-8 border">
+                                                <form class="row mt-3"
+                                                      th:action="@{/don-hang/ban-hang/cart/{id}/add-items(id=${cart.id})}"
+                                                      method="POST">
+                                                    <div class="col-sm-11 form-group">
+                                                        <select class="form-control select2" multiple="multiple"
+                                                                data-placeholder="Chọn sản phẩm"
+                                                                style="width: 100%;" required
+                                                                name="bienTheSanPhamId">
+                                                            <option th:each="option : ${listBienTheSanPham}"
+                                                                    th:value="${option.id}"
+                                                                    th:text="${option.sanPham.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-1 form-group">
+                                                        <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px">
+                                                            Thêm
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                                <div class="row">
+                                                    <table class="table table-head-fixed text-nowrap text-center">
+                                                        <thead>
+                                                        <tr>
+                                                            <td>#</td>
+                                                            <td class="text-left">Tên sản phẩm</td>
+                                                            <td>Đơn giá</td>
+                                                            <td>Số lượng</td>
+                                                            <td>Thành tiền</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr th:each="item, itemIndex : ${cart.listItems}">
+                                                                <td th:text="${itemIndex.index + 1}"></td>
+                                                                <td class="text-left">
+                                                                    <a th:text="${item.bienTheSanPham.tenBienThe}"
+                                                                       th:href="@{/san-pham/variant/{id}(id=${item.bienTheSanPham.id})}"></a>
+                                                                    <input class="form-control form-control-sm" name="ghiChu" th:value="${item.ghiChu}" readonly>
+                                                                </td>
+                                                                <td></td>
+                                                                <td th:text="${item.soLuong}"></td>
+                                                                <td>200,000 vnđ</td>
+                                                                <td>
+                                                                    <!--UPDATE ITEMS-->
+                                                                    <button type="button" class="btn btn-sm btn-primary"
+                                                                            data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${item.id}">
+                                                                        Cập nhật
+                                                                    </button>
+                                                                    <div class="modal fade" th:id="'modalUpdateItems_' + ${item.id}">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <form th:action="@{/don-hang/ban-hang/cart/update/{id}(id=${cart.id})}"
+                                                                                      th:object="${items}" method="POST">
+                                                                                    <div class="modal-header">
+                                                                                        <strong class="modal-title">Cập nhật sản phẩm</strong>
+                                                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                                                aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <input type="hidden" name="id" th:value="${item.id}">
+                                                                                        <input type="hidden" name="bienTheSanPham" th:value="${item.bienTheSanPham.id}">
+                                                                                        <div class="form-group row"
+                                                                                             style="display: flex; align-items: center;
+                                                                                                    margin: 0 0 15px 0">
+                                                                                            <label class="col-sm-4 text-left">Số lượng</label>
+                                                                                            <input class="col-sm-8 form-control"
+                                                                                                   type="number" name="soLuong"
+                                                                                                   min="1" max="[[${item.bienTheSanPham.soLuongKho}]]"
+                                                                                                   th:value="${item.soLuong}"/>
+                                                                                        </div>
+                                                                                        <div class="form-group row"
+                                                                                             style="display: flex; align-items: center; margin: 0">
+                                                                                            <label class="col-sm-4 text-left">Ghi chú</label>
+                                                                                            <textarea class="col-sm-8 form-control"
+                                                                                                      name="ghiChu" th:value="${item.ghiChu}"></textarea>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer justify-content-end">
+                                                                                        <button type="button" class="btn btn-sm btn-default"
+                                                                                                data-dismiss="modal">Hủy
+                                                                                        </button>
+                                                                                        <button type="submit" class="btn btn-sm btn-primary">Đồng ý
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!--DELETE ITEMS-->
+                                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                                            data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${cart.id}">
+                                                                        Xóa
+                                                                    </button>
+                                                                    <div class="modal fade" th:id="'modalDeleteItems_' + ${cart.id}">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <form th:action="@{/don-hang/ban-hang/update/{id}(id=${cart.id})}" method="POST">
+                                                                                    <div class="modal-header">
+                                                                                        <strong class="modal-title">Xóa sản phẩm</strong>
+                                                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                                                aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <input type="hidden" name="soLuong" value="0"/>
+                                                                                    </div>
+                                                                                    <div class="modal-footer justify-content-end">
+                                                                                        <button type="button" class="btn btn-sm btn-default"
+                                                                                                data-dismiss="modal">Hủy
+                                                                                        </button>
+                                                                                        <button type="submit" class="btn btn-sm btn-primary">Đồng ý
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 border">
+                                                <div class="row mt-3">
+                                                    <div class="form-group col-sm-10 pr-0">
+                                                        <select class="custom-select" name="khachHang"
+                                                                data-placeholder="Chọn khách hàng" required>
+                                                            <option th:each="cus : ${listKhachHang}"
+                                                                    th:value="${cus.id}"
+                                                                    th:text="${cus.tenKhachHang}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-2 form-group">
+                                                        <button type="button" class="btn btn-sm btn-primary w-100" style="height: 38px">
+                                                            Thêm
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <hr class="mt-0">
+                                                <div class="row">
+                                                    <div class="form-group col-sm-6 pr-0">
+                                                        <select class="custom-select" name="nhanVienBanHang"
+                                                                data-placeholder="Chọn nhân viên bán hàng" required>
+                                                            <option th:each="staff : ${listNhanVienBanHang}"
+                                                                    th:value="${staff.id}"
+                                                                    th:text="${staff.hoTen}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-sm-6">
+                                                        <div class="input-group date" id="reservationdatetime"
+                                                             data-target-input="nearest">
+                                                            <input type="text" class="form-control datetimepicker-input"
+                                                                   data-target="#reservationdatetime"/>
+                                                            <div class="input-group-append"
+                                                                 data-target="#reservationdatetime"
+                                                                 data-toggle="datetimepicker">
+                                                                <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr class="mt-0">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-5">
+                                                        Tổng tiền hàng
+                                                        <span class="badge badge-danger" th:text="${cart.listItems.size()}"></span>
+                                                    </label>
+                                                    <span class="col-sm-7 text-right">0</span>
+                                                </div>
+                                                <hr>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-4">Phí vận chuyển</label>
+                                                    <span class="col-sm-8 text-right">0</span>
+                                                </div>
+                                                <hr>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-4">Thành tiền</label>
+                                                    <label class="col-sm-8 text-right">200.000đ</label>
+                                                </div>
+                                                <hr>
+                                                <div class="form-group">
+                                                    <label>Ghi chú</label>
+                                                    <textarea class="form-control" name="ghiChu"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-info w-100">Lưu đơn</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
 
-    <div th:replace="footer :: footer">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+<div th:replace="footer :: footer">
+    <!-- Nhúng các file JavaScript vào -->
+</div>
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+</aside>
 
-    <div th:replace="header :: scripts">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+<div th:replace="header :: scripts">
+    <!-- Nhúng các file JavaScript vào -->
+</div>
 
-    <!-- Select2 -->
-    <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
-    <!-- Bootstrap4 Duallistbox -->
-    <script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
+<!-- Select2 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
 
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-            //Initialize Select2 Elements
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-
-            //Bootstrap Duallistbox
-            $('.duallistbox').bootstrapDualListbox()
-
-            $("input[data-bootstrap-switch]").each(function(){
-                $(this).bootstrapSwitch('state', $(this).prop('checked'));
-            })
-
-            //Date and time picker
-            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-            //Timepicker
-            $('#timepicker').datetimepicker({
-                format: 'LT'
-            })
-
-            //Date range picker
-            $('#reservation').daterangepicker()
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
         })
-    </script>
+
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+
+        $("input[data-bootstrap-switch]").each(function () {
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        })
+
+        //Date and time picker
+        $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
+        //Timepicker
+        $('#timepicker').datetimepicker({
+            format: 'LT'
+        })
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+    })
+</script>
 </div>
 
 </body>

@@ -61,4 +61,7 @@ public class BienTheSanPham implements Serializable {
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
+
+    @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
+    private List<Items> listItems;
 }

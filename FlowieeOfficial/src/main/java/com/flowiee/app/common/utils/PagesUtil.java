@@ -12,6 +12,7 @@ public class PagesUtil {
     public static final String PAGE_SANPHAM_BIENTHE = "/pages/san-pham/chi-tiet-san-pham";
     public static final String PAGE_DONHANG = "/pages/san-pham/don-hang";
     public static final String PAGE_DONHANG_CHITIET = "/pages/san-pham/don-hang-chi-tiet";
+    public static final String PAGE_DONHANG_BANHANG = "/pages/san-pham/ban-hang";
     public static final String PAGE_KHACHHANG = "/pages/khach-hang/khach-hang";
 
     public static final String PAGE_PROFILE = "pages/profile/profile";

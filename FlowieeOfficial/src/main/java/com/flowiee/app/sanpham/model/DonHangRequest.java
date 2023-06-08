@@ -22,4 +22,5 @@ public class DonHangRequest implements Serializable {
     private String ghiChu;
     private String thoiGianDatHangSearch;
     private String searchTxt;
+    private int cartId;
 }

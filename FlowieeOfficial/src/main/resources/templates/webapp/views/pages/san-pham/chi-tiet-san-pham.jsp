@@ -121,7 +121,8 @@
                                                        th:value="${list.sort}" required/>
                                                 <span class="input-group-append">
                                                     <input type="hidden" name="id" th:value="${list.id}"/>
-                                                    <input type="hidden" name="bienTheSanPham" th:value="${list.bienTheSanPham.id}"/>
+                                                    <input type="hidden" name="bienTheSanPham"
+                                                           th:value="${list.bienTheSanPham.id}"/>
                                                     <input type="hidden" name="trangThai" th:value="${list.trangThai}"/>
                                                     <button type="submit" name="update" class="btn btn-info">
                                                         <i class="fas fa-check"></i>
@@ -129,13 +130,15 @@
 
                                                     <!--Button lock-->
                                                     <th:block th:if="${list.trangThai}">
-                                                        <button type="button" class="btn btn-warning" data-toggle="modal"
-                                                                  th:data-target="'#lock-' + ${list.bienTheSanPham}">
+                                                        <button type="button" class="btn btn-warning"
+                                                                data-toggle="modal"
+                                                                th:data-target="'#lock-' + ${list.bienTheSanPham}">
                                                             <i class="fas fa-unlock" style="color: green;"></i>
                                                         </button>
                                                     </th:block>
                                                     <th:block th:if="not ${list.trangThai}">
-                                                          <button type="button" class="btn btn-warning" data-toggle="modal"
+                                                          <button type="button" class="btn btn-warning"
+                                                                  data-toggle="modal"
                                                                   th:data-target="'#lock-' + ${list.bienTheSanPham}">
                                                               <i class="fas fa-lock"></i>
                                                           </button>
@@ -146,33 +149,41 @@
                                                             th:data-target="'#delete-' + ${list.bienTheSanPham}"><i
                                                             class="fas fa-trash"></i></button>
 
-                                                        <!--Popup lock thuộc tính-->
-                                                        <div class="modal fade" th:id="'lock-' + ${list.bienTheSanPham}">
+                                                    <!--Popup lock thuộc tính-->
+                                                        <div class="modal fade"
+                                                             th:id="'lock-' + ${list.bienTheSanPham}">
                                                           <div class="modal-dialog">
                                                             <div class="modal-content">
                                                               <div class="modal-header">
                                                                 <strong class="modal-title" th:if="${list.trangThai}">Xác nhận mở khóa thuộc
                                                                   tính</strong>
-                                                                <strong class="modal-title" th:if="not ${list.trangThai}">Xác nhận khóa thuộc
+                                                                <strong class="modal-title"
+                                                                        th:if="not ${list.trangThai}">Xác nhận khóa thuộc
                                                                   tính</strong>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close">
                                                                   <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                               </div>
                                                               <div class="modal-body">
                                                                 <div class="card-body" th:if="${list.trangThai}">
-                                                                  Thuộc tính <strong class="badge text-bg-info" th:text="${list.tenThuocTinh}"
+                                                                  Thuộc tính <strong class="badge text-bg-info"
+                                                                                     th:text="${list.tenThuocTinh}"
                                                                                      style="font-size: 16px;"></strong> sẽ được mở khóa!
                                                                 </div>
                                                                 <div class="card-body" th:if="not ${list.trangThai}">
-                                                                  Thuộc tính <strong class="badge text-bg-info" th:text="${list.tenThuocTinh}"
+                                                                  Thuộc tính <strong class="badge text-bg-info"
+                                                                                     th:text="${list.tenThuocTinh}"
                                                                                      style="font-size: 16px;"></strong> sẽ bị khóa!
                                                                 </div>
-                                                                <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
-                                                                  <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                                  <button type="submit" name="lock" class="btn btn-primary">Đồng ý</button>
+                                                                <div class="modal-footer justify-content-end"
+                                                                     style="margin-bottom: -15px;">
+                                                                  <button type="button" class="btn btn-default"
+                                                                          data-dismiss="modal">Hủy</button>
+                                                                  <button type="submit" name="lock"
+                                                                          class="btn btn-primary">Đồng ý</button>
                                                                 </div>
-                                                              </div>
+                                                                  </div>
                                                             </div>
                                                           </div>
                                                         </div>
@@ -302,6 +313,7 @@
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">Lưu</button>
                                                 </div>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -324,10 +336,11 @@
                                     <div id="actions" class="row">
                                         <div class="col-lg-7">
                                             <div class="btn-group w-100">
-                          <span class="btn btn-sm btn-success col fileinput-button" title="Chọn file từ máy tính">
-                            <i class="fas fa-plus"></i>
-                            <span><!--Chọn file--></span>
-                          </span>
+                                                  <span class="btn btn-sm btn-success col fileinput-button"
+                                                        title="Chọn file từ máy tính">
+                                                    <i class="fas fa-plus"></i>
+                                                    <span><!--Chọn file--></span>
+                                                  </span>
                                                 <button type="submit" class="btn btn-sm btn-primary col start">
                                                     <i class="fas fa-upload"></i>
                                                     <span><!--Tải lên SV--></span>
@@ -436,7 +449,8 @@
                         </div>
                     </div>
                     <!--End popup addToCart-->
-
+                </div>
+            </div>
         </section>
         <!-- /.content -->
     </div>

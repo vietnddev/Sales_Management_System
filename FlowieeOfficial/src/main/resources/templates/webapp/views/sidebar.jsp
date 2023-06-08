@@ -91,8 +91,8 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fa-solid fa- nav-icon"></i>
+              <a th:href="@{/don-hang/ban-hang}" class="nav-link">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
                 <p>
                   Bán hàng
                 </p>
@@ -100,7 +100,7 @@
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
-                <i class="fa-solid fa- nav-icon"></i>
+                <i class="fa-solid fa-gifts"></i>
                 <p>
                   Tạo mã voucher
                 </p>
@@ -158,7 +158,7 @@
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
-                <i class="fa-solid fa- nav-icon"></i>
+                <i class="fa-solid fa-list"></i>
                 <p>
                   Danh mục hệ thống
                   <i class="fas fa-angle-left right"></i>

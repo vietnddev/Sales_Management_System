@@ -2,20 +2,17 @@ package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
-import com.flowiee.app.danhmuc.repository.KenhBanHangRepository;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.DonHangChiTiet;
-import com.flowiee.app.sanpham.model.DonHangChiTietResponse;
+import com.flowiee.app.sanpham.entity.KhachHang;
+import com.flowiee.app.sanpham.entity.Cart;
+import com.flowiee.app.sanpham.entity.Items;
 import com.flowiee.app.sanpham.model.DonHangRequest;
-import com.flowiee.app.sanpham.services.BienTheSanPhamService;
-import com.flowiee.app.sanpham.services.ChiTietDonHangService;
-import com.flowiee.app.sanpham.services.DonHangService;
-import com.flowiee.app.sanpham.services.KhachHangService;
+import com.flowiee.app.sanpham.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +20,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -44,6 +45,10 @@ public class DonHangController {
     private KhachHangService khachHangService;
     @Autowired
     private TrangThaiDonHangService trangThaiDonHangService;
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private ItemsService itemsService;
     @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
@@ -94,7 +99,7 @@ public class DonHangController {
     }
 
     @GetMapping("/{id}")
-    public String findDonHangDetail(@PathVariable("id") int id, HttpServletRequest request, ModelMap modelMap) {
+    public String findDonHangDetail(@PathVariable("id") int id, ModelMap modelMap) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -109,6 +114,87 @@ public class DonHangController {
         }
     }
 
+    @GetMapping("/ban-hang")
+    public String showPageBanHang(ModelMap modelMap, HttpSession session) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
+            modelMap.addAttribute("listDonHang", donHangService.findAll());
+            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
+            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelMap.addAttribute("listKhachHang", khachHangService.findAll());
+            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
+            modelMap.addAttribute("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+
+            List<Cart> listCart = cartService.findByAccountId(accountService.getCurrentAccount().getId());
+            modelMap.addAttribute("listCart", listCart);
+
+            modelMap.addAttribute("donHangRequest", new DonHangRequest());
+            modelMap.addAttribute("donHang", new DonHang());
+            modelMap.addAttribute("khachHang", new KhachHang());
+            modelMap.addAttribute("cart", new Cart());
+            modelMap.addAttribute("items", new Items());
+            return PagesUtil.PAGE_DONHANG_BANHANG;
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/ban-hang/cart/create")
+    public String createCart() {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        Cart cart = new Cart();
+        cart.setCreatedBy(accountService.getCurrentAccount().getId());
+        cart.setCreateAt(new Date());
+        cartService.save(cart);
+        return "redirect:/don-hang/ban-hang";
+    }
+
+    @PostMapping("/ban-hang/cart/{id}/add-items")
+    public String addItemsToCart(@PathVariable("id") int idCart, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        Cart cart = cartService.findById(idCart);
+        List<String> listBienTheSanPham = Arrays.stream(request.getParameterValues("bienTheSanPhamId")).toList();
+        for (String bTSanPhamId : listBienTheSanPham) {
+            Items items = new Items();
+            items.setCart(cart);
+            items.setBienTheSanPham(bienTheSanPhamService.findById(Integer.parseInt(bTSanPhamId)));
+            items.setSoLuong(1);
+            items.setGhiChu("");
+            itemsService.save(items);
+        }
+        return "redirect:/don-hang/ban-hang";
+    }
+
+    @PostMapping("/ban-hang/cart/update/{id}")
+    public String updateItemsOfCart(@PathVariable("id") int id, @ModelAttribute("items") Items items) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        items.setCart(cartService.findById(id));
+        if (items.getSoLuong() > 0) {
+            itemsService.save(items);
+        } else {
+            itemsService.delete(items.getId());
+        }
+        return "redirect:/don-hang/ban-hang";
+    }
+
+    @PostMapping("/ban-hang/cart/delete/{id}")
+    public String deleteItemsOfCart(@PathVariable("id") int id) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        cartService.delete(id);
+        return "redirect:/don-hang/ban-hang";
+    }
+
     @Transactional
     @PostMapping("/insert")
     public String insert(@ModelAttribute("donHangRequest") DonHangRequest request) {
@@ -116,7 +202,10 @@ public class DonHangController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
+            int cartId = request.getCartId();
             donHangService.save(request);
+            //Sau khi đã lưu đơn hàng thì xóa giỏ hàng
+            cartService.delete(cartId);
             return "redirect:/don-hang";
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;

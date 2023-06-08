@@ -134,7 +134,7 @@
                         </div>
                     </div>
                     <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
-                    <div class="row col-sm-12 mt-3">
+                    <div class="row col-sm-12 border pt-3 mt-3">
                         <hr>
                         <div class="col-sm-8">
                             <table class="table">

@@ -132,12 +132,11 @@
                                             <td th:text="${list.ghiChu}"></td>
                                             <td th:text="${list.trangThaiDonHang.ten}"></td>
                                             <td>
-                                                <button class="btn btn-outline-info btn-sm" style="margin-bottom: 4px;">
+                                                <button class="btn btn-outline-info btn-sm">
                                                     <a th:href="@{/don-hang/{id}(id=${list.id})}">
                                                         <i class="fa-solid fa-eye"></i>
                                                     </a></button>
                                                 <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
-                                                        style="margin-bottom: 4px;"
                                                         th:data-target="'#update-' + ${list.id}">
                                                     <i class="fa-solid fa-pencil"></i>
                                                 </button>
@@ -222,20 +221,6 @@
                                         </tr>
                                     </th:block>
                                     </tbody>
-                                    <tfoot>
-                                    <tr class="align-self-center">
-                                        <th>ID</th>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Thời gian đặt hàng</th>
-                                        <th>Địa chỉ giao hàng</th>
-                                        <th>Khách hàng</th>
-                                        <th>Số tiền</th>
-                                        <th>Kênh bán hàng</th>
-                                        <th>Ghi chú</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                             <!-- /.card-body -->
@@ -256,9 +241,9 @@
                                                         <div class="col-12">
                                                             <div class="form-group">
                                                                 <label>Sản phẩm</label>
-                                                                <select class="select2" multiple="multiple"
+                                                                <select class="form-control select2 w-100"
                                                                         data-placeholder="Chọn sản phẩm"
-                                                                        style="width: 100%;"  required
+                                                                        required
                                                                         name="listBienTheSanPham">
                                                                     <option th:each="option : ${listBienTheSanPham}"
                                                                             th:value="${option.id}"
