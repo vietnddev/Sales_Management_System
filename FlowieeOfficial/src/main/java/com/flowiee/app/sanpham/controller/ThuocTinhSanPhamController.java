@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.controller;
 
+import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
@@ -26,12 +27,11 @@ public class ThuocTinhSanPhamController {
     //Thêm mới thuộc tính
     @PostMapping(value = "/insert")
     public String insertAttributes(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ThuocTinhSanPham thuocTinhSanPham) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            thuocTinhSanPhamService.saveAttribute(thuocTinhSanPham);
-            return "redirect:" + request.getHeader("referer");
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        thuocTinhSanPhamService.saveAttribute(thuocTinhSanPham);
+        return "redirect:" + request.getHeader("referer");
     }
 
     //Cập nhật thuộc tính cho sản phẩm
@@ -39,46 +39,44 @@ public class ThuocTinhSanPhamController {
     @PostMapping(value = "/update/{id}", params = "update")
     public String updateAttribute(@ModelAttribute("thuocTinhSanPham") ThuocTinhSanPham attribute,
                                   HttpServletRequest request, @PathVariable("id") int id) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            attribute.setId(id);
-            thuocTinhSanPhamService.saveAttribute(attribute);
-            return "redirect:" + request.getHeader("referer");
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        attribute.setId(id);
+        thuocTinhSanPhamService.saveAttribute(attribute);
+        return "redirect:" + request.getHeader("referer");
     }
 
     //Khóa lock attribute
     @Transactional
     @PostMapping(value = "/update/{id}", params = "lock")
     public String lockAttribute(HttpServletRequest request, @PathVariable("id") int attributeID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            ThuocTinhSanPham attribute = thuocTinhSanPhamService.getByAttributeID(attributeID).get();
-            attribute.setId(attributeID);
-            if (attribute.isTrangThai()) {
-                attribute.setTrangThai(false);
-            } else {
-                attribute.setTrangThai(true);
-            }
-            thuocTinhSanPhamService.saveAttribute(attribute);
-            return "redirect:" + request.getHeader("referer");
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        ThuocTinhSanPham attribute = thuocTinhSanPhamService.getByAttributeID(attributeID).get();
+        attribute.setId(attributeID);
+        if (attribute.isTrangThai()) {
+            attribute.setTrangThai(false);
+        } else {
+            attribute.setTrangThai(true);
+        }
+        thuocTinhSanPhamService.saveAttribute(attribute);
+        return "redirect:" + request.getHeader("referer");
     }
 
-    //Xóa thuộc tính
     @Transactional
     @PostMapping(value = "/delete/{id}")
     public String deleteAttribute(@ModelAttribute("attribute") ThuocTinhSanPham attribute,
                                   HttpServletRequest request, @PathVariable("id") int attributeID) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            if (thuocTinhSanPhamService.getByAttributeID(attributeID).isPresent()) {
-                thuocTinhSanPhamService.deleteAttribute(attributeID);
-                return "redirect:" + request.getHeader("referer");
-            }
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        if (thuocTinhSanPhamService.getByAttributeID(attributeID).isPresent()) {
+            thuocTinhSanPhamService.deleteAttribute(attributeID);
+            return "redirect:" + request.getHeader("referer");
+        } else {
+            throw new NotFoundException();
+        }
     }
 }

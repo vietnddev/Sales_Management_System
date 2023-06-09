@@ -48,7 +48,8 @@
                                                    aria-selected="true"
                                                    th:id="${cartIndex.index + 1}"
                                                    th:href="'#tab_' + ${cartIndex.index + 1}"
-                                                   style="font-weight: bold">Giỏ hàng [[${cartIndex.index + 1}]]</a>
+                                                   style="font-weight: bold">Giỏ hàng [[${cartIndex.index + 1}]]
+                                                </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -94,7 +95,7 @@
                                                 <form class="row mt-3"
                                                       th:action="@{/don-hang/ban-hang/cart/{id}/add-items(id=${cart.id})}"
                                                       method="POST">
-                                                    <div class="col-sm-11 form-group">
+                                                    <div class="col-sm-10 form-group">
                                                         <select class="form-control select2" multiple="multiple"
                                                                 data-placeholder="Chọn sản phẩm"
                                                                 style="width: 100%;" required
@@ -105,14 +106,14 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-sm-1 form-group">
+                                                    <div class="col-sm-2 form-group">
                                                         <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px">
                                                             Thêm
                                                         </button>
                                                     </div>
                                                 </form>
                                                 <div class="row">
-                                                    <table class="table table-head-fixed text-nowrap text-center">
+                                                    <table class="table table-head-fixed text-nowrap text-center align-items-center">
                                                         <thead>
                                                         <tr>
                                                             <td>#</td>
@@ -146,7 +147,7 @@
                                                                                 <form th:action="@{/don-hang/ban-hang/cart/update/{id}(id=${cart.id})}"
                                                                                       th:object="${items}" method="POST">
                                                                                     <div class="modal-header">
-                                                                                        <strong class="modal-title">Cập nhật sản phẩm</strong>
+                                                                                        <strong class="modal-title">Cập nhật giỏ hàng</strong>
                                                                                         <button type="button" class="close" data-dismiss="modal"
                                                                                                 aria-label="Close">
                                                                                             <span aria-hidden="true">&times;</span>
@@ -190,16 +191,20 @@
                                                                     <div class="modal fade" th:id="'modalDeleteItems_' + ${cart.id}">
                                                                         <div class="modal-dialog">
                                                                             <div class="modal-content">
-                                                                                <form th:action="@{/don-hang/ban-hang/update/{id}(id=${cart.id})}" method="POST">
+                                                                                <form th:action="@{/don-hang/ban-hang/cart/update/{id}(id=${cart.id})}" method="POST">
                                                                                     <div class="modal-header">
-                                                                                        <strong class="modal-title">Xóa sản phẩm</strong>
+                                                                                        <strong class="modal-title">Cập nhật giỏ hàng</strong>
                                                                                         <button type="button" class="close" data-dismiss="modal"
                                                                                                 aria-label="Close">
                                                                                             <span aria-hidden="true">&times;</span>
                                                                                         </button>
                                                                                     </div>
                                                                                     <div class="modal-body">
+                                                                                        <input type="hidden" name="id" th:value="${item.id}">
                                                                                         <input type="hidden" name="soLuong" value="0"/>
+                                                                                        Xác nhận xóa sản phẩm
+                                                                                        <span class="badge badge-info" th:text="${item.bienTheSanPham.tenBienThe}"></span>
+                                                                                        khỏi giỏ hàng!
                                                                                     </div>
                                                                                     <div class="modal-footer justify-content-end">
                                                                                         <button type="button" class="btn btn-sm btn-default"
@@ -220,7 +225,7 @@
                                             </div>
                                             <div class="col-sm-4 border">
                                                 <div class="row mt-3">
-                                                    <div class="form-group col-sm-10 pr-0">
+                                                    <div class="form-group col-sm-9 pr-0">
                                                         <select class="custom-select" name="khachHang"
                                                                 data-placeholder="Chọn khách hàng" required>
                                                             <option th:each="cus : ${listKhachHang}"
@@ -229,10 +234,36 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-sm-2 form-group">
-                                                        <button type="button" class="btn btn-sm btn-primary w-100" style="height: 38px">
+                                                    <div class="col-sm-3 form-group">
+                                                        <button type="button" class="btn btn-sm btn-primary w-100" style="height: 38px"
+                                                                data-target="#modalCreateKhachHang" data-toggle="modal">
                                                             Thêm
                                                         </button>
+                                                        <div class="modal fade" id="modalCreateKhachHang">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <form th:action="@{/khach-hang/create}" method="POST">
+                                                                        <div class="modal-header">
+                                                                            <strong class="modal-title">Thêm mới khách hàng</strong>
+                                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+
+                                                                        </div>
+                                                                        <div class="modal-footer justify-content-end">
+                                                                            <button type="button" class="btn btn-default"
+                                                                                    data-dismiss="modal">Hủy
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-primary">Đồng ý
+                                                                            </button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <hr class="mt-0">
@@ -262,29 +293,96 @@
                                                 </div>
                                                 <hr class="mt-0">
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5">
+                                                    <label class="col-sm-6">
                                                         Tổng tiền hàng
                                                         <span class="badge badge-danger" th:text="${cart.listItems.size()}"></span>
                                                     </label>
-                                                    <span class="col-sm-7 text-right">0</span>
+                                                    <span class="col-sm-6 text-right">0</span>
                                                 </div>
                                                 <hr>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-4">Phí vận chuyển</label>
-                                                    <span class="col-sm-8 text-right">0</span>
+                                                    <label class="col-sm-6">Phí vận chuyển</label>
+                                                    <span class="col-sm-6 text-right">0</span>
                                                 </div>
                                                 <hr>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-4">Thành tiền</label>
-                                                    <label class="col-sm-8 text-right">200.000đ</label>
+                                                    <label class="col-sm-6">Thành tiền</label>
+                                                    <label class="col-sm-6 text-right">200.000đ</label>
                                                 </div>
                                                 <hr>
                                                 <div class="form-group">
                                                     <label>Ghi chú</label>
                                                     <textarea class="form-control" name="ghiChu"></textarea>
                                                 </div>
-                                                <div class="form-group">
-                                                    <button type="button" class="btn btn-info w-100">Lưu đơn</button>
+                                                <div class="form-group row">
+                                                    <!--LƯU ĐƠN HÀNG-->
+                                                    <div class="col-sm-6">
+                                                        <button type="button" class="btn btn-info w-100"
+                                                                style="padding-right: 3px"
+                                                                data-toggle="modal" th:data-target="'#modalSaveDonHang_' + ${cart.id}">Lưu đơn</button>
+                                                    </div>
+                                                    <div class="modal fade" th:id="'modalSaveDonHang_' + ${cart.id}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <form th:action="@{/don-hang/insert}" method="POST">
+                                                                    <div class="modal-header">
+                                                                        <strong class="modal-title">Thông báo xác nhận</strong>
+                                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                                aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <input type="hidden" name="id">
+                                                                        <input type="hidden" name="soLuong" value="0"/>
+                                                                        Xác nhận tạo mới đơn hàng!
+                                                                    </div>
+                                                                    <div class="modal-footer justify-content-end">
+                                                                        <button type="button" class="btn btn-sm btn-default"
+                                                                                data-dismiss="modal">Hủy
+                                                                        </button>
+                                                                        <button type="submit" class="btn btn-sm btn-primary">Đồng ý
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--XÓA GIỎ HÀNG-->
+                                                    <div class="col-sm-6">
+                                                        <button type="button" class="btn btn-danger w-100"
+                                                                style="padding-left: 3px;"
+                                                                data-toggle="modal" th:data-target="'#modalDeleteCart_' + ${cart.id}">
+                                                            Xóa giỏ hàng
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal fade" th:id="'modalDeleteCart_' + ${cart.id}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <form th:action="@{/don-hang/ban-hang/cart/delete/{id}(id=${cart.id})}" method="POST">
+                                                                    <div class="modal-header">
+                                                                        <strong class="modal-title">Thông báo xác nhận</strong>
+                                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                                aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <input type="hidden" name="id">
+                                                                        <input type="hidden" name="soLuong" value="0"/>
+                                                                        Xác nhận xóa giỏ hàng
+                                                                    </div>
+                                                                    <div class="modal-footer justify-content-end">
+                                                                        <button type="button" class="btn btn-sm btn-default"
+                                                                                data-dismiss="modal">Hủy
+                                                                        </button>
+                                                                        <button type="submit" class="btn btn-sm btn-primary">Đồng ý
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

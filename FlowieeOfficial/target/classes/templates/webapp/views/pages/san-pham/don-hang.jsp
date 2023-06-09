@@ -104,18 +104,18 @@
                                 </div>
                                 <table class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
-                                    <tr class="align-self-center">
-                                        <th>ID</th>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Thời gian đặt hàng</th>
-                                        <th>Địa chỉ giao hàng</th>
-                                        <th>Khách hàng</th>
-                                        <th>Số tiền</th>
-                                        <th>Kênh bán hàng</th>
-                                        <th>Ghi chú</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
+                                        <tr class="align-self-center">
+                                            <th>ID</th>
+                                            <th>Mã đơn hàng</th>
+                                            <th>Thời gian đặt hàng</th>
+                                            <th>Địa chỉ giao hàng</th>
+                                            <th>Khách hàng</th>
+                                            <th>Số tiền</th>
+                                            <th>Kênh bán hàng</th>
+                                            <th>Ghi chú</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thao tác</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="list : ${listDonHang}">

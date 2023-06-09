@@ -6,22 +6,22 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "san_pham_danh_gia")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Entity
+//@Table(name = "san_pham_danh_gia")
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Comment {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	private int ID;
-	private int IDProduct;
-	private String Name;
-	private String Email;
-	private String Phone;
-	private String Created;
-	private String Describes;
-	private boolean Status;
-	private int Code;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@Column(name = "ID", unique = true, nullable = false)
+//	private int ID;
+//	private int IDProduct;
+//	private String Name;
+//	private String Email;
+//	private String Phone;
+//	private String Created;
+//	private String Describes;
+//	private boolean Status;
+//	private int Code;
 }

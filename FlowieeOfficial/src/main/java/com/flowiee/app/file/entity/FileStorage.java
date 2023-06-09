@@ -28,7 +28,7 @@ public class FileStorage implements Serializable{
     @Column(name = "id", unique = true, nullable = false)
     private int id;
 
-    @Column(name = "ten_customize")
+    @Column(name = "ten_file_customize")
     private String tenFileCustomize;
 
     @Column(name = "ten_file_khi_luu", nullable = false)
@@ -56,7 +56,7 @@ public class FileStorage implements Serializable{
     private String directoryPath;
 
     @CreatedDate
-    @Column(name = "CreatedAt",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    @Column(name = "created_at",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private Date createdAt;
 
     @PreUpdate
@@ -89,6 +89,6 @@ public class FileStorage implements Serializable{
     private Document document;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "upload_by", nullable = false)
     private Account account;
 }

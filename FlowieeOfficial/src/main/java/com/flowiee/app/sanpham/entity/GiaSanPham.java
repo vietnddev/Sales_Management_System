@@ -30,7 +30,7 @@ public class GiaSanPham implements Serializable {
     private BienTheSanPham bienTheSanPham;
 
     @Column(name = "gia_ban", nullable = false)
-    private float giaBan;
+    private Double giaBan;
 
     @CreatedDate
     @Column(name = "created_at",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)

@@ -47,8 +47,7 @@ public class SanPhamController {
      */
     @GetMapping(value = "")
     public String getAllProducts(ModelMap modelMap) {
-        String username = accountService.getUserName();
-        if (username == null && username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
@@ -73,43 +72,40 @@ public class SanPhamController {
 
     @GetMapping(value = "/{id}")
     public String getDetailProduct(ModelMap modelMap, @PathVariable("id") int sanPhamId) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            modelMap.addAttribute("sanPham", new SanPham());
-            modelMap.addAttribute("bienTheSanPham", new BienTheSanPham());
-            modelMap.addAttribute("idSanPham", sanPhamId);
-            // Load chi tiết thông tin sản phẩm
-            modelMap.addAttribute("detailProducts", productsService.findById(sanPhamId));
-            // Danh sách loại sản phẩm từ danh mục hệ thống
-            modelMap.addAttribute("listTypeProducts", loaiSanPhamService.findAll());
-            // Danh sách màu sắc từ danh mục hệ thống
-            modelMap.addAttribute("listDmMauSacSanPham", loaiMauSacService.findAll());
-            // Danh sách kích cỡ từ danh mục hệ thống
-            modelMap.addAttribute("listDmKichCoSanPham", loaiKichCoService.findAll());
-            // Load danh sách biến thể sản phẩm
-            modelMap.addAttribute("listColorVariant", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.getListVariantOfProduct(sanPhamId)));
-            // Danh sách đơn vị tính từ danh mục hệ thống
-            modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
-            return PagesUtil.PAGE_SANPHAM_TONG_QUAN;
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        modelMap.addAttribute("sanPham", new SanPham());
+        modelMap.addAttribute("bienTheSanPham", new BienTheSanPham());
+        modelMap.addAttribute("idSanPham", sanPhamId);
+        // Load chi tiết thông tin sản phẩm
+        modelMap.addAttribute("detailProducts", productsService.findById(sanPhamId));
+        // Danh sách loại sản phẩm từ danh mục hệ thống
+        modelMap.addAttribute("listTypeProducts", loaiSanPhamService.findAll());
+        // Danh sách màu sắc từ danh mục hệ thống
+        modelMap.addAttribute("listDmMauSacSanPham", loaiMauSacService.findAll());
+        // Danh sách kích cỡ từ danh mục hệ thống
+        modelMap.addAttribute("listDmKichCoSanPham", loaiKichCoService.findAll());
+        // Load danh sách biến thể sản phẩm
+        modelMap.addAttribute("listColorVariant", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.getListVariantOfProduct(sanPhamId)));
+        // Danh sách đơn vị tính từ danh mục hệ thống
+        modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
+        return PagesUtil.PAGE_SANPHAM_TONG_QUAN;
     }
 
     @PostMapping(value = "/insert")
     public String insertProduct(HttpServletRequest request, @ModelAttribute("sanPham") SanPham sanPham) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            productsService.save(sanPham);
-            return "redirect:" + request.getHeader("referer");
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        productsService.save(sanPham);
+        return "redirect:" + request.getHeader("referer");
     }
 
     @Transactional
     @PostMapping(value = "/update/{id}")
     public String updateProduct(HttpServletRequest request, @ModelAttribute("sanPham") SanPham sanPham, @PathVariable("id") int id) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (id <= 0 || productsService.findById(id) == null) {
@@ -122,16 +118,15 @@ public class SanPhamController {
     @Transactional
     @PostMapping(value = "/delete/{id}")
     public String deleteProduct(HttpServletRequest request, @PathVariable("id") int id) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            if (productsService.findById(id) != null) {
-                productsService.delete(id);
-                System.out.println("Delete successfully");
-            } else {
-                System.out.println("Product not found!");
-            }
-            return "redirect:" + request.getHeader("referer");
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
         }
-        return PagesUtil.PAGE_LOGIN;
+        if (productsService.findById(id) != null) {
+            productsService.delete(id);
+            System.out.println("Delete successfully");
+        } else {
+            System.out.println("Product not found!");
+        }
+        return "redirect:" + request.getHeader("referer");
     }
 }

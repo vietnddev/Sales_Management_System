@@ -149,6 +149,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             response.setLoaiKichCo(bienTheSanPham.getLoaiKichCo());
             response.setSoLuongKho(bienTheSanPham.getSoLuongKho());
             response.setTrangThai(bienTheSanPham.getTrangThai());
+            response.setGiaBan(giaSanPhamService.findGiaHienTai(bienTheSanPham.getId()));
             listReturn.add(response);
             i++;
         }

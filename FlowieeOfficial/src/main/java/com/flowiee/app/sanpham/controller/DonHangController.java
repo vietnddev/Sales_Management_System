@@ -59,7 +59,7 @@ public class DonHangController {
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
             modelMap.addAttribute("listDonHang", donHangService.findAll());
-            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.findAll()));
             modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
             modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
             modelMap.addAttribute("listKhachHang", khachHangService.findAll());
@@ -84,7 +84,7 @@ public class DonHangController {
                                                                                    request.getKenhBanHang(),
                                                                                    request.getHinhThucThanhToan(),
                                                                                    request.getTrangThaiDonHang()));
-            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.findAll()));
             modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
             modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
             modelMap.addAttribute("listKhachHang", khachHangService.findAll());
@@ -121,7 +121,7 @@ public class DonHangController {
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
             modelMap.addAttribute("listDonHang", donHangService.findAll());
-            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.findAll()));
             modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
             modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
             modelMap.addAttribute("listKhachHang", khachHangService.findAll());

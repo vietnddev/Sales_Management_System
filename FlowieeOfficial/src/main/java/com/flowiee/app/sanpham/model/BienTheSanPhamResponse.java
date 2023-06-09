@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class BienTheSanPhamResponse extends BienTheSanPham {
     private int stt;
+    private double giaBan;
 }

@@ -1,6 +1,5 @@
 package com.flowiee.app.sanpham.model;
 
-import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import lombok.Data;
 import lombok.ToString;
 
