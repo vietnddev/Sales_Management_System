@@ -53,7 +53,7 @@
             <li class="nav-header"><strong>QUẢN LÝ BÁN HÀNG</strong></li>
             <li class="nav-item">
               <a href="" class="nav-link">
-                <i class="nav-icon"></i>
+                <i class="fa-solid fa-chart-pie nav-icon"></i>
                 <p>
                   Tổng quan
                 </p>
@@ -108,7 +108,7 @@
             </li>
             <li class="nav-item">
               <a th:href="@{/khach-hang}" class="nav-link">
-                <i class="nav-icon"></i>
+                <i class="fa-solid fa-user-tag"></i>
                 <p>
                   Khách hàng
                 </p>
@@ -125,7 +125,7 @@
             <li class="nav-header"><strong>KHO TÀI LIỆU</strong></li>
             <li class="nav-item">
               <a th:href="@{/kho-tai-lieu/document}" class="nav-link">
-                <i class="fa-solid fa- nav-icon"></i>
+                <i class="fa-solid fa-chart-pie nav-icon"></i>
                 <p>
                   Tổng quan
                 </p>
@@ -133,7 +133,7 @@
             </li>
             <li class="nav-item">
               <a th:href="@{/danh-muc/loai-tai-lieu}" class="nav-link">
-                <i class="fa-solid fa- nav-icon"></i>
+                <i class="fa-solid fa-file-code nav-icon"></i>
                 <p>
                   Loại tài liệu
                 </p>
@@ -217,7 +217,7 @@
             </li>
             <li class="nav-item">
               <a th:href="@{/he-thong/nhom-quyen}" class="nav-link">
-                <i class="nav-icon"></i>
+                <i class="fa-solid fa-user-gear nav-icon"></i>
                 <p>
                   Nhóm quyền
                 </p>
