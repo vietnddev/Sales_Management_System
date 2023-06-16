@@ -11,4 +11,4 @@ Backend:
 + Java
 + Spring Boot, Spring Security, Spring Data JPA
 + Maven, Thymeleaf, Log4j
-+ Oracle
++ Oracle, diagram: https://dbdiagram.io/d/64859460722eb77494c1ae83
