@@ -1,6 +1,7 @@
 package com.flowiee.app.danhmuc.entity;
 
 import com.flowiee.app.sanpham.entity.DonHang;
+import com.flowiee.app.sanpham.entity.DonHangThanhToan;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,7 +35,7 @@ public class HinhThucThanhToan implements Serializable {
     private boolean trangThai;
 
     @OneToMany(mappedBy = "hinhThucThanhToan", fetch = FetchType.LAZY)
-    private List<DonHang> listDonHang;
+    private List<DonHangThanhToan> listThanhToan;
 
     @Override
     public String toString() {

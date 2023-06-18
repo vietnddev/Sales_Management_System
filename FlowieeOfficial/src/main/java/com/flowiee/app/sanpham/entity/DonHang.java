@@ -50,9 +50,8 @@ public class DonHang implements java.io.Serializable {
 	@JoinColumn(name = "kenh_ban_hang", nullable = false)
 	private KenhBanHang kenhBanHang;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hinh_thuc_thanh_toan", nullable = false)
-	private HinhThucThanhToan hinhThucThanhToan;
+	@OneToMany(mappedBy = "donHang", fetch = FetchType.LAZY)
+	private List<DonHangThanhToan> listDonHangThanhToan;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trang_thai_don_hang", nullable = false)

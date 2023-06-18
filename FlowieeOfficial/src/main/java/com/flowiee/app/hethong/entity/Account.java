@@ -8,6 +8,7 @@ import com.flowiee.app.hethong.model.RoleResponse;
 import com.flowiee.app.khotailieu.entity.DocShare;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.sanpham.entity.DonHang;
+import com.flowiee.app.sanpham.entity.DonHangThanhToan;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -74,6 +75,9 @@ public class Account extends DateAudit implements Serializable{
 
     @OneToMany(mappedBy = "nhanVienBanHang", fetch = FetchType.LAZY)
     private List<DonHang> listDonHang;
+
+    @OneToMany(mappedBy = "thuNgan", fetch = FetchType.LAZY)
+    private List<DonHangThanhToan> listDonHangThanhToan;
 
     @Transient
     private List<Role> role;

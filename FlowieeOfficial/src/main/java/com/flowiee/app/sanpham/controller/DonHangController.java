@@ -1,16 +1,13 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
 import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.sanpham.entity.DonHang;
-import com.flowiee.app.sanpham.entity.DonHangChiTiet;
-import com.flowiee.app.sanpham.entity.KhachHang;
-import com.flowiee.app.sanpham.entity.Cart;
-import com.flowiee.app.sanpham.entity.Items;
+import com.flowiee.app.sanpham.entity.*;
 import com.flowiee.app.sanpham.model.DonHangRequest;
 import com.flowiee.app.sanpham.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,8 @@ public class DonHangController {
     private KhachHangService khachHangService;
     @Autowired
     private TrangThaiDonHangService trangThaiDonHangService;
+    @Autowired
+    private DonHangThanhToanService donHangThanhToanService;
     @Autowired
     private CartService cartService;
     @Autowired
@@ -82,7 +81,6 @@ public class DonHangController {
             modelMap.addAttribute("listDonHang", donHangService.findAll(request.getSearchTxt(),
                                                                                    request.getThoiGianDatHangSearch(),
                                                                                    request.getKenhBanHang(),
-                                                                                   request.getHinhThucThanhToan(),
                                                                                    request.getTrangThaiDonHang()));
             modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.findAll()));
             modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
@@ -107,7 +105,11 @@ public class DonHangController {
             List<DonHangChiTiet> listDonHangDetail = donHangChiTietService.findByDonHangId(id);
             modelMap.addAttribute("donHangDetail", donHangService.findById(id));
             modelMap.addAttribute("listDonHangDetail", donHangChiTietService.convertToDonHangChiTietResponse(listDonHangDetail));
+            modelMap.addAttribute("listThanhToan", donHangThanhToanService.findByDonHangId(id));
+            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
             modelMap.addAttribute("donHang", new DonHang());
+            modelMap.addAttribute("donHangThanhToan", new DonHangThanhToan());
             return PagesUtil.PAGE_DONHANG_CHITIET;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
@@ -115,11 +117,18 @@ public class DonHangController {
     }
 
     @GetMapping("/ban-hang")
-    public String showPageBanHang(ModelMap modelMap, HttpSession session) {
+    public String showPageBanHang(ModelMap modelMap) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
+            List<Cart> cartCurrent = cartService.findByAccountId(accountService.getCurrentAccount().getId());
+            if (cartCurrent.isEmpty()) {
+                Cart cart = new Cart();
+                cart.setCreatedBy(accountService.getCurrentAccount().getId());
+                cart.setCreateAt(new Date());
+                cartService.save(cart);
+            }
             modelMap.addAttribute("listDonHang", donHangService.findAll());
             modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.findAll()));
             modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
@@ -142,28 +151,15 @@ public class DonHangController {
         }
     }
 
-    @PostMapping("/ban-hang/cart/create")
-    public String createCart() {
-        if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
-        }
-        Cart cart = new Cart();
-        cart.setCreatedBy(accountService.getCurrentAccount().getId());
-        cart.setCreateAt(new Date());
-        cartService.save(cart);
-        return "redirect:/don-hang/ban-hang";
-    }
-
     @PostMapping("/ban-hang/cart/{id}/add-items")
     public String addItemsToCart(@PathVariable("id") int idCart, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        Cart cart = cartService.findById(idCart);
         List<String> listBienTheSanPham = Arrays.stream(request.getParameterValues("bienTheSanPhamId")).toList();
         for (String bTSanPhamId : listBienTheSanPham) {
             Items items = new Items();
-            items.setCart(cart);
+            items.setCart(cartService.findById(idCart));
             items.setBienTheSanPham(bienTheSanPhamService.findById(Integer.parseInt(bTSanPhamId)));
             items.setSoLuong(1);
             items.setGhiChu("");
@@ -191,21 +187,38 @@ public class DonHangController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        cartService.delete(id);
+        itemsService.findByCartId(id).forEach(items -> {
+           itemsService.delete(items.getId());
+        });
         return "redirect:/don-hang/ban-hang";
     }
 
     @Transactional
     @PostMapping("/insert")
-    public String insert(@ModelAttribute("donHangRequest") DonHangRequest request) {
+    public String insert(@ModelAttribute("donHangRequest") DonHangRequest donHangRequest,
+                         HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
-            int cartId = request.getCartId();
-            donHangService.save(request);
-            //Sau khi đã lưu đơn hàng thì xóa giỏ hàng
-            cartService.delete(cartId);
+            String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
+            if (thoiGianDatHangString != null) {
+                donHangRequest.setThoiGianDatHang(DateUtil.convertStringToDate(thoiGianDatHangString));
+            } else {
+                donHangRequest.setThoiGianDatHang(new Date());
+            }
+            List<Integer> listBtspIdInt = new ArrayList<>();
+            List<String> listBtspIdString = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
+            for (String idString : listBtspIdString) {
+                listBtspIdInt.add(Integer.parseInt(idString));
+            }
+            donHangRequest.setListBienTheSanPham(listBtspIdInt);
+            donHangRequest.setTrangThaiThanhToan(false);
+            donHangService.save(donHangRequest);
+            //Sau khi đã lưu đơn hàng thì xóa all items
+            itemsService.findByCartId(donHangRequest.getCartId()).forEach(items -> {
+               itemsService.delete(items.getId());
+            });
             return "redirect:/don-hang";
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
@@ -233,6 +246,23 @@ public class DonHangController {
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
             donHangService.delete(id);
             return "redirect:/don-hang";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/thanh-toan/{id}")
+    public String thanhToan(@PathVariable("id") int donHangId,
+                            @ModelAttribute("donHangThanhToan") DonHangThanhToan donHangThanhToan) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
+            donHangThanhToan.setMaPhieu("PTT" + donHangId + DateUtil.now("yyMMddHHmmss"));
+            donHangThanhToan.setDonHang(donHangService.findById(donHangId));
+            donHangThanhToan.setTrangThaiThanhToan(true);
+            donHangThanhToanService.save(donHangThanhToan);
+            return "redirect:/don-hang/" + donHangId;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }

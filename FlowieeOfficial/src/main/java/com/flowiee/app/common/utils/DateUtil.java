@@ -1,7 +1,11 @@
 package com.flowiee.app.common.utils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class DateUtil {
     public static String now(String format){
@@ -29,5 +33,16 @@ public class DateUtil {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd");
         LocalDateTime now = LocalDateTime.now();
         return dateTimeFormatter.format(now);
+    }
+
+    public static Date convertStringToDate(String dateString) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing date: " + e.getMessage());
+        }
+        return date;
     }
 }

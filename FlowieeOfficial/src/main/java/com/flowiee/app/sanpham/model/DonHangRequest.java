@@ -18,6 +18,7 @@ public class DonHangRequest implements Serializable {
     private int nhanVienBanHang;
     private Date thoiGianDatHang;
     private int trangThaiDonHang;
+    private boolean trangThaiThanhToan;
     private String ghiChu;
     private String thoiGianDatHangSearch;
     private String searchTxt;

@@ -63,7 +63,8 @@
                                     <div class="tab-pane fade show active" id="THONG_TIN" role="tabpanel"
                                          aria-labelledby="custom-tabs-one-home-tab">
                                         <div class="row">
-                                            <div class="card-body table-responsive col-sm-12 p-0 mb-3" style="height: 250px;">
+                                            <div class="card-body table-responsive col-sm-12 p-0 mb-3"
+                                                 style="height: 250px;">
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
                                                     <tr>
@@ -150,12 +151,6 @@
                                                     <div class="col-4" style="display: flex; align-items: center">
                                                     </div>
                                                     <div class="col-4 text-right">
-                                                        <button type="button" class="btn btn-primary">
-                                                            In
-                                                        </button>
-                                                        <button type="button" class="btn btn-success">
-                                                            Thanh toán
-                                                        </button>
                                                         <button type="button" class="btn btn-danger">
                                                             Hủy đơn hàng
                                                         </button>
@@ -164,66 +159,177 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--END THÔNG TIN ĐƠN HÀNG-->
-                                    <!--START LỊCH SỬ THANH TOÁN-->
+                                    <!--END TAB THÔNG TIN ĐƠN HÀNG-->
+                                    <!--START TAB LỊCH SỬ THANH TOÁN-->
                                     <div class="tab-pane fade" id="THANH_TOAN" role="tabpanel"
                                          aria-labelledby="custom-tabs-one-profile-tab">
                                         <div class="row">
-                                            <div class="card-body table-responsive col-sm-12 p-0" style="height: 250px;">
+                                            <div class="card-body table-responsive col-sm-12 p-0"
+                                                 style="height: 250px;">
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
                                                         <tr>
                                                             <td>#</td>
                                                             <td>Mã phiếu</td>
                                                             <td>Thời gian thanh toán</td>
+                                                            <td>Hình thức thanh toán</td>
                                                             <td>Số tiền</td>
-                                                            <td>Trạng thái</td>
-                                                            <td>Xác nhận</td>
+                                                            <td>Thu ngân</td>
                                                             <td>Ghi chú</td>
+                                                            <td>Trạng thái thanh toán</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>F716664</td>
-                                                            <td>01/06/2023 12:00</td>
-                                                            <td>500,000 vnđ</td>
-                                                            <td>Đã thanh toán</td>
-                                                            <td>01/06/2023 12:30 <br>
-                                                                VietND</td>
-                                                            <td></td>
+                                                        <tr th:each="thanhToan, index : ${listThanhToan}">
+                                                            <td th:text="${index.index + 1}"></td>
+                                                            <td th:text="${thanhToan.maPhieu}"></td>
+                                                            <td th:text="${thanhToan.thoiGianThanhToan}"></td>
+                                                            <td th:text="${thanhToan.hinhThucThanhToan.tenLoai}"></td>
+                                                            <td th:text="${thanhToan.donHang.tongTienDonHang}"></td>
+                                                            <td th:text="${thanhToan.thuNgan.hoTen}"></td>
+                                                            <td th:text="${thanhToan.ghiChu}"></td>
+                                                            <td>
+                                                                <span class="badge badge-danger"
+                                                                      th:if="!${thanhToan.trangThaiThanhToan}">
+                                                                      Chưa thanh toán
+                                                                </span>
+                                                                <span class="badge badge-primary"
+                                                                      th:if="${thanhToan.trangThaiThanhToan}">
+                                                                      Đã thanh toán
+                                                                </span>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
+                                        <hr>
+                                        <div class="row justify-content-between">
+                                            <div class="col-4" style="display: flex; align-items: center">
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <button type="button" class="btn btn-primary">
+                                                    In
+                                                </button>
+                                                <button type="button" class="btn btn-success"
+                                                        data-toggle="modal"
+                                                        data-target="#modalThanhToan"
+                                                        disabled
+                                                        th:if="${donHangDetail.listDonHangThanhToan.size() > 0}">
+                                                        Đã thanh toán
+                                                </button>
+                                                <button type="button" class="btn btn-success"
+                                                        data-toggle="modal"
+                                                        data-target="#modalThanhToan"
+                                                        th:if="${donHangDetail.listDonHangThanhToan.size() == 0}">
+                                                        Thanh toán
+                                                </button>
+                                                <!--POPUP THANH TOÁN-->
+                                                <div class="modal fade" id="modalThanhToan">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <form th:action="@{/don-hang/thanh-toan/{id}(id=${donHangDetail.id})}"
+                                                                  th:object="${donHangThanhToan}" method="POST">
+                                                                <div class="modal-header">
+                                                                    <strong class="modal-title">Thanh toán đơn hàng</strong>
+                                                                    <button type="button" class="close" data-dismiss="modal"
+                                                                            aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-left row">
+                                                                    <div class="form-group row w-100" style="padding-right: 8px">
+                                                                        <span class="col-sm-5"
+                                                                              style="display: flex; align-items: center">
+                                                                              Thời gian thanh toán
+                                                                        </span>
+                                                                        <div class="input-group date col-sm-7" id="reservationdatetime"
+                                                                             data-target-input="nearest">
+                                                                            <input type="text" class="form-control datetimepicker-input"
+                                                                                   data-target="#reservationdatetime"
+                                                                                   name="thoiGianThanhToan"
+                                                                                   required/>
+                                                                            <div class="input-group-append"
+                                                                                 data-target="#reservationdatetime"
+                                                                                 data-toggle="datetimepicker">
+                                                                                <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row w-100" style="padding-right: 8px">
+                                                                        <span class="col-sm-5"
+                                                                              style="display: flex; align-items: center">
+                                                                              Hình thức thanh toán
+                                                                        </span>
+                                                                        <select class="custom-select col-sm-7"
+                                                                                data-placeholder="Chọn hình thức thanh toán"
+                                                                                name="hinhThucThanhToan"
+                                                                                required>
+                                                                            <option th:each="payType : ${listHinhThucThanhToan}"
+                                                                                    th:value="${payType.id}"
+                                                                                    th:text="${payType.tenLoai}">
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="form-group row w-100" style="padding-right: 8px">
+                                                                        <span class="col-sm-5"
+                                                                              style="display: flex; align-items: center">
+                                                                              Thu ngân
+                                                                        </span>
+                                                                        <select class="custom-select col-sm-7"
+                                                                                data-placeholder="Chọn nhân viên bán hàng"
+                                                                                name="thuNgan"
+                                                                                required>
+                                                                            <option th:each="staff : ${listNhanVienBanHang}"
+                                                                                    th:value="${staff.id}"
+                                                                                    th:text="${staff.hoTen}">
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="form-group row w-100" style="padding-right: 8px">
+                                                                        <span class="col-sm-5"
+                                                                              style="display: flex; align-items: center">
+                                                                              Ghi chú
+                                                                        </span>
+                                                                        <textarea class="form-control col-sm-7"
+                                                                                  name="ghiChu" rows="3"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer justify-content-end">
+                                                                    <button type="button" class="btn btn-sm btn-default"
+                                                                            data-dismiss="modal">Hủy
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-sm btn-primary">
+                                                                        Đồng ý
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--END POPUP THANH TOÁN-->
+                                            </div>
+                                        </div>
                                     </div>
+                                    <!--TAB XUẤT KHO-->
                                     <div class="tab-pane fade" id="XUAT_KHO" role="tabpanel"
                                          aria-labelledby="custom-tabs-one-messages-tab">
                                         <div class="row">
-                                            <div class="card-body table-responsive col-sm-12 p-0" style="height: 250px;">
+                                            <div class="card-body table-responsive col-sm-12 p-0"
+                                                 style="height: 250px;">
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
-                                                    <tr>
-                                                        <td>#</td>
-                                                        <td>Mã phiếu</td>
-                                                        <td>Thời gian xuất kho</td>
-                                                        <td>Ghi chú</td>
-                                                        <td>Trạng thái</td>
-                                                        <td>Thao tác</td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>#</td>
+                                                            <td>Mã phiếu</td>
+                                                            <td>Thời gian xuất kho</td>
+                                                            <td>Ghi chú</td>
+                                                            <td>Trạng thái</td>
+                                                            <td>Thao tác</td>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>PXK716664</td>
-                                                        <td>02/06/2023 12:00</td>
-                                                        <td></td>
-                                                        <td>Hoàn thành</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-sm btn-primary"> In </button>
-                                                        </td>
-                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -253,6 +359,20 @@
     <div th:replace="header :: scripts">
         <!-- Nhúng các file JavaScript vào -->
     </div>
+
+    <script>
+        $(function () {
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+        })
+    </script>
 </div>
 
 </body>

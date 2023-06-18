@@ -8,7 +8,7 @@ import java.util.List;
 public interface DonHangService {
     List<DonHang> findAll();
 
-    List<DonHang> findAll(String searchTxt, String thoiGianDatHang, int kenhBanHangId, int hinhThucThanhToanId, int trangThaiDonHangId);
+    List<DonHang> findAll(String searchTxt, String thoiGianDatHang, int kenhBanHangId, int trangThaiDonHangId);
 
     List<DonHang> findByTrangThai(int trangThaiDonHangId);
 

@@ -36,10 +36,11 @@ public class DonHangServiceImpl implements DonHangService {
     public List<DonHang> findAll() {
         return donHangRepository.findAll();
     }
+
     @Override
     public List<DonHang> findAll(String searchTxt, String thoiGianDatHang,
-                                 int kenhBanHangId, int hinhThucThanhToanId, int trangThaiDonHangId) {
-        return donHangRepository.findAll(searchTxt, kenhBanHangId, hinhThucThanhToanId, trangThaiDonHangId);
+                                 int kenhBanHangId, int trangThaiDonHangId) {
+        return donHangRepository.findAll(searchTxt, kenhBanHangId, trangThaiDonHangId);
     }
 
     @Override
@@ -68,7 +69,6 @@ public class DonHangServiceImpl implements DonHangService {
             donHang.setNhanVienBanHang(Account.builder().id(request.getNhanVienBanHang()).build());
             donHang.setGhiChu(request.getGhiChu());
             donHang.setThoiGianDatHang(request.getThoiGianDatHang());
-            donHang.setHinhThucThanhToan(HinhThucThanhToan.builder().id(request.getHinhThucThanhToan()).build());
             donHang.setTrangThaiDonHang(TrangThaiDonHang.builder().id(request.getTrangThaiDonHang()).build());
             donHang.setTongTienDonHang(0D);
             donHangRepository.save(donHang);
