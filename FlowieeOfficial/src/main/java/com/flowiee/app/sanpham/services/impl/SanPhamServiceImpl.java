@@ -74,8 +74,16 @@ public class SanPhamServiceImpl implements SanPhamService {
             SystemLog systemLog = new SystemLog();
             systemLog.setModule(SystemModule.SAN_PHAM.name());
             systemLog.setAction(SanPhamAction.UPDATE_SANPHAM.name());
-            systemLog.setNoiDung(sanPhamBefore.toString());
-            systemLog.setNoiDungCapNhat(sanPham.toString());
+            if (sanPhamBefore.toString().length() > 2000) {
+                systemLog.setNoiDung(sanPhamBefore.toString().substring(0, 2000));
+            } else {
+                systemLog.setNoiDung(sanPhamBefore.toString());
+            }
+            if (sanPham.toString().length() > 2000) {
+                systemLog.setNoiDungCapNhat(sanPham.toString().substring(0, 2000));
+            } else {
+                systemLog.setNoiDungCapNhat(sanPham.toString());
+            }
             systemLog.setAccount(accountService.getCurrentAccount());
             systemLog.setIp(accountService.getIP());
             systemLogService.writeLog(systemLog);
