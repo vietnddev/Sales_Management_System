@@ -102,9 +102,8 @@ public class DonHangController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
-            List<DonHangChiTiet> listDonHangDetail = donHangChiTietService.findByDonHangId(id);
             modelMap.addAttribute("donHangDetail", donHangService.findById(id));
-            modelMap.addAttribute("listDonHangDetail", donHangChiTietService.convertToDonHangChiTietResponse(listDonHangDetail));
+            modelMap.addAttribute("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
             modelMap.addAttribute("listThanhToan", donHangThanhToanService.findByDonHangId(id));
             modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
             modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());

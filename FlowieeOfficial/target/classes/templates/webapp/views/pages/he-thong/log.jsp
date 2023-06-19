@@ -36,7 +36,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th>ID</th>
+                      <th>STT</th>
                       <th>Tài khoản</th>
                       <th>Module</th>
                       <th>Thao tác</th>
@@ -47,9 +47,9 @@
                     </tr>
                   </thead>
                   <tbody>
-                  <th:block th:each="log : ${listLog}">
+                  <th:block th:each="log, index : ${listLog}">
                     <tr>
-                      <td th:text="${log.id}"></td>
+                      <td th:text="${index.index + 1}"></td>
                       <td th:text="${log.account.username}"></td>
                       <td th:text="${log.module}"></td>
                       <td th:text="${log.action}"></td>
@@ -62,7 +62,7 @@
                   </tbody>
                   <tfoot>
                     <tr>
-                      <th>ID</th>
+                      <th>STT</th>
                       <th>Tài khoản</th>
                       <th>Module</th>
                       <th>Thao tác</th>

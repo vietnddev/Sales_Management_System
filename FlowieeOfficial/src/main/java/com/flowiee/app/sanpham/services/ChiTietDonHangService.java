@@ -1,7 +1,6 @@
 package com.flowiee.app.sanpham.services;
 
 import com.flowiee.app.sanpham.entity.DonHangChiTiet;
-import com.flowiee.app.sanpham.model.DonHangChiTietResponse;
 
 import java.util.List;
 
@@ -17,6 +16,4 @@ public interface ChiTietDonHangService {
     String update(DonHangChiTiet donHangChiTiet, int id);
 
     String delete(int id);
-
-    List<DonHangChiTietResponse> convertToDonHangChiTietResponse(List<DonHangChiTiet> listDonHangChiTiet);
 }

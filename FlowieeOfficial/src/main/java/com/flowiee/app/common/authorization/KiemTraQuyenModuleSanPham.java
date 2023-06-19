@@ -2,6 +2,7 @@ package com.flowiee.app.common.authorization;
 
 import com.flowiee.app.common.utils.TaiKhoanUtil;
 import com.flowiee.app.hethong.model.action.DonHangAction;
+import com.flowiee.app.hethong.model.action.KhachHangAction;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
@@ -156,6 +157,18 @@ public class KiemTraQuyenModuleSanPham {
             return true;
         }
         final String action = DonHangAction.DELETE_DONHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenXemKhachHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = KhachHangAction.READ_KHACHHANG.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;

@@ -54,7 +54,7 @@
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
                                     <tr class="align-self-center">
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Tên loại tài liệu</th>
                                         <th>Mô tả</th>
                                         <th>Số lượng tài liệu</th>
@@ -63,9 +63,9 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list : ${listLoaiTaiLieu}">
+                                    <th:block th:each="list, index : ${listLoaiTaiLieu}">
                                         <tr>
-                                            <td th:text="${list.id}"></td>
+                                            <td th:text="${index.index + 1}"></td>
                                             <td>
                                                 <a th:text="${list.ten}"
                                                    th:href="@{/danh-muc/loai-tai-lieu/{id}(id = ${list.id})}">
@@ -221,7 +221,7 @@
                                     </tbody>
                                     <tfoot>
                                     <tr class="align-self-center">
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Tên loại tài liệu</th>
                                         <th>Mô tả</th>
                                         <th>Số lượng tài liệu</th>

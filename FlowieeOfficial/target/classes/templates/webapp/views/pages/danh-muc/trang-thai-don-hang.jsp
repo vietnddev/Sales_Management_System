@@ -53,16 +53,16 @@
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
                                     <tr class="align-self-center">
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Tên</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list : ${listDanhMuc}">
+                                    <th:block th:each="list, index : ${listDanhMuc}">
                                         <tr>
-                                            <td th:text="${list.id}"></td>
+                                            <td th:text="${index.index + 1}"></td>
                                             <td th:text="${list.ten}"></td>
                                             <td>
                                                 <th:block th:if="${list.trangThai}">
@@ -196,7 +196,7 @@
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Tên</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>

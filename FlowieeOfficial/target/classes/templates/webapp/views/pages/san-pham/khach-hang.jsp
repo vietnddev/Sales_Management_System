@@ -36,7 +36,7 @@
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Tên khách hàng</th>
                         <th>Số điện thoại</th>
                         <th>Email</th>
@@ -46,21 +46,21 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <th:block th:each="list : ${listCustomer}">
+                      <th:block th:each="list, index : ${listKhachHang}">
                         <tr>
-                          <td th:text="${list.id}"></td>
+                          <td th:text="${index.index + 1}"></td>
                           <td th:text="${list.tenKhachHang}"></td>
                           <td th:text="${list.soDienThoai}"></td>
                           <td th:text="${list.email}"></td>
                           <td th:text="${list.diaChi}"></td>
                           <td th:text="${list.trangThai}"></td>
-                          <td>update, delete</td>
+                          <td></td>
                         </tr>
                       </th:block>
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Tên khách hàng</th>
                         <th>Số điện thoại</th>
                         <th>Email</th>

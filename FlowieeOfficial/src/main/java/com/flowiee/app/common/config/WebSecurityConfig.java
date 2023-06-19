@@ -49,11 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		httpSecurity
 				.authorizeRequests()
-				.antMatchers("/",
-					"/build/**",
-					"/dist/**",
-					"/plugins/**",
-					"/uploads/**")
+				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**")
 				.permitAll()
 				.anyRequest().authenticated()
 				.and()

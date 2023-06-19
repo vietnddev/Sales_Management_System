@@ -25,16 +25,13 @@ public class KhachHang implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private int id;
 
-	@Column(name = "mat_khau", length = 255,nullable = false)
-	private String matKhau;
-
 	@Column(name = "ten_khach_hang", length = 100, nullable = false)
 	private String tenKhachHang;
 
 	@Column(name = "so_dien_thoai", length = 20, nullable = false)
 	private String soDienThoai;
 
-	@Column(name = "email", length = 50, nullable = true)
+	@Column(name = "email", length = 50, nullable = false)
 	private String email;
 
 	@Column(name = "dia_chi", length = 500, nullable = false)

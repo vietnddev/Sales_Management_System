@@ -68,7 +68,7 @@
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
                                                     <tr>
-                                                        <td>#</td>
+                                                        <td>STT</td>
                                                         <td>Tên sản phẩm</td>
                                                         <td>Đơn vị tính</td>
                                                         <td>Số lượng</td>
@@ -79,8 +79,8 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="list : ${listDonHangDetail}">
-                                                        <td th:text="${list.stt}"></td>
+                                                    <tr th:each="list, index : ${listDonHangDetail}">
+                                                        <td th:text="${index.index + 1}"></td>
                                                         <td th:text="${list.bienTheSanPham.tenBienThe}"></td>
                                                         <td th:text="${list.bienTheSanPham.sanPham.donViTinh.tenLoai}"></td>
                                                         <td th:text="${list.soLuong}"></td>

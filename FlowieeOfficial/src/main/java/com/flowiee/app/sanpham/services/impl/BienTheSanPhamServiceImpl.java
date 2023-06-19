@@ -3,17 +3,13 @@ package com.flowiee.app.sanpham.services.impl;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
-import com.flowiee.app.sanpham.entity.DonHangChiTiet;
-import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.model.BienTheSanPhamResponse;
-import com.flowiee.app.sanpham.model.DonHangChiTietResponse;
 import com.flowiee.app.sanpham.repository.BienTheSanPhamRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
@@ -23,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {

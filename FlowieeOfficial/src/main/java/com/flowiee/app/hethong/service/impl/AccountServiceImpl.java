@@ -150,7 +150,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean isLogin() {
         String username = this.getUserName();
-        if (username == null || username.isEmpty() || username.isBlank()) {
+        if (username == null || username.isEmpty() || username.isBlank() || username.length() == 0) {
             return false;
         }
         return true;

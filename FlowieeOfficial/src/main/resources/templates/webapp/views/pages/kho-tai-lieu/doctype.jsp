@@ -36,7 +36,7 @@
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Tên loại tài liệu</th>
                         <th>Mô tả</th>
                         <th>Số lượng tài liệu đã dùng</th>
@@ -47,9 +47,9 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <th:block th:each="list : ${listDocType}">
+                      <th:block th:each="list, index : ${listDocType}">
                         <tr>
-                          <td th:text="${list.docTypeID}"></td>
+                          <td th:text="${index.index + 1}"></td>
                           <td>
                             <a th:href="@{/storage/doctype/docfield-{id}(id=${list.docTypeID})}">  
                             <th:block th:text="${list.name}">
@@ -70,7 +70,7 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Tên loại tài liệu</th>
                         <th>Mô tả</th>
                         <th>Số lượng tài liệu đã dùng</th>

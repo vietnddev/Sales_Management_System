@@ -105,7 +105,7 @@
                                 <table class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
                                         <tr class="align-self-center">
-                                            <th>ID</th>
+                                            <th>STT</th>
                                             <th>Mã đơn hàng</th>
                                             <th>Thời gian đặt hàng</th>
                                             <th>Địa chỉ giao hàng</th>
@@ -118,9 +118,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list : ${listDonHang}">
+                                    <th:block th:each="list, index : ${listDonHang}">
                                         <tr>
-                                            <td th:text="${list.id}"></td>
+                                            <td th:text="${index.index + 1}"></td>
                                             <td>
                                                 <a th:href="@{/don-hang/{id}(id=${list.id})}" th:text="${list.maDonHang}"></a>
                                             </td>

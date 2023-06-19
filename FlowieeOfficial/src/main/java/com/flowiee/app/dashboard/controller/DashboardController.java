@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.text.NumberFormat;
-import java.util.Currency;
-import java.util.Locale;
-
 @Controller
 @CrossOrigin
 @RequestMapping("")

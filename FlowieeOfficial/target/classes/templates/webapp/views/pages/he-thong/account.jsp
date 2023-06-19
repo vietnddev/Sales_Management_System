@@ -47,7 +47,7 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Họ tên</th>
                                         <th>Giới tính</th>
                                         <th>Thông tin liên hệ</th>
@@ -56,9 +56,9 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list : ${listAccount}">
+                                    <th:block th:each="list, index : ${listAccount}">
                                         <tr>
-                                            <td th:text="${list.id}"></td>
+                                            <td th:text="${index.index + 1}"></td>
                                             <td>
                                                 <th:block th:text="${list.username}">
                                                 </th:block> <br>
@@ -340,7 +340,7 @@
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Họ tên</th>
                                         <th>Giới tính</th>
                                         <th>Thông tin liên hệ</th>

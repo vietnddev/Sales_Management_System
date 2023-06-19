@@ -48,7 +48,7 @@
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
                                     <tr class="align-self-center">
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Tên sản phẩm</th>
                                         <th>Loại sản phẩm</th>
                                         <th>Đơn vị tính</th>
@@ -58,9 +58,9 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list : ${listSanPham}">
+                                    <th:block th:each="list, index : ${listSanPham}">
                                         <tr>
-                                            <td th:text="${list.id}"></td>
+                                            <td th:text="${index.index + 1}"></td>
                                             <td>
                                                 <a th:href="@{/san-pham/{id}(id=${list.id})}" th:text="${list.tenSanPham}"></a>
                                             </td>
@@ -225,7 +225,7 @@
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th>Tên sản phẩm</th>
                                         <th>Loại sản phẩm</th>
                                         <th>Đơn vị tính</th>

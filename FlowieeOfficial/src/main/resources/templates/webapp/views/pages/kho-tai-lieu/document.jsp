@@ -59,7 +59,7 @@
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
                                     <tr class="align-self-center">
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th></th>
                                         <th>Tên</th>
                                         <th>Loại tài liệu</th>
@@ -68,9 +68,9 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list : ${listDocument}">
+                                    <th:block th:each="list, index : ${listDocument}">
                                         <tr>
-                                            <td th:text="${list.id}"></td>
+                                            <td th:text="${index.index + 1}"></td>
                                             <td><img th:src="@{/dist/icon/folder.png}" th:if="${list.loai == 'FOLDER'}">
                                                 <img th:src="@{/dist/icon/pdf.png}"
                                                      th:if="${list.loai == 'FILE'}"></td>
@@ -202,7 +202,7 @@
                                     </tbody>
                                     <tfoot>
                                     <tr class="align-self-center">
-                                        <th>ID</th>
+                                        <th>STT</th>
                                         <th></th>
                                         <th>Tên</th>
                                         <th>Loại tài liệu</th>
