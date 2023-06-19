@@ -29,6 +29,9 @@ public class KenhBanHang implements Serializable {
     @Column(name = "ten_loai", nullable = false)
     private String tenLoai;
 
+    @Column(name = "mau_nhan")
+    private String mauNhan;
+
     @Column(name = "ghi_chu")
     private String ghiChu;
 

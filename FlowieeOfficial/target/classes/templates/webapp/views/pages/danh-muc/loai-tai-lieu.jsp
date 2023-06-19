@@ -104,7 +104,8 @@
                                                             <form th:action="@{/danh-muc/loai-tai-lieu/delete/{id}(id=${list.id})}"
                                                                   th:object="${loaiTaiLieu}" method="post">
                                                                 <div class="modal-header">
-                                                                    <strong class="modal-title">Xác nhận xóa loại tài liệu</strong>
+                                                                    <strong class="modal-title">Xác nhận xóa loại tài
+                                                                        liệu</strong>
                                                                     <button type="button" class="close"
                                                                             data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
@@ -117,16 +118,16 @@
                                                                                          style="font-size: 16px;"></strong>
                                                                         sẽ bị xóa vĩnh viễn!
                                                                     </div>
-                                                                    <div class="modal-footer justify-content-end"
-                                                                         style="margin-bottom: -15px;">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Đồng ý
-                                                                        </button>
-                                                                    </div>
                                                                 </div>
+                                                                <div class="modal-footer justify-content-end">
+                                                                    <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Hủy
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Đồng ý
+                                                                    </button>
+                                                                </div>
+
                                                             </form>
                                                         </div>
                                                         <!-- /.modal-content -->
@@ -175,7 +176,8 @@
                                                                                 <label>Trạng thái</label>
                                                                                 <select class="custom-select"
                                                                                         name="trangThai">
-                                                                                    <option value="true" selected>Đang sử dụng
+                                                                                    <option value="true" selected>Đang
+                                                                                        sử dụng
                                                                                     </option>
                                                                                     <option value="false">Ngừng sử
                                                                                         dụng

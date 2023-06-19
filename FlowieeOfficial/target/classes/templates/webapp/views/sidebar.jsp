@@ -44,18 +44,12 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class
-                 with font-awesome or any other icon font library -->
-            <li class="nav-header">
-              <i class="nav-icon fas fa-tachometer-alt nav-icon"></i>
-              <strong>TỔNG QUAN</strong>
-            </li>
             <li class="nav-header"><strong>QUẢN LÝ BÁN HÀNG</strong></li>
             <li class="nav-item">
-              <a href="" class="nav-link">
+              <a th:href="@{/}" class="nav-link">
                 <i class="fa-solid fa-chart-pie nav-icon"></i>
                 <p>
-                  Tổng quan
+                  Dashboard
                 </p>
               </a>
             </li>

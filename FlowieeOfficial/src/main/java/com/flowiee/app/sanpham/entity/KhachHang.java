@@ -1,12 +1,15 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
+import com.flowiee.app.hethong.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -39,6 +42,13 @@ public class KhachHang implements java.io.Serializable {
 
 	@Column(name = "trang_thai", nullable = false)
 	private boolean trangThai;
+
+	@Column(name = "created_at", nullable = false)
+	private Date createdAt;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false)
+	private Account createdBy;
 
 	@JsonIgnoreProperties("khachHang")
 	@OneToMany(mappedBy = "khachHang", fetch = FetchType.LAZY)

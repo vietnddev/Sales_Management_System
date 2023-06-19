@@ -36,6 +36,8 @@
     <link rel="stylesheet" th:href="@{/plugins/dropzone/min/dropzone.min.css}">
     <!-- Ekko Lightbox -->
     <link rel="stylesheet" th:href="@{/plugins/ekko-lightbox/ekko-lightbox.css}">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css}">
   </th:block>
 </head>
 
@@ -152,6 +154,8 @@
     <script th:src="@{/plugins/filterizr/jquery.filterizr.min.js}"></script>
     <!-- Ekko Lightbox -->
     <script th:src="@{/plugins/ekko-lightbox/ekko-lightbox.min.js}"></script>
+    <!-- bootstrap color picker -->
+    <script th:src="@{/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js}"></script>
     <!-- Page specific script -->
     <script>
       $(function () {

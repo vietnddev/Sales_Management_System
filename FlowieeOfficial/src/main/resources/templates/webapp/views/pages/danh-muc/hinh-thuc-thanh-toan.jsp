@@ -52,14 +52,14 @@
                             <div class="card-body align-items-center">
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
-                                        <tr class="align-self-center">
-                                            <th>ID</th>
-                                            <th>Mã loại</th>
-                                            <th>Tên loại</th>
-                                            <th>Ghi chú</th>
-                                            <th>Trạng thái</th>
-                                            <th>Thao tác</th>
-                                        </tr>
+                                    <tr class="align-self-center">
+                                        <th>ID</th>
+                                        <th>Mã loại</th>
+                                        <th>Tên loại</th>
+                                        <th>Ghi chú</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="list : ${listDanhMuc}">
@@ -102,21 +102,18 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <div class="card-body">
-                                                                        Danh mục <strong class="badge text-bg-info"
-                                                                                         th:text="${list.tenLoai}"
-                                                                                         style="font-size: 16px;"></strong>
-                                                                        sẽ bị xóa vĩnh viễn!
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-end"
-                                                                         style="margin-bottom: -15px;">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Đồng ý
-                                                                        </button>
-                                                                    </div>
+                                                                    Danh mục <strong class="badge text-bg-info"
+                                                                                     th:text="${list.tenLoai}"
+                                                                                     style="font-size: 16px;"></strong>
+                                                                    sẽ bị xóa vĩnh viễn!
+                                                                </div>
+                                                                <div class="modal-footer justify-content-end">
+                                                                    <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Hủy
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Đồng ý
+                                                                    </button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -216,14 +213,14 @@
                                     </th:block>
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Mã loại</th>
-                                            <th>Tên loại</th>
-                                            <th>Ghi chú</th>
-                                            <th>Trạng thái</th>
-                                            <th>Thao tác</th>
-                                        </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Mã loại</th>
+                                        <th>Tên loại</th>
+                                        <th>Ghi chú</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
                                     </tfoot>
                                 </table>
                             </div>

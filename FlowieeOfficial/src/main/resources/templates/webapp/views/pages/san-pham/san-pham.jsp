@@ -78,7 +78,7 @@
                                                 </th:block>
                                             </td>
                                             <td>
-                                                <button class="btn btn-outline-info btn-sm" style="margin-bottom: 4px;">
+                                                <button class="btn btn-outline-info btn-sm">
                                                     <a th:href="@{/san-pham/{id}(id=${list.id})}">
                                                         <i class="fa-solid fa-eye"></i>
                                                     </a></button>

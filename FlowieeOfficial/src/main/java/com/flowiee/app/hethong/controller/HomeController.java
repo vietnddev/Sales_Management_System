@@ -16,14 +16,6 @@ public class HomeController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping
-    public String homeController() {
-        if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
-        }
-        return "redirect:/don-hang";
-    }
-
     @GetMapping(value = "/login")
     public String showLoginPage(HttpServletRequest request) {
         if (accountService.findByUsername("admin") == null) {

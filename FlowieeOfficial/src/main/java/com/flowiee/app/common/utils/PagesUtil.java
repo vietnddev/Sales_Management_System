@@ -2,6 +2,9 @@ package com.flowiee.app.common.utils;
 
 public class PagesUtil {
     public static final String PAGE_LOGIN = "/login";
+
+    public static final String PAGE_DASHBOARD = "/pages/dashboard/dashboard";
+
     public static final String PAGE_HETHONG_TAIKHOAN = "/pages/he-thong/account";
     public static final String PAGE_HETHONG_NHATKY = "/pages/he-thong/log";
     public static final String PAGE_HETHONG_ROLE = "/pages/he-thong/role";
