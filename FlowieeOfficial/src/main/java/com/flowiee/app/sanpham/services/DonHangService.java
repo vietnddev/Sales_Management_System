@@ -14,7 +14,10 @@ public interface DonHangService {
 
     List<DonHang> search();
 
+    List<DonHang> findByKhachHangId(int id);
+
     DonHang findById(int id);
+
 
     DonHang save(DonHangRequest request);
 

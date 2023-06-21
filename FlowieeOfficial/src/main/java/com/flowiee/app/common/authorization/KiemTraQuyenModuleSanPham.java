@@ -175,4 +175,40 @@ public class KiemTraQuyenModuleSanPham {
         }
         return false;
     }
+
+    public boolean kiemTraQuyenThemMoiKhachHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = KhachHangAction.CREATE_KHACHHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenCapNhatKhachHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = KhachHangAction.UPDATE_KHACHHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenXoaKhachHang() {
+        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = KhachHangAction.DELETE_KHACHHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
 }

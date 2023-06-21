@@ -4,6 +4,7 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleDashboard;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.dashboard.model.DoanhThuCacThangTheoNam;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.dashboard.service.DashboardService;
@@ -45,6 +46,10 @@ public class DashboardController {
             modelMap.addAttribute("doanhThuOfKBH_listTen", doanhThuTheoKenhBanHang.getTenOfKenh());
             modelMap.addAttribute("doanhThuOfKBH_listDoanhThu", doanhThuTheoKenhBanHang.getDoanhThuOfKenh());
             modelMap.addAttribute("doanhThuOfKBH_listMauSac", doanhThuTheoKenhBanHang.getMauSac());
+
+            //Line chart - Doanh thu các tháng theo năm
+            DoanhThuCacThangTheoNam doanhThuCacThangTheoNam = dashboardService.getDoanhThuCacThangTheoNam();
+            modelMap.addAttribute("doanhThuOfMonth_listDoanhThu", doanhThuCacThangTheoNam.getDoanhThu());
             return PagesUtil.PAGE_DASHBOARD;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;

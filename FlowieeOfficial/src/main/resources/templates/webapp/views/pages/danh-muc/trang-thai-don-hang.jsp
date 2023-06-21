@@ -99,7 +99,7 @@
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     Danh mục <strong class="badge text-bg-info"
-                                                                                     th:text="${list.tenLoai}"
+                                                                                     th:text="${list.ten}"
                                                                                      style="font-size: 16px;"></strong>
                                                                     sẽ bị xóa vĩnh viễn!
                                                                 </div>

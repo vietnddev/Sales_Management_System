@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,6 +29,9 @@ public class KhachHang implements java.io.Serializable {
 	@Column(name = "ten_khach_hang", length = 100, nullable = false)
 	private String tenKhachHang;
 
+	@Column(name = "gioi_tinh", nullable = false)
+	private boolean gioiTinh;
+
 	@Column(name = "so_dien_thoai", length = 20, nullable = false)
 	private String soDienThoai;
 
@@ -37,14 +41,20 @@ public class KhachHang implements java.io.Serializable {
 	@Column(name = "dia_chi", length = 500, nullable = false)
 	private String diaChi;
 
-	@Column(name = "trang_thai", nullable = false)
-	private boolean trangThai;
-
-	@Column(name = "created_at", nullable = false)
+	@CreatedDate
+	@Column(name = "created_at", nullable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
 	private Date createdAt;
 
+	@PreUpdate
+	@PrePersist
+	public void updateTimeStamps() {
+		if (createdAt == null) {
+			createdAt = new Date();
+		}
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", nullable = false)
+	@JoinColumn(name = "created_by", nullable = false, updatable = false)
 	private Account createdBy;
 
 	@JsonIgnoreProperties("khachHang")

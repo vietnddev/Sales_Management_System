@@ -216,25 +216,46 @@
                                                 <div class="modal fade" id="modalCreateKhachHang">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/khach-hang/create}" method="POST">
+                                                            <form th:action="@{/khach-hang/create}"
+                                                                  th:object="${khachHang}" method="post">
                                                                 <div class="modal-header">
-                                                                    <strong class="modal-title">Thêm mới khách
-                                                                        hàng</strong>
-                                                                    <button type="button" class="close"
-                                                                            data-dismiss="modal"
+                                                                    <strong class="modal-title">Thêm mới khách hàng</strong>
+                                                                    <button type="button" class="close" data-dismiss="modal"
                                                                             aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body">
-
-                                                                </div>
-                                                                <div class="modal-footer justify-content-end">
-                                                                    <button type="button" class="btn btn-default"
-                                                                            data-dismiss="modal">Hủy
-                                                                    </button>
-                                                                    <button type="button" class="btn btn-primary">Đồng ý
-                                                                    </button>
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="form-group">
+                                                                                <label>Tên khách hàng</label>
+                                                                                <input type="text" class="form-control" required
+                                                                                       name="tenKhachHang"/>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label>Số điện thoại</label>
+                                                                                <input type="text" class="form-control" required
+                                                                                       name="soDienThoai"/>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label>Email</label>
+                                                                                <input type="email" class="form-control"
+                                                                                       name="email"/>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label>Địa chỉ</label>
+                                                                                <input type="text" class="form-control" required
+                                                                                       name="diaChi"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer justify-content-end">
+                                                                        <button type="button" class="btn btn-default"
+                                                                                data-dismiss="modal">Hủy
+                                                                        </button>
+                                                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                                                    </div>
                                                                 </div>
                                                             </form>
                                                         </div>

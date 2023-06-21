@@ -24,4 +24,7 @@ public interface DonHangRepository extends JpaRepository<DonHang, Integer> {
     List<DonHang> findAll(@Param("searchTxt") String searchTxt,
                           @Param("kenhBanHangId") int kenhBanHangId,
                           @Param("trangThaiDonDangId") int trangThaiDonDangId);
+
+    @Query("from DonHang d where d.khachHang.id=:khachHangId")
+    List<DonHang> findByKhachHangId(int khachHangId);
 }

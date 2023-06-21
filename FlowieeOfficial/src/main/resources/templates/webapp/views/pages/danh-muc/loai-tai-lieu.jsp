@@ -36,7 +36,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row justify-content-between">
-                                    <div class="col-4">
+                                    <div class="col-4" style="display: flex; align-items: center">
                                         <h3 class="card-title"><strong>DANH MỤC LOẠI TÀI LIỆU</strong></h3>
                                     </div>
                                     <div class="col-4 text-right">
@@ -290,6 +290,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
         <!-- /.content -->
     </div>

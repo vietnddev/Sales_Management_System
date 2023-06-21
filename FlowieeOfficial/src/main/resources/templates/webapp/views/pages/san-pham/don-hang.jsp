@@ -34,21 +34,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
-                                <div class="row justify-content-between">
-                                    <div class="col-4" style="display: flex; align-items: center">
-                                        <h3 class="card-title"><strong>DANH SÁCH ĐƠN HÀNG</strong></h3>
-                                    </div>
-                                    <div class="col-4 text-right">
-                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#insert">
-                                            Thêm mới
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- modal-content (Thêm mới sản phẩm)-->
-                            </div>
-                            <!-- /.card-header -->
                             <div class="card-body align-items-center">
                                 <div class="row justify-content-between">
                                     <form class="col-sm-12 ml-2 mr-2 mb-3"
