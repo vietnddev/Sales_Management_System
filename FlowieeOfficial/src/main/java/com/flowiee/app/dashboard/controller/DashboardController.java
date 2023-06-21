@@ -5,6 +5,7 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.dashboard.model.DoanhThuCacThangTheoNam;
+import com.flowiee.app.dashboard.model.TopSanPhamBanChay;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.dashboard.service.DashboardService;
@@ -50,6 +51,11 @@ public class DashboardController {
             //Line chart - Doanh thu các tháng theo năm
             DoanhThuCacThangTheoNam doanhThuCacThangTheoNam = dashboardService.getDoanhThuCacThangTheoNam();
             modelMap.addAttribute("doanhThuOfMonth_listDoanhThu", doanhThuCacThangTheoNam.getDoanhThu());
+
+            //Bar chart - Top sản phẩm bán chạy
+            TopSanPhamBanChay topSanPhamBanChay = dashboardService.getTopSanPhamBanChay();
+            modelMap.addAttribute("topSanPham_listTenSanPham", topSanPhamBanChay.getTenSanPham());
+            modelMap.addAttribute("topSanPham_listSoLuong", topSanPhamBanChay.getSoLuongDaBan());
             return PagesUtil.PAGE_DASHBOARD;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;

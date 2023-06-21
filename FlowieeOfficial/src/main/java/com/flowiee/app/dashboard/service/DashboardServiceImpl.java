@@ -2,6 +2,7 @@ package com.flowiee.app.dashboard.service;
 
 import com.flowiee.app.dashboard.model.DoanhThuCacThangTheoNam;
 import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
+import com.flowiee.app.dashboard.model.TopSanPhamBanChay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DoanhThuTheoKenhBanHang getDoanhThuTheoKenhBanHang() {
-        StringBuilder query = new StringBuilder("SELECT c.TEN_LOAI, c.MAU_NHAN, SUM(d.TONG_TIEN_DON_HANG) AS TOTAL ");
+        StringBuilder query = new StringBuilder("SELECT c.TEN_LOAI, c.MAU_NHAN, NVL(SUM(d.TONG_TIEN_DON_HANG),0) AS TOTAL ");
         query.append("FROM DM_KENH_BAN_HANG c ");
         query.append("LEFT JOIN DON_HANG d ON c.ID = d.KENH_BAN_HANG ");
         query.append("GROUP BY c.ten_loai, c.mau_nhan");
@@ -32,7 +33,7 @@ public class DashboardServiceImpl implements DashboardService {
         List<String> listMauSacOfKenh = new ArrayList<>();
         for (Object[] data : listData) {
             listTenOfKenh.add(String.valueOf(data[0]));
-            listDoanhThuOfKenh.add(data[2] == null ? 0 : Float.parseFloat(String.valueOf(data[2])));
+            listDoanhThuOfKenh.add(Float.parseFloat(String.valueOf(data[2])));
             listMauSacOfKenh.add(String.valueOf(data[1]));
         }
         dataReturn.setTenOfKenh(listTenOfKenh);
@@ -70,6 +71,35 @@ public class DashboardServiceImpl implements DashboardService {
 
         DoanhThuCacThangTheoNam dataReturn = new DoanhThuCacThangTheoNam();
         dataReturn.setDoanhThu(listDoanhThu);
+
+        return dataReturn;
+    }
+
+    @Override
+    public TopSanPhamBanChay getTopSanPhamBanChay() {
+        StringBuilder query = new StringBuilder("SELECT * ");
+        query.append("FROM (");
+        query.append("SELECT s.TEN_BIEN_THE, NVL(SUM(d.SO_LUONG), 0) AS Total ");
+        query.append("FROM SAN_PHAM_BIEN_THE s ");
+        query.append("LEFT JOIN DON_HANG_CHI_TIET d ");
+        query.append("ON s.id = d.BIEN_THE_SAN_PHAM_ID ");
+        query.append("GROUP BY s.ID, s.TEN_BIEN_THE ");
+        query.append("ORDER BY total DESC");
+        query.append(") ");
+        query.append("WHERE ROWNUM <= 10");
+
+        Query result = entityManager.createNativeQuery(query.toString());
+        List<Object[]> listData = result.getResultList();
+
+        TopSanPhamBanChay dataReturn = new TopSanPhamBanChay();
+        List<String> listTenSanPham = new ArrayList<>();
+        List<Integer> listSoLuongDaBan = new ArrayList<>();
+        for (Object[] data : listData) {
+            listTenSanPham.add(String.valueOf(data[0]));
+            listSoLuongDaBan.add(Integer.parseInt(String.valueOf(data[1])));
+        }
+        dataReturn.setTenSanPham(listTenSanPham);
+        dataReturn.setSoLuongDaBan(listSoLuongDaBan);
 
         return dataReturn;
     }

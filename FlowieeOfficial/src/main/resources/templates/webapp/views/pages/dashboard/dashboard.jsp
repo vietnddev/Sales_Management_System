@@ -137,7 +137,7 @@
                             </div>
                             <div class="card-body">
                                 <canvas id="myLineChart" style="width: 100%; height: 350px"></canvas>
-                                <script>
+                                <script th:inline="javascript">
                                     var nameOfMonth = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
                                     var dataOfMonth = [[${doanhThuOfMonth_listDoanhThu}]];
                                     var ctx = document.getElementById("myLineChart");
@@ -161,6 +161,47 @@
                                             }],
                                         },
                                     });</script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Top các sản phẩm bán chạy</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="lineChartTopProduct" style="width: 100%; height: 350px"></canvas>
+                                <script th:inline="javascript">
+                                    var xValues = [[${topSanPham_listTenSanPham}]];
+                                    var yValues = [[${topSanPham_listSoLuong}]];
+                                    var barColors = ["red","green","blue","orange","brown","red","green","blue","orange","brown"];
+
+                                    new Chart("lineChartTopProduct", {
+                                        type: "bar",
+                                        data: {
+                                            labels: xValues,
+                                            datasets: [{
+                                                backgroundColor: barColors,
+                                                data: yValues
+                                            }]
+                                        },
+                                        options: {
+                                            legend: {display: false},
+                                            title: {
+                                                display: true,
+                                                text: "Top 10 sản phẩm bán chạy nhất trong tháng"
+                                            }
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
