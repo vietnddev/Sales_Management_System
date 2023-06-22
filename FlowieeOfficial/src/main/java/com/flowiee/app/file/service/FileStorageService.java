@@ -11,6 +11,10 @@ public interface FileStorageService {
 
     List<FileStorage> getAllImageSanPham(String module);
 
+    List<FileStorage> getImageOfSanPham(int sanPhamId);
+
+    List<FileStorage> getImageOfSanPhamBienThe(int bienTheSanPhamId);
+
     void saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException;
 
     void saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException;

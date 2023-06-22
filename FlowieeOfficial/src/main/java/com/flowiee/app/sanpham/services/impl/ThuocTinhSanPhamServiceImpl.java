@@ -28,8 +28,8 @@ public class ThuocTinhSanPhamServiceImpl implements ThuocTinhSanPhamService {
     }
 
     @Override
-    public Optional<ThuocTinhSanPham> getByAttributeID(int attributeID){
-    	return productAttributeRepository.findById(attributeID);
+    public ThuocTinhSanPham findById(int attributeID){
+    	return productAttributeRepository.findById(attributeID).orElse(null);
     }
 
     @Override

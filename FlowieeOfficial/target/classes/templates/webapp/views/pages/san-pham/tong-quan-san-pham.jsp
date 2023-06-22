@@ -13,6 +13,17 @@
             margin-left: 0px;
             margin-right: 0px;
         }
+
+        img {
+            border-radius: 5px;
+        }
+
+        .product-image-thumb {
+            border: none;
+            box-shadow: none;
+            max-width: 6.5rem;
+            margin-right: 0rem;
+        }
     </style>
 </head>
 
@@ -36,103 +47,148 @@
             <div class="card card-solid" style="background-color: #f4f6f9;">
 
                 <div class="row" style="background-color: #fff; border-radius: 15px; padding: 15px;">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 mb-1">
                         <h3 class="text-center"><b th:text="${detailProducts.tenSanPham}"
                                                    style="text-transform: uppercase;"></b></h3>
                     </div>
                     <hr>
                     <div class="col-sm-5">
+                        <!--Image chính-->
                         <div class="row">
                             <img th:src="@{/dist/img/photo1.png}" class="product-image" alt="Product Image"
-                                 style="max-width: 90%;">
+                                 style="width: 100%; border-radius: 5px; margin: auto">
+                        </div>
+                        <!--./ End Image chính-->
+
+                        <div class="row mt-2">
+                            <button type="button" class="btn btn-success w-50"
+                                    style="margin: auto"
+                                    data-toggle="modal"
+                                    data-target="#modalUploadImage">
+                                Upload image
+                            </button>
+                            <div class="modal fade" id="modalUploadImage">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <strong class="modal-title">Upload image sản phẩm</strong>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row" style="max-height: 520px; overflow: scroll">
+                                                <div class="card col-sm-12">
+                                                    <div class="card-body">
+                                                        <div id="actions" class="row">
+                                                            <div class="col-lg-7">
+                                                                <div class="btn-group w-100">
+                                                                    <span class="btn btn-sm btn-success col fileinput-button"
+                                                                          title="Chọn file từ máy tính">
+                                                                        <i class="fas fa-plus"></i>
+                                                                        <span><!--Chọn file--></span>
+                                                                    </span>
+                                                                    <button type="submit"
+                                                                            class="btn btn-sm btn-primary col start">
+                                                                        <i class="fas fa-upload"></i>
+                                                                        <span><!--Tải lên SV--></span>
+                                                                    </button>
+                                                                    <button type="reset"
+                                                                            class="btn btn-sm btn-warning col cancel">
+                                                                        <i class="fas fa-times-circle"></i>
+                                                                        <span><!--Hủy--></span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-5 d-flex align-items-center">
+                                                                <div class="fileupload-process w-100">
+                                                                    <div id="total-progress"
+                                                                         class="progress progress-striped active"
+                                                                         role="progressbar"
+                                                                         aria-valuemin="0" aria-valuemax="100"
+                                                                         aria-valuenow="0">
+                                                                        <div class="progress-bar progress-bar-success"
+                                                                             style="width:0%;"
+                                                                             data-dz-uploadprogress>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="table table-striped files" id="previews">
+                                                            <div id="template" class="row mt-2">
+                                                                <div class="col-auto">
+                                                                    <span class="preview"><img src="data:," alt=""
+                                                                           data-dz-thumbnail/></span>
+                                                                </div>
+                                                                <div class="col d-flex align-items-center">
+                                                                    <p class="mb-0">
+                                                                        <span class="lead" data-dz-name></span>
+                                                                        (<span data-dz-size></span>)
+                                                                    </p>
+                                                                    <strong class="error text-danger"
+                                                                            data-dz-errormessage></strong>
+                                                                </div>
+                                                                <div class="col-3 d-flex align-items-center">
+                                                                    <div class="progress progress-striped active w-100"
+                                                                         role="progressbar"
+                                                                         aria-valuemin="0"
+                                                                         aria-valuemax="100" aria-valuenow="0">
+                                                                        <div class="progress-bar progress-bar-success"
+                                                                             style="width:0%;"
+                                                                             data-dz-uploadprogress>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-auto d-flex align-items-center">
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-sm btn-primary start">
+                                                                            <i class="fas fa-upload"></i>
+                                                                            <span><!--Tải lên SV--></span>
+                                                                        </button>
+                                                                        <button data-dz-remove
+                                                                                class="btn btn-sm btn-warning cancel">
+                                                                            <i class="fas fa-times-circle"></i>
+                                                                            <span><!--Hủy--></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                    <div class="card-footer">
+                                                        <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và
+                                                            tổng dung lượng không
+                                                            vượt 50MB cho
+                                                            mỗi lượt.</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-default"
+                                                    data-dismiss="modal">Hủy
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-7" style="max-height: 450px; overflow: scroll">
-                        <div class="row mt-2" th:each="list : ${listSubImage}">
-                            <div class="product-image-thumb">
-                                <img th:src="@{/upload/{storageName}(storageName=${list.storageName})}"
+
+                    <!--./ Sub-Image-->
+                    <div class="col-sm-7 row" style="max-height: 345px; overflow: scroll">
+                        <div class="col-sm-3 mb-2" th:each="list : ${listImageOfSanPham}">
+                            <div class="product-image-thumb" style="margin: auto">
+                                <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"
                                      alt="Product Image">
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="card col-sm-12">
-                                <div class="card-body">
-                                    <div id="actions" class="row">
-                                        <div class="col-lg-7">
-                                            <div class="btn-group w-100">
-                                              <span class="btn btn-sm btn-success col fileinput-button"
-                                                    title="Chọn file từ máy tính">
-                                                <i class="fas fa-plus"></i>
-                                                <span><!--Chọn file--></span>
-                                              </span>
-                                                <button type="submit" class="btn btn-sm btn-primary col start">
-                                                    <i class="fas fa-upload"></i>
-                                                    <span><!--Tải lên SV--></span>
-                                                </button>
-                                                <button type="reset" class="btn btn-sm btn-warning col cancel">
-                                                    <i class="fas fa-times-circle"></i>
-                                                    <span><!--Hủy--></span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-5 d-flex align-items-center">
-                                            <div class="fileupload-process w-100">
-                                                <div id="total-progress" class="progress progress-striped active"
-                                                     role="progressbar"
-                                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                                    <div class="progress-bar progress-bar-success" style="width:0%;"
-                                                         data-dz-uploadprogress>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="table table-striped files" id="previews">
-                                        <div id="template" class="row mt-2">
-                                            <div class="col-auto">
-                                                <span class="preview"><img src="data:," alt=""
-                                                                           data-dz-thumbnail/></span>
-                                            </div>
-                                            <div class="col d-flex align-items-center">
-                                                <p class="mb-0">
-                                                    <span class="lead" data-dz-name></span>
-                                                    (<span data-dz-size></span>)
-                                                </p>
-                                                <strong class="error text-danger" data-dz-errormessage></strong>
-                                            </div>
-                                            <div class="col-3 d-flex align-items-center">
-                                                <div class="progress progress-striped active w-100" role="progressbar"
-                                                     aria-valuemin="0"
-                                                     aria-valuemax="100" aria-valuenow="0">
-                                                    <div class="progress-bar progress-bar-success" style="width:0%;"
-                                                         data-dz-uploadprogress>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-auto d-flex align-items-center">
-                                                <div class="btn-group">
-                                                    <button class="btn btn-sm btn-primary start">
-                                                        <i class="fas fa-upload"></i>
-                                                        <span><!--Tải lên SV--></span>
-                                                    </button>
-                                                    <button data-dz-remove class="btn btn-sm btn-warning cancel">
-                                                        <i class="fas fa-times-circle"></i>
-                                                        <span><!--Hủy--></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và tổng dung lượng không
-                                        vượt 50MB cho
-                                        mỗi lượt.</i>
-                                </div>
-                            </div>
-                        </div>
                     </div>
+                    <!--./ End Sub-Image-->
+
                     <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
                     <div class="row col-sm-12 border pt-3 mt-3">
                         <hr>
@@ -143,6 +199,7 @@
                                 <th>Tên biến thể</th>
                                 <th>Màu sắc</th>
                                 <th>Kích cỡ</th>
+                                <th>Số lượng</th>
                                 <th>Thao tác</th>
                                 </thead>
                                 <tbody>
@@ -155,6 +212,7 @@
                                     </td>
                                     <td th:text="${var.loaiMauSac.tenLoai}"></td>
                                     <td th:text="${var.loaiKichCo.tenLoai}"></td>
+                                    <td th:text="${var.soLuongKho}"></td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-info"> Cập nhật</button>
                                         <button type="button" class="btn btn-sm btn-danger"> Xóa</button>
@@ -266,8 +324,8 @@
                     </div>
                     <!--/. END DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
 
-                    <div class="row col-sm-12"
-                         style="background-color: #fff; border-radius: 15px; padding: 15px; margin-right: 0px;">
+                    <div class="row col-sm-12 mt-3 border"
+                         style="padding-top: 10px">
                         <div class="nav nav-tabs" id="product-tab" role="tablist">
                             <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab"
                                href="#product-desc"
@@ -354,7 +412,7 @@ var previewTemplate = previewNode.parentNode.innerHTML
 previewNode.parentNode.removeChild(previewNode)
 
 var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/uploads/san-pham/[[${detailProducts.id}]]", // Gọi tới function trong spring để xử lý file
+    url: "/uploads/san-pham/[[${detailProducts.id}]]", // Gọi tới API trong spring để xử lý file
     thumbnailWidth: 80,
     thumbnailHeight: 80,
     parallelUploads: 20,

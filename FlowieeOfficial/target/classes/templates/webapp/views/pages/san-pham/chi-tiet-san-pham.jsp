@@ -64,142 +64,272 @@
             <div class="card card-solid" style="background-color: #f4f6f9;">
 
                 <div class="row" style="background-color: #fff; border-radius: 15px; padding: 15px;">
+                    <!--TÊN SẢN PHẨM-->
                     <div class="col-sm-12">
-                        <h3 class="text-center"><b style="text-transform: uppercase;">TÊN SP - COLOR - SIZE</b></h3>
+                        <h3 class="text-center">
+                            <b style="text-transform: uppercase;"
+                               th:text="${bienTheSanPham.tenBienThe}"></b>
+                        </h3>
                     </div>
-                    <div class="row col-sm-12">
-                        <div class="col-sm-5 text-center"><b>Hình ảnh sản phẩm</b></div>
-                        <div class="col-sm-7 text-center"><b>Thuộc tính</b></div>
-                    </div>
-                    <!--FileEntity-->
-                    <div class="col-sm-5 mt-3">
-                        <div class="row">
-                            <img th:src="@{/dist/img/photo1.png}" class="product-image" alt="Product Image">
-                        </div>
-                        <div class="row mt-3" style="max-height: 350px;overflow: overlay;">
-                            <div class="col-sm-3 product-image-thumb mb-2" th:each="list : ${listFiles}">
-                                <img th:src="@{/uploads/san-pham)}" alt="Product Image">
-                            </div>
-                        </div>
-                    </div>
-                    <!--./ End FileEntity-->
+                    <!--./ END TÊN SẢN PHẨM-->
 
-                    <!--Attributes-->
-                    <div class="row col-sm-7 mt-3"
-                         style="max-height: 480px; overflow: overlay; padding-left: 10px; padding-right: 20px;">
-                        <div class="col-sm-12 w-100 p-0" th:each="list : ${listThuocTinh}">
-                            <form th:action="@{/san-pham/attribute/update/{id}(id=${list.id})}"
-                                  th:object="${thuocTinhSanPham}" method="post">
-                                <div class="form-group">
-                                    <!--TÊN THUỘC TÍNH-->
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Thuộc tính</label>
-                                        <div class="col-sm-5">
-                                            <div class="input-group row col-sm-12 p-0">
-                                                <input type="text" class="form-control" placeholder="Tên thuộc tính"
-                                                       name="tenThuocTinh"
-                                                       th:value="${list.tenThuocTinh}" required/>
+                    <!--Image chính-->
+                    <div class="col-sm-5">
+                        <div class="row">
+                            <img th:src="@{/dist/img/photo1.png}" class="product-image" alt="Product Image"
+                                 style="width: 100%; border-radius: 5px; margin: auto">
+                        </div>
+
+                        <div class="row mt-2">
+                            <button type="button" class="btn btn-success w-50"
+                                    style="margin: auto"
+                                    data-toggle="modal"
+                                    data-target="#modalUploadImage">
+                                Upload image
+                            </button>
+                            <div class="modal fade" id="modalUploadImage">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <strong class="modal-title">Upload image sản phẩm</strong>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row" style="max-height: 520px; overflow: scroll">
+                                                <div class="card col-sm-12">
+                                                    <div class="card-body">
+                                                        <div id="actions" class="row">
+                                                            <div class="col-lg-7">
+                                                                <div class="btn-group w-100">
+                                                                    <span class="btn btn-sm btn-success col fileinput-button"
+                                                                          title="Chọn file từ máy tính">
+                                                                        <i class="fas fa-plus"></i>
+                                                                        <span><!--Chọn file--></span>
+                                                                    </span>
+                                                                    <button type="submit"
+                                                                            class="btn btn-sm btn-primary col start">
+                                                                        <i class="fas fa-upload"></i>
+                                                                        <span><!--Tải lên SV--></span>
+                                                                    </button>
+                                                                    <button type="reset"
+                                                                            class="btn btn-sm btn-warning col cancel">
+                                                                        <i class="fas fa-times-circle"></i>
+                                                                        <span><!--Hủy--></span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-5 d-flex align-items-center">
+                                                                <div class="fileupload-process w-100">
+                                                                    <div id="total-progress"
+                                                                         class="progress progress-striped active"
+                                                                         role="progressbar"
+                                                                         aria-valuemin="0" aria-valuemax="100"
+                                                                         aria-valuenow="0">
+                                                                        <div class="progress-bar progress-bar-success"
+                                                                             style="width:0%;"
+                                                                             data-dz-uploadprogress>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="table table-striped files" id="previews">
+                                                            <div id="template" class="row mt-2">
+                                                                <div class="col-auto">
+                                                                    <span class="preview"><img src="data:," alt=""
+                                                                                               data-dz-thumbnail/></span>
+                                                                </div>
+                                                                <div class="col d-flex align-items-center">
+                                                                    <p class="mb-0">
+                                                                        <span class="lead" data-dz-name></span>
+                                                                        (<span data-dz-size></span>)
+                                                                    </p>
+                                                                    <strong class="error text-danger"
+                                                                            data-dz-errormessage></strong>
+                                                                </div>
+                                                                <div class="col-3 d-flex align-items-center">
+                                                                    <div class="progress progress-striped active w-100"
+                                                                         role="progressbar"
+                                                                         aria-valuemin="0"
+                                                                         aria-valuemax="100" aria-valuenow="0">
+                                                                        <div class="progress-bar progress-bar-success"
+                                                                             style="width:0%;"
+                                                                             data-dz-uploadprogress>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-auto d-flex align-items-center">
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-sm btn-primary start">
+                                                                            <i class="fas fa-upload"></i>
+                                                                            <span><!--Tải lên SV--></span>
+                                                                        </button>
+                                                                        <button data-dz-remove
+                                                                                class="btn btn-sm btn-warning cancel">
+                                                                            <i class="fas fa-times-circle"></i>
+                                                                            <span><!--Hủy--></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                    <div class="card-footer">
+                                                        <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và
+                                                            tổng dung lượng không
+                                                            vượt 50MB cho
+                                                            mỗi lượt.</i>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="col-sm-1 col-form-label" th:if="${list.trangThai}">
-                                            <i class="fas fa-lock" style="color: orange;"></i>
-                                        </label>
-                                        <label class="col-sm-1 col-form-label" th:if="not ${list.trangThai}">
-                                            <i class="fas fa-unlock" style="color: green;"></i>
-                                        </label>
-                                    </div>
-                                    <!--GIÁ TRỊ THUỘC TÍNH-->
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Giá trị</label>
-                                        <div class="col-sm-10">
-                                            <div class="input-group row col-sm-12 p-0">
-                                                <input type="text" class="form-control col-sm-11" placeholder="Giá trị"
-                                                       name="giaTriThuocTinh"
-                                                       th:value="${list.giaTriThuocTinh}" required/>
-                                                <input type="number" class="form-control col-sm-1" placeholder="0"
-                                                       name="sort"
-                                                       th:value="${list.sort}" required/>
-                                                <span class="input-group-append">
-                                                    <input type="hidden" name="id" th:value="${list.id}"/>
-                                                    <input type="hidden" name="bienTheSanPham"
-                                                           th:value="${list.bienTheSanPham.id}"/>
-                                                    <input type="hidden" name="trangThai" th:value="${list.trangThai}"/>
-                                                    <button type="submit" name="update" class="btn btn-info">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-
-                                                    <!--Button lock-->
-                                                    <th:block th:if="${list.trangThai}">
-                                                        <button type="button" class="btn btn-warning"
-                                                                data-toggle="modal"
-                                                                th:data-target="'#lock-' + ${list.bienTheSanPham}">
-                                                            <i class="fas fa-unlock" style="color: green;"></i>
-                                                        </button>
-                                                    </th:block>
-                                                    <th:block th:if="not ${list.trangThai}">
-                                                          <button type="button" class="btn btn-warning"
-                                                                  data-toggle="modal"
-                                                                  th:data-target="'#lock-' + ${list.bienTheSanPham}">
-                                                              <i class="fas fa-lock"></i>
-                                                          </button>
-                                                    </th:block>
-                                                    <!--./Button lock-->
-
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                            th:data-target="'#delete-' + ${list.bienTheSanPham}"><i
-                                                            class="fas fa-trash"></i></button>
-
-                                                    <!--Popup lock thuộc tính-->
-                                                        <div class="modal fade"
-                                                             th:id="'lock-' + ${list.bienTheSanPham}">
-                                                          <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                              <div class="modal-header">
-                                                                <strong class="modal-title" th:if="${list.trangThai}">Xác nhận mở khóa thuộc
-                                                                  tính</strong>
-                                                                <strong class="modal-title"
-                                                                        th:if="not ${list.trangThai}">Xác nhận khóa thuộc
-                                                                  tính</strong>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                        aria-label="Close">
-                                                                  <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                              </div>
-                                                              <div class="modal-body">
-                                                                <div class="card-body" th:if="${list.trangThai}">
-                                                                  Thuộc tính <strong class="badge text-bg-info"
-                                                                                     th:text="${list.tenThuocTinh}"
-                                                                                     style="font-size: 16px;"></strong> sẽ được mở khóa!
-                                                                </div>
-                                                                <div class="card-body" th:if="not ${list.trangThai}">
-                                                                  Thuộc tính <strong class="badge text-bg-info"
-                                                                                     th:text="${list.tenThuocTinh}"
-                                                                                     style="font-size: 16px;"></strong> sẽ bị khóa!
-                                                                </div>
-                                                                <div class="modal-footer justify-content-end"
-                                                                     style="margin-bottom: -15px;">
-                                                                  <button type="button" class="btn btn-default"
-                                                                          data-dismiss="modal">Hủy</button>
-                                                                  <button type="submit" name="lock"
-                                                                          class="btn btn-primary">Đồng ý</button>
-                                                                </div>
-                                                                  </div>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                    <!--./ Đóng popup lock thuộc tính-->
-                                                    </span>
-                                            </div>
+                                        <div class="modal-footer justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-default"
+                                                    data-dismiss="modal">Hủy
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                            <hr>
-                            <th:block>
-                                <div class="modal fade" th:id="'delete-' + ${list.bienTheSanPham}">
+                            </div>
+                        </div>
+                    </div>
+                    <!--./ End Image chính-->
+
+                    <!--./ Sub-Image-->
+                    <div class="col-sm-7 row" style="max-height: 345px; overflow: scroll">
+                        <div class="col-sm-3 mb-2" th:each="list : ${listImageOfSanPhamBienThe}">
+                            <div class="product-image-thumb" style="margin: auto">
+                                <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"
+                                     alt="Product Image">
+                            </div>
+                        </div>
+                    </div>
+                    <!--./ End Sub-Image-->
+
+                    <div class="row mt-2 w-100">
+                        <hr style="height: 5px; width: 100%; margin-bottom: 0">
+                    </div>
+
+                    <!--THUỘC TÍNH SẢN PHẨM-->
+                    <div class="row mt-2 w-100">
+                        <div class="row justify-content-between w-100">
+                            <div class="col-4"></div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="btn btn-success" data-toggle="modal"
+                                        data-target="#modelAddKhachHang">
+                                    Thêm mới thuộc tính
+                                </button>
+                                <div class="modal fade" id="modelAddKhachHang">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-left">
+                                            <form th:action="@{/san-pham/attribute/insert}"
+                                                  th:object="${thuocTinhSanPham}" method="post">
+                                                <div class="modal-header">
+                                                    <strong class="modal-title">Thêm mới thuộc tính sản phẩm</strong>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row text-left">
+                                                        <div class="col-12">
+                                                            <input type="hidden" name="bienTheSanPham"
+                                                                   th:value="${bienTheSanPhamId}"/>
+                                                            <div class="form-group">
+                                                                <label>Tên thuộc tính</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Tên thuộc tính" required
+                                                                       name="tenThuocTinh"/>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Giá trị" required
+                                                                       name="giaTriThuocTinh"/>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Sắp xếp hiển thị</label>
+                                                                <input type="number" class="form-control"
+                                                                       placeholder="0"
+                                                                       required name="sort"
+                                                                       min="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer justify-content-end">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered mt-2">
+                            <thead>
+                                <th>#</th>
+                                <th>Tên thuộc tính</th>
+                                <th>Giá trị</th>
+                                <th>Sắp xếp</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </thead>
+                            <tbody>
+                            <tr th:each="list, index : ${listThuocTinh}">
+                                <form th:action="@{/san-pham/attribute/update/{id}(id=${list.id})}"
+                                      method="post">
+                                    <td th:text="${index.index + 1}"></td>
+                                    <td>
+                                        <input type="text" class="form-control" placeholder="Tên thuộc tính"
+                                               name="tenThuocTinh" required
+                                               th:value="${list.tenThuocTinh}">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" placeholder="Giá trị"
+                                               name="giaTriThuocTinh" required
+                                               th:value="${list.giaTriThuocTinh}">
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" placeholder="0"
+                                               name="sort" required
+                                               th:value="${list.sort}">
+                                    </td>
+                                    <td>
+                                        <select class="custom-select" name="trangThai"
+                                                th:if="${list.trangThai}">
+                                            <option value="true" selected>Sử dụng</option>
+                                            <option value="false">Không sử dụng</option>
+                                        </select>
+                                        <select class="custom-select" name="trangThai"
+                                                th:if="not ${list.trangThai}">
+                                            <option value="true">Sử dụng</option>
+                                            <option value="false" selected>Không sử dụng</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="id" th:value="${list.id}">
+                                        <input type="hidden" name="bienTheSanPham" th:value="${list.bienTheSanPham.id}">
+                                        <button type="submit" class="btn btn-sm btn-info">Cập nhật
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                data-toggle="modal"
+                                                th:data-target="'#modalDeleteAttribute-' + ${list.id}"> Xóa
+                                        </button>
+                                    </td>
+                                </form>
+                                <div class="modal fade" th:id="'modalDeleteAttribute-' + ${list.id}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form th:action="@{/san-pham/attribute/delete/{id}(id=${list.bienTheSanPham.id})}"
+                                            <form th:action="@{/san-pham/attribute/delete/{id}(id=${list.id})}"
                                                   method="post">
                                                 <div class="modal-header">
                                                     <strong class="modal-title">Xác nhận xóa thuộc tính</strong>
@@ -209,246 +339,27 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div class="card-body">
-                                                        Thuộc tính <strong class="badge text-bg-info"
-                                                                           th:text="${list.tenThuocTinh}"
-                                                                           style="font-size: 16px;"></strong> sẽ bị xóa
-                                                        vĩnh viễn!
-                                                    </div>
-                                                    <div class="modal-footer justify-content-end"
-                                                         style="margin-bottom: -15px;">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">Hủy
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Đồng ý</button>
-                                                    </div>
+                                                    Thuộc tính <strong class="badge text-bg-info"
+                                                                       th:text="${list.tenThuocTinh}"
+                                                                       style="font-size: 16px;"></strong>
+                                                    sẽ bị xóa vĩnh viễn!
+                                                </div>
+                                                <div class="modal-footer justify-content-end">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Đồng ý
+                                                    </button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-                            </th:block>
-                        </div>
-
-                        <div class="row col-sm-12 justify-content-between" style="align-items: center; padding: 0;">
-                            <div class="col-sm-8 text-left" style="padding: 0;">
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label text-red">Giá bán</label>
-                                    <div class="col-sm-9">
-                                        <div class="input-group row col-sm-12 p-0">
-                                            <input type="text" class="form-control col-sm-11"
-                                                   style="color: #f67b7b; font-weight: bold;"
-                                                   placeholder="Giá bán" name="price"
-                                                   th:value="${listPrices.get(0).getGiaBan()}" required/>
-                                            <span class="input-group-append">
-                          <button type="submit" name="update" class="btn btn-info"><i class="fas fa-check"></i></button>
-                          <button type="button" class="btn btn-secondary" data-toggle="modal"
-                                  data-target="#priceHistory"><i class="fas fa-history"></i></button>
-                        </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 text-right">
-                            <button type="button" class="btn btn-sm btn-primary mb-1" name="addToFavourite"><i
-                                    class="fas fa-heart fa-lg mr-2"></i>Thêm vào yêu
-                                thích
-                            </button>
-                            <button type="button" class="btn btn-sm btn-warning mb-1" data-toggle="modal"
-                                    data-target="#addToCart"><i
-                                    class="fas fa-cart-plus fa-lg mr-2"></i>Thêm vào
-                                giỏ hàng
-                            </button>
-                            <button type="button" class="btn btn-sm btn-info mb-1" data-toggle="modal"
-                                    data-target="#insertSizes">Thêm kích
-                                cỡ
-                            </button>
-                            <button type="button" class="btn btn-sm btn-success mb-1" data-toggle="modal"
-                                    data-target="#insertAttributes">Thêm thuộc
-                                tính
-                            </button>
-                            <!-- Popup thêm mới thuộc tính -->
-                            <div class="modal fade" id="insertAttributes">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form th:action="@{/san-pham/attribute/insert}" th:object="${thuocTinhSanPham}"
-                                              method="post">
-                                            <div class="modal-header">
-                                                <strong class="modal-title">Thêm mới thuộc tính</strong>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row text-left">
-                                                    <div class="col-12">
-                                                        <input type="hidden" name="bienTheSanPham"
-                                                               th:value="${bienTheSanPhamId}"/>
-                                                        <div class="form-group">
-                                                            <label>Tên thuộc tính</label>
-                                                            <input type="text" class="form-control"
-                                                                   placeholder="Tên thuộc tính" required
-                                                                   name="tenThuocTinh"/>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Giá trị</label>
-                                                            <input type="text" class="form-control"
-                                                                   placeholder="Giá trị" required
-                                                                   name="giaTriThuocTinh"/>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Sắp xếp hiển thị</label>
-                                                            <input type="number" class="form-control" placeholder="0"
-                                                                   required name="sort"
-                                                                   min="0"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer justify-content-end"
-                                                     style="margin-bottom: -15px;">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                        Hủy
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Lưu</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--End popup thêm mới thuộc tính-->
-                        </div>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <!--/end attributes-->
-
-                    <div class="col-sm-12 mt-3" style="max-height: 450px; overflow: overlay">
-                        <div class="row" th:each="list : ${listSubImage}">
-                            <div class="product-image-thumb">
-                                <img th:src="@{/upload/{storageName}(storageName=${list.storageName})}"
-                                     alt="Product Image">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="card col-sm-12">
-                                <div class="card-body">
-                                    <div id="actions" class="row">
-                                        <div class="col-lg-7">
-                                            <div class="btn-group w-100">
-                                                  <span class="btn btn-sm btn-success col fileinput-button"
-                                                        title="Chọn file từ máy tính">
-                                                    <i class="fas fa-plus"></i>
-                                                    <span><!--Chọn file--></span>
-                                                  </span>
-                                                <button type="submit" class="btn btn-sm btn-primary col start">
-                                                    <i class="fas fa-upload"></i>
-                                                    <span><!--Tải lên SV--></span>
-                                                </button>
-                                                <button type="reset" class="btn btn-sm btn-warning col cancel">
-                                                    <i class="fas fa-times-circle"></i>
-                                                    <span><!--Hủy--></span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-5 d-flex align-items-center">
-                                            <div class="fileupload-process w-100">
-                                                <div id="total-progress" class="progress progress-striped active"
-                                                     role="progressbar"
-                                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                                    <div class="progress-bar progress-bar-success" style="width:0%;"
-                                                         data-dz-uploadprogress>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="table table-striped files" id="previews">
-                                        <div id="template" class="row mt-2">
-                                            <div class="col-auto">
-                                                <span class="preview"><img src="data:," alt=""
-                                                                           data-dz-thumbnail/></span>
-                                            </div>
-                                            <div class="col d-flex align-items-center">
-                                                <p class="mb-0">
-                                                    <span class="lead" data-dz-name></span>
-                                                    (<span data-dz-size></span>)
-                                                </p>
-                                                <strong class="error text-danger" data-dz-errormessage></strong>
-                                            </div>
-                                            <div class="col-3 d-flex align-items-center">
-                                                <div class="progress progress-striped active w-100" role="progressbar"
-                                                     aria-valuemin="0"
-                                                     aria-valuemax="100" aria-valuenow="0">
-                                                    <div class="progress-bar progress-bar-success" style="width:0%;"
-                                                         data-dz-uploadprogress>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-auto d-flex align-items-center">
-                                                <div class="btn-group">
-                                                    <button class="btn btn-sm btn-primary start">
-                                                        <i class="fas fa-upload"></i>
-                                                        <span><!--Tải lên SV--></span>
-                                                    </button>
-                                                    <button data-dz-remove class="btn btn-sm btn-warning cancel">
-                                                        <i class="fas fa-times-circle"></i>
-                                                        <span><!--Hủy--></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và tổng dung lượng không
-                                        vượt 50MB cho
-                                        mỗi lượt.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.card-body -->
-
-                    <!--Popup-->
-                    <!-- Popup addToCart -->
-                    <div class="modal fade" id="addToCart">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form th:action="@{/sales/addToCart}" method="post">
-                                    <div class="modal-header">
-                                        <strong class="modal-title">Thêm sản phẩm vào giỏ hàng</strong>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row text-left">
-                                            <div class="col-12">
-                                                <input type="hidden" name="bienTheSanPham"
-                                                       th:value="${bienTheSanPham}"/>
-                                                <div class="form-group">
-                                                    <label>Chọn kích cỡ</label>
-                                                    <select class="custom-select" name="size">
-                                                        <option value="s" selected>S</option>
-                                                        <option value="m">M <i>(Hiện còn n sản phẩm)</i></option>
-                                                        <option value="l">L <i>(Hiện còn n sản phẩm)</i></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Hủy
-                                            </button>
-                                            <button type="submit" class="btn btn-primary">Lưu</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <!--End popup addToCart-->
+                    <!--THUỘC TÍNH SẢN PHẨM-->
                 </div>
             </div>
         </section>
@@ -492,7 +403,7 @@ var previewTemplate = previewNode.parentNode.innerHTML
 previewNode.parentNode.removeChild(previewNode)
 
 var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/files/uploads/products/[[${bienTheSanPham}]]", // Gọi tới function trong spring để xử lý file
+    url: "/uploads/bien-the-san-pham/[[${bienTheSanPham.id}]]", // Gọi tới API trong spring để xử lý file
     thumbnailWidth: 80,
     thumbnailHeight: 80,
     parallelUploads: 20,

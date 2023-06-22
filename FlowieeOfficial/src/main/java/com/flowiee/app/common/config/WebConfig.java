@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
             .addResourceHandler("/uploads/**")
-            .addResourceLocations("file:/D:/VietND/Project/Flowiee WebApp/FlowieeOfficial/src/main/resources/static/uploads/")
+            .addResourceLocations("file:/" + System.getProperty("user.dir") + "/src/main/resources/static/uploads/")
             .setCachePeriod(3600)
             .resourceChain(true)
             .addResolver(new PathResourceResolver());

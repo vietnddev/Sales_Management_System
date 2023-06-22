@@ -22,8 +22,8 @@ public class FileStorageController {
     private AccountService accountService;
 
     @PostMapping("/uploads/san-pham/{id}")
-    public String sanPhamUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request,
-                                     @PathVariable("id") int id) throws Exception {
+    public String uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request,
+                                       @PathVariable("id") int id) throws Exception {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -33,14 +33,14 @@ public class FileStorageController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @PostMapping("/uploads/san-pham/variant/{id}")
-    public String bienTheSanPhamUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request,
-                                     @PathVariable("id") int id) throws Exception {
+    @PostMapping("/uploads/bien-the-san-pham/{id}")
+    public String uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request,
+                                              @PathVariable("id") int id) throws Exception {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (!file.isEmpty()) {
-            fileService.saveImageSanPham(file, id);
+            fileService.saveImageBienTheSanPham(file, id);
         }
         return "redirect:" + request.getHeader("referer");
     }

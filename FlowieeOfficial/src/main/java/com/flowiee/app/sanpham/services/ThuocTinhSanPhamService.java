@@ -11,7 +11,7 @@ public interface ThuocTinhSanPhamService {
 
     void saveAttribute(ThuocTinhSanPham productAttribute);
 
-    Optional<ThuocTinhSanPham> getByAttributeID(int attributeID);
+    ThuocTinhSanPham findById(int attributeID);
     
     void deleteAttribute(int attributeID);
 }

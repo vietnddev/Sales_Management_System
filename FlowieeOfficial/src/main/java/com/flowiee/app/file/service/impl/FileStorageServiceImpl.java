@@ -1,5 +1,6 @@
 package com.flowiee.app.file.service.impl;
 
+import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.file.entity.FileStorage;
@@ -39,6 +40,22 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public List<FileStorage> getAllImageSanPham(String module) {
         return fileRepository.findAllImageSanPham(module);
+    }
+
+    @Override
+    public List<FileStorage> getImageOfSanPham(int sanPhamId) {
+        if (sanPhamService.findById(sanPhamId) == null) {
+            throw new BadRequestException();
+        }
+        return fileRepository.findImageOfSanPham(sanPhamId);
+    }
+
+    @Override
+    public List<FileStorage> getImageOfSanPhamBienThe(int bienTheSanPhamId) {
+        if (bienTheSanPhamService.findById(bienTheSanPhamId) == null) {
+            throw new BadRequestException();
+        }
+        return fileRepository.findImageOfSanPhamBienThe(bienTheSanPhamId);
     }
 
     @Override

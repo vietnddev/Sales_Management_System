@@ -4,6 +4,7 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.danhmuc.service.LoaiKichCoService;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
+import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
@@ -39,6 +40,8 @@ public class SanPhamController {
     private LoaiSanPhamService loaiSanPhamService;
     @Autowired
     private DonViTinhService donViTinhService;
+    @Autowired
+    private FileStorageService fileStorageService;
     @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModule;
 
@@ -90,6 +93,8 @@ public class SanPhamController {
         modelMap.addAttribute("listColorVariant", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.getListVariantOfProduct(sanPhamId)));
         // Danh sách đơn vị tính từ danh mục hệ thống
         modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
+        //List image
+        modelMap.addAttribute("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
         return PagesUtil.PAGE_SANPHAM_TONG_QUAN;
     }
 

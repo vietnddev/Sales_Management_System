@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.entity.LoaiMauSac;
+import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -32,6 +33,8 @@ public class SanPhamBienTheController {
     private ThuocTinhSanPhamService thuocTinhSanPhamService;
     @Autowired
     private GiaSanPhamService giaSanPhamService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @GetMapping(value = "{id}")
     public String showDetailProduct(ModelMap modelMap, @PathVariable("id") int id) {
@@ -45,9 +48,8 @@ public class SanPhamBienTheController {
         modelMap.addAttribute("giaBanSanPham", new GiaSanPham());
         modelMap.addAttribute("listThuocTinh", thuocTinhSanPhamService.getAllAttributes(id));
         modelMap.addAttribute("bienTheSanPhamId", id);
-        //Lấy danh sách hình ảnh của biến thể
-        //modelMap.addAttribute("listFiles", fileService.getFilesByProductVariant(productVariantID));
-        //
+        modelMap.addAttribute("bienTheSanPham", bienTheSanPhamService.findById(id));
+        modelMap.addAttribute("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(id));
         modelMap.addAttribute("listPrices", giaSanPhamService.findByBienTheSanPhamId(id));
         return PagesUtil.PAGE_SANPHAM_BIENTHE;
     }

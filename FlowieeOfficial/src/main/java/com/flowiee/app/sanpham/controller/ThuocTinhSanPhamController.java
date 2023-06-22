@@ -34,33 +34,14 @@ public class ThuocTinhSanPhamController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    //Cập nhật thuộc tính cho sản phẩm
     @Transactional
-    @PostMapping(value = "/update/{id}", params = "update")
+    @PostMapping(value = "/update/{id}")
     public String updateAttribute(@ModelAttribute("thuocTinhSanPham") ThuocTinhSanPham attribute,
                                   HttpServletRequest request, @PathVariable("id") int id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         attribute.setId(id);
-        thuocTinhSanPhamService.saveAttribute(attribute);
-        return "redirect:" + request.getHeader("referer");
-    }
-
-    //Khóa lock attribute
-    @Transactional
-    @PostMapping(value = "/update/{id}", params = "lock")
-    public String lockAttribute(HttpServletRequest request, @PathVariable("id") int attributeID) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
-        }
-        ThuocTinhSanPham attribute = thuocTinhSanPhamService.getByAttributeID(attributeID).get();
-        attribute.setId(attributeID);
-        if (attribute.isTrangThai()) {
-            attribute.setTrangThai(false);
-        } else {
-            attribute.setTrangThai(true);
-        }
         thuocTinhSanPhamService.saveAttribute(attribute);
         return "redirect:" + request.getHeader("referer");
     }
@@ -72,7 +53,7 @@ public class ThuocTinhSanPhamController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (thuocTinhSanPhamService.getByAttributeID(attributeID).isPresent()) {
+        if (thuocTinhSanPhamService.findById(attributeID) != null) {
             thuocTinhSanPhamService.deleteAttribute(attributeID);
             return "redirect:" + request.getHeader("referer");
         } else {

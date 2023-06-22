@@ -11,5 +11,10 @@ import java.util.List;
 public interface FileStorageRepository extends JpaRepository<FileStorage, Integer> {
     @Query("from FileStorage f where f.module=:module")
     List<FileStorage> findAllImageSanPham(String module);
-} 
-               
+
+    @Query("from FileStorage f where f.sanPham.id=:idSanPham")
+    List<FileStorage> findImageOfSanPham(int idSanPham);
+
+    @Query("from FileStorage f where f.bienTheSanPham.id=:bienTheSanPhamId")
+    List<FileStorage> findImageOfSanPhamBienThe(int bienTheSanPhamId);
+}
