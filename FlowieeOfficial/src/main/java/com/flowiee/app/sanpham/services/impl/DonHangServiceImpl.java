@@ -59,6 +59,11 @@ public class DonHangServiceImpl implements DonHangService {
     }
 
     @Override
+    public List<DonHang> findByNhanVienId(int nhanVienId) {
+        return donHangRepository.findByNhanvienId(nhanVienId);
+    }
+
+    @Override
     public DonHang findById(int id) {
         return donHangRepository.findById(id).orElse(null);
     }

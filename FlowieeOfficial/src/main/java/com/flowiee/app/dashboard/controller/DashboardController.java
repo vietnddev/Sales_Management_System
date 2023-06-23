@@ -4,6 +4,7 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleDashboard;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.dashboard.model.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.dashboard.model.DoanhThuCacThangTheoNam;
 import com.flowiee.app.dashboard.model.TopSanPhamBanChay;
 import com.flowiee.app.hethong.service.AccountService;
@@ -15,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @CrossOrigin
@@ -28,37 +30,45 @@ public class DashboardController {
     private DashboardService dashboardService;
 
     @GetMapping
-    public String reportDoanhThu(ModelMap modelMap) {
+    public ModelAndView reportDoanhThu() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleDashboard.kiemTraQuyenXem()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DASHBOARD);
+                        
             //Số lượng đơn hàng hôm nay
-            modelMap.addAttribute("soLuongDonHangHomNay", dashboardService.getSoLuongDonHangHomNay());
+            modelAndView.addObject("soLuongDonHangHomNay", dashboardService.getSoLuongDonHangHomNay());
             //Doanh thu hôm nay
-            modelMap.addAttribute("doanhThuHomNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuHomNay()));
+            modelAndView.addObject("doanhThuHomNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuHomNay()));
             //Doanh thu trong tháng này
-            modelMap.addAttribute("doanhThuThangNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuThangNay()));
+            modelAndView.addObject("doanhThuThangNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuThangNay()));
             //Số lượng khách hàng mới trong tháng
-            modelMap.addAttribute("khachHangMoiTrongThang", dashboardService.getSoLuongKhachHangMoi());
+            modelAndView.addObject("khachHangMoiTrongThang", dashboardService.getSoLuongKhachHangMoi());
 
             //Pie chart - Doanh thu theo kênh bán hàng
             DoanhThuTheoKenhBanHang doanhThuTheoKenhBanHang = dashboardService.getDoanhThuTheoKenhBanHang();
-            modelMap.addAttribute("doanhThuOfKBH_listTen", doanhThuTheoKenhBanHang.getTenOfKenh());
-            modelMap.addAttribute("doanhThuOfKBH_listDoanhThu", doanhThuTheoKenhBanHang.getDoanhThuOfKenh());
-            modelMap.addAttribute("doanhThuOfKBH_listMauSac", doanhThuTheoKenhBanHang.getMauSac());
+            modelAndView.addObject("doanhThuOfKBH_listTen", doanhThuTheoKenhBanHang.getTenOfKenh());
+            modelAndView.addObject("doanhThuOfKBH_listDoanhThu", doanhThuTheoKenhBanHang.getDoanhThuOfKenh());
+            modelAndView.addObject("doanhThuOfKBH_listMauSac", doanhThuTheoKenhBanHang.getMauSac());
 
             //Line chart - Doanh thu các tháng theo năm
             DoanhThuCacThangTheoNam doanhThuCacThangTheoNam = dashboardService.getDoanhThuCacThangTheoNam();
-            modelMap.addAttribute("doanhThuOfMonth_listDoanhThu", doanhThuCacThangTheoNam.getDoanhThu());
+            modelAndView.addObject("doanhThuOfMonth_listDoanhThu", doanhThuCacThangTheoNam.getDoanhThu());
+
+            //Line chart - Doanh thu các ngày theo tháng
+            DoanhThuCacNgayTheoThang doanhThuCacNgayTheoThang = dashboardService.getDoanhThuCacNgayTheoThang();
+            modelAndView.addObject("doanhThuOfDay_listNgay", doanhThuCacNgayTheoThang.getListNgay());
+            modelAndView.addObject("doanhThuOfDay_listDoanhThu", doanhThuCacNgayTheoThang.getListDoanhThu());
 
             //Bar chart - Top sản phẩm bán chạy
             TopSanPhamBanChay topSanPhamBanChay = dashboardService.getTopSanPhamBanChay();
-            modelMap.addAttribute("topSanPham_listTenSanPham", topSanPhamBanChay.getTenSanPham());
-            modelMap.addAttribute("topSanPham_listSoLuong", topSanPhamBanChay.getSoLuongDaBan());
-            return PagesUtil.PAGE_DASHBOARD;
+            modelAndView.addObject("topSanPham_listTenSanPham", topSanPhamBanChay.getTenSanPham());
+            modelAndView.addObject("topSanPham_listSoLuong", topSanPhamBanChay.getSoLuongDaBan());
+            
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 }

@@ -27,4 +27,7 @@ public interface DonHangRepository extends JpaRepository<DonHang, Integer> {
 
     @Query("from DonHang d where d.khachHang.id=:khachHangId")
     List<DonHang> findByKhachHangId(int khachHangId);
+
+    @Query("from DonHang d where d.nhanVienBanHang.id=:nhanVienId")
+    List<DonHang> findByNhanvienId(int nhanVienId);
 }

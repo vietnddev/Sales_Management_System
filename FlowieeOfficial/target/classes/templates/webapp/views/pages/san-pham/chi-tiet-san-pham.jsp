@@ -84,7 +84,8 @@
                             <button type="button" class="btn btn-success w-50"
                                     style="margin: auto"
                                     data-toggle="modal"
-                                    data-target="#modalUploadImage">
+                                    data-target="#modalUploadImage"
+                                    title="Upload hình ảnh cho sản phẩm">
                                 <i class="fa-solid fa-upload"></i>
                             </button>
                             <div class="modal fade" id="modalUploadImage">
@@ -274,90 +275,93 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-bordered mt-2">
-                            <thead>
+                        <div class="row w-100" style="max-height: 400px; overflow: scroll">
+                            <table class="table table-bordered mt-2">
+                                <thead>
                                 <th>#</th>
                                 <th>Tên thuộc tính</th>
                                 <th>Giá trị</th>
                                 <th>Sắp xếp</th>
                                 <th>Trạng thái</th>
                                 <th>Thao tác</th>
-                            </thead>
-                            <tbody>
-                            <tr th:each="list, index : ${listThuocTinh}">
-                                <form th:action="@{/san-pham/attribute/update/{id}(id=${list.id})}"
-                                      method="post">
-                                    <td th:text="${index.index + 1}"></td>
-                                    <td>
-                                        <input type="text" class="form-control" placeholder="Tên thuộc tính"
-                                               name="tenThuocTinh" required
-                                               th:value="${list.tenThuocTinh}">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" placeholder="Giá trị"
-                                               name="giaTriThuocTinh" required
-                                               th:value="${list.giaTriThuocTinh}">
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" placeholder="0"
-                                               name="sort" required
-                                               th:value="${list.sort}">
-                                    </td>
-                                    <td>
-                                        <select class="custom-select" name="trangThai"
-                                                th:if="${list.trangThai}">
-                                            <option value="true" selected>Sử dụng</option>
-                                            <option value="false">Không sử dụng</option>
-                                        </select>
-                                        <select class="custom-select" name="trangThai"
-                                                th:if="not ${list.trangThai}">
-                                            <option value="true">Sử dụng</option>
-                                            <option value="false" selected>Không sử dụng</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="hidden" name="id" th:value="${list.id}">
-                                        <input type="hidden" name="bienTheSanPham" th:value="${list.bienTheSanPham.id}">
-                                        <button type="submit" class="btn btn-sm btn-info">Cập nhật
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-danger"
-                                                data-toggle="modal"
-                                                th:data-target="'#modalDeleteAttribute-' + ${list.id}"> Xóa
-                                        </button>
-                                    </td>
-                                </form>
-                                <div class="modal fade" th:id="'modalDeleteAttribute-' + ${list.id}">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form th:action="@{/san-pham/attribute/delete/{id}(id=${list.id})}"
-                                                  method="post">
-                                                <div class="modal-header">
-                                                    <strong class="modal-title">Xác nhận xóa thuộc tính</strong>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Thuộc tính <strong class="badge text-bg-info"
-                                                                       th:text="${list.tenThuocTinh}"
-                                                                       style="font-size: 16px;"></strong>
-                                                    sẽ bị xóa vĩnh viễn!
-                                                </div>
-                                                <div class="modal-footer justify-content-end">
-                                                    <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">Hủy
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Đồng ý
-                                                    </button>
-                                                </div>
-                                            </form>
+                                </thead>
+                                <tbody>
+                                <tr th:each="list, index : ${listThuocTinh}">
+                                    <form th:action="@{/san-pham/attribute/update/{id}(id=${list.id})}"
+                                          method="post">
+                                        <td th:text="${index.index + 1}"></td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Tên thuộc tính"
+                                                   name="tenThuocTinh" required
+                                                   th:value="${list.tenThuocTinh}">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Giá trị"
+                                                   name="giaTriThuocTinh" required
+                                                   th:value="${list.giaTriThuocTinh}">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" placeholder="0"
+                                                   name="sort" required
+                                                   th:value="${list.sort}">
+                                        </td>
+                                        <td>
+                                            <select class="custom-select" name="trangThai"
+                                                    th:if="${list.trangThai}">
+                                                <option value="true" selected>Sử dụng</option>
+                                                <option value="false">Không sử dụng</option>
+                                            </select>
+                                            <select class="custom-select" name="trangThai"
+                                                    th:if="not ${list.trangThai}">
+                                                <option value="true">Sử dụng</option>
+                                                <option value="false" selected>Không sử dụng</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="id" th:value="${list.id}">
+                                            <input type="hidden" name="bienTheSanPham"
+                                                   th:value="${list.bienTheSanPham.id}">
+                                            <button type="submit" class="btn btn-sm btn-info">Cập nhật
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                    data-toggle="modal"
+                                                    th:data-target="'#modalDeleteAttribute-' + ${list.id}"> Xóa
+                                            </button>
+                                        </td>
+                                    </form>
+                                    <div class="modal fade" th:id="'modalDeleteAttribute-' + ${list.id}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form th:action="@{/san-pham/attribute/delete/{id}(id=${list.id})}"
+                                                      method="post">
+                                                    <div class="modal-header">
+                                                        <strong class="modal-title">Xác nhận xóa thuộc tính</strong>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Thuộc tính <strong class="badge text-bg-info"
+                                                                           th:text="${list.tenThuocTinh}"
+                                                                           style="font-size: 16px;"></strong>
+                                                        sẽ bị xóa vĩnh viễn!
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Hủy
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Đồng ý
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </tr>
-                            </tbody>
-                        </table>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <!--THUỘC TÍNH SẢN PHẨM-->
                 </div>

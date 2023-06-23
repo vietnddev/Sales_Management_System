@@ -16,6 +16,8 @@ public interface DonHangService {
 
     List<DonHang> findByKhachHangId(int id);
 
+    List<DonHang> findByNhanVienId(int accountId);
+
     DonHang findById(int id);
 
 

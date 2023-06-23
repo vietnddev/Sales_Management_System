@@ -33,15 +33,12 @@ public class Account extends DateAudit implements Serializable{
     private int id;
 
     @Column(name = "username", nullable = false)
-    @NotNull(message = "Username không được trống")
     private String username;
 
     @Column(name = "password", nullable = false)
-    @NotNull(message = "Password không được trống")
     private String password;
 
-    @Column(name = "ho_ten", length = 255, nullable = false)
-    @NotNull(message = "Họ tên không được trống")
+    @Column(name = "ho_ten", nullable = false)
     private String hoTen;
 
     @Column(name = "gioi_tinh", nullable = false)

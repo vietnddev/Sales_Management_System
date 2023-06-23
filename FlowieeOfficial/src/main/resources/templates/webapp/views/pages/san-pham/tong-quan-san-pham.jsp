@@ -64,7 +64,8 @@
                             <button type="button" class="btn btn-success w-50"
                                     style="margin: auto"
                                     data-toggle="modal"
-                                    data-target="#modalUploadImage">
+                                    data-target="#modalUploadImage"
+                                    title="Upload hình ảnh cho sản phẩm">
                                 <i class="fa-solid fa-upload"></i>
                             </button>
                             <div class="modal fade" id="modalUploadImage">
@@ -192,7 +193,7 @@
                     <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
                     <div class="row col-sm-12 border pt-3 mt-3">
                         <hr>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" style="max-height: 470px; overflow: scroll">
                             <table class="table table-bordered">
                                 <thead>
                                     <th>#</th>
@@ -205,83 +206,83 @@
                                     <th>Thao tác</th>
                                 </thead>
                                 <tbody>
-                                <tr th:each="var, index : ${listBienTheSanPham}">
-                                    <td th:text="${index.index + 1}"></td>
-                                    <td>
-                                        <a th:href="@{/san-pham/variant/{id}(id=${var.id})}"
-                                           th:text="${var.tenBienThe}">
-                                        </a>
-                                    </td>
-                                    <td th:text="${var.loaiMauSac.tenLoai}"></td>
-                                    <td th:text="${var.loaiKichCo.tenLoai}"></td>
-                                    <td th:text="${var.soLuongKho}"></td>
-                                    <td>
-                                            <span th:text="${var.giaSanPham.giaBan}"
-                                                  style="color: #007bff; cursor: pointer"
-                                                  data-toggle="modal"
-                                                  th:data-target="'#modalLichSuGiaBan_' + ${var.id}"></span>
-                                    </td>
-                                    <td th:text="${var.trangThai}"></td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-info"
-                                                title="Cập nhật biến thể sản phẩm">
-                                            <i class="fa-solid fa-circle-check"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary"
-                                                type="button" data-toggle="modal"
-                                                title="Cập nhật giá sản phẩm"
-                                                th:data-target="'#modalUpdateGiaBan_' + ${var.id}">
+                                    <tr th:each="var, index : ${listBienTheSanPham}">
+                                        <td th:text="${index.index + 1}"></td>
+                                        <td>
+                                            <a th:href="@{/san-pham/variant/{id}(id=${var.id})}"
+                                               th:text="${var.tenBienThe}">
+                                            </a>
+                                        </td>
+                                        <td th:text="${var.loaiMauSac.tenLoai}"></td>
+                                        <td th:text="${var.loaiKichCo.tenLoai}"></td>
+                                        <td th:text="${var.soLuongKho}"></td>
+                                        <td>
+                                                <span th:text="${var.giaSanPham.giaBan}"
+                                                      style="color: #007bff; cursor: pointer"
+                                                      data-toggle="modal"
+                                                      th:data-target="'#modalLichSuGiaBan_' + ${var.id}"></span>
+                                        </td>
+                                        <td th:text="${var.trangThai}"></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-info"
+                                                    title="Cập nhật biến thể sản phẩm">
                                                 <i class="fa-solid fa-circle-check"></i>
-                                        </button>
-                                        <!--./ Button xóa biến thể sản phẩm-->
-                                        <button type="button" class="btn btn-sm btn-danger"
-                                                title="Xóa biến thể sản phẩm">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <!--./ End button xóa biến thể sản phẩm-->
+                                            </button>
+                                            <button class="btn btn-sm btn-primary"
+                                                    type="button" data-toggle="modal"
+                                                    title="Cập nhật giá sản phẩm"
+                                                    th:data-target="'#modalUpdateGiaBan_' + ${var.id}">
+                                                    <i class="fa-solid fa-dollar-sign"></i>
+                                            </button>
+                                            <!--./ Button xóa biến thể sản phẩm-->
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                    title="Xóa biến thể sản phẩm">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                            <!--./ End button xóa biến thể sản phẩm-->
 
-                                        <!--MODAL UPDATE GIÁ BÁN-->
-                                        <div class="modal fade"
-                                             th:id="'modalUpdateGiaBan_' + ${var.id}">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form th:action="@{/san-pham/variant/gia-ban/update/{id}(id=${var.id})}"
-                                                          th:object="${giaSanPham}" method="post">
-                                                        <div class="modal-header">
-                                                            <strong class="modal-title">Cập nhật giá bán</strong>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group row">
-                                                                <label class="col-sm-4">Giá hiện tại</label>
-                                                                <input class="col-sm-8 form-control" type="text"
-                                                                       th:value="${var.giaSanPham.giaBan}" readonly>
+                                            <!--MODAL UPDATE GIÁ BÁN-->
+                                            <div class="modal fade"
+                                                 th:id="'modalUpdateGiaBan_' + ${var.id}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form th:action="@{/san-pham/variant/gia-ban/update/{id}(id=${var.id})}"
+                                                              th:object="${giaSanPham}" method="post">
+                                                            <div class="modal-header">
+                                                                <strong class="modal-title">Cập nhật giá bán</strong>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
                                                             </div>
-                                                            <div class="form-group row">
-                                                                <label class="col-sm-4">Giá điều chỉnh</label>
-                                                                <input class="col-sm-8 form-control" type="number"
-                                                                       name="giaBan">
+                                                            <div class="modal-body">
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4">Giá hiện tại</label>
+                                                                    <input class="col-sm-8 form-control" type="text"
+                                                                           th:value="${var.giaSanPham.giaBan}" readonly>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4">Giá điều chỉnh</label>
+                                                                    <input class="col-sm-8 form-control" type="number"
+                                                                           name="giaBan">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer justify-content-end">
-                                                            <input type="hidden" name="idGiaBan" th:value="${var.giaSanPham.id}">
-                                                            <button type="button" class="btn btn-sm btn-default"
-                                                                    data-dismiss="modal">Hủy
-                                                            </button>
-                                                            <button type="submit" class="btn btn-sm btn-primary">
-                                                                Đồng ý
-                                                            </button>
-                                                        </div>
-                                                    </form>
+                                                            <div class="modal-footer justify-content-end">
+                                                                <input type="hidden" name="idGiaBan" th:value="${var.giaSanPham.id}">
+                                                                <button type="button" class="btn btn-sm btn-default"
+                                                                        data-dismiss="modal">Hủy
+                                                                </button>
+                                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                                    Đồng ý
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!--END ./ MODAL UPDATE GIÁ BÁN-->
-                                    </td>
-                                </tr>
+                                            <!--END ./ MODAL UPDATE GIÁ BÁN-->
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
 

@@ -1,5 +1,6 @@
 package com.flowiee.app.dashboard.service;
 
+import com.flowiee.app.dashboard.model.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.dashboard.model.DoanhThuCacThangTheoNam;
 import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.dashboard.model.TopSanPhamBanChay;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +74,45 @@ public class DashboardServiceImpl implements DashboardService {
 
         DoanhThuCacThangTheoNam dataReturn = new DoanhThuCacThangTheoNam();
         dataReturn.setDoanhThu(listDoanhThu);
+
+        return dataReturn;
+    }
+
+    @Override
+    public DoanhThuCacNgayTheoThang getDoanhThuCacNgayTheoThang() {
+        // Lấy ngày bắt đầu của tháng hiện tại
+        LocalDate ngayBatDau = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        // Lấy ngày kết thúc của tháng hiện tại
+        LocalDate ngayKetThuc = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+
+        StringBuilder query = new StringBuilder("WITH all_dates AS (");
+        query.append("SELECT TO_DATE('" + ngayBatDau + "', 'YYYY-MM-DD') + LEVEL - 1 AS NGAY ");
+        query.append("FROM DUAL ");
+        query.append("CONNECT BY LEVEL <= TO_DATE('" + ngayKetThuc + "', 'YYYY-MM-DD') - TO_DATE('" + ngayBatDau + "', 'YYYY-MM-DD') + 1");
+        query.append(") ");
+        query.append("SELECT all_dates.NGAY, NVL(SUM(DON_HANG.TONG_TIEN_DON_HANG), 0) AS DOANH_THU ");
+        query.append("FROM all_dates ");
+        query.append("LEFT JOIN DON_HANG ON TRUNC(DON_HANG.THOI_GIAN_DAT_HANG) = all_dates.NGAY ");
+        query.append("GROUP BY all_dates.NGAY ");
+        query.append("ORDER BY all_dates.NGAY");
+
+        Query result = entityManager.createNativeQuery(query.toString());
+        List<Object[]> listData = result.getResultList();
+
+        DoanhThuCacNgayTheoThang dataReturn = new DoanhThuCacNgayTheoThang();
+        List<String> listNgay = new ArrayList<>();
+        List<Float> listDoanhThu = new ArrayList<>();
+
+        int i = 1;
+        for (Object[] data : listData) {
+            listNgay.add("Ngày " + i);
+            i++;
+
+            listDoanhThu.add(Float.parseFloat(String.valueOf(data[1])));
+        }
+
+        dataReturn.setListNgay(listNgay);
+        dataReturn.setListDoanhThu(listDoanhThu);
 
         return dataReturn;
     }

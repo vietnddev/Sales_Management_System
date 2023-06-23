@@ -125,7 +125,7 @@
                     <div class="col-sm-6">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Doanh thu các tháng của năm ?</h3>
+                                <h3 class="card-title">Doanh thu của các tháng trong năm</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -141,6 +141,48 @@
                                     var nameOfMonth = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
                                     var dataOfMonth = [[${doanhThuOfMonth_listDoanhThu}]];
                                     var ctx = document.getElementById("myLineChart");
+                                    var myLineChart = new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: nameOfMonth,
+                                            datasets: [{
+                                                label: "Thu Nhập(VNĐ)",
+                                                lineTension: 0.3,
+                                                backgroundColor: "rgba(2,117,216,0.2)",
+                                                borderColor: "rgba(2,117,216,1)",
+                                                pointRadius: 5,
+                                                pointBackgroundColor: "rgba(2,117,216,1)",
+                                                pointBorderColor: "rgba(255,255,255,0.8)",
+                                                pointHoverRadius: 5,
+                                                pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                                                pointHitRadius: 50,
+                                                pointBorderWidth: 1,
+                                                data: dataOfMonth,
+                                            }],
+                                        },
+                                    });</script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Doanh thu theo các ngày trong tháng</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="lineChart_DoanhThuTungNgay" style="width: 100%; height: 350px"></canvas>
+                                <script th:inline="javascript">
+                                    var nameOfMonth = [[${doanhThuOfDay_listNgay}]];
+                                    var dataOfMonth = [[${doanhThuOfDay_listDoanhThu}]];
+                                    var ctx = document.getElementById("lineChart_DoanhThuTungNgay");
                                     var myLineChart = new Chart(ctx, {
                                         type: 'line',
                                         data: {

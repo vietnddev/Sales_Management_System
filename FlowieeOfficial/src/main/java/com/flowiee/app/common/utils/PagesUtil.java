@@ -19,7 +19,7 @@ public class PagesUtil {
     public static final String PAGE_KHACHHANG = "/pages/san-pham/khach-hang";
     public static final String PAGE_KHACHHANG_CHITIET = "/pages/san-pham/khach-hang-chi-tiet";
 
-    public static final String PAGE_PROFILE = "pages/profile/profile";
+    public static final String PAGE_PROFILE = "pages/he-thong/profile";
 
     public static final String PAGE_DANHMUC_HETHONG = "/pages/danh-muc/danh-muc-he-thong";
     public static final String PAGE_DANHMUC_LOAITAILIEU = "/pages/danh-muc/loai-tai-lieu";

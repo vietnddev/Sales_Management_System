@@ -4,6 +4,7 @@ import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.file.service.FileStorageService;
+import com.flowiee.app.sanpham.services.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,22 +26,23 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private DonHangService donHangService;
 
 	BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
 	@GetMapping("")
-	public String showInformation(@AuthenticationPrincipal UserDetails userDetails, ModelMap modelMap) {
+	public ModelAndView showInformation(ModelMap modelMap, @ModelAttribute("message") String message) {
 		if (!accountService.isLogin()) {
-			return PagesUtil.PAGE_LOGIN;
+			return new ModelAndView(PagesUtil.PAGE_LOGIN);
 		}
-		Account accountEntity = accountService.findByUsername(userDetails.getUsername());
-		if (accountEntity != null) {
-			modelMap.addAttribute("information", accountEntity);
-		}
-		
-		modelMap.addAttribute("account", new Account());
+		Account profile = accountService.getCurrentAccount();
+		modelMap.addAttribute("profile", profile);
+		modelMap.addAttribute("listDonHangDaBan", donHangService.findByNhanVienId(profile.getId()));
 
-		return "pages/profile/information";
+		ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_PROFILE);
+		modelAndView.addObject("message", message);
+		return modelAndView;
 	}
 
 	@PostMapping("/update")
@@ -60,31 +65,37 @@ public class ProfileController {
 	}
 
 	@PostMapping("/change-password")
-	public String changePassword(HttpServletRequest request, @AuthenticationPrincipal UserDetails userDetails,
-                                 @ModelAttribute("account") Account accountEntity, ModelMap modelMap) {
+	public ModelAndView changePassword(HttpServletRequest request,
+									   @ModelAttribute("account") Account accountEntity,
+									   RedirectAttributes redirectAttributes) {
 		if (!accountService.isLogin()) {
-			return PagesUtil.PAGE_LOGIN;
+			return new ModelAndView(PagesUtil.PAGE_LOGIN);
 		}
 		String password_old = request.getParameter("password_old");
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");
 
+		Account profile = accountService.getCurrentAccount();
+
 		if (bCrypt.matches(password_old,
-				accountService.findByUsername(userDetails.getUsername()).getPassword())) {
+				accountService.findByUsername(profile.getUsername()).getPassword())) {
 			if (password_new.equals(password_renew)) {
-				accountEntity.setId(accountService.findByUsername(userDetails.getUsername()).getId());
-				accountEntity.setUsername(userDetails.getUsername());
-				accountEntity.setHoTen(accountService.findByUsername(userDetails.getUsername()).getHoTen());
+				accountEntity.setId(accountService.findByUsername(profile.getUsername()).getId());
+				accountEntity.setUsername(profile.getUsername());
+				accountEntity.setHoTen(accountService.findByUsername(profile.getUsername()).getHoTen());
 				accountEntity.setPassword(bCrypt.encode(password_new));
 				accountEntity.setTrangThai(true);
 				accountService.save(accountEntity);
-				
-				modelMap.addAttribute("successMessage", "OK rồi nhé");
-			}		 			
-			modelMap.addAttribute("successMessage", "OK rồi nhée");
-		}  
-		modelMap.addAttribute("successMessage", "OK rồi nhée");
-		
-		return "redirect:/profile";
+
+				redirectAttributes.addAttribute("message", "Cập nhật thành công!");
+				RedirectView redirectView = new RedirectView();
+				redirectView.setUrl("/profile");
+				return new ModelAndView(redirectView);
+			}
+			redirectAttributes.addAttribute("message", "Mật khẩu nhập lại chưa khớp!");
+		}
+		redirectAttributes.addAttribute("message", "Sai mật khẩu hiện tại!");
+
+		return new ModelAndView("redirect:/profile");
 	}  
 }   
