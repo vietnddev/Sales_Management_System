@@ -6,7 +6,7 @@ public enum SanPhamAction {
     UPDATE_SANPHAM("Cập nhật sản phẩm"),
     DELETE_SANPHAM("Xóa sản phẩm"),
     IMPORT_SANPHAM("Import sản phẩm"),
-    PRICE_SANPHAM("Quản lý giá bán"),
+    UPDATE_PRICE_SANPHAM("Quản lý giá bán"),
     REPORT_SANPHAM("Báo cáo thống kê sản phẩm");
 
     SanPhamAction(String label) {

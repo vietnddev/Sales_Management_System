@@ -1,6 +1,6 @@
 package com.flowiee.app.khotailieu.service.impl;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.khotailieu.entity.DocShare;
 import com.flowiee.app.khotailieu.repository.DocShareRepository;
 import com.flowiee.app.khotailieu.service.DocShareService;
@@ -30,7 +30,7 @@ public class DocShareServiceImpl implements DocShareService {
 
     @Override
     public boolean isShared(int documentId) {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         int accountId = accountService.findIdByUsername(accountService.getUserName());

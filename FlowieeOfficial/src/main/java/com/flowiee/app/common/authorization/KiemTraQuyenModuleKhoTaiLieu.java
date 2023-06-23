@@ -1,6 +1,6 @@
 package com.flowiee.app.common.authorization;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.model.action.KhoTaiLieuAction;
@@ -18,7 +18,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     private final String module = SystemModule.KHO_TAI_LIEU.name();
 
     public boolean kiemTraRoleXemDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.READ_DOCUMENT.name();
@@ -30,7 +30,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleThemMoiDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.CREATE_DOCUMENT.name();
@@ -42,7 +42,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleCapNhatDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.UPDATE_DOCUMENT.name();
@@ -54,7 +54,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleXoaDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DELETE_DOCUMENT.name();
@@ -66,7 +66,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleDiChuyenDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.MOVE_DOCUMENT.name();
@@ -78,7 +78,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleSaoChepDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.COPY_DOCUMENT.name();
@@ -90,7 +90,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleDownloadDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DOWNLOAD_DOCUMENT.name();
@@ -102,7 +102,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleChiaSeDocument() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.SHARE_DOCUMENT.name();

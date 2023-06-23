@@ -9,7 +9,6 @@ import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
-import com.flowiee.app.sanpham.model.BienTheSanPhamResponse;
 import com.flowiee.app.sanpham.repository.BienTheSanPhamRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
@@ -45,7 +44,12 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
 
     @Override
     public List<BienTheSanPham> getListVariantOfProduct(int sanPhamId) {
-        return bienTheSanPhamRepository.findListBienTheOfsanPham(sanPhamId);
+        List<BienTheSanPham> listReturn = new ArrayList<>();
+        bienTheSanPhamRepository.findListBienTheOfsanPham(sanPhamId).forEach(bienTheSanPham -> {
+            bienTheSanPham.setGiaSanPham(giaSanPhamService.findGiaHienTaiModel(bienTheSanPham.getId()));
+            listReturn.add(bienTheSanPham);
+        });
+        return listReturn;
     }
 
     @Override
@@ -127,27 +131,5 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             e.printStackTrace();
             return "NOK";
         }
-    }
-
-    @Override
-    public List<BienTheSanPhamResponse> convertToBienTheSanPhamResponse(List<BienTheSanPham> listBienTheSanPham) {
-        List<BienTheSanPhamResponse> listReturn = new ArrayList<>();
-        int i = 1;
-        for (BienTheSanPham bienTheSanPham : listBienTheSanPham) {
-            BienTheSanPhamResponse response = new BienTheSanPhamResponse();
-            response.setStt(i);
-            response.setId(bienTheSanPham.getId());
-            response.setSanPham(bienTheSanPham.getSanPham());
-            response.setMaSanPham(bienTheSanPham.getMaSanPham());
-            response.setTenBienThe(bienTheSanPham.getTenBienThe());
-            response.setLoaiMauSac(bienTheSanPham.getLoaiMauSac());
-            response.setLoaiKichCo(bienTheSanPham.getLoaiKichCo());
-            response.setSoLuongKho(bienTheSanPham.getSoLuongKho());
-            response.setTrangThai(bienTheSanPham.getTrangThai());
-            response.setGiaBan(giaSanPhamService.findGiaHienTai(bienTheSanPham.getId()));
-            listReturn.add(response);
-            i++;
-        }
-        return listReturn;
     }
 }

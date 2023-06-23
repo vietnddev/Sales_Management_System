@@ -1,10 +1,9 @@
 package com.flowiee.app.common.authorization;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.model.action.RoleAction;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
-import com.flowiee.app.hethong.model.action.AccountAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class KiemTraQuyenModulePhanQuyen {
     private final String module = SystemModule.HE_THONG.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = RoleAction.READ_ROLE.name();
@@ -31,7 +30,7 @@ public class KiemTraQuyenModulePhanQuyen {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = RoleAction.UPDATE_ROLE.name();

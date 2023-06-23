@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.controller;
 
+import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.entity.LoaiMauSac;
 import com.flowiee.app.file.service.FileStorageService;
@@ -35,6 +36,8 @@ public class SanPhamBienTheController {
     private GiaSanPhamService giaSanPhamService;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping(value = "{id}")
     public String showDetailProduct(ModelMap modelMap, @PathVariable("id") int id) {
@@ -61,10 +64,9 @@ public class SanPhamBienTheController {
         }
         bienTheSanPham.setTrangThai(TrangThai.KINH_DOANH.name());
         bienTheSanPham.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
-        bienTheSanPham.setTenBienThe(bienTheSanPham.getSanPham().getTenSanPham() + " - " + bienTheSanPham.getLoaiMauSac().getTenLoai() + " - " + bienTheSanPham.getLoaiKichCo().getTenLoai());
         bienTheSanPhamService.save(bienTheSanPham);
         //Khởi tạo giá default của giá bán
-        giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(499D).build());
+        giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(0D).build());
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -92,6 +94,20 @@ public class SanPhamBienTheController {
             System.out.println("Delete successfully");
         } else {
             System.out.println("Record not found!");
+        }
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @PostMapping(value = "/gia-ban/update/{id}")
+    public String updateGiaBan(HttpServletRequest request,
+                               @ModelAttribute("giaSanPham") GiaSanPham giaSanPham,
+                               @PathVariable("id") int idBienTheSanPham) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenQuanLyGiaBan()) {
+            int idGiaBanHienTai = Integer.parseInt(request.getParameter("idGiaBan"));
+            giaSanPhamService.update(giaSanPham, idBienTheSanPham, idGiaBanHienTai);
         }
         return "redirect:" + request.getHeader("referer");
     }

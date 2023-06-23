@@ -1,6 +1,6 @@
 package com.flowiee.app.common.authorization;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.model.action.AccountAction;
@@ -18,7 +18,7 @@ public class KiemTraQuyenModuleAccount {
     private final String module = SystemModule.HE_THONG.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.READ_ACCOUNT.name();
@@ -30,7 +30,7 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenThemMoi() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.CREATE_ACCOUNT.name();
@@ -42,7 +42,7 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.UPDATE_ACCOUNT.name();
@@ -54,7 +54,7 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenXoa() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.DELETE_ACCOUNT.name();

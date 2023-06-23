@@ -8,4 +8,6 @@ public interface SystemLogService {
     List<SystemLog> getAll();
 
     void writeLog(SystemLog log);
+
+    void writeLog(String module, String action, String noiDung, String noiDungCapNhat);
 }

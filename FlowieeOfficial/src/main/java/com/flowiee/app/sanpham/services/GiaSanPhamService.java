@@ -14,9 +14,11 @@ public interface GiaSanPhamService {
 
     Double findGiaHienTai(int bienTheSanPhamId);
 
+    GiaSanPham findGiaHienTaiModel(int bienTheSanPhamId);
+
     String save(GiaSanPham giaSanPham);
 
-    String update(GiaSanPham giaSanPham, int id);
+    String update(GiaSanPham giaSanPham, int bienTheSanPhamId, int giaSanPhamId);
 
     String delete(int id);
 }

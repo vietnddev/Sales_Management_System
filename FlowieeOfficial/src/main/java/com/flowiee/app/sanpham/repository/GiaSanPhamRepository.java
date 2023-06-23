@@ -13,4 +13,7 @@ public interface GiaSanPhamRepository extends JpaRepository<GiaSanPham, Integer>
 
     @Query("select g.giaBan from GiaSanPham g where g.bienTheSanPham=:bienTheSanPhamId and g.trangThai=:trangThai")
     Double findGiaBanHienTai(BienTheSanPham bienTheSanPhamId, boolean trangThai);
+
+    @Query("from GiaSanPham g where g.bienTheSanPham=:bienTheSanPhamId and g.trangThai=:trangThai")
+    GiaSanPham findGiaBanHienTaiModel(BienTheSanPham bienTheSanPhamId, boolean trangThai);
 }

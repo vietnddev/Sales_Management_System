@@ -85,7 +85,7 @@
                                     style="margin: auto"
                                     data-toggle="modal"
                                     data-target="#modalUploadImage">
-                                Upload image
+                                <i class="fa-solid fa-upload"></i>
                             </button>
                             <div class="modal fade" id="modalUploadImage">
                                 <div class="modal-dialog modal-lg">

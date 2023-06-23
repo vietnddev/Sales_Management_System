@@ -50,6 +50,9 @@ public class BienTheSanPham implements Serializable {
     @JoinColumn(name = "kich_co_id", nullable = false)
     private LoaiKichCo loaiKichCo;
 
+    @Transient
+    private GiaSanPham giaSanPham;
+
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<ThuocTinhSanPham> listThuocTinh;
 

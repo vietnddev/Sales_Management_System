@@ -1,7 +1,6 @@
 package com.flowiee.app.sanpham.services;
 
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
-import com.flowiee.app.sanpham.model.BienTheSanPhamResponse;
 
 import java.util.List;
 
@@ -20,6 +19,4 @@ public interface BienTheSanPhamService {
     BienTheSanPham findById(int id);
 
     String detele(int id);
-
-    List<BienTheSanPhamResponse> convertToBienTheSanPhamResponse(List<BienTheSanPham> listBienTheSanPham);
 }

@@ -45,7 +45,7 @@ public class FileStorageController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @PostMapping("/file-storage/delete/{id}")
+    @PostMapping("/file/delete/{id}")
     public String delete(HttpServletRequest request, @PathVariable("id") int id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;

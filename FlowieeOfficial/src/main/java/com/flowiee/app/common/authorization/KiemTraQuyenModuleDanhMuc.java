@@ -1,6 +1,6 @@
 package com.flowiee.app.common.authorization;
 
-import com.flowiee.app.common.utils.TaiKhoanUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.model.action.DanhMucAction;
@@ -18,7 +18,7 @@ public class KiemTraQuyenModuleDanhMuc {
     private final String module = SystemModule.DANH_MUC.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.READ_DANHMUC.name();
@@ -30,7 +30,7 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenThemMoi() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.CREATE_DANHMUC.name();
@@ -42,7 +42,7 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.UPDATE_DANHMUC.name();
@@ -54,7 +54,7 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenXoa() {
-        if (accountService.getUserName().equals(TaiKhoanUtil.ADMINISTRATOR)) {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.DELETE_DANHMUC.name();

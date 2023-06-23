@@ -9,6 +9,7 @@ import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
+import com.flowiee.app.sanpham.entity.GiaSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.services.*;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -80,6 +81,7 @@ public class SanPhamController {
         }
         modelMap.addAttribute("sanPham", new SanPham());
         modelMap.addAttribute("bienTheSanPham", new BienTheSanPham());
+        modelMap.addAttribute("giaSanPham", new GiaSanPham());
         modelMap.addAttribute("idSanPham", sanPhamId);
         // Load chi tiết thông tin sản phẩm
         modelMap.addAttribute("detailProducts", productsService.findById(sanPhamId));
@@ -90,7 +92,7 @@ public class SanPhamController {
         // Danh sách kích cỡ từ danh mục hệ thống
         modelMap.addAttribute("listDmKichCoSanPham", loaiKichCoService.findAll());
         // Load danh sách biến thể sản phẩm
-        modelMap.addAttribute("listColorVariant", bienTheSanPhamService.convertToBienTheSanPhamResponse(bienTheSanPhamService.getListVariantOfProduct(sanPhamId)));
+        modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.getListVariantOfProduct(sanPhamId));
         // Danh sách đơn vị tính từ danh mục hệ thống
         modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
         //List image
