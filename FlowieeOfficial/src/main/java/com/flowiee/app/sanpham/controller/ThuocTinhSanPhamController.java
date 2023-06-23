@@ -3,7 +3,6 @@ package com.flowiee.app.sanpham.controller;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.ThuocTinhSanPham;
 import com.flowiee.app.sanpham.services.ThuocTinhSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;

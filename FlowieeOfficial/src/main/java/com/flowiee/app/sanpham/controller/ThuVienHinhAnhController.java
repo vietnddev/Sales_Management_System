@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/san-pham/thu-vien-hinh-anh")
@@ -22,14 +23,16 @@ public class ThuVienHinhAnhController {
     private SanPhamService sanPhamService;
 
     @GetMapping("")
-    public String getAllFiles(ModelMap modelMap) {
+    public ModelAndView getAllFiles() {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()){
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_THUVIEN);
             // Lấy tất cả ảnh cho page thư viện
-            modelMap.addAttribute("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
+            modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
             // Lấy danh sách tên sản phẩm
-            modelMap.addAttribute("listSanPham", sanPhamService.findAll());
-            return PagesUtil.PAGE_THUVIEN;
+            modelAndView.addObject("listSanPham", sanPhamService.findAll());
+            return modelAndView;
         }
-        return PagesUtil.PAGE_LOGIN;
-    } }
+        return new ModelAndView(PagesUtil.PAGE_LOGIN);
+    }
+}

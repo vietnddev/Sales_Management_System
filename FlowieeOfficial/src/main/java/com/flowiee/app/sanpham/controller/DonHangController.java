@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -52,75 +53,79 @@ public class DonHangController {
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping
-    public String findAllDonHang(ModelMap modelMap) {
+    public ModelAndView findAllDonHang() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
-            modelMap.addAttribute("listDonHang", donHangService.findAll());
-            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
-            modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
-            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
-            modelMap.addAttribute("listKhachHang", khachHangService.findAll());
-            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
-            modelMap.addAttribute("listTrangThaiDonHang", trangThaiDonHangService.findAll());
-            modelMap.addAttribute("donHangRequest", new DonHangRequest());
-            modelMap.addAttribute("donHang", new DonHang());
-            return PagesUtil.PAGE_DONHANG;
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
+            modelAndView.addObject("listDonHang", donHangService.findAll());
+            modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
+            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listKhachHang", khachHangService.findAll());
+            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelAndView.addObject("donHangRequest", new DonHangRequest());
+            modelAndView.addObject("donHang", new DonHang());
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @PostMapping
-    public String FilterListDonHang(ModelMap modelMap, @ModelAttribute("donHangRequest") DonHangRequest request) {
+    public ModelAndView FilterListDonHang(@ModelAttribute("donHangRequest") DonHangRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
-            modelMap.addAttribute("listDonHang", donHangService.findAll(request.getSearchTxt(),
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
+            modelAndView.addObject("listDonHang", donHangService.findAll(request.getSearchTxt(),
                                                                                    request.getThoiGianDatHangSearch(),
                                                                                    request.getKenhBanHang(),
                                                                                    request.getTrangThaiDonHang()));
-            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
-            modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
-            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
-            modelMap.addAttribute("listKhachHang", khachHangService.findAll());
-            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
-            modelMap.addAttribute("listTrangThaiDonHang", trangThaiDonHangService.findAll());
-            modelMap.addAttribute("donHangRequest", new DonHangRequest());
-            modelMap.addAttribute("donHang", new DonHang());
-            return PagesUtil.PAGE_DONHANG;
+            modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
+            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listKhachHang", khachHangService.findAll());
+            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelAndView.addObject("donHangRequest", new DonHangRequest());
+            modelAndView.addObject("donHang", new DonHang());
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @GetMapping("/{id}")
-    public String findDonHangDetail(@PathVariable("id") int id, ModelMap modelMap) {
+    public ModelAndView findDonHangDetail(@PathVariable("id") int id) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
-            modelMap.addAttribute("donHangDetail", donHangService.findById(id));
-            modelMap.addAttribute("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
-            modelMap.addAttribute("listThanhToan", donHangThanhToanService.findByDonHangId(id));
-            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
-            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
-            modelMap.addAttribute("donHang", new DonHang());
-            modelMap.addAttribute("donHangThanhToan", new DonHangThanhToan());
-            return PagesUtil.PAGE_DONHANG_CHITIET;
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_CHITIET);
+            modelAndView.addObject("donHangDetail", donHangService.findById(id));
+            modelAndView.addObject("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
+            modelAndView.addObject("listThanhToan", donHangThanhToanService.findByDonHangId(id));
+            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+            modelAndView.addObject("donHang", new DonHang());
+            modelAndView.addObject("donHangThanhToan", new DonHangThanhToan());
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @GetMapping("/ban-hang")
-    public String showPageBanHang(ModelMap modelMap) {
+    public ModelAndView showPageBanHang() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_BANHANG);
             List<Cart> cartCurrent = cartService.findByAccountId(accountService.getCurrentAccount().getId());
             if (cartCurrent.isEmpty()) {
                 Cart cart = new Cart();
@@ -128,25 +133,25 @@ public class DonHangController {
                 cart.setCreateAt(new Date());
                 cartService.save(cart);
             }
-            modelMap.addAttribute("listDonHang", donHangService.findAll());
-            modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.findAll());
-            modelMap.addAttribute("listKenhBanHang", kenhBanHangService.findAll());
-            modelMap.addAttribute("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
-            modelMap.addAttribute("listKhachHang", khachHangService.findAll());
-            modelMap.addAttribute("listNhanVienBanHang", accountService.findAll());
-            modelMap.addAttribute("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelAndView.addObject("listDonHang", donHangService.findAll());
+            modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
+            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listKhachHang", khachHangService.findAll());
+            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
 
             List<Cart> listCart = cartService.findByAccountId(accountService.getCurrentAccount().getId());
-            modelMap.addAttribute("listCart", listCart);
+            modelAndView.addObject("listCart", listCart);
 
-            modelMap.addAttribute("donHangRequest", new DonHangRequest());
-            modelMap.addAttribute("donHang", new DonHang());
-            modelMap.addAttribute("khachHang", new KhachHang());
-            modelMap.addAttribute("cart", new Cart());
-            modelMap.addAttribute("items", new Items());
-            return PagesUtil.PAGE_DONHANG_BANHANG;
+            modelAndView.addObject("donHangRequest", new DonHangRequest());
+            modelAndView.addObject("donHang", new DonHang());
+            modelAndView.addObject("khachHang", new KhachHang());
+            modelAndView.addObject("cart", new Cart());
+            modelAndView.addObject("items", new Items());
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 

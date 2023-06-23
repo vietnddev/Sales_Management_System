@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,54 +51,56 @@ public class SanPhamController {
      * Quản lý sản phẩm core
      */
     @GetMapping(value = "")
-    public String getAllProducts(ModelMap modelMap) {
+    public ModelAndView getAllProducts() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
-            modelMap.addAttribute("sanPham", new SanPham());
-            modelMap.addAttribute("listSanPham", productsService.findAll());
-            modelMap.addAttribute("listLoaiSanPham", loaiSanPhamService.findAll());
-            modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
+            modelAndView.addObject("sanPham", new SanPham());
+            modelAndView.addObject("listSanPham", productsService.findAll());
+            modelAndView.addObject("listLoaiSanPham", loaiSanPhamService.findAll());
+            modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
-                modelMap.addAttribute("action_create", "enable");
+                modelAndView.addObject("action_create", "enable");
             }
             if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModule.kiemTraQuyenXoa()) {
-                modelMap.addAttribute("action_delete", "enable");
+                modelAndView.addObject("action_delete", "enable");
             }
-            return PagesUtil.PAGE_SANPHAM;
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @GetMapping(value = "/{id}")
-    public String getDetailProduct(ModelMap modelMap, @PathVariable("id") int sanPhamId) {
+    public ModelAndView getDetailProduct(ModelMap modelMap, @PathVariable("id") int sanPhamId) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        modelMap.addAttribute("sanPham", new SanPham());
-        modelMap.addAttribute("bienTheSanPham", new BienTheSanPham());
-        modelMap.addAttribute("giaSanPham", new GiaSanPham());
-        modelMap.addAttribute("idSanPham", sanPhamId);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_TONG_QUAN);
+        modelAndView.addObject("sanPham", new SanPham());
+        modelAndView.addObject("bienTheSanPham", new BienTheSanPham());
+        modelAndView.addObject("giaSanPham", new GiaSanPham());
+        modelAndView.addObject("idSanPham", sanPhamId);
         // Load chi tiết thông tin sản phẩm
-        modelMap.addAttribute("detailProducts", productsService.findById(sanPhamId));
+        modelAndView.addObject("detailProducts", productsService.findById(sanPhamId));
         // Danh sách loại sản phẩm từ danh mục hệ thống
-        modelMap.addAttribute("listTypeProducts", loaiSanPhamService.findAll());
+        modelAndView.addObject("listTypeProducts", loaiSanPhamService.findAll());
         // Danh sách màu sắc từ danh mục hệ thống
-        modelMap.addAttribute("listDmMauSacSanPham", loaiMauSacService.findAll());
+        modelAndView.addObject("listDmMauSacSanPham", loaiMauSacService.findAll());
         // Danh sách kích cỡ từ danh mục hệ thống
-        modelMap.addAttribute("listDmKichCoSanPham", loaiKichCoService.findAll());
+        modelAndView.addObject("listDmKichCoSanPham", loaiKichCoService.findAll());
         // Load danh sách biến thể sản phẩm
-        modelMap.addAttribute("listBienTheSanPham", bienTheSanPhamService.getListVariantOfProduct(sanPhamId));
+        modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.getListVariantOfProduct(sanPhamId));
         // Danh sách đơn vị tính từ danh mục hệ thống
-        modelMap.addAttribute("listDonViTinh", donViTinhService.findAll());
+        modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
         //List image
-        modelMap.addAttribute("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
-        return PagesUtil.PAGE_SANPHAM_TONG_QUAN;
+        modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
+        return modelAndView;
     }
 
     @PostMapping(value = "/insert")

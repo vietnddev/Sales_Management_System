@@ -1,8 +1,6 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
-import com.flowiee.app.danhmuc.entity.LoaiKichCo;
-import com.flowiee.app.danhmuc.entity.LoaiMauSac;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.utils.DateUtil;
@@ -16,10 +14,8 @@ import com.flowiee.app.sanpham.services.GiaSanPhamService;
 import com.flowiee.app.sanpham.services.ThuocTinhSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,21 +36,22 @@ public class SanPhamBienTheController {
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping(value = "{id}")
-    public String showDetailProduct(ModelMap modelMap, @PathVariable("id") int id) {
+    public ModelAndView showDetailProduct(@PathVariable("id") int id) {
         /* Show trang chi tiết của biến thể
          * */
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        modelMap.addAttribute("bienTheSanPham", new BienTheSanPham());
-        modelMap.addAttribute("thuocTinhSanPham", new ThuocTinhSanPham());
-        modelMap.addAttribute("giaBanSanPham", new GiaSanPham());
-        modelMap.addAttribute("listThuocTinh", thuocTinhSanPhamService.getAllAttributes(id));
-        modelMap.addAttribute("bienTheSanPhamId", id);
-        modelMap.addAttribute("bienTheSanPham", bienTheSanPhamService.findById(id));
-        modelMap.addAttribute("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(id));
-        modelMap.addAttribute("listPrices", giaSanPhamService.findByBienTheSanPhamId(id));
-        return PagesUtil.PAGE_SANPHAM_BIENTHE;
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_BIENTHE);
+        modelAndView.addObject("bienTheSanPham", new BienTheSanPham());
+        modelAndView.addObject("thuocTinhSanPham", new ThuocTinhSanPham());
+        modelAndView.addObject("giaBanSanPham", new GiaSanPham());
+        modelAndView.addObject("listThuocTinh", thuocTinhSanPhamService.getAllAttributes(id));
+        modelAndView.addObject("bienTheSanPhamId", id);
+        modelAndView.addObject("bienTheSanPham", bienTheSanPhamService.findById(id));
+        modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(id));
+        modelAndView.addObject("listPrices", giaSanPhamService.findByBienTheSanPhamId(id));
+        return modelAndView;
     }
 
     @PostMapping(value = "/insert")

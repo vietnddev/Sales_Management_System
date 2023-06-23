@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/khach-hang")
@@ -26,30 +27,32 @@ public class KhachHangController {
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping
-    public String findAllKhachHang(ModelMap modelMap) {
+    public ModelAndView findAllKhachHang() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXemKhachHang()) {
-            modelMap.addAttribute("listKhachHang", khachHangService.findAll());
-            modelMap.addAttribute("khachHang", new KhachHang());
-            return PagesUtil.PAGE_KHACHHANG;
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_KHACHHANG);
+            modelAndView.addObject("listKhachHang", khachHangService.findAll());
+            modelAndView.addObject("khachHang", new KhachHang());
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @GetMapping("/{id}")
-    public String findChiTietKhachHang(ModelMap modelMap, @PathVariable("id") int id) {
+    public ModelAndView findChiTietKhachHang(@PathVariable("id") int id) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXemKhachHang()) {
-            modelMap.addAttribute("khachHangDetail", khachHangService.findById(id));
-            modelMap.addAttribute("listDonHang", donHangService.findByKhachHangId(id));
-            return PagesUtil.PAGE_KHACHHANG_CHITIET;
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_KHACHHANG_CHITIET);
+            modelAndView.addObject("khachHangDetail", khachHangService.findById(id));
+            modelAndView.addObject("listDonHang", donHangService.findByKhachHangId(id));
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
