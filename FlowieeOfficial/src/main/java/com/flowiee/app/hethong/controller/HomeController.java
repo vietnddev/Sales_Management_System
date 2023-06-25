@@ -17,7 +17,7 @@ public class HomeController {
     private AccountService accountService;
 
     @GetMapping(value = "/login")
-    public String showLoginPage(HttpServletRequest request) {
+    public String showLoginPage() {
         if (accountService.findByUsername("admin") == null) {
             Account account = new Account();
             account.setUsername("admin");

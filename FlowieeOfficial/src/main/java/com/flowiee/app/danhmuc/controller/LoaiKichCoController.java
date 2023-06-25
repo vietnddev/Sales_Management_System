@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -23,32 +24,30 @@ public class LoaiKichCoController {
     @Autowired
     private LoaiKichCoService loaiKichCoService;
     @Autowired
-    private SystemLogService systemLogService;
-
-    @Autowired
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModule;
 
     @GetMapping("")
-    public String findAll(ModelMap modelMap) {
+    public ModelAndView findAll() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DANHMUC_KICHCO);
             List<LoaiKichCo> list = loaiKichCoService.findAll();
-            modelMap.addAttribute("listDanhMuc", list);
-            modelMap.addAttribute("loaiKichCo", new LoaiKichCo());
+            modelAndView.addObject("listDanhMuc", list);
+            modelAndView.addObject("loaiKichCo", new LoaiKichCo());
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
-                modelMap.addAttribute("action_create", "enable");
+                modelAndView.addObject("action_create", "enable");
             }
             if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModule.kiemTraQuyenXoa()) {
-                modelMap.addAttribute("action_delete", "enable");
+                modelAndView.addObject("action_delete", "enable");
             }
-            return PagesUtil.PAGE_DANHMUC_KICHCO;
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 

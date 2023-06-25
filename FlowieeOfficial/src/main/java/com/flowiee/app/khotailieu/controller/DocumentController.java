@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -44,7 +45,6 @@ import java.util.*;
 public class DocumentController {
     @Autowired
     private AccountService accountService;
-
     @Autowired
     private DocumentService documentService;
     @Autowired
@@ -66,36 +66,37 @@ public class DocumentController {
 
     //Màn hình root
     @GetMapping("")
-    public String getRootDocument(ModelMap modelMap, HttpServletRequest request) {
+    public ModelAndView getRootDocument() {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
-            modelMap.addAttribute("listDocument", listRootDocument);
-            modelMap.addAttribute("document", new Document());
-            modelMap.addAttribute("listLoaiTaiLieu", loaiTaiLieuService.findAllWhereStatusTrue());
+            modelAndView.addObject("listDocument", listRootDocument);
+            modelAndView.addObject("document", new Document());
+            modelAndView.addObject("listLoaiTaiLieu", loaiTaiLieuService.findAllWhereStatusTrue());
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
-                modelMap.addAttribute("action_create", "enable");
+                modelAndView.addObject("action_create", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
-                modelMap.addAttribute("action_delete", "enable");
+                modelAndView.addObject("action_delete", "enable");
             }
-            return PagesUtil.PAGE_STORAGE_DOCUMENT;
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @GetMapping("/{aliasPath}")
-    public String getListDocument(@PathVariable("aliasPath") String aliasPath, ModelMap modelMap) {
+    public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         String aliasName = FileUtil.getAliasNameFromAliasPath(aliasPath);
         int documentId = FileUtil.getIdFromAliasPath(aliasPath);
@@ -108,13 +109,14 @@ public class DocumentController {
         }
         //Kiểm tra quyền xem document
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem() && docShareService.isShared(documentId)) {
-            modelMap.addAttribute("document", document);
-            modelMap.addAttribute("document", new Document());
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT_DETAIL);
+            modelAndView.addObject("document", document);
+            modelAndView.addObject("document", new Document());
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
-                modelMap.addAttribute("action_delete", "enable");
+                modelAndView.addObject("action_delete", "enable");
             }
             //Nếu document truy cập đến là file thì ném qua page view chi tiết
             // Ngược lại nếu là FOLDER thì ném qua danh sách document
@@ -125,14 +127,14 @@ public class DocumentController {
                 for (DocData docData :listDocData) {
                     listDocDataInfo.put(docData.getDocField().getTenField(), docData.getNoiDung());
                 }
-                modelMap.addAttribute("listDocDataInfo", listDocDataInfo);
+                modelAndView.addObject("listDocDataInfo", listDocDataInfo);
                 //Trả về page xem thông tin chi tiết file
-                return PagesUtil.PAGE_STORAGE_DOCUMENT_DETAIL;
+                return modelAndView;
             } else {
-                return PagesUtil.PAGE_STORAGE_DOCUMENT;
+                return new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
             }
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 

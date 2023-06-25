@@ -1,7 +1,6 @@
 package com.flowiee.app.dashboard.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDashboard;
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.dashboard.model.DoanhThuCacNgayTheoThang;
@@ -12,7 +11,6 @@ import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.dashboard.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

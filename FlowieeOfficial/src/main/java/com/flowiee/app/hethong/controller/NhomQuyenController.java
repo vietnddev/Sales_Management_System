@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -25,18 +26,19 @@ public class NhomQuyenController {
     private KiemTraQuyenModulePhanQuyen kiemTraQuyenModule;
 
     @GetMapping
-    public String showAllRole(ModelMap modelMap) {
+    public ModelAndView showAllRole() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
-            modelMap.addAttribute("listRole", roleService.findAllRole());
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_ROLE);
+            modelAndView.addObject("listRole", roleService.findAllRole());
             if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
-            return PagesUtil.PAGE_HETHONG_ROLE;
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 }

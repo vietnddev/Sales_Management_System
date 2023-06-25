@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,12 +22,13 @@ public class LogController {
     private AccountService accountService;
 
     @GetMapping(value = "")
-    public String getLog(ModelMap modelMap) {
+    public ModelAndView getAllLog() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        modelMap.addAttribute("listLog", systemLogService.getAll());
-        return PagesUtil.PAGE_HETHONG_NHATKY;
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_NHATKY);
+        modelAndView.addObject("listLog", systemLogService.getAll());
+        return modelAndView;
     }
 
 //    @GetMapping(value = "export")

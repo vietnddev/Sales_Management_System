@@ -32,16 +32,17 @@ public class ProfileController {
 	BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
 	@GetMapping("")
-	public ModelAndView showInformation(ModelMap modelMap, @ModelAttribute("message") String message) {
+	public ModelAndView showInformation(@ModelAttribute("message") String message) {
 		if (!accountService.isLogin()) {
 			return new ModelAndView(PagesUtil.PAGE_LOGIN);
 		}
 		Account profile = accountService.getCurrentAccount();
-		modelMap.addAttribute("profile", profile);
-		modelMap.addAttribute("listDonHangDaBan", donHangService.findByNhanVienId(profile.getId()));
 
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_PROFILE);
 		modelAndView.addObject("message", message);
+		modelAndView.addObject("profile", profile);
+		modelAndView.addObject("listDonHangDaBan", donHangService.findByNhanVienId(profile.getId()));
+
 		return modelAndView;
 	}
 

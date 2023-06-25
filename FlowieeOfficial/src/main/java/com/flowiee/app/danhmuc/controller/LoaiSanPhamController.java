@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,48 +27,40 @@ import java.util.List;
 public class LoaiSanPhamController {
     @Autowired
     private AccountService accountService;
-
     @Autowired
     private LoaiSanPhamService loaiSanPhamService;
-
-    @Autowired
-    private SystemLogService systemLogService;
-
     @Autowired
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModule;
 
     @GetMapping("")
-    public String findAllSanPham(ModelMap modelMap) {
+    public ModelAndView findAllSanPham() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DANHMUC_LOAISANPHAM);
             List<LoaiSanPham> listLoaiSP = loaiSanPhamService.findAll();
-            modelMap.addAttribute("listLoaiSP", listLoaiSP);
-            modelMap.addAttribute("loaiSanPham", new LoaiSanPham());
+            modelAndView.addObject("listLoaiSP", listLoaiSP);
+            modelAndView.addObject("loaiSanPham", new LoaiSanPham());
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
-                modelMap.addAttribute("action_create", "enable");
+                modelAndView.addObject("action_create", "enable");
             }
             if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModule.kiemTraQuyenXoa()) {
-                modelMap.addAttribute("action_delete", "enable");
+                modelAndView.addObject("action_delete", "enable");
             }
-            return PagesUtil.PAGE_DANHMUC_LOAISANPHAM;
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @PostMapping("/insert")
-    public String insert(@Valid @ModelAttribute("loaiSanPham") LoaiSanPham loaiSanPham,
-                         BindingResult bindingResult, HttpServletRequest request) {
+    public String insert(@ModelAttribute("loaiSanPham") LoaiSanPham loaiSanPham) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
-        }
-        if (bindingResult.hasErrors()) {
-            System.out.println("Error: " + bindingResult.getFieldError());
         }
         loaiSanPhamService.save(loaiSanPham);
         return "redirect:";

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -38,60 +39,61 @@ public class DocTypeController {
     private DocFieldService docFieldService;
 
     @GetMapping("")
-    public String findAllDmLoaiTaiLieu(ModelMap modelMap) {
+    public ModelAndView findAllDmLoaiTaiLieu() {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DANHMUC_LOAITAILIEU);
             List<LoaiTaiLieu> listLoaiTaiLieu = loaiTaiLieuService.findAll();
-            modelMap.addAttribute("listLoaiTaiLieu", listLoaiTaiLieu);
-            modelMap.addAttribute("loaiTaiLieu", new LoaiTaiLieu());
+            modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
+            modelAndView.addObject("loaiTaiLieu", new LoaiTaiLieu());
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
-                modelMap.addAttribute("action_create", "enable");
+                modelAndView.addObject("action_create", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
-                modelMap.addAttribute("action_delete", "enable");
+                modelAndView.addObject("action_delete", "enable");
             }
-            return PagesUtil.PAGE_DANHMUC_LOAITAILIEU;
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @GetMapping("/{id}")
-    public String findDetailDocType(ModelMap modelMap, @PathVariable("id") int id) {
+    public ModelAndView findDetailDocType(@PathVariable("id") int id) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
-            return PagesUtil.PAGE_LOGIN;
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCTYPE_DETAIL);
             List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(id).build());
-            modelMap.addAttribute("listDocField", listDocField);
-            modelMap.addAttribute("docField", new DocField());
-            modelMap.addAttribute("nameDocType", loaiTaiLieuService.findById(id).getTen().toUpperCase());
-            modelMap.addAttribute("docTypeId", id);
+            modelAndView.addObject("listDocField", listDocField);
+            modelAndView.addObject("docField", new DocField());
+            modelAndView.addObject("nameDocType", loaiTaiLieuService.findById(id).getTen().toUpperCase());
+            modelAndView.addObject("docTypeId", id);
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
-                modelMap.addAttribute("action_create", "enable");
+                modelAndView.addObject("action_create", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
-                modelMap.addAttribute("action_update", "enable");
+                modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
-                modelMap.addAttribute("action_delete", "enable");
+                modelAndView.addObject("action_delete", "enable");
             }
-            return PagesUtil.PAGE_STORAGE_DOCTYPE_DETAIL;
+            return modelAndView;
         } else {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 
     @PostMapping("/insert")
-    public String insert(@ModelAttribute("loaiTaiLieu") LoaiTaiLieu loaiTaiLieu,
-                         HttpServletRequest request) {
+    public String insert(@ModelAttribute("loaiTaiLieu") LoaiTaiLieu loaiTaiLieu, HttpServletRequest request) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
@@ -100,15 +102,6 @@ public class DocTypeController {
             throw new DataExistsException();
         }
         loaiTaiLieuService.save(loaiTaiLieu);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-            .module("Danh mục - Loại tài liệu")
-            .action(SystemLogAction.THEM_MOI.name())
-            .noiDung(loaiTaiLieu.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
-        systemLogService.writeLog(systemLog);
         return "redirect:";
     }
 
@@ -123,15 +116,6 @@ public class DocTypeController {
             throw new BadRequestException();
         }
         loaiTaiLieuService.update(loaiTaiLieu, id);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-            .module("Danh mục - Loại tài liệu")
-            .action(SystemLogAction.CAP_NHAT.name())
-            .noiDung(loaiTaiLieu.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
-        systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -146,15 +130,6 @@ public class DocTypeController {
             throw new BadRequestException();
         }
         loaiTaiLieuService.delete(id);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-            .module("Danh mục - Loại tài liệu")
-            .action(SystemLogAction.XOA.name())
-            .noiDung(loaiTaiLieu.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
-        systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
     }
 }

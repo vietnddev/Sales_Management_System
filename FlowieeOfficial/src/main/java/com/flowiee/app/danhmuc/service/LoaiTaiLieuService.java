@@ -13,13 +13,13 @@ public interface LoaiTaiLieuService {
 
     List<LoaiTaiLieu> findAllWhereStatusTrue();
 
-    LoaiTaiLieu findById(int id);
+    LoaiTaiLieu findById(Integer id);
 
     LoaiTaiLieu findByTen(String ten);
 
     LoaiTaiLieu save(LoaiTaiLieu loaiTaiLieu);
 
-    void update(LoaiTaiLieu loaiSanPham, int id);
+    void update(LoaiTaiLieu loaiSanPham, Integer id);
 
-    boolean delete(int id);
+    boolean delete(Integer id);
 }

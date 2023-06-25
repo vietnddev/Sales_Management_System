@@ -2,8 +2,6 @@ package com.flowiee.app.hethong.controller;
 
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.hethong.model.Role;
-import com.flowiee.app.hethong.model.RoleResponse;
 import com.flowiee.app.hethong.model.SystemLogAction;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
@@ -13,17 +11,13 @@ import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping(path = "/he-thong/tai-khoan")
@@ -36,14 +30,15 @@ public class AccountController {
     private RoleService roleService;
 
     @GetMapping(value = "")
-    public String findAll(ModelMap modelMap) {
+    public ModelAndView findAllAccount() {
         String username = accountService.getUserName();
         if (username != null && !username.isEmpty()) {
-            modelMap.addAttribute("account", new Account());
-            modelMap.addAttribute("listAccount", accountService.findAll());
-            return PagesUtil.PAGE_HETHONG_TAIKHOAN;
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN);
+            modelAndView.addObject("account", new Account());
+            modelAndView.addObject("listAccount", accountService.findAll());
+            return modelAndView;
         }
-        return PagesUtil.PAGE_LOGIN;
+        return new ModelAndView(PagesUtil.PAGE_LOGIN);
     }
 
     @PostMapping(value = "/insert")
