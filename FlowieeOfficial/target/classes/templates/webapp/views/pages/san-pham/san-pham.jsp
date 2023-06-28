@@ -52,7 +52,6 @@
                                         <th>Tên sản phẩm</th>
                                         <th>Loại sản phẩm</th>
                                         <th>Đơn vị tính</th>
-                                        <th>Mô tả sản phẩm</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
                                     </tr>
@@ -68,7 +67,6 @@
                                             </td>
                                             <td th:text="${list.donViTinh.tenLoai}">
                                             </td>
-                                            <td th:text="${list.moTaSanPham}"></td>
                                             <td>
                                                 <th:block th:if="${list.trangThai}">
                                                     Kinh doanh
@@ -229,7 +227,6 @@
                                         <th>Tên sản phẩm</th>
                                         <th>Loại sản phẩm</th>
                                         <th>Đơn vị tính</th>
-                                        <th>Mô tả sản phẩm</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
                                     </tr>

@@ -13,6 +13,8 @@ import com.flowiee.app.sanpham.entity.GiaSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.services.*;
 import com.flowiee.app.common.utils.PagesUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(path = "/san-pham")
 public class SanPhamController {
+    private static final Logger logger = LoggerFactory.getLogger(SanPhamController.class);
 
     @Autowired
     private SanPhamService productsService;
@@ -47,9 +50,6 @@ public class SanPhamController {
     @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModule;
 
-    /**
-     * Quản lý sản phẩm core
-     */
     @GetMapping(value = "")
     public ModelAndView getAllProducts() {
         if (!accountService.isLogin()) {
@@ -77,7 +77,7 @@ public class SanPhamController {
     }
 
     @GetMapping(value = "/{id}")
-    public ModelAndView getDetailProduct(ModelMap modelMap, @PathVariable("id") int sanPhamId) {
+    public ModelAndView getDetailProduct(@PathVariable("id") int sanPhamId) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }

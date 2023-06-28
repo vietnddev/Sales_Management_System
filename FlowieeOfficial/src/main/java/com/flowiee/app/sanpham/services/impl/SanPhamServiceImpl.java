@@ -8,9 +8,12 @@ import com.flowiee.app.hethong.model.action.SanPhamAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
+import com.flowiee.app.sanpham.controller.SanPhamController;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.repository.SanPhamRepository;
 import com.flowiee.app.sanpham.services.SanPhamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ import java.util.List;
 
 @Service
 public class SanPhamServiceImpl implements SanPhamService {
+    private static final Logger logger = LoggerFactory.getLogger(SanPhamServiceImpl.class);
+
     @Autowired
     private SanPhamRepository productsRepository;
     @Autowired
@@ -32,11 +37,15 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public SanPham findById(int id) {
-        SanPham sanPham = productsRepository.findById(id).orElse(null);
-        if (sanPham == null) {
-            throw new NotFoundException();
-        } else {
+        SanPham sanPham = new SanPham();
+        if (id > 0) {
+            sanPham = productsRepository.findById(id).orElse(null);
+        }
+        if (sanPham != null) {
             return sanPham;
+        } else {
+            logger.error("Lỗi khi findById sản phẩm!", new NotFoundException());
+            return new SanPham();
         }
     }
 
@@ -58,6 +67,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Lỗi khi thêm mới sản phẩm!", e.getCause());
             return "NOK";
         }
     }
@@ -90,6 +100,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Lỗi khi cập nhật sản phẩm!", e.getCause());
             return "NOK";
         }
     }
@@ -97,10 +108,12 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public String delete(int id) {
         if (id <= 0) {
+            logger.error("Lỗi khi xóa sản phẩm!", new NotFoundException());
             throw new NotFoundException();
         }
         SanPham sanPhamToDelete = this.findById(id);
         if (sanPhamToDelete == null) {
+            logger.error("Lỗi khi xóa sản phẩm!", new NotFoundException());
             throw new NotFoundException();
         }
         try {
@@ -115,6 +128,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Lỗi khi xóa sản phẩm!", e.getCause());
             return "NOK";
         }
     }
