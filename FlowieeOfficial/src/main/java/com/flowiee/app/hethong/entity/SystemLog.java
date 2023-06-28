@@ -1,7 +1,6 @@
 package com.flowiee.app.hethong.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.hethong.entity.Account;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 

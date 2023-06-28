@@ -22,6 +22,7 @@ import java.util.List;
 @Service
 public class SanPhamServiceImpl implements SanPhamService {
     private static final Logger logger = LoggerFactory.getLogger(SanPhamServiceImpl.class);
+    private static final String module = SystemModule.SAN_PHAM.name();
 
     @Autowired
     private SanPhamRepository productsRepository;
@@ -57,13 +58,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         }
         try {
             productsRepository.save(sanPham);
-            SystemLog systemLog = new SystemLog();
-            systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.DELETE_SANPHAM.name());
-            systemLog.setNoiDung(sanPham.toString());
-            systemLog.setAccount(accountService.getCurrentAccount());
-            systemLog.setIp(accountService.getIP());
-            systemLogService.writeLog(systemLog);
+            systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), sanPham.toString(), null);
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,22 +76,19 @@ public class SanPhamServiceImpl implements SanPhamService {
         try {
             sanPham.setId(id);
             productsRepository.save(sanPham);
-            SystemLog systemLog = new SystemLog();
-            systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.UPDATE_SANPHAM.name());
+            String noiDungLog = "";
+            String noiDungLogUpdate = "";
             if (sanPhamBefore.toString().length() > 2000) {
-                systemLog.setNoiDung(sanPhamBefore.toString().substring(0, 2000));
+                noiDungLog = sanPhamBefore.toString().substring(0, 2000);
             } else {
-                systemLog.setNoiDung(sanPhamBefore.toString());
+                noiDungLog = sanPhamBefore.toString();
             }
             if (sanPham.toString().length() > 2000) {
-                systemLog.setNoiDungCapNhat(sanPham.toString().substring(0, 2000));
+                noiDungLogUpdate = sanPham.toString().substring(0, 2000);
             } else {
-                systemLog.setNoiDungCapNhat(sanPham.toString());
+                noiDungLogUpdate = sanPham.toString();
             }
-            systemLog.setAccount(accountService.getCurrentAccount());
-            systemLog.setIp(accountService.getIP());
-            systemLogService.writeLog(systemLog);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), noiDungLog, noiDungLogUpdate);
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,13 +110,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         }
         try {
             productsRepository.deleteById(id);
-            SystemLog systemLog = new SystemLog();
-            systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.DELETE_SANPHAM.name());
-            systemLog.setNoiDung(sanPhamToDelete.toString());
-            systemLog.setAccount(accountService.getCurrentAccount());
-            systemLog.setIp(accountService.getIP());
-            systemLogService.writeLog(systemLog);
+            systemLogService.writeLog(module, SanPhamAction.DELETE_SANPHAM.name(), sanPhamToDelete.toString(), null);
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();

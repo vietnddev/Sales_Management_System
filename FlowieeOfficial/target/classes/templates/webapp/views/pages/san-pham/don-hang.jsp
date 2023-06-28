@@ -56,7 +56,13 @@
                                             </div>
                                             <select class="custom-select col-sm" name="kenhBanHang"
                                                     data-placeholder="Chọn kênh bán hàng">
-                                                <option selected value="0">Chọn kênh bán hàng</option>
+                                                <option selected value="0"
+                                                        th:if="${selected_kenhBanHang == null}">Chọn kênh bán hàng</option>
+                                                <option selected
+                                                        th:value="${selected_kenhBanHang.id}"
+                                                        th:if="${selected_kenhBanHang != null}"
+                                                        th:text="${selected_kenhBanHang.tenLoai}">
+                                                </option>
                                                 <option th:each="channel : ${listKenhBanHang}"
                                                         th:value="${channel.id}"
                                                         th:text="${channel.tenLoai}">
@@ -64,7 +70,14 @@
                                             </select>
                                             <select class="custom-select col-sm" name="hinhThucThanhToan"
                                                     data-placeholder="Chọn hình thức thanh toán">
-                                                <option selected value="0">Chọn hình thức thanh toán</option>
+                                                <option selected value="0"
+                                                        th:if="${selected_hinhThucThanhToan == null}">Chọn hình thức thanh toán
+                                                </option>
+                                                <option selected
+                                                        th:value="${selected_hinhThucThanhToan.id}"
+                                                        th:if="${selected_hinhThucThanhToan != null}"
+                                                        th:text="${selected_hinhThucThanhToan.tenLoai}">
+                                                </option>
                                                 <option th:each="typePayment : ${listHinhThucThanhToan}"
                                                         th:value="${typePayment.id}"
                                                         th:text="${typePayment.tenLoai}">
@@ -72,11 +85,16 @@
                                             </select>
                                             <select class="custom-select col-sm" name="trangThaiDonHang"
                                                     data-placeholder="Chọn trạng thái đơn hàng">
-                                                <option selected value="0">Trạng thái đơn hàng</option>
-                                                <option th:each="status, iterStat : ${listTrangThaiDonHang}"
+                                                <option selected value="0"
+                                                        th:if="${selected_trangThaiDonHang == null}">Trạng thái đơn hàng</option>
+                                                <option selected
+                                                        th:value="${selected_trangThaiDonHang.id}"
+                                                        th:if="${selected_trangThaiDonHang != null}"
+                                                        th:text="${selected_trangThaiDonHang.ten}">
+                                                </option>
+                                                <option th:each="status : ${listTrangThaiDonHang}"
                                                         th:value="${status.id}"
-                                                        th:text="${status.ten}"
-                                                        th:selected="${iterStat.index == 0}">
+                                                        th:text="${status.ten}">
                                                 </option>
                                             </select>
                                             <span class="input-group-append col-sm">
@@ -209,116 +227,6 @@
                                 </table>
                             </div>
                             <!-- /.card-body -->
-                            <th:block>
-                                <div class="modal fade" id="insert">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <form th:action="@{/don-hang/insert}" method="POST" th:object="${donHangRequest}">
-                                                <div class="modal-header">
-                                                    <strong class="modal-title">Thêm mới đơn hàng</strong>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group">
-                                                                <label>Sản phẩm</label>
-                                                                <select class="form-control select2 w-100"
-                                                                        data-placeholder="Chọn sản phẩm"
-                                                                        required
-                                                                        name="listBienTheSanPham">
-                                                                    <option th:each="option : ${listBienTheSanPham}"
-                                                                            th:value="${option.id}"
-                                                                            th:text="${option.sanPham.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Khách hàng</label>
-                                                                <select class="custom-select" name="khachHang"
-                                                                        data-placeholder="Chọn khách hàng" required>
-                                                                    <option th:each="cus : ${listKhachHang}"
-                                                                            th:value="${cus.id}"
-                                                                            th:text="${cus.tenKhachHang} + ' - ' + ${cus.soDienThoai} + ' - ' + ${cus.diaChi}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Thời gian đặt hàng</label>
-                                                                <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                                                                    <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" name="thoiGianDatHang"/>
-                                                                    <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
-                                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Kênh bán hàng</label>
-                                                                <select class="custom-select" name="kenhBanHang"
-                                                                        data-placeholder="Chọn kênh bán hàng" required>
-                                                                    <option th:each="channel : ${listKenhBanHang}"
-                                                                            th:value="${channel.id}"
-                                                                            th:text="${channel.tenLoai}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Hình thức thanh toán</label>
-                                                                <select class="custom-select" name="hinhThucThanhToan"
-                                                                        data-placeholder="Chọn hình thức thanh toán" required>
-                                                                    <option th:each="payment : ${listHinhThucThanhToan}"
-                                                                            th:value="${payment.id}"
-                                                                            th:text="${payment.tenLoai}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Nhân viên bán hàng</label>
-                                                                <select class="custom-select" name="nhanVienBanHang"
-                                                                        data-placeholder="Chọn nhân viên bán hàng" required>
-                                                                    <option th:each="sales : ${listNhanVienBanHang}"
-                                                                            th:value="${sales.id}"
-                                                                            th:text="${sales.hoTen}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Ghi chú</label>
-                                                                <textarea class="form-control" rows="3"
-                                                                          placeholder="Ghi chú"
-                                                                          name="ghiChu"></textarea>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Trạng thái đơn đặt hàng</label>
-                                                                <select class="custom-select" name="trangThaiDonHang"
-                                                                        data-placeholder="Chọn trạng thái đơn hàng" required>
-                                                                    <option th:each="status, iterStat : ${listTrangThaiDonHang}"
-                                                                            th:value="${status.id}"
-                                                                            th:text="${status.ten}"
-                                                                            th:selected="${iterStat.index == 0}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer justify-content-end"
-                                                         style="margin-bottom: -15px;">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">Hủy
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <!-- /.modal-content -->
-                                    </div>
-                                    <!-- /.modal-dialog -->
-                                </div>
-                            </th:block>
                         </div>
                     </div>
                 </div>

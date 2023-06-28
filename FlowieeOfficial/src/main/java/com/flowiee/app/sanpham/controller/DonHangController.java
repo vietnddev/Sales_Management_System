@@ -3,6 +3,7 @@ package com.flowiee.app.sanpham.controller;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
@@ -86,11 +87,18 @@ public class DonHangController {
                                                                                    request.getKenhBanHang(),
                                                                                    request.getTrangThaiDonHang()));
             modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
-            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
-            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
             modelAndView.addObject("listKhachHang", khachHangService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+
+            modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : kenhBanHangService.findById(request.getKenhBanHang()));
+            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
+
+            modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : hinhThucThanhToanService.findById(request.getHinhThucThanhToan()));
+            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+
+            modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : trangThaiDonHangService.findById(request.getTrangThaiDonHang()));
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+
             modelAndView.addObject("donHangRequest", new DonHangRequest());
             modelAndView.addObject("donHang", new DonHang());
             return modelAndView;
