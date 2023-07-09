@@ -9,12 +9,16 @@ import com.flowiee.app.dashboard.model.TopSanPhamBanChay;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.dashboard.service.DashboardService;
+import com.flowiee.app.sanpham.entity.DonHang;
+import com.flowiee.app.sanpham.entity.KhachHang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @CrossOrigin
@@ -36,13 +40,17 @@ public class DashboardController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DASHBOARD);
                         
             //Số lượng đơn hàng hôm nay
-            modelAndView.addObject("soLuongDonHangHomNay", dashboardService.getSoLuongDonHangHomNay());
+            List<DonHang> listDonHangToDay = dashboardService.getSoLuongDonHangHomNay();
+            modelAndView.addObject("soLuongDonHangHomNay", listDonHangToDay.size());
+            modelAndView.addObject("danhSachDonHangHomNay", listDonHangToDay);
             //Doanh thu hôm nay
             modelAndView.addObject("doanhThuHomNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuHomNay()));
             //Doanh thu trong tháng này
             modelAndView.addObject("doanhThuThangNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuThangNay()));
             //Số lượng khách hàng mới trong tháng
-            modelAndView.addObject("khachHangMoiTrongThang", dashboardService.getSoLuongKhachHangMoi());
+            List<KhachHang> listKhachHangThisMonth = dashboardService.getSoLuongKhachHangMoi();
+            modelAndView.addObject("khachHangMoiTrongThang", listKhachHangThisMonth.size());
+            modelAndView.addObject("danhSachkhachHangMoiTrongThang", listKhachHangThisMonth);
 
             //Pie chart - Doanh thu theo kênh bán hàng
             DoanhThuTheoKenhBanHang doanhThuTheoKenhBanHang = dashboardService.getDoanhThuTheoKenhBanHang();

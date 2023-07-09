@@ -4,6 +4,8 @@ import com.flowiee.app.dashboard.model.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.dashboard.model.DoanhThuCacThangTheoNam;
 import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.dashboard.model.TopSanPhamBanChay;
+import com.flowiee.app.sanpham.entity.DonHang;
+import com.flowiee.app.sanpham.entity.KhachHang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -147,10 +149,14 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public Integer getSoLuongDonHangHomNay() {
-        String query = "SELECT NVL(COUNT(*), 0) FROM DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
+    public List<DonHang> getSoLuongDonHangHomNay() {
+//        String query = "SELECT NVL(COUNT(*), 0) FROM DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
+//        Query result = entityManager.createNativeQuery(query);
+//        return Integer.parseInt(String.valueOf(result.getSingleResult()));
+        String query = "SELECT * FROM DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
         Query result = entityManager.createNativeQuery(query);
-        return Integer.parseInt(String.valueOf(result.getSingleResult()));
+        List<DonHang> listReturn = result.getResultList();
+        return listReturn;
     }
 
     @Override
@@ -168,9 +174,13 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public Integer getSoLuongKhachHangMoi() {
-        String query = "SELECT NVL(COUNT(*), 0) FROM KHACH_HANG c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
+    public List<KhachHang> getSoLuongKhachHangMoi() {
+//        String query = "SELECT NVL(COUNT(*), 0) FROM KHACH_HANG c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
+//        Query result = entityManager.createNativeQuery(query);
+//        return Integer.parseInt(String.valueOf(result.getSingleResult()));
+        String query = "SELECT * FROM KHACH_HANG c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
         Query result = entityManager.createNativeQuery(query);
-        return Integer.parseInt(String.valueOf(result.getSingleResult()));
+        List<KhachHang> listReturn = result.getResultList();
+        return listReturn;
     }
 }

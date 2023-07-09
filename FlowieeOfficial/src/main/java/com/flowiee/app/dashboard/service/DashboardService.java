@@ -4,6 +4,10 @@ import com.flowiee.app.dashboard.model.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.dashboard.model.DoanhThuCacThangTheoNam;
 import com.flowiee.app.dashboard.model.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.dashboard.model.TopSanPhamBanChay;
+import com.flowiee.app.sanpham.entity.DonHang;
+import com.flowiee.app.sanpham.entity.KhachHang;
+
+import java.util.List;
 
 public interface DashboardService {
     DoanhThuTheoKenhBanHang getDoanhThuTheoKenhBanHang();
@@ -14,11 +18,11 @@ public interface DashboardService {
 
     TopSanPhamBanChay getTopSanPhamBanChay();
 
-    Integer getSoLuongDonHangHomNay();
+    List<DonHang> getSoLuongDonHangHomNay();
 
     Float getDoanhThuHomNay();
 
     Float getDoanhThuThangNay();
 
-    Integer getSoLuongKhachHangMoi();
+    List<KhachHang> getSoLuongKhachHangMoi();
 }

@@ -33,7 +33,48 @@
                             <div class="icon">
                                 <i class="ion ion-bag"></i>
                             </div>
-                            <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="#" class="small-box-footer"
+                               data-toggle="modal" data-target="#modalDanhSachDonHangToDay">Chi tiết
+                                <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                            <div class="modal fade" id="modalDanhSachDonHangToDay">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <strong class="modal-title">Danh sách đơn hàng đã bán được hôm nay</strong>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-bordered table-striped align-items-center">
+                                                <thead class="align-self-center">
+                                                    <tr class="align-self-center">
+                                                        <th>STT</th>
+                                                        <th>Mã đơn hàng</th>
+                                                        <th>Khách hàng</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="list, index : ${danhSachDonHangHomNay}">
+                                                    <td th:text="${index.index + 1}"></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="align-self-center">
+                                                        <th>STT</th>
+                                                        <th>Mã đơn hàng</th>
+                                                        <th>Khách hàng</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- ./col -->
@@ -224,7 +265,7 @@
                                 <script th:inline="javascript">
                                     var xValues = [[${topSanPham_listTenSanPham}]];
                                     var yValues = [[${topSanPham_listSoLuong}]];
-                                    var barColors = ["red","green","blue","orange","brown","red","green","blue","orange","brown"];
+                                    var barColors = ["red", "green", "blue", "orange", "brown", "red", "green", "blue", "orange", "brown"];
 
                                     new Chart("lineChartTopProduct", {
                                         type: "bar",
