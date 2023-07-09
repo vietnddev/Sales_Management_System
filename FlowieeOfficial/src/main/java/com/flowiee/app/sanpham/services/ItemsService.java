@@ -15,4 +15,6 @@ public interface ItemsService {
     String save(Items cart);
 
     String delete(int id);
+
+    Integer findSoLuongByBienTheSanPhamId(int bienTheSanPhamId);
 }

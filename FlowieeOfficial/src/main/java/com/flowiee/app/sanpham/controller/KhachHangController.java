@@ -14,6 +14,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/khach-hang")
 public class KhachHangController {
@@ -57,7 +59,8 @@ public class KhachHangController {
     }
 
     @PostMapping("/create")
-    public String createKhachHang(@ModelAttribute("khachHang") KhachHang khachHang) {
+    public String createKhachHang(@ModelAttribute("khachHang") KhachHang khachHang,
+                                  HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }

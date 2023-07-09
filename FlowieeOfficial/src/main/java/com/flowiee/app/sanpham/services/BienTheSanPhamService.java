@@ -19,4 +19,6 @@ public interface BienTheSanPhamService {
     BienTheSanPham findById(int id);
 
     String detele(int id);
+
+    String updateSoLuong(Integer soLuong, Integer id);
 }

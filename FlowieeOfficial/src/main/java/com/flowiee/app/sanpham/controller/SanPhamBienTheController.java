@@ -63,7 +63,7 @@ public class SanPhamBienTheController {
         bienTheSanPham.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
         bienTheSanPhamService.save(bienTheSanPham);
         //Khởi tạo giá default của giá bán
-        giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(0D).build());
+        giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(0D).trangThai(true).build());
         return "redirect:" + request.getHeader("referer");
     }
 

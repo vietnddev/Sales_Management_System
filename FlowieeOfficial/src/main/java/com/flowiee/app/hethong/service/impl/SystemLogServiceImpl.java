@@ -18,17 +18,29 @@ public class SystemLogServiceImpl implements SystemLogService {
     private AccountService accountService;
 
     @Override
-    public List<SystemLog> getAll(){
+    public List<SystemLog> getAll() {
         return logRepository.findAll();
     }
 
     @Override
-    public void writeLog(SystemLog log){
-        logRepository.save(log);
+    public SystemLog writeLog(SystemLog log) {
+        return logRepository.save(log);
     }
 
     @Override
-    public void writeLog(String module, String action, String noiDung, String noiDungCapNhat) {
+    public SystemLog writeLog(String module, String action, String noiDung) {
+        SystemLog systemLog = new SystemLog();
+        systemLog.setModule(module);
+        systemLog.setAction(action);
+        systemLog.setNoiDung(noiDung);
+        systemLog.setNoiDungCapNhat(null);
+        systemLog.setAccount(accountService.getCurrentAccount());
+        systemLog.setIp(FlowieeUtil.getIPLogin());
+        return logRepository.save(systemLog);
+    }
+
+    @Override
+    public SystemLog writeLog(String module, String action, String noiDung, String noiDungCapNhat) {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setAction(action);
@@ -36,6 +48,6 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setNoiDungCapNhat(noiDungCapNhat);
         systemLog.setAccount(accountService.getCurrentAccount());
         systemLog.setIp(FlowieeUtil.getIPLogin());
-        logRepository.save(systemLog);
+        return logRepository.save(systemLog);
     }
 }

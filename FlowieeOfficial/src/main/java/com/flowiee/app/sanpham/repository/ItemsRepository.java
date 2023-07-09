@@ -11,4 +11,7 @@ import java.util.List;
 public interface ItemsRepository extends JpaRepository<Items, Integer> {
     @Query("from Items i where i.cart.id=:idCart")
     List<Items> findByCartId(int idCart);
+
+    @Query("select i.soLuong from Items i where i.bienTheSanPham.id=:bienTheSanPhamId")
+    Integer findSoLuongByBienTheSanPhamId(int bienTheSanPhamId);
 }

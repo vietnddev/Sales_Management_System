@@ -13,6 +13,8 @@ import com.flowiee.app.sanpham.repository.BienTheSanPhamRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
 import com.flowiee.app.sanpham.services.SanPhamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ import java.util.List;
 
 @Service
 public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
+    private static final Logger logger = LoggerFactory.getLogger(BienTheSanPhamServiceImpl.class);
+    private static final String module = SystemModule.SAN_PHAM.name();
+
     @Autowired
     private BienTheSanPhamRepository bienTheSanPhamRepository;
     @Autowired
@@ -129,6 +134,26 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
+            return "NOK";
+        }
+    }
+
+    @Override
+    public String updateSoLuong(Integer soLuong, Integer id) {
+        if (id < 0) {
+            throw new BadRequestException();
+        }
+        BienTheSanPham bienTheSanPham = this.findById(id);
+        if (bienTheSanPham == null) {
+            throw new BadRequestException();
+        }
+        bienTheSanPham.setSoLuongKho(bienTheSanPham.getSoLuongKho() - soLuong);
+        try {
+            bienTheSanPhamRepository.save(bienTheSanPham);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng", null);
+            return "OK";
+        } catch (Exception e) {
+            logger.error("Lỗi khi cập nhật số lượng sản phẩm!", bienTheSanPham);
             return "NOK";
         }
     }

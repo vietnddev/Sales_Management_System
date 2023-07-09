@@ -8,6 +8,7 @@ public class PagesUtil {
     public static final String PAGE_HETHONG_TAIKHOAN = "/pages/he-thong/account";
     public static final String PAGE_HETHONG_NHATKY = "/pages/he-thong/log";
     public static final String PAGE_HETHONG_ROLE = "/pages/he-thong/role";
+    public static final String PAGE_HETHONG_CONFIG = "/pages/he-thong/config";
 
     public static final String PAGE_THUVIEN = "/pages/san-pham/thu-vien-hinh-anh";
     public static final String PAGE_SANPHAM = "/pages/san-pham/san-pham";

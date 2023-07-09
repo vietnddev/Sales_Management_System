@@ -81,7 +81,6 @@
                                                         <i class="fa-solid fa-eye"></i>
                                                     </a></button>
                                                 <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
-                                                        style="margin-bottom: 4px;"
                                                         th:data-target="'#update-' + ${list.id}">
                                                     <i class="fa-solid fa-pencil"></i>
                                                 </button>

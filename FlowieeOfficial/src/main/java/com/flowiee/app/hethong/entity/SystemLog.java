@@ -14,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Table
 @Entity(name = "nhat_ky_he_thong")
-@ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SystemLog implements java.io.Serializable {
 	@Id
@@ -52,5 +51,19 @@ public class SystemLog implements java.io.Serializable {
 		if (createdAt == null) {
 			createdAt = new Date();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "SystemLog{" +
+				"id=" + id +
+				", module='" + module + '\'' +
+				", account=" + account +
+				", action='" + action + '\'' +
+				", noiDung='" + noiDung + '\'' +
+				", noiDungCapNhat='" + noiDungCapNhat + '\'' +
+				", ip='" + ip + '\'' +
+				", createdAt=" + createdAt +
+				'}';
 	}
 }

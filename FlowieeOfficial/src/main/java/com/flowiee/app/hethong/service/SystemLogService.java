@@ -7,7 +7,9 @@ import java.util.List;
 public interface SystemLogService {
     List<SystemLog> getAll();
 
-    void writeLog(SystemLog log);
+    SystemLog writeLog(SystemLog log);
 
-    void writeLog(String module, String action, String noiDung, String noiDungCapNhat);
+    SystemLog writeLog(String module, String action, String noiDung);
+
+    SystemLog writeLog(String module, String action, String noiDung, String noiDungCapNhat);
 }

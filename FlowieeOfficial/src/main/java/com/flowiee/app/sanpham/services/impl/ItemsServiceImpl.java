@@ -39,4 +39,9 @@ public class ItemsServiceImpl implements ItemsService {
         itemsRepository.deleteById(id);
         return "OK";
     }
+
+    @Override
+    public Integer findSoLuongByBienTheSanPhamId(int bienTheSanPhamId) {
+        return itemsRepository.findSoLuongByBienTheSanPhamId(bienTheSanPhamId);
+    }
 }

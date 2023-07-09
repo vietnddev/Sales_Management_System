@@ -202,10 +202,83 @@
 
                     <!--./ Sub-Image-->
                     <div class="col-sm-7 row" style="max-height: 345px; overflow: scroll">
-                        <div class="col-sm-3 mb-2" th:each="list : ${listImageOfSanPhamBienThe}">
-                            <div class="product-image-thumb" style="margin: auto">
+                        <div class="col-sm-3 row mb-2 border"
+                             th:each="list : ${listImageOfSanPhamBienThe}"
+                             style="border-radius: 10px; margin: 3px; max-width: 24%">
+                            <div class="col-sm-12 product-image-thumb" style="margin: auto">
                                 <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"
                                      alt="Product Image">
+                            </div>
+                            <div class="col-sm-12">
+                                <!--Start modal UPDATE hình ảnh-->
+                                <i class="fa-solid fa-arrows-rotate text-info"
+                                   style="position: absolute; bottom: 5px; cursor: pointer"
+                                   data-toggle="modal"
+                                   th:data-target="'#modalChangeImage_' + ${list.id}">
+                                </i>
+                                <div class="modal fade" th:id="'modalChangeImage_' + ${list.id}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-left">
+                                            <form th:action="@{/file/change-image-sanpham/{id}(id=${list.id})}"
+                                                  enctype="multipart/form-data" method="post">
+                                                <div class="modal-header">
+                                                    <strong class="modal-title">Thay đổi hình ảnh</strong>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label>Chọn hình mới</label>
+                                                            <input class="form-control" type="file" name="file" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer justify-content-end">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End modal UPDATE hình ảnh-->
+
+                                <!--Start modal DELETE hình ảnh-->
+                                <i class="fa-solid fa-trash text-danger"
+                                   style="position: absolute; bottom: 5px; right: 5px; cursor: pointer"
+                                   data-toggle="modal"
+                                   th:data-target="'#modalDeleteImage_' + ${list.id}">
+                                </i>
+                                <div class="modal fade" th:id="'modalDeleteImage_' + ${list.id}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-left">
+                                            <form th:action="@{/file/delete/{id}(id=${list.id})}" method="post">
+                                                <div class="modal-header">
+                                                    <strong class="modal-title">Xóa hình ảnh</strong>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Xác nhận xóa this image!
+                                                </div>
+                                                <div class="modal-footer justify-content-end">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--eND modal DELETE hình ảnh-->
                             </div>
                         </div>
                     </div>

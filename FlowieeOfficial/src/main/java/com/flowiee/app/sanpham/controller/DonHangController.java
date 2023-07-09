@@ -3,23 +3,28 @@ package com.flowiee.app.sanpham.controller;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
+import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.sanpham.entity.*;
 import com.flowiee.app.sanpham.model.DonHangRequest;
 import com.flowiee.app.sanpham.services.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -28,6 +33,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/don-hang")
 public class DonHangController {
+    private static final Logger logger = LoggerFactory.getLogger(DonHangController.class);
+    private static final String module = SystemModule.SAN_PHAM.name();
+
     @Autowired
     private DonHangService donHangService;
     @Autowired
@@ -83,9 +91,9 @@ public class DonHangController {
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
             modelAndView.addObject("listDonHang", donHangService.findAll(request.getSearchTxt(),
-                                                                                   request.getThoiGianDatHangSearch(),
-                                                                                   request.getKenhBanHang(),
-                                                                                   request.getTrangThaiDonHang()));
+                    request.getThoiGianDatHangSearch(),
+                    request.getKenhBanHang(),
+                    request.getTrangThaiDonHang()));
             modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
             modelAndView.addObject("listKhachHang", khachHangService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
@@ -200,7 +208,7 @@ public class DonHangController {
             return PagesUtil.PAGE_LOGIN;
         }
         itemsService.findByCartId(id).forEach(items -> {
-           itemsService.delete(items.getId());
+            itemsService.delete(items.getId());
         });
         return "redirect:/don-hang/ban-hang";
     }
@@ -229,7 +237,7 @@ public class DonHangController {
             donHangService.save(donHangRequest);
             //Sau khi đã lưu đơn hàng thì xóa all items
             itemsService.findByCartId(donHangRequest.getCartId()).forEach(items -> {
-               itemsService.delete(items.getId());
+                itemsService.delete(items.getId());
             });
             return "redirect:/don-hang";
         } else {
@@ -277,6 +285,18 @@ public class DonHangController {
             return "redirect:/don-hang/" + donHangId;
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<?> exportDanhSachDonHang() {
+        if (!accountService.isLogin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+        }
+        if (kiemTraQuyenModuleSanPham.kiemTraQuyenExportDonHang()) {
+            return donHangService.exportDanhSachDonHang();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
 }

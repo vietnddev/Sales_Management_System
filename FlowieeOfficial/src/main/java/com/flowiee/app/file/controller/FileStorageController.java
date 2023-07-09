@@ -1,5 +1,7 @@
 package com.flowiee.app.file.controller;
 
+import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.sanpham.services.SanPhamService;
@@ -42,6 +44,20 @@ public class FileStorageController {
         if (!file.isEmpty()) {
             fileService.saveImageBienTheSanPham(file, id);
         }
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @PostMapping("/file/change-image-sanpham/{id}")
+    public String changeFile(@RequestParam("file") MultipartFile file,
+                             @PathVariable("id") int id,
+                             HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (id <= 0 || file.isEmpty()) {
+            throw new BadRequestException();
+        }
+        fileService.changeImageSanPham(file, id);
         return "redirect:" + request.getHeader("referer");
     }
 

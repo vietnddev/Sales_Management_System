@@ -2,30 +2,31 @@ package com.flowiee.app.hethong.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table (name = "cau_hinh_he_thong")
+@Table (name = "flowiee_config")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CauHinhHeThong implements java.io.Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	private int ID;
-	private String code;
+	@Column(name = "id", unique = true, nullable = false)
+	private int id;
 
-	@Column(name = "ten_cua_hang", length = 500, nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	private String address;
-	private String email;
-	private String phone;
-	private String logo;
-	private String favicon;
-	private int loginLock;
-	private String describes;
+	@Column(name = "value", length = 1000)
+	private String value;
+
+	@Column(name = "sort")
+	private Integer sort;
 }

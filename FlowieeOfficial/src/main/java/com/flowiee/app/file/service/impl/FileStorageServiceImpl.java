@@ -13,12 +13,15 @@ import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.SanPhamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +31,8 @@ import java.util.List;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
+    private static final Logger logger = LoggerFactory.getLogger(FileStorageServiceImpl.class);
+
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -36,6 +41,11 @@ public class FileStorageServiceImpl implements FileStorageService {
     private SanPhamService sanPhamService;
     @Autowired
     private BienTheSanPhamService bienTheSanPhamService;
+
+    @Override
+    public FileStorage findById(int fileId) {
+        return fileRepository.findById(fileId).orElse(null);
+    }
 
     @Override
     public List<FileStorage> getAllImageSanPham(String module) {
@@ -102,14 +112,40 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public void save(MultipartFile fileUpload, SystemModule module) {
-        FileStorage fileInfo = new FileStorage();
-        fileInfo.setModule(module.name());
-        fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
-        fileInfo.setKichThuocFile(fileUpload.getSize());
-        fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
-        fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
+    public String changeImageSanPham(MultipartFile fileAttached, int fileId) {
+        Long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
+        FileStorage fileToChange = this.findById(fileId);
+        if (fileToChange == null) {
+            throw new NotFoundException();
+        }
+        //Delete file vật lý cũ
+        try {
+            File file = new File(FileUtil.rootPath + fileToChange.getDirectoryPath() + "/" + fileToChange.getTenFileKhiLuu());
+            if (file.exists()) {
+                file.delete();
+            }
+        } catch (Exception e) {
+            logger.error("File cần change không tồn tại!", e.getCause().getMessage());
+        }
+        //Update thông tin file mới
+        fileToChange.setTenFileGoc(fileAttached.getOriginalFilename());
+        fileToChange.setTenFileKhiLuu(currentTime + "_" + fileAttached.getOriginalFilename());
+        fileToChange.setKichThuocFile(fileAttached.getSize());
+        fileToChange.setExtension(FileUtil.getExtension(fileAttached.getOriginalFilename()));
+        fileToChange.setContentType(fileAttached.getContentType());
+        fileToChange.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
+        fileToChange.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
+        fileRepository.save(fileToChange);
+
+        //Lưu file mới vào thư mục chứa file upload
+        try {
+            Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileAttached.getOriginalFilename());
+            fileAttached.transferTo(path);
+        } catch (Exception e) {
+            logger.error("Lưu file change vào thư mục chứa file upload thất bại!", e.getCause().getMessage());
+        }
+
+        return "OK";
     }
 
     @Override
@@ -121,10 +157,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileRepository.deleteById(id);
         //Xóa file trên ổ cứng
         File file = new File(FileUtil.rootPath + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
+        System.out.println("Path of file in dic" + file.getPath());
         if (file.exists()) {
             if (file.delete()) {
+                System.out.println("Xóa thành công file in directory!");
                 return "OK";
             } else {
+                System.out.println("Xóa thất bại file in directory!");
                 return "Xóa file NOK";
             }
         }

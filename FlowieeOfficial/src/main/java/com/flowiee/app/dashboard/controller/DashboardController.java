@@ -63,7 +63,7 @@ public class DashboardController {
             TopSanPhamBanChay topSanPhamBanChay = dashboardService.getTopSanPhamBanChay();
             modelAndView.addObject("topSanPham_listTenSanPham", topSanPhamBanChay.getTenSanPham());
             modelAndView.addObject("topSanPham_listSoLuong", topSanPhamBanChay.getSoLuongDaBan());
-            
+
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
