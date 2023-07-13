@@ -91,4 +91,7 @@ public class FileStorage implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "upload_by", nullable = false)
     private Account account;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 }

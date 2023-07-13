@@ -9,6 +9,8 @@ import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.khotailieu.entity.Document;
+import com.flowiee.app.khotailieu.service.DocumentService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
@@ -41,6 +43,8 @@ public class FileStorageServiceImpl implements FileStorageService {
     private SanPhamService sanPhamService;
     @Autowired
     private BienTheSanPhamService bienTheSanPhamService;
+    @Autowired
+    private DocumentService documentService;
 
     @Override
     public FileStorage findById(int fileId) {
@@ -66,6 +70,14 @@ public class FileStorageServiceImpl implements FileStorageService {
             throw new BadRequestException();
         }
         return fileRepository.findImageOfSanPhamBienThe(bienTheSanPhamId);
+    }
+
+    @Override
+    public List<FileStorage> getFileOfDocument(int documentId) {
+        if (documentService.findById(documentId) == null) {
+            throw new BadRequestException();
+        }
+        return fileRepository.findFileOfDocument(documentId);
     }
 
     @Override
@@ -108,6 +120,25 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileRepository.save(fileInfo);
 
         Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        fileUpload.transferTo(path);
+    }
+
+    @Override
+    public void saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
+        long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
+        FileStorage fileInfo = new FileStorage();
+        fileInfo.setModule(SystemModule.KHO_TAI_LIEU.name());
+        fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
+        fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setKichThuocFile(fileUpload.getSize());
+        fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
+        fileInfo.setContentType(fileUpload.getContentType());
+        fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
+        fileInfo.setDocument(Document.builder().id(documentId).build());
+        fileInfo.setAccount(accountService.getCurrentAccount());
+        fileRepository.save(fileInfo);
+
+        Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
     }
 

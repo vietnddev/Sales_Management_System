@@ -35,44 +35,50 @@
                 <div class="card col-12" style="font-size: 14px">
                     <div class="card-header">
                         <div class="row justify-content-between">
-                            <div class="col-4">
-                                <h3 class="card-title"><strong>KHO TÀI LIỆU</strong></h3>
+                            <div class="col-8" style="display: flex; align-items: center">
+                                <h3 class="card-title">
+                                    <strong th:text="${docDetail.ten}"></strong>
+                                </h3>
                             </div>
                             <div class="col-4 text-right">
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#insert"
-                                        th:if="${action_create == 'enable'}">
-                                    Thêm mới tài liệu
-                                </button>
-                                <button type="button" class="btn btn-warning" data-toggle="modal"
-                                        data-target="#insert-folder"
-                                        th:if="${action_create == 'enable'}">
-                                    Thêm mới thư mục
-                                </button>
                             </div>
                         </div>
                         <!-- modal-content (Thêm mới loại sản phẩm)-->
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body"
-                         style="padding-left: 5px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px">
-                        <div class="row">
-                            <div class="col-sm-7 text-right" style="margin-bottom: 5px">
-                                <button type="button" class="btn btn-info" data-toggle="modal"
-                                        data-target="#share">
-                                    Chia sẻ
+                         style="padding-left: 5px; padding-top: 3px; padding-right: 5px; padding-bottom: 5px">
+                        <div class="row mt-2 mb-1 border">
+                            <div class="col-sm-12 text-center" style="margin-bottom: 5px">
+                                <button type="button" class="btn btn-sm btn-secondary" style="width: 90px"
+                                        data-toggle="modal" data-target="#modalDownload">
+                                        Tải về
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success" style="width: 90px"
+                                        data-toggle="modal" data-target="#modalCopy">
+                                        Sao chép
+                                </button>
+                                <button type="button" class="btn btn-sm btn-info" style="width: 90px"
+                                        data-toggle="modal" data-target="#modalMove">
+                                        Di chuyển
+                                </button>
+                                <button type="button" class="btn btn-sm btn-warning" style="width: 90px"
+                                        data-toggle="modal" data-target="#modelShare">
+                                        Phân quyền
                                 </button>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-7">
-                                <div id="pdfContainer"></div>
+                                <iframe class="w-100" th:src="@{'/' + ${listFileOfDocument.get(0).directoryPath} + '/' + ${listFileOfDocument.get(0).tenFileKhiLuu}}"
+                                        style="min-height: 583px">
+                                </iframe>
                             </div>
                             <div class="col-sm-5">
                                 <div class="card">
                                     <div class="card-header p-2">
                                         <ul class="nav nav-pills"
-                                            style="font-weight: bold; font-size: 15px">
+                                            style="font-weight: bold; font-size: 13px">
                                             <li class="nav-item">
                                                 <a class="nav-link active"
                                                    href="#docData"
@@ -101,10 +107,10 @@
                                                     <div class="form-group row"
                                                          th:each="list : ${listDocDataInfo.entrySet()}">
                                                         <label for="inputName"
-                                                               class="col-sm-3 col-form-label"
+                                                               class="col-sm-4 col-form-label"
                                                                th:text="${list.key}">
                                                         </label>
-                                                        <div class="col-sm-9">
+                                                        <div class="col-sm-8">
                                                             <input type="text"
                                                                    class="form-control"
                                                                    id="inputName"
@@ -114,8 +120,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <div class="offset-sm-3 col-sm-9">
-                                                            <button class="btn btn-success"
+                                                        <div class="offset-sm-4 col-sm-9">
+                                                            <button class="btn btn-sm btn-primary"
                                                                     style="font-weight: bold;">
                                                                 Lưu
                                                             </button>
@@ -161,67 +167,65 @@
                     </div>
 
                     <!-- Thêm mới file -->
-                    <th:block>
-                        <div class="modal fade" id="insert">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <form th:action="@{/kho-tai-lieu/document/insert}"
-                                          th:object="${document}" method="post"
-                                          enctype="multipart/form-data">
-                                        <div class="modal-header">
-                                            <strong class="modal-title">Thêm mới tài liệu</strong>
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="form-group">
-                                                        <label>Loại tài liệu</label>
-                                                        <select class="custom-select"
-                                                                name="loaiTaiLieu">
-                                                            <option th:each="list : ${listLoaiTaiLieu}"
-                                                                    th:value="${list.id}"
-                                                                    th:text="${list.ten}">
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>
-                                                            Tên
-                                                        </label>
-                                                        <input type="text" class="form-control"
-                                                               placeholder="Tên loại tài liệu"
-                                                               name="ten" maxlength="200" required/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Mô tả</label>
-                                                        <textarea class="form-control" rows="5"
-                                                                  placeholder="Mô tả"
-                                                                  name="moTa"></textarea>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>File</label>
-                                                        <input class="form-control" type="file" name="file"/>
-                                                    </div>
+                    <div class="modal fade" id="insert">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form th:action="@{/kho-tai-lieu/document/insert}"
+                                      th:object="${document}" method="post"
+                                      enctype="multipart/form-data">
+                                    <div class="modal-header">
+                                        <strong class="modal-title">Thêm mới tài liệu</strong>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label>Loại tài liệu</label>
+                                                    <select class="custom-select"
+                                                            name="loaiTaiLieu">
+                                                        <option th:each="list : ${listLoaiTaiLieu}"
+                                                                th:value="${list.id}"
+                                                                th:text="${list.ten}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>
+                                                        Tên
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Tên loại tài liệu"
+                                                           name="ten" maxlength="200" required/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Mô tả</label>
+                                                    <textarea class="form-control" rows="5"
+                                                              placeholder="Mô tả"
+                                                              name="moTa"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>File</label>
+                                                    <input class="form-control" type="file" name="file"/>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer justify-content-end"
-                                                 style="margin-bottom: -15px;">
-                                                <button type="button" class="btn btn-default"
-                                                        data-dismiss="modal">Hủy
-                                                </button>
-                                                <input type="hidden" name="loai" th:value="FILE"/>
-                                                <button type="submit" class="btn btn-primary">Lưu</button>
-                                            </div>
                                         </div>
-                                    </form>
-                                </div>
+                                        <div class="modal-footer justify-content-end"
+                                             style="margin-bottom: -15px;">
+                                            <button type="button" class="btn btn-default"
+                                                    data-dismiss="modal">Hủy
+                                            </button>
+                                            <input type="hidden" name="loai" th:value="FILE"/>
+                                            <button type="submit" class="btn btn-primary">Lưu</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    </th:block>
+                    </div>
                 </div>
             </div>
         </div>

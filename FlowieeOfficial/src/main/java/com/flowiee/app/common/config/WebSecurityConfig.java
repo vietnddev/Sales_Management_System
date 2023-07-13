@@ -47,13 +47,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable().cors();
 
+		//Cấu hình phần này để có thể nhúng URL vào các thẻ như iframe,..
+		httpSecurity.headers().frameOptions().sameOrigin();
+
 		httpSecurity
 				.authorizeRequests()
 				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**")
 				.permitAll()
 				.anyRequest().authenticated()
 				.and()
+				//Page login
 				.formLogin().loginPage("/login").permitAll()
+				//Login OK thì redirect vào page danh sách sản phẩm
 				.defaultSuccessUrl("/san-pham")
 				.failureUrl("/login?success=fail")
 				.loginProcessingUrl("/j_spring_security_check")

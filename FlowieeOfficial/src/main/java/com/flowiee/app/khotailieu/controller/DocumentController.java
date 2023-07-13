@@ -110,7 +110,7 @@ public class DocumentController {
         //Kiểm tra quyền xem document
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem() && docShareService.isShared(documentId)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT_DETAIL);
-            modelAndView.addObject("document", document);
+            modelAndView.addObject("docDetail", document);
             modelAndView.addObject("document", new Document());
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
                 modelAndView.addObject("action_update", "enable");
@@ -123,11 +123,13 @@ public class DocumentController {
             if (document.getLoai().equals(DocumentType.FILE.name())) {
                 List<DocData> listDocData = document.getListDocData();
                 LinkedHashMap<String, String> listDocDataInfo = new LinkedHashMap<>();
-                //Đưa thông tin tên field và nội dung field vào ls
+                //Đưa thông tin tên field và nội dung field vào list
                 for (DocData docData :listDocData) {
                     listDocDataInfo.put(docData.getDocField().getTenField(), docData.getNoiDung());
                 }
                 modelAndView.addObject("listDocDataInfo", listDocDataInfo);
+                //Load file đính kèm
+                modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
                 //Trả về page xem thông tin chi tiết file
                 return modelAndView;
             } else {
@@ -152,20 +154,12 @@ public class DocumentController {
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
         document.setAccount(Account.builder().id(accountService.findIdByUsername(username)).build());
         Document documentSaved = documentService.save(document);
-        //Nếu document là FILE -> Lưu giá trị default vào DocData
+        //Trường hợp document được tạo mới là file upload
         if (document.getLoai().equals(DocumentType.FILE.name()) && file != null) {
-            Path path = Paths.get("src\\main\\resources\\static\\uploads\\kho-tai-lieu\\2023\\05\\22\\" + DateUtil.now("yyyy.MM.dd.HH.mm.ss") + "_" + file.getOriginalFilename());
-            file.transferTo(path);
-            FileStorage fileStorage = FileStorage.builder()
-                                                 .module(SystemModule.KHO_TAI_LIEU.name())
-                                                 .tenFileGoc(file.getOriginalFilename())
-                                                 .extension(FileUtil.getExtension(file.getOriginalFilename()))
-                                                 .kichThuocFile(file.getSize())
-                                                 .tenFileKhiLuu(DateUtil.now("yyyy.MM.dd.HH.mm.ss") + "_" + file.getOriginalFilename())
-                                                 .contentType(file.getContentType())
-                                                 .document(Document.builder().id(documentSaved.getId()).build())
-                                                 .account(Account.builder().id(accountService.findIdByUsername(username)).build()).build();
-            //fileStorageService.save(file, fileStorage);
+            //Lưu file đính kèm vào thư mục chứ file upload
+            fileStorageService.saveFileOfDocument(file, documentSaved.getId());
+
+            //Lưu giá trị default vào DocData
             List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(document.getLoaiTaiLieu().getId()).build());
             for (DocField docField: listDocField) {
                 DocData docData = DocData.builder()
