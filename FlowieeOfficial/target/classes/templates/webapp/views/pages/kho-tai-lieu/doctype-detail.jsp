@@ -257,22 +257,26 @@
                                                 <div class="form-group col-sm-6">
                                                     <label>Min length</label>
                                                     <input type="number" class="form-control"
-                                                           placeholder="Min length" name="minLength">
+                                                           placeholder="Min length" name="minLength"
+                                                           value="0" required>
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <label>Max length</label>
                                                     <input type="number" class="form-control"
-                                                           placeholder="Max length" name="maxLength">
+                                                           placeholder="Max length" name="maxLength"
+                                                           value="255" required>
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <label>Min number</label>
                                                     <input type="number" class="form-control"
-                                                           placeholder="Min number" name="minNumber">
+                                                           placeholder="Min number" name="minNumber"
+                                                           value="0" required>
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <label>Max number</label>
                                                     <input type="number" class="form-control"
-                                                           placeholder="Max number" name="maxNumber">
+                                                           placeholder="Max number" name="maxNumber"
+                                                           value="255" required>
                                                 </div>
                                                 <div class="form-group col-sm-12">
                                                     <label>Có bắt buộc nhập?</label>
@@ -283,7 +287,8 @@
                                                 <div class="form-group col-sm-12">
                                                     <label>Sắp xếp</label>
                                                     <input type="number" class="form-control"
-                                                           placeholder="Sắp xếp" name="sapXep">
+                                                           placeholder="Sắp xếp" name="sapXep"
+                                                           value="0" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer justify-content-end"

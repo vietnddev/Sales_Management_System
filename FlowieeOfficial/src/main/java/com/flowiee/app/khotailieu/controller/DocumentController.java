@@ -15,6 +15,7 @@ import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.khotailieu.entity.DocData;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.entity.Document;
+import com.flowiee.app.khotailieu.model.DocMetaResponse;
 import com.flowiee.app.khotailieu.model.DocumentType;
 import com.flowiee.app.khotailieu.service.DocDataService;
 import com.flowiee.app.khotailieu.service.DocFieldService;
@@ -121,13 +122,10 @@ public class DocumentController {
             //Nếu document truy cập đến là file thì ném qua page view chi tiết
             // Ngược lại nếu là FOLDER thì ném qua danh sách document
             if (document.getLoai().equals(DocumentType.FILE.name())) {
-                List<DocData> listDocData = document.getListDocData();
-                LinkedHashMap<String, String> listDocDataInfo = new LinkedHashMap<>();
-                //Đưa thông tin tên field và nội dung field vào list
-                for (DocData docData :listDocData) {
-                    listDocDataInfo.put(docData.getDocField().getTenField(), docData.getNoiDung());
-                }
-                modelAndView.addObject("listDocDataInfo", listDocDataInfo);
+                //load metadata
+                List<DocMetaResponse> docMetaResponse = documentService.getMetadata(documentId);
+                modelAndView.addObject("listDocDataInfo", docMetaResponse);
+
                 //Load file đính kèm
                 modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
                 //Trả về page xem thông tin chi tiết file
@@ -161,22 +159,22 @@ public class DocumentController {
 
             //Lưu giá trị default vào DocData
             List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(document.getLoaiTaiLieu().getId()).build());
-            for (DocField docField: listDocField) {
+            for (DocField docField : listDocField) {
                 DocData docData = DocData.builder()
-                                         .docField(DocField.builder().id(docField.getId()).build())
-                                         .document(Document.builder().id(document.getId()).build())
-                                         .noiDung(null).build();
+                        .docField(DocField.builder().id(docField.getId()).build())
+                        .document(Document.builder().id(document.getId()).build())
+                        .noiDung("").build();
                 docDataService.save(docData);
             }
         }
         //Ghi log
         SystemLog systemLog = SystemLog.builder()
-            .module(SystemModule.KHO_TAI_LIEU.name())
-            .action(SystemLogAction.THEM_MOI.name())
-            .noiDung(document.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
+                .module(SystemModule.KHO_TAI_LIEU.name())
+                .action(SystemLogAction.THEM_MOI.name())
+                .noiDung(document.toString())
+                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
+                .ip(IPUtil.getClientIpAddress(request))
+                .build();
         systemLogService.writeLog(systemLog);
         return "redirect:";
     }
@@ -192,14 +190,14 @@ public class DocumentController {
         }
         //String fileNameToSave = DateUtil.now("yyyy.MM.dd.HH.mm.ss") + FileUtil.getExtension();
         FileStorage fileStorage = FileStorage.builder()
-            .module(SystemModule.KHO_TAI_LIEU.name())
-            .contentType(file.getContentType())
-            .extension(FileUtil.getExtension(file.getOriginalFilename()))
-            .kichThuocFile(file.getSize())
-            .tenFileGoc(file.getOriginalFilename())
-            //.tenFileKhiLuu()
+                .module(SystemModule.KHO_TAI_LIEU.name())
+                .contentType(file.getContentType())
+                .extension(FileUtil.getExtension(file.getOriginalFilename()))
+                .kichThuocFile(file.getSize())
+                .tenFileGoc(file.getOriginalFilename())
+                //.tenFileKhiLuu()
 
-            .build();
+                .build();
         //fileStorageService.save(fileStorage);
 
 //        documentService.update(document);
@@ -228,16 +226,37 @@ public class DocumentController {
         if (documentService.findById(id) == null) {
             throw new NotFoundException();
         }
-        documentService.update(document);
+        documentService.update(document, id);
         //Ghi log
         SystemLog systemLog = SystemLog.builder()
-            .module(SystemModule.KHO_TAI_LIEU.name())
-            .action(SystemLogAction.CAP_NHAT.name())
-            .noiDung(document.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
+                .module(SystemModule.KHO_TAI_LIEU.name())
+                .action(SystemLogAction.CAP_NHAT.name())
+                .noiDung(document.toString())
+                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
+                .ip(IPUtil.getClientIpAddress(request))
+                .build();
         systemLogService.writeLog(systemLog);
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @GetMapping("/update-metadata/{id}")
+    public String updateMetadata(HttpServletRequest request,
+                                 @PathVariable("id") int documentId,
+                                 @RequestParam("docDataId") Integer[] docDataIds,
+                                 @RequestParam("docDataValue") String[] docDataValues) {
+        String username = accountService.getUserName();
+        if (username.isEmpty() || username == null) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (documentId <= 0) {
+            throw new BadRequestException();
+        }
+        if (documentService.findById(documentId) == null) {
+            throw new NotFoundException();
+        }
+
+        documentService.updateMetadata(docDataIds, docDataValues, documentId);
+
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -254,12 +273,12 @@ public class DocumentController {
         documentService.delete(id);
         //Ghi log
         SystemLog systemLog = SystemLog.builder()
-            .module(SystemModule.KHO_TAI_LIEU.name())
-            .action(SystemLogAction.XOA.name())
-            .noiDung(document.toString())
-            .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-            .ip(IPUtil.getClientIpAddress(request))
-            .build();
+                .module(SystemModule.KHO_TAI_LIEU.name())
+                .action(SystemLogAction.XOA.name())
+                .noiDung(document.toString())
+                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
+                .ip(IPUtil.getClientIpAddress(request))
+                .build();
         systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
     }

@@ -1,7 +1,9 @@
 package com.flowiee.app.khotailieu.service;
 
 import com.flowiee.app.khotailieu.entity.Document;
+import com.flowiee.app.khotailieu.model.DocMetaResponse;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface DocumentService {
@@ -14,7 +16,11 @@ public interface DocumentService {
 
     Document save(Document document);
 
-    Document update(Document document);
+    String update(Document document, int documentId);
+
+    String updateMetadata(Integer[] docDataIds, String[] docDataValues, int documentId);
 
     String delete(int id);
+
+    List<DocMetaResponse> getMetadata(int documentId);
 }

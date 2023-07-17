@@ -58,14 +58,15 @@
                             <div class="card-body align-items-center">
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
-                                    <tr class="align-self-center">
-                                        <th>STT</th>
-                                        <th></th>
-                                        <th>Tên</th>
-                                        <th>Loại tài liệu</th>
-                                        <th>Mô tả</th>
-                                        <th>Thao tác</th>
-                                    </tr>
+                                        <tr class="align-self-center">
+                                            <th>STT</th>
+                                            <th></th>
+                                            <th>Thời gian</th>
+                                            <th>Tên</th>
+                                            <th>Loại tài liệu</th>
+                                            <th>Mô tả</th>
+                                            <th>Thao tác</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="list, index : ${listDocument}">
@@ -74,6 +75,7 @@
                                             <td><img th:src="@{/dist/icon/folder.png}" th:if="${list.loai == 'FOLDER'}">
                                                 <img th:src="@{/dist/icon/pdf.png}"
                                                      th:if="${list.loai == 'FILE'}"></td>
+                                            <td th:text="${list.createdAt}"></td>
                                             <td>
                                                 <a th:href="@{/kho-tai-lieu/document/{aliasName}-{id}(aliasName=${list.aliasName}, id=${list.id})}"
                                                    th:text="${list.ten}" th:if="${list.loai == 'FOLDER'}"></a>
@@ -201,14 +203,15 @@
                                     </th:block>
                                     </tbody>
                                     <tfoot>
-                                    <tr class="align-self-center">
-                                        <th>STT</th>
-                                        <th></th>
-                                        <th>Tên</th>
-                                        <th>Loại tài liệu</th>
-                                        <th>Mô tả</th>
-                                        <th>Thao tác</th>
-                                    </tr>
+                                        <tr class="align-self-center">
+                                            <th>STT</th>
+                                            <th></th>
+                                            <th>Thời gian</th>
+                                            <th>Tên</th>
+                                            <th>Loại tài liệu</th>
+                                            <th>Mô tả</th>
+                                            <th>Thao tác</th>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>

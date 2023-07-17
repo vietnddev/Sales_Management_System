@@ -5,9 +5,11 @@ import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.hethong.entity.Account;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -39,9 +41,21 @@ public class Document implements Serializable {
     @Column(name = "mo_ta")
     private String moTa;
 
+    @CreatedDate
+    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
+    private Date createdAt;
+
+    @PreUpdate
+    @PrePersist
+    public void updateTimeStamps() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
+
     @JsonIgnoreProperties("listDocument")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false, insertable = true, updatable = true)
+    @JoinColumn(name = "created_by", nullable = false, insertable = true, updatable = true)
     private Account account;
 
     @JsonIgnoreProperties("listDocument")

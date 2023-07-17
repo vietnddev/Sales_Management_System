@@ -3,9 +3,11 @@ package com.flowiee.app.khotailieu.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -48,6 +50,18 @@ public class DocField implements Serializable {
 
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;
+
+    @CreatedDate
+    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
+    private Date createdAt;
+
+    @PreUpdate
+    @PrePersist
+    public void updateTimeStamps() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
 
     @JsonIgnoreProperties("listDocField")
     @ManyToOne(fetch = FetchType.LAZY)

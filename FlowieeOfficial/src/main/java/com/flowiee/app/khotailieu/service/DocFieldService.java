@@ -13,7 +13,9 @@ public interface DocFieldService {
 
     List<DocField> findByDocTypeId(LoaiTaiLieu loaiTaiLieu);
 
-    DocField save(DocField docField);
+    String save(DocField docField);
+
+    String update(DocField docField, int docFieldId);
 
     DocField delete(int id);
 }

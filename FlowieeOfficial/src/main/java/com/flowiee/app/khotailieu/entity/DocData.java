@@ -2,9 +2,11 @@ package com.flowiee.app.khotailieu.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.sql.Clob;
+import java.util.Date;
 
 @Builder
 @Entity
@@ -32,6 +34,18 @@ public class DocData {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", nullable = false)
     private Document document;
+
+    @CreatedDate
+    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
+    private Date createdAt;
+
+    @PreUpdate
+    @PrePersist
+    public void updateTimeStamps() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
 
     @Override
     public String toString() {

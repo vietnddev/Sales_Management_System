@@ -48,7 +48,7 @@
                     <!-- /.card-header -->
                     <div class="card-body"
                          style="padding-left: 5px; padding-top: 3px; padding-right: 5px; padding-bottom: 5px">
-                        <div class="row mt-2 mb-1 border">
+                        <div class="row mt-2 mb-1">
                             <div class="col-sm-12 text-center" style="margin-bottom: 5px">
                                 <button type="button" class="btn btn-sm btn-secondary" style="width: 90px"
                                         data-toggle="modal" data-target="#modalDownload">
@@ -78,7 +78,7 @@
                                 <div class="card">
                                     <div class="card-header p-2">
                                         <ul class="nav nav-pills"
-                                            style="font-weight: bold; font-size: 13px">
+                                            style="font-size: 13px">
                                             <li class="nav-item">
                                                 <a class="nav-link active"
                                                    href="#docData"
@@ -102,21 +102,28 @@
                                     <div class="card-body">
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="docData">
-                                                <form class="form-horizontal" method="POST"
-                                                      action="">
+                                                <form class="form-horizontal" method="GET"
+                                                      th:action="@{/kho-tai-lieu/document/update-metadata/{id}(id=${docDetail.id})}">
                                                     <div class="form-group row"
-                                                         th:each="list : ${listDocDataInfo.entrySet()}">
-                                                        <label for="inputName"
+                                                         th:each="list : ${listDocDataInfo}">
+                                                        <label th:for="${list.docDataId}"
                                                                class="col-sm-4 col-form-label"
-                                                               th:text="${list.key}">
+                                                               th:text="${list.docFieldName}">
                                                         </label>
                                                         <div class="col-sm-8">
-                                                            <input type="text"
-                                                                   class="form-control"
-                                                                   id="inputName"
-                                                                   th:placeholder="${list.key}"
-                                                                   name="noiDung"
-                                                                   th:value="${list.value}">
+                                                            <input type="hidden" name="docDataId" th:value="${list.docDataId}">
+                                                            <input class="form-control"
+                                                                   name="docDataValue"
+                                                                   th:type="${list.docFieldTypeInput}"
+                                                                   th:placeholder="${list.docFieldName}"
+                                                                   th:value="${list.docDataValue}"
+                                                                   th:if="${list.docFieldRequired}" required>
+                                                            <input class="form-control"
+                                                                   name="docDataValue"
+                                                                   th:type="${list.docFieldTypeInput}"
+                                                                   th:placeholder="${list.docFieldName}"
+                                                                   th:value="${list.docDataValue}"
+                                                                   th:if="!${list.docFieldRequired}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
