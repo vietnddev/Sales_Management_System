@@ -12,6 +12,7 @@ import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
+import com.flowiee.app.hethong.service.MailService;
 import com.flowiee.app.khotailieu.entity.DocData;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.entity.Document;
@@ -64,6 +65,8 @@ public class DocumentController {
     private KiemTraQuyenModuleKhoTaiLieu kiemTraQuyenModuleKhoTaiLieu;
     @Autowired
     private DocShareService docShareService;
+    @Autowired
+    private MailService mailService;
 
     //Màn hình root
     @GetMapping("")

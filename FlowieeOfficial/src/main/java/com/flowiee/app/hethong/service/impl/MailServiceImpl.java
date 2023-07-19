@@ -1,6 +1,6 @@
-package com.flowiee.app.sanpham.services.impl;
+package com.flowiee.app.hethong.service.impl;
 
-import com.flowiee.app.sanpham.services.MailService;
+import com.flowiee.app.hethong.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,19 +15,20 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender javaMailSender;
 
     @Override
-    public void sendMail(String subject, String to, String body) {
-        if (subject != null && to != null && body != null){
+    public String sendMail(String subject, String to, String body) {
+        if (subject != null && to != null && body != null) {
             try {
                 MimeMessage mimeMessage = javaMailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
                 helper.setSubject(subject);
                 helper.setTo(to);
                 helper.setText(body, true);
-
                 javaMailSender.send(mimeMessage);
+                return "OK";
             } catch (MessagingException exception){
                 exception.printStackTrace();
             }
         }
+        return "NOK";
     }
 }
