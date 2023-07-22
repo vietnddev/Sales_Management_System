@@ -58,16 +58,16 @@
                             <div class="card-body align-items-center">
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
-                                        <tr class="align-self-center">
-                                            <th>STT</th>
-                                            <th></th>
-                                            <th>Thời gian</th>
-                                            <th>Tên</th>
-                                            <th>Loại tài liệu</th>
-                                            <th>Mô tả</th>
-                                            <th>Thao tác</th>
-                                        </tr>
-                                    </thead>
+                                <tr class="align-self-center">
+                                    <th>STT</th>
+                                    <th></th>
+                                    <th>Thời gian</th>
+                                    <th>Tên</th>
+                                    <th>Loại tài liệu</th>
+                                    <th>Mô tả</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                                </thead>
                                     <tbody>
                                     <th:block th:each="list, index : ${listDocument}">
                                         <tr>

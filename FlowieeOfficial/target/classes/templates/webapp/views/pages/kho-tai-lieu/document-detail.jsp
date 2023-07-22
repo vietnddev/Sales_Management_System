@@ -51,8 +51,8 @@
                         <div class="row mt-2 mb-1">
                             <div class="col-sm-12 text-center" style="margin-bottom: 5px">
                                 <button type="button" class="btn btn-sm btn-secondary" style="width: 90px"
-                                        data-toggle="modal" data-target="#modalDownload">
-                                        Tải về
+                                        data-toggle="modal" data-target="#modalChangeFile">
+                                        Thay file
                                 </button>
                                 <button type="button" class="btn btn-sm btn-success" style="width: 90px"
                                         data-toggle="modal" data-target="#modalCopy">
@@ -66,11 +66,45 @@
                                         data-toggle="modal" data-target="#modelShare">
                                         Phân quyền
                                 </button>
+
+                                <!--==-- POPUP --==-->
+                                <!--CHANGE FILE-->
+                                <div class="modal fade" id="modalChangeFile">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-left">
+                                            <form th:action="@{/kho-tai-lieu/document/change-file/{id}(id=${docDetail.id})}"
+                                                  enctype="multipart/form-data" method="post">
+                                                <div class="modal-header">
+                                                    <strong class="modal-title">Thay file đính kèm</strong>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="form-group w-100">
+                                                            <label>Chọn file mới</label>
+                                                            <input class="form-control" type="file" name="file" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer justify-content-end">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--END CHANGE FILE-->
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-7">
-                                <iframe class="w-100" th:src="@{'/' + ${listFileOfDocument.get(0).directoryPath} + '/' + ${listFileOfDocument.get(0).tenFileKhiLuu}}"
+                                <iframe class="w-100" th:src="@{'/' + ${fileActiveOfDocument.directoryPath} + '/' + ${fileActiveOfDocument.tenFileKhiLuu}}"
                                         style="min-height: 583px">
                                 </iframe>
                             </div>
@@ -101,6 +135,7 @@
                                     </div><!-- /.card-header -->
                                     <div class="card-body">
                                         <div class="tab-content">
+                                            <!--Tab metadata-->
                                             <div class="active tab-pane" id="docData">
                                                 <form class="form-horizontal" method="GET"
                                                       th:action="@{/kho-tai-lieu/document/update-metadata/{id}(id=${docDetail.id})}">
@@ -136,7 +171,9 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!-- /.tab-pane -->
+                                            <!--End Tab metadata-->
+
+                                            <!-- Tab tài liệu liên quan -->
                                             <div class="tab-pane" id="docRelated" style="font-size: 15px">
                                                 <div class="row mb-2">
                                                     <div class="col-sm-8">
@@ -146,90 +183,30 @@
                                                 </div>
                                                 <hr style="margin: 0">
                                             </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="version" style="font-size: 15px;">
-                                                <div class="row mb-2">
-                                                    <div class="col-sm-2">
-                                                        01/01/23 <br> 00:00
-                                                    </div>
-                                                    <div class="col-sm-8">
-                                                        <a href="#">Quyết định bổ nhiệm trưởng phòng ...</a>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <button type="submit" style="border: none; background: none">
-                                                            <img th:src="@{/dist/icon/restore.png}">
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <hr style="margin: 0">
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                        </div>
-                                        <!-- /.tab-content -->
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                            <!-- End Tab tài liệu liên quan -->
 
-                    <!-- Thêm mới file -->
-                    <div class="modal fade" id="insert">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <form th:action="@{/kho-tai-lieu/document/insert}"
-                                      th:object="${document}" method="post"
-                                      enctype="multipart/form-data">
-                                    <div class="modal-header">
-                                        <strong class="modal-title">Thêm mới tài liệu</strong>
-                                        <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label>Loại tài liệu</label>
-                                                    <select class="custom-select"
-                                                            name="loaiTaiLieu">
-                                                        <option th:each="list : ${listLoaiTaiLieu}"
-                                                                th:value="${list.id}"
-                                                                th:text="${list.ten}">
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>
-                                                        Tên
-                                                    </label>
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Tên loại tài liệu"
-                                                           name="ten" maxlength="200" required/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Mô tả</label>
-                                                    <textarea class="form-control" rows="5"
-                                                              placeholder="Mô tả"
-                                                              name="moTa"></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>File</label>
-                                                    <input class="form-control" type="file" name="file"/>
-                                                </div>
+                                            <!-- Tab version -->
+                                            <div class="tab-pane" id="version" style="font-size: 15px;">
+                                                <table class="table table-hover table-responsive p-0">
+                                                    <tbody class="align-self-center">
+                                                        <tr class="align-self-center" th:each="list, index : ${listFileOfDocument}">
+                                                            <td th:text="${index.index + 1}"></td>
+                                                            <td th:text="${list.createdAt}"></td>
+                                                            <td th:text="${list.tenFileGoc}">Tên</td>
+                                                            <td th:text="${list.isActive}"></td>
+                                                            <td>
+                                                                <button type="submit" style="border: none; background: none">
+                                                                    <img th:src="@{/dist/icon/restore.png}">
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer justify-content-end"
-                                             style="margin-bottom: -15px;">
-                                            <button type="button" class="btn btn-default"
-                                                    data-dismiss="modal">Hủy
-                                            </button>
-                                            <input type="hidden" name="loai" th:value="FILE"/>
-                                            <button type="submit" class="btn btn-primary">Lưu</button>
+                                            <!-- End Tab version -->
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>

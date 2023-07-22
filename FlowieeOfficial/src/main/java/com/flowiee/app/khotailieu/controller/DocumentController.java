@@ -30,15 +30,12 @@ import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @CrossOrigin
@@ -129,7 +126,9 @@ public class DocumentController {
                 List<DocMetaResponse> docMetaResponse = documentService.getMetadata(documentId);
                 modelAndView.addObject("listDocDataInfo", docMetaResponse);
 
-                //Load file đính kèm
+                //Load file active
+                modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
+                //Load các version khác của document
                 modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
                 //Trả về page xem thông tin chi tiết file
                 return modelAndView;
@@ -183,36 +182,14 @@ public class DocumentController {
     }
 
     @PostMapping("/change-file/{id}")
-    public String changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+    public String changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") int id, HttpServletRequest request) throws IOException {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (id <= 0 || documentService.findById(id) == null || file.isEmpty()) {
-            throw new BadRequestException();
+        if (id <= 0 || file.isEmpty()) {
+            throw new NotFoundException();
         }
-        //String fileNameToSave = DateUtil.now("yyyy.MM.dd.HH.mm.ss") + FileUtil.getExtension();
-        FileStorage fileStorage = FileStorage.builder()
-                .module(SystemModule.KHO_TAI_LIEU.name())
-                .contentType(file.getContentType())
-                .extension(FileUtil.getExtension(file.getOriginalFilename()))
-                .kichThuocFile(file.getSize())
-                .tenFileGoc(file.getOriginalFilename())
-                //.tenFileKhiLuu()
-
-                .build();
-        //fileStorageService.save(fileStorage);
-
-//        documentService.update(document);
-//        //Ghi log
-//        SystemLog systemLog = SystemLog.builder()
-//            .module("Kho tài liệu")
-//            .action(SystemLogAction.CAP_NHAT.name())
-//            .noiDung(document.toString())
-//            .taiKhoan(TaiKhoan.builder().id(accountService.findIdByUsername(username)).build())
-//            .ip(IPUtil.getClientIpAddress(request))
-        //.build();
-        //systemLogService.writeLog(systemLog);
+        fileStorageService.changFileOfDocument(file, id);
         return "redirect:" + request.getHeader("referer");
     }
 

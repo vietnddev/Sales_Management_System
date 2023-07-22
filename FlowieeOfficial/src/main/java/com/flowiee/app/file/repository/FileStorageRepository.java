@@ -18,6 +18,9 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Intege
     @Query("from FileStorage f where f.bienTheSanPham.id=:bienTheSanPhamId")
     List<FileStorage> findImageOfSanPhamBienThe(int bienTheSanPhamId);
 
-    @Query("from FileStorage f where f.document.id=:documentId order by f.isActive desc")
+    @Query("from FileStorage f where f.document.id=:documentId order by f.createdAt desc")
     List<FileStorage> findFileOfDocument(int documentId);
+
+    @Query("from FileStorage f where f.document.id=:documentId and f.isActive=:isActive")
+    FileStorage findFileIsActiveOfDocument(int documentId, boolean isActive);
 }

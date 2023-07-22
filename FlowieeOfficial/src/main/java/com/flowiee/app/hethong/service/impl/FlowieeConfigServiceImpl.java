@@ -52,7 +52,10 @@ public class FlowieeConfigServiceImpl implements FlowieeConfigService {
         this.save(new CauHinhHeThong(0,"Email port", "587",0));
         this.save(new CauHinhHeThong(0,"Email username", "",0));
         this.save(new CauHinhHeThong(0,"Email password", "",0));
-        this.save(new CauHinhHeThong(0,"Timeout", "",0));
-        this.save(new CauHinhHeThong(0,"Directory path", "",0));
+        this.save(new CauHinhHeThong(0,"Thời gian timeout", "",0));
+        this.save(new CauHinhHeThong(0,"Thư mục lưu file upload", "",0));
+        this.save(new CauHinhHeThong(0,"Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "false",0));
+        this.save(new CauHinhHeThong(0,"Dung lượng file tối đa cho phép upload", "",0));
+        this.save(new CauHinhHeThong(0,"Định dạng file được phép upload", "",0));
     }
 }

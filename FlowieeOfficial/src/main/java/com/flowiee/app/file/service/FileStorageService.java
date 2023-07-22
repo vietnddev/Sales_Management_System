@@ -18,15 +18,19 @@ public interface FileStorageService {
 
     List<FileStorage> getFileOfDocument(int documentId);
 
-    void saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException;
+    String saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException;
 
-    void saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException;
+    String saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException;
 
-    void saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
+    String saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
+
+    String changFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
 
     String delete(int id);
 
     String changeImageSanPham(MultipartFile fileToChange, int fileId);
 
     FileStorage findById(int fileId);
+
+    FileStorage findFileIsActiveOfDocument(int documentId);
 }

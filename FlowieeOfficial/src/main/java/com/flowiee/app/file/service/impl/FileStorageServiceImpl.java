@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.NotActiveException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
@@ -49,6 +50,15 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public FileStorage findById(int fileId) {
         return fileRepository.findById(fileId).orElse(null);
+    }
+
+    @Override
+    public FileStorage findFileIsActiveOfDocument(int documentId) {
+        FileStorage fileReturn = fileRepository.findFileIsActiveOfDocument(documentId, true);
+        if (fileReturn != null) {
+            return fileReturn;
+        }
+        return new FileStorage();
     }
 
     @Override
@@ -82,7 +92,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     @Transactional
-    public void saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException {
+    public String saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(SystemModule.SAN_PHAM.name());
@@ -94,15 +104,18 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
         fileInfo.setSanPham(SanPham.builder().id(sanPhamId).build());
         fileInfo.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
+        fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
         Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
+
+        return "OK";
     }
 
     @Override
     @Transactional
-    public void saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException {
+    public String saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(SystemModule.SAN_PHAM.name());
@@ -117,14 +130,17 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setBienTheSanPham(bienTheSanPham);
         fileInfo.setSanPham(bienTheSanPham.getSanPham());
         fileInfo.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
+        fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
         Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
+
+        return "OK";
     }
 
     @Override
-    public void saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
+    public String saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(SystemModule.KHO_TAI_LIEU.name());
@@ -136,10 +152,46 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
         fileInfo.setDocument(Document.builder().id(documentId).build());
         fileInfo.setAccount(accountService.getCurrentAccount());
+        fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
         Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
+
+        return "OK";
+    }
+
+    @Override
+    public String changFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
+        Document document = documentService.findById(documentId);
+        if (document == null) {
+            throw new NotActiveException();
+        }
+        //Set inactive cho các version cũ
+        List<FileStorage> listDocFile = document.getListDocFile();
+        for (FileStorage docFile : listDocFile) {
+            docFile.setActive(false);
+            fileRepository.save(docFile);
+        }
+        //Save file mới vào hệ thống
+        long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
+        FileStorage fileInfo = new FileStorage();
+        fileInfo.setModule(SystemModule.KHO_TAI_LIEU.name());
+        fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
+        fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setKichThuocFile(fileUpload.getSize());
+        fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
+        fileInfo.setContentType(fileUpload.getContentType());
+        fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
+        fileInfo.setDocument(Document.builder().id(documentId).build());
+        fileInfo.setAccount(accountService.getCurrentAccount());
+        fileInfo.setActive(true);
+        fileRepository.save(fileInfo);
+
+        Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        fileUpload.transferTo(path);
+
+        return "OK";
     }
 
     @Override
