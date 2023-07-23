@@ -21,7 +21,7 @@
         .product-image-thumb {
             border: none;
             box-shadow: none;
-            max-width: 6.5rem;
+            max-width: 7rem;
             margin-right: 0rem;
         }
     </style>
@@ -55,7 +55,8 @@
                     <div class="col-sm-5">
                         <!--Start Image chính-->
                         <div class="row">
-                            <img th:src="@{/dist/img/photo1.png}" class="product-image" alt="Product Image"
+                            <img th:src="@{'/' + ${imageActive.directoryPath} + '/' + ${imageActive.tenFileKhiLuu}}"
+                                 class="product-image" alt="Product Image"
                                  style="width: 100%; border-radius: 5px; margin: auto">
                         </div>
                         <!--./ End Image chính-->
@@ -181,17 +182,17 @@
 
                     <!--./ Srart Sub-Image-->
                     <div class="col-sm-7 row" style="max-height: 345px; overflow: scroll">
-                        <div class="col-sm-3 row mb-2 border"
-                             th:each="list : ${listImageOfSanPham}"
-                             style="border-radius: 10px; margin: 3px; max-width: 24%">
-                            <div class="col-sm-12 product-image-thumb" style="margin: auto">
+                        <div th:each="list : ${listImageOfSanPham}"
+                             th:class="(${list.isActive} ? 'col-sm-3 row mb-2 border border-primary' : 'col-sm-3 row mb-2 border')"
+                             th:style="(${list.isActive} ? 'border-radius: 10px; margin: 3px; max-width: 24%; background-color:aliceblue' : 'border-radius: 10px; margin: 3px; max-width: 24%')">
+                            <div class="row col-sm-12 product-image-thumb" style="margin: auto">
                                 <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"
                                      alt="Product Image">
                             </div>
-                            <div class="col-sm-12">
+                            <div class="row col-sm-12 mb-2">
                                 <!--Start modal UPDATE hình ảnh-->
-                                <i class="fa-solid fa-arrows-rotate text-info"
-                                   style="position: absolute; bottom: 5px; cursor: pointer"
+                                <i class="fa-solid fa-arrows-rotate text-info col"
+                                   style="cursor: pointer"
                                    data-toggle="modal"
                                    th:data-target="'#modalChangeImage_' + ${list.id}">
                                 </i>
@@ -227,9 +228,42 @@
                                 </div>
                                 <!--End modal UPDATE hình ảnh-->
 
+                                <!--Start modal Active hình ảnh-->
+                                <i class="fa-regular fa-circle-check col"
+                                   style="cursor: pointer"
+                                   data-toggle="modal"
+                                   th:data-target="'#modalActiveImage_' + ${list.id}">
+                                </i>
+                                <div class="modal fade" th:id="'modalActiveImage_' + ${list.id}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-left">
+                                            <form th:action="@{/san-pham/active-image/{sanPhamId}(sanPhamId=${detailProducts.id})}" method="post">
+                                                <div class="modal-header">
+                                                    <strong class="modal-title">Đặt ảnh hiển thị default</strong>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Xác nhận chọn this image is default!
+                                                    <input type="hidden" name="imageId" th:value="${list.id}">
+                                                </div>
+                                                <div class="modal-footer justify-content-end">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End modal Active hình ảnh-->
+
                                 <!--Start modal DELETE hình ảnh-->
-                                <i class="fa-solid fa-trash text-danger"
-                                   style="position: absolute; bottom: 5px; right: 5px; cursor: pointer"
+                                <i class="fa-solid fa-trash text-danger col"
+                                   style="cursor: pointer"
                                    data-toggle="modal"
                                    th:data-target="'#modalDeleteImage_' + ${list.id}">
                                 </i>

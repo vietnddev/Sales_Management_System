@@ -1,6 +1,8 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.utils.DateUtil;
@@ -36,9 +38,8 @@ public class SanPhamBienTheController {
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping(value = "{id}")
-    public ModelAndView showDetailProduct(@PathVariable("id") int id) {
-        /* Show trang chi tiết của biến thể
-         * */
+    public ModelAndView showDetailProduct(@PathVariable("id") int bienTheSanPhamId) {
+        // Show trang chi tiết của biến thể
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -46,11 +47,16 @@ public class SanPhamBienTheController {
         modelAndView.addObject("bienTheSanPham", new BienTheSanPham());
         modelAndView.addObject("thuocTinhSanPham", new ThuocTinhSanPham());
         modelAndView.addObject("giaBanSanPham", new GiaSanPham());
-        modelAndView.addObject("listThuocTinh", thuocTinhSanPhamService.getAllAttributes(id));
-        modelAndView.addObject("bienTheSanPhamId", id);
-        modelAndView.addObject("bienTheSanPham", bienTheSanPhamService.findById(id));
-        modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(id));
-        modelAndView.addObject("listPrices", giaSanPhamService.findByBienTheSanPhamId(id));
+        modelAndView.addObject("listThuocTinh", thuocTinhSanPhamService.getAllAttributes(bienTheSanPhamId));
+        modelAndView.addObject("bienTheSanPhamId", bienTheSanPhamId);
+        modelAndView.addObject("bienTheSanPham", bienTheSanPhamService.findById(bienTheSanPhamId));
+        modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(bienTheSanPhamId));
+        modelAndView.addObject("listPrices", giaSanPhamService.findByBienTheSanPhamId(bienTheSanPhamId));
+        FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(bienTheSanPhamId);
+        if (imageActive == null) {
+            imageActive = new FileStorage();
+        }
+        modelAndView.addObject("imageActive", imageActive);
         return modelAndView;
     }
 
@@ -106,6 +112,20 @@ public class SanPhamBienTheController {
             int idGiaBanHienTai = Integer.parseInt(request.getParameter("idGiaBan"));
             giaSanPhamService.update(giaSanPham, idBienTheSanPham, idGiaBanHienTai);
         }
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @PostMapping(value = "/active-image/{sanPhamBienTheId}")
+    public String activeProduct(HttpServletRequest request,
+                                @PathVariable("sanPhamBienTheId") Integer sanPhamBienTheId,
+                                @RequestParam("imageId") Integer imageId) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (sanPhamBienTheId == null || sanPhamBienTheId <= 0 || imageId == null || imageId <= 0) {
+            throw new NotFoundException();
+        }
+        fileStorageService.setImageActiveOfBienTheSanPham(sanPhamBienTheId, imageId);
         return "redirect:" + request.getHeader("referer");
     }
 }

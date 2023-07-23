@@ -1,9 +1,11 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.danhmuc.service.LoaiKichCoService;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
+import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
@@ -100,6 +102,10 @@ public class SanPhamController {
         modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
         //List image
         modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
+        //Image active
+        FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(sanPhamId);
+        modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());
+
         return modelAndView;
     }
 
@@ -137,6 +143,20 @@ public class SanPhamController {
         } else {
             System.out.println("Product not found!");
         }
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @PostMapping(value = "/active-image/{sanPhamId}")
+    public String activeProduct(HttpServletRequest request,
+                                @PathVariable("sanPhamId") Integer sanPhamId,
+                                @RequestParam("imageId") Integer imageId) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (sanPhamId == null || sanPhamId <= 0 || imageId == null || imageId <= 0) {
+            throw new NotFoundException();
+        }
+        fileStorageService.setImageActiveOfSanPham(sanPhamId, imageId);
         return "redirect:" + request.getHeader("referer");
     }
 }

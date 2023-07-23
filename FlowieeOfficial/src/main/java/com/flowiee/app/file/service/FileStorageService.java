@@ -33,4 +33,12 @@ public interface FileStorageService {
     FileStorage findById(int fileId);
 
     FileStorage findFileIsActiveOfDocument(int documentId);
+
+    FileStorage findImageActiveOfSanPham(int sanPhamId);
+
+    FileStorage findImageActiveOfSanPhamBienThe(int sanPhamBienTheId);
+
+    String setImageActiveOfSanPham(Integer sanPhamId, Integer imageId);
+
+    String setImageActiveOfBienTheSanPham(Integer bienTheSanPhamId, Integer imageId);
 }

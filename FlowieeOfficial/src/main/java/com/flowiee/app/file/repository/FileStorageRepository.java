@@ -4,18 +4,20 @@ import com.flowiee.app.file.entity.FileStorage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
+@Transactional
 public interface FileStorageRepository extends JpaRepository<FileStorage, Integer> {
     @Query("from FileStorage f where f.module=:module")
     List<FileStorage> findAllImageSanPham(String module);
 
-    @Query("from FileStorage f where f.sanPham.id=:idSanPham")
-    List<FileStorage> findImageOfSanPham(int idSanPham);
+    @Query("from FileStorage f where f.sanPham.id=:sanPhamId and f.bienTheSanPham.id is null order by f.createdAt")
+    List<FileStorage> findImageOfSanPham(int sanPhamId);
 
-    @Query("from FileStorage f where f.bienTheSanPham.id=:bienTheSanPhamId")
+    @Query("from FileStorage f where f.bienTheSanPham.id=:bienTheSanPhamId order by f.createdAt")
     List<FileStorage> findImageOfSanPhamBienThe(int bienTheSanPhamId);
 
     @Query("from FileStorage f where f.document.id=:documentId order by f.createdAt desc")
@@ -24,6 +26,9 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Intege
     @Query("from FileStorage f where f.document.id=:documentId and f.isActive=:isActive")
     FileStorage findFileIsActiveOfDocument(int documentId, boolean isActive);
 
-    //SELECT * FROM FILE_STORAGE WHERE SAN_PHAM_ID = 2 and BIEN_THE_SAN_PHAM_ID is null and is_active = 1 order by created_at desc
-    //@Query
+    @Query("from FileStorage f where f.sanPham.id=:sanPhamId and f.bienTheSanPham.id is null and f.isActive=:isActive")
+    FileStorage findImageActiveOfSanPham(int sanPhamId, boolean isActive);
+
+    @Query("from FileStorage f where f.bienTheSanPham.id=:bienTheSanPhamId and f.isActive=:isActive")
+    FileStorage findImageActiveOfSanPhamBienThe(int bienTheSanPhamId, boolean isActive);
 }

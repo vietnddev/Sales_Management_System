@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.NotActiveException;
 import java.nio.file.Path;
@@ -46,6 +45,8 @@ public class FileStorageServiceImpl implements FileStorageService {
     private BienTheSanPhamService bienTheSanPhamService;
     @Autowired
     private DocumentService documentService;
+    @Autowired
+    FileStorageService fileService;
 
     @Override
     public FileStorage findById(int fileId) {
@@ -59,6 +60,60 @@ public class FileStorageServiceImpl implements FileStorageService {
             return fileReturn;
         }
         return new FileStorage();
+    }
+
+    @Override
+    public FileStorage findImageActiveOfSanPham(int sanPhamId) {
+        return fileRepository.findImageActiveOfSanPham(sanPhamId, true);
+    }
+
+    @Override
+    public FileStorage findImageActiveOfSanPhamBienThe(int sanPhamBienTheId) {
+        return fileRepository.findImageActiveOfSanPhamBienThe(sanPhamBienTheId, true);
+    }
+
+    @Override
+    public String setImageActiveOfSanPham(Integer sanPhamId, Integer imageId) {
+        if (sanPhamId == null || sanPhamId <= 0 || imageId == null || imageId <= 0) {
+            throw new NotFoundException();
+        }
+        //Bỏ image default hiện tại
+        FileStorage imageActiving = fileRepository.findImageActiveOfSanPham(sanPhamId, true);
+        if (imageActiving != null) {
+            imageActiving.setActive(false);
+            fileRepository.save(imageActiving);
+        }
+
+        //Active lại image theo id được truyền vào
+        FileStorage imageToActive = fileRepository.findById(imageId).orElse(null);
+        if (imageToActive != null) {
+            imageToActive.setActive(true);
+            fileRepository.save(imageToActive);
+            return "OK";
+        }
+        return "NOK";
+    }
+
+    @Override
+    public String setImageActiveOfBienTheSanPham(Integer bienTheSanPhamId, Integer imageId) {
+        if (bienTheSanPhamId == null || bienTheSanPhamId <= 0 || imageId == null || imageId <= 0) {
+            throw new NotFoundException();
+        }
+        //Bỏ image default hiện tại
+        FileStorage imageActiving = fileRepository.findImageActiveOfSanPhamBienThe(bienTheSanPhamId, true);
+        if (imageActiving != null) {
+            imageActiving.setActive(false);
+            fileRepository.save(imageActiving);
+        }
+
+        //Active lại image theo id được truyền vào
+        FileStorage imageToActive = fileRepository.findById(imageId).orElse(null);
+        if (imageToActive != null) {
+            imageToActive.setActive(true);
+            fileRepository.save(imageToActive);
+            return "OK";
+        }
+        return "NOK";
     }
 
     @Override

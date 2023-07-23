@@ -2,13 +2,12 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.hethong.entity.Account;
-import com.flowiee.app.hethong.entity.SystemLog;
+import com.flowiee.app.file.entity.FileStorage;
+import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
-import com.flowiee.app.sanpham.controller.SanPhamController;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.repository.SanPhamRepository;
 import com.flowiee.app.sanpham.services.SanPhamService;
@@ -30,10 +29,21 @@ public class SanPhamServiceImpl implements SanPhamService {
     private SystemLogService systemLogService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private FileStorageService fileService;
 
     @Override
     public List<SanPham> findAll() {
-        return productsRepository.findAll();
+        List<SanPham> listSanPham = productsRepository.findAll();
+        for (int i = 0; i < listSanPham.size(); i++) {
+            FileStorage imageActive = fileService.findImageActiveOfSanPham(listSanPham.get(i).getId());
+            if (imageActive != null) {
+                listSanPham.get(i).setImageActive(imageActive);
+            } else {
+                listSanPham.get(i).setImageActive(new FileStorage());
+            }
+        }
+        return listSanPham;
     }
 
     @Override

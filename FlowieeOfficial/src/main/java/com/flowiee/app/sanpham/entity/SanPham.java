@@ -50,6 +50,9 @@ public class SanPham implements Serializable {
     @OneToMany(mappedBy = "sanPham", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
 
+    @Transient
+    private FileStorage imageActive;
+
     @Override
     public String toString() {
         return "SanPham{" +

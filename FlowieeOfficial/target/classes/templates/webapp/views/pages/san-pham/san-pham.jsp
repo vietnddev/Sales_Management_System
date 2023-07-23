@@ -47,21 +47,26 @@
                             <div class="card-body align-items-center">
                                 <table id="example1" class="table table-bordered table-striped align-items-center">
                                     <thead class="align-self-center">
-                                    <tr class="align-self-center">
-                                        <th>STT</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Loại sản phẩm</th>
-                                        <th>Đơn vị tính</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
+                                        <tr class="align-self-center">
+                                            <th>STT</th>
+                                            <th></th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Loại sản phẩm</th>
+                                            <th>Đơn vị tính</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thao tác</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list, index : ${listSanPham}">
-                                        <tr>
+                                        <tr th:each="list, index : ${listSanPham}">
                                             <td th:text="${index.index + 1}"></td>
+                                            <td class="text-center">
+                                                <img th:src="@{'/' + ${list.imageActive.directoryPath} + '/' + ${list.imageActive.tenFileKhiLuu}}"
+                                                     style="width: 100px; height: 100px; border-radius: 5px">
+                                            </td>
                                             <td>
-                                                <a th:href="@{/san-pham/{id}(id=${list.id})}" th:text="${list.tenSanPham}"></a>
+                                                <a th:href="@{/san-pham/{id}(id=${list.id})}"
+                                                   th:text="${list.tenSanPham}"></a>
                                             </td>
                                             <td th:text="${list.loaiSanPham.tenLoai}">
                                             </td>
@@ -124,111 +129,118 @@
                                                 </div>
                                             </td>
                                             <!-- Update -->
-                                            <th:block>
-                                                <!-- Modal update -->
-                                                <div class="modal fade" th:id="'update-' + ${list.id}">
-                                                    <div class="modal-dialog modal-lg">
-                                                        <div class="modal-content">
-                                                            <form th:action="@{/san-pham/update/{id}(id=${list.id})}"
-                                                                  th:object="${sanPham}" method="post">
-                                                                <div class="modal-header">
-                                                                    <strong class="modal-title">Cập nhật sản
-                                                                        phẩm</strong>
-                                                                    <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="row">
-                                                                        <div class="col-12">
-                                                                            <div class="form-group">
-                                                                                <label>Tên sản phẩm</label>
-                                                                                <input type="text" class="form-control"
-                                                                                       placeholder="Tên sản phẩm"
-                                                                                       name="tenSanPham"
-                                                                                       th:value="${list.tenSanPham}"/>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label>Loại sản phẩm</label>
-                                                                                <select class="custom-select"
-                                                                                        name="loaiSanPham">
-                                                                                    <option th:each="lstype, iterStat : ${listLoaiSanPham}"
-                                                                                            th:value="${lstype.id}"
-                                                                                            th:text="${lstype.tenLoai}">
-                                                                                    </option>
-                                                                                    <option th:text="${list.loaiSanPham.tenLoai}"
-                                                                                            th:value="${list.loaiSanPham.id}"
-                                                                                            selected></option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label>Đơn vị tính</label>
-                                                                                <select class="custom-select"
-                                                                                        name="donViTinh">
-                                                                                    <option th:each="lsDvt, iterStat : ${listDonViTinh}"
-                                                                                            th:value="${lsDvt.id}"
-                                                                                            th:text="${lsDvt.tenLoai}">
-                                                                                    </option>
-                                                                                    <option th:text="${list.donViTinh.tenLoai}"
-                                                                                            th:value="${list.donViTinh.id}"
-                                                                                            selected></option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label>Mô tả sản phẩm</label>
-                                                                                <textarea class="form-control" rows="5"
-                                                                                          placeholder="Mô tả sản phẩm"
-                                                                                          name="moTaSanPham"
-                                                                                          th:text="${list.moTaSanPham}"></textarea>
-                                                                            </div>
-                                                                            <div class="form-group" th:if="${list.trangThai}">
-                                                                                <label>Trạng thái</label>
-                                                                                <select class="custom-select" name="trangThai">
-                                                                                    <option value="true" selected>Kinh doanh</option>
-                                                                                    <option value="false">Ngừng kinh doanh</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group" th:if="not ${list.trangThai}">
-                                                                                <label>Trạng thái</label>
-                                                                                <select class="custom-select" name="trangThai">
-                                                                                    <option value="true">Kinh doanh</option>
-                                                                                    <option value="false" selected>Ngừng kinh doanh</option>
-                                                                                </select>
-                                                                            </div>
+                                            <!-- Modal update -->
+                                            <div class="modal fade" th:id="'update-' + ${list.id}">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <form th:action="@{/san-pham/update/{id}(id=${list.id})}"
+                                                              th:object="${sanPham}" method="post">
+                                                            <div class="modal-header">
+                                                                <strong class="modal-title">Cập nhật sản
+                                                                    phẩm</strong>
+                                                                <button type="button" class="close"
+                                                                        data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                            <label>Tên sản phẩm</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   placeholder="Tên sản phẩm"
+                                                                                   name="tenSanPham"
+                                                                                   th:value="${list.tenSanPham}"/>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label>Loại sản phẩm</label>
+                                                                            <select class="custom-select"
+                                                                                    name="loaiSanPham">
+                                                                                <option th:each="lstype, iterStat : ${listLoaiSanPham}"
+                                                                                        th:value="${lstype.id}"
+                                                                                        th:text="${lstype.tenLoai}">
+                                                                                </option>
+                                                                                <option th:text="${list.loaiSanPham.tenLoai}"
+                                                                                        th:value="${list.loaiSanPham.id}"
+                                                                                        selected></option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label>Đơn vị tính</label>
+                                                                            <select class="custom-select"
+                                                                                    name="donViTinh">
+                                                                                <option th:each="lsDvt, iterStat : ${listDonViTinh}"
+                                                                                        th:value="${lsDvt.id}"
+                                                                                        th:text="${lsDvt.tenLoai}">
+                                                                                </option>
+                                                                                <option th:text="${list.donViTinh.tenLoai}"
+                                                                                        th:value="${list.donViTinh.id}"
+                                                                                        selected></option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label>Mô tả sản phẩm</label>
+                                                                            <textarea class="form-control" rows="5"
+                                                                                      placeholder="Mô tả sản phẩm"
+                                                                                      name="moTaSanPham"
+                                                                                      th:text="${list.moTaSanPham}"></textarea>
+                                                                        </div>
+                                                                        <div class="form-group"
+                                                                             th:if="${list.trangThai}">
+                                                                            <label>Trạng thái</label>
+                                                                            <select class="custom-select"
+                                                                                    name="trangThai">
+                                                                                <option value="true" selected>Kinh
+                                                                                    doanh
+                                                                                </option>
+                                                                                <option value="false">Ngừng kinh doanh
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group"
+                                                                             th:if="not ${list.trangThai}">
+                                                                            <label>Trạng thái</label>
+                                                                            <select class="custom-select"
+                                                                                    name="trangThai">
+                                                                                <option value="true">Kinh doanh</option>
+                                                                                <option value="false" selected>Ngừng
+                                                                                    kinh doanh
+                                                                                </option>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="modal-footer justify-content-end"
-                                                                         style="margin-bottom: -15px;">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Lưu
-                                                                        </button>
-                                                                    </div>
                                                                 </div>
-                                                            </form>
-                                                        </div>
-                                                        <!-- /.modal-content -->
+                                                                <div class="modal-footer justify-content-end"
+                                                                     style="margin-bottom: -15px;">
+                                                                    <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Hủy
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Lưu
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                                                     </div>
-                                                    <!-- /.modal-dialog -->
+                                                    <!-- /.modal-content -->
                                                 </div>
-                                                <!-- /.end modal update-->
-                                            </th:block>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <!-- /.end modal update-->
                                             <!-- End update -->
                                         </tr>
-                                    </th:block>
                                     </tbody>
                                     <tfoot>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Loại sản phẩm</th>
-                                        <th>Đơn vị tính</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th></th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Loại sản phẩm</th>
+                                            <th>Đơn vị tính</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thao tác</th>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
