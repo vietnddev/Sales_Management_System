@@ -4,13 +4,11 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
-import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.MailService;
 import com.flowiee.app.khotailieu.entity.DocData;
@@ -18,6 +16,7 @@ import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.khotailieu.model.DocMetaResponse;
 import com.flowiee.app.khotailieu.model.DocumentType;
+import com.flowiee.app.khotailieu.repository.DocumentRepository;
 import com.flowiee.app.khotailieu.service.DocDataService;
 import com.flowiee.app.khotailieu.service.DocFieldService;
 import com.flowiee.app.khotailieu.service.DocShareService;
@@ -64,6 +63,8 @@ public class DocumentController {
     private DocShareService docShareService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private DocumentRepository documentRepository;
 
     //Màn hình root
     @GetMapping("")
@@ -128,8 +129,20 @@ public class DocumentController {
 
                 //Load file active
                 modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
+
                 //Load các version khác của document
                 modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
+
+                //Load cây thư mục
+//                modelAndView.addObject("cayThuMuc", null);
+
+
+                //List<Document> listThuMuc = documentRepository.findListFolder(DocumentType.FOLDER.name());
+                //Document root = buildStorageTree(listThuMuc);
+                //modelAndView.addObject("root", root);
+
+                //documentService.getCayThuMucSTG();
+
                 //Trả về page xem thông tin chi tiết file
                 return modelAndView;
             } else {
@@ -139,6 +152,34 @@ public class DocumentController {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
     }
+
+//    public Document buildStorageTree(List<Document> storages) {
+//        Map<Integer, Document> storageMap = new HashMap<>();
+//        Document root = null;
+//
+//        // Tạo danh sách thư mục và thêm vào map
+//        for (Document storage : storages) {
+//            storageMap.put(storage.getId(), storage);
+//            if (storage.getParentId() == 0) {
+//                root = storage; // Thư mục gốc
+//            }
+//        }
+//
+//        // Xây dựng cây thư mục
+//        for (Document storage : storages) {
+//            Integer parentStorageId = storage.getParentId();
+//            if (parentStorageId != null) {
+//                Document parentStorage = storageMap.get(parentStorageId);
+//                if (parentStorage != null) {
+//                    parentStorage.addSubStorage(storage);
+//                }
+//            }
+//        }
+//
+//        return root;
+//    }
+
+
 
     //Insert FILE và FOLDER
     @PostMapping("/insert")

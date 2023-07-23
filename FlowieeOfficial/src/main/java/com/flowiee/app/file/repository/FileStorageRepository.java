@@ -23,4 +23,7 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Intege
 
     @Query("from FileStorage f where f.document.id=:documentId and f.isActive=:isActive")
     FileStorage findFileIsActiveOfDocument(int documentId, boolean isActive);
+
+    //SELECT * FROM FILE_STORAGE WHERE SAN_PHAM_ID = 2 and BIEN_THE_SAN_PHAM_ID is null and is_active = 1 order by created_at desc
+    //@Query
 }

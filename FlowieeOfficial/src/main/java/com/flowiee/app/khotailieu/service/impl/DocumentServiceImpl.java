@@ -4,6 +4,7 @@ import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.khotailieu.entity.DocData;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.khotailieu.model.DocMetaResponse;
+import com.flowiee.app.khotailieu.model.DocumentType;
 import com.flowiee.app.khotailieu.repository.DocumentRepository;
 import com.flowiee.app.khotailieu.service.DocDataService;
 import com.flowiee.app.khotailieu.service.DocumentService;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -109,4 +107,47 @@ public class DocumentServiceImpl implements DocumentService {
 
         return listReturn;
     }
+
+//    @Override
+//    public void getCayThuMucSTG() {
+//        List<Document> listThuMuc = documentRepository.findListFolder(DocumentType.FOLDER.name());
+//
+//        // Xây dựng cây thư mục và hiển thị
+//        Document root = buildStorageTree(listThuMuc);
+//        displayStorageTree(root, "");
+//    }
+
+//    public static Document buildStorageTree(List<Document> storages) {
+//        Map<Integer, Document> storageMap = new HashMap<>();
+//        Document root = null;
+//
+//        // Tạo danh sách thư mục và thêm vào map
+//        for (Document storage : storages) {
+//            storageMap.put(storage.getId(), storage);
+//            if (storage.getParentId() == 0) {
+//                root = storage; // Thư mục gốc
+//            }
+//        }
+//
+//        // Xây dựng cây thư mục
+//        for (Document storage : storages) {
+//            Integer parentStorageId = storage.getParentId();
+//            if (parentStorageId != null) {
+//                Document parentStorage = storageMap.get(parentStorageId);
+//                if (parentStorage != null) {
+//                    parentStorage.addSubStorage(storage);
+//                }
+//            }
+//        }
+//
+//        return root;
+//    }
+
+    // Hiển thị cây thư mục
+//    public static void displayStorageTree(Document storage, String indent) {
+//        System.out.println(indent + storage.getTen());
+//        for (Document subStorage : storage.getSubThuMuc()) {
+//            displayStorageTree(subStorage, indent + "    ");
+//        }
+//    }
 }

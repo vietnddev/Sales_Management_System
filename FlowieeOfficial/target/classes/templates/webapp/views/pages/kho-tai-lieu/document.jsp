@@ -112,7 +112,7 @@
                                                             <form th:action="@{/kho-tai-lieu/document/delete/{id}(id=${list.id})}"
                                                                   th:object="${document}" method="post">
                                                                 <div class="modal-header">
-                                                                    <strong class="modal-title">Xác nhận xóa loại tài
+                                                                    <strong class="modal-title">Xác nhận xóa tài
                                                                         liệu</strong>
                                                                     <button type="button" class="close"
                                                                             data-dismiss="modal" aria-label="Close">
@@ -120,21 +120,18 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <div class="card-body">
-                                                                        Danh mục <strong class="badge text-bg-info"
+                                                                        Tài liệu <span class="badge text-bg-info"
                                                                                          th:text="${list.ten}"
-                                                                                         style="font-size: 16px;"></strong>
-                                                                        sẽ bị xóa vĩnh viễn!
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-end"
-                                                                         style="margin-bottom: -15px;">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Đồng ý
-                                                                        </button>
-                                                                    </div>
+                                                                                         style="font-size: 16px;"></span>
+                                                                        sẽ bị xóa!
+                                                                </div>
+                                                                <div class="modal-footer justify-content-end">
+                                                                    <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Hủy
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Đồng ý
+                                                                    </button>
                                                                 </div>
                                                             </form>
                                                         </div>

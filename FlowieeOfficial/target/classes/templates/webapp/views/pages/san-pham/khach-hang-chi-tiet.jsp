@@ -99,7 +99,8 @@
                                         </div>
                                     </div>
                                     <!--END TAB THÔNG TIN ĐƠN HÀNG-->
-                                    <!--START TAB LỊCH SỬ THANH TOÁN-->
+
+                                    <!--START TAB LỊCH SỬ MUA HÀNG-->
                                     <div class="tab-pane fade" id="LICH_SU_MUA_HANG" role="tabpanel"
                                          aria-labelledby="custom-tabs-one-profile-tab">
                                         <div class="row">
@@ -107,31 +108,35 @@
                                                  style="height: 500px;">
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
-                                                    <tr>
-                                                        <td>STT</td>
-                                                        <td>Mã đơn hàng</td>
-                                                        <td>Thời gian đặt hàng</td>
-                                                        <td>Địa chỉ nhận hàng</td>
-                                                        <td>Số tiền</td>
-                                                        <td>Kênh</td>
-                                                        <td>Trạng thái</td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>STT</td>
+                                                            <td>Mã đơn hàng</td>
+                                                            <td>Thời gian đặt hàng</td>
+                                                            <td>Địa chỉ nhận hàng</td>
+                                                            <td>Số tiền</td>
+                                                            <td>Kênh</td>
+                                                            <td>Trạng thái</td>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="donHang, index : ${listDonHang}">
-                                                        <td th:text="${index.index + 1}"></td>
-                                                        <td th:text="${donHang.maDonHang}"></td>
-                                                        <td th:text="${donHang.thoiGianDatHang}"></td>
-                                                        <td th:text="${donHang.khachHang.diaChi}"></td>
-                                                        <td th:text="${donHang.tongTienDonHang}"></td>
-                                                        <td th:text="${donHang.kenhBanHang.tenLoai}"></td>
-                                                        <td></td>
-                                                    </tr>
+                                                        <tr th:each="donHang, index : ${listDonHang}">
+                                                            <td th:text="${index.index + 1}"></td>
+                                                            <td>
+                                                                <a th:href="@{/don-hang/{id}(id=${donHang.id})}"
+                                                                   th:text="${donHang.maDonHang}"></a>
+                                                            </td>
+                                                            <td th:text="${donHang.thoiGianDatHang}"></td>
+                                                            <td th:text="${donHang.khachHang.diaChi}"></td>
+                                                            <td th:text="${donHang.tongTienDonHang}"></td>
+                                                            <td th:text="${donHang.kenhBanHang.tenLoai}"></td>
+                                                            <td></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
+                                    <!--END TAB LỊCH SỬ MUA HÀNG-->
                                 </div>
                             </div>
                             <!--END CARD BODY-->

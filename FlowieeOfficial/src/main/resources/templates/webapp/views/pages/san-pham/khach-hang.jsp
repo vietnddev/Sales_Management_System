@@ -94,18 +94,17 @@
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Tên khách hàng</th>
-                                        <th>Giới tính</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Email</th>
-                                        <th>Địa chỉ</th>
-                                    </tr>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Giới tính</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list, index : ${listKhachHang}">
-                                        <tr>
+                                        <tr th:each="list, index : ${listKhachHang}">
                                             <td th:text="${index.index + 1}"></td>
                                             <td>
                                                 <a th:href="@{/khach-hang/{id}(id=${list.id})}"
@@ -117,17 +116,16 @@
                                             <td th:text="${list.email}"></td>
                                             <td th:text="${list.diaChi}"></td>
                                         </tr>
-                                    </th:block>
                                     </tbody>
                                     <tfoot>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Tên khách hàng</th>
-                                        <th>Giới tính</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Email</th>
-                                        <th>Địa chỉ</th>
-                                    </tr>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Giới tính</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>

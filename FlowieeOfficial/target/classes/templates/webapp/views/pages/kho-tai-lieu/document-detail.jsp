@@ -35,12 +35,10 @@
                 <div class="card col-12" style="font-size: 14px">
                     <div class="card-header">
                         <div class="row justify-content-between">
-                            <div class="col-8" style="display: flex; align-items: center">
+                            <div class="col-12" style="display: flex; align-items: center">
                                 <h3 class="card-title">
                                     <strong th:text="${docDetail.ten}"></strong>
                                 </h3>
-                            </div>
-                            <div class="col-4 text-right">
                             </div>
                         </div>
                         <!-- modal-content (Thêm mới loại sản phẩm)-->

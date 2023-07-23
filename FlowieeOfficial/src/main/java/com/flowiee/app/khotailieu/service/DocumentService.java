@@ -3,7 +3,6 @@ package com.flowiee.app.khotailieu.service;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.khotailieu.model.DocMetaResponse;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface DocumentService {
@@ -23,4 +22,6 @@ public interface DocumentService {
     String delete(int id);
 
     List<DocMetaResponse> getMetadata(int documentId);
+
+    //void getCayThuMucSTG();
 }

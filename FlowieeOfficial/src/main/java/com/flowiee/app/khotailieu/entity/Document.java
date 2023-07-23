@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,13 +64,13 @@ public class Document implements Serializable {
     @JoinColumn(name = "loai_tai_lieu_id", nullable = true, insertable = true, updatable = true)
     private LoaiTaiLieu loaiTaiLieu;
 
-    @OneToMany(mappedBy = "document", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocData> listDocData;
 
-    @OneToMany(mappedBy = "document", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileStorage> listDocFile;
 
-    @OneToMany(mappedBy = "document", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocShare> listDocShare;
 
     @Override
@@ -85,4 +86,11 @@ public class Document implements Serializable {
             ", loaiTaiLieu=" + loaiTaiLieu +
             '}';
     }
+
+//    @Transient
+//    private List<Document> subThuMuc = new ArrayList<>();;
+//
+//    public void addSubStorage(Document subStorage) {
+//        subThuMuc.add(subStorage);
+//    }
 }

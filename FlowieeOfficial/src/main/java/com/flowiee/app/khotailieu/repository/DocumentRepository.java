@@ -13,4 +13,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
 
     @Query("from Document d where d.parentId =:parentId order by d.loai desc")
     List<Document> findListDocument(int parentId);
+
+    @Query("from Document d where d.loai=:isThuMuc")
+    List<Document> findListFolder(String isThuMuc);
 }
