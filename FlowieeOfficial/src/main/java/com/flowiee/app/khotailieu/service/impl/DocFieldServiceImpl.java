@@ -31,7 +31,7 @@ public class DocFieldServiceImpl implements DocFieldService {
     }
 
     @Override
-    public DocField findById(int id) {
+    public DocField findById(Integer id) {
         return docFieldRepository.findById(id).orElse(null);
     }
 
@@ -55,18 +55,23 @@ public class DocFieldServiceImpl implements DocFieldService {
                 docDataService.save(docData);
             }
         } catch (Exception e) {
-            logger.error("Có lỗi xảy ra khi thêm mới docField!", e.getCause().toString());
+            logger.error("An error occurred while insert new docField!", e.getCause().toString());
         }
         return "OK";
     }
 
     @Override
-    public String update(DocField docField, int docFieldId) {
-        return null;
+    public String update(DocField docField, Integer docFieldId) {
+        if (docField == null || docFieldId == null || docFieldId <= 0) {
+            throw new NotFoundException();
+        }
+        docField.setId(docFieldId);
+        docFieldRepository.save(docField);
+        return "OK";
     }
 
     @Override
-    public DocField delete(int id) {
+    public DocField delete(Integer id) {
         DocField docFieldToDelete = findById(id);
         if (docFieldToDelete != null) {
             docFieldRepository.deleteById(id);

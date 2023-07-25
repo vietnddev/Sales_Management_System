@@ -1,398 +1,19 @@
-2023-07-23 16:32:57,306 ERROR org.thymeleaf.TemplateEngine [http-nio-8085-exec-1]: [THYMELEAF][http-nio-8085-exec-1] Exception processing template "/pages/san-pham/chi-tiet-san-pham": An error happened during template parsing (template: "class path resource [templates/webapp/views//pages/san-pham/chi-tiet-san-pham.jsp]")
-org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/webapp/views//pages/san-pham/chi-tiet-san-pham.jsp]")
-	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
-	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
-	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
-	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1098)
-	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1072)
-	at org.thymeleaf.spring5.view.ThymeleafView.renderFragment(ThymeleafView.java:366)
-	at org.thymeleaf.spring5.view.ThymeleafView.render(ThymeleafView.java:190)
-	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1405)
-	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1149)
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088)
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:670)
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:337)
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:122)
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:116)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:109)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:166)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:223)
-	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:217)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:112)
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:82)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:221)
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:186)
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:891)
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1784)
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:1589)
-Caused by: org.attoparser.ParseException: Exception evaluating SpringEL expression: "imageActive.directoryPath" (template: "/pages/san-pham/chi-tiet-san-pham" - line 79, col 34)
-	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:393)
-	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
-	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
-	... 95 common frames omitted
-Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "imageActive.directoryPath" (template: "/pages/san-pham/chi-tiet-san-pham" - line 79, col 34)
-	at org.thymeleaf.spring5.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:292)
-	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
-	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
-	at org.thymeleaf.standard.expression.AdditionExpression.executeAddition(AdditionExpression.java:96)
-	at org.thymeleaf.standard.expression.ComplexExpression.executeComplex(ComplexExpression.java:62)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:112)
-	at org.thymeleaf.standard.expression.AdditionExpression.executeAddition(AdditionExpression.java:89)
-	at org.thymeleaf.standard.expression.ComplexExpression.executeComplex(ComplexExpression.java:62)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:112)
-	at org.thymeleaf.standard.expression.AdditionExpression.executeAddition(AdditionExpression.java:89)
-	at org.thymeleaf.standard.expression.ComplexExpression.executeComplex(ComplexExpression.java:62)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:112)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
-	at org.thymeleaf.standard.expression.LinkExpression.executeLinkExpression(LinkExpression.java:264)
-	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:85)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
-	at org.thymeleaf.standard.processor.AbstractStandardExpressionAttributeTagProcessor.doProcess(AbstractStandardExpressionAttributeTagProcessor.java:144)
-	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
-	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
-	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
-	at org.thymeleaf.engine.ProcessorTemplateHandler.handleStandaloneElement(ProcessorTemplateHandler.java:918)
-	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleStandaloneElementEnd(TemplateHandlerAdapterMarkupHandler.java:260)
-	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleStandaloneElementEnd(InlinedOutputExpressionMarkupHandler.java:256)
-	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleStandaloneElementEnd(OutputExpressionInlinePreProcessorHandler.java:169)
-	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleStandaloneElementEnd(InlinedOutputExpressionMarkupHandler.java:104)
-	at org.attoparser.HtmlVoidElement.handleOpenElementEnd(HtmlVoidElement.java:92)
-	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
-	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
-	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
-	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
-	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
-	... 97 common frames omitted
-Caused by: org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'directoryPath' cannot be found on null
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:213)
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:104)
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference.access$000(PropertyOrFieldReference.java:51)
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorLValue.getValue(PropertyOrFieldReference.java:406)
-	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:92)
-	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:112)
-	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
-	at org.thymeleaf.spring5.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
-	... 129 common frames omitted
-2023-07-23 16:32:57,306 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/webapp/views//pages/san-pham/chi-tiet-san-pham.jsp]")] with root cause
-org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'directoryPath' cannot be found on null
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:213)
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:104)
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference.access$000(PropertyOrFieldReference.java:51)
-	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorLValue.getValue(PropertyOrFieldReference.java:406)
-	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:92)
-	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:112)
-	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
-	at org.thymeleaf.spring5.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
-	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
-	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
-	at org.thymeleaf.standard.expression.AdditionExpression.executeAddition(AdditionExpression.java:96)
-	at org.thymeleaf.standard.expression.ComplexExpression.executeComplex(ComplexExpression.java:62)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:112)
-	at org.thymeleaf.standard.expression.AdditionExpression.executeAddition(AdditionExpression.java:89)
-	at org.thymeleaf.standard.expression.ComplexExpression.executeComplex(ComplexExpression.java:62)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:112)
-	at org.thymeleaf.standard.expression.AdditionExpression.executeAddition(AdditionExpression.java:89)
-	at org.thymeleaf.standard.expression.ComplexExpression.executeComplex(ComplexExpression.java:62)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:112)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
-	at org.thymeleaf.standard.expression.LinkExpression.executeLinkExpression(LinkExpression.java:264)
-	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:85)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
-	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
-	at org.thymeleaf.standard.processor.AbstractStandardExpressionAttributeTagProcessor.doProcess(AbstractStandardExpressionAttributeTagProcessor.java:144)
-	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
-	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
-	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
-	at org.thymeleaf.engine.ProcessorTemplateHandler.handleStandaloneElement(ProcessorTemplateHandler.java:918)
-	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleStandaloneElementEnd(TemplateHandlerAdapterMarkupHandler.java:260)
-	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleStandaloneElementEnd(InlinedOutputExpressionMarkupHandler.java:256)
-	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleStandaloneElementEnd(OutputExpressionInlinePreProcessorHandler.java:169)
-	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleStandaloneElementEnd(InlinedOutputExpressionMarkupHandler.java:104)
-	at org.attoparser.HtmlVoidElement.handleOpenElementEnd(HtmlVoidElement.java:92)
-	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
-	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
-	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
-	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
-	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
-	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
-	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
-	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
-	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
-	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1098)
-	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1072)
-	at org.thymeleaf.spring5.view.ThymeleafView.renderFragment(ThymeleafView.java:366)
-	at org.thymeleaf.spring5.view.ThymeleafView.render(ThymeleafView.java:190)
-	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1405)
-	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1149)
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088)
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:670)
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:337)
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:122)
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:116)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:109)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:166)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:223)
-	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:217)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:112)
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:82)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:221)
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:186)
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:891)
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1784)
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:1589)
-2023-07-23 16:32:57,320 ERROR org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration$StaticView [http-nio-8085-exec-1]: Cannot render error page for request [/san-pham/variant/21] and exception [An error happened during template parsing (template: "class path resource [templates/webapp/views//pages/san-pham/chi-tiet-san-pham.jsp]")] as the response has already been committed. As a result, the response may have the wrong status code.
-2023-07-23 16:35:34,745 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:35:34,748 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:35:34,759 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:35:38,622 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:35:38,654 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 14364 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:35:38,655 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:35:38,711 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:35:38,711 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:35:38,711 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:35:39,611 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:35:39,803 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 179 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:35:40,632 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:35:40,643 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:35:40,643 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:35:40,643 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:35:40,748 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:35:40,748 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2036 ms
-2023-07-23 16:35:41,071 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:35:41,142 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:35:41,320 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:35:41,429 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:35:41,438 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:35:41,800 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:35:41,828 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:35:43,266 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:35:43,273 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:35:44,140 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:35:44,695 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:35:44,888 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@51cd8937, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@31eff934, org.springframework.security.web.context.SecurityContextPersistenceFilter@342a7a23, org.springframework.security.web.header.HeaderWriterFilter@43c41c9f, org.springframework.web.filter.CorsFilter@1562cdc6, org.springframework.security.web.authentication.logout.LogoutFilter@6df8c2cd, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@64a184a0, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@356eebc9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@19aec58a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@25d3de73, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7e777988, org.springframework.security.web.session.SessionManagementFilter@8cc0f51, org.springframework.security.web.access.ExceptionTranslationFilter@70eebf12, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2f651fa7]
-2023-07-23 16:35:45,449 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:35:45,468 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:35:45,490 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:35:45,510 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 7.289 seconds (JVM running for 7.992)
-2023-07-23 16:36:49,398 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:36:49,399 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:36:49,399 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 0 ms
-2023-07-23 16:39:01,503 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:39:01,506 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:39:01,532 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:39:06,749 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:39:06,801 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 12460 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:39:06,803 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:39:06,890 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:39:06,891 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:39:06,891 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:39:08,109 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:39:08,345 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 221 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:39:09,379 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:39:09,400 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:39:09,401 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:39:09,401 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:39:09,523 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:39:09,523 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2631 ms
-2023-07-23 16:39:09,947 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:39:10,012 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:39:10,233 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:39:10,374 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:39:10,383 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:39:10,770 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:39:10,801 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:39:13,274 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:39:13,289 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:39:14,842 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:39:15,496 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:39:15,755 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@21c744df, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2b9d9812, org.springframework.security.web.context.SecurityContextPersistenceFilter@1d9e18cd, org.springframework.security.web.header.HeaderWriterFilter@32be5ea8, org.springframework.web.filter.CorsFilter@60f1dc52, org.springframework.security.web.authentication.logout.LogoutFilter@71445fb4, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7307b369, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@59a7f97, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@19c9d64e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7e8c7316, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@28958f4e, org.springframework.security.web.session.SessionManagementFilter@436ff21, org.springframework.security.web.access.ExceptionTranslationFilter@1451ff18, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@72783443]
-2023-07-23 16:39:16,511 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:39:16,532 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:39:16,558 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:39:16,578 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 10.416 seconds (JVM running for 12.853)
-2023-07-23 16:39:16,940 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:39:16,940 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:39:16,941 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
-2023-07-23 16:39:25,591 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-8]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2; nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2] with root cause
-javax.persistence.NonUniqueResultException: query did not return a unique result: 2
-	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:128)
-	at org.hibernate.query.internal.AbstractProducedQuery.getSingleResult(AbstractProducedQuery.java:1672)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:198)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:81)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+2023-07-23 17:54:01,302 WARN org.hibernate.engine.jdbc.spi.SqlExceptionHelper [http-nio-8085-exec-1]: SQL Error: 1400, SQLState: 23000
+2023-07-23 17:54:01,303 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper [http-nio-8085-exec-1]: ORA-01400: cannot insert NULL into ("FLOWIEE"."STG_DOC_FIELD"."TEN_FIELD")
+
+2023-07-23 17:54:01,303 ERROR com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl [http-nio-8085-exec-1]: Có lỗi xảy ra khi thêm mới docField!
+2023-07-23 17:54:01,304 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.transaction.UnexpectedRollbackException: Transaction silently rolled back because it has been marked as rollback-only] with root cause
+org.springframework.transaction.UnexpectedRollbackException: Transaction silently rolled back because it has been marked as rollback-only
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:752)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:711)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:654)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:407)
 	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:145)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
-	at jdk.proxy3/jdk.proxy3.$Proxy142.findImageActiveOfSanPhamBienThe(Unknown Source)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl.findImageActiveOfSanPhamBienThe(FileStorageServiceImpl.java:72)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$FastClassBySpringCGLIB$$7c0de7c6.invoke(<generated>)
-	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
-	at org.springframework.aop.framework.CglibAopProxy.invokeMethod(CglibAopProxy.java:386)
-	at org.springframework.aop.framework.CglibAopProxy.access$000(CglibAopProxy.java:85)
-	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:704)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$EnhancerBySpringCGLIB$$75190dc6.findImageActiveOfSanPhamBienThe(<generated>)
-	at com.flowiee.app.sanpham.controller.SanPhamBienTheController.showDetailProduct(SanPhamBienTheController.java:55)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
+	at com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl$$EnhancerBySpringCGLIB$$a1b61e45.save(<generated>)
+	at com.flowiee.app.khotailieu.controller.DocFieldController.update(DocFieldController.java:48)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
@@ -404,8 +25,8 @@ javax.persistence.NonUniqueResultException: query did not return a unique result
 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1071)
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:670)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:696)
 	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
 	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
@@ -488,41 +109,110 @@ javax.persistence.NonUniqueResultException: query did not return a unique result
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
-2023-07-23 16:39:32,725 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-7]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2; nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2] with root cause
-javax.persistence.NonUniqueResultException: query did not return a unique result: 2
-	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:128)
-	at org.hibernate.query.internal.AbstractProducedQuery.getSingleResult(AbstractProducedQuery.java:1672)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:198)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:81)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+2023-07-23 18:10:19,295 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:10:19,298 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-07-23 18:10:19,308 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
+2023-07-23 18:10:24,870 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-07-23 18:10:24,905 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 6724 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
+2023-07-23 18:10:24,906 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-07-23 18:10:24,968 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
+2023-07-23 18:10:24,969 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-23 18:10:24,969 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-23 18:10:25,928 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-23 18:10:26,115 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 176 ms. Found 29 JPA repository interfaces.
+2023-07-23 18:10:26,996 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-07-23 18:10:27,012 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:10:27,013 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-07-23 18:10:27,013 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-07-23 18:10:27,126 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-07-23 18:10:27,127 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2157 ms
+2023-07-23 18:10:27,569 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-23 18:10:27,643 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-07-23 18:10:27,879 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-07-23 18:10:28,014 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
+2023-07-23 18:10:28,024 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-07-23 18:10:28,402 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
+2023-07-23 18:10:28,430 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-07-23 18:10:30,242 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-23 18:10:30,253 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:10:31,325 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-23 18:10:32,068 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
+2023-07-23 18:10:32,305 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7ed1b30b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@23efd9e7, org.springframework.security.web.context.SecurityContextPersistenceFilter@1384be54, org.springframework.security.web.header.HeaderWriterFilter@75d470a1, org.springframework.web.filter.CorsFilter@54cd9e95, org.springframework.security.web.authentication.logout.LogoutFilter@5b8614ae, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4048e450, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@6b6b358a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@50dfd295, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2e727657, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3846eb64, org.springframework.security.web.session.SessionManagementFilter@5c3a0c56, org.springframework.security.web.access.ExceptionTranslationFilter@101a654d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6698e680]
+2023-07-23 18:10:32,999 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-07-23 18:10:33,019 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:10:33,086 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-07-23 18:10:33,131 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.724 seconds (JVM running for 9.487)
+2023-07-23 18:10:36,411 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-23 18:10:36,411 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
+2023-07-23 18:10:36,412 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
+2023-07-23 18:10:41,257 WARN org.hibernate.engine.jdbc.spi.SqlExceptionHelper [http-nio-8085-exec-4]: SQL Error: 1407, SQLState: 72000
+2023-07-23 18:10:41,257 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper [http-nio-8085-exec-4]: ORA-01407: cannot update ("FLOWIEE"."STG_DOC_FIELD"."LOAI_TAI_LIEU_ID") to NULL
+
+2023-07-23 18:10:41,258 INFO org.hibernate.engine.jdbc.batch.internal.AbstractBatchImpl [http-nio-8085-exec-4]: HHH000010: On release of batch it still contained JDBC statements
+2023-07-23 18:10:41,266 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-4]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.DataIntegrityViolationException: could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement] with root cause
+oracle.jdbc.OracleDatabaseException: ORA-01407: cannot update ("FLOWIEE"."STG_DOC_FIELD"."LOAI_TAI_LIEU_ID") to NULL
+
+	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:637)
+	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:564)
+	at oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1151)
+	at oracle.jdbc.driver.T4CTTIfun.receive(T4CTTIfun.java:771)
+	at oracle.jdbc.driver.T4CTTIfun.doRPC(T4CTTIfun.java:299)
+	at oracle.jdbc.driver.T4C8Oall.doOALL(T4C8Oall.java:498)
+	at oracle.jdbc.driver.T4CPreparedStatement.doOall8(T4CPreparedStatement.java:152)
+	at oracle.jdbc.driver.T4CPreparedStatement.executeForRows(T4CPreparedStatement.java:1052)
+	at oracle.jdbc.driver.OracleStatement.executeSQLStatement(OracleStatement.java:1531)
+	at oracle.jdbc.driver.OracleStatement.doExecuteWithTimeout(OracleStatement.java:1311)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeInternal(OraclePreparedStatement.java:3746)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeLargeUpdate(OraclePreparedStatement.java:3918)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeUpdate(OraclePreparedStatement.java:3897)
+	at oracle.jdbc.driver.OraclePreparedStatementWrapper.executeUpdate(OraclePreparedStatementWrapper.java:992)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.engine.jdbc.batch.internal.NonBatchingBatch.addToBatch(NonBatchingBatch.java:46)
+	at org.hibernate.persister.entity.AbstractEntityPersister.update(AbstractEntityPersister.java:3571)
+	at org.hibernate.persister.entity.AbstractEntityPersister.updateOrInsert(AbstractEntityPersister.java:3438)
+	at org.hibernate.persister.entity.AbstractEntityPersister.update(AbstractEntityPersister.java:3870)
+	at org.hibernate.action.internal.EntityUpdateAction.execute(EntityUpdateAction.java:202)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:604)
+	at org.hibernate.engine.spi.ActionQueue.lambda$executeActions$1(ActionQueue.java:478)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:729)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:475)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:344)
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:40)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:107)
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1407)
+	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:489)
+	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:3303)
+	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:2438)
+	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:449)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:183)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.access$300(JdbcResourceLocalTransactionCoordinatorImpl.java:40)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:281)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:743)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:711)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:654)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:407)
 	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:145)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:174)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
-	at jdk.proxy3/jdk.proxy3.$Proxy142.findImageActiveOfSanPhamBienThe(Unknown Source)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl.findImageActiveOfSanPhamBienThe(FileStorageServiceImpl.java:72)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$FastClassBySpringCGLIB$$7c0de7c6.invoke(<generated>)
+	at jdk.proxy3/jdk.proxy3.$Proxy165.save(Unknown Source)
+	at com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl.update(DocFieldServiceImpl.java:69)
+	at com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl$$FastClassBySpringCGLIB$$ae62d48.invoke(<generated>)
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
 	at org.springframework.aop.framework.CglibAopProxy.invokeMethod(CglibAopProxy.java:386)
 	at org.springframework.aop.framework.CglibAopProxy.access$000(CglibAopProxy.java:85)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:704)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$EnhancerBySpringCGLIB$$75190dc6.findImageActiveOfSanPhamBienThe(<generated>)
-	at com.flowiee.app.sanpham.controller.SanPhamBienTheController.showDetailProduct(SanPhamBienTheController.java:55)
+	at com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl$$EnhancerBySpringCGLIB$$30d07015.update(<generated>)
+	at com.flowiee.app.khotailieu.controller.DocFieldController.update(DocFieldController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
@@ -534,8 +224,8 @@ javax.persistence.NonUniqueResultException: query did not return a unique result
 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1071)
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:670)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:696)
 	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
 	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
@@ -618,41 +308,110 @@ javax.persistence.NonUniqueResultException: query did not return a unique result
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
-2023-07-23 16:39:34,388 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-9]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2; nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2] with root cause
-javax.persistence.NonUniqueResultException: query did not return a unique result: 2
-	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:128)
-	at org.hibernate.query.internal.AbstractProducedQuery.getSingleResult(AbstractProducedQuery.java:1672)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:198)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:81)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+2023-07-23 18:12:29,524 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:12:29,528 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-07-23 18:12:29,541 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
+2023-07-23 18:12:33,262 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-07-23 18:12:33,311 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 2640 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
+2023-07-23 18:12:33,313 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-07-23 18:12:33,397 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
+2023-07-23 18:12:33,397 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-23 18:12:33,398 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-23 18:12:34,529 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-23 18:12:34,880 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 327 ms. Found 29 JPA repository interfaces.
+2023-07-23 18:12:36,430 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-07-23 18:12:36,624 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:12:36,625 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-07-23 18:12:36,625 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-07-23 18:12:36,789 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-07-23 18:12:36,790 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 3391 ms
+2023-07-23 18:12:37,174 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-23 18:12:37,253 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-07-23 18:12:37,437 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-07-23 18:12:37,609 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
+2023-07-23 18:12:37,618 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-07-23 18:12:38,088 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
+2023-07-23 18:12:38,124 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-07-23 18:12:39,998 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-23 18:12:40,013 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:12:41,072 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-23 18:12:41,766 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
+2023-07-23 18:12:42,066 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@37786110, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5cadc84, org.springframework.security.web.context.SecurityContextPersistenceFilter@216f7c3, org.springframework.security.web.header.HeaderWriterFilter@66e36531, org.springframework.web.filter.CorsFilter@536c913e, org.springframework.security.web.authentication.logout.LogoutFilter@1934e5f9, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@3759d294, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@5debfd1b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@a259a75, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2e71c895, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2c66371b, org.springframework.security.web.session.SessionManagementFilter@9766bd1, org.springframework.security.web.access.ExceptionTranslationFilter@45b2ca27, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@51352c38]
+2023-07-23 18:12:42,877 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-07-23 18:12:42,894 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:12:42,918 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-07-23 18:12:42,935 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 10.173 seconds (JVM running for 11.692)
+2023-07-23 18:12:52,572 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-23 18:12:52,572 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
+2023-07-23 18:12:52,574 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 2 ms
+2023-07-23 18:12:56,072 WARN org.hibernate.engine.jdbc.spi.SqlExceptionHelper [http-nio-8085-exec-7]: SQL Error: 1407, SQLState: 72000
+2023-07-23 18:12:56,072 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper [http-nio-8085-exec-7]: ORA-01407: cannot update ("FLOWIEE"."STG_DOC_FIELD"."TEN_FIELD") to NULL
+
+2023-07-23 18:12:56,073 INFO org.hibernate.engine.jdbc.batch.internal.AbstractBatchImpl [http-nio-8085-exec-7]: HHH000010: On release of batch it still contained JDBC statements
+2023-07-23 18:12:56,086 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-7]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.DataIntegrityViolationException: could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement] with root cause
+oracle.jdbc.OracleDatabaseException: ORA-01407: cannot update ("FLOWIEE"."STG_DOC_FIELD"."TEN_FIELD") to NULL
+
+	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:637)
+	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:564)
+	at oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1151)
+	at oracle.jdbc.driver.T4CTTIfun.receive(T4CTTIfun.java:771)
+	at oracle.jdbc.driver.T4CTTIfun.doRPC(T4CTTIfun.java:299)
+	at oracle.jdbc.driver.T4C8Oall.doOALL(T4C8Oall.java:498)
+	at oracle.jdbc.driver.T4CPreparedStatement.doOall8(T4CPreparedStatement.java:152)
+	at oracle.jdbc.driver.T4CPreparedStatement.executeForRows(T4CPreparedStatement.java:1052)
+	at oracle.jdbc.driver.OracleStatement.executeSQLStatement(OracleStatement.java:1531)
+	at oracle.jdbc.driver.OracleStatement.doExecuteWithTimeout(OracleStatement.java:1311)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeInternal(OraclePreparedStatement.java:3746)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeLargeUpdate(OraclePreparedStatement.java:3918)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeUpdate(OraclePreparedStatement.java:3897)
+	at oracle.jdbc.driver.OraclePreparedStatementWrapper.executeUpdate(OraclePreparedStatementWrapper.java:992)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.engine.jdbc.batch.internal.NonBatchingBatch.addToBatch(NonBatchingBatch.java:46)
+	at org.hibernate.persister.entity.AbstractEntityPersister.update(AbstractEntityPersister.java:3571)
+	at org.hibernate.persister.entity.AbstractEntityPersister.updateOrInsert(AbstractEntityPersister.java:3438)
+	at org.hibernate.persister.entity.AbstractEntityPersister.update(AbstractEntityPersister.java:3870)
+	at org.hibernate.action.internal.EntityUpdateAction.execute(EntityUpdateAction.java:202)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:604)
+	at org.hibernate.engine.spi.ActionQueue.lambda$executeActions$1(ActionQueue.java:478)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:729)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:475)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:344)
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:40)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:107)
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1407)
+	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:489)
+	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:3303)
+	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:2438)
+	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:449)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:183)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.access$300(JdbcResourceLocalTransactionCoordinatorImpl.java:40)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:281)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:743)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:711)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:654)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:407)
 	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:145)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:174)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
-	at jdk.proxy3/jdk.proxy3.$Proxy142.findImageActiveOfSanPhamBienThe(Unknown Source)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl.findImageActiveOfSanPhamBienThe(FileStorageServiceImpl.java:72)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$FastClassBySpringCGLIB$$7c0de7c6.invoke(<generated>)
+	at jdk.proxy3/jdk.proxy3.$Proxy165.save(Unknown Source)
+	at com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl.update(DocFieldServiceImpl.java:69)
+	at com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl$$FastClassBySpringCGLIB$$ae62d48.invoke(<generated>)
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
 	at org.springframework.aop.framework.CglibAopProxy.invokeMethod(CglibAopProxy.java:386)
 	at org.springframework.aop.framework.CglibAopProxy.access$000(CglibAopProxy.java:85)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:704)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$EnhancerBySpringCGLIB$$75190dc6.findImageActiveOfSanPhamBienThe(<generated>)
-	at com.flowiee.app.sanpham.controller.SanPhamBienTheController.showDetailProduct(SanPhamBienTheController.java:55)
+	at com.flowiee.app.khotailieu.service.impl.DocFieldServiceImpl$$EnhancerBySpringCGLIB$$4ca901fe.update(<generated>)
+	at com.flowiee.app.khotailieu.controller.DocFieldController.update(DocFieldController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
@@ -664,8 +423,8 @@ javax.persistence.NonUniqueResultException: query did not return a unique result
 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1071)
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:670)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:696)
 	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
 	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
@@ -748,385 +507,114 @@ javax.persistence.NonUniqueResultException: query did not return a unique result
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
-2023-07-23 16:40:35,066 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:40:35,068 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:40:35,078 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:40:39,168 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:40:39,200 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 3592 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:40:39,201 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:40:39,262 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:40:39,262 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:40:39,262 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:40:40,193 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:40:40,407 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 202 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:40:41,271 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:40:41,285 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:40:41,285 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:40:41,285 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:40:41,379 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:40:41,379 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2116 ms
-2023-07-23 16:40:41,735 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:40:41,822 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:40:42,045 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:40:42,155 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:40:42,162 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:40:42,478 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:40:42,503 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:40:44,127 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:40:44,135 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:40:45,115 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:40:45,718 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:40:46,008 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@736c887a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@64a184a0, org.springframework.security.web.context.SecurityContextPersistenceFilter@281090c3, org.springframework.security.web.header.HeaderWriterFilter@5e2280fd, org.springframework.web.filter.CorsFilter@6bea7736, org.springframework.security.web.authentication.logout.LogoutFilter@53c430bb, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@b65ada8, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@2f651fa7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@121729ef, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@546356d6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@63f5b36, org.springframework.security.web.session.SessionManagementFilter@69327deb, org.springframework.security.web.access.ExceptionTranslationFilter@1cb3d55c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@38fe2046]
-2023-07-23 16:40:46,715 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:40:46,733 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:40:46,763 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:40:46,782 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.053 seconds (JVM running for 8.791)
-2023-07-23 16:40:46,898 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:40:46,898 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:40:46,899 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
-2023-07-23 16:40:55,518 ERROR org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-7]: Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2; nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2] with root cause
-javax.persistence.NonUniqueResultException: query did not return a unique result: 2
-	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:128)
-	at org.hibernate.query.internal.AbstractProducedQuery.getSingleResult(AbstractProducedQuery.java:1672)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:198)
-	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156)
-	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137)
-	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160)
-	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:81)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:145)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
-	at jdk.proxy3/jdk.proxy3.$Proxy142.findImageActiveOfSanPhamBienThe(Unknown Source)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl.findImageActiveOfSanPhamBienThe(FileStorageServiceImpl.java:72)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$FastClassBySpringCGLIB$$7c0de7c6.invoke(<generated>)
-	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
-	at org.springframework.aop.framework.CglibAopProxy.invokeMethod(CglibAopProxy.java:386)
-	at org.springframework.aop.framework.CglibAopProxy.access$000(CglibAopProxy.java:85)
-	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:704)
-	at com.flowiee.app.file.service.impl.FileStorageServiceImpl$$EnhancerBySpringCGLIB$$a0379b01.findImageActiveOfSanPhamBienThe(<generated>)
-	at com.flowiee.app.sanpham.controller.SanPhamBienTheController.showDetailProduct(SanPhamBienTheController.java:55)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1071)
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:670)
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:337)
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:122)
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:116)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:109)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:166)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:223)
-	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:217)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:112)
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:82)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:221)
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:186)
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:891)
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1784)
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:1589)
-2023-07-23 16:49:34,783 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:49:34,787 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:49:34,798 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:49:38,419 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:49:38,448 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 8388 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:49:38,449 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:49:38,531 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:49:38,532 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:49:38,532 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:49:39,720 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:49:40,016 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 281 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:49:41,166 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:49:41,181 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:49:41,182 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:49:41,182 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:49:41,296 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:49:41,297 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2764 ms
-2023-07-23 16:49:41,644 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:49:41,703 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:49:41,883 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:49:42,001 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:49:42,008 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:49:42,411 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:49:42,433 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:49:43,906 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:49:43,914 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:49:44,805 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:49:45,365 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:49:45,560 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3023797e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@73aece4b, org.springframework.security.web.context.SecurityContextPersistenceFilter@3479ba28, org.springframework.security.web.header.HeaderWriterFilter@211c4df7, org.springframework.web.filter.CorsFilter@6150fe14, org.springframework.security.web.authentication.logout.LogoutFilter@778d7f6f, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@415c1307, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@5432b58b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7ae7b65b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4ca11adf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@709c13b5, org.springframework.security.web.session.SessionManagementFilter@37829e14, org.springframework.security.web.access.ExceptionTranslationFilter@23ef5954, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@48fe49c1]
-2023-07-23 16:49:46,108 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:49:46,122 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:49:46,150 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:49:46,168 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.802 seconds (JVM running for 9.958)
-2023-07-23 16:49:51,847 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:49:51,847 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:49:51,848 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
-2023-07-23 16:51:27,362 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:51:27,367 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:51:27,381 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:51:30,789 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:51:30,847 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 12712 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:51:30,849 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:51:30,929 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:51:30,930 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:51:30,930 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:51:32,266 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:51:32,624 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 335 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:51:33,620 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:51:33,636 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:51:33,637 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:51:33,637 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:51:33,752 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:51:33,752 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2821 ms
-2023-07-23 16:51:34,111 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:51:34,185 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:51:34,339 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:51:34,434 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:51:34,442 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:51:34,725 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:51:34,752 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:51:36,209 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:51:36,217 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:51:37,140 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:51:37,742 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:51:37,943 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4c240860, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7ed1b30b, org.springframework.security.web.context.SecurityContextPersistenceFilter@1f5058ce, org.springframework.security.web.header.HeaderWriterFilter@1f4932ff, org.springframework.web.filter.CorsFilter@23efd9e7, org.springframework.security.web.authentication.logout.LogoutFilter@14e1d5f4, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6294908c, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@53785d10, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@70e560ec, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@408c25f5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@54cd9e95, org.springframework.security.web.session.SessionManagementFilter@138b9968, org.springframework.security.web.access.ExceptionTranslationFilter@2e3c2859, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@203b59ed]
-2023-07-23 16:51:38,578 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:51:38,590 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:51:38,618 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:51:38,638 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.379 seconds (JVM running for 9.338)
-2023-07-23 16:51:40,930 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:51:40,931 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:51:40,932 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
-2023-07-23 16:53:28,657 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:53:28,663 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:53:28,684 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:53:32,320 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:53:32,353 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 7600 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:53:32,354 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:53:32,426 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:53:32,427 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:53:32,427 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:53:34,068 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:53:34,248 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 169 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:53:35,062 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:53:35,077 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:53:35,077 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:53:35,078 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:53:35,182 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:53:35,182 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2754 ms
-2023-07-23 16:53:35,516 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:53:35,581 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:53:35,749 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:53:35,883 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:53:35,892 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:53:36,220 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:53:36,253 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:53:38,120 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:53:38,131 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:53:39,465 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:53:40,080 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:53:40,284 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@372de1f3, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@45bc5e38, org.springframework.security.web.context.SecurityContextPersistenceFilter@49155d70, org.springframework.security.web.header.HeaderWriterFilter@33a1c8ae, org.springframework.web.filter.CorsFilter@29cf299c, org.springframework.security.web.authentication.logout.LogoutFilter@9c0fc2d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6e77dbde, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@74c32140, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@36c78d20, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@58f59b95, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3b42396c, org.springframework.security.web.session.SessionManagementFilter@5debd49, org.springframework.security.web.access.ExceptionTranslationFilter@39112b00, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7b66623]
-2023-07-23 16:53:40,890 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:53:40,906 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:53:40,928 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:53:40,942 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 9.279 seconds (JVM running for 10.565)
-2023-07-23 16:53:41,022 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:53:41,022 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:53:41,023 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
-2023-07-23 16:57:41,828 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:57:41,831 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:57:41,845 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:57:45,558 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:57:45,596 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 16156 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:57:45,597 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:57:45,688 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:57:45,688 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:57:45,689 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:57:47,151 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:57:47,332 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 170 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:57:48,141 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:57:48,156 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:57:48,157 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:57:48,157 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:57:48,255 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:57:48,255 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2565 ms
-2023-07-23 16:57:48,589 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:57:48,647 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:57:48,791 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:57:48,896 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:57:48,903 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:57:49,235 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:57:49,272 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:57:50,810 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:57:50,818 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:57:51,794 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:57:52,553 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:57:52,987 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@41604d5d, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2275b666, org.springframework.security.web.context.SecurityContextPersistenceFilter@73b1814f, org.springframework.security.web.header.HeaderWriterFilter@478b0fa8, org.springframework.web.filter.CorsFilter@2a36a713, org.springframework.security.web.authentication.logout.LogoutFilter@529d0413, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@5115dff, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@609c8552, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@34f8dcbc, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@666dcc1c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@78032303, org.springframework.security.web.session.SessionManagementFilter@65af140c, org.springframework.security.web.access.ExceptionTranslationFilter@7dd583db, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@707d2a6]
-2023-07-23 16:57:54,029 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:57:54,050 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:57:54,086 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:57:54,151 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 9.546 seconds (JVM running for 10.786)
-2023-07-23 16:57:54,216 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-2]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:57:54,217 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-2]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:57:54,218 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-2]: Completed initialization in 1 ms
-2023-07-23 16:59:12,654 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:59:12,657 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 16:59:12,723 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 16:59:16,153 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 16:59:16,208 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 17964 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 16:59:16,209 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 16:59:16,341 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 16:59:16,343 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 16:59:16,343 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 16:59:18,139 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 16:59:18,330 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 181 ms. Found 29 JPA repository interfaces.
-2023-07-23 16:59:19,201 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 16:59:19,215 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:59:19,216 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 16:59:19,216 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 16:59:19,319 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 16:59:19,319 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2975 ms
-2023-07-23 16:59:19,691 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 16:59:19,769 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 16:59:19,971 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 16:59:20,085 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 16:59:20,093 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 16:59:20,612 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 16:59:20,634 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 16:59:22,087 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 16:59:22,095 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 16:59:23,054 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 16:59:23,584 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 16:59:23,777 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2415d46, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@77de980e, org.springframework.security.web.context.SecurityContextPersistenceFilter@519580c9, org.springframework.security.web.header.HeaderWriterFilter@46d6fb47, org.springframework.web.filter.CorsFilter@3b6e13da, org.springframework.security.web.authentication.logout.LogoutFilter@3b620285, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@19f7bbd4, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@e2954db, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@685f5cf6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@64847af0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2f466e21, org.springframework.security.web.session.SessionManagementFilter@575ab139, org.springframework.security.web.access.ExceptionTranslationFilter@19aec58a, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4180a51b]
-2023-07-23 16:59:24,417 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 16:59:24,430 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 16:59:24,459 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 16:59:24,475 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.877 seconds (JVM running for 9.929)
-2023-07-23 16:59:24,605 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 16:59:24,606 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 16:59:24,607 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
-2023-07-23 17:02:27,321 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 17:02:27,324 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
-2023-07-23 17:02:27,333 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
-2023-07-23 17:02:30,612 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
-2023-07-23 17:02:30,644 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 17628 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
-2023-07-23 17:02:30,646 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
-2023-07-23 17:02:30,720 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
-2023-07-23 17:02:30,721 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-07-23 17:02:30,721 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-07-23 17:02:31,586 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-23 17:02:31,789 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 187 ms. Found 29 JPA repository interfaces.
-2023-07-23 17:02:32,633 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
-2023-07-23 17:02:32,647 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
-2023-07-23 17:02:32,647 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
-2023-07-23 17:02:32,647 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
-2023-07-23 17:02:32,746 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
-2023-07-23 17:02:32,746 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2024 ms
-2023-07-23 17:02:33,097 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-23 17:02:33,163 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
-2023-07-23 17:02:33,318 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-07-23 17:02:33,442 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
-2023-07-23 17:02:33,450 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
-2023-07-23 17:02:33,833 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
-2023-07-23 17:02:33,858 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
-2023-07-23 17:02:35,463 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-23 17:02:35,472 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-23 17:02:36,512 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-23 17:02:37,187 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
-2023-07-23 17:02:37,529 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@79eb2ed7, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4180a51b, org.springframework.security.web.context.SecurityContextPersistenceFilter@cb89410, org.springframework.security.web.header.HeaderWriterFilter@52b76d0f, org.springframework.web.filter.CorsFilter@3d1ab0f6, org.springframework.security.web.authentication.logout.LogoutFilter@64847af0, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4f174bd7, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@64a184a0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@70eebf12, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@23fccc78, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1553e222, org.springframework.security.web.session.SessionManagementFilter@62474891, org.springframework.security.web.access.ExceptionTranslationFilter@97f3bff, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@b65ada8]
-2023-07-23 17:02:38,439 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
-2023-07-23 17:02:38,451 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
-2023-07-23 17:02:38,468 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
-2023-07-23 17:02:38,486 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.837 seconds (JVM running for 9.861)
-2023-07-23 17:02:38,742 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-23 17:02:38,742 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
-2023-07-23 17:02:38,743 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
+2023-07-23 18:13:23,177 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:13:23,181 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-07-23 18:13:23,191 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
+2023-07-23 18:13:26,858 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-07-23 18:13:26,891 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 14284 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
+2023-07-23 18:13:26,893 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-07-23 18:13:26,972 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
+2023-07-23 18:13:26,972 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-23 18:13:26,972 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-23 18:13:27,950 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-23 18:13:28,165 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 204 ms. Found 29 JPA repository interfaces.
+2023-07-23 18:13:29,094 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-07-23 18:13:29,111 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:13:29,111 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-07-23 18:13:29,111 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-07-23 18:13:29,225 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-07-23 18:13:29,225 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2251 ms
+2023-07-23 18:13:29,589 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-23 18:13:29,658 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-07-23 18:13:29,835 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-07-23 18:13:29,970 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
+2023-07-23 18:13:29,978 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-07-23 18:13:30,462 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
+2023-07-23 18:13:30,485 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-07-23 18:13:32,035 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-23 18:13:32,045 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:13:32,939 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-23 18:13:33,511 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
+2023-07-23 18:13:33,715 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2e7515e4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6e77dbde, org.springframework.security.web.context.SecurityContextPersistenceFilter@4e075f8d, org.springframework.security.web.header.HeaderWriterFilter@5160c23, org.springframework.web.filter.CorsFilter@1cc43062, org.springframework.security.web.authentication.logout.LogoutFilter@683e6000, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@335d4550, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@7b66623, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@60f32c68, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@47c7b9a1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@31d06d6c, org.springframework.security.web.session.SessionManagementFilter@30310d88, org.springframework.security.web.access.ExceptionTranslationFilter@3d0a192b, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@511ce8b2]
+2023-07-23 18:13:34,372 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-07-23 18:13:34,386 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:13:34,405 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-07-23 18:13:34,422 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.358 seconds (JVM running for 9.598)
+2023-07-23 18:13:44,779 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-23 18:13:44,779 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
+2023-07-23 18:13:44,781 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 2 ms
+2023-07-23 18:16:55,420 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:16:55,424 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-07-23 18:16:55,439 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
+2023-07-23 18:16:59,563 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-07-23 18:16:59,599 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 14604 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
+2023-07-23 18:16:59,599 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-07-23 18:16:59,672 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
+2023-07-23 18:16:59,672 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-23 18:16:59,673 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-23 18:17:00,726 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-23 18:17:00,940 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 201 ms. Found 29 JPA repository interfaces.
+2023-07-23 18:17:01,819 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-07-23 18:17:01,836 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:17:01,836 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-07-23 18:17:01,837 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-07-23 18:17:01,954 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-07-23 18:17:01,954 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2280 ms
+2023-07-23 18:17:02,300 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-23 18:17:02,367 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-07-23 18:17:02,564 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-07-23 18:17:02,686 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
+2023-07-23 18:17:02,694 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-07-23 18:17:03,000 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
+2023-07-23 18:17:03,026 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-07-23 18:17:04,606 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-23 18:17:04,615 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:17:05,680 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-23 18:17:06,304 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
+2023-07-23 18:17:06,510 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4f78e675, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@45d2f6a0, org.springframework.security.web.context.SecurityContextPersistenceFilter@74e5cc8d, org.springframework.security.web.header.HeaderWriterFilter@7dd583db, org.springframework.web.filter.CorsFilter@41604d5d, org.springframework.security.web.authentication.logout.LogoutFilter@4aaa2f87, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@cbd88c1, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@65e3b733, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@73b1814f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3217e2ed, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2275b666, org.springframework.security.web.session.SessionManagementFilter@478b0fa8, org.springframework.security.web.access.ExceptionTranslationFilter@68a5119e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@398ec906]
+2023-07-23 18:17:07,128 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-07-23 18:17:07,142 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:17:07,182 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-07-23 18:17:07,200 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 8.169 seconds (JVM running for 9.406)
+2023-07-23 18:17:08,835 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-1]: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-23 18:17:08,835 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Initializing Servlet 'dispatcherServlet'
+2023-07-23 18:17:08,837 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-1]: Completed initialization in 1 ms
+2023-07-23 18:18:47,636 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:18:47,639 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-07-23 18:18:47,650 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
+2023-07-23 18:18:52,594 INFO org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-07-23 18:18:52,631 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on VIETND with PID 13804 (E:\The-Flowiee-Official\FlowieeOfficial\target\classes started by viet0 in E:\The-Flowiee-Official\FlowieeOfficial)
+2023-07-23 18:18:52,632 INFO org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-07-23 18:18:52,707 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\viet0\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/viet0/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
+2023-07-23 18:18:52,708 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-23 18:18:52,708 INFO org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-23 18:18:53,818 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-23 18:18:54,023 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 195 ms. Found 29 JPA repository interfaces.
+2023-07-23 18:18:54,941 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-07-23 18:18:54,958 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:18:54,958 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-07-23 18:18:54,958 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-07-23 18:18:55,066 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-07-23 18:18:55,067 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2358 ms
+2023-07-23 18:18:55,446 INFO org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-23 18:18:55,534 INFO org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-07-23 18:18:55,743 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-07-23 18:18:55,886 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
+2023-07-23 18:18:55,899 WARN com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-07-23 18:18:56,367 INFO com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
+2023-07-23 18:18:56,396 INFO org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-07-23 18:18:58,143 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-23 18:18:58,153 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:18:59,373 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-23 18:19:00,194 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [restartedMain]: Adding welcome page template: index
+2023-07-23 18:19:00,458 INFO org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6bea7736, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@63f5b36, org.springframework.security.web.context.SecurityContextPersistenceFilter@121729ef, org.springframework.security.web.header.HeaderWriterFilter@69327deb, org.springframework.web.filter.CorsFilter@11073cd3, org.springframework.security.web.authentication.logout.LogoutFilter@4c7f38cd, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7b794668, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@44d973b9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4e7d4a92, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@b1401f9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@79eb2ed7, org.springframework.security.web.session.SessionManagementFilter@97f3bff, org.springframework.security.web.access.ExceptionTranslationFilter@5e2280fd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@439e4b7a]
+2023-07-23 18:19:01,112 INFO org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-07-23 18:19:01,131 INFO org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-07-23 18:19:01,152 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-07-23 18:19:01,174 INFO org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 9.052 seconds (JVM running for 9.932)
+2023-07-23 18:19:02,544 INFO org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-2]: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-23 18:19:02,544 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-2]: Initializing Servlet 'dispatcherServlet'
+2023-07-23 18:19:02,545 INFO org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-2]: Completed initialization in 1 ms
+2023-07-23 18:20:45,082 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-23 18:20:45,084 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-07-23 18:20:45,097 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.

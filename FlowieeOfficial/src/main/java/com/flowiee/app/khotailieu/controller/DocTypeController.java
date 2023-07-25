@@ -30,9 +30,7 @@ public class DocTypeController {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private LoaiTaiLieuService loaiTaiLieuService;
-    @Autowired
-    private SystemLogService systemLogService;
+    private LoaiTaiLieuService docTypeService;
     @Autowired
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
     @Autowired
@@ -46,7 +44,7 @@ public class DocTypeController {
         }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DANHMUC_LOAITAILIEU);
-            List<LoaiTaiLieu> listLoaiTaiLieu = loaiTaiLieuService.findAll();
+            List<LoaiTaiLieu> listLoaiTaiLieu = docTypeService.findAll();
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             modelAndView.addObject("loaiTaiLieu", new LoaiTaiLieu());
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
@@ -75,7 +73,7 @@ public class DocTypeController {
             List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(id).build());
             modelAndView.addObject("listDocField", listDocField);
             modelAndView.addObject("docField", new DocField());
-            modelAndView.addObject("nameDocType", loaiTaiLieuService.findById(id).getTen().toUpperCase());
+            modelAndView.addObject("nameDocType", docTypeService.findById(id).getTen().toUpperCase());
             modelAndView.addObject("docTypeId", id);
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
@@ -98,10 +96,10 @@ public class DocTypeController {
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (loaiTaiLieuService.findByTen(loaiTaiLieu.getTen()) != null) {
+        if (docTypeService.findByTen(loaiTaiLieu.getTen()) != null) {
             throw new DataExistsException();
         }
-        loaiTaiLieuService.save(loaiTaiLieu);
+        docTypeService.save(loaiTaiLieu);
         return "redirect:";
     }
 
@@ -115,7 +113,7 @@ public class DocTypeController {
         if (id <= 0) {
             throw new BadRequestException();
         }
-        loaiTaiLieuService.update(loaiTaiLieu, id);
+        docTypeService.update(loaiTaiLieu, id);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -125,11 +123,11 @@ public class DocTypeController {
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        LoaiTaiLieu loaiTaiLieu = loaiTaiLieuService.findById(id);
+        LoaiTaiLieu loaiTaiLieu = docTypeService.findById(id);
         if (id <= 0 || loaiTaiLieu == null) {
             throw new BadRequestException();
         }
-        loaiTaiLieuService.delete(id);
+        docTypeService.delete(id);
         return "redirect:" + request.getHeader("referer");
     }
 }

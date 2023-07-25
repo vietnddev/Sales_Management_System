@@ -75,13 +75,18 @@ public class DocField implements Serializable {
     @Override
     public String toString() {
         return "DocField{" +
-            "id=" + id +
-            ", loaiField='" + loaiField + '\'' +
-            ", tenField='" + tenField + '\'' +
-            ", batBuocNhap=" + batBuocNhap +
-            ", sapXep=" + sapXep +
-            ", trangThai=" + trangThai +
-            ", loaiTaiLieu=" + loaiTaiLieu +
-            '}';
+                "id=" + id +
+                ", loaiField='" + loaiField + '\'' +
+                ", tenField='" + tenField + '\'' +
+                ", minLength=" + minLength +
+                ", maxLength=" + maxLength +
+                ", minNumber=" + minNumber +
+                ", maxNumber=" + maxNumber +
+                ", batBuocNhap=" + batBuocNhap +
+                ", sapXep=" + sapXep +
+                ", trangThai=" + trangThai +
+                ", createdAt=" + createdAt +
+                ", loaiTaiLieu=" + loaiTaiLieu +
+                '}';
     }
 }

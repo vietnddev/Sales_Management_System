@@ -9,13 +9,13 @@ public interface DocFieldService {
 
     List<DocField> findAll();
 
-    DocField findById(int id);
+    DocField findById(Integer id);
 
     List<DocField> findByDocTypeId(LoaiTaiLieu loaiTaiLieu);
 
     String save(DocField docField);
 
-    String update(DocField docField, int docFieldId);
+    String update(DocField docField, Integer docFieldId);
 
-    DocField delete(int id);
+    DocField delete(Integer id);
 }

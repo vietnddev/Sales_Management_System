@@ -8,6 +8,7 @@ import com.flowiee.app.khotailieu.service.DocFieldService;
 import com.flowiee.app.hethong.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,7 @@ public class DocFieldController {
 
     @PostMapping("/insert")
     public String create(DocField docField, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleThemMoiDocument()) {
@@ -39,14 +39,16 @@ public class DocFieldController {
         }
     }
 
-    @PostMapping("/update")
-    public String update(DocField docField, HttpServletRequest request) {
-        String username = accountService.getUserName();
-        if (username == null || username.isEmpty()) {
+    @PostMapping(value = "/update/{id}", params = "update")
+    public String update(HttpServletRequest request,
+                         @ModelAttribute("docField") DocField docField,
+                         @PathVariable("id") Integer docFieldId) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleCapNhatDocument()) {
-            docFieldService.save(docField);
+            System.out.println(docField.toString());
+            docFieldService.update(docField, docFieldId);
             return "redirect:" + request.getHeader("referer");
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;

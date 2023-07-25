@@ -38,6 +38,8 @@
     <link rel="stylesheet" th:href="@{/plugins/ekko-lightbox/ekko-lightbox.css}">
     <!-- Bootstrap Color Picker -->
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css}">
+    <!-- fullCalendar -->
+    <link rel="stylesheet" th:href="@{/plugins/fullcalendar/main.css}">
   </th:block>
 </head>
 
@@ -49,6 +51,10 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block border"
+            style="border-radius: 20px; font-weight: bold; background-color: cornflowerblue">
+          <a th:href="@{/lich-lam-viec}" class="nav-link">Lịch làm việc</a>
         </li>
       </ul>
 
@@ -156,6 +162,9 @@
     <script th:src="@{/plugins/ekko-lightbox/ekko-lightbox.min.js}"></script>
     <!-- bootstrap color picker -->
     <script th:src="@{/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js}"></script>
+    <!-- fullCalendar 2.2.5 -->
+    <script th:src="@{/plugins/moment/moment.min.js}"></script>
+    <script th:src="@{/plugins/fullcalendar/main.js}"></script>
     <!-- Page specific script -->
     <script>
       $(function () {
