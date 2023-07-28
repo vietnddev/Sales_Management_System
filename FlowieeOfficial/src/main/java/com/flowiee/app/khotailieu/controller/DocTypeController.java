@@ -91,7 +91,7 @@ public class DocTypeController {
     }
 
     @PostMapping("/insert")
-    public String insert(@ModelAttribute("loaiTaiLieu") LoaiTaiLieu loaiTaiLieu, HttpServletRequest request) {
+    public String insert(@ModelAttribute("loaiTaiLieu") LoaiTaiLieu loaiTaiLieu) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
@@ -113,6 +113,7 @@ public class DocTypeController {
         if (id <= 0) {
             throw new BadRequestException();
         }
+        System.out.println(loaiTaiLieu.toString());
         docTypeService.update(loaiTaiLieu, id);
         return "redirect:" + request.getHeader("referer");
     }

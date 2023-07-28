@@ -44,9 +44,19 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
     }
 
     @Override
+    public LoaiTaiLieu findDocTypeDefault() {
+        return loaiTaiLieuRepository.findDocTypeDefault(true);
+    }
+
+    @Override
     public LoaiTaiLieu save(LoaiTaiLieu loaiTaiLieu) {
         if (findByTen(loaiTaiLieu.getTen()) != null) {
             return null;
+        }
+        if (loaiTaiLieu.isDefault() == true) {
+            LoaiTaiLieu docTypeDefault = this.findDocTypeDefault();
+            docTypeDefault.setDefault(false);
+            loaiTaiLieuRepository.save(docTypeDefault);
         }
         LoaiTaiLieu loaiTaiLieuSaved = loaiTaiLieuRepository.save(loaiTaiLieu);
         systemLogService.writeLog(SystemModule.KHO_TAI_LIEU.name(), SystemLogAction.THEM_MOI.name(), loaiTaiLieu.toString(), null);
@@ -56,6 +66,11 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
     @Override
     public void update(LoaiTaiLieu loaiTaiLieu, Integer id) {
         if (id != null && this.findById(id) != null) {
+            if (loaiTaiLieu.isDefault() == true) {
+                LoaiTaiLieu docTypeDefault = this.findDocTypeDefault();
+                docTypeDefault.setDefault(false);
+                loaiTaiLieuRepository.save(docTypeDefault);
+            }
             loaiTaiLieu.setId(id);
             LoaiTaiLieu loaiTaiLieuUpdated = loaiTaiLieuRepository.save(loaiTaiLieu);
             systemLogService.writeLog(SystemModule.KHO_TAI_LIEU.name(), DanhMucAction.UPDATE_DANHMUC.name(), loaiTaiLieu.toString(), loaiTaiLieuUpdated.toString());

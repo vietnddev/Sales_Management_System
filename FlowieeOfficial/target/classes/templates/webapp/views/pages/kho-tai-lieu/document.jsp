@@ -37,7 +37,7 @@
                             <div class="card-header">
                                 <div class="row justify-content-between">
                                     <div class="col-4" style="display: flex; align-items: center">
-                                        <h3 class="card-title"><strong>KHO TÀI LIỆU</strong></h3>
+                                        <h3 class="card-title"><strong th:text="${documentParentName}"></strong></h3>
                                     </div>
                                     <div class="col-4 text-right">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -76,7 +76,7 @@
                                                 <img th:src="@{/dist/icon/pdf.png}"
                                                      th:if="${list.loai == 'FILE'}"></td>
                                             <td th:text="${list.createdAt}"></td>
-                                            <td>
+                                            <td style="max-width: 300px">
                                                 <a th:href="@{/kho-tai-lieu/document/{aliasName}-{id}(aliasName=${list.aliasName}, id=${list.id})}"
                                                    th:text="${list.ten}" th:if="${list.loai == 'FOLDER'}"></a>
                                                 <a th:href="@{/kho-tai-lieu/document/{aliasName}-{id}(aliasName=${list.aliasName}, id=${list.id})}"
@@ -232,6 +232,16 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group">
+                                                                <label>Thuộc thư mục</label>
+                                                                <select class="custom-select"
+                                                                        name="parentId">
+                                                                    <option th:each="list : ${listFolder}"
+                                                                            th:value="${list.id}"
+                                                                            th:text="${list.ten}">
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <label>Loại tài liệu</label>
                                                                 <select class="custom-select"
                                                                         name="loaiTaiLieu">
@@ -297,7 +307,13 @@
                                                         <div class="col-12">
                                                             <div class="form-group">
                                                                 <label>Thuộc thư mục</label>
-                                                                <select class="custom-select"></select>
+                                                                <select class="custom-select"
+                                                                        name="parentId">
+                                                                    <option th:each="list : ${listFolder}"
+                                                                            th:value="${list.id}"
+                                                                            th:text="${list.ten}">
+                                                                    </option>
+                                                                </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>

@@ -31,8 +31,13 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> findListDocument(int parentId) {
-        return documentRepository.findListDocument(parentId);
+    public List<Document> findDocumentByParentId(int parentId) {
+        return documentRepository.findListDocumentByParentId(parentId);
+    }
+
+    @Override
+    public List<Document> findAllFolder() {
+        return documentRepository.findAllFolder(DocumentType.FOLDER.name());
     }
 
     @Override

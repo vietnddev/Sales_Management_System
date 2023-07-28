@@ -32,6 +32,9 @@ public class LoaiTaiLieu implements Serializable {
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;
 
+    @Column(name = "is_default", nullable = false)
+    private boolean isDefault;
+
     @JsonIgnoreProperties("loaiTaiLieu")
     @OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
     private List<Document> listDocument;
@@ -43,10 +46,11 @@ public class LoaiTaiLieu implements Serializable {
     @Override
     public String toString() {
         return "LoaiTaiLieu{" +
-            "id=" + id +
-            ", ten='" + ten + '\'' +
-            ", moTa='" + moTa + '\'' +
-            ", trangThai=" + trangThai +
-            '}';
+                "id=" + id +
+                ", ten='" + ten + '\'' +
+                ", moTa='" + moTa + '\'' +
+                ", trangThai=" + trangThai +
+                ", isDefault=" + isDefault +
+                '}';
     }
 }

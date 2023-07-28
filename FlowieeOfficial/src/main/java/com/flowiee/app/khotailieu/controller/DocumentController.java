@@ -4,6 +4,7 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.IPUtil;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -76,9 +77,23 @@ public class DocumentController {
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
+            for (int i = 0; i < listRootDocument.size(); i++) {
+                listRootDocument.get(i).setCreatedAt(DateUtil.formatDate(listRootDocument.get(i).getCreatedAt(),"dd/MM/yyyy"));
+            }
             modelAndView.addObject("listDocument", listRootDocument);
             modelAndView.addObject("document", new Document());
-            modelAndView.addObject("listLoaiTaiLieu", loaiTaiLieuService.findAllWhereStatusTrue());
+            //select-option danh sách loại tài liệu
+            List<LoaiTaiLieu> listLoaiTaiLieu = new ArrayList<>();
+            listLoaiTaiLieu.add(loaiTaiLieuService.findDocTypeDefault());
+            listLoaiTaiLieu.addAll(loaiTaiLieuService.findAllWhereStatusTrue());
+            modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
+            //select-option danh sách thư mục
+            List<Document> listFolder = new ArrayList<>();
+            listFolder.add(Document.builder().id(0).ten("--Chọn thư mục--").build());
+            listFolder.addAll(documentService.findAllFolder());
+            modelAndView.addObject("listFolder", listFolder);
+            //Parent name
+            modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -96,8 +111,7 @@ public class DocumentController {
 
     @GetMapping("/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         String aliasName = FileUtil.getAliasNameFromAliasPath(aliasPath);
@@ -110,47 +124,60 @@ public class DocumentController {
             throw new NotFoundException();
         }
         //Kiểm tra quyền xem document
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem() && docShareService.isShared(documentId)) {
+        if (!kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem() || !docShareService.isShared(documentId)) {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+
+        if (document.getLoai().equals(DocumentType.FILE.name())) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT_DETAIL);
             modelAndView.addObject("docDetail", document);
             modelAndView.addObject("document", new Document());
+            //load metadata
+            List<DocMetaResponse> docMetaResponse = documentService.getMetadata(documentId);
+            modelAndView.addObject("listDocDataInfo", docMetaResponse);
+            //Load file active
+            modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
+            //Load các version khác của document
+            modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
                 modelAndView.addObject("action_update", "enable");
             }
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
                 modelAndView.addObject("action_delete", "enable");
             }
-            //Nếu document truy cập đến là file thì ném qua page view chi tiết
-            // Ngược lại nếu là FOLDER thì ném qua danh sách document
-            if (document.getLoai().equals(DocumentType.FILE.name())) {
-                //load metadata
-                List<DocMetaResponse> docMetaResponse = documentService.getMetadata(documentId);
-                modelAndView.addObject("listDocDataInfo", docMetaResponse);
-
-                //Load file active
-                modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
-
-                //Load các version khác của document
-                modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
-
-                //Load cây thư mục
-//                modelAndView.addObject("cayThuMuc", null);
-
-
-                //List<Document> listThuMuc = documentRepository.findListFolder(DocumentType.FOLDER.name());
-                //Document root = buildStorageTree(listThuMuc);
-                //modelAndView.addObject("root", root);
-
-                //documentService.getCayThuMucSTG();
-
-                //Trả về page xem thông tin chi tiết file
-                return modelAndView;
-            } else {
-                return new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
-            }
-        } else {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return modelAndView;
         }
+
+        if (document.getLoai().equals(DocumentType.FOLDER.name())) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
+            modelAndView.addObject("document", new Document());
+            modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
+            //select-option danh loại tài liệu
+            List<LoaiTaiLieu> listLoaiTaiLieu = new ArrayList<>();
+            listLoaiTaiLieu.add(loaiTaiLieuService.findDocTypeDefault());
+            listLoaiTaiLieu.addAll(loaiTaiLieuService.findAllWhereStatusTrue());
+            modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
+            //select-option danh sách thư mục
+            List<Document> listFolder = new ArrayList<>();
+            listFolder.add(documentService.findById(documentId));
+            listFolder.addAll(documentService.findAllFolder());
+            modelAndView.addObject("listFolder", listFolder);
+            //Parent name
+            modelAndView.addObject("documentParentName", document.getTen().toUpperCase());
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
+                modelAndView.addObject("action_create", "enable");
+            }
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
+                modelAndView.addObject("action_update", "enable");
+            }
+            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
+                modelAndView.addObject("action_delete", "enable");
+            }
+
+            return modelAndView;
+        }
+
+        return new ModelAndView();
     }
 
 //    public Document buildStorageTree(List<Document> storages) {
@@ -183,7 +210,8 @@ public class DocumentController {
 
     //Insert FILE và FOLDER
     @PostMapping("/insert")
-    public String insert(@ModelAttribute("document") Document document, HttpServletRequest request,
+    public String insert(HttpServletRequest request,
+                         @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
@@ -219,7 +247,7 @@ public class DocumentController {
                 .ip(IPUtil.getClientIpAddress(request))
                 .build();
         systemLogService.writeLog(systemLog);
-        return "redirect:";
+        return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/change-file/{id}")

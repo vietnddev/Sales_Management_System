@@ -1,4 +1,4 @@
-package com.flowiee.app.common.config;
+package com.flowiee.app.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

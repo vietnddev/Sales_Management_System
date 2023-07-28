@@ -17,6 +17,8 @@ public interface LoaiTaiLieuService {
 
     LoaiTaiLieu findByTen(String ten);
 
+    LoaiTaiLieu findDocTypeDefault();
+
     LoaiTaiLieu save(LoaiTaiLieu loaiTaiLieu);
 
     void update(LoaiTaiLieu loaiSanPham, Integer id);

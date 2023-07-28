@@ -9,7 +9,9 @@ public interface DocumentService {
 
     List<Document> findRootDocument();
 
-    List<Document> findListDocument(int parentId);
+    List<Document> findDocumentByParentId(int parentId);
+
+    List<Document> findAllFolder();
 
     Document findById(int id);
 

@@ -50,6 +50,9 @@ public class Account extends DateAudit implements Serializable{
     @Column(name = "email")
     private String email;
 
+    @Column(name = "dia_chi")
+    private String diaChi;
+
     @Column(name = "avatar")
     private String avatar;
 

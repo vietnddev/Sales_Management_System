@@ -1,4 +1,4 @@
-package com.flowiee.app.common.config;
+package com.flowiee.app.security.config;
 
 import com.flowiee.app.hethong.model.SystemLogAction;
 import com.flowiee.app.hethong.entity.Account;

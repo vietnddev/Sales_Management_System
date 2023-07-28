@@ -58,6 +58,7 @@
                                         <th>Tên loại tài liệu</th>
                                         <th>Mô tả</th>
                                         <th>Số lượng tài liệu</th>
+                                        <th>Mặc định sử dụng</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
                                     </tr>
@@ -73,6 +74,7 @@
                                             </td>
                                             <td th:text="${list.moTa}"></td>
                                             <td th:text="${list.listDocument.size()}"></td>
+                                            <td th:text="${list.isDefault}"></td>
                                             <td>
                                                 <th:block th:if="${list.trangThai}">
                                                     Đang sử dụng
@@ -172,16 +174,30 @@
                                                                                           th:text="${list.moTa}"></textarea>
                                                                             </div>
                                                                             <div class="form-group"
+                                                                                 th:if="${list.isDefault}">
+                                                                                <label>Default</label>
+                                                                                <select class="custom-select"
+                                                                                        name="isDefault">
+                                                                                    <option value="true" selected>YES</option>
+                                                                                    <option value="false">NO</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group"
+                                                                                 th:if="not ${list.isDefault}">
+                                                                                <label>Default</label>
+                                                                                <select class="custom-select"
+                                                                                        name="isDefault">
+                                                                                    <option value="true">YES</option>
+                                                                                    <option value="false" selected>NO</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group"
                                                                                  th:if="${list.trangThai}">
                                                                                 <label>Trạng thái</label>
                                                                                 <select class="custom-select"
                                                                                         name="trangThai">
-                                                                                    <option value="true" selected>Đang
-                                                                                        sử dụng
-                                                                                    </option>
-                                                                                    <option value="false">Ngừng sử
-                                                                                        dụng
-                                                                                    </option>
+                                                                                    <option value="true" selected>Đang sử dụng</option>
+                                                                                    <option value="false">Ngừng sử dụng</option>
                                                                                 </select>
                                                                             </div>
                                                                             <div class="form-group"
@@ -189,11 +205,8 @@
                                                                                 <label>Trạng thái</label>
                                                                                 <select class="custom-select"
                                                                                         name="trangThai">
-                                                                                    <option value="true">Kinh doanh
-                                                                                    </option>
-                                                                                    <option value="false" selected>Ngừng
-                                                                                        kinh doanh
-                                                                                    </option>
+                                                                                    <option value="true">Kinh doanh</option>
+                                                                                    <option value="false" selected>Ngừng kinh doanh</option>
                                                                                 </select>
                                                                             </div>
                                                                         </div>
@@ -225,6 +238,7 @@
                                         <th>Tên loại tài liệu</th>
                                         <th>Mô tả</th>
                                         <th>Số lượng tài liệu</th>
+                                        <th>Mặc định sử dụng</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
                                     </tr>
@@ -262,6 +276,13 @@
                                                                 <textarea class="form-control" rows="5"
                                                                           placeholder="Mô tả"
                                                                           name="moTa"></textarea>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Sử dụng mặc định</label>
+                                                                <select class="custom-select" name="isDefault">
+                                                                    <option value="true" selected>YES</option>
+                                                                    <option value="false">NO</option>
+                                                                </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Trạng thái</label>

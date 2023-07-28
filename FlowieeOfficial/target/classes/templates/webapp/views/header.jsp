@@ -52,9 +52,17 @@
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block border mr-2"
+            style="border-radius: 20px; font-weight: bold; background-color: aliceblue">
+          <a th:href="@{/}" class="nav-link"><i class="fa-solid fa-chart-pie nav-icon"></i>
+            Dashboard
+          </a>
+        </li>
         <li class="nav-item d-none d-sm-inline-block border"
-            style="border-radius: 20px; font-weight: bold; background-color: cornflowerblue">
-          <a th:href="@{/lich-lam-viec}" class="nav-link">Lịch làm việc</a>
+            style="border-radius: 20px; font-weight: bold; background-color: aliceblue">
+          <a th:href="@{/lich-lam-viec}" class="nav-link"><i class="fa-solid fa-calendar-days"></i>
+            Lịch làm việc
+          </a>
         </li>
       </ul>
 

@@ -46,14 +46,6 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-header"><strong>QUẢN LÝ BÁN HÀNG</strong></li>
             <li class="nav-item">
-              <a th:href="@{/}" class="nav-link">
-                <i class="fa-solid fa-chart-pie nav-icon"></i>
-                <p>
-                  Dashboard
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fa-solid fa-shirt nav-icon"></i>
                 <p>
@@ -116,6 +108,9 @@
                 </p>
               </a>
             </li>
+            <!---->
+
+            <!---->
             <li class="nav-header"><strong>KHO TÀI LIỆU</strong></li>
             <li class="nav-item">
               <a th:href="@{/kho-tai-lieu/document}" class="nav-link">
@@ -141,6 +136,83 @@
                 </p>
               </a>
             </li>
+            <!---->
+
+            <!---->
+            <li class="nav-header"><strong>QUẢN LÝ NHÂN VIÊN</strong></li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa-users nav-icon"></i>
+                <p>
+                  Danh sách nhân viên
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon"></i>
+                <p>
+                  Quản lý phép
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa-list-check nav-icon"></i>
+                <p>
+                  Bảng công
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Bảng công nhân viên</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Cài đặt ngày công</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa-calendar-days nav-icon"></i>
+                <p>
+                  Ca làm việc
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Cấu hình ca</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Phân ca</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa-calculator nav-icon"></i>
+                <p>
+                  Tính lương
+                </p>
+              </a>
+            </li>
+            <!---->
+
+            <!---->
             <li class="nav-header"><strong>QUẢN TRỊ HỆ THỐNG</strong></li>
             <li class="nav-item">
               <a th:href="@{/he-thong/config}" class="nav-link">
