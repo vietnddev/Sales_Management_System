@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.entity;
 
+import com.flowiee.app.common.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,18 +14,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cart implements Serializable {
-    @Id
-    @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "created_by")
-    private int createdBy;
-
-    @Column(name = "created_at")
-    private Date createAt;
-
+public class Cart extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Items> listItems;
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "listItems=" +
+                '}';
+    }
 }

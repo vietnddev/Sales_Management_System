@@ -157,7 +157,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
-        fileInfo.setSanPham(SanPham.builder().id(sanPhamId).build());
+        fileInfo.setSanPham(new SanPham(sanPhamId));
         fileInfo.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);

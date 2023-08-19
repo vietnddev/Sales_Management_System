@@ -7,6 +7,8 @@ import java.util.List;
 public interface FlowieeConfigService {
     CauHinhHeThong findById(Integer id);
 
+    CauHinhHeThong findByKey(String key);
+
     List<CauHinhHeThong> findAll();
 
     String save(CauHinhHeThong cauHinhHeThong);

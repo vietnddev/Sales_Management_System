@@ -11,4 +11,6 @@ import java.util.List;
 public interface FlowieeConfigRepository extends JpaRepository<CauHinhHeThong, Integer> {
     @Query("from CauHinhHeThong order by sort")
     List<CauHinhHeThong> findAll();
+
+    CauHinhHeThong findByKey(String key);
 }

@@ -1,5 +1,6 @@
 package com.flowiee.app.hethong.service.impl;
 
+import com.flowiee.app.hethong.service.FlowieeConfigService;
 import com.flowiee.app.hethong.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,7 +26,7 @@ public class MailServiceImpl implements MailService {
                 helper.setText(body, true);
                 javaMailSender.send(mimeMessage);
                 return "OK";
-            } catch (MessagingException exception){
+            } catch (MessagingException exception) {
                 exception.printStackTrace();
             }
         }

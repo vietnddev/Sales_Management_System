@@ -1,10 +1,8 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.flowiee.app.common.entity.BaseEntity;
+import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -15,15 +13,12 @@ import java.util.Date;
 @Builder
 @Entity
 @Table(name = "san_pham_gia")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class GiaSanPham implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+public class GiaSanPham extends BaseEntity implements Serializable {
     @JsonIgnoreProperties("listGiaBan")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bien_the_id", nullable = false)
@@ -32,23 +27,16 @@ public class GiaSanPham implements Serializable {
     @Column(name = "gia_ban", nullable = false)
     private Double giaBan;
 
-    @CreatedDate
-    @Column(name = "created_at",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
-    private Date createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date updatedAt;
-
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;
 
-    @PreUpdate
-    @PrePersist
-    public void updateTimeStamps() {
-        updatedAt = new Date();
-        if (createdAt == null) {
-            createdAt = new Date();
-        }
+    @Override
+    public String toString() {
+        return "GiaSanPham{" +
+                "id=" + id +
+                ", bienTheSanPham=" + bienTheSanPham +
+                ", giaBan=" + giaBan +
+                ", trangThai=" + trangThai +
+                '}';
     }
 }

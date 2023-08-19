@@ -102,7 +102,7 @@ public class DonHangServiceImpl implements DonHangService {
         try {
             DonHang donHang = new DonHang();
             donHang.setMaDonHang(FlowieeUtil.maDonHang());
-            donHang.setKhachHang(KhachHang.builder().id(request.getKhachHang()).build());
+            donHang.setKhachHang(new KhachHang(request.getKhachHang()));
             donHang.setKenhBanHang(KenhBanHang.builder().id(request.getKenhBanHang()).build());
             donHang.setNhanVienBanHang(Account.builder().id(request.getNhanVienBanHang()).build());
             donHang.setGhiChu(request.getGhiChu());

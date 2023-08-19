@@ -31,8 +31,30 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public List<Document> findRootFolder() {
+        List<Document> listRootFolder = documentRepository.findRootFolder();
+        return listRootFolder;
+    }
+
+    @Override
+    public List<Document> findRootFile() {
+        List<Document> listRootFile = documentRepository.findRootFile();
+        return listRootFile;
+    }
+
+    @Override
     public List<Document> findDocumentByParentId(int parentId) {
         return documentRepository.findListDocumentByParentId(parentId);
+    }
+
+    @Override
+    public List<Document> findFolderByParentId(int parentId) {
+        return documentRepository.findListFolderByParentId(parentId);
+    }
+
+    @Override
+    public List<Document> findFileByParentId(int parentId) {
+        return documentRepository.findListFileByParentId(parentId);
     }
 
     @Override

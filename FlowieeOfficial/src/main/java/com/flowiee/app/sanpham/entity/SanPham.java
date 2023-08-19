@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
 import com.flowiee.app.danhmuc.entity.LoaiSanPham;
 import com.flowiee.app.file.entity.FileStorage;
@@ -13,19 +14,13 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "san_pham")
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PUBLIC)
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class SanPham implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private  int id;
-
+public class SanPham extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loai_san_pham", nullable = false, insertable = true, updatable = true)
+    @JoinColumn(name = "loai_san_pham", nullable = false)
     private LoaiSanPham loaiSanPham;
 
     @Column(name = "ten_san_pham", nullable = false)
@@ -52,6 +47,10 @@ public class SanPham implements Serializable {
 
     @Transient
     private FileStorage imageActive;
+
+    public SanPham(int id) {
+        super.id = id;
+    }
 
     @Override
     public String toString() {

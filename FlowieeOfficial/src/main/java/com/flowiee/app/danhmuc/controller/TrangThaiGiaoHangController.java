@@ -61,7 +61,6 @@ public class TrangThaiGiaoHangController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("trangThaiGiaoHang") TrangThaiGiaoHang trangThaiGiaoHang,
                          @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -74,7 +73,6 @@ public class TrangThaiGiaoHangController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }

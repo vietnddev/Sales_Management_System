@@ -32,6 +32,7 @@ public class PagesUtil {
     public static final String PAGE_DANHMUC_MAUSAC = "/pages/danh-muc/loai-mau-sac";
     public static final String PAGE_DANHMUC_KICHCO = "/pages/danh-muc/loai-kich-co";
 
+    public static final String PAGE_STORAGE_DASHBOARD = "/pages/kho-tai-lieu/dashboard";
     public static final String PAGE_STORAGE_DOCUMENT = "/pages/kho-tai-lieu/document";
     public static final String PAGE_STORAGE_DOCUMENT_DETAIL = "/pages/kho-tai-lieu/document-detail";
     public static final String PAGE_STORAGE_DOCTYPE_DETAIL = "/pages/kho-tai-lieu/doctype-detail";

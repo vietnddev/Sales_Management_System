@@ -1,32 +1,28 @@
 package com.flowiee.app.hethong.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.common.model.DateAudit;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.hethong.model.Role;
-import com.flowiee.app.hethong.model.RoleResponse;
 import com.flowiee.app.khotailieu.entity.DocShare;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.DonHangThanhToan;
 import com.flowiee.app.sanpham.entity.KhachHang;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
 @Builder
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PUBLIC)
+@Data
 @Entity
-@Table(name = "nguoi_dung")
+@Table(name = "account")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account extends DateAudit implements Serializable{
+public class Account extends BaseEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)

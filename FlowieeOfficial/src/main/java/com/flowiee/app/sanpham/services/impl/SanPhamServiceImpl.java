@@ -67,6 +67,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             throw new BadRequestException();
         }
         try {
+            sanPham.setCreatedBy(accountService.getCurrentAccount().getId() + "");
             productsRepository.save(sanPham);
             systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), sanPham.toString(), null);
             return "OK";
@@ -85,6 +86,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         SanPham sanPhamBefore = this.findById(id);
         try {
             sanPham.setId(id);
+            sanPham.setLastUpdatedBy(accountService.getCurrentAccount().getId() + "");
             productsRepository.save(sanPham);
             String noiDungLog = "";
             String noiDungLogUpdate = "";

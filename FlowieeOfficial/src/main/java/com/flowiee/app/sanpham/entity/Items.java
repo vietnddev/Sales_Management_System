@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.entity;
 
+import com.flowiee.app.common.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,12 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Items implements Serializable {
-    @Id
-    @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+public class Items extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bien_the_san_pham_id", nullable = false)
     private BienTheSanPham bienTheSanPham;

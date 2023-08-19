@@ -37,7 +37,7 @@
                                         <a class="nav-link active"
                                            id="THONG_TIN_TAB" href="#THONG_TIN"
                                            data-toggle="pill" role="tab" aria-selected="true"
-                                           style="font-weight: bold">Thông tin
+                                           style="font-weight: bold">Thông tin chung
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -56,23 +56,20 @@
                                     <div class="tab-pane fade show active" id="THONG_TIN" role="tabpanel"
                                          aria-labelledby="custom-tabs-one-home-tab">
                                         <div class="card">
-                                            <div class="card-header">
-                                                <h4 class="card-title">Thông tin</h4>
-                                            </div>
                                             <div class="card-body">
-                                                <div class="row">
+                                                <div class="row mb-2">
                                                     <span class="col-sm-6">Họ tên</span>
                                                     <span class="col-sm-6">[[${khachHangDetail.tenKhachHang}]]</span>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mb-2">
                                                     <span class="col-sm-6">Giới tính</span>
                                                     <span class="col-sm-6">[[${khachHangDetail.gioiTinh}]]</span>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mb-2">
                                                     <span class="col-sm-6">Số điện thoại</span>
                                                     <span class="col-sm-6">[[${khachHangDetail.soDienThoai}]]</span>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mb-2">
                                                     <span class="col-sm-6">Email</span>
                                                     <span class="col-sm-6">[[${khachHangDetail.email}]]</span>
                                                 </div>
@@ -87,7 +84,7 @@
                                                 <h4 class="card-title">Lịch sử giao dịch</h4>
                                             </div>
                                             <div class="card-body">
-                                                <div class="row">
+                                                <div class="row mb-2">
                                                     <span class="col-sm-6">Tổng số hóa đơn: [[${khachHangDetail.listDonHang.size()}]]</span>
                                                     <span class="col-sm-6">Ngày bắt đầu mua hàng: 12/12/2022</span>
                                                 </div>

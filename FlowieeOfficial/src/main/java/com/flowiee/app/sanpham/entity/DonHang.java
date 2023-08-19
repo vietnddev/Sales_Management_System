@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import com.flowiee.app.danhmuc.entity.TrangThaiGiaoHang;
@@ -9,6 +9,7 @@ import com.flowiee.app.hethong.entity.Account;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -19,12 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "don_hang")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class DonHang implements java.io.Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private int id;
-
+public class DonHang extends BaseEntity implements Serializable {
 	@Column(name = "ma_don_hang", length = 20, nullable = false)
 	private String maDonHang;
 
@@ -61,4 +57,18 @@ public class DonHang implements java.io.Serializable {
 
 	@OneToMany(mappedBy = "donHang", fetch = FetchType.LAZY)
 	private List<DonHangChiTiet> listDonHangChiTiet;
+
+	@Override
+	public String toString() {
+		return "DonHang{" +
+				"maDonHang='" + maDonHang + '\'' +
+				", khachHang=" + khachHang +
+				", ghiChu='" + ghiChu + '\'' +
+				", thoiGianDatHang=" + thoiGianDatHang +
+				", tongTienDonHang=" + tongTienDonHang +
+				", nhanVienBanHang=" + nhanVienBanHang +
+				", kenhBanHang=" + kenhBanHang +
+				", trangThaiDonHang=" + trangThaiDonHang +
+				'}';
+	}
 }

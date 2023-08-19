@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.entity;
 
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.hethong.entity.Account;
@@ -16,11 +17,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DonHangThanhToan implements Serializable {
-    @Id
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class DonHangThanhToan extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "don_hang_id", nullable = false)
     private DonHang donHang;
@@ -44,4 +41,17 @@ public class DonHangThanhToan implements Serializable {
 
     @Column(name = "trang_thai_thanh_toan", nullable = false)
     private boolean trangThaiThanhToan;
+
+    @Override
+    public String toString() {
+        return "DonHangThanhToan{" +
+                "donHang=" + donHang +
+                ", maPhieu='" + maPhieu + '\'' +
+                ", thoiGianThanhToan=" + thoiGianThanhToan +
+                ", hinhThucThanhToan=" + hinhThucThanhToan +
+                ", thuNgan=" + thuNgan +
+                ", ghiChu='" + ghiChu + '\'' +
+                ", trangThaiThanhToan=" + trangThaiThanhToan +
+                '}';
+    }
 }

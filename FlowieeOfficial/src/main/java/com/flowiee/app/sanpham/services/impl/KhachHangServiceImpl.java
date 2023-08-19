@@ -31,7 +31,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         if (khachHang == null) {
             return "NOK";
         }
-        khachHang.setCreatedBy(accountService.getCurrentAccount());
+        khachHang.setCreatedBy(accountService.getCurrentAccount().getId() + "");
         khachHangRepository.save(khachHang);
         return "OK";
     }

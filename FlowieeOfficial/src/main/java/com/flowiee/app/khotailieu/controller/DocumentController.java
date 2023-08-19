@@ -4,10 +4,7 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.common.utils.DateUtil;
-import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.IPUtil;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.common.utils.*;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
 import com.flowiee.app.file.service.FileStorageService;
@@ -15,6 +12,7 @@ import com.flowiee.app.hethong.service.MailService;
 import com.flowiee.app.khotailieu.entity.DocData;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.entity.Document;
+import com.flowiee.app.khotailieu.model.CayThuMuc;
 import com.flowiee.app.khotailieu.model.DocMetaResponse;
 import com.flowiee.app.khotailieu.model.DocumentType;
 import com.flowiee.app.khotailieu.repository.DocumentRepository;
@@ -40,7 +38,7 @@ import java.util.*;
 
 @CrossOrigin
 @Controller
-@RequestMapping("/kho-tai-lieu/document")
+@RequestMapping("/kho-tai-lieu")
 public class DocumentController {
     @Autowired
     private AccountService accountService;
@@ -67,8 +65,32 @@ public class DocumentController {
     @Autowired
     private DocumentRepository documentRepository;
 
+    //Dashboard
+    @GetMapping("/dashboard")
+    public ModelAndView showDashboardOfSTG() {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleXemDashboard()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DASHBOARD);
+            //Loại tài liệu
+            List<LoaiTaiLieu> listLoaiTaiLieu = loaiTaiLieuService.findAll();
+            List<String> listTenOfDocType = new ArrayList<>();
+            List<Integer> listSoLuongOfDocType = new ArrayList<>();
+            for (LoaiTaiLieu docType : listLoaiTaiLieu) {
+                listTenOfDocType.add(docType.getTen());
+                listSoLuongOfDocType.add(docType.getListDocument() != null ? docType.getListDocument().size() : 0);
+            }
+            modelAndView.addObject("reportOfDocType_listTen", listTenOfDocType);
+            modelAndView.addObject("reportOfDocType_listSoLuong", listSoLuongOfDocType);
+            return modelAndView;
+        } else {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+    }
+
     //Màn hình root
-    @GetMapping("")
+    @GetMapping("/document")
     public ModelAndView getRootDocument() {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
@@ -109,7 +131,94 @@ public class DocumentController {
         }
     }
 
-    @GetMapping("/{aliasPath}")
+//    private CayThuMuc chuyenDoiSangCayThuMuc(Document document) {
+//        CayThuMuc cayThuMuc = new CayThuMuc();
+//        cayThuMuc.setId(document.getId());
+//        cayThuMuc.setTenThuMuc(document.getTen());
+//        //cayThuMuc.setListSubThuMuc(new ArrayList<>());
+//
+//        List<Document> subDocuments = documentService.findFolderByParentId(document.getId());
+//        List<CayThuMuc> subCayThuMucList = new ArrayList<>();
+//
+//        if (subDocuments != null) {
+//            for (Document subDocument : subDocuments) {
+//                CayThuMuc subCayThuMuc = chuyenDoiSangCayThuMuc(subDocument);
+//                if (subCayThuMuc != null) {
+//                    subCayThuMucList.add(subCayThuMuc);
+//                } else {
+//                    subCayThuMucList.add(new CayThuMuc());
+//                }
+//            }
+//        }
+//
+//
+//        cayThuMuc.setListSubThuMuc(subCayThuMucList);
+//        return cayThuMuc;
+//    }
+
+//    public List<CayThuMuc> layCayThuMuc() {
+//        List<Document> rootDocuments = documentService.findRootFolder();
+//        List<CayThuMuc> cayThuMucList = new ArrayList<>();
+//
+//        for (Document rootDocument : rootDocuments) {
+//            CayThuMuc cayThuMuc = chuyenDoiSangCayThuMuc(rootDocument);
+//            if (cayThuMuc != null) {
+//                cayThuMucList.add(cayThuMuc);
+//            } else {
+//                cayThuMucList.add(new CayThuMuc());
+//            }
+//        }
+//        return cayThuMucList;
+//    }
+
+    public List<CayThuMuc> buildTree() {
+        List<Document> documents = documentService.findAllFolder();
+
+        // Tạo một map để lưu các cấu trúc cây thư mục dưới dạng key-value
+        Map<Integer, CayThuMuc> map = new HashMap<>();
+
+        // Tạo danh sách gốc cho cây thư mục
+        List<CayThuMuc> roots = new ArrayList<>();
+
+        // Đầu tiên, hãy tạo tất cả các nút (CayThuMuc) từ danh sách tài liệu (documents)
+        for (Document document : documents) {
+            CayThuMuc cayThuMuc = new CayThuMuc();
+            cayThuMuc.setId(document.getId());
+            cayThuMuc.setTenThuMuc(document.getTen());
+            cayThuMuc.setListSubThuMuc(new ArrayList<>()); // Khởi tạo danh sách con trống ban đầu
+            map.put(document.getId(), cayThuMuc);
+
+            // Nếu là thư mục gốc (parentId == 0), thêm vào danh sách gốc
+            if (document.getParentId() == 0) {
+                roots.add(cayThuMuc);
+            }
+        }
+
+        // Sau đó, lặp qua danh sách tài liệu lần nữa để xây dựng cây thư mục
+        for (Document document : documents) {
+            int parentId = document.getParentId();
+
+            // Bỏ qua các thư mục gốc vì chúng đã được thêm vào danh sách gốc
+            if (parentId == 0) {
+                continue;
+            }
+
+            // Lấy CayThuMuc đại diện cho thư mục cha
+            CayThuMuc parentCayThuMuc = map.get(parentId);
+
+            // Nếu thư mục cha không tồn tại (có thể do dữ liệu không hợp lệ), thì bỏ qua thư mục này
+            if (parentCayThuMuc == null) {
+                continue;
+            }
+
+            // Lấy danh sách con của thư mục cha và thêm CayThuMuc hiện tại vào danh sách đó
+            parentCayThuMuc.getListSubThuMuc().add(map.get(document.getId()));
+        }
+
+        return roots;
+    }
+
+    @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
@@ -127,7 +236,43 @@ public class DocumentController {
         if (!kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem() || !docShareService.isShared(documentId)) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        ///
+//        List<CayThuMuc> cayThuMuc = new ArrayList<>();
+//
+//        List<Document> listRoot = documentService.findRootDocument();
+//        for (Document docRoot : listRoot) {
+//            CayThuMuc rootFolder = new CayThuMuc();
+//            rootFolder.setId(docRoot.getId());
+//            rootFolder.setTenThuMuc(docRoot.getTen());
+//
+//            List<CayThuMuc> listSub = new ArrayList<>();
+//            List<Document> listSubDoc = documentService.findDocumentByParentId(docRoot.getId());
+//            if (listSubDoc != null) {
+//                for (Document doc : listSubDoc) {
+//                    CayThuMuc subFolder = new CayThuMuc();
+//                    subFolder.setId(doc.getId());
+//                    subFolder.setTenThuMuc(doc.getTen());
+//                    listSub.add(subFolder);
+//                }
+//            }
+//
+//            rootFolder.setListSubThuMuc(listSub);
+//            cayThuMuc.add(rootFolder);
+//
+//
+//        }
+//
+//        System.out.println(cayThuMuc);
 
+        //List<CayThuMuc> listCTM = layCayThuMuc();
+//
+//        List<CayThuMuc> cayThuMucList = cayThuMucService.layCayThuMuc();
+//        model.addAttribute("folders", cayThuMucList);
+
+         List<CayThuMuc> list = buildTree();
+        System.out.println(list);
+
+        ///
         if (document.getLoai().equals(DocumentType.FILE.name())) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT_DETAIL);
             modelAndView.addObject("docDetail", document);
@@ -139,6 +284,8 @@ public class DocumentController {
             modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
             //Load các version khác của document
             modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
+            //Cây thư mục
+            //modelAndView.addObject("folders", list);
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
                 modelAndView.addObject("action_update", "enable");
             }
@@ -209,7 +356,7 @@ public class DocumentController {
 
 
     //Insert FILE và FOLDER
-    @PostMapping("/insert")
+    @PostMapping("/document/insert")
     public String insert(HttpServletRequest request,
                          @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
@@ -250,7 +397,7 @@ public class DocumentController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @PostMapping("/change-file/{id}")
+    @PostMapping("/document/change-file/{id}")
     public String changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") int id, HttpServletRequest request) throws IOException {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
@@ -262,7 +409,7 @@ public class DocumentController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/document/update/{id}")
     public String update(@ModelAttribute("document") Document document,
                          @PathVariable("id") int id, HttpServletRequest request) {
         String username = accountService.getUserName();
@@ -288,13 +435,12 @@ public class DocumentController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @GetMapping("/update-metadata/{id}")
+    @GetMapping("/document/update-metadata/{id}")
     public String updateMetadata(HttpServletRequest request,
                                  @PathVariable("id") int documentId,
                                  @RequestParam("docDataId") Integer[] docDataIds,
                                  @RequestParam("docDataValue") String[] docDataValues) {
-        String username = accountService.getUserName();
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (documentId <= 0) {
@@ -309,7 +455,7 @@ public class DocumentController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/document/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
@@ -332,7 +478,7 @@ public class DocumentController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @PostMapping("/move/{id}")
+    @PostMapping("/document/move/{id}")
     public String move() {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {
@@ -341,7 +487,7 @@ public class DocumentController {
         return "";
     }
 
-    @PostMapping("/share/{id}")
+    @PostMapping("/document/share/{id}")
     public String share() {
         String username = accountService.getUserName();
         if (username.isEmpty() || username == null) {

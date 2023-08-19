@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.common.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,11 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "don_hang_chi_tiet")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class DonHangChiTiet implements java.io.Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private int id;
+public class DonHangChiTiet extends BaseEntity implements java.io.Serializable {
 
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -37,4 +34,15 @@ public class DonHangChiTiet implements java.io.Serializable {
 
 	@Column(name = "trang_thai", nullable = false)
 	private boolean trangThai;
+
+	@Override
+	public String toString() {
+		return "DonHangChiTiet{" +
+				"donHang=" + donHang +
+				", bienTheSanPham=" + bienTheSanPham +
+				", soLuong=" + soLuong +
+				", ghiChu='" + ghiChu + '\'' +
+				", trangThai=" + trangThai +
+				'}';
+	}
 }

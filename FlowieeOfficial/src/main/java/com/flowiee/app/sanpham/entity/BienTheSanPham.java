@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.entity.LoaiMauSac;
 import com.flowiee.app.file.entity.FileStorage;
@@ -20,12 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class BienTheSanPham implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class BienTheSanPham extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "san_pham_id", nullable = false)
     private SanPham sanPham;
@@ -67,4 +63,18 @@ public class BienTheSanPham implements Serializable {
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<Items> listItems;
+
+    @Override
+    public String toString() {
+        return "BienTheSanPham{" +
+                "sanPham=" + sanPham +
+                ", maSanPham='" + maSanPham + '\'' +
+                ", tenBienThe='" + tenBienThe + '\'' +
+                ", soLuongKho=" + soLuongKho +
+                ", trangThai='" + trangThai + '\'' +
+                ", loaiMauSac=" + loaiMauSac +
+                ", loaiKichCo=" + loaiKichCo +
+                ", giaSanPham=" + giaSanPham +
+                '}';
+    }
 }

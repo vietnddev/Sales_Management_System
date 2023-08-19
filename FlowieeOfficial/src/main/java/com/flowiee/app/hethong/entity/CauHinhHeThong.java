@@ -21,6 +21,9 @@ public class CauHinhHeThong implements java.io.Serializable{
 	@Column(name = "id", unique = true, nullable = false)
 	private int id;
 
+	@Column(name = "key", nullable = false)
+	private String key;
+
 	@Column(name = "name", nullable = false)
 	private String name;
 

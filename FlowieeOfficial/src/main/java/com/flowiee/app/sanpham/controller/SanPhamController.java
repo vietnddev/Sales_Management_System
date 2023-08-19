@@ -128,6 +128,8 @@ public class SanPhamController {
             throw new BadRequestException();
         }
         productsService.update(sanPham, id);
+
+
         return "redirect:" + request.getHeader("referer");
     }
 

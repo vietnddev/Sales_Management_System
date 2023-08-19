@@ -13,6 +13,79 @@
         th {
             vertical-align: middle;
         }
+
+        .tree, .tree ul {
+            margin: 0;
+            padding: 0;
+            list-style: none
+        }
+
+        .tree ul {
+            margin-left: 1em;
+            position: relative
+        }
+
+        .tree ul ul {
+            margin-left: .5em
+        }
+
+        .tree ul:before {
+            content: "";
+            display: block;
+            width: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            border-left: 1px solid
+        }
+
+        .tree li {
+            margin: 0;
+            padding: 0 1em;
+            line-height: 2em;
+            color: #369;
+            font-weight: 700;
+            position: relative
+        }
+
+        .tree ul li:before {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 0;
+            border-top: 1px solid;
+            margin-top: -1px;
+            position: absolute;
+            top: 1em;
+            left: 0
+        }
+
+        .tree ul li:last-child:before {
+            background: #fff;
+            height: auto;
+            top: 1em;
+            bottom: 0
+        }
+
+        .indicator {
+            margin-right: 5px;
+        }
+
+        .tree li a {
+            text-decoration: none;
+            color: #369;
+        }
+
+        .tree li button, .tree li button:active, .tree li button:focus {
+            text-decoration: none;
+            color: #369;
+            border: none;
+            background: transparent;
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+            outline: 0;
+        }
     </style>
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/pdf-js/web/viewer.css}">
 </head>
@@ -50,19 +123,19 @@
                             <div class="col-sm-12 text-center" style="margin-bottom: 5px">
                                 <button type="button" class="btn btn-sm btn-secondary" style="width: 90px"
                                         data-toggle="modal" data-target="#modalChangeFile">
-                                        Thay file
+                                    Thay file
                                 </button>
                                 <button type="button" class="btn btn-sm btn-success" style="width: 90px"
                                         data-toggle="modal" data-target="#modalCopy">
-                                        Sao chép
+                                    Sao chép
                                 </button>
                                 <button type="button" class="btn btn-sm btn-info" style="width: 90px"
                                         data-toggle="modal" data-target="#modalMove">
-                                        Di chuyển
+                                    Di chuyển
                                 </button>
                                 <button type="button" class="btn btn-sm btn-warning" style="width: 90px"
                                         data-toggle="modal" data-target="#modelShare">
-                                        Phân quyền
+                                    Phân quyền
                                 </button>
 
                                 <!--==-- POPUP --==-->
@@ -83,7 +156,8 @@
                                                     <div class="row">
                                                         <div class="form-group w-100">
                                                             <label>Chọn file mới</label>
-                                                            <input class="form-control" type="file" name="file" required>
+                                                            <input class="form-control" type="file" name="file"
+                                                                   required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -101,12 +175,60 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-7">
-                                <iframe class="w-100" th:src="@{'/' + ${fileActiveOfDocument.directoryPath} + '/' + ${fileActiveOfDocument.tenFileKhiLuu}}"
+                            <div class="col-sm-3">
+                                <!--
+                                <ul id="tree1">
+                                    <li>
+                                        <a href="#">TECH</a>
+                                        <ul>
+                                            <li>Company Maintenance</li>
+                                            <li>Employees
+                                                <ul>
+                                                    <li>Reports
+                                                        <ul>
+                                                            <li>Report1</li>
+                                                            <li>Report2</li>
+                                                            <li>Report3</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>Employee Maint.</li>
+                                                </ul>
+                                            </li>
+                                            <li>Human Resources</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        XRP
+                                        <ul>
+                                            <li>Company Maintenance</li>
+                                            <li>Employees
+                                                <ul>
+                                                    <li>Reports
+                                                        <ul>
+                                                            <li>Report1</li>
+                                                            <li>Report2</li>
+                                                            <li>Report3</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>Employee Maint.</li>
+                                                </ul>
+                                            </li>
+                                            <li>Human Resources</li>
+                                        </ul>
+                                    </li>
+                                </ul>-->
+
+
+                            </div>
+
+
+                            <div class="col-sm-4">
+                                <iframe class="w-100"
+                                        th:src="@{'/' + ${fileActiveOfDocument.directoryPath} + '/' + ${fileActiveOfDocument.tenFileKhiLuu}}"
                                         style="min-height: 583px">
                                 </iframe>
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-sm-3">
                                 <div class="card">
                                     <div class="card-header p-2">
                                         <ul class="nav nav-pills"
@@ -144,7 +266,8 @@
                                                                th:text="${list.docFieldName}">
                                                         </label>
                                                         <div class="col-sm-8">
-                                                            <input type="hidden" name="docDataId" th:value="${list.docDataId}">
+                                                            <input type="hidden" name="docDataId"
+                                                                   th:value="${list.docDataId}">
                                                             <input class="form-control"
                                                                    name="docDataValue"
                                                                    th:type="${list.docFieldTypeInput}"
@@ -187,17 +310,19 @@
                                             <div class="tab-pane" id="version" style="font-size: 15px;">
                                                 <table class="table table-hover table-responsive p-0">
                                                     <tbody class="align-self-center">
-                                                        <tr class="align-self-center" th:each="list, index : ${listFileOfDocument}">
-                                                            <td th:text="${index.index + 1}"></td>
-                                                            <td th:text="${list.createdAt}"></td>
-                                                            <td th:text="${list.tenFileGoc}">Tên</td>
-                                                            <td th:text="${list.isActive}"></td>
-                                                            <td>
-                                                                <button type="submit" style="border: none; background: none">
-                                                                    <img th:src="@{/dist/icon/restore.png}">
-                                                                </button>
-                                                            </td>
-                                                        </tr>
+                                                    <tr class="align-self-center"
+                                                        th:each="list, index : ${listFileOfDocument}">
+                                                        <td th:text="${index.index + 1}"></td>
+                                                        <td th:text="${list.createdAt}"></td>
+                                                        <td th:text="${list.tenFileGoc}">Tên</td>
+                                                        <td th:text="${list.isActive}"></td>
+                                                        <td>
+                                                            <button type="submit"
+                                                                    style="border: none; background: none">
+                                                                <img th:src="@{/dist/icon/restore.png}">
+                                                            </button>
+                                                        </td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -227,6 +352,15 @@
     <div th:replace="header :: scripts">
         <!-- Nhúng các file JavaScript vào -->
     </div>
+
+    <!-- jQuery -->
+    <script th:src="@{/plugins/jquery/jquery.min.js}"></script>
+    <!-- Bootstrap 4 -->
+    <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- AdminLTE App -->
+    <script th:src="@{/dist/js/adminlte.min.js}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script th:src="@{/dist/js/demo.js}"></script>
 
     <!--View file pdf-->
     <script th:src="@{/plugins/pdf-js/src/pdf.js}"></script>
@@ -261,6 +395,68 @@
                 page.render(renderContext);
             });
         });
+    </script>
+
+    <script>
+        $.fn.extend({
+            treed: function (o) {
+                //<i class="fa-solid fa-circle-plus"></i>
+                //<i class="fa-solid fa-minus"></i>
+                var openedClass = 'fa-minus';
+                var closedClass = 'fa-circle-plus';
+
+                if (typeof o != 'undefined') {
+                    if (typeof o.openedClass != 'undefined') {
+                        openedClass = o.openedClass;
+                    }
+                    if (typeof o.closedClass != 'undefined') {
+                        closedClass = o.closedClass;
+                    }
+                }
+                ;
+
+                //initialize each of the top levels
+                var tree = $(this);
+                tree.addClass("tree");
+                tree.find('li').has("ul").each(function () {
+                    var branch = $(this); //li with children ul
+                    branch.prepend("<i class='fa-solid " + closedClass + "'></i>");
+                    branch.addClass('branch');
+                    branch.on('click', function (e) {
+                        if (this == e.target) {
+                            var icon = $(this).children('i:first');
+                            icon.toggleClass(openedClass + " " + closedClass);
+                            $(this).children().children().toggle();
+                        }
+                    })
+                    branch.children().children().toggle();
+                });
+                //fire event from the dynamically added icon
+                tree.find('.branch .indicator').each(function () {
+                    $(this).on('click', function () {
+                        $(this).closest('li').click();
+                    });
+                });
+                //fire event to open branch if the li contains an anchor instead of text
+                tree.find('.branch>a').each(function () {
+                    $(this).on('click', function (e) {
+                        $(this).closest('li').click();
+                        e.preventDefault();
+                    });
+                });
+                //fire event to open branch if the li contains a button instead of text
+                tree.find('.branch>button').each(function () {
+                    $(this).on('click', function (e) {
+                        $(this).closest('li').click();
+                        e.preventDefault();
+                    });
+                });
+            }
+        });
+
+        //Initialization of treeviews
+
+        $('#tree1').treed();
     </script>
 </div>
 

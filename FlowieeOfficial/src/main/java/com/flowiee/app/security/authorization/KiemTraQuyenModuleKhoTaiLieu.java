@@ -17,6 +17,18 @@ public class KiemTraQuyenModuleKhoTaiLieu {
 
     private final String module = SystemModule.KHO_TAI_LIEU.name();
 
+    public boolean kiemTraRoleXemDashboard() {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = KhoTaiLieuAction.DASHBOARD_DOCUMENT.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean kiemTraRoleXemDocument() {
         if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;

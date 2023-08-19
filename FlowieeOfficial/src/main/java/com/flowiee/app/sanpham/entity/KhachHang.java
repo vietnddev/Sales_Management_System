@@ -1,31 +1,25 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.hethong.entity.Account;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "khach_hang")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class KhachHang implements java.io.Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private int id;
-
+public class KhachHang extends BaseEntity implements Serializable {
 	@Column(name = "ten_khach_hang", length = 100, nullable = false)
 	private String tenKhachHang;
 
@@ -41,23 +35,23 @@ public class KhachHang implements java.io.Serializable {
 	@Column(name = "dia_chi", length = 500, nullable = false)
 	private String diaChi;
 
-	@CreatedDate
-	@Column(name = "created_at", nullable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
-	private Date createdAt;
-
-	@PreUpdate
-	@PrePersist
-	public void updateTimeStamps() {
-		if (createdAt == null) {
-			createdAt = new Date();
-		}
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", nullable = false, updatable = false)
-	private Account createdBy;
-
 	@JsonIgnoreProperties("khachHang")
 	@OneToMany(mappedBy = "khachHang", fetch = FetchType.LAZY)
 	private List<DonHang> listDonHang;
+
+	public KhachHang(int id) {
+		super.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "KhachHang{" +
+				"id=" + id +
+				", tenKhachHang='" + tenKhachHang + '\'' +
+				", gioiTinh=" + gioiTinh +
+				", soDienThoai='" + soDienThoai + '\'' +
+				", email='" + email + '\'' +
+				", diaChi='" + diaChi + '\'' +
+				'}';
+	}
 }

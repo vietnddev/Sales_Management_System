@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
     @Query("from Cart c where c.createdBy=:createdBy")
-    List<Cart> findByAccountId(int createdBy);
+    List<Cart> findByAccountId(String createdBy);
 }

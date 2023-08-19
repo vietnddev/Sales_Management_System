@@ -145,8 +145,7 @@ public class DonHangController {
             List<Cart> cartCurrent = cartService.findByAccountId(accountService.getCurrentAccount().getId());
             if (cartCurrent.isEmpty()) {
                 Cart cart = new Cart();
-                cart.setCreatedBy(accountService.getCurrentAccount().getId());
-                cart.setCreateAt(new Date());
+                cart.setCreatedBy(accountService.getCurrentAccount().getId() + "");
                 cartService.save(cart);
             }
             modelAndView.addObject("listDonHang", donHangService.findAll());

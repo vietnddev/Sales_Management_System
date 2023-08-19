@@ -29,7 +29,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<Cart> findByAccountId(int accountId) {
-        return cartRepository.findByAccountId(accountId);
+        return cartRepository.findByAccountId(accountId + "");
     }
 
     @Override

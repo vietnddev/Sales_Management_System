@@ -1,25 +1,20 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.flowiee.app.common.entity.BaseEntity;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "san_pham_thuoc_tinh")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class ThuocTinhSanPham implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class ThuocTinhSanPham extends BaseEntity implements Serializable {
     @JsonIgnoreProperties("listThuocTinh")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bien_the_id", nullable = false)
@@ -36,4 +31,15 @@ public class ThuocTinhSanPham implements Serializable {
 
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;
+
+    @Override
+    public String toString() {
+        return "ThuocTinhSanPham{" +
+                "bienTheSanPham=" + bienTheSanPham +
+                ", tenThuocTinh='" + tenThuocTinh + '\'' +
+                ", giaTriThuocTinh='" + giaTriThuocTinh + '\'' +
+                ", sort=" + sort +
+                ", trangThai=" + trangThai +
+                '}';
+    }
 }
