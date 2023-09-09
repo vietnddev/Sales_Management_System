@@ -17,7 +17,6 @@ public enum SystemModule {
 
     DANH_MUC("DANH MỤC"),
 
-    FILE("FILE"),
 
     DASHBOARD("DASHBOARD");
 
