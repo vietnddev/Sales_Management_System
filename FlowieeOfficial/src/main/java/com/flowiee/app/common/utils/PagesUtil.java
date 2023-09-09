@@ -5,7 +5,8 @@ public class PagesUtil {
 
     public static final String PAGE_DASHBOARD = "/pages/dashboard/dashboard";
 
-    public static final String PAGE_HETHONG_TAIKHOAN = "/pages/he-thong/account";
+    public static final String PAGE_HETHONG_TAIKHOAN_LIST = "/pages/he-thong/account";
+    public static final String PAGE_HETHONG_TAIKHOAN_DETAIL = "/pages/he-thong/account-detail";
     public static final String PAGE_HETHONG_NHATKY = "/pages/he-thong/log";
     public static final String PAGE_HETHONG_ROLE = "/pages/he-thong/role";
     public static final String PAGE_HETHONG_CONFIG = "/pages/he-thong/config";
