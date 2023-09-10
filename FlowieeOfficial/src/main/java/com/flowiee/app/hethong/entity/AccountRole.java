@@ -1,6 +1,7 @@
 package com.flowiee.app.hethong.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,12 +15,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table (name = "account_role")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class AccountRole implements java.io.Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private int id;
-
+public class AccountRole extends BaseEntity implements java.io.Serializable {
 	@Column(name = "module", nullable = false)
 	@NotNull
 	private String module;
@@ -30,5 +26,5 @@ public class AccountRole implements java.io.Serializable {
 
 	@Column(name = "account_id", nullable = false)
 	@NotNull
-	private int accountId;
+	private Integer accountId;
 }

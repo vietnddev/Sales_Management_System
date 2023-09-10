@@ -1,9 +1,8 @@
 package com.flowiee.app.hethong.service.impl;
 
-import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.AccountRole;
-import com.flowiee.app.hethong.model.Role;
-import com.flowiee.app.hethong.model.RoleResponse;
+import com.flowiee.app.hethong.model.*;
 import com.flowiee.app.hethong.model.action.*;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.repository.RoleRepository;
@@ -21,7 +20,6 @@ import java.util.Map;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private AccountService accountService;
 
@@ -31,7 +29,6 @@ public class RoleServiceImpl implements RoleService {
 
         for (SystemModule sys : SystemModule.values()) {
             Role response = new Role();
-
             Map<String, String> module = new LinkedHashMap<>();
             module.put(sys.name(),sys.getLabel());
             response.setModule(module);
@@ -78,14 +75,24 @@ public class RoleServiceImpl implements RoleService {
                     response.setAction(listActionDanhMuc);
                     break;
                 case HE_THONG:
-                    List<Role.Action> actionSystem = new ArrayList<>();
+                    List<Role.Action> listActionSystem = new ArrayList<>();
                     for (AccountAction actionAccount : AccountAction.values()) {
                         Role.Action action = new Role.Action();
                         action.setKeyAction(actionAccount.name());
                         action.setValueAction(actionAccount.getLabel());
-                        actionSystem.add(action);
+                        listActionSystem.add(action);
                     }
-                    response.setAction(actionSystem);
+                    response.setAction(listActionSystem);
+                    break;
+                case THU_VIEN_ANH:
+                    List<Role.Action> listActionAlbum = new ArrayList<>();
+                    for (ThuVienAnhAction actionAlbum : ThuVienAnhAction.values()) {
+                        Role.Action action = new Role.Action();
+                        action.setKeyAction(actionAlbum.name());
+                        action.setValueAction(actionAlbum.getLabel());
+                        listActionAlbum.add(action);
+                    }
+                    response.setAction(listActionAlbum);
                     break;
             }
             listReturn.add(response);
@@ -94,8 +101,183 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public AccountRole findById(int id) {
+    public List<FlowieeRole> findAllRoleByAccountId(Integer accountId) {
+        Account account = accountService.findById(accountId);
+        if (account == null) {
+            return null;
+        }
+        List<FlowieeRole> listReturn = new ArrayList<>();
+
+        for (SystemModule sys : SystemModule.values()) {
+            switch (sys) {
+                case DASHBOARD:
+                    for (DashboardAction actions : DashboardAction.values()) {
+                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
+                    }
+                    break;
+                case SAN_PHAM:
+                    for (SanPhamAction actions : SanPhamAction.values()) {
+                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
+                    }
+                    break;
+                case KHO_TAI_LIEU:
+                    for (KhoTaiLieuAction actions : KhoTaiLieuAction.values()) {
+                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
+                    }
+                    break;
+                case DANH_MUC:
+                    for (DanhMucAction actions : DanhMucAction.values()) {
+                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
+                    }
+                    break;
+                case HE_THONG:
+                    for (AccountAction actions : AccountAction.values()) {
+                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
+                    }
+                    break;
+                case THU_VIEN_ANH:
+                    for (ThuVienAnhAction actions : ThuVienAnhAction.values()) {
+                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
+                    }
+                    break;
+            }
+        }
+        return listReturn;
+    }
+
+    @Override
+    public List<String> findAllModuleKey() {
+        List<String> listModuleKey = new ArrayList<>();
+        for (SystemModule sys : SystemModule.values()) {
+            listModuleKey.add(sys.name());
+        }
+        return listModuleKey;
+    }
+
+    @Override
+    public List<ModuleOfFlowiee> findAllModule() {
+        List<ModuleOfFlowiee> listModule = new ArrayList<>();
+        for (SystemModule sysModule : SystemModule.values()) {
+            ModuleOfFlowiee moduleOfFlowiee = new ModuleOfFlowiee();
+            moduleOfFlowiee.setModuleKey(sysModule.name());
+            moduleOfFlowiee.setModuleLabel(sysModule.getLabel());
+            listModule.add(moduleOfFlowiee);
+        }
+        return listModule;
+    }
+
+    @Override
+    public List<String> findAllActionKey() {
+        List<String> listActionKey = new ArrayList<>();
+        for (SystemModule sys : SystemModule.values()) {
+            switch (sys) {
+                case DASHBOARD:
+                    for (DashboardAction actions : DashboardAction.values()) {
+                        listActionKey.add(actions.name());
+                    }
+                    break;
+                case SAN_PHAM:
+                    for (SanPhamAction actions : SanPhamAction.values()) {
+                        listActionKey.add(actions.name());
+                    }
+                    break;
+                case KHO_TAI_LIEU:
+                    for (KhoTaiLieuAction actions : KhoTaiLieuAction.values()) {
+                        listActionKey.add(actions.name());
+                    }
+                    break;
+                case DANH_MUC:
+                    for (DanhMucAction actions : DanhMucAction.values()) {
+                        listActionKey.add(actions.name());
+                    }
+                    break;
+                case HE_THONG:
+                    for (AccountAction actions : AccountAction.values()) {
+                        listActionKey.add(actions.name());
+                    }
+                    break;
+                case THU_VIEN_ANH:
+                    for (ThuVienAnhAction actions : ThuVienAnhAction.values()) {
+                        listActionKey.add(actions.name());
+                    }
+                    break;
+            }
+        }
+        return listActionKey;
+    }
+
+    @Override
+    public List<ActionOfModule> findAllAction() {
+        List<ActionOfModule> listAction = new ArrayList<>();
+        for (SystemModule sysModule : SystemModule.values()) {
+            switch (sysModule) {
+                case DASHBOARD:
+                    for (DashboardAction sysAction : DashboardAction.values()) {
+                        ActionOfModule actionOfModule = new ActionOfModule();
+                        actionOfModule.setActionKey(sysAction.name());
+                        actionOfModule.setActionLabel(sysAction.getLabel());
+                        actionOfModule.setModuleKey(sysModule.name());
+                        listAction.add(actionOfModule);
+                    }
+                    break;
+                case SAN_PHAM:
+                    for (SanPhamAction sysAction : SanPhamAction.values()) {
+                        ActionOfModule actionOfModule = new ActionOfModule();
+                        actionOfModule.setActionKey(sysAction.name());
+                        actionOfModule.setActionLabel(sysAction.getLabel());
+                        actionOfModule.setModuleKey(sysModule.name());
+                        listAction.add(actionOfModule);
+                    }
+                    break;
+                case KHO_TAI_LIEU:
+                    for (KhoTaiLieuAction sysAction : KhoTaiLieuAction.values()) {
+                        ActionOfModule actionOfModule = new ActionOfModule();
+                        actionOfModule.setActionKey(sysAction.name());
+                        actionOfModule.setActionLabel(sysAction.getLabel());
+                        actionOfModule.setModuleKey(sysModule.name());
+                        listAction.add(actionOfModule);
+                    }
+                    break;
+                case DANH_MUC:
+                    for (DanhMucAction sysAction : DanhMucAction.values()) {
+                        ActionOfModule actionOfModule = new ActionOfModule();
+                        actionOfModule.setActionKey(sysAction.name());
+                        actionOfModule.setActionLabel(sysAction.getLabel());
+                        actionOfModule.setModuleKey(sysModule.name());
+                        listAction.add(actionOfModule);
+                    }
+                    break;
+                case HE_THONG:
+                    for (AccountAction sysAction : AccountAction.values()) {
+                        ActionOfModule actionOfModule = new ActionOfModule();
+                        actionOfModule.setActionKey(sysAction.name());
+                        actionOfModule.setActionLabel(sysAction.getLabel());
+                        actionOfModule.setModuleKey(sysModule.name());
+                        listAction.add(actionOfModule);
+                    }
+                    break;
+                case THU_VIEN_ANH:
+                    for (ThuVienAnhAction sysAction : ThuVienAnhAction.values()) {
+                        ActionOfModule actionOfModule = new ActionOfModule();
+                        actionOfModule.setActionKey(sysAction.name());
+                        actionOfModule.setActionLabel(sysAction.getLabel());
+                        actionOfModule.setModuleKey(sysModule.name());
+                        listAction.add(actionOfModule);
+                    }
+                    break;
+            }
+        }
+        return listAction;
+    }
+
+    @Override
+    public AccountRole findById(Integer id) {
         return roleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<AccountRole> findByAccountId(Integer accountId) {
+        return roleRepository.findByAccountId(accountId);
     }
 
     @Override
@@ -104,50 +286,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public String save(AccountRole accountRole) {
-        if (accountRole == null) {
-            return "Null value!";
-        }
-        if (accountRole.getAccountId() <= 0 || accountService.findById(accountRole.getId()) == null) {
-            return "Account invalid!";
-        }
-        if (accountRole.getModule().isEmpty() || accountRole.getAction().isEmpty()) {
-            return "Module or Action invalid!";
-        }
-        if (!isAuthorized(accountRole.getAccountId(), accountRole.getModule(), accountRole.getAction())) {
-            roleRepository.save(accountRole);
-            return "OK";
-        }
-        return "NOK";
-    }
-
-    @Override
-    public String update(AccountRole accountRole) {
-        if (accountRole == null) {
-            return "Null value!";
-        }
-        if (accountRole.getAccountId() <= 0 || accountService.findById(accountRole.getId()) == null) {
-            return "Account invalid!";
-        }
-        if (accountRole.getModule().isEmpty() || accountRole.getAction().isEmpty()) {
-            return "Module or Action invalid!";
-        }
-        if (accountRole.getId() <= 0 || findById(accountRole.getId()) == null) {
-            return "Role invalid!";
-        }
-        if (isAuthorized(accountRole.getAccountId(), accountRole.getModule(), accountRole.getAction())) {
-            roleRepository.save(accountRole);
-            return "OK";
-        }
-        return "NOK";
-    }
-
-    @Override
-    public String delete(int id) {
-        if (id <= 0) {
-            return "Id invalid!";
-        }
-        roleRepository.deleteById(id);
+    public String updatePermission(String moduleKey, String actionKey, Integer accountId) {
+        AccountRole accountRole = new AccountRole();
+        accountRole.setModule(moduleKey);
+        accountRole.setAction(actionKey);
+        accountRole.setAccountId(accountId);
+        roleRepository.save(accountRole);
         return "OK";
     }
 
@@ -159,18 +303,36 @@ public class RoleServiceImpl implements RoleService {
         return false;
     }
 
-//    @Override
-//    public List<RoleResponse> convertToRoleResponse(List<Role> listRole) {
-//        if (listRole == null) {
-//            throw new BadRequestException();
-//        }
-//        List<RoleResponse> listReturn = new ArrayList<>();
-//        for (Role role : listRole) {
-//            RoleResponse roleResponse = new RoleResponse();
-//            roleResponse.setModule(role.getModule());
-//            roleResponse.setAction(role.getAction());
-//            listReturn.add(roleResponse);
-//        }
-//        return listReturn;
-//    }
+    @Override
+    public AccountRole findByActionAndAccountId(String action, Integer accoutnId) {
+        return roleRepository.findByActionAndAccountId(action, accoutnId);
+    }
+
+    @Override
+    public String deleteAllRole(Integer accountId) {
+        roleRepository.deleteByAccountId(accountId);
+        return "OK";
+    }
+
+    private FlowieeRole buildFlowieeRole(Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
+        FlowieeRole flowieeRole = new FlowieeRole();
+
+        ModuleOfFlowiee module = new ModuleOfFlowiee();
+        module.setModuleKey(pModuleKey);
+        module.setModuleLabel(pModuleLabel);
+        flowieeRole.setModule(module);
+
+        ActionOfModule action = new ActionOfModule();
+        action.setActionKey(pActionKey);
+        action.setActionLabel(pActionLabel);
+        action.setModuleKey(pModuleKey);
+        flowieeRole.setAction(action);
+
+        AccountRole isAuthor = roleRepository.isAuthorized(pAccountId, pModuleKey, pActionKey);
+        flowieeRole.setIsAuthor(isAuthor != null ? true : false);
+
+        flowieeRole.setAccountId(pAccountId);
+
+        return flowieeRole;
+    }
 }

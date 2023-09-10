@@ -21,7 +21,7 @@ public class KiemTraQuyenModuleDashboard {
         if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DashboardAction.READ.name();
+        final String action = DashboardAction.READ_DASHBOARD.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;

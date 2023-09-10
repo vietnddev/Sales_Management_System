@@ -1,7 +1,7 @@
 package com.flowiee.app.hethong.model.action;
 
 public enum DashboardAction {
-    READ("Xem dashboard");
+    READ_DASHBOARD("Xem dashboard");
 
     DashboardAction(String label) {
         this.label = label;

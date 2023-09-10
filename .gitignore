@@ -1,4 +1,5 @@
 
+FlowieeOfficial/src/main/resources/static/uploads/
 FlowieeOfficial/target/classes/static/uploads/san-pham/2023/06/22/1687424412633_z2515155831729_cec8e3640333dd9b30ffc166a1ac4564.jpg
 FlowieeOfficial/logs/application.2023-06-26.log
 FlowieeOfficial/logs/flowiee 2023-06-26.log
@@ -232,3 +233,7 @@ FlowieeOfficial/src/main/resources/static/uploads/kho-tai-lieu/2023/07/28/169055
 FlowieeOfficial/src/main/resources/static/uploads/kho-tai-lieu/2023/07/28/1690553095708_Screenshot 2023-07-09 200203.png
 FlowieeOfficial/src/main/resources/static/uploads/kho-tai-lieu/2023/07/28/1690552952906_Screenshot 2023-07-09 200444.png
 FlowieeOfficial/src/main/resources/static/uploads/kho-tai-lieu/2023/07/28/1690552799841_Screenshot 2023-07-23 123911.png
+*.pdf
+*.jpg
+*.log
+*.pptx

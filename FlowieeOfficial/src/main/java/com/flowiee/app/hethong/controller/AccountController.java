@@ -2,6 +2,9 @@ package com.flowiee.app.hethong.controller;
 
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.hethong.model.ActionOfModule;
+import com.flowiee.app.hethong.model.FlowieeRole;
+import com.flowiee.app.hethong.model.Role;
 import com.flowiee.app.hethong.model.SystemLogAction;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
@@ -14,10 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/he-thong/tai-khoan")
@@ -25,48 +31,58 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
     @Autowired
+    private RoleService roleService;
+    @Autowired
     private SystemLogService systemLogService;
 
     @GetMapping(value = "")
     public ModelAndView findAllAccount() {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN);
-            modelAndView.addObject("account", new Account());
-            modelAndView.addObject("listAccount", accountService.findAll());
-            return modelAndView;
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_LIST);
+        modelAndView.addObject("account", new Account());
+        modelAndView.addObject("listAccount", accountService.findAll());
+        List<Role> newRole = new ArrayList<>();
+        modelAndView.addObject("list", newRole);
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/{id}")
+    public ModelAndView findDetailAccountById(@PathVariable("id") Integer id) {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_DETAIL);
+        //Role
+        List<FlowieeRole> roleOfAccount = roleService.findAllRoleByAccountId(id);
+        modelAndView.addObject("listRole", roleOfAccount);
+        //Account info
+        Account accountInfo = accountService.findById(id);
+        modelAndView.addObject("accountInfo", accountInfo);
+        return modelAndView;
     }
 
     @PostMapping(value = "/insert")
-    public String save(HttpServletRequest request, @ModelAttribute("account") Account account) {
-        String username = accountService.getUserName();
-        if (username != null && !username.isEmpty()) {
-            if (accountService.findByUsername(account.getUsername()) != null) {
-                throw new DataExistsException();
-            }
-            BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
-            String password = account.getPassword();
-            account.setPassword(bCrypt.encode(password));
-            accountService.save(account);
-
-            SystemLog systemLog = SystemLog.builder()
-                    .module("Tài khoản hệ thống")
-                    .action(SystemLogAction.THEM_MOI.name())
-                    .noiDung(account.toString())
-                    .account(Account.builder().id(accountService.findIdByUsername(username)).build())
-                    .ip(IPUtil.getClientIpAddress(request))
-                    .build();
-            systemLogService.writeLog(systemLog);
-
-            return "redirect:/he-thong/tai-khoan";
+    public ModelAndView save(HttpServletRequest request, @ModelAttribute("account") Account account) {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        return PagesUtil.PAGE_LOGIN;
+        if (accountService.findByUsername(account.getUsername()) != null) {
+            throw new DataExistsException();
+        }
+        ModelAndView modelAndView = new ModelAndView("redirect:/he-thong/tai-khoan");
+        BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
+        String password = account.getPassword();
+        account.setPassword(bCrypt.encode(password));
+        accountService.save(account);
+        return modelAndView;
     }
 
     @PostMapping(value = "/update/{id}")
-    public String update(@ModelAttribute("account") Account accountEntity, @PathVariable("id") int id) {
+    public String update(@ModelAttribute("account") Account accountEntity,
+                         @PathVariable("id") int id,
+                         HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -77,13 +93,10 @@ public class AccountController {
             accountEntity.setPassword(acc.getPassword());
             accountEntity.setLastUpdatedBy(accountService.getCurrentAccount().getUsername());
             accountService.update(accountEntity);
-            return "redirect:/he-thong/tai-khoan";
-        } else {
-            return "redirect:/he-thong/tai-khoan";
         }
+        return "redirect:" + request.getHeader("referer");
     }
 
-    @Transactional
     @PostMapping(value = "/delete/{id}")
     public String deleteAccount(@PathVariable int id) {
         if (!accountService.isLogin()) {
@@ -96,5 +109,32 @@ public class AccountController {
         account.setTrangThai(false);
         accountService.save(account);
         return "redirect:/he-thong/tai-khoan";
+    }
+
+    @PostMapping("/update-permission/{id}")
+    public String updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (accountService.findById(accountId) == null) {
+            throw new NotFoundException();
+        }
+        try {
+            roleService.deleteAllRole(accountId);
+            List<ActionOfModule> listAction = roleService.findAllAction();
+            for (int i = 0; i < listAction.size(); i++) {
+                ActionOfModule sysAction = listAction.get(i);
+                String clientActionKey = request.getParameter(sysAction.getActionKey());
+                if (clientActionKey != null) {
+                    Boolean isAuthorSelected = clientActionKey.equals("on") ? true : false;
+                    if (isAuthorSelected) {
+                        roleService.updatePermission(sysAction.getModuleKey(), sysAction.getActionKey(), accountId);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/he-thong/tai-khoan/" + accountId;
     }
 }

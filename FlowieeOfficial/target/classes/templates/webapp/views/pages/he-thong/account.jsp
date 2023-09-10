@@ -55,8 +55,7 @@
                                                 <div class="row">
                                                     <div class="col-7">
                                                         <h2 class="lead"><b th:text="${list.hoTen}"></b></h2>
-                                                        <p class="text-muted text-sm"><b>About: </b> Web Designer / UX /
-                                                            Graphic Artist / Coffee Lover </p>
+                                                        <p class="text-muted text-sm"><b>About: </b> Software Engineer </p>
                                                         <ul class="ml-4 mb-0 fa-ul text-muted">
                                                             <li class="small"><span class="fa-li"><i
                                                                     class="fas fa-lg fa-building"></i></span><span
@@ -83,7 +82,7 @@
                                                             th:data-target="'#role-' + ${list.id}">
                                                         <i class="fa-solid fa-share"></i>
                                                     </button>
-                                                    <a href="#" class="btn btn-sm btn-primary">
+                                                    <a th:href="@{/he-thong/tai-khoan/{id}(id=${list.id})}" class="btn btn-sm btn-primary">
                                                         <i class="fas fa-user"></i> View Profile
                                                     </a>
                                                 </div>
@@ -94,24 +93,16 @@
                                         <div class="modal fade" th:id="'role-' + ${list.id}">
                                             <div class="modal-dialog modal-xl">
                                                 <div class="modal-content">
-                                                    <form th:action="@{/he-thong/tai-khoan/update-role/{id}}"
-                                                          method="post">
-                                                        <div class="modal-header">
-                                                            <strong class="modal-title">Phân quyền</strong>
-                                                            <button type="button" class="close"
-                                                                    data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
+                                                    <div class="modal-header">
+                                                        <strong class="modal-title">Phân quyền</strong>
+                                                        <button type="button" class="close"
+                                                                data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
                                                             <div class="card card-primary card-tabs"
                                                                  style="min-height: 550px; margin-bottom: 0px">
-                                                                <div class="row justify-content-center mt-2 mb-2">
-                                                                    <button type="button"
-                                                                            class="btn btn-primary col-3">
-                                                                        Lưu
-                                                                    </button>
-                                                                </div>
                                                                 <div class="card-header p-0 pt-1">
                                                                     <ul class="nav nav-tabs"
                                                                         id="custom-tabs-one-tab"
@@ -151,22 +142,26 @@
                                                                                 </thead>
                                                                                 <tbody>
                                                                                 <tr th:each="action : ${role.action}">
-                                                                                    <td></td>
+                                                                                    <td>
+                                                                                        <input type="hidden"
+                                                                                               name="module"
+                                                                                               th:value="${role.module.entrySet().iterator().next().key}">
+                                                                                        <input type="hidden"
+                                                                                               name="keyAction"
+                                                                                               th:value="${action.keyAction}">
+                                                                                        <input type="hidden"
+                                                                                               name="valueAction"
+                                                                                               th:value="${action.valueAction}">
+                                                                                    </td>
                                                                                     <td class="text-center">
                                                                                         <div class="form-group clearfix"
                                                                                              style="margin: 0 auto">
-                                                                                            <div class="icheck-primary"
-                                                                                                 th:if="${action.isChecked}">
+                                                                                            <div class="icheck-primary">
                                                                                                 <input type="checkbox"
-                                                                                                       checked
-                                                                                                       th:id="'unchecked_' + ${action.keyAction}">
-                                                                                                <label th:for="'unchecked_' + ${action.keyAction}"></label>
-                                                                                            </div>
-                                                                                            <div class="icheck-primary"
-                                                                                                 th:if="not ${action.isChecked}">
-                                                                                                <input type="checkbox"
-                                                                                                       th:id="'unchecked_' + ${action.keyAction}">
-                                                                                                <label th:for="'unchecked_' + ${action.keyAction}"></label>
+                                                                                                       name="isChecked"
+                                                                                                       th:checked="${action.isChecked}"
+                                                                                                       th:id="'checked_' + ${action.keyAction}">
+                                                                                                <label th:for="'checked_' + ${action.keyAction}"></label>
                                                                                             </div>
                                                                                         </div>
                                                                                     </td>
@@ -179,8 +174,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
