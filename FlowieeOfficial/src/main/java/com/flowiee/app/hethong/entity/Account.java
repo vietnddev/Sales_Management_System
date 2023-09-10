@@ -23,11 +23,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends BaseEntity implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
     @Column(name = "username", nullable = false)
     private String username;
 
@@ -96,5 +91,9 @@ public class Account extends BaseEntity implements Serializable{
                 ", ghiChu='" + ghiChu + '\'' +
                 ", trangThai=" + trangThai +
                 '}';
+    }
+
+    public Account(Integer id) {
+        super.id = id;
     }
 }

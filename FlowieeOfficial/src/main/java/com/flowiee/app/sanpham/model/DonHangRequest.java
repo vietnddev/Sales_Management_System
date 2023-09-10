@@ -11,16 +11,16 @@ import java.util.List;
 @ToString
 public class DonHangRequest implements Serializable {
     private List<Integer> listBienTheSanPham;
-    private int khachHang;
-    private int kenhBanHang;
-    private int hinhThucThanhToan;
+    private Integer khachHang;
+    private Integer kenhBanHang;
+    private Integer hinhThucThanhToan;
     private String diaChiGiaoHang;
-    private int nhanVienBanHang;
+    private Integer nhanVienBanHang;
     private Date thoiGianDatHang;
-    private int trangThaiDonHang;
-    private boolean trangThaiThanhToan;
+    private Integer trangThaiDonHang;
+    private Boolean trangThaiThanhToan;
     private String ghiChu;
     private String thoiGianDatHangSearch;
     private String searchTxt;
-    private int cartId;
+    private Integer cartId;
 }

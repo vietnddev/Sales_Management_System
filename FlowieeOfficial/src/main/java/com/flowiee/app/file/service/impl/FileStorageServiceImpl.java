@@ -158,7 +158,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
         fileInfo.setSanPham(new SanPham(sanPhamId));
-        fileInfo.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
+        fileInfo.setAccount(new Account(accountService.findIdByUsername(accountService.getUserName())));
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
@@ -184,7 +184,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         BienTheSanPham bienTheSanPham = bienTheSanPhamService.findById(bienTheId);
         fileInfo.setBienTheSanPham(bienTheSanPham);
         fileInfo.setSanPham(bienTheSanPham.getSanPham());
-        fileInfo.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
+        fileInfo.setAccount(new Account(accountService.getCurrentAccount().id));
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
@@ -272,7 +272,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileToChange.setExtension(FileUtil.getExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
-        fileToChange.setAccount(Account.builder().id(accountService.findIdByUsername(accountService.getUserName())).build());
+        fileToChange.setAccount(new Account(accountService.getCurrentAccount().id));
         fileRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload

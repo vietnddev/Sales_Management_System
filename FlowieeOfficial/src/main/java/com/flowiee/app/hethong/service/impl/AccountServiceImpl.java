@@ -74,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
             .module(SystemModule.HE_THONG.name())
             .action(AccountAction.CREATE_ACCOUNT.name())
             .noiDung(account.toString())
-            .account(Account.builder().id(accountRepository.findIdByUsername(account.getUsername())).build())
+            .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
             .ip(getIP())
             .build();
         systemLogService.writeLog(systemLog);
@@ -89,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
             .module(SystemModule.HE_THONG.name())
             .action(AccountAction.UPDATE_ACCOUNT.name())
             .noiDung(account.toString())
-            .account(Account.builder().id(accountRepository.findIdByUsername(account.getUsername())).build())
+            .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
             .ip(getIP())
             .build();
         systemLogService.writeLog(systemLog);
@@ -106,7 +106,7 @@ public class AccountServiceImpl implements AccountService {
                 .module(SystemModule.HE_THONG.name())
                 .action(AccountAction.DELETE_ACCOUNT.name())
                 .noiDung(account.toString())
-                .account(Account.builder().id(accountRepository.findIdByUsername(account.getUsername())).build())
+                .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
                 .ip(getIP())
                 .build();
             systemLogService.writeLog(systemLog);

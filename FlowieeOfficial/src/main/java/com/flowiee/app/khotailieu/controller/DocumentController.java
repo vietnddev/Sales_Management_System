@@ -368,7 +368,7 @@ public class DocumentController {
             throw new NotFoundException();
         }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
-        document.setAccount(Account.builder().id(accountService.findIdByUsername(username)).build());
+        document.setAccount(new Account(accountService.getCurrentAccount().id));
         Document documentSaved = documentService.save(document);
         //Trường hợp document được tạo mới là file upload
         if (document.getLoai().equals(DocumentType.FILE.name()) && file != null) {
@@ -390,7 +390,7 @@ public class DocumentController {
                 .module(SystemModule.KHO_TAI_LIEU.name())
                 .action(SystemLogAction.THEM_MOI.name())
                 .noiDung(document.toString())
-                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
+                .account(new Account(accountService.getCurrentAccount().id))
                 .ip(IPUtil.getClientIpAddress(request))
                 .build();
         systemLogService.writeLog(systemLog);
@@ -428,7 +428,7 @@ public class DocumentController {
                 .module(SystemModule.KHO_TAI_LIEU.name())
                 .action(SystemLogAction.CAP_NHAT.name())
                 .noiDung(document.toString())
-                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
+                .account(new Account(accountService.getCurrentAccount().id))
                 .ip(IPUtil.getClientIpAddress(request))
                 .build();
         systemLogService.writeLog(systemLog);
@@ -471,7 +471,7 @@ public class DocumentController {
                 .module(SystemModule.KHO_TAI_LIEU.name())
                 .action(SystemLogAction.XOA.name())
                 .noiDung(document.toString())
-                .account(Account.builder().id(accountService.findIdByUsername(username)).build())
+                .account(new Account(accountService.getCurrentAccount().id))
                 .ip(IPUtil.getClientIpAddress(request))
                 .build();
         systemLogService.writeLog(systemLog);

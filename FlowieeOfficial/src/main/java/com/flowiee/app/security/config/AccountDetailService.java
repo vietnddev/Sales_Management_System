@@ -54,7 +54,7 @@ public class AccountDetailService implements UserDetailsService {
 				.module(SystemModule.HE_THONG.name())
 				.action(SystemLogAction.LOGIN.name())
 				.noiDung(accountEntity.toString())
-				.account(Account.builder().id(accountEntity.getId()).build())
+				.account(new Account(accountEntity.getId()))
 				.ip(details != null ? details.getRemoteAddress() : "unknown").build();
 				systemLogService.writeLog(systemLog);
 		} else {
