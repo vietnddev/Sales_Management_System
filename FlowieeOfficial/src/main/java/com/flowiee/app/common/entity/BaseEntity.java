@@ -16,7 +16,7 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int id;
+    public Integer id;
 
     @Column(name = "created_at", updatable = false, columnDefinition = "timestamp default current_timestamp")
     @CreatedDate
