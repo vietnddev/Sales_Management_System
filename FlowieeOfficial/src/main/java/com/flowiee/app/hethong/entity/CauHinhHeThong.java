@@ -21,15 +21,15 @@ public class CauHinhHeThong implements java.io.Serializable{
 	@Column(name = "id", unique = true, nullable = false)
 	private int id;
 
-	@Column(name = "key", nullable = false)
+	@Column(name = "key_config", nullable = false)
 	private String key;
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name_config", nullable = false)
 	private String name;
 
-	@Column(name = "value", length = 1000)
+	@Column(name = "value_config", length = 1000)
 	private String value;
 
-	@Column(name = "sort")
+	@Column(name = "sort_config")
 	private Integer sort;
 }
