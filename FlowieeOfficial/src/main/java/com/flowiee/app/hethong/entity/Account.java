@@ -74,6 +74,9 @@ public class Account extends BaseEntity implements Serializable{
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<KhachHang> listKhachHang;
 
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private List<ImportInfo> listImport;
+
     @Transient
     private List<Role> role;
 
