@@ -5,6 +5,7 @@ import com.flowiee.app.danhmuc.repository.LoaiSanPhamRepository;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,5 +51,15 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public String importData(MultipartFile fileImport) {
+        return null;
+    }
+
+    @Override
+    public byte[] exportData() {
+        return new byte[0];
     }
 }

@@ -8,6 +8,7 @@ import com.flowiee.app.danhmuc.repository.KenhBanHangRepository;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -65,5 +66,15 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
             return "OK";
         }
         return "NOK";
+    }
+
+    @Override
+    public String importData(MultipartFile fileImport) {
+        return null;
+    }
+
+    @Override
+    public byte[] exportData() {
+        return new byte[0];
     }
 }

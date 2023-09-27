@@ -1,6 +1,7 @@
 package com.flowiee.app.danhmuc.service;
 
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,4 +15,8 @@ public interface HinhThucThanhToanService {
     String update(HinhThucThanhToan loaiMauSac, int id);
 
     String delete(int id);
+
+    String importData(MultipartFile fileImport);
+
+    byte[] exportData();
 }

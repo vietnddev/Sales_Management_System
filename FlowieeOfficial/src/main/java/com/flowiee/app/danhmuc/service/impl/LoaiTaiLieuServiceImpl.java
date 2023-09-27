@@ -13,6 +13,7 @@ import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -90,5 +91,15 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public String importData(MultipartFile fileImport) {
+        return null;
+    }
+
+    @Override
+    public byte[] exportData() {
+        return new byte[0];
     }
 }

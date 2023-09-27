@@ -1,6 +1,7 @@
 package com.flowiee.app.danhmuc.service;
 
 import com.flowiee.app.danhmuc.entity.TrangThaiGiaoHang;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 public interface TrangThaiGiaoHangService {
@@ -15,4 +16,8 @@ public interface TrangThaiGiaoHangService {
     String update(TrangThaiGiaoHang trangThaiGiaoHang, int id);
 
     String delete(int id);
+
+    String importData(MultipartFile fileImport);
+
+    byte[] exportData();
 }
