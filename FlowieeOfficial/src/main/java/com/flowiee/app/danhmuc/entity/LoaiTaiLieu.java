@@ -23,6 +23,9 @@ public class LoaiTaiLieu implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private int id;
 
+    @Column(name = "ma_loai", nullable = false)
+    private String maLoai;
+
     @Column(name = "ten", nullable = false)
     private String ten;
 
