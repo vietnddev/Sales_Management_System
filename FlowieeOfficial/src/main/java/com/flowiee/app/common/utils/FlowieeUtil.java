@@ -5,11 +5,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 public class FlowieeUtil {
+    public static final String ADMINISTRATOR = "admin";
+
+    public static final String PATH_TEMPLATE_EXCEL = "src/main/resources/static/templates/excel";
+
     public static String maDonHang() {
         return "F" + DateUtil.now("yyMMddHHmmss");
     }
-
-    public static final String ADMINISTRATOR = "admin";
 
     public static String getIPLogin() {
         WebAuthenticationDetails details = null;
