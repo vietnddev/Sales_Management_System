@@ -17,6 +17,7 @@ public class FileUtil {
     public static String TEMPLATE_DM_LOAIKICHCO = "Template_IE_DM_LoaiKichCo";
     public static String TEMPLATE_DM_LOAIMAUSAC = "Template_IE_DM_LoaiMauSac";
     public static String TEMPLATE_DM_LOAIKENHBANHANG = "Template_IE_DM_LoaiKenhBanHang";
+    public static String TEMPLATE_DM_LOAIHINHTHUCTHANHTOAN = "Template_IE_DM_LoaiHinhThucThanhToan";
     public static String TEMPLATE_DM_LOAIDONVITINH = "Template_IE_DM_LoaiDonViTinh";
     public static String TEMPLATE_DM_LOAISANPHAM = "Template_IE_DM_LoaiSanPham";
     public static String TEMPLATE_DM_LOAITAILIEU = "Template_IE_DM_LoaiTaiLieu";
