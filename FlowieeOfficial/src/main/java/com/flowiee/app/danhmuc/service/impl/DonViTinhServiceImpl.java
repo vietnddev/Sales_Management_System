@@ -1,13 +1,27 @@
 package com.flowiee.app.danhmuc.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.ExcelUtil;
+import com.flowiee.app.common.utils.FileUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
+import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.repository.DonViTinhRepository;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -73,6 +87,35 @@ public class DonViTinhServiceImpl implements DonViTinhService {
 
     @Override
     public byte[] exportData() {
-        return new byte[0];
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAIDONVITINH + ".xlsx";
+        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAIDONVITINH + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
+                    Path.of(filePathTemp),
+                    StandardCopyOption.REPLACE_EXISTING).toFile());
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            List<DonViTinh> listData = this.findAll();
+            for (int i = 0; i < listData.size(); i++) {
+                XSSFRow row = sheet.createRow(i + 3);
+                row.createCell(0).setCellValue(i + 1);
+                row.createCell(1).setCellValue(listData.get(i).getMaLoai());
+                row.createCell(2).setCellValue(listData.get(i).getTenLoai());
+                row.createCell(3).setCellValue(listData.get(i).getGhiChu());
+                for (int j = 0; j <= 3; j++) {
+                    row.getCell(j).setCellStyle(ExcelUtil.setBorder(workbook.createCellStyle()));
+                }
+            }
+            workbook.write(stream);
+            workbook.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fileDeleteAfterExport.exists()) {
+                fileDeleteAfterExport.delete();
+            }
+        }
+        return stream.toByteArray();
     }
 }

@@ -2,6 +2,7 @@ package com.flowiee.app.danhmuc.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
@@ -9,6 +10,11 @@ import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.hethong.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -81,5 +87,21 @@ public class DonViTinhController {
         }
         donViTinhService.delete(id);
         return "redirect:" + request.getHeader("referer");
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<?> exportData() {
+        if (!accountService.isLogin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+        }
+        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
+            byte[] dataExport = donViTinhService.exportData();
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("application", "force-download"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIDONVITINH + ".xlsx");
+            return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+        }
     }
 }
