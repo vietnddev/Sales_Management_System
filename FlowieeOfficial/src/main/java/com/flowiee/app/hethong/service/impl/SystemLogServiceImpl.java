@@ -35,7 +35,7 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(null);
         systemLog.setAccount(accountService.getCurrentAccount());
-        systemLog.setIp(FlowieeUtil.getIPLogin());
+        systemLog.setIp(FlowieeUtil.getIPAccountLogin());
         return logRepository.save(systemLog);
     }
 
@@ -47,7 +47,7 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(noiDungCapNhat);
         systemLog.setAccount(accountService.getCurrentAccount());
-        systemLog.setIp(FlowieeUtil.getIPLogin());
+        systemLog.setIp(FlowieeUtil.getIPAccountLogin());
         return logRepository.save(systemLog);
     }
 }

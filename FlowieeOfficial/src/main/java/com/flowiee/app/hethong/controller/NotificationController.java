@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/he-thong/thong/bao")
+@RequestMapping("/he-thong/notification")
 public class NotificationController {
     @Autowired
     private NotificationService notificationService;

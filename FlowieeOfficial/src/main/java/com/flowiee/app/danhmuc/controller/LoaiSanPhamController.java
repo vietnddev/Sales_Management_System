@@ -2,16 +2,11 @@ package com.flowiee.app.danhmuc.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.IPUtil;
-import com.flowiee.app.hethong.model.SystemLogAction;
-import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.LoaiSanPham;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
-import com.flowiee.app.hethong.entity.SystemLog;
-import com.flowiee.app.hethong.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -19,13 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
