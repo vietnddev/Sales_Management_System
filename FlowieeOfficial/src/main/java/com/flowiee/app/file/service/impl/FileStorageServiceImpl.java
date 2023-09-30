@@ -159,7 +159,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
         fileInfo.setSanPham(new SanPham(sanPhamId));
         fileInfo.setAccount(new Account(accountService.findIdByUsername(accountService.getUserName())));
-        fileInfo.setActive(true);
+        fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
         Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
@@ -185,7 +185,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setBienTheSanPham(bienTheSanPham);
         fileInfo.setSanPham(bienTheSanPham.getSanPham());
         fileInfo.setAccount(new Account(accountService.getCurrentAccount().id));
-        fileInfo.setActive(true);
+        fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
         Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
