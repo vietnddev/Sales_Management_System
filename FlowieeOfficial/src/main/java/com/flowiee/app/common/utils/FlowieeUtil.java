@@ -13,7 +13,7 @@ public class FlowieeUtil {
         return "F" + DateUtil.now("yyMMddHHmmss");
     }
 
-    public static String getIPLogin() {
+    public static String getIPAccountLogin() {
         WebAuthenticationDetails details = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {

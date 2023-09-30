@@ -20,6 +20,7 @@ public class PagesUtil {
     public static final String PAGE_DONHANG_BANHANG = "/pages/san-pham/ban-hang";
     public static final String PAGE_KHACHHANG = "/pages/san-pham/khach-hang";
     public static final String PAGE_KHACHHANG_CHITIET = "/pages/san-pham/khach-hang-chi-tiet";
+    public static final String PAGE_SANPHAM_VOUCHER = "/pages/san-pham/voucher";
 
     public static final String PAGE_PROFILE = "pages/he-thong/profile";
 
@@ -39,8 +40,8 @@ public class PagesUtil {
     public static final String PAGE_STORAGE_DOCTYPE_DETAIL = "/pages/kho-tai-lieu/doctype-detail";
 
     public static final String PAGE_UNAUTHORIZED= "/pages/exception/unauthorized";
-    public static final String PAGE_NOT_FOUND= "/pages/exception/not-found";
-    public static final String PAGE_ERROR= "/pages/exception/error";
+    public static final String PAGE_NOT_FOUND = "/pages/exception/not-found";
+    public static final String PAGE_ERROR = "/pages/exception/error";
 
     public static final String PAGE_CONGVIEC_LICHLAMVIEC= "/pages/cong-viec/lich-lam-viec";
 }
