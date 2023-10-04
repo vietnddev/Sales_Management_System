@@ -391,7 +391,7 @@ public class DocumentController {
                 .action(SystemLogAction.THEM_MOI.name())
                 .noiDung(document.toString())
                 .account(new Account(accountService.getCurrentAccount().id))
-                .ip(FlowieeUtil.getIPAccountLogin())
+                .ip(FlowieeUtil.ACCOUNT_IP)
                 .build();
         systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
@@ -429,7 +429,7 @@ public class DocumentController {
                 .action(SystemLogAction.CAP_NHAT.name())
                 .noiDung(document.toString())
                 .account(new Account(accountService.getCurrentAccount().id))
-                .ip(FlowieeUtil.getIPAccountLogin())
+                .ip(FlowieeUtil.ACCOUNT_IP)
                 .build();
         systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
@@ -472,7 +472,7 @@ public class DocumentController {
                 .action(SystemLogAction.XOA.name())
                 .noiDung(document.toString())
                 .account(new Account(accountService.getCurrentAccount().id))
-                .ip(FlowieeUtil.getIPAccountLogin())
+                .ip(FlowieeUtil.ACCOUNT_IP)
                 .build();
         systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");

@@ -13,18 +13,22 @@ public class FlowieeUtil {
         return "F" + DateUtil.now("yyMMddHHmmss");
     }
 
+    public static String ACCOUNT_IP = "unknown";
+
     public static String getIPAccountLogin() {
-        WebAuthenticationDetails details = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Object authDetails = authentication.getDetails();
-            if (authDetails instanceof WebAuthenticationDetails) {
-                details = (WebAuthenticationDetails) authDetails;
-            }
-        }
-        if (details != null) {
-            return details.getRemoteAddress();
-        }
-        return "unknown";
+//        WebAuthenticationDetails details = null;
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null) {
+//            Object authDetails = authentication.getDetails();
+//            if (authDetails instanceof WebAuthenticationDetails) {
+//                details = (WebAuthenticationDetails) authDetails;
+//            }
+//        }
+//        if (details != null) {
+//            return details.getRemoteAddress();
+//        }
+//        return "unknown";
+
+        return ACCOUNT_IP;
     }
 }
