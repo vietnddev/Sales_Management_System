@@ -2,10 +2,8 @@ package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.Voucher;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
-import com.flowiee.app.sanpham.model.DonHangRequest;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import com.flowiee.app.security.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;

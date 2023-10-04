@@ -68,10 +68,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a th:href="@{/san-pham/voucher}" class="nav-link">
                 <i class="fa-solid fa-gifts"></i>
                 <p>
-                  Tạo mã voucher
+                  Voucher
                 </p>
               </a>
             </li>
