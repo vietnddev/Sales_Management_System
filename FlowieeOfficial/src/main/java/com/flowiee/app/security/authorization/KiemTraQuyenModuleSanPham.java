@@ -1,8 +1,9 @@
-package com.flowiee.app.common.authorization;
+package com.flowiee.app.security.authorization;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.model.action.DonHangAction;
 import com.flowiee.app.hethong.model.action.KhachHangAction;
+import com.flowiee.app.hethong.model.action.VoucherAction;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
@@ -217,6 +218,54 @@ public class KiemTraQuyenModuleSanPham {
             return true;
         }
         final String action = KhachHangAction.DELETE_KHACHHANG.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenXemVoucher() {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = VoucherAction.READ_VOUCHER.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenThemVoucher() {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = VoucherAction.CREATE_VOUCHER.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenUpdateVoucher() {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = VoucherAction.UPDATE_VOUCHER.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean kiemTraQuyenDeleteVoucher() {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = VoucherAction.DELETE_VOUCHER.name();
         int accountId = accountService.findIdByUsername(accountService.getUserName());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
