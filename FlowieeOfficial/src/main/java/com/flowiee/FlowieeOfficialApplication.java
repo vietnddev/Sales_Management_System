@@ -50,15 +50,15 @@ public class FlowieeOfficialApplication {
     }
 
     //Auto gửi email báo cáo doanh thu hàng ngày
-    @Scheduled(cron = "0 0 20 * * ?")
-    public void sendReportDaily() {
-        try {
-            String subject = "Email subject";
-            String to = "nguyenducviet0684@gmail.com";
-            String content = "Email content";
-            mailService.sendMail(subject, to, content);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Scheduled(cron = "0 0 20 * * ?")
+//    public void sendReportDaily() {
+//        try {
+//            String subject = "Email subject";
+//            String to = "nguyenducviet0684@gmail.com";
+//            String content = "Email content";
+//            mailService.sendMail(subject, to, content);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
