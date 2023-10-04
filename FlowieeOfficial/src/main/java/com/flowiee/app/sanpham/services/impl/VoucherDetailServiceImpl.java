@@ -21,6 +21,11 @@ public class VoucherDetailServiceImpl implements VoucherDetailService {
     }
 
     @Override
+    public List<VoucherDetail> findByVoucherId(Integer voucherId) {
+        return voucherDetailRepository.findByVoucherId(voucherId);
+    }
+
+    @Override
     public VoucherDetail findById(Integer voucherDetailId) {
         return voucherDetailRepository.findById(voucherDetailId).orElse(null);
     }

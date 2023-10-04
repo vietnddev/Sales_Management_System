@@ -61,27 +61,30 @@
                                             <th>Tiêu đề</th>
                                             <th>Sản phẩm áp dụng</th>
                                             <th>Đối tượng áp dụng</th>
-                                            <th>% Discount</th>
-                                            <th>Giảm tối đa</th>
+                                            <th>Discount</th>
                                             <th>Số lượng phiếu</th>
-                                            <th>Ngày bắt đầu</th>
-                                            <th>Ngày kết thúc</th>
+                                            <th>Thời gian áp dụng</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="list, index : ${listVoucher}">
-                                        <tr>
+                                        <tr th:each="list, index : ${listVoucher}">
                                             <td th:text="${index.index + 1}"></td>
                                             <td th:text="${list.title}"></td>
                                             <td></td>
                                             <td th:text="${list.doiTuongApDung}"></td>
-                                            <td th:text="${list.discount}"></td>
-                                            <td th:text="${list.maxPriceDiscount}"></td>
-                                            <td></td>
-                                            <td th:text="${list.startTime}"></td>
-                                            <td th:text="${list.endTime}"></td>
+                                            <td>
+                                                <span th:text="'Phần trăm: ' + ${list.discount} + ' %'"></span>
+                                                <br>
+                                                <span th:text="'Giảm tối đa: ' + ${list.maxPriceDiscount} + ' đ'"></span>
+                                            </td>
+                                            <td th:text="${list.quantity}"></td>
+                                            <td>
+                                                <span th:text="'Ngày bắt đầu: ' + ${list.startTime}"></span>
+                                                <br>
+                                                <span th:text="'Ngày kết thúc: ' + ${list.endTime}"></span>
+                                            </td>
                                             <td>
                                                 <th:block th:if="${list.status}">
                                                     Đang áp dụng
@@ -105,7 +108,8 @@
                                                                         <h3 class="card-title"><strong>Danh sách voucher</strong></h3>
                                                                     </div>
                                                                 </div>
-                                                                <div class="card-body">
+                                                                <div class="card-body"
+                                                                     style="max-height: 600px; overflow: overlay">
                                                                     <table class="table table-bordered table-striped align-items-center">
                                                                         <thead class="align-self-center">
                                                                             <tr class="align-self-center">
@@ -117,19 +121,12 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            <tr>
-                                                                                <td>1</td>
-                                                                                <td>ABCF4JFF</td>
-                                                                                <td>Nguyễn Đức Việt</td>
-                                                                                <td>01/10/2023</td>
-                                                                                <td>Đã sử dụng</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>2</td>
-                                                                                <td>ABCF4JFF</td>
-                                                                                <td>Nguyễn Đức Việt</td>
-                                                                                <td>01/10/2023</td>
-                                                                                <td>Đã sử dụng</td>
+                                                                            <tr th:each="detail, index : ${list.listVoucherDetail}">
+                                                                                <td th:text="${index.index + 1}"></td>
+                                                                                <td th:text="${detail.key}"></td>
+                                                                                <td th:text="${detail.khachHang != null} ? ${detail.khachHang.tenKhachHang} : ''"></td>
+                                                                                <td th:text="${detail.activeTime}"></td>
+                                                                                <td th:text="${detail.status == false} ? 'Chưa sử dụng' : 'Đã sử dụng'"></td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
@@ -141,7 +138,6 @@
                                             </td>
                                             <!-- Popup cập nhật, xóa -->
                                         </tr>
-                                    </th:block>
                                     </tbody>
                                     <tfoot>
                                         <tr class="align-self-center">
@@ -149,11 +145,9 @@
                                             <th>Tiêu đề</th>
                                             <th>Sản phẩm áp dụng</th>
                                             <th>Đối tượng áp dụng</th>
-                                            <th>% Discount</th>
-                                            <th>Giảm tối đa</th>
+                                            <th>Discount</th>
                                             <th>Số lượng phiếu</th>
-                                            <th>Ngày bắt đầu</th>
-                                            <th>Ngày kết thúc</th>
+                                            <th>Thời gian áp dụng</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
                                         </tr>

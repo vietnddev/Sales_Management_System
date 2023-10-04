@@ -1,11 +1,12 @@
 package com.flowiee.app.sanpham.services;
 
 import com.flowiee.app.sanpham.entity.Voucher;
+import com.flowiee.app.sanpham.model.VoucherResponse;
 
 import java.util.List;
 
 public interface VoucherService {
-    List<Voucher> findAll();
+    List<VoucherResponse> findAll();
 
     Voucher findById(Integer voucherId);
 

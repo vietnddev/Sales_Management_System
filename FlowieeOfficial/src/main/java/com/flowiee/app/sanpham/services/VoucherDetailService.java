@@ -8,6 +8,8 @@ import java.util.List;
 public interface VoucherDetailService {
     List<VoucherDetail> findAll();
 
+    List<VoucherDetail> findByVoucherId(Integer voucherId);
+
     VoucherDetail findById(Integer voucherDetailId);
 
     String save(VoucherDetail voucherDetail);
