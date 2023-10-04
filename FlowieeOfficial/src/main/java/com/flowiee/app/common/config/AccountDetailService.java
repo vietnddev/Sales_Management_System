@@ -1,5 +1,6 @@
-package com.flowiee.app.security.config;
+package com.flowiee.app.common.config;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.model.SystemLogAction;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
@@ -50,6 +51,9 @@ public class AccountDetailService implements UserDetailsService {
 					details = (WebAuthenticationDetails) authDetails;
 				}
 			}
+
+			FlowieeUtil.ACCOUNT_IP = details != null ? details.getRemoteAddress() : "unknown";
+
 			SystemLog systemLog = SystemLog.builder()
 				.module(SystemModule.HE_THONG.name())
 				.action(SystemLogAction.LOGIN.name())

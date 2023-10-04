@@ -1,4 +1,4 @@
-package com.flowiee.app.security.authorization;
+package com.flowiee.app.common.authorization;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.model.action.DonHangAction;
