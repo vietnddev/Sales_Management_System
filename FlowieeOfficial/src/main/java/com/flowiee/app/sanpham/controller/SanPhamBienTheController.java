@@ -1,6 +1,5 @@
 package com.flowiee.app.sanpham.controller;
 
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
@@ -14,6 +13,7 @@ import com.flowiee.app.sanpham.model.TrangThai;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
 import com.flowiee.app.sanpham.services.ThuocTinhSanPhamService;
+import com.flowiee.app.security.authorization.KiemTraQuyenModuleSanPham;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

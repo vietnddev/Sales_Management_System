@@ -1,6 +1,5 @@
 package com.flowiee.app.sanpham.controller;
 
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.danhmuc.service.LoaiKichCoService;
@@ -15,12 +14,12 @@ import com.flowiee.app.sanpham.entity.GiaSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.services.*;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.security.authorization.KiemTraQuyenModuleSanPham;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 

@@ -1,16 +1,13 @@
 package com.flowiee.app.sanpham.controller;
 
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.KhachHang;
-import com.flowiee.app.sanpham.model.DonHangRequest;
 import com.flowiee.app.sanpham.services.DonHangService;
 import com.flowiee.app.sanpham.services.KhachHangService;
+import com.flowiee.app.security.authorization.KiemTraQuyenModuleSanPham;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
