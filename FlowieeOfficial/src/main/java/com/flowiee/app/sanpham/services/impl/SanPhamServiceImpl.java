@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -69,15 +70,17 @@ public class SanPhamServiceImpl implements SanPhamService {
         try {
             sanPham.setCreatedBy(accountService.getCurrentAccount().getId() + "");
             productsRepository.save(sanPham);
-            systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), sanPham.toString(), null);
+            systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), "Thêm mới sản phẩm: " + sanPham.toString());
+            logger.info(SanPhamServiceImpl.class.getName() + ": Thêm mới sản phẩm " + sanPham.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Lỗi khi thêm mới sản phẩm!", e.getCause());
+            logger.error(SanPhamServiceImpl.class.getName() + ": Lỗi khi thêm mới sản phẩm", e.getCause());
             return "NOK";
         }
     }
 
+    @Transactional
     @Override
     public String update(SanPham sanPham, int id) {
         if (id <= 0 || this.findById(id) == null) {
@@ -90,25 +93,27 @@ public class SanPhamServiceImpl implements SanPhamService {
             productsRepository.save(sanPham);
             String noiDungLog = "";
             String noiDungLogUpdate = "";
-            if (sanPhamBefore.toString().length() > 2000) {
-                noiDungLog = sanPhamBefore.toString().substring(0, 2000);
+            if (sanPhamBefore.toString().length() > 1950) {
+                noiDungLog = sanPhamBefore.toString().substring(0, 1950);
             } else {
                 noiDungLog = sanPhamBefore.toString();
             }
-            if (sanPham.toString().length() > 2000) {
-                noiDungLogUpdate = sanPham.toString().substring(0, 2000);
+            if (sanPham.toString().length() > 1950) {
+                noiDungLogUpdate = sanPham.toString().substring(0, 1950);
             } else {
                 noiDungLogUpdate = sanPham.toString();
             }
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), noiDungLog, noiDungLogUpdate);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
+            logger.info(SanPhamServiceImpl.class.getName() + ": Cập nhật sản phẩm " + sanPhamBefore.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Lỗi khi cập nhật sản phẩm!", e.getCause());
+            logger.error(SanPhamServiceImpl.class.getName() + ": Lỗi khi cập nhật sản phẩm!", e.getCause());
             return "NOK";
         }
     }
 
+    @Transactional
     @Override
     public String delete(int id) {
         if (id <= 0) {
@@ -117,16 +122,17 @@ public class SanPhamServiceImpl implements SanPhamService {
         }
         SanPham sanPhamToDelete = this.findById(id);
         if (sanPhamToDelete == null) {
-            logger.error("Lỗi khi xóa sản phẩm!", new NotFoundException());
+            logger.error(SanPhamServiceImpl.class.getName() + ": Lỗi khi xóa sản phẩm", new NotFoundException());
             throw new NotFoundException();
         }
         try {
             productsRepository.deleteById(id);
-            systemLogService.writeLog(module, SanPhamAction.DELETE_SANPHAM.name(), sanPhamToDelete.toString(), null);
+            logger.info(SanPhamServiceImpl.class.getName() + ": Xóa sản phẩm " + sanPhamToDelete.toString());
+            systemLogService.writeLog(module, SanPhamAction.DELETE_SANPHAM.name(), "Xóa sản phẩm: " + sanPhamToDelete.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Lỗi khi xóa sản phẩm!", e.getCause());
+            logger.error(SanPhamServiceImpl.class.getName() + ": Lỗi khi xóa sản phẩm", e.getCause());
             return "NOK";
         }
     }

@@ -99,4 +99,10 @@ public class Account extends BaseEntity implements Serializable{
     public Account(Integer id) {
         super.id = id;
     }
+
+    public Account(Integer id, String username, String hoTen) {
+        super.id = id;
+        this.username = username;
+        this.hoTen = hoTen;
+    }
 }

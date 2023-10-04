@@ -1,6 +1,7 @@
 package com.flowiee.app.hethong.service.impl;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.repository.SystemLogRepository;
 import com.flowiee.app.hethong.service.AccountService;
@@ -29,24 +30,28 @@ public class SystemLogServiceImpl implements SystemLogService {
 
     @Override
     public SystemLog writeLog(String module, String action, String noiDung) {
+        Account account = accountService.getCurrentAccount();
+
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(null);
-        systemLog.setAccount(accountService.getCurrentAccount());
+        systemLog.setAccount(new Account(account.getId(), account.getUsername(), account.getHoTen()));
         systemLog.setIp(FlowieeUtil.getIPAccountLogin());
         return logRepository.save(systemLog);
     }
 
     @Override
     public SystemLog writeLog(String module, String action, String noiDung, String noiDungCapNhat) {
+        Account account = accountService.getCurrentAccount();
+
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(noiDungCapNhat);
-        systemLog.setAccount(accountService.getCurrentAccount());
+        systemLog.setAccount(new Account(account.getId(), account.getUsername(), account.getHoTen()));
         systemLog.setIp(FlowieeUtil.getIPAccountLogin());
         return logRepository.save(systemLog);
     }

@@ -3,6 +3,7 @@ package com.flowiee.app.sanpham.services.impl;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.entity.SystemLog;
+import com.flowiee.app.hethong.model.action.KhachHangAction;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
@@ -12,6 +13,8 @@ import com.flowiee.app.sanpham.entity.GiaSanPham;
 import com.flowiee.app.sanpham.repository.GiaSanPhamRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,9 @@ import java.util.List;
 
 @Service
 public class GiaSanPhamServiceImpl implements GiaSanPhamService {
+    private static final Logger logger = LoggerFactory.getLogger(GiaSanPhamServiceImpl.class);
+    private static final String module = SystemModule.SAN_PHAM.name();
+
     @Autowired
     private GiaSanPhamRepository giaSanPhamRepository;
     @Autowired
@@ -27,7 +33,6 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
     private AccountService accountService;
     @Autowired
     private SystemLogService systemLogService;
-    private String module = SystemModule.SAN_PHAM.name();
 
     @Override
     public List<GiaSanPham> findAll() {
@@ -58,6 +63,8 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
     public String save(GiaSanPham giaSanPham) {
         try {
             giaSanPhamRepository.save(giaSanPham);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Thêm mới giá sản phẩm: " + giaSanPham.toString());
+            logger.info(GiaSanPhamServiceImpl.class.getName() + ": Thêm mới giá sản phẩm " + giaSanPham.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +93,8 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
             //Lưu log
             String noiDung = "Giá cũ:  " + disableGiaCu.getGiaBan();
             String noiDungCapNhat = "Giá mới: " + giaSanPham.getGiaBan();
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), noiDung, noiDungCapNhat);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Cập nhật giá sản phẩm: " + noiDung.toString(), "Giá sau khi cập nhật: " + noiDungCapNhat.toString());
+            logger.info(GiaSanPhamServiceImpl.class.getName() + ": Cập nhật giá sản phẩm " + giaSanPham.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,14 +103,13 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
     }
     @Override
     public String delete(int id) {
-        if (id <= 0 || this.findById(id) == null) {
+        GiaSanPham giaSanPham = this.findById(id);
+        if (id <= 0 || giaSanPham == null) {
             throw new NotFoundException();
         }
         giaSanPhamRepository.deleteById(id);
-        if (this.findById(id) == null) {
-            return "OK";
-        } else {
-            return "NOK";
-        }
+        systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Xóa giá sản phẩm: " + giaSanPham.toString());
+        logger.info(GiaSanPhamServiceImpl.class.getName() + ": Xóa giá sản phẩm " + giaSanPham.toString());
+        return "OK";
     }
 }

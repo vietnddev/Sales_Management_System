@@ -4,6 +4,7 @@ import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.hethong.entity.SystemLog;
+import com.flowiee.app.hethong.model.action.DonHangAction;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
@@ -78,13 +79,8 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         }
         try {
             bienTheSanPhamRepository.save(bienTheSanPham);
-            SystemLog systemLog = new SystemLog();
-            systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.CREATE_SANPHAM.name());
-            systemLog.setNoiDung(bienTheSanPham.toString());
-            systemLog.setAccount(accountService.getCurrentAccount());
-            systemLog.setIp(accountService.getIP());
-            systemLogService.writeLog(systemLog);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới biến thể sản phẩm: " + bienTheSanPham.toString());
+            logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + bienTheSanPham.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,14 +97,8 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         try {
             bienTheSanPham.setId(id);
             bienTheSanPhamRepository.save(bienTheSanPham);
-            SystemLog systemLog = new SystemLog();
-            systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.UPDATE_SANPHAM.name());
-            systemLog.setNoiDung(bienTheSanPhamBefore.toString());
-            systemLog.setNoiDungCapNhat(bienTheSanPham.toString());
-            systemLog.setAccount(accountService.getCurrentAccount());
-            systemLog.setIp(accountService.getIP());
-            systemLogService.writeLog(systemLog);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
+            logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + bienTheSanPhamBefore.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,13 +114,8 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         }
         try {
             bienTheSanPhamRepository.deleteById(bienTheSanPhamId);
-            SystemLog systemLog = new SystemLog();
-            systemLog.setModule(SystemModule.SAN_PHAM.name());
-            systemLog.setAction(SanPhamAction.DELETE_SANPHAM.name());
-            systemLog.setNoiDung(bienTheSanPhamToDelete.toString());
-            systemLog.setAccount(accountService.getCurrentAccount());
-            systemLog.setIp(accountService.getIP());
-            systemLogService.writeLog(systemLog);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa biến thể sản phẩm: " + bienTheSanPhamToDelete.toString());
+            logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Xóa biến thể sản phẩm " + bienTheSanPhamToDelete.toString());
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,7 +135,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         bienTheSanPham.setSoLuongKho(bienTheSanPham.getSoLuongKho() - soLuong);
         try {
             bienTheSanPhamRepository.save(bienTheSanPham);
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng", null);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
             return "OK";
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!", bienTheSanPham);

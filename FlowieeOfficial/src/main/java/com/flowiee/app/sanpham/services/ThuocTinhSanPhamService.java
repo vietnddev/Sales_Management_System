@@ -11,6 +11,8 @@ public interface ThuocTinhSanPhamService {
 
     void saveAttribute(ThuocTinhSanPham productAttribute);
 
+    String updateAttribute(ThuocTinhSanPham attribute, Integer attributeId);
+
     ThuocTinhSanPham findById(int attributeID);
     
     void deleteAttribute(int attributeID);

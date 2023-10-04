@@ -8,6 +8,7 @@ import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.model.action.DonHangAction;
+import com.flowiee.app.hethong.model.action.KhachHangAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.DonHang;
@@ -130,6 +131,9 @@ public class DonHangServiceImpl implements DonHangService {
             donHangSaved.setTongTienDonHang(totalMoneyOfDonHang);
             donHangRepository.save(donHangSaved);
 
+            systemLogService.writeLog(module, DonHangAction.CREATE_DONHANG.name(), "Thêm mới đơn hàng: " + donHang.toString());
+            logger.info(DonHangServiceImpl.class.getName() + ": Thêm mới đơn hàng " + donHang.toString());
+
             return donHangSaved;
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,19 +147,21 @@ public class DonHangServiceImpl implements DonHangService {
             throw new NotFoundException();
         }
         donHang.setId(id);
+        systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật đơn hàng: " + donHang.toString());
+        logger.info(DonHangServiceImpl.class.getName() + ": Cập nhật đơn hàng " + donHang.toString());
         return donHangRepository.save(donHang);
     }
 
     @Override
     public String delete(int id) {
-        if (id <= 0 || this.findById(id) == null) {
+        DonHang donHang = this.findById(id);
+        if (id <= 0 || donHang == null) {
             throw new NotFoundException();
         }
         donHangRepository.deleteById(id);
-        if (this.findById(id) == null) {
-            return "OK";
-        }
-        return "NOK";
+        systemLogService.writeLog(module, DonHangAction.DELETE_DONHANG.name(), "Xóa đơn hàng: " + donHang.toString());
+        logger.info(DonHangServiceImpl.class.getName() + ": Xóa đơn hàng " + donHang.toString());
+        return "OK";
     }
 
     @Override
