@@ -228,6 +228,13 @@ public class RoleServiceImpl implements RoleService {
                         actionOfModule.setModuleKey(sysModule.name());
                         listAction.add(actionOfModule);
                     }
+                    for (VoucherAction sysAction : VoucherAction.values()) {
+                        ActionOfModule actionOfModule = new ActionOfModule();
+                        actionOfModule.setActionKey(sysAction.name());
+                        actionOfModule.setActionLabel(sysAction.getLabel());
+                        actionOfModule.setModuleKey(sysModule.name());
+                        listAction.add(actionOfModule);
+                    }
                     break;
                 case KHO_TAI_LIEU:
                     for (KhoTaiLieuAction sysAction : KhoTaiLieuAction.values()) {
