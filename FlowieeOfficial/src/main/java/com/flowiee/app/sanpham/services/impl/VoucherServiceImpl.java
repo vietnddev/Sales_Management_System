@@ -2,9 +2,11 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.sanpham.entity.Voucher;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
+import com.flowiee.app.sanpham.entity.VoucherSanPham;
 import com.flowiee.app.sanpham.model.VoucherResponse;
 import com.flowiee.app.sanpham.repository.VoucherRepository;
 import com.flowiee.app.sanpham.services.VoucherDetailService;
+import com.flowiee.app.sanpham.services.VoucherSanPhamService;
 import com.flowiee.app.sanpham.services.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherRepository voucherRepository;
     @Autowired
     private VoucherDetailService voucherDetailService;
+    @Autowired
+    private VoucherSanPhamService voucherSanPhamService;
 
     @Override
     public List<VoucherResponse> findAll() {
@@ -53,6 +57,13 @@ public class VoucherServiceImpl implements VoucherService {
     public String save(Voucher voucher, List<Integer> listSanPhamApDung) {
         if (voucher != null) {
             voucherRepository.save(voucher);
+            //
+            for (int sanPhamId : listSanPhamApDung) {
+                VoucherSanPham voucherSanPham = new VoucherSanPham();
+                voucherSanPham.setVoucherId(voucher.getId());
+                voucherSanPham.setSanPhamId(sanPhamId);
+                voucherSanPhamService.save(voucherSanPham);
+            }
             //Gen list voucher detail
             List<String> listKeyVoucher = new ArrayList<>();
             while (listKeyVoucher.size() < voucher.getQuantity()) {

@@ -1,24 +1,18 @@
 package com.flowiee.app.sanpham.services;
 
-import com.flowiee.app.sanpham.entity.BienTheSanPham;
+import com.flowiee.app.sanpham.entity.VoucherSanPham;
 
 import java.util.List;
 
 public interface VoucherSanPhamService {
 
-    List<BienTheSanPham> findAll();
+    List<VoucherSanPham> findAll();
 
-    List<BienTheSanPham> getListVariantOfProduct(int sanPhamId);
+    VoucherSanPham findById(Integer id);
 
-    Double getGiaBan(int id);
+    String save(VoucherSanPham voucherSanPham);
 
-    String save(BienTheSanPham bienTheSanPham);
+    String update(VoucherSanPham voucherSanPham, Integer id);
 
-    String update(BienTheSanPham bienTheSanPham, int id);
-    
-    BienTheSanPham findById(int id);
-
-    String detele(int id);
-
-    String updateSoLuong(Integer soLuong, Integer id);
+    String detele(Integer id);
 }
