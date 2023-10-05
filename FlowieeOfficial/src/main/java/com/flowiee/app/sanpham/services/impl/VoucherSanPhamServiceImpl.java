@@ -27,6 +27,11 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
     }
 
     @Override
+    public List<VoucherSanPham> findByVoucherId(Integer voucherId) {
+        return voucherSanPhamRepository.findByVoucherId(voucherId);
+    }
+
+    @Override
     public VoucherSanPham findById(Integer id) {
         return voucherSanPhamRepository.findById(id).orElse(null);
     }

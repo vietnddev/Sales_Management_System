@@ -5,10 +5,11 @@ import com.flowiee.app.sanpham.entity.VoucherSanPham;
 import java.util.List;
 
 public interface VoucherSanPhamService {
+    VoucherSanPham findById(Integer id);
 
     List<VoucherSanPham> findAll();
 
-    VoucherSanPham findById(Integer id);
+    List<VoucherSanPham> findByVoucherId(Integer voucherId);
 
     String save(VoucherSanPham voucherSanPham);
 

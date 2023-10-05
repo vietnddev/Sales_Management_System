@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.model;
 
+import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
 import lombok.Data;
 
@@ -18,8 +19,9 @@ public class VoucherResponse {
     private Integer lengthOfKey;
     private Integer discount;
     private Float maxPriceDiscount;
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
     private boolean status;
     private List<VoucherDetail> listVoucherDetail;
+    private List<BienTheSanPham> listSanPhamApDung;
 }

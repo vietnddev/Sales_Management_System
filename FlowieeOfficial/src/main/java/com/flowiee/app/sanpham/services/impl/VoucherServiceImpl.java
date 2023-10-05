@@ -1,10 +1,12 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.Voucher;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
 import com.flowiee.app.sanpham.entity.VoucherSanPham;
 import com.flowiee.app.sanpham.model.VoucherResponse;
 import com.flowiee.app.sanpham.repository.VoucherRepository;
+import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.VoucherDetailService;
 import com.flowiee.app.sanpham.services.VoucherSanPhamService;
 import com.flowiee.app.sanpham.services.VoucherService;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherDetailService voucherDetailService;
     @Autowired
     private VoucherSanPhamService voucherSanPhamService;
+    @Autowired
+    private BienTheSanPhamService bienTheSanPhamService;
 
     @Override
     public List<VoucherResponse> findAll() {
@@ -39,10 +44,25 @@ public class VoucherServiceImpl implements VoucherService {
             voucherResponse.setLengthOfKey(voucher.getLengthOfKey());
             voucherResponse.setDiscount(voucher.getDiscount());
             voucherResponse.setMaxPriceDiscount(voucher.getMaxPriceDiscount());
-            voucherResponse.setStartTime(voucher.getStartTime());
-            voucherResponse.setEndTime(voucher.getEndTime());
             voucherResponse.setStatus(voucher.isStatus());
-            voucherResponse.setListVoucherDetail(voucherDetailService.findByVoucherId(voucher.getId()));
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            voucherResponse.setStartTime(dateFormat.format(voucher.getStartTime()));
+            voucherResponse.setEndTime(dateFormat.format(voucher.getEndTime()));
+
+            List<VoucherDetail> listVoucherDetail = voucherDetailService.findByVoucherId(voucher.getId());
+            voucherResponse.setListVoucherDetail(listVoucherDetail);
+
+            List<VoucherSanPham> listVoucherSanPham = voucherSanPhamService.findByVoucherId(voucher.getId());
+            List<BienTheSanPham> listSanPhamApDung = new ArrayList<>();
+            for (VoucherSanPham vSanPham : listVoucherSanPham) {
+                 BienTheSanPham sanPhamApDung = bienTheSanPhamService.findById(vSanPham.getSanPhamId());
+                 if (sanPhamApDung != null) {
+                     listSanPhamApDung.add(sanPhamApDung);
+                 }
+            }
+            voucherResponse.setListSanPhamApDung(listSanPhamApDung);
+
             listVoucherResponse.add(voucherResponse);
         }
         return listVoucherResponse;
@@ -67,7 +87,7 @@ public class VoucherServiceImpl implements VoucherService {
             //Gen list voucher detail
             List<String> listKeyVoucher = new ArrayList<>();
             while (listKeyVoucher.size() < voucher.getQuantity()) {
-                String randomKey = generateRandomKeyVoucher(voucher.getLengthOfKey());
+                String randomKey = generateRandomKeyVoucher(voucher.getLengthOfKey(), voucher.getVoucherType());
                 if (!listKeyVoucher.contains(randomKey)) {
                     listKeyVoucher.add(randomKey);
                     //Lưu key vào DB
@@ -93,8 +113,16 @@ public class VoucherServiceImpl implements VoucherService {
         return null;
     }
 
-    private String generateRandomKeyVoucher(int lengthOfKey) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {
+        String characters = "";
+        if (voucherType.equals("NUMBER")) {
+            characters = "0123456789";
+        } else if (voucherType.equals("TEXT")) {
+            characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        } else if (voucherType.equals("TEXT")) {
+            characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        }
+
         SecureRandom random = new SecureRandom();
         StringBuilder keyVoucher = new StringBuilder();
         for (int i = 0; i < lengthOfKey; i++) {
