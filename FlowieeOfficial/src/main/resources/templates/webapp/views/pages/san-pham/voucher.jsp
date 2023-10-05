@@ -62,7 +62,7 @@
                                             <th>Sản phẩm áp dụng</th>
                                             <th>Đối tượng áp dụng</th>
                                             <th>Discount</th>
-                                            <th>Số lượng phiếu</th>
+                                            <th>Số lượng</th>
                                             <th>Thời gian áp dụng</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
@@ -72,7 +72,15 @@
                                         <tr th:each="list, index : ${listVoucher}">
                                             <td th:text="${index.index + 1}"></td>
                                             <td th:text="${list.title}"></td>
-                                            <td></td>
+                                            <td>
+                                                <th:block th:each="spApplied, index : ${list.listSanPhamApDung}">
+                                                    <span th:text="${index.index + 1} + ' '"></span>
+                                                    <a th:href="@{/san-pham/variant/{id}(id=${spApplied.id})}">
+                                                        <span th:text="${spApplied.tenBienThe}"></span>
+                                                    </a>
+                                                    <br>
+                                                </th:block>
+                                            </td>
                                             <td th:text="${list.doiTuongApDung}"></td>
                                             <td>
                                                 <span th:text="'Phần trăm: ' + ${list.discount} + ' %'"></span>
@@ -146,7 +154,7 @@
                                             <th>Sản phẩm áp dụng</th>
                                             <th>Đối tượng áp dụng</th>
                                             <th>Discount</th>
-                                            <th>Số lượng phiếu</th>
+                                            <th>Số lượng</th>
                                             <th>Thời gian áp dụng</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
