@@ -533,7 +533,6 @@
                                                     <div class="form-group">
                                                         <label>Tên biến thể</label>
                                                         <input class="form-control" type="text" name="tenBienThe"
-                                                               required
                                                                th:placeholder="${detailProducts.tenSanPham}">
                                                     </div>
                                                     <div class="form-group">
