@@ -7,13 +7,15 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.repository.LoaiTaiLieuRepository;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
-import com.flowiee.app.hethong.model.SystemLogAction;
-import com.flowiee.app.hethong.model.action.DanhMucAction;
+import com.flowiee.app.hethong.model.action.KhoTaiLieuAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.SystemLogService;
+import com.flowiee.app.khotailieu.service.impl.DocumentServiceImpl;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,9 @@ import java.util.List;
 
 @Service
 public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
+    private static final Logger logger = LoggerFactory.getLogger(LoaiTaiLieuServiceImpl.class);
+    private static final String module = SystemModule.KHO_TAI_LIEU.name();
+
     @Autowired
     private LoaiTaiLieuRepository loaiTaiLieuRepository;
     @Autowired
@@ -70,7 +75,8 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
             loaiTaiLieuRepository.save(docTypeDefault);
         }
         LoaiTaiLieu loaiTaiLieuSaved = loaiTaiLieuRepository.save(loaiTaiLieu);
-        systemLogService.writeLog(SystemModule.KHO_TAI_LIEU.name(), SystemLogAction.THEM_MOI.name(), loaiTaiLieu.toString(), null);
+        systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Thêm mới loại tài liệu: " + loaiTaiLieuSaved.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới loại tài liệu " + loaiTaiLieuSaved.toString());
         return loaiTaiLieuSaved;
     }
 
@@ -84,7 +90,8 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
             }
             loaiTaiLieu.setId(id);
             LoaiTaiLieu loaiTaiLieuUpdated = loaiTaiLieuRepository.save(loaiTaiLieu);
-            systemLogService.writeLog(SystemModule.KHO_TAI_LIEU.name(), DanhMucAction.UPDATE_DANHMUC.name(), loaiTaiLieu.toString(), loaiTaiLieuUpdated.toString());
+            systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Cập nhật loại tài liệu: " + loaiTaiLieuUpdated.toString());
+            logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật loại tài liệu " + loaiTaiLieuUpdated.toString());
         }
     }
 
@@ -95,8 +102,9 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
             throw new BadRequestException();
         }
         loaiTaiLieuRepository.deleteById(id);
-        systemLogService.writeLog(SystemModule.KHO_TAI_LIEU.name(), DanhMucAction.UPDATE_DANHMUC.name(), loaiTaiLieuToDelete.toString(), null);
-        if (findById(id) == null){
+        if (findById(id) == null) {
+            systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Xóa loại tài liệu: " + loaiTaiLieuToDelete.toString());
+            logger.info(DocumentServiceImpl.class.getName() + ": Xóa loại tài liệu " + loaiTaiLieuToDelete.toString());
             return true;
         } else {
             return false;
@@ -139,6 +147,7 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
                 fileDeleteAfterExport.delete();
             }
         }
+        logger.info(LoaiTaiLieuServiceImpl.class.getName() + ": Export loại tài liệu");
         return stream.toByteArray();
     }
 }

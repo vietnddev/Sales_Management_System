@@ -20,12 +20,9 @@ import com.flowiee.app.khotailieu.service.DocDataService;
 import com.flowiee.app.khotailieu.service.DocFieldService;
 import com.flowiee.app.khotailieu.service.DocShareService;
 import com.flowiee.app.khotailieu.service.DocumentService;
-import com.flowiee.app.hethong.entity.SystemLog;
-import com.flowiee.app.hethong.model.SystemLogAction;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.hethong.model.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -385,15 +382,6 @@ public class DocumentController {
                 docDataService.save(docData);
             }
         }
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-                .module(SystemModule.KHO_TAI_LIEU.name())
-                .action(SystemLogAction.THEM_MOI.name())
-                .noiDung(document.toString())
-                .account(new Account(accountService.getCurrentAccount().id))
-                .ip(FlowieeUtil.ACCOUNT_IP)
-                .build();
-        systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -423,15 +411,6 @@ public class DocumentController {
             throw new NotFoundException();
         }
         documentService.update(document, id);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-                .module(SystemModule.KHO_TAI_LIEU.name())
-                .action(SystemLogAction.CAP_NHAT.name())
-                .noiDung(document.toString())
-                .account(new Account(accountService.getCurrentAccount().id))
-                .ip(FlowieeUtil.ACCOUNT_IP)
-                .build();
-        systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -466,15 +445,6 @@ public class DocumentController {
             throw new BadRequestException();
         }
         documentService.delete(id);
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-                .module(SystemModule.KHO_TAI_LIEU.name())
-                .action(SystemLogAction.XOA.name())
-                .noiDung(document.toString())
-                .account(new Account(accountService.getCurrentAccount().id))
-                .ip(FlowieeUtil.ACCOUNT_IP)
-                .build();
-        systemLogService.writeLog(systemLog);
         return "redirect:" + request.getHeader("referer");
     }
 
