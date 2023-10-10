@@ -1,7 +1,7 @@
 package com.flowiee.app.common.config;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.hethong.model.SystemLogAction;
+import com.flowiee.app.hethong.model.action.SystemAction;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.model.module.SystemModule;
@@ -56,7 +56,7 @@ public class AccountDetailService implements UserDetailsService {
 
 			SystemLog systemLog = SystemLog.builder()
 				.module(SystemModule.HE_THONG.name())
-				.action(SystemLogAction.LOGIN.name())
+				.action(SystemAction.LOGIN.name())
 				.noiDung(accountEntity.toString())
 				.account(new Account(accountEntity.getId()))
 				.ip(details != null ? details.getRemoteAddress() : "unknown").build();
