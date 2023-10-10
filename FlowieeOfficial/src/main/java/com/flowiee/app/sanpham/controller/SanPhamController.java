@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.danhmuc.service.LoaiKichCoService;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
@@ -18,6 +19,11 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -159,5 +165,21 @@ public class SanPhamController {
         }
         fileStorageService.setImageActiveOfSanPham(sanPhamId, imageId);
         return "redirect:" + request.getHeader("referer");
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<?> exportData() {
+        if (!accountService.isLogin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+        }
+        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
+            byte[] dataExport = productsService.exportData(null);
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("application", "force-download"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_SANPHAM + ".xlsx");
+            return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+        }
     }
 }

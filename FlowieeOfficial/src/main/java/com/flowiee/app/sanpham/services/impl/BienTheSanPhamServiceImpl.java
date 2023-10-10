@@ -78,6 +78,13 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             throw new DataExistsException();
         }
         try {
+            String tenBienTheSanPham = "";
+            if (bienTheSanPham.getTenBienThe().isEmpty()) {
+                tenBienTheSanPham = bienTheSanPham.getSanPham().getTenSanPham() + " - Size " + bienTheSanPham.getLoaiKichCo().getTenLoai() + " - Màu " + bienTheSanPham.getLoaiMauSac().getTenLoai();
+            } else {
+                tenBienTheSanPham = bienTheSanPham.getSanPham().getTenSanPham() + " - " + bienTheSanPham.getTenBienThe() + " - Size " + bienTheSanPham.getLoaiKichCo().getTenLoai() + " - Màu " + bienTheSanPham.getLoaiMauSac().getTenLoai();
+            }
+            bienTheSanPham.setTenBienThe(tenBienTheSanPham);
             bienTheSanPhamRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới biến thể sản phẩm: " + bienTheSanPham.toString());
             logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + bienTheSanPham.toString());

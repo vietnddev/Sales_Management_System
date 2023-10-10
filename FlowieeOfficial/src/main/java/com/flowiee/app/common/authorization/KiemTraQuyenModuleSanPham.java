@@ -272,4 +272,16 @@ public class KiemTraQuyenModuleSanPham {
         }
         return false;
     }
+
+    public boolean kiemTraQuyenExport() {
+        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = SanPhamAction.EXPORT_SANPHAM.name();
+        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
 }

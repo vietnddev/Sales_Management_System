@@ -15,4 +15,6 @@ public interface SanPhamService {
     String update(SanPham sanPham, int id);
 
     String delete(int productID);
+
+    byte[] exportData(List<Integer> listSanPhamId);
 }
