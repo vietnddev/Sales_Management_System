@@ -35,6 +35,9 @@ public class BienTheSanPham extends BaseEntity implements Serializable {
     @Column(name = "so_luong_kho", nullable = false)
     private int soLuongKho;
 
+    @Column(name = "da_ban", nullable = false)
+    private int soLuongDaBan;
+
     @Column(name = "trang_thai", nullable = false)
     private String trangThai;
 
