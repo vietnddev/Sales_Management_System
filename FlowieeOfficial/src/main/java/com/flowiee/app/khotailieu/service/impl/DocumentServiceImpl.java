@@ -1,6 +1,10 @@
 package com.flowiee.app.khotailieu.service.impl;
 
 import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.hethong.model.action.KhoTaiLieuAction;
+import com.flowiee.app.hethong.model.action.SanPhamAction;
+import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.khotailieu.entity.DocData;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.khotailieu.model.DocMetaResponse;
@@ -8,8 +12,12 @@ import com.flowiee.app.khotailieu.model.DocumentType;
 import com.flowiee.app.khotailieu.repository.DocumentRepository;
 import com.flowiee.app.khotailieu.service.DocDataService;
 import com.flowiee.app.khotailieu.service.DocumentService;
+import com.flowiee.app.sanpham.services.impl.BienTheSanPhamServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -17,12 +25,17 @@ import java.util.*;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
+    private static final Logger logger = LoggerFactory.getLogger(DocumentServiceImpl.class);
+    private static final String module = SystemModule.KHO_TAI_LIEU.name();
+
     @Autowired
     private DocumentRepository documentRepository;
     @Autowired
     private DocDataService docDataService;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private SystemLogService systemLogService;
 
     @Override
     public List<Document> findRootDocument() {
@@ -69,6 +82,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document save(Document document) {
+        systemLogService.writeLog(module, KhoTaiLieuAction.CREATE_DOCUMENT.name(), "Thêm mới tài liệu: " + document.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
         return documentRepository.save(document);
     }
 
@@ -79,6 +94,8 @@ public class DocumentServiceImpl implements DocumentService {
             document.setTen(data.getTen());
             document.setMoTa(data.getMoTa());
             documentRepository.save(document);
+            systemLogService.writeLog(module, KhoTaiLieuAction.UPDATE_DOCUMENT.name(), "Cập nhật tài liệu: " + document.toString());
+            logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật tài liệu " + document.toString());
             return "OK";
         }
         return "NOK";
@@ -97,13 +114,19 @@ public class DocumentServiceImpl implements DocumentService {
                 docDataService.save(docData);
             }
         }
+        systemLogService.writeLog(module, KhoTaiLieuAction.UPDATE_DOCUMENT.name(), "Update metadata: " + document.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Update metadata " + document.toString());
         return "OK";
     }
 
+    @Transactional
     @Override
     public String delete(int id) {
-        documentRepository.deleteById(id);
-        if (findById(id) == null) {
+        Document document = this.findById(id);
+        if (document != null) {
+            documentRepository.deleteById(id);
+            systemLogService.writeLog(module, KhoTaiLieuAction.DELETE_DOCUMENT.name(), "Xóa tài liệu: " + document.toString());
+            logger.info(DocumentServiceImpl.class.getName() + ": Xóa tài liệu " + document.toString());
             return "OK";
         } else {
             return "NOK";
