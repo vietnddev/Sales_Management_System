@@ -86,6 +86,11 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     }
 
     @Override
+    public byte[] exportTemplate() {
+        return FileUtil.exportTemplate(FileUtil.TEMPLATE_DM_LOAIDONVITINH);
+    }
+
+    @Override
     public byte[] exportData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAIDONVITINH + ".xlsx";

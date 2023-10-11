@@ -18,5 +18,7 @@ public interface DonViTinhService {
 
     String importData(MultipartFile fileImport);
 
+    byte[] exportTemplate();
+
     byte[] exportData();
 }
