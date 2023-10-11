@@ -24,5 +24,7 @@ public interface LoaiSanPhamService {
 
     String importData(MultipartFile fileImport);
 
+    byte[] exportTemplate();
+
     byte[] exportData();
 }

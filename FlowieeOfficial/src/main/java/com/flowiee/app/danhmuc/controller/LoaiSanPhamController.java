@@ -90,6 +90,22 @@ public class LoaiSanPhamController {
         return "redirect:" + request.getHeader("referer");
     }
 
+    @GetMapping("/template")
+    public ResponseEntity<?> exportTemplate() {
+        if (!accountService.isLogin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+        }
+        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
+            byte[] dataExport = loaiSanPhamService.exportTemplate();
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("application", "force-download"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAISANPHAM + ".xlsx");
+            return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+    }
+
     @GetMapping("/export")
     public ResponseEntity<?> exportData() {
         if (!accountService.isLogin()) {
