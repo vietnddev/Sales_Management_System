@@ -90,6 +90,11 @@ public class LoaiKichCoServiceImpl implements LoaiKichCoService {
     }
 
     @Override
+    public byte[] exportTemplate() {
+        return FileUtil.exportTemplate(FileUtil.TEMPLATE_DM_LOAIKICHCO);
+    }
+
+    @Override
     public byte[] exportData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAIKICHCO + ".xlsx";

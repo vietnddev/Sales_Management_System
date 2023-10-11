@@ -20,5 +20,7 @@ public interface LoaiKichCoService {
 
     String importData(MultipartFile fileImport);
 
+    byte[] exportTemplate();
+
     byte[] exportData();
 }
