@@ -1,24 +1,19 @@
 package com.flowiee.app.hethong.entity;
 
-import com.flowiee.app.file.entity.FileStorage;
+import com.flowiee.app.common.entity.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "thong_bao_he_thong")
-public class Notification {
-    @Id
-    @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+@Table(name = "notification")
+public class Notification extends BaseEntity {
     @Column(name = "send", nullable = false)
-    private int send;
+    private Integer send;
 
     @Column(name = "receive", nullable = false)
-    private int receive;
+    private Integer receive;
 
     @Column(name = "type", nullable = false)
     private String type;
@@ -30,7 +25,7 @@ public class Notification {
     private String content;
 
     @Column(name = "readed", nullable = false)
-    private boolean readed;
+    private Boolean readed;
 
     @OneToOne
     @JoinColumn(name = "import_info")
