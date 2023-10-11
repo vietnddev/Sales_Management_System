@@ -10,17 +10,18 @@ public class PagesUtil {
     public static final String PAGE_HETHONG_NHATKY = "/pages/he-thong/log";
     public static final String PAGE_HETHONG_ROLE = "/pages/he-thong/role";
     public static final String PAGE_HETHONG_CONFIG = "/pages/he-thong/config";
+    public static final String PAGE_HETHONG_NOTIFICATION = "/pages/he-thong/notification";
 
     public static final String PAGE_THUVIEN = "/pages/san-pham/thu-vien-hinh-anh";
     public static final String PAGE_SANPHAM = "/pages/san-pham/san-pham";
     public static final String PAGE_SANPHAM_TONG_QUAN = "/pages/san-pham/tong-quan-san-pham";
     public static final String PAGE_SANPHAM_BIENTHE = "/pages/san-pham/chi-tiet-san-pham";
+    public static final String PAGE_SANPHAM_VOUCHER = "/pages/san-pham/voucher";
     public static final String PAGE_DONHANG = "/pages/san-pham/don-hang";
     public static final String PAGE_DONHANG_CHITIET = "/pages/san-pham/don-hang-chi-tiet";
     public static final String PAGE_DONHANG_BANHANG = "/pages/san-pham/ban-hang";
     public static final String PAGE_KHACHHANG = "/pages/san-pham/khach-hang";
     public static final String PAGE_KHACHHANG_CHITIET = "/pages/san-pham/khach-hang-chi-tiet";
-    public static final String PAGE_SANPHAM_VOUCHER = "/pages/san-pham/voucher";
 
     public static final String PAGE_PROFILE = "pages/he-thong/profile";
 
