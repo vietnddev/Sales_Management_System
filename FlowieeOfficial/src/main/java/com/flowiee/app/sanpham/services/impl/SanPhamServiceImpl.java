@@ -6,7 +6,6 @@ import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.danhmuc.entity.DonViTinh;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.model.action.SanPhamAction;
@@ -88,7 +87,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             throw new BadRequestException();
         }
         try {
-            sanPham.setCreatedBy(accountService.getCurrentAccount().getId() + "");
+            sanPham.setCreatedBy(FlowieeUtil.ACCOUNT_ID + "");
             productsRepository.save(sanPham);
             systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), "Thêm mới sản phẩm: " + sanPham.toString());
             logger.info(SanPhamServiceImpl.class.getName() + ": Thêm mới sản phẩm " + sanPham.toString());
@@ -109,7 +108,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         SanPham sanPhamBefore = this.findById(id);
         try {
             sanPham.setId(id);
-            sanPham.setLastUpdatedBy(accountService.getCurrentAccount().getId() + "");
+            sanPham.setLastUpdatedBy(FlowieeUtil.ACCOUNT_ID + "");
             productsRepository.save(sanPham);
             String noiDungLog = "";
             String noiDungLogUpdate = "";

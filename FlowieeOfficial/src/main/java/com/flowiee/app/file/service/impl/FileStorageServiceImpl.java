@@ -3,6 +3,7 @@ package com.flowiee.app.file.service.impl;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.repository.FileStorageRepository;
 import com.flowiee.app.file.service.FileStorageService;
@@ -158,7 +159,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
         fileInfo.setSanPham(new SanPham(sanPhamId));
-        fileInfo.setAccount(new Account(accountService.findIdByUsername(accountService.getUserName())));
+        fileInfo.setAccount(new Account(accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME)));
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
@@ -184,7 +185,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         BienTheSanPham bienTheSanPham = bienTheSanPhamService.findById(bienTheId);
         fileInfo.setBienTheSanPham(bienTheSanPham);
         fileInfo.setSanPham(bienTheSanPham.getSanPham());
-        fileInfo.setAccount(new Account(accountService.getCurrentAccount().id));
+        fileInfo.setAccount(new Account(FlowieeUtil.ACCOUNT_ID));
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
@@ -206,7 +207,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
         fileInfo.setDocument(Document.builder().id(documentId).build());
-        fileInfo.setAccount(accountService.getCurrentAccount());
+        fileInfo.setAccount(FlowieeUtil.ACCOUNT);
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
@@ -239,7 +240,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
         fileInfo.setDocument(Document.builder().id(documentId).build());
-        fileInfo.setAccount(accountService.getCurrentAccount());
+        fileInfo.setAccount(FlowieeUtil.ACCOUNT);
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
@@ -272,7 +273,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileToChange.setExtension(FileUtil.getExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
-        fileToChange.setAccount(new Account(accountService.getCurrentAccount().id));
+        fileToChange.setAccount(new Account(FlowieeUtil.ACCOUNT_ID));
         fileRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload

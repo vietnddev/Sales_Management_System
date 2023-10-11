@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.entity.SystemLog;
-import com.flowiee.app.hethong.model.action.SanPhamAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
@@ -49,8 +49,8 @@ public class CartServiceImpl implements CartService {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(SystemModule.SAN_PHAM.name());
         systemLog.setAction("DELETE_CART");
-        systemLog.setAccount(accountService.getCurrentAccount());
-        systemLog.setIp(accountService.getIP());
+        systemLog.setAccount(FlowieeUtil.ACCOUNT);
+        systemLog.setIp(FlowieeUtil.ACCOUNT_IP);
         systemLog.setNoiDung("DELETE CART");
         systemLogService.writeLog(systemLog);
         return "OK";

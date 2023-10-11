@@ -4,6 +4,7 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.utils.FileUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
@@ -37,7 +38,7 @@ public class DocTypeController {
 
     @GetMapping("")
     public ModelAndView findAllDmLoaiTaiLieu() {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -63,7 +64,7 @@ public class DocTypeController {
 
     @GetMapping("/{id}")
     public ModelAndView findDetailDocType(@PathVariable("id") int id) {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -91,7 +92,7 @@ public class DocTypeController {
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("loaiTaiLieu") LoaiTaiLieu loaiTaiLieu) {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -105,7 +106,7 @@ public class DocTypeController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("loaiTaiLieu") LoaiTaiLieu loaiTaiLieu,
                          @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -119,7 +120,7 @@ public class DocTypeController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }

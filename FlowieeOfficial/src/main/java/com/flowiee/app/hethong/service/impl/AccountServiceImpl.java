@@ -1,5 +1,6 @@
 package com.flowiee.app.hethong.service.impl;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.model.Role;
@@ -73,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
             .action(AccountAction.CREATE_ACCOUNT.name())
             .noiDung(account.toString())
             .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
-            .ip(getIP())
+            .ip(FlowieeUtil.ACCOUNT_IP)
             .build();
         systemLogService.writeLog(systemLog);
         return accountSaved;
@@ -88,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
             .action(AccountAction.UPDATE_ACCOUNT.name())
             .noiDung(account.toString())
             .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
-            .ip(getIP())
+            .ip(FlowieeUtil.ACCOUNT_IP)
             .build();
         systemLogService.writeLog(systemLog);
         return accountSaved;
@@ -105,49 +106,15 @@ public class AccountServiceImpl implements AccountService {
                 .action(AccountAction.DELETE_ACCOUNT.name())
                 .noiDung(account.toString())
                 .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
-                .ip(getIP())
+                .ip(FlowieeUtil.ACCOUNT_IP)
                 .build();
             systemLogService.writeLog(systemLog);
         }
     }
 
     @Override
-    public String getUserName() {
-        String username = "";
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        return username.toLowerCase();
-    }
-
-    @Override
-    public Account getCurrentAccount() {
-        return this.findByUsername(this.getUserName());
-    }
-
-    @Override
-    public String getIP() {
-        WebAuthenticationDetails details = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Object authDetails = authentication.getDetails();
-            if (authDetails instanceof WebAuthenticationDetails) {
-                details = (WebAuthenticationDetails) authDetails;
-            }
-        }
-        if (details != null) {
-            return details.getRemoteAddress();
-        }
-        return "unknown";
-    }
-
-    @Override
     public boolean isLogin() {
-        String username = this.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username == null || username.isEmpty() || username.isBlank() || username.length() == 0) {
             return false;
         }

@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.model.action.KhachHangAction;
-import com.flowiee.app.hethong.model.action.SanPhamAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
@@ -42,7 +42,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         if (khachHang == null) {
             return "NOK";
         }
-        khachHang.setCreatedBy(accountService.getCurrentAccount().getId() + "");
+        khachHang.setCreatedBy(FlowieeUtil.ACCOUNT_ID + "");
         khachHangRepository.save(khachHang);
         systemLogService.writeLog(module, KhachHangAction.CREATE_KHACHHANG.name(), "Thêm mới khách hàng: " + khachHang.toString());
         logger.info(SanPhamServiceImpl.class.getName() + ": Thêm mới khách hàng " + khachHang.toString());

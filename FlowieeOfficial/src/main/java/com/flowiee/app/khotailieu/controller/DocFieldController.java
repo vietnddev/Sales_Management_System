@@ -2,6 +2,7 @@ package com.flowiee.app.khotailieu.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.service.DocFieldService;
@@ -57,7 +58,7 @@ public class DocFieldController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username == null || username.isEmpty()) {
             return PagesUtil.PAGE_LOGIN;
         }

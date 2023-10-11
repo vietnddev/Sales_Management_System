@@ -23,11 +23,5 @@ public interface AccountService{
 
     void delete(int ID);
 
-    String getUserName();
-
-    Account getCurrentAccount();
-
-    String getIP();
-
     boolean isLogin();
 }

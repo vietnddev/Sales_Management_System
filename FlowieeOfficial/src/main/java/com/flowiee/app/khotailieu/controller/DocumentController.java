@@ -89,7 +89,7 @@ public class DocumentController {
     //Màn hình root
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -357,7 +357,7 @@ public class DocumentController {
     public String insert(HttpServletRequest request,
                          @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -365,7 +365,7 @@ public class DocumentController {
             throw new NotFoundException();
         }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
-        document.setAccount(new Account(accountService.getCurrentAccount().id));
+        document.setAccount(new Account(FlowieeUtil.ACCOUNT_ID));
         Document documentSaved = documentService.save(document);
         //Trường hợp document được tạo mới là file upload
         if (document.getLoai().equals(DocumentType.FILE.name()) && file != null) {
@@ -400,7 +400,7 @@ public class DocumentController {
     @PostMapping("/document/update/{id}")
     public String update(@ModelAttribute("document") Document document,
                          @PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -436,7 +436,7 @@ public class DocumentController {
 
     @PostMapping("/document/delete/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -450,7 +450,7 @@ public class DocumentController {
 
     @PostMapping("/document/move/{id}")
     public String move() {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -459,7 +459,7 @@ public class DocumentController {
 
     @PostMapping("/document/share/{id}")
     public String share() {
-        String username = accountService.getUserName();
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }

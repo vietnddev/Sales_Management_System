@@ -2,11 +2,13 @@ package com.flowiee.app.hethong.controller;
 
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.model.ActionOfModule;
 import com.flowiee.app.hethong.model.FlowieeRole;
 import com.flowiee.app.hethong.model.Role;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -29,6 +31,8 @@ public class AccountController {
     private RoleService roleService;
     @Autowired
     private SystemLogService systemLogService;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping(value = "")
     public ModelAndView findAllAccount() {
@@ -38,6 +42,7 @@ public class AccountController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_LIST);
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
+        modelAndView.addObject("listNotification", notificationService.findById(FlowieeUtil.ACCOUNT_ID));
         List<Role> newRole = new ArrayList<>();
         modelAndView.addObject("list", newRole);
         return modelAndView;
@@ -86,7 +91,7 @@ public class AccountController {
             accountEntity.setId(id);
             accountEntity.setUsername(acc.getUsername());
             accountEntity.setPassword(acc.getPassword());
-            accountEntity.setLastUpdatedBy(accountService.getCurrentAccount().getUsername());
+            accountEntity.setLastUpdatedBy(FlowieeUtil.ACCOUNT_USERNAME);
             accountService.update(accountEntity);
         }
         return "redirect:" + request.getHeader("referer");

@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.utils.DateUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
@@ -139,10 +140,10 @@ public class DonHangController {
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_BANHANG);
-            List<Cart> cartCurrent = cartService.findByAccountId(accountService.getCurrentAccount().getId());
+            List<Cart> cartCurrent = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
             if (cartCurrent.isEmpty()) {
                 Cart cart = new Cart();
-                cart.setCreatedBy(accountService.getCurrentAccount().getId() + "");
+                cart.setCreatedBy(FlowieeUtil.ACCOUNT_ID + "");
                 cartService.save(cart);
             }
             modelAndView.addObject("listDonHang", donHangService.findAll());
@@ -153,7 +154,7 @@ public class DonHangController {
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
 
-            List<Cart> listCart = cartService.findByAccountId(accountService.getCurrentAccount().getId());
+            List<Cart> listCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
             modelAndView.addObject("listCart", listCart);
 
             modelAndView.addObject("donHangRequest", new DonHangRequest());

@@ -18,11 +18,11 @@ public class KiemTraQuyenModuleDanhMuc {
     private final String module = SystemModule.DANH_MUC.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.READ_DANHMUC.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -30,11 +30,11 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenThemMoi() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.CREATE_DANHMUC.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -42,11 +42,11 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.UPDATE_DANHMUC.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -54,11 +54,11 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenXoa() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.DELETE_DANHMUC.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -66,11 +66,11 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenImport() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.IMPORT_DANHMUC.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -78,11 +78,11 @@ public class KiemTraQuyenModuleDanhMuc {
     }
 
     public boolean kiemTraQuyenExport() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = DanhMucAction.EXPORT_DANHMUC.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }

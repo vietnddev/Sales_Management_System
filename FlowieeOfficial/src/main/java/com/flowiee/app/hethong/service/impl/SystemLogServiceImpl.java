@@ -30,7 +30,7 @@ public class SystemLogServiceImpl implements SystemLogService {
 
     @Override
     public SystemLog writeLog(String module, String action, String noiDung) {
-        Account account = accountService.getCurrentAccount();
+        Account account = FlowieeUtil.ACCOUNT;
 
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
@@ -44,7 +44,7 @@ public class SystemLogServiceImpl implements SystemLogService {
 
     @Override
     public SystemLog writeLog(String module, String action, String noiDung, String noiDungCapNhat) {
-        Account account = accountService.getCurrentAccount();
+        Account account = FlowieeUtil.ACCOUNT;
 
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);

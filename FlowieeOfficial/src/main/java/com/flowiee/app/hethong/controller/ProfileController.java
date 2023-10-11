@@ -1,16 +1,15 @@
 package com.flowiee.app.hethong.controller;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.sanpham.services.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +35,7 @@ public class ProfileController {
 		if (!accountService.isLogin()) {
 			return new ModelAndView(PagesUtil.PAGE_LOGIN);
 		}
-		Account profile = accountService.getCurrentAccount();
+		Account profile = FlowieeUtil.ACCOUNT;
 
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_PROFILE);
 		modelAndView.addObject("message", message);
@@ -76,7 +75,7 @@ public class ProfileController {
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");
 
-		Account profile = accountService.getCurrentAccount();
+		Account profile = FlowieeUtil.ACCOUNT;
 
 		if (bCrypt.matches(password_old,
 				accountService.findByUsername(profile.getUsername()).getPassword())) {

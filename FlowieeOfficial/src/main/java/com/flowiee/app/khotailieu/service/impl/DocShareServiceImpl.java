@@ -30,10 +30,10 @@ public class DocShareServiceImpl implements DocShareService {
 
     @Override
     public boolean isShared(int documentId) {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (docShareRepository.findByDocmentAndTaiKhoan(documentId, accountId) != null) {
             return true;
         }

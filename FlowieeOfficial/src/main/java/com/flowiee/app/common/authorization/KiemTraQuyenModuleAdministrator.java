@@ -1,7 +1,6 @@
 package com.flowiee.app.common.authorization;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.hethong.model.action.AccountAction;
 import com.flowiee.app.hethong.model.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
@@ -19,11 +18,11 @@ public class KiemTraQuyenModuleAdministrator {
 
 
     public boolean kiemTraQuyenConfig() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = "CONFIG";
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }

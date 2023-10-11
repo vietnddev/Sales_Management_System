@@ -18,11 +18,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     private final String module = SystemModule.KHO_TAI_LIEU.name();
 
     public boolean kiemTraRoleXemDashboard() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DASHBOARD_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -30,11 +30,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleXemDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.READ_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -42,11 +42,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleThemMoiDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.CREATE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -54,11 +54,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleCapNhatDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.UPDATE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -66,11 +66,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleXoaDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DELETE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -78,11 +78,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleDiChuyenDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.MOVE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -90,11 +90,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleSaoChepDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.COPY_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -102,11 +102,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleDownloadDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DOWNLOAD_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -114,11 +114,11 @@ public class KiemTraQuyenModuleKhoTaiLieu {
     }
 
     public boolean kiemTraRoleChiaSeDocument() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.SHARE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }

@@ -18,11 +18,11 @@ public class KiemTraQuyenModuleAccount {
     private final String module = SystemModule.HE_THONG.name();
 
     public boolean kiemTraQuyenXem() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.READ_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -30,11 +30,11 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenThemMoi() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.CREATE_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -42,11 +42,11 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenCapNhat() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.UPDATE_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -54,11 +54,11 @@ public class KiemTraQuyenModuleAccount {
     }
 
     public boolean kiemTraQuyenXoa() {
-        if (accountService.getUserName().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.DELETE_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(accountService.getUserName());
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
