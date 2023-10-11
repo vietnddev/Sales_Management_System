@@ -5,21 +5,27 @@ import java.util.Currency;
 import java.util.Locale;
 
 public class CurrencyUtil {
-    public static String formatToVND(long currency) {
+    public static String formatToVND(Long currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         currencyFormat.setCurrency(Currency.getInstance("VND"));
-        return currencyFormat.format(currency);
+        return currency != null ? currencyFormat.format(currency) : "0 VND";
     }
 
-    public static String formatToVND(float currency) {
+    public static String formatToVND(Float currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         currencyFormat.setCurrency(Currency.getInstance("VND"));
-        return currencyFormat.format(currency);
+        return currency != null ? currencyFormat.format(currency) : "0 VND";
     }
 
-    public static String formatToVND(double currency) {
+    public static String formatToVND(Double currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         currencyFormat.setCurrency(Currency.getInstance("VND"));
-        return currencyFormat.format(currency);
+        return currency != null ? currencyFormat.format(currency) : "0 VND";
+    }
+
+    public static String formatToVND(String currency) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        currencyFormat.setCurrency(Currency.getInstance("VND"));
+        return currency != null ? currencyFormat.format(currency) : "0 VND";
     }
 }
