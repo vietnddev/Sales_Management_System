@@ -20,5 +20,7 @@ public interface LoaiMauSacService {
 
     String importData(MultipartFile fileImport);
 
+    byte[] exportTemplate();
+
     byte[] exportData();
 }

@@ -85,6 +85,11 @@ public class LoaiMauSacServiceImpl implements LoaiMauSacService {
     }
 
     @Override
+    public byte[] exportTemplate() {
+        return FileUtil.exportTemplate(FileUtil.TEMPLATE_DM_LOAIMAUSAC);
+    }
+
+    @Override
     public byte[] exportData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAIMAUSAC + ".xlsx";
