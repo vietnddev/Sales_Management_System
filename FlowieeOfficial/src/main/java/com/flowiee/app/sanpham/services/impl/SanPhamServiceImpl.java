@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
@@ -158,18 +159,22 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public byte[] exportData(List<Integer> listSanPhamId) {
-        StringBuilder strSQL = new StringBuilder();
-        strSQL.append("SELECT lsp.TEN_LOAI as LOAI_SAN_PHAM, sp.TEN_SAN_PHAM, spbt.MA_SAN_PHAM, spbt.TEN_BIEN_THE, sz.TEN_LOAI as KICH_CO, cl.TEN_LOAI as MAU_SAC, spbt.SO_LUONG_KHO, spbt.DA_BAN from san_pham sp ");
+        StringBuilder strSQL = new StringBuilder("SELECT ");
+        strSQL.append("lsp.TEN_LOAI as LOAI_SAN_PHAM, ").append("spbt.MA_SAN_PHAM, ").append("spbt.TEN_BIEN_THE, ").append("sz.TEN_LOAI as KICH_CO, ").append("cl.TEN_LOAI as MAU_SAC, ")
+              .append("(SELECT spg.GIA_BAN FROM san_pham_gia spg WHERE spg.BIEN_THE_ID = spbt.ID AND spg.TRANG_THAI = 1) as GIA_BAN, ")
+              .append("spbt.SO_LUONG_KHO, ").append("spbt.DA_BAN ");
+        strSQL.append("FROM san_pham sp ");
         strSQL.append("LEFT JOIN san_pham_bien_the spbt ").append("on sp.ID = spbt.SAN_PHAM_ID ");
         strSQL.append("LEFT JOIN dm_loai_san_pham lsp ").append("on sp.LOAI_SAN_PHAM = lsp.ID ");
         strSQL.append("LEFT JOIN dm_loai_kich_co sz ").append(" on spbt.KICH_CO_ID = sz.ID ");
         strSQL.append("LEFT JOIN dm_loai_mau_sac cl on ").append(" spbt.MAU_SAC_ID = cl.ID ");
+        strSQL.append("WHERE spbt.ID > 0 ");
         if (listSanPhamId != null) {
-            strSQL.append("WHERE sp.ID IN (sp.ID)");
+            strSQL.append("AND sp.ID IN (sp.ID)");
         } else {
-            strSQL.append("WHERE sp.ID IN (sp.ID)");
+            strSQL.append("AND  sp.ID IN (sp.ID)");
         }
-        Query result = entityManager.createQuery(strSQL.toString());
+        Query result = entityManager.createNativeQuery(strSQL.toString());
         List<Object[]> listData = result.getResultList();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -183,16 +188,26 @@ public class SanPhamServiceImpl implements SanPhamService {
             XSSFSheet sheet = workbook.getSheetAt(0);
             for (int i = 0; i < listData.size(); i++) {
                 XSSFRow row = sheet.createRow(i + 3);
+
+                String loaiSanPham = listData.get(i)[0] != null ? String.valueOf(listData.get(i)[0]) : "";
+                String maSanPham = listData.get(i)[1] != null ? String.valueOf(listData.get(i)[1]) : "";
+                String tenSanPham = listData.get(i)[2] != null ? String.valueOf(listData.get(i)[2]) : "";
+                String kichCo = listData.get(i)[3] != null ? String.valueOf(listData.get(i)[3]) : "";
+                String mauSac = listData.get(i)[4] != null ? String.valueOf(listData.get(i)[4]) : "";
+                Double giaBan = listData.get(i)[5] != null ? Double.parseDouble(String.valueOf(listData.get(i)[5])) : 0;
+                String soLuong = listData.get(i)[6] != null ? String.valueOf(listData.get(i)[6]) : "0";
+                String daBan = listData.get(i)[7] != null ? String.valueOf(listData.get(i)[7]) : "";
+
                 row.createCell(0).setCellValue(i + 1);
-                row.createCell(1).setCellValue(String.valueOf(listData.get(i)[0])); //Loại sản phẩm
-                row.createCell(2).setCellValue(String.valueOf(listData.get(i)[1])); //Tên sản phẩm
-                row.createCell(3).setCellValue(String.valueOf(listData.get(i)[2])); //Mã sản phẩm
-                row.createCell(4).setCellValue(String.valueOf(listData.get(i)[3])); //Tên biến thể
-                row.createCell(5).setCellValue(String.valueOf(listData.get(i)[4])); //Kích cỡ
-                row.createCell(6).setCellValue(String.valueOf(listData.get(i)[5])); //Màu sắc
-                row.createCell(7).setCellValue(String.valueOf("0 đ")); //Giá bán
-                row.createCell(7).setCellValue(String.valueOf(listData.get(i)[6])); //Số lượng
-                row.createCell(8).setCellValue(String.valueOf(listData.get(i)[7])); //Đã bán
+                row.createCell(1).setCellValue(loaiSanPham);
+                row.createCell(2).setCellValue(maSanPham);
+                row.createCell(3).setCellValue(tenSanPham);
+                row.createCell(4).setCellValue(kichCo);
+                row.createCell(5).setCellValue(mauSac);
+                row.createCell(6).setCellValue(CurrencyUtil.formatToVND(giaBan));
+                row.createCell(7).setCellValue(soLuong);
+                row.createCell(8).setCellValue(daBan);
+
                 for (int j = 0; j <= 8; j++) {
                     row.getCell(j).setCellStyle(ExcelUtil.setBorder(workbook.createCellStyle()));
                 }
