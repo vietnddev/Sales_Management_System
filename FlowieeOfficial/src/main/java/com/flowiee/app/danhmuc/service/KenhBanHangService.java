@@ -19,5 +19,7 @@ public interface KenhBanHangService {
 
     String importData(MultipartFile fileImport);
 
+    byte[] exportTemplate();
+
     byte[] exportData();
 }

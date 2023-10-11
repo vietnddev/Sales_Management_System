@@ -88,6 +88,11 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
     }
 
     @Override
+    public byte[] exportTemplate() {
+        return FileUtil.exportTemplate(FileUtil.TEMPLATE_DM_LOAIKENHBANHANG);
+    }
+
+    @Override
     public byte[] exportData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAIKENHBANHANG + ".xlsx";
