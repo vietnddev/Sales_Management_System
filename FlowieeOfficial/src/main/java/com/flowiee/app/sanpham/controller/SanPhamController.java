@@ -68,6 +68,7 @@ public class SanPhamController {
             modelAndView.addObject("listSanPham", productsService.findAll());
             modelAndView.addObject("listLoaiSanPham", loaiSanPhamService.findAll());
             modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -176,7 +177,7 @@ public class SanPhamController {
             byte[] dataExport = productsService.exportData(null);
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_SANPHAM + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_E_SANPHAM + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);

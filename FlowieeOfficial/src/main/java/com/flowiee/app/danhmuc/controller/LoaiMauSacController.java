@@ -40,6 +40,7 @@ public class LoaiMauSacController {
             List<LoaiMauSac> list = loaiMauSacService.findAll();
             modelAndView.addObject("listDanhMuc", list);
             modelAndView.addObject("loaiMauSac", new LoaiMauSac());
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIMAUSAC);
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -95,7 +96,7 @@ public class LoaiMauSacController {
             byte[] dataExport = loaiMauSacService.exportTemplate();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIMAUSAC + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIMAUSAC + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
@@ -111,7 +112,7 @@ public class LoaiMauSacController {
             byte[] dataExport = loaiMauSacService.exportData();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIMAUSAC + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIMAUSAC + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);

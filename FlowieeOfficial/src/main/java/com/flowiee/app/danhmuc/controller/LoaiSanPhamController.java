@@ -40,6 +40,7 @@ public class LoaiSanPhamController {
             List<LoaiSanPham> listLoaiSP = loaiSanPhamService.findAll();
             modelAndView.addObject("listLoaiSP", listLoaiSP);
             modelAndView.addObject("loaiSanPham", new LoaiSanPham());
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAISANPHAM);
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -99,7 +100,7 @@ public class LoaiSanPhamController {
             byte[] dataExport = loaiSanPhamService.exportTemplate();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAISANPHAM + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAISANPHAM + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
@@ -115,7 +116,7 @@ public class LoaiSanPhamController {
             byte[] dataExport = loaiSanPhamService.exportData();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAISANPHAM + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAISANPHAM + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);

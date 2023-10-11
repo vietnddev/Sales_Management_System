@@ -2,6 +2,7 @@ package com.flowiee.app.danhmuc.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
@@ -40,6 +41,10 @@ public class DonViTinhController {
             List<DonViTinh> list = donViTinhService.findAll();
             modelAndView.addObject("listDanhMuc", list);
             modelAndView.addObject("donViTinh", new DonViTinh());
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH);
+            modelAndView.addObject("url_template", EndPointUtil.DANHMUC_DONVITINH_TEMPLATE);
+            modelAndView.addObject("url_import", EndPointUtil.DANHMUC_DONVITINH_IMPORT);
+            modelAndView.addObject("url_export", EndPointUtil.DANHMUC_DONVITINH_EXPORT);
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -95,7 +100,7 @@ public class DonViTinhController {
             byte[] dataExport = donViTinhService.exportTemplate();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIDONVITINH + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
@@ -111,7 +116,7 @@ public class DonViTinhController {
             byte[] dataExport = donViTinhService.exportData();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIDONVITINH + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);

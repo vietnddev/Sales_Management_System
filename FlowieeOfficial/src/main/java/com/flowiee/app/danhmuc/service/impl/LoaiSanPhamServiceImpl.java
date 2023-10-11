@@ -74,14 +74,14 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
 
     @Override
     public byte[] exportTemplate() {
-        return FileUtil.exportTemplate(FileUtil.TEMPLATE_DM_LOAISANPHAM);
+        return FileUtil.exportTemplate(FileUtil.TEMPLATE_IE_DM_LOAISANPHAM);
     }
 
     @Override
     public byte[] exportData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAISANPHAM + ".xlsx";
-        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAISANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_IE_DM_LOAISANPHAM + ".xlsx";
+        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_IE_DM_LOAISANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),

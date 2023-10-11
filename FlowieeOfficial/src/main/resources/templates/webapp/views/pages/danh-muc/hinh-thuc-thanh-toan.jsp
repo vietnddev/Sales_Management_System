@@ -39,7 +39,16 @@
                                     <div class="col-4" style="display: flex; align-items: center">
                                         <h3 class="card-title"><strong>DANH MỤC HÌNH THỨC THANH TOÁN</strong></h3>
                                     </div>
-                                    <div class="col-4 text-right">
+                                    <div class="col-6 text-right">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#import">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                            Import
+                                        </button>
+                                        <a th:href="@{${url_export}}" class="btn btn-info">
+                                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                                            Export
+                                        </a>
                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                                 data-target="#insert"
                                                 th:if="${action_create == 'enable'}">
@@ -225,6 +234,49 @@
                                 </table>
                             </div>
                             <!-- /.card-body -->
+
+                            <!-- modal import -->
+                            <div class="modal fade" id="import">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form th:action="@{${url_import}}" method="POST">
+                                            <div class="modal-header">
+                                                <strong class="modal-title">Import data</strong>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="form-group">
+                                                            <label>Chọn file import</label>
+                                                            <input type="file" class="form-control" name="file">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Template</label>
+                                                            <a th:href="@{${url_template}}" class="form-control link">
+                                                                <i class="fa-solid fa-cloud-arrow-down"></i>
+                                                                [[${templateImportName}]]
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer justify-content-end"
+                                                     style="margin-bottom: -15px;">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- modal import -->
+
                             <th:block>
                                 <!-- modal insert -->
                                 <div class="modal fade" id="insert">

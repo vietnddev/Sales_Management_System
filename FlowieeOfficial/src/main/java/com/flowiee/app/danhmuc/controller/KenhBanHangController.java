@@ -40,6 +40,7 @@ public class KenhBanHangController {
             List<KenhBanHang> list = kenhBanHangService.findAll();
             modelAndView.addObject("listDanhMuc", list);
             modelAndView.addObject("kenhBanHang", new KenhBanHang());
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIKENHBANHANG);
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -95,7 +96,7 @@ public class KenhBanHangController {
             byte[] dataExport = kenhBanHangService.exportTemplate();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIKENHBANHANG + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIKENHBANHANG + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
@@ -111,7 +112,7 @@ public class KenhBanHangController {
             byte[] dataExport = kenhBanHangService.exportData();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIKENHBANHANG + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIKENHBANHANG + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);

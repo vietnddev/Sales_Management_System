@@ -118,14 +118,14 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
 
     @Override
     public byte[] exportTemplate() {
-        return FileUtil.exportTemplate(FileUtil.TEMPLATE_DM_LOAITAILIEU);
+        return FileUtil.exportTemplate(FileUtil.TEMPLATE_IE_DM_LOAITAILIEU);
     }
 
     @Override
     public byte[] exportData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAITAILIEU + ".xlsx";
-        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_DM_LOAITAILIEU + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_IE_DM_LOAITAILIEU + ".xlsx";
+        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_IE_DM_LOAITAILIEU + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),

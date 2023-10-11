@@ -47,6 +47,7 @@ public class DocTypeController {
             List<LoaiTaiLieu> listLoaiTaiLieu = docTypeService.findAll();
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             modelAndView.addObject("loaiTaiLieu", new LoaiTaiLieu());
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAITAILIEU);
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -141,7 +142,7 @@ public class DocTypeController {
             byte[] dataExport = docTypeService.exportTemplate();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAITAILIEU + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAITAILIEU + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
@@ -157,7 +158,7 @@ public class DocTypeController {
             byte[] dataExport = docTypeService.exportData();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAITAILIEU + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAITAILIEU + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);

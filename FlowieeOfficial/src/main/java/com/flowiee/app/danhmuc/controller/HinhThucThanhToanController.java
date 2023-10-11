@@ -40,6 +40,7 @@ public class HinhThucThanhToanController {
             List<HinhThucThanhToan> list = hinhThucThanhToanService.findAll();
             modelAndView.addObject("listDanhMuc", list);
             modelAndView.addObject("hinhThucThanhToan", new HinhThucThanhToan());
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIHINHTHUCTHANHTOAN);
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -95,7 +96,7 @@ public class HinhThucThanhToanController {
             byte[] dataExport = hinhThucThanhToanService.exportTemplate();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIHINHTHUCTHANHTOAN + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIHINHTHUCTHANHTOAN + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
@@ -111,7 +112,7 @@ public class HinhThucThanhToanController {
             byte[] dataExport = hinhThucThanhToanService.exportData();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_DM_LOAIHINHTHUCTHANHTOAN + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIHINHTHUCTHANHTOAN + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
