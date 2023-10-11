@@ -28,5 +28,7 @@ public interface LoaiTaiLieuService {
 
     String importData(MultipartFile fileImport);
 
+    byte[] exportTemplate();
+
     byte[] exportData();
 }
