@@ -2,13 +2,18 @@ package com.flowiee.app.common.utils;
 
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.hethong.model.module.SystemModule;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.Normalizer;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.regex.Pattern;
 
 public class FileUtil {
@@ -32,7 +37,7 @@ public class FileUtil {
         return extension;
     }
 
-    public static String pathDirectoty(SystemModule systemModule) {
+    public static String getPathDirectoty(SystemModule systemModule) {
         try {
             StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
             switch (systemModule) {
@@ -92,5 +97,25 @@ public class FileUtil {
         int lastDashIndex = alias.lastIndexOf("-");
         //Trả về name bằng cách cắt chuỗi từ đầu đến vị trí cuối cùng của dấu "-"
         return alias.substring(0, lastDashIndex);
+    }
+
+    public static byte[] exportTemplate(String templateName) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + ".xlsx";
+        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        File fileDeleteAfterExport = null;
+        try {
+            fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
+            XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal), Path.of(filePathTemp), StandardCopyOption.REPLACE_EXISTING).toFile());
+            workbook.write(stream);
+            workbook.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fileDeleteAfterExport.exists()) {
+                fileDeleteAfterExport.delete();
+            }
+        }
+        return stream.toByteArray();
     }
 }
