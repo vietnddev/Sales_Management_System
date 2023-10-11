@@ -18,5 +18,7 @@ public interface HinhThucThanhToanService {
 
     String importData(MultipartFile fileImport);
 
+    byte[] exportTemplate();
+
     byte[] exportData();
 }
