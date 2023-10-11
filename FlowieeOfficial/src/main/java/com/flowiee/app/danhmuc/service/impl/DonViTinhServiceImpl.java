@@ -8,6 +8,7 @@ import com.flowiee.app.danhmuc.entity.DonViTinh;
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.repository.DonViTinhRepository;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
+import com.flowiee.app.hethong.service.NotificationService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -28,6 +29,8 @@ import java.util.List;
 public class DonViTinhServiceImpl implements DonViTinhService {
     @Autowired
     private DonViTinhRepository donViTinhRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public List<DonViTinh> findAll() {
@@ -82,7 +85,30 @@ public class DonViTinhServiceImpl implements DonViTinhService {
 
     @Override
     public String importData(MultipartFile fileImport) {
-        return null;
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(fileImport.getInputStream());
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            boolean isImportSuccess = true;
+            for (int i = 3; i < sheet.getPhysicalNumberOfRows(); i++) {
+                XSSFRow row = sheet.getRow(i);
+                if (row != null) {
+                    DonViTinh donViTinh = new DonViTinh();
+                    donViTinh.setMaLoai(row.getCell(1).getStringCellValue());
+                    donViTinh.setTenLoai(row.getCell(2).getStringCellValue());
+                    donViTinh.setGhiChu(row.getCell(3).getStringCellValue());
+                    if (!"OK".equals(donViTinhRepository.save(donViTinh))) {
+                        isImportSuccess = false;
+                    }
+                }
+            }
+            workbook.close();
+
+            //notificationService.save();
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "NOK";
     }
 
     @Override
