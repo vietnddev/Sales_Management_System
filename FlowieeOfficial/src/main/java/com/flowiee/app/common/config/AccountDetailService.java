@@ -53,6 +53,9 @@ public class AccountDetailService implements UserDetailsService {
 			}
 
 			FlowieeUtil.ACCOUNT_IP = details != null ? details.getRemoteAddress() : "unknown";
+			FlowieeUtil.ACCOUNT_ID = accountEntity.getId();
+			FlowieeUtil.ACCOUNT_USERNAME = accountEntity.getUsername();
+			FlowieeUtil.ACCOUNT = accountEntity;
 
 			SystemLog systemLog = SystemLog.builder()
 				.module(SystemModule.HE_THONG.name())
