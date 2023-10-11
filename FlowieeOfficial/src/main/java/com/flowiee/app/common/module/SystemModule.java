@@ -1,6 +1,4 @@
-package com.flowiee.app.hethong.model.module;
-
-import lombok.Data;
+package com.flowiee.app.common.module;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

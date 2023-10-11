@@ -1,8 +1,8 @@
 package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.hethong.model.action.KhachHangAction;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.action.KhachHangAction;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.KhachHang;

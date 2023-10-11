@@ -2,8 +2,8 @@ package com.flowiee.app.khotailieu.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
-import com.flowiee.app.hethong.model.action.KhoTaiLieuAction;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.action.KhoTaiLieuAction;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.khotailieu.entity.DocData;
 import com.flowiee.app.khotailieu.entity.DocField;

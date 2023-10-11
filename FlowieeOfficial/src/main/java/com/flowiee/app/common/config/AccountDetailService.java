@@ -1,10 +1,10 @@
 package com.flowiee.app.common.config;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.hethong.model.action.SystemAction;
+import com.flowiee.app.common.action.SystemAction;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;

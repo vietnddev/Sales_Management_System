@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.services.impl;
 
-import com.flowiee.app.hethong.model.action.SanPhamAction;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.action.SanPhamAction;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.ThuocTinhSanPham;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ThuocTinhSanPhamServiceImpl implements ThuocTinhSanPhamService {

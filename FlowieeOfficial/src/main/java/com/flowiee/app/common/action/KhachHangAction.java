@@ -1,4 +1,4 @@
-package com.flowiee.app.hethong.model.action;
+package com.flowiee.app.common.action;
 
 public enum KhachHangAction {
     READ_KHACHHANG,

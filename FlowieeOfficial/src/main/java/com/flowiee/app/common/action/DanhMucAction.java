@@ -1,4 +1,4 @@
-package com.flowiee.app.hethong.model.action;
+package com.flowiee.app.common.action;
 
 public enum DanhMucAction {
     READ_DANHMUC("Xem danh mục hệ thống"),

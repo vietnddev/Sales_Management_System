@@ -8,8 +8,8 @@ import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
-import com.flowiee.app.hethong.model.action.SanPhamAction;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.action.SanPhamAction;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.SanPham;
@@ -33,7 +33,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

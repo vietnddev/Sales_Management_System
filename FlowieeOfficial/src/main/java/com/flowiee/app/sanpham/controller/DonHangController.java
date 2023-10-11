@@ -6,7 +6,7 @@ import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.sanpham.entity.*;
 import com.flowiee.app.sanpham.model.DonHangRequest;

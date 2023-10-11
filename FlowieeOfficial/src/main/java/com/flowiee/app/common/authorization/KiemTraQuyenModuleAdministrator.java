@@ -1,7 +1,7 @@
 package com.flowiee.app.common.authorization;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

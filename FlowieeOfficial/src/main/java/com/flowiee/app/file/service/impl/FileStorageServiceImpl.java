@@ -9,7 +9,7 @@ import com.flowiee.app.file.repository.FileStorageRepository;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.khotailieu.service.DocumentService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;

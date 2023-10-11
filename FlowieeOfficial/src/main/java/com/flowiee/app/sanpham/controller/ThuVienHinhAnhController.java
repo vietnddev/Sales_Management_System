@@ -3,7 +3,7 @@ package com.flowiee.app.sanpham.controller;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.file.service.FileStorageService;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.sanpham.services.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;

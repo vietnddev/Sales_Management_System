@@ -1,4 +1,4 @@
-package com.flowiee.app.hethong.model.action;
+package com.flowiee.app.common.action;
 
 public enum ThuVienAnhAction {
     READ_ALBUM("Xem thư viện ảnh");

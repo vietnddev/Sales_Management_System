@@ -4,22 +4,17 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.model.Role;
-import com.flowiee.app.hethong.model.action.AccountAction;
-import com.flowiee.app.hethong.model.module.SystemModule;
+import com.flowiee.app.common.action.AccountAction;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.repository.AccountRepository;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.RoleService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
