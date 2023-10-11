@@ -156,13 +156,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
         fileInfo.setSanPham(new SanPham(sanPhamId));
         fileInfo.setAccount(new Account(accountService.findIdByUsername(accountService.getUserName())));
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -179,7 +179,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
         //
         BienTheSanPham bienTheSanPham = bienTheSanPhamService.findById(bienTheId);
         fileInfo.setBienTheSanPham(bienTheSanPham);
@@ -188,7 +188,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -204,13 +204,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
         fileInfo.setDocument(Document.builder().id(documentId).build());
         fileInfo.setAccount(accountService.getCurrentAccount());
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -237,13 +237,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
         fileInfo.setDocument(Document.builder().id(documentId).build());
         fileInfo.setAccount(accountService.getCurrentAccount());
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -271,13 +271,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileToChange.setKichThuocFile(fileAttached.getSize());
         fileToChange.setExtension(FileUtil.getExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
-        fileToChange.setDirectoryPath(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.pathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
+        fileToChange.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
         fileToChange.setAccount(new Account(accountService.getCurrentAccount().id));
         fileRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload
         try {
-            Path path = Paths.get(FileUtil.pathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileAttached.getOriginalFilename());
+            Path path = Paths.get(FileUtil.getPathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileAttached.getOriginalFilename());
             fileAttached.transferTo(path);
         } catch (Exception e) {
             logger.error("Lưu file change vào thư mục chứa file upload thất bại!", e.getCause().getMessage());
