@@ -1,6 +1,10 @@
 package com.flowiee.app.file.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.common.utils.FileUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
@@ -10,9 +14,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.io.Serializable;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Date;
 
 @Builder
@@ -22,12 +30,7 @@ import java.util.Date;
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "file_storage")
-public class FileStorage implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class FileStorage extends BaseEntity implements Serializable {
     @Column(name = "ten_file_customize")
     private String tenFileCustomize;
 
@@ -54,18 +57,6 @@ public class FileStorage implements Serializable{
 
     @Column(name = "directory_path", length = 500)
     private String directoryPath;
-
-    @CreatedDate
-    @Column(name = "created_at",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
-    private Date createdAt;
-
-    @PreUpdate
-    @PrePersist
-    public void updateTimeStamps() {
-        if (createdAt == null) {
-            createdAt = new Date();
-        }
-    }
 
     @Column(name = "sort")
     private int sort;
@@ -94,4 +85,20 @@ public class FileStorage implements Serializable{
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
+
+    public FileStorage(MultipartFile file, String pModule) {
+        try {
+            this.module = pModule;
+            this.tenFileGoc = file.getOriginalFilename();
+            this.tenFileKhiLuu = Instant.now(Clock.systemUTC()).toEpochMilli() + "_" + file.getOriginalFilename();
+            this.kichThuocFile = file.getSize();
+            this.extension = FileUtil.getExtension(file.getOriginalFilename());
+            this.contentType = file.getContentType();
+            this.directoryPath = FileUtil.getPathDirectoty(pModule).substring(FileUtil.getPathDirectoty(pModule).indexOf("uploads"));
+            this.account = FlowieeUtil.ACCOUNT;
+            this.isActive = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
