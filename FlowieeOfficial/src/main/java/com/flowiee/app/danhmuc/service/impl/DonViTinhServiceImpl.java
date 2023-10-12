@@ -1,19 +1,24 @@
 package com.flowiee.app.danhmuc.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.common.utils.ExcelUtil;
-import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.common.utils.*;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.repository.DonViTinhRepository;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
+import com.flowiee.app.file.entity.FileStorage;
+import com.flowiee.app.file.service.FileStorageService;
+import com.flowiee.app.hethong.entity.FlowieeImport;
+import com.flowiee.app.hethong.entity.Notification;
+import com.flowiee.app.hethong.service.FlowieeImportService;
 import com.flowiee.app.hethong.service.NotificationService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
@@ -23,14 +28,21 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class DonViTinhServiceImpl implements DonViTinhService {
+    private static final String MODULE = SystemModule.DANH_MUC.name();
+
     @Autowired
     private DonViTinhRepository donViTinhRepository;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private FlowieeImportService importService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Override
     public List<DonViTinh> findAll() {
@@ -83,27 +95,75 @@ public class DonViTinhServiceImpl implements DonViTinhService {
         return "NOK";
     }
 
+    @Transactional
     @Override
-    public String importData(MultipartFile fileImport) {
+    public String importData(MultipartFile pFileImport) {
+        Date startTimeImport = new Date();
+        String resultOfFlowieeImport = "";
+        String detailOfFlowieeImport = "";
+        int importSuccess = 0;
+        int totalRecord = 0;
+        boolean isImportSuccess = true;
         try {
-            XSSFWorkbook workbook = new XSSFWorkbook(fileImport.getInputStream());
+            XSSFWorkbook workbook = new XSSFWorkbook(pFileImport.getInputStream());
             XSSFSheet sheet = workbook.getSheetAt(0);
-            boolean isImportSuccess = true;
             for (int i = 3; i < sheet.getPhysicalNumberOfRows(); i++) {
                 XSSFRow row = sheet.getRow(i);
                 if (row != null) {
+                    String categoryCode = row.getCell(1).getStringCellValue();
+                    String categoryName = row.getCell(2).getStringCellValue();
+                    String categoryNote = row.getCell(3).getStringCellValue();
+                    //Nếu name null -> không ínsert data null vào database
+                    if (categoryName == null || categoryName.length() == 0) continue;
+
                     DonViTinh donViTinh = new DonViTinh();
-                    donViTinh.setMaLoai(row.getCell(1).getStringCellValue());
-                    donViTinh.setTenLoai(row.getCell(2).getStringCellValue());
-                    donViTinh.setGhiChu(row.getCell(3).getStringCellValue());
+                    donViTinh.setMaLoai(!categoryCode.isEmpty() ? categoryCode : FlowieeUtil.getMaDanhMuc(categoryName));
+                    donViTinh.setTenLoai(categoryName);
+                    donViTinh.setGhiChu(categoryNote);
+
                     if (!"OK".equals(donViTinhRepository.save(donViTinh))) {
                         isImportSuccess = false;
+                    } else {
+                        importSuccess++;
                     }
+                    totalRecord++;
                 }
             }
             workbook.close();
 
-            //notificationService.save();
+            if (isImportSuccess) {
+                resultOfFlowieeImport = NotificationUtil.IMPORT_DM_DONVITINH_SUCCESS;
+                detailOfFlowieeImport = importSuccess + " / " + totalRecord;
+            } else {
+                resultOfFlowieeImport = NotificationUtil.IMPORT_DM_DONVITINH_FAIL;
+                detailOfFlowieeImport = importSuccess + " / " + totalRecord;
+            }
+            //Build Import Process
+            FlowieeImport flowieeImport = new FlowieeImport();
+            flowieeImport.setModule(MODULE);
+            flowieeImport.setEntity(DonViTinhServiceImpl.class.getName());
+            flowieeImport.setAccount(FlowieeUtil.ACCOUNT);
+            flowieeImport.setStartTime(startTimeImport);
+            flowieeImport.setEndTime(new Date());
+            flowieeImport.setResult(resultOfFlowieeImport);
+            flowieeImport.setDetail(detailOfFlowieeImport);
+            //Build object FileStorage
+            FileStorage fileStorage = new FileStorage(pFileImport, SystemModule.DANH_MUC.name());
+            fileStorage.setGhiChu("IMPORT");
+            fileStorage.setStatus(false);
+            flowieeImport.setStgFile(fileStorage);
+            importService.save(flowieeImport);
+            fileStorageService.saveFileOfImport(pFileImport, fileStorage);
+
+            Notification notification = new Notification();
+            notification.setTitle(resultOfFlowieeImport);
+            notification.setSend(FlowieeUtil.SYS_NOTI_ID);
+            notification.setReceive(FlowieeUtil.ACCOUNT_ID);
+            notification.setType(NotificationUtil.NOTI_TYPE_IMPORT);
+            notification.setContent("");
+            notification.setReaded(false);
+            notificationService.save(notification);
+
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
