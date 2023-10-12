@@ -52,7 +52,8 @@
                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                                 data-target="#insert"
                                                 th:if="${action_create == 'enable'}">
-                                            Thêm mới
+                                                <i class="fa-solid fa-circle-plus"></i>
+                                                Thêm mới
                                         </button>
                                     </div>
                                 </div>
@@ -239,7 +240,7 @@
                             <div class="modal fade" id="import">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form th:action="@{${url_import}}" method="POST">
+                                        <form th:action="@{${url_import}}" enctype="multipart/form-data" method="POST">
                                             <div class="modal-header">
                                                 <strong class="modal-title">Import data</strong>
                                                 <button type="button" class="close" data-dismiss="modal"

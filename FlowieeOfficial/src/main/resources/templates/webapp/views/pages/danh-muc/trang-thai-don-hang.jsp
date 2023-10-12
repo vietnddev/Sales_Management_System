@@ -43,7 +43,8 @@
                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                                 data-target="#insert"
                                                 th:if="${action_create == 'enable'}">
-                                            Thêm mới
+                                                <i class="fa-solid fa-circle-plus"></i>
+                                                Thêm mới
                                         </button>
                                     </div>
                                 </div>

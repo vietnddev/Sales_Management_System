@@ -45,14 +45,15 @@
                                             <i class="fa-solid fa-cloud-arrow-up"></i>
                                             Import
                                         </button>
-                                        <a th:href="@{${urlexport}}" class="btn btn-info">
+                                        <a th:href="@{${url_export}}" class="btn btn-info">
                                             <i class="fa-solid fa-cloud-arrow-down"></i>
                                             Export
                                         </a>
                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                                 data-target="#insert"
                                                 th:if="${action_create == 'enable'}">
-                                            Thêm mới
+                                                <i class="fa-solid fa-circle-plus"></i>
+                                                Thêm mới
                                         </button>
                                     </div>
                                 </div>

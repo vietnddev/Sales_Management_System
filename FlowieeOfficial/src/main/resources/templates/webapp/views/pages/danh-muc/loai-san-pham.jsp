@@ -52,7 +52,8 @@
                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                                 data-target="#insert"
                                                 th:if="${action_create == 'enable'}">
-                                            Thêm mới
+                                                <i class="fa-solid fa-circle-plus"></i>
+                                                Thêm mới
                                         </button>
                                     </div>
                                 </div>
@@ -261,7 +262,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Template</label>
-                                                            <a th:href="@{${url_export}}" class="form-control link">
+                                                            <a th:href="@{${url_template}}" class="form-control link">
                                                                 <i class="fa-solid fa-cloud-arrow-down"></i>
                                                                 [[${templateImportName}]]
                                                             </a>
