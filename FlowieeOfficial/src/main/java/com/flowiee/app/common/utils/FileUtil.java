@@ -46,6 +46,9 @@ public class FileUtil {
                 case SAN_PHAM:
                     path.append("/san-pham");
                     break;
+                case DANH_MUC:
+                    path.append("/danh-muc");
+                    break;
                 default:
                     throw new NotFoundException();
             }
@@ -72,6 +75,8 @@ public class FileUtil {
                 path.append("/kho-tai-lieu");
             } else if (SystemModule.SAN_PHAM.name().equals(systemModule)) {
                 path.append("/san-pham");
+            } else if (SystemModule.DANH_MUC.name().equals(systemModule)) {
+                path.append("/danh-muc");
             }
             path.append("/" + DateUtil.getNamHienTai());
             path.append("/" + DateUtil.getThangHienTai());

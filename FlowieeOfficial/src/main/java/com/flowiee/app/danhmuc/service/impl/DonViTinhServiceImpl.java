@@ -11,6 +11,7 @@ import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.entity.FlowieeImport;
 import com.flowiee.app.hethong.entity.Notification;
+import com.flowiee.app.hethong.repository.FlowieeImportRepository;
 import com.flowiee.app.hethong.service.FlowieeImportService;
 import com.flowiee.app.hethong.service.NotificationService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -41,6 +42,8 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     private NotificationService notificationService;
     @Autowired
     private FlowieeImportService importService;
+    @Autowired
+    private FlowieeImportRepository importRepository;
     @Autowired
     private FileStorageService fileStorageService;
 
@@ -121,7 +124,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
                     donViTinh.setTenLoai(categoryName);
                     donViTinh.setGhiChu(categoryNote);
 
-                    if (!"OK".equals(donViTinhRepository.save(donViTinh))) {
+                    if (!"OK".equals(this.save(donViTinh))) {
                         isImportSuccess = false;
                     } else {
                         importSuccess++;
@@ -151,6 +154,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             FileStorage fileStorage = new FileStorage(pFileImport, SystemModule.DANH_MUC.name());
             fileStorage.setGhiChu("IMPORT");
             fileStorage.setStatus(false);
+            fileStorage.setActive(false);
             flowieeImport.setStgFile(fileStorage);
             importService.save(flowieeImport);
             fileStorageService.saveFileOfImport(pFileImport, fileStorage);
@@ -160,8 +164,10 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             notification.setSend(FlowieeUtil.SYS_NOTI_ID);
             notification.setReceive(FlowieeUtil.ACCOUNT_ID);
             notification.setType(NotificationUtil.NOTI_TYPE_IMPORT);
-            notification.setContent("");
+            notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);
+            notification.setFlowieeImport(importRepository.findByStartTime(flowieeImport.getStartTime()));
+            int id = importRepository.findByStartTime(flowieeImport.getStartTime()).getId();
             notificationService.save(notification);
 
             return "OK";
