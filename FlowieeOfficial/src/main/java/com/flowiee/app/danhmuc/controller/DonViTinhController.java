@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -104,6 +105,19 @@ public class DonViTinhController {
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/import")
+    public String importData(@RequestParam("file")MultipartFile file) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
+            donViTinhService.importData(file);
+            return "redirect:" + EndPointUtil.DANHMUC_DONVITINH_VIEW;
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
     }
 
