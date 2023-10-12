@@ -65,6 +65,30 @@ public class FileUtil {
         }
     }
 
+    public static String getPathDirectoty(String systemModule) {
+        try {
+            StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
+            if (SystemModule.KHO_TAI_LIEU.name().equals(systemModule)) {
+                path.append("/kho-tai-lieu");
+            } else if (SystemModule.SAN_PHAM.name().equals(systemModule)) {
+                path.append("/san-pham");
+            }
+            path.append("/" + DateUtil.getNamHienTai());
+            path.append("/" + DateUtil.getThangHienTai());
+            path.append("/" + DateUtil.getNgayHienTai());
+            File folder = new File(path.toString());
+            if (!folder.exists()) {
+                if (folder.mkdirs()) {
+                    System.out.println("mkdirs OK");
+                }
+            }
+            return path.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
     public static String generateAliasName(String text) {
         // Loại bỏ dấu tiếng Việt và ký tự đặc biệt
         String normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD);
