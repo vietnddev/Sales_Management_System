@@ -29,5 +29,5 @@ public class Notification extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "import_info")
-    private ImportInfo importInfo;
+    private FlowieeImport flowieeImport;
 }
