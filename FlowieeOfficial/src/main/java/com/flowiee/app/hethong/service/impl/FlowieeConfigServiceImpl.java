@@ -1,7 +1,7 @@
 package com.flowiee.app.hethong.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.hethong.entity.CauHinhHeThong;
+import com.flowiee.app.hethong.entity.FlowieeConfig;
 import com.flowiee.app.hethong.repository.FlowieeConfigRepository;
 import com.flowiee.app.hethong.service.FlowieeConfigService;
 import org.slf4j.Logger;
@@ -19,30 +19,30 @@ public class FlowieeConfigServiceImpl implements FlowieeConfigService {
     private FlowieeConfigRepository flowieeConfigRepository;
 
     @Override
-    public CauHinhHeThong findById(Integer id) {
+    public FlowieeConfig findById(Integer id) {
         return flowieeConfigRepository.findById(id).orElse(null);
     }
 
     @Override
-    public CauHinhHeThong findByKey(String key) {
+    public FlowieeConfig findByKey(String key) {
         return flowieeConfigRepository.findByKey(key);
     }
 
     @Override
-    public List<CauHinhHeThong> findAll() {
+    public List<FlowieeConfig> findAll() {
         return flowieeConfigRepository.findAll();
     }
 
     @Override
-    public String save(CauHinhHeThong cauHinhHeThong) {
-        flowieeConfigRepository.save(cauHinhHeThong);
+    public String save(FlowieeConfig flowieeConfig) {
+        flowieeConfigRepository.save(flowieeConfig);
         return "OK";
     }
 
     @Override
-    public String update(CauHinhHeThong cauHinhHeThong, Integer id) {
-        cauHinhHeThong.setId(id);
-        flowieeConfigRepository.save(cauHinhHeThong);
+    public String update(FlowieeConfig flowieeConfig, Integer id) {
+        flowieeConfig.setId(id);
+        flowieeConfigRepository.save(flowieeConfig);
         return "OK";
     }
 
@@ -54,14 +54,14 @@ public class FlowieeConfigServiceImpl implements FlowieeConfigService {
 
     @Override
     public void defaultConfig() {
-        this.save(new CauHinhHeThong(0,TagName.EMAIL_HOST,"Email host", "smtp",0));
-        this.save(new CauHinhHeThong(0,TagName.EMAIL_PORT,"Email port", "587",0));
-        this.save(new CauHinhHeThong(0,TagName.EMAIL_USERNAME,"Email username", "",0));
-        this.save(new CauHinhHeThong(0,TagName.EMAIL_PASSWORD,"Email password", "",0));
-        this.save(new CauHinhHeThong(0,TagName.TIMEOUT,"Thời gian timeout", "",0));
-        this.save(new CauHinhHeThong(0,TagName.PATH_UPLOAD,"Thư mục lưu file upload", "",0));
-        this.save(new CauHinhHeThong(0,TagName.SEND_MAIL_REPORT_DAILY,"Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "false",0));
-        this.save(new CauHinhHeThong(0,TagName.MAX_SIZE_UPLOAD,"Dung lượng file tối đa cho phép upload", "",0));
-        this.save(new CauHinhHeThong(0,TagName.EXTENSION_ALLOWED_UPLOAD,"Định dạng file được phép upload", "",0));
+        this.save(new FlowieeConfig(0,TagName.EMAIL_HOST,"Email host", "smtp",0));
+        this.save(new FlowieeConfig(0,TagName.EMAIL_PORT,"Email port", "587",0));
+        this.save(new FlowieeConfig(0,TagName.EMAIL_USERNAME,"Email username", "",0));
+        this.save(new FlowieeConfig(0,TagName.EMAIL_PASSWORD,"Email password", "",0));
+        this.save(new FlowieeConfig(0,TagName.TIMEOUT,"Thời gian timeout", "",0));
+        this.save(new FlowieeConfig(0,TagName.PATH_UPLOAD,"Thư mục lưu file upload", "",0));
+        this.save(new FlowieeConfig(0,TagName.SEND_MAIL_REPORT_DAILY,"Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "false",0));
+        this.save(new FlowieeConfig(0,TagName.MAX_SIZE_UPLOAD,"Dung lượng file tối đa cho phép upload", "",0));
+        this.save(new FlowieeConfig(0,TagName.EXTENSION_ALLOWED_UPLOAD,"Định dạng file được phép upload", "",0));
     }
 }

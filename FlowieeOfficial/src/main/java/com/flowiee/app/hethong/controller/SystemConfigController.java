@@ -2,7 +2,7 @@ package com.flowiee.app.hethong.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleAdministrator;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.hethong.entity.CauHinhHeThong;
+import com.flowiee.app.hethong.entity.FlowieeConfig;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.FlowieeConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +30,18 @@ public class SystemConfigController {
         if (!kiemTraQuyenModuleAdministrator.kiemTraQuyenConfig()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
-        List<CauHinhHeThong> listConfig = flowieeConfigService.findAll();
+        List<FlowieeConfig> listConfig = flowieeConfigService.findAll();
         if (listConfig.isEmpty()) {
             flowieeConfigService.defaultConfig();
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CONFIG);
-        modelAndView.addObject("config", new CauHinhHeThong());
+        modelAndView.addObject("config", new FlowieeConfig());
         modelAndView.addObject("listConfig", flowieeConfigService.findAll());
         return modelAndView;
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute("config") CauHinhHeThong config,
+    public String update(@ModelAttribute("config") FlowieeConfig config,
                          @PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;

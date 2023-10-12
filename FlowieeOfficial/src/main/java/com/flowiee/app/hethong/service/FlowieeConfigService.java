@@ -1,19 +1,19 @@
 package com.flowiee.app.hethong.service;
 
-import com.flowiee.app.hethong.entity.CauHinhHeThong;
+import com.flowiee.app.hethong.entity.FlowieeConfig;
 
 import java.util.List;
 
 public interface FlowieeConfigService {
-    CauHinhHeThong findById(Integer id);
+    FlowieeConfig findById(Integer id);
 
-    CauHinhHeThong findByKey(String key);
+    FlowieeConfig findByKey(String key);
 
-    List<CauHinhHeThong> findAll();
+    List<FlowieeConfig> findAll();
 
-    String save(CauHinhHeThong cauHinhHeThong);
+    String save(FlowieeConfig flowieeConfig);
 
-    String update(CauHinhHeThong cauHinhHeThong, Integer id);
+    String update(FlowieeConfig flowieeConfig, Integer id);
 
     String delete(Integer id);
 
