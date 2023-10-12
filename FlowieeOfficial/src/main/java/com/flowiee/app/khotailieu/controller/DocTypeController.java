@@ -3,6 +3,7 @@ package com.flowiee.app.khotailieu.controller;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.DataExistsException;
+import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -48,6 +49,9 @@ public class DocTypeController {
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             modelAndView.addObject("loaiTaiLieu", new LoaiTaiLieu());
             modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAITAILIEU);
+            modelAndView.addObject("url_template", EndPointUtil.DANHMUC_LOAITAILIEU_TEMPLATE);
+            modelAndView.addObject("url_import", EndPointUtil.DANHMUC_LOAITAILIEU_IMPORT);
+            modelAndView.addObject("url_export", EndPointUtil.DANHMUC_LOAITAILIEU_EXPORT);
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
