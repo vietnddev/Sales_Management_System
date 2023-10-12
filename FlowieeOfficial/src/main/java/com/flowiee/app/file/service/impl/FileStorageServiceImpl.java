@@ -218,6 +218,13 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
+    public String saveFileOfImport(MultipartFile fileImport, FileStorage fileInfo) throws IOException {
+        fileRepository.save(fileInfo);
+        fileImport.transferTo(Paths.get(fileInfo.getDirectoryPath()));
+        return "OK";
+    }
+
+    @Override
     public String changFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
         Document document = documentService.findById(documentId);
         if (document == null) {

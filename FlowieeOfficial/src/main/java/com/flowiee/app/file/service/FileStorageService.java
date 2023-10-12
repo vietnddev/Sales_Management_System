@@ -22,7 +22,10 @@ public interface FileStorageService {
 
     String saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
 
+    String saveFileOfImport(MultipartFile fileImport, FileStorage fileInfo) throws IOException;
+
     String changFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
+
 
     String delete(int id);
 
