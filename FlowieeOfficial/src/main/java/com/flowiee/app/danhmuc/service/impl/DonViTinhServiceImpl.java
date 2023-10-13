@@ -14,9 +14,7 @@ import com.flowiee.app.hethong.entity.Notification;
 import com.flowiee.app.hethong.repository.FlowieeImportRepository;
 import com.flowiee.app.hethong.service.FlowieeImportService;
 import com.flowiee.app.hethong.service.NotificationService;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +39,9 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     @Autowired
     private NotificationService notificationService;
     @Autowired
-    private FlowieeImportService importService;
+    private FlowieeImportService flowieeImportService;
     @Autowired
-    private FlowieeImportRepository importRepository;
+    private FlowieeImportRepository flowieeImportRepository;
     @Autowired
     private FileStorageService fileStorageService;
 
@@ -117,7 +115,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
                     String categoryName = row.getCell(2).getStringCellValue();
                     String categoryNote = row.getCell(3).getStringCellValue();
                     //Nếu name null -> không ínsert data null vào database
-                    if (categoryName == null || categoryName.length() == 0) continue;
+                    //if (categoryName == null || categoryName.length() == 0) continue;
 
                     DonViTinh donViTinh = new DonViTinh();
                     donViTinh.setMaLoai(!categoryCode.isEmpty() ? categoryCode : FlowieeUtil.getMaDanhMuc(categoryName));
@@ -126,6 +124,11 @@ public class DonViTinhServiceImpl implements DonViTinhService {
 
                     if (!"OK".equals(this.save(donViTinh))) {
                         isImportSuccess = false;
+                        XSSFCellStyle cellStyle = workbook.createCellStyle();
+                        XSSFFont fontStyle = workbook.createFont();
+                        row.getCell(1).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
                     } else {
                         importSuccess++;
                     }
@@ -156,7 +159,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             fileStorage.setStatus(false);
             fileStorage.setActive(false);
             flowieeImport.setStgFile(fileStorage);
-            importService.save(flowieeImport);
+            flowieeImportService.save(flowieeImport);
             fileStorageService.saveFileOfImport(pFileImport, fileStorage);
 
             Notification notification = new Notification();
@@ -166,8 +169,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             notification.setType(NotificationUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);
-            notification.setFlowieeImport(importRepository.findByStartTime(flowieeImport.getStartTime()));
-            int id = importRepository.findByStartTime(flowieeImport.getStartTime()).getId();
+            notification.setFlowieeImport(flowieeImportRepository.findByStartTime(flowieeImport.getStartTime()));
             notificationService.save(notification);
 
             return "OK";

@@ -94,6 +94,26 @@ public class FileUtil {
         }
     }
 
+    public static String getPathDirectotyForImport() {
+        try {
+            StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
+            path.append("/import");
+            path.append("/" + DateUtil.getNamHienTai());
+            path.append("/" + DateUtil.getThangHienTai());
+            path.append("/" + DateUtil.getNgayHienTai());
+            File folder = new File(path.toString());
+            if (!folder.exists()) {
+                if (folder.mkdirs()) {
+                    System.out.println("mkdirs OK");
+                }
+            }
+            return path.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
     public static String generateAliasName(String text) {
         // Loại bỏ dấu tiếng Việt và ký tự đặc biệt
         String normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD);

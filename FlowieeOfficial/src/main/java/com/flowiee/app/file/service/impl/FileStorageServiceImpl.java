@@ -220,7 +220,8 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String saveFileOfImport(MultipartFile fileImport, FileStorage fileInfo) throws IOException {
         fileRepository.save(fileInfo);
-        fileImport.transferTo(Paths.get(fileInfo.getDirectoryPath()));
+        fileInfo.setTenFileKhiLuu("I_" + fileInfo.getTenFileKhiLuu());
+        fileImport.transferTo(Paths.get(FileUtil.getPathDirectoty(fileInfo.getModule()) + "/" + fileInfo.getTenFileKhiLuu()));
         return "OK";
     }
 
