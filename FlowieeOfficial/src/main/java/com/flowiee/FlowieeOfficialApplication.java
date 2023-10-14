@@ -1,5 +1,6 @@
 package com.flowiee;
 
+import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.hethong.service.MailService;
 import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.khotailieu.service.DocumentService;
@@ -14,6 +15,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin
@@ -25,6 +27,8 @@ public class FlowieeOfficialApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FlowieeOfficialApplication.class, args);
+
+        System.out.println("FlowieeOfficialApplication started at " + DateUtil.now("dd/MM/yyyy HH:mm:ss"));
 
 //        int year = 2023; // Năm cần in danh sách tuần
 //
