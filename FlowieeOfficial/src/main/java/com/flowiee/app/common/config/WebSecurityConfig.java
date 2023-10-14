@@ -64,6 +64,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginProcessingUrl("/j_spring_security_check")
 				.authenticationDetailsSource(authenticationDetailsSource())
 				.and()
-				.httpBasic();
+				.httpBasic()
+				.and()
+				.logout()
+				.logoutUrl("/logout") // Endpoint cho đăng xuất
+				.logoutSuccessUrl("/login") // Đường dẫn sau khi đăng xuất thành công
+				.deleteCookies("JSESSIONID") // Xóa cookies sau khi đăng xuất
+				.invalidateHttpSession(true) // Hủy phiên làm việc
+				.and()
+				.userDetailsService(userDetailsService()); ;
 	}
 }

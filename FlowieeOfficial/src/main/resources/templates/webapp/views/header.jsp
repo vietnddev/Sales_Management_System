@@ -82,6 +82,11 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" th:href="@{/logout}">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" data-widget="fullscreen" href="#" role="button">
             <i class="fas fa-expand-arrows-alt"></i>
           </a>
