@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -31,4 +32,7 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Intege
 
     @Query("from FileStorage f where f.bienTheSanPham.id=:bienTheSanPhamId and f.isActive=:isActive")
     FileStorage findImageActiveOfSanPhamBienThe(int bienTheSanPhamId, boolean isActive);
+
+    @Query("from FileStorage f where f.createdAt=:createdTime")
+    FileStorage findByCreatedTime(Date createdTime);
 }
