@@ -33,7 +33,12 @@ public class FlowieeImport extends BaseEntity {
     @Column(name = "detail", nullable = false, length = 999)
     private String detail;
 
-    @OneToOne
-    @JoinColumn(name = "stg_file")
-    private FileStorage stgFile;
+    @Column(name = "sucess_record")
+    private Integer successRecord;
+
+    @Column(name = "total_record")
+    private Integer totalRecord;
+
+    @Column(name = "file_id")
+    private Integer fileId;
 }

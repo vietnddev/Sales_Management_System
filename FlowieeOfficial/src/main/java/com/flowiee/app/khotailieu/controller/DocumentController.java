@@ -9,6 +9,7 @@ import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.MailService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.khotailieu.entity.DocData;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.entity.Document;
@@ -61,6 +62,8 @@ public class DocumentController {
     private MailService mailService;
     @Autowired
     private DocumentRepository documentRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     //Dashboard
     @GetMapping("/dashboard")
@@ -80,6 +83,7 @@ public class DocumentController {
             }
             modelAndView.addObject("reportOfDocType_listTen", listTenOfDocType);
             modelAndView.addObject("reportOfDocType_listSoLuong", listSoLuongOfDocType);
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
@@ -113,6 +117,7 @@ public class DocumentController {
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
             modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -281,6 +286,7 @@ public class DocumentController {
             modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
             //Load các version khác của document
             modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             //Cây thư mục
             //modelAndView.addObject("folders", list);
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
@@ -308,6 +314,7 @@ public class DocumentController {
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
             modelAndView.addObject("documentParentName", document.getTen().toUpperCase());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }

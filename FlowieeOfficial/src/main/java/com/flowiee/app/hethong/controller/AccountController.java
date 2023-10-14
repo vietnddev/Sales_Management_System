@@ -42,7 +42,7 @@ public class AccountController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_LIST);
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
-        modelAndView.addObject("listNotification", notificationService.findById(FlowieeUtil.ACCOUNT_ID));
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
         List<Role> newRole = new ArrayList<>();
         modelAndView.addObject("list", newRole);
         return modelAndView;

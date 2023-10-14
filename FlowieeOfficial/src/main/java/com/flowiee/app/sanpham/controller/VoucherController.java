@@ -1,7 +1,9 @@
 package com.flowiee.app.sanpham.controller;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.Voucher;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
@@ -30,6 +32,8 @@ public class VoucherController {
     @Autowired
     private BienTheSanPhamService bienTheSanPhamService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping
@@ -49,6 +53,7 @@ public class VoucherController {
             modelAndView.addObject("listVoucherType", voucherType);
             modelAndView.addObject("voucher", new Voucher());
             modelAndView.addObject("voucherDetail", new VoucherDetail());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);

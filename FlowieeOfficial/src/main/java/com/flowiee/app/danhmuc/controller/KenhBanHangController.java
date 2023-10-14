@@ -4,10 +4,12 @@ import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FileUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +32,8 @@ public class KenhBanHangController {
     @Autowired
     private KenhBanHangService kenhBanHangService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModule;
 
     @GetMapping("")
@@ -46,6 +50,7 @@ public class KenhBanHangController {
             modelAndView.addObject("url_template", EndPointUtil.DANHMUC_KENHBANHANG_TEMPLATE);
             modelAndView.addObject("url_import", EndPointUtil.DANHMUC_KENHBANHANG_IMPORT);
             modelAndView.addObject("url_export", EndPointUtil.DANHMUC_KENHBANHANG_EXPORT);
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }

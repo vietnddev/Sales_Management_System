@@ -1,11 +1,13 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.GiaSanPham;
 import com.flowiee.app.sanpham.entity.ThuocTinhSanPham;
@@ -35,6 +37,8 @@ public class SanPhamBienTheController {
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping(value = "{id}")
@@ -57,6 +61,7 @@ public class SanPhamBienTheController {
             imageActive = new FileStorage();
         }
         modelAndView.addObject("imageActive", imageActive);
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
         return modelAndView;
     }
 

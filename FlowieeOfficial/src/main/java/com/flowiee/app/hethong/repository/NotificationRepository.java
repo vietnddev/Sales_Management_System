@@ -10,5 +10,8 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
     @Query("from Notification n where n.receive=:accountId order by n.id desc")
-    List<Notification> findByReceiveId(Integer accountId);
+    List<Notification> findAllByReceiveId(Integer accountId);
+
+    @Query(value = "select * from notification n where n.receive=:accountId order by n.id desc fetch next :limit row only", nativeQuery = true)
+    List<Notification> findLimitByReceiveId(Integer accountId, Integer limit);
 }

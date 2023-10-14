@@ -1,10 +1,12 @@
 package com.flowiee.app.hethong.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleAdministrator;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.FlowieeConfig;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.FlowieeConfigService;
+import com.flowiee.app.hethong.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,8 @@ public class SystemConfigController {
     private KiemTraQuyenModuleAdministrator kiemTraQuyenModuleAdministrator;
     @Autowired
     private FlowieeConfigService flowieeConfigService;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping
     public ModelAndView showConfig() {
@@ -37,6 +41,7 @@ public class SystemConfigController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CONFIG);
         modelAndView.addObject("config", new FlowieeConfig());
         modelAndView.addObject("listConfig", flowieeConfigService.findAll());
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
         return modelAndView;
     }
 

@@ -9,6 +9,7 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.service.DocFieldService;
 import com.flowiee.app.hethong.service.AccountService;
@@ -36,6 +37,8 @@ public class DocTypeController {
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
     @Autowired
     private DocFieldService docFieldService;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("")
     public ModelAndView findAllDmLoaiTaiLieu() {
@@ -52,6 +55,7 @@ public class DocTypeController {
             modelAndView.addObject("url_template", EndPointUtil.DANHMUC_LOAITAILIEU_TEMPLATE);
             modelAndView.addObject("url_import", EndPointUtil.DANHMUC_LOAITAILIEU_IMPORT);
             modelAndView.addObject("url_export", EndPointUtil.DANHMUC_LOAITAILIEU_EXPORT);
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -80,6 +84,7 @@ public class DocTypeController {
             modelAndView.addObject("docField", new DocField());
             modelAndView.addObject("nameDocType", docTypeService.findById(id).getTen().toUpperCase());
             modelAndView.addObject("docTypeId", id);
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }

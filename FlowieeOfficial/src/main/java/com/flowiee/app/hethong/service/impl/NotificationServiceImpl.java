@@ -3,7 +3,6 @@ package com.flowiee.app.hethong.service.impl;
 import com.flowiee.app.hethong.entity.Notification;
 import com.flowiee.app.hethong.repository.NotificationRepository;
 import com.flowiee.app.hethong.service.NotificationService;
-import com.flowiee.app.sanpham.services.impl.BienTheSanPhamServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<Notification> findByReceiveId(Integer accountId) {
-        return notificationRepository.findByReceiveId(accountId);
+    public List<Notification> findAllByReceiveId(Integer accountId) {
+        return notificationRepository.findAllByReceiveId(accountId);
+    }
+
+    @Override
+    public List<Notification> findLimitByReceiveId(Integer accountId, Integer limit) {
+        return notificationRepository.findLimitByReceiveId(accountId, limit);
     }
 
     @Override

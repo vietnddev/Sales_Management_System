@@ -8,6 +8,7 @@ import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.*;
 import com.flowiee.app.sanpham.model.DonHangRequest;
 import com.flowiee.app.sanpham.services.*;
@@ -57,6 +58,8 @@ public class DonHangController {
     @Autowired
     private ItemsService itemsService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping
@@ -75,6 +78,7 @@ public class DonHangController {
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
             modelAndView.addObject("donHangRequest", new DonHangRequest());
             modelAndView.addObject("donHang", new DonHang());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
@@ -107,6 +111,7 @@ public class DonHangController {
 
             modelAndView.addObject("donHangRequest", new DonHangRequest());
             modelAndView.addObject("donHang", new DonHang());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
@@ -127,6 +132,7 @@ public class DonHangController {
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("donHang", new DonHang());
             modelAndView.addObject("donHangThanhToan", new DonHangThanhToan());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
@@ -153,6 +159,7 @@ public class DonHangController {
             modelAndView.addObject("listKhachHang", khachHangService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
 
             List<Cart> listCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
             modelAndView.addObject("listCart", listCart);

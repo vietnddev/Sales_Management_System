@@ -27,7 +27,6 @@ public class Notification extends BaseEntity {
     @Column(name = "readed", nullable = false)
     private Boolean readed;
 
-    @OneToOne
-    @JoinColumn(name = "import_info")
-    private FlowieeImport flowieeImport;
+    @Column(name = "import_id")
+    private Integer importId;
 }

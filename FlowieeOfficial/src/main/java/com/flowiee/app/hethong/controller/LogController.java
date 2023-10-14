@@ -1,6 +1,8 @@
 package com.flowiee.app.hethong.controller;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.common.utils.PagesUtil;
 
@@ -20,6 +22,8 @@ public class LogController {
     private SystemLogService systemLogService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    NotificationService notificationService;
 
     @GetMapping(value = "")
     public ModelAndView getAllLog() {
@@ -28,6 +32,7 @@ public class LogController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_NHATKY);
         modelAndView.addObject("listLog", systemLogService.getAll());
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
         return modelAndView;
     }
 

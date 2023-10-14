@@ -1,7 +1,9 @@
 package com.flowiee.app.sanpham.controller;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.KhachHang;
 import com.flowiee.app.sanpham.services.DonHangService;
 import com.flowiee.app.sanpham.services.KhachHangService;
@@ -23,6 +25,8 @@ public class KhachHangController {
     @Autowired
     private DonHangService donHangService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping
@@ -34,6 +38,7 @@ public class KhachHangController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_KHACHHANG);
             modelAndView.addObject("listKhachHang", khachHangService.findAll());
             modelAndView.addObject("khachHang", new KhachHang());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
@@ -49,6 +54,7 @@ public class KhachHangController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_KHACHHANG_CHITIET);
             modelAndView.addObject("khachHangDetail", khachHangService.findById(id));
             modelAndView.addObject("listDonHang", donHangService.findByKhachHangId(id));
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);

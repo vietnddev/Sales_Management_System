@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.danhmuc.service.LoaiKichCoService;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
@@ -10,6 +11,7 @@ import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.GiaSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;
@@ -55,6 +57,8 @@ public class SanPhamController {
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModule;
 
     @GetMapping(value = "")
@@ -69,6 +73,7 @@ public class SanPhamController {
             modelAndView.addObject("listLoaiSanPham", loaiSanPhamService.findAll());
             modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
             modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -111,7 +116,7 @@ public class SanPhamController {
         //Image active
         FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(sanPhamId);
         modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());
-
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
         return modelAndView;
     }
 

@@ -1,5 +1,6 @@
 package com.flowiee.app.hethong.controller;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.Notification;
 import com.flowiee.app.hethong.service.AccountService;
@@ -18,6 +19,7 @@ public class NotificationController {
     @Autowired
     private AccountService accountService;
 
+
     @GetMapping
     public ModelAndView getAllNotification() {
         if (!accountService.isLogin()) {
@@ -25,7 +27,7 @@ public class NotificationController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_NOTIFICATION);
         modelAndView.addObject("notification", new Notification());
-        modelAndView.addObject("listNotification", notificationService.findAll());
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
         return modelAndView;
     }
 }

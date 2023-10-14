@@ -1,8 +1,10 @@
 package com.flowiee.app.hethong.controller;
 
 import com.flowiee.app.common.authorization.KiemTraQuyenModulePhanQuyen;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.hethong.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ public class NhomQuyenController {
     @Autowired
     private AccountService accountService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private KiemTraQuyenModulePhanQuyen kiemTraQuyenModule;
 
     @GetMapping
@@ -28,6 +32,7 @@ public class NhomQuyenController {
         if (kiemTraQuyenModule.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_ROLE);
             modelAndView.addObject("listRole", roleService.findAllRole());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
                 modelAndView.addObject("action_update", "enable");
             }

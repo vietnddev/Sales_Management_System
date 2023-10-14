@@ -5,6 +5,7 @@ import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.services.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ public class ThuVienHinhAnhController {
     private FileStorageService fileStorageService;
     @Autowired
     private SanPhamService sanPhamService;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("")
     public ModelAndView getAllFiles() {
@@ -31,6 +34,7 @@ public class ThuVienHinhAnhController {
             modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
             // Lấy danh sách tên sản phẩm
             modelAndView.addObject("listSanPham", sanPhamService.findAll());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         }
         return new ModelAndView(PagesUtil.PAGE_LOGIN);

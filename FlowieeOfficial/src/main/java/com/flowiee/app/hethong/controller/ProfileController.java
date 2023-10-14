@@ -4,6 +4,7 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.services.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,7 +28,8 @@ public class ProfileController {
 	private AccountService accountService;
 	@Autowired
 	private DonHangService donHangService;
-
+	@Autowired
+	private NotificationService notificationService;
 	BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
 	@GetMapping("")
@@ -41,7 +43,7 @@ public class ProfileController {
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", profile);
 		modelAndView.addObject("listDonHangDaBan", donHangService.findByNhanVienId(profile.getId()));
-
+		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
 		return modelAndView;
 	}
 
