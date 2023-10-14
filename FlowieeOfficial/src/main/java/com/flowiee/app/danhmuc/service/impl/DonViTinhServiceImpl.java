@@ -8,6 +8,7 @@ import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.repository.DonViTinhRepository;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.file.entity.FileStorage;
+import com.flowiee.app.file.repository.FileStorageRepository;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.entity.FlowieeImport;
 import com.flowiee.app.hethong.entity.Notification;
@@ -44,6 +45,8 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     private FlowieeImportRepository flowieeImportRepository;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private FileStorageRepository fileStorageRepository;
 
     @Override
     public List<DonViTinh> findAll() {
@@ -115,7 +118,14 @@ public class DonViTinhServiceImpl implements DonViTinhService {
                     String categoryName = row.getCell(2).getStringCellValue();
                     String categoryNote = row.getCell(3).getStringCellValue();
                     //Nếu name null -> không ínsert data null vào database
-                    //if (categoryName == null || categoryName.length() == 0) continue;
+                    if (categoryName == null || categoryName.length() == 0) {
+                        XSSFCellStyle cellStyle = workbook.createCellStyle();
+                        XSSFFont fontStyle = workbook.createFont();
+                        row.getCell(1).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        continue;
+                    }
 
                     DonViTinh donViTinh = new DonViTinh();
                     donViTinh.setMaLoai(!categoryCode.isEmpty() ? categoryCode : FlowieeUtil.getMaDanhMuc(categoryName));
@@ -144,7 +154,14 @@ public class DonViTinhServiceImpl implements DonViTinhService {
                 resultOfFlowieeImport = NotificationUtil.IMPORT_DM_DONVITINH_FAIL;
                 detailOfFlowieeImport = importSuccess + " / " + totalRecord;
             }
-            //Build Import Process
+            //Save file attach to storage
+            FileStorage fileStorage = new FileStorage(pFileImport, SystemModule.DANH_MUC.name());
+            fileStorage.setGhiChu("IMPORT");
+            fileStorage.setStatus(false);
+            fileStorage.setActive(false);
+            fileStorageService.saveFileOfImport(pFileImport, fileStorage);
+
+            //Save import
             FlowieeImport flowieeImport = new FlowieeImport();
             flowieeImport.setModule(MODULE);
             flowieeImport.setEntity(DonViTinhServiceImpl.class.getName());
@@ -153,14 +170,10 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             flowieeImport.setEndTime(new Date());
             flowieeImport.setResult(resultOfFlowieeImport);
             flowieeImport.setDetail(detailOfFlowieeImport);
-            //Build object FileStorage
-            FileStorage fileStorage = new FileStorage(pFileImport, SystemModule.DANH_MUC.name());
-            fileStorage.setGhiChu("IMPORT");
-            fileStorage.setStatus(false);
-            fileStorage.setActive(false);
-            flowieeImport.setStgFile(fileStorage);
+            flowieeImport.setSuccessRecord(importSuccess);
+            flowieeImport.setTotalRecord(totalRecord);
+            flowieeImport.setFileId(fileStorageRepository.findByCreatedTime(fileStorage.getCreatedAt()).getId());
             flowieeImportService.save(flowieeImport);
-            fileStorageService.saveFileOfImport(pFileImport, fileStorage);
 
             Notification notification = new Notification();
             notification.setTitle(resultOfFlowieeImport);
@@ -169,7 +182,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             notification.setType(NotificationUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);
-            notification.setFlowieeImport(flowieeImportRepository.findByStartTime(flowieeImport.getStartTime()));
+            notification.setImportId(flowieeImportRepository.findByStartTime(flowieeImport.getStartTime()).getId());
             notificationService.save(notification);
 
             return "OK";
