@@ -70,31 +70,11 @@
       <ul class="navbar-nav ml-auto">
 
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown">
-          <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="far fa-bell"></i>
-            <span class="badge badge-warning navbar-badge">15</span>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#notification">
+            <i class="far fa-bell" style="cursor: pointer"></i>
+            <span class="badge badge-warning navbar-badge" style="cursor: pointer">15</span>
           </a>
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <span class="dropdown-item dropdown-header">15 Notifications</span>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-envelope mr-2"></i> 4 new messages
-              <span class="float-right text-muted text-sm">3 mins</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-users mr-2"></i> 8 friend requests
-              <span class="float-right text-muted text-sm">12 hours</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-file mr-2"></i> 3 new reports
-              <span class="float-right text-muted text-sm">2 days</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-          </div>
         </li>
         <li class="nav-item">
           <a class="nav-link" th:href="@{/profile}">
@@ -113,6 +93,41 @@
         </li>
       </ul>
     </nav>
+
+    <div class="modal fade" id="notification">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="card">
+            <div class="card-header">
+              <div class="row justify-content-center">
+                <h3 class="card-title"><strong>Thông báo hệ thống</strong></h3>
+              </div>
+            </div>
+            <div class="card-body" style="padding: 0; max-height: 600px; overflow: overlay">
+              <table class="table table-bordered table-striped align-items-center">
+                <thead class="align-self-center">
+                  <tr>
+                    <th>STT</th>
+                    <th>Time</th>
+                    <th>Title</th>
+                    <th>Detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="noti, index : ${listNotification}">
+                    <td th:text="${index.index + 1}"></td>
+                    <td th:text="${noti.createdAt}"></td>
+                    <td th:text="${noti.title}"></td>
+                    <td th:text="${noti.content}"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div th:fragment="scripts">
     <!-- jQuery -->
