@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table
-@Entity(name = "nhat_ky_he_thong")
+@Entity(name = "flowiee_log")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SystemLog implements java.io.Serializable {
 	@Id
