@@ -3,10 +3,10 @@ package com.flowiee.app.sanpham.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.danhmuc.entity.FabricType;
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.entity.LoaiMauSac;
 import com.flowiee.app.file.entity.FileStorage;
-import com.flowiee.app.sanpham.model.TrangThai;
 import lombok.*;
 
 import javax.persistence.*;
@@ -49,6 +49,10 @@ public class BienTheSanPham extends BaseEntity implements Serializable {
     @JoinColumn(name = "kich_co_id", nullable = false)
     private LoaiKichCo loaiKichCo;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_lieu_vai_id", nullable = false)
+    private FabricType fabricType;
+
     @Transient
     private GiaSanPham giaSanPham;
 
@@ -66,6 +70,9 @@ public class BienTheSanPham extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<Items> listItems;
+
+    @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
+    private List<SanPhamBienTheImport> listProductVariantImport;
 
     @Override
     public String toString() {
