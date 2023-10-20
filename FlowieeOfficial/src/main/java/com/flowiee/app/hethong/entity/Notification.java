@@ -1,6 +1,6 @@
 package com.flowiee.app.hethong.entity;
 
-import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.base.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.*;

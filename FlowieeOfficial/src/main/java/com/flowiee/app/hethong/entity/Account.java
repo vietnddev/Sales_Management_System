@@ -1,7 +1,7 @@
 package com.flowiee.app.hethong.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.hethong.model.Role;
 import com.flowiee.app.khotailieu.entity.DocShare;

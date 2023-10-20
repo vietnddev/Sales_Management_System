@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
 import com.flowiee.app.danhmuc.entity.LoaiSanPham;
 import com.flowiee.app.file.entity.FileStorage;

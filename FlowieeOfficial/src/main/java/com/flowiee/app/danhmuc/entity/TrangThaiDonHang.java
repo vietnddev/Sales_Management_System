@@ -1,6 +1,6 @@
 package com.flowiee.app.danhmuc.entity;
 
-import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.sanpham.entity.DonHang;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.flowiee.app.common.entity;
+package com.flowiee.app.base;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,15 +1,13 @@
 package com.flowiee.app.sanpham.entity;
 
-import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
-import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.hethong.entity.Account;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "don_hang_thanh_toan")

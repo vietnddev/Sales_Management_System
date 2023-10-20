@@ -1,6 +1,6 @@
 package com.flowiee.app.sanpham.entity;
 
-import com.flowiee.app.common.entity.BaseEntity;
+import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;

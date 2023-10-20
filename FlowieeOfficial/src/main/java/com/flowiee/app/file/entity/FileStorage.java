@@ -1,8 +1,7 @@
 package com.flowiee.app.file.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.common.entity.BaseEntity;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.khotailieu.entity.Document;
@@ -13,15 +12,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Date;
 
 @Builder
 @Entity
