@@ -1,6 +1,7 @@
 package com.flowiee.app.danhmuc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import lombok.*;
 
@@ -16,12 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoaiKichCo implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class LoaiKichCo extends BaseEntity implements Serializable {
     @Column(name = "ma_loai", length = 50)
     private String maLoai;
 
@@ -39,12 +35,6 @@ public class LoaiKichCo implements Serializable {
 
     @Override
     public String toString() {
-        return "LoaiKichCo{" +
-            "id=" + id +
-            ", maLoai='" + maLoai + '\'' +
-            ", tenLoai='" + tenLoai + '\'' +
-            ", ghiChu='" + ghiChu + '\'' +
-            ", trangThai=" + trangThai +
-            '}';
+        return "LoaiKichCo {id=" + id + ", maLoai=" + maLoai +", tenLoai=" + tenLoai + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai + "}";
     }
 }

@@ -79,7 +79,7 @@ public class DocTypeController {
         }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCTYPE_DETAIL);
-            List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(id).build());
+            List<DocField> listDocField = docFieldService.findByDocTypeId(new LoaiTaiLieu(id));
             modelAndView.addObject("listDocField", listDocField);
             modelAndView.addObject("docField", new DocField());
             modelAndView.addObject("nameDocType", docTypeService.findById(id).getTen().toUpperCase());

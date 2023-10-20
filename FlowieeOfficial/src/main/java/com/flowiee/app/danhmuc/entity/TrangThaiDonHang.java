@@ -1,11 +1,7 @@
 package com.flowiee.app.danhmuc.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.hethong.entity.Account;
-import com.flowiee.app.sanpham.entity.BienTheSanPham;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.sanpham.entity.DonHang;
-import com.flowiee.app.sanpham.entity.DonHangChiTiet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,12 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "dm_trang_thai_don_hang")
-public class TrangThaiDonHang implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class TrangThaiDonHang extends BaseEntity implements Serializable {
     @Column(name = "ten", unique = true, nullable = false)
     private String ten;
 
@@ -35,4 +26,8 @@ public class TrangThaiDonHang implements Serializable {
 
     @OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
     private List<DonHang> listDonHang;
+
+    public TrangThaiDonHang (int id) {
+        super.id = id;
+    }
 }

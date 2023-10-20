@@ -380,7 +380,7 @@ public class DocumentController {
             fileStorageService.saveFileOfDocument(file, documentSaved.getId());
 
             //Lưu giá trị default vào DocData
-            List<DocField> listDocField = docFieldService.findByDocTypeId(LoaiTaiLieu.builder().id(document.getLoaiTaiLieu().getId()).build());
+            List<DocField> listDocField = docFieldService.findByDocTypeId(new LoaiTaiLieu(document.getLoaiTaiLieu().getId()));
             for (DocField docField : listDocField) {
                 DocData docData = DocData.builder()
                         .docField(DocField.builder().id(docField.getId()).build())

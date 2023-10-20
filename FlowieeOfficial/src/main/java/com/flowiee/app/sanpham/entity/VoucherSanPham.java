@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Builder
 @Entity
-@Table(name = "voucher_sanpham")
+@Table(name = "voucher_apply")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

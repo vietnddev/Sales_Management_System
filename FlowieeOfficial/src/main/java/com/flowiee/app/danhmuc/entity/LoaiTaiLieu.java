@@ -1,6 +1,7 @@
 package com.flowiee.app.danhmuc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.khotailieu.entity.DocField;
 import com.flowiee.app.khotailieu.entity.Document;
 import lombok.*;
@@ -17,12 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class LoaiTaiLieu implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class LoaiTaiLieu extends BaseEntity implements Serializable {
     @Column(name = "ma_loai", nullable = false)
     private String maLoai;
 
@@ -46,14 +42,12 @@ public class LoaiTaiLieu implements Serializable {
     @OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
     private List<DocField> listDocField;
 
+    public LoaiTaiLieu (int id) {
+        super.id = id;
+    }
+
     @Override
     public String toString() {
-        return "LoaiTaiLieu{" +
-                "id=" + id +
-                ", ten='" + ten + '\'' +
-                ", moTa='" + moTa + '\'' +
-                ", trangThai=" + trangThai +
-                ", isDefault=" + isDefault +
-                '}';
+        return "LoaiTaiLieu {id=" + id + ", maLoai=" + maLoai +", tenLoai=" + ten + ", ghiChu=" + moTa + ", isDefault=" + isDefault + ", trangThai=" + trangThai + "}";
     }
 }

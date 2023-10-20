@@ -1,6 +1,6 @@
 package com.flowiee.app.danhmuc.entity;
 
-import com.flowiee.app.sanpham.entity.DonHang;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.sanpham.entity.DonHangThanhToan;
 import lombok.*;
 
@@ -16,12 +16,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "dm_hinh_thuc_thanh_toan")
-public class HinhThucThanhToan implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class HinhThucThanhToan extends BaseEntity implements Serializable {
     @Column(name = "ma_loai", length = 50)
     private String maLoai;
 
@@ -39,12 +34,6 @@ public class HinhThucThanhToan implements Serializable {
 
     @Override
     public String toString() {
-        return "HinhThucThanhToan{" +
-                "id=" + id +
-                ", maLoai='" + maLoai + '\'' +
-                ", tenLoai='" + tenLoai + '\'' +
-                ", ghiChu='" + ghiChu + '\'' +
-                ", trangThai=" + trangThai +
-                '}';
+        return "HinhThucThanhToan {id=" + id + ", maLoai=" + maLoai +", tenLoai=" + tenLoai + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai + "}";
     }
 }

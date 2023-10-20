@@ -1,7 +1,7 @@
 package com.flowiee.app.danhmuc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.sanpham.entity.BienTheSanPham;
+import com.flowiee.app.common.entity.BaseEntity;
 import com.flowiee.app.sanpham.entity.DonHang;
 import lombok.*;
 
@@ -17,12 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class KenhBanHang implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private int id;
-
+public class KenhBanHang extends BaseEntity implements Serializable {
     @Column(name = "ma_loai", length = 50)
     private String maLoai;
 
@@ -41,14 +36,12 @@ public class KenhBanHang implements Serializable {
     @OneToMany(mappedBy = "kenhBanHang", fetch = FetchType.LAZY)
     private List<DonHang> listDonHang;
 
+    public KenhBanHang (int id) {
+        super.id = id;
+    }
+
     @Override
     public String toString() {
-        return "KenhBanHang{" +
-            "id=" + id +
-            ", maLoai='" + maLoai + '\'' +
-            ", tenLoai='" + tenLoai + '\'' +
-            ", ghiChu='" + ghiChu + '\'' +
-            ", trangThai=" + trangThai +
-            '}';
+        return "KenhBanHang {id=" + id + ", maLoai=" + maLoai +", tenLoai=" + tenLoai + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai + "}";
     }
 }

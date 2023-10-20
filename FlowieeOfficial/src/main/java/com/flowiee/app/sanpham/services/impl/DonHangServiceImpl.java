@@ -103,11 +103,11 @@ public class DonHangServiceImpl implements DonHangService {
             DonHang donHang = new DonHang();
             donHang.setMaDonHang(FlowieeUtil.getMaDonHang());
             donHang.setKhachHang(new KhachHang(request.getKhachHang()));
-            donHang.setKenhBanHang(KenhBanHang.builder().id(request.getKenhBanHang()).build());
+            donHang.setKenhBanHang(new KenhBanHang(request.getKenhBanHang()));
             donHang.setNhanVienBanHang(new Account(request.getNhanVienBanHang()));
             donHang.setGhiChu(request.getGhiChu());
             donHang.setThoiGianDatHang(request.getThoiGianDatHang());
-            donHang.setTrangThaiDonHang(TrangThaiDonHang.builder().id(request.getTrangThaiDonHang()).build());
+            donHang.setTrangThaiDonHang(new TrangThaiDonHang(request.getTrangThaiDonHang()));
             donHang.setTongTienDonHang(0D);
             donHangRepository.save(donHang);
 
