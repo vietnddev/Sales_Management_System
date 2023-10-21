@@ -43,4 +43,14 @@ public class NotificationServiceImpl implements NotificationService {
         logger.info(NotificationServiceImpl.class.getName() + ": Insert notification " + notification.toString());
         return "OK";
     }
+
+    @Override
+    public String update(Notification entity, Integer entityId) {
+        return null;
+    }
+
+    @Override
+    public String delete(Integer entityId) {
+        return null;
+    }
 }
