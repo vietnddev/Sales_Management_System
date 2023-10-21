@@ -4,10 +4,7 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
-import com.flowiee.app.danhmuc.entity.LoaiKichCo;
-import com.flowiee.app.danhmuc.repository.HinhThucThanhToanRepository;
 import com.flowiee.app.danhmuc.repository.KenhBanHangRepository;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -37,7 +34,7 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
     }
 
     @Override
-    public KenhBanHang findById(int id) {
+    public KenhBanHang findById(Integer id) {
         if (id <= 0) {
             throw new NotFoundException();
         }
@@ -56,7 +53,7 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
     }
 
     @Override
-    public String update(KenhBanHang kenhBanHang, int id) {
+    public String update(KenhBanHang kenhBanHang, Integer id) {
         try {
             if (id <= 0 || this.findById(id) == null) {
                 throw new NotFoundException();
@@ -71,7 +68,7 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
