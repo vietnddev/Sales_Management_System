@@ -33,4 +33,14 @@ public class FlowieeImportImpl implements FlowieeImportService {
         flowieeImportRepository.save(flowieeImport);
         return "OK";
     }
+
+    @Override
+    public String update(FlowieeImport entity, Integer entityId) {
+        return null;
+    }
+
+    @Override
+    public String delete(Integer entityId) {
+        return null;
+    }
 }
