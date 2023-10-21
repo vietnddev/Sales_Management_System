@@ -34,7 +34,7 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     }
 
     @Override
-    public LoaiSanPham findById(int id) {
+    public LoaiSanPham findById(Integer id) {
         return loaiSanPhamRepository.findById(id).orElse(null);
     }
 
@@ -44,26 +44,28 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     }
 
     @Override
-    public LoaiSanPham save(LoaiSanPham loaiSanPham) {
+    public String save(LoaiSanPham loaiSanPham) {
         if (findByTen(loaiSanPham.getTenLoai()) != null) {
-            return null;
+            return "NOK";
         }
-        return loaiSanPhamRepository.save(loaiSanPham);
+        loaiSanPhamRepository.save(loaiSanPham);
+        return "OK";
     }
 
     @Override
-    public void update(LoaiSanPham loaiSanPham, int id) {
+    public String update(LoaiSanPham loaiSanPham, Integer id) {
         loaiSanPham.setId(id);
         loaiSanPhamRepository.save(loaiSanPham);
+        return "OK";
     }
 
     @Override
-    public boolean delete(int id) {
+    public String delete(Integer id) {
         loaiSanPhamRepository.deleteById(id);
         if (findById(id) == null){
-            return true;
+            return "OK";
         } else {
-            return false;
+            return "NOK";
         }
     }
 
