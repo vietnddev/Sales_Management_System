@@ -4,7 +4,6 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.entity.LoaiMauSac;
 import com.flowiee.app.danhmuc.repository.LoaiMauSacRepository;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
@@ -35,7 +34,7 @@ public class LoaiMauSacServiceImpl implements LoaiMauSacService {
     }
 
     @Override
-    public LoaiMauSac findById(int id) {
+    public LoaiMauSac findById(Integer id) {
         if (id <= 0) {
             throw new NotFoundException();
         }
@@ -54,7 +53,7 @@ public class LoaiMauSacServiceImpl implements LoaiMauSacService {
     }
 
     @Override
-    public String update(LoaiMauSac loaiMauSac, int id) {
+    public String update(LoaiMauSac loaiMauSac, Integer id) {
         try {
             if (id <= 0 || this.findById(id) == null) {
                 throw new NotFoundException();
@@ -68,7 +67,7 @@ public class LoaiMauSacServiceImpl implements LoaiMauSacService {
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
