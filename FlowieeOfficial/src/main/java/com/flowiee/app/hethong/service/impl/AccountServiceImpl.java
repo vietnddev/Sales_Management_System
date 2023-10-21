@@ -51,8 +51,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account findById(int ID) {
-        return accountRepository.findById(ID).orElse(null);
+    public Account findById(Integer accountId) {
+        return accountRepository.findById(accountId).orElse(null);
     }
 
     @Override
@@ -91,8 +91,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void delete(int ID) {
-        Account account = accountRepository.findById(ID).orElse(null);
+    public String delete(Integer accountId) {
+        Account account = accountRepository.findById(accountId).orElse(null);
         if (account != null) {
             accountRepository.delete(account);
             //Ghi log
@@ -100,7 +100,7 @@ public class AccountServiceImpl implements AccountService {
                 .module(SystemModule.HE_THONG.name())
                 .action(AccountAction.DELETE_ACCOUNT.name())
                 .noiDung(account.toString())
-                .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
+                .account(FlowieeUtil.ACCOUNT)
                 .ip(FlowieeUtil.ACCOUNT_IP)
                 .build();
             systemLogService.writeLog(systemLog);
