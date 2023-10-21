@@ -19,12 +19,12 @@ public class ItemsServiceImpl implements ItemsService {
     }
 
     @Override
-    public List<Items> findByCartId(int cartId) {
+    public List<Items> findByCartId(Integer cartId) {
         return itemsRepository.findByCartId(cartId);
     }
 
     @Override
-    public Items findById(int id) {
+    public Items findById(Integer id) {
         return itemsRepository.findById(id).orElse(null);
     }
 
@@ -35,7 +35,12 @@ public class ItemsServiceImpl implements ItemsService {
     }
 
     @Override
-    public String delete(int id) {
+    public String update(Items entity, Integer entityId) {
+        return "OK";
+    }
+
+    @Override
+    public String delete(Integer id) {
         itemsRepository.deleteById(id);
         return "OK";
     }
