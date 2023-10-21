@@ -65,7 +65,7 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
     }
 
     @Override
-    public LoaiTaiLieu save(LoaiTaiLieu loaiTaiLieu) {
+    public String save(LoaiTaiLieu loaiTaiLieu) {
         if (findByTen(loaiTaiLieu.getTen()) != null) {
             return null;
         }
@@ -77,11 +77,11 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
         LoaiTaiLieu loaiTaiLieuSaved = loaiTaiLieuRepository.save(loaiTaiLieu);
         systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Thêm mới loại tài liệu: " + loaiTaiLieuSaved.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới loại tài liệu " + loaiTaiLieuSaved.toString());
-        return loaiTaiLieuSaved;
+        return "OK";
     }
 
     @Override
-    public void update(LoaiTaiLieu loaiTaiLieu, Integer id) {
+    public String update(LoaiTaiLieu loaiTaiLieu, Integer id) {
         if (id != null && this.findById(id) != null) {
             if (loaiTaiLieu.isDefault() == true) {
                 LoaiTaiLieu docTypeDefault = this.findDocTypeDefault();
@@ -92,11 +92,13 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
             LoaiTaiLieu loaiTaiLieuUpdated = loaiTaiLieuRepository.save(loaiTaiLieu);
             systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Cập nhật loại tài liệu: " + loaiTaiLieuUpdated.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật loại tài liệu " + loaiTaiLieuUpdated.toString());
+            return "OK";
         }
+        return "NOK";
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public String delete(Integer id) {
         LoaiTaiLieu loaiTaiLieuToDelete = findById(id);
         if (loaiTaiLieuToDelete == null) {
             throw new BadRequestException();
@@ -105,9 +107,9 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
         if (findById(id) == null) {
             systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Xóa loại tài liệu: " + loaiTaiLieuToDelete.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Xóa loại tài liệu " + loaiTaiLieuToDelete.toString());
-            return true;
+            return "OK";
         } else {
-            return false;
+            return "NOK";
         }
     }
 
