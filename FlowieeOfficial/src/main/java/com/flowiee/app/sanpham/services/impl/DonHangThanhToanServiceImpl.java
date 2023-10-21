@@ -26,7 +26,7 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
     }
 
     @Override
-    public DonHangThanhToan findById(int id) {
+    public DonHangThanhToan findById(Integer id) {
         return donHangThanhToanRepository.findById(id).orElse(null);
     }
 
@@ -45,7 +45,7 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
     }
 
     @Override
-    public String update(DonHangThanhToan donHangThanhToan, int id) {
+    public String update(DonHangThanhToan donHangThanhToan, Integer id) {
         if (this.findById(id) == null || donHangThanhToan.getHinhThucThanhToan() == null) {
             throw new NotFoundException();
         }
@@ -60,7 +60,7 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         if (this.findById(id) == null) {
             throw new NotFoundException();
         }
