@@ -34,6 +34,12 @@ public class BaseEntity {
     @LastModifiedBy
     private String lastUpdatedBy;
 
+    @Column(name = "deleted_at")
+    private Date deletedAt;
+
+    @Column(name = "deleted_by")
+    private String deletedBy;
+
     @PreUpdate
     @PrePersist
     public void updateTimeStamps() {
