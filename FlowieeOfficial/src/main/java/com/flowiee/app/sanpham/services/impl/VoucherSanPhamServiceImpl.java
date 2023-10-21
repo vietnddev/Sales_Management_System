@@ -1,19 +1,11 @@
 package com.flowiee.app.sanpham.services.impl;
 
-import com.flowiee.app.sanpham.entity.Voucher;
-import com.flowiee.app.sanpham.entity.VoucherDetail;
 import com.flowiee.app.sanpham.entity.VoucherSanPham;
-import com.flowiee.app.sanpham.model.VoucherResponse;
-import com.flowiee.app.sanpham.repository.VoucherRepository;
 import com.flowiee.app.sanpham.repository.VoucherSanPhamRepository;
-import com.flowiee.app.sanpham.services.VoucherDetailService;
 import com.flowiee.app.sanpham.services.VoucherSanPhamService;
-import com.flowiee.app.sanpham.services.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,9 +44,9 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
     }
 
     @Override
-    public String detele(Integer id) {
-        if (this.findById(id) != null) {
-            voucherSanPhamRepository.deleteById(id);
+    public String delete(Integer entityId) {
+        if (this.findById(entityId) != null) {
+            voucherSanPhamRepository.deleteById(entityId);
         }
         return "OK";
     }
