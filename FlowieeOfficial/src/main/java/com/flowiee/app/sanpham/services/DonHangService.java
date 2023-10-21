@@ -20,4 +20,6 @@ public interface DonHangService extends BaseService<DonHang> {
     List<DonHang> findByNhanVienId(int accountId);
 
     ResponseEntity<?> exportDanhSachDonHang();
+
+    String save(DonHangRequest donHangRequest);
 }
