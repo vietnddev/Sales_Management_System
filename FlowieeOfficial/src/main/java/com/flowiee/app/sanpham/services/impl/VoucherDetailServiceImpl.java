@@ -1,9 +1,7 @@
 package com.flowiee.app.sanpham.services.impl;
 
-import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
 import com.flowiee.app.sanpham.repository.VoucherDetailRepository;
-import com.flowiee.app.sanpham.repository.VoucherRepository;
 import com.flowiee.app.sanpham.services.VoucherDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +40,7 @@ public class VoucherDetailServiceImpl implements VoucherDetailService {
     }
 
     @Override
-    public String detele(Integer voucherDetailId) {
+    public String delete(Integer entityId) {
         return null;
     }
 }
