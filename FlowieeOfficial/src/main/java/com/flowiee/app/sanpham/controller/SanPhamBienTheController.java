@@ -93,12 +93,12 @@ public class SanPhamBienTheController {
     }
 
     @PostMapping(value = "/delete/{id}")
-    public String delete(HttpServletRequest request, @PathVariable("variantID") int variantID) {
+    public String delete(HttpServletRequest request, @PathVariable("variantID") Integer variantID) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (bienTheSanPhamService.findById(variantID) != null) {
-            bienTheSanPhamService.detele(variantID);
+            bienTheSanPhamService.delete(variantID);
             System.out.println("Delete successfully");
         } else {
             System.out.println("Record not found!");
