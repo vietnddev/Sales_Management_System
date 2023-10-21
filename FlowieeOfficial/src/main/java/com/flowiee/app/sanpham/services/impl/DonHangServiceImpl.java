@@ -92,13 +92,17 @@ public class DonHangServiceImpl implements DonHangService {
     }
 
     @Override
-    public DonHang findById(int id) {
+    public DonHang findById(Integer id) {
         return donHangRepository.findById(id).orElse(null);
     }
 
     @Override
+    public String save(DonHang entity) {
+        return null;
+    }
+
     @Transactional
-    public DonHang save(DonHangRequest request) {
+    public String save(DonHangRequest request) {
         try {
             DonHang donHang = new DonHang();
             donHang.setMaDonHang(FlowieeUtil.getMaDonHang());
@@ -133,26 +137,27 @@ public class DonHangServiceImpl implements DonHangService {
             systemLogService.writeLog(module, DonHangAction.CREATE_DONHANG.name(), "Thêm mới đơn hàng: " + donHang.toString());
             logger.info(DonHangServiceImpl.class.getName() + ": Thêm mới đơn hàng " + donHang.toString());
 
-            return donHangSaved;
+            return "OK";
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return "NOK";
         }
     }
 
     @Override
-    public DonHang update(DonHang donHang, int id) {
+    public String update(DonHang donHang, Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
         donHang.setId(id);
         systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật đơn hàng: " + donHang.toString());
         logger.info(DonHangServiceImpl.class.getName() + ": Cập nhật đơn hàng " + donHang.toString());
-        return donHangRepository.save(donHang);
+        donHangRepository.save(donHang);
+        return "OK";
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         DonHang donHang = this.findById(id);
         if (id <= 0 || donHang == null) {
             throw new NotFoundException();
