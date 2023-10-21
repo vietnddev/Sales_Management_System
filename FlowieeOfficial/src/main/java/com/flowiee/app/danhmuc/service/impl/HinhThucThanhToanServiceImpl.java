@@ -5,7 +5,6 @@ import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
-import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.repository.HinhThucThanhToanRepository;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -35,7 +34,7 @@ public class HinhThucThanhToanServiceImpl implements HinhThucThanhToanService {
     }
 
     @Override
-    public HinhThucThanhToan findById(int id) {
+    public HinhThucThanhToan findById(Integer id) {
         if (id <= 0) {
             throw new NotFoundException();
         }
@@ -54,7 +53,7 @@ public class HinhThucThanhToanServiceImpl implements HinhThucThanhToanService {
     }
 
     @Override
-    public String update(HinhThucThanhToan hinhThucThanhToan, int id) {
+    public String update(HinhThucThanhToan hinhThucThanhToan, Integer id) {
         try {
             if (id <= 0 || this.findById(id) == null) {
                 throw new NotFoundException();
@@ -68,7 +67,7 @@ public class HinhThucThanhToanServiceImpl implements HinhThucThanhToanService {
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
