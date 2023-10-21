@@ -33,7 +33,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public KhachHang findById(int id) {
+    public KhachHang findById(Integer id) {
         return khachHangRepository.findById(id).orElse(null);
     }
 
@@ -50,7 +50,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public String update(KhachHang khachHang, int id) {
+    public String update(KhachHang khachHang, Integer id) {
         if (id <=0 || this.findById(id) == null) {
             return "NOK";
         }
@@ -62,7 +62,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         KhachHang khachHang = this.findById(id);
         if (id <= 0 || khachHang == null) {
             return "NOK";
