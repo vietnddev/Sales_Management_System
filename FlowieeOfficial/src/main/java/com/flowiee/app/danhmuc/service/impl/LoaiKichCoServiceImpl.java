@@ -40,7 +40,7 @@ public class LoaiKichCoServiceImpl implements LoaiKichCoService {
     }
 
     @Override
-    public LoaiKichCo findById(int id) {
+    public LoaiKichCo findById(Integer id) {
         if (id <= 0) {
             throw new NotFoundException();
         }
@@ -59,7 +59,7 @@ public class LoaiKichCoServiceImpl implements LoaiKichCoService {
     }
 
     @Override
-    public String update(LoaiKichCo loaiKichCo, int id) {
+    public String update(LoaiKichCo loaiKichCo, Integer id) {
         try {
             if (id <= 0 || this.findById(id) == null) {
                 throw new NotFoundException();
@@ -73,7 +73,7 @@ public class LoaiKichCoServiceImpl implements LoaiKichCoService {
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
