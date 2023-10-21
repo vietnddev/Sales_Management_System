@@ -66,7 +66,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public SanPham findById(int id) {
+    public SanPham findById(Integer id) {
         SanPham sanPham = new SanPham();
         if (id > 0) {
             sanPham = productsRepository.findById(id).orElse(null);
@@ -100,7 +100,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Transactional
     @Override
-    public String update(SanPham sanPham, int id) {
+    public String update(SanPham sanPham, Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
@@ -133,7 +133,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Transactional
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         if (id <= 0) {
             logger.error("Lỗi khi xóa sản phẩm!", new NotFoundException());
             throw new NotFoundException();
