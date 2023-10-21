@@ -28,13 +28,9 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
     @Autowired
     private BienTheSanPhamRepository bienTheSanPhamRepository;
     @Autowired
-    private SanPhamService sanPhamService;
-    @Autowired
     private GiaSanPhamService giaSanPhamService;
     @Autowired
     private SystemLogService systemLogService;
-    @Autowired
-    private AccountService accountService;
 
     @Override
     public List<BienTheSanPham> findAll() {
@@ -94,13 +90,13 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
     }
 
     @Override
-    public String detele(Integer bienTheSanPhamId) {
-        BienTheSanPham bienTheSanPhamToDelete = this.findById(bienTheSanPhamId);
+    public String delete(Integer entityId) {
+        BienTheSanPham bienTheSanPhamToDelete = this.findById(entityId);
         if (bienTheSanPhamToDelete == null) {
             throw new NotFoundException();
         }
         try {
-            bienTheSanPhamRepository.deleteById(bienTheSanPhamId);
+            bienTheSanPhamRepository.deleteById(entityId);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa biến thể sản phẩm: " + bienTheSanPhamToDelete.toString());
             logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Xóa biến thể sản phẩm " + bienTheSanPhamToDelete.toString());
             return "OK";
@@ -127,8 +123,6 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         }
         return "NOK";
     }
-
-
 
     @Override
     public String updateSoLuong(Integer soLuong, Integer id) {
