@@ -54,7 +54,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     }
 
     @Override
-    public DonViTinh findById(int id) {
+    public DonViTinh findById(Integer id) {
         if (id <= 0) {
             throw new NotFoundException();
         }
@@ -73,7 +73,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     }
 
     @Override
-    public String update(DonViTinh donViTinh, int id) {
+    public String update(DonViTinh donViTinh, Integer id) {
         try {
             if (id <= 0 || this.findById(id) == null) {
                 throw new NotFoundException();
@@ -88,7 +88,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     }
 
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
