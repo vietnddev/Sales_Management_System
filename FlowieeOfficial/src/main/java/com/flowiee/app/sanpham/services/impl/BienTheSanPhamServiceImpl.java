@@ -42,8 +42,8 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
     }
 
     @Override
-    public BienTheSanPham findById(int id) {
-        return bienTheSanPhamRepository.findById(id).orElse(null);
+    public BienTheSanPham findById(Integer entityId) {
+        return bienTheSanPhamRepository.findById(entityId).orElse(null);
     }
 
     @Override
@@ -94,25 +94,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
     }
 
     @Override
-    public String update(BienTheSanPham bienTheSanPham, int id) {
-        BienTheSanPham bienTheSanPhamBefore = this.findById(id);
-        if (this.findById(id) == null) {
-            throw new NotFoundException();
-        }
-        try {
-            bienTheSanPham.setId(id);
-            bienTheSanPhamRepository.save(bienTheSanPham);
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
-            logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + bienTheSanPhamBefore.toString());
-            return "OK";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "NOK";
-        }
-    }
-
-    @Override
-    public String detele(int bienTheSanPhamId) {
+    public String detele(Integer bienTheSanPhamId) {
         BienTheSanPham bienTheSanPhamToDelete = this.findById(bienTheSanPhamId);
         if (bienTheSanPhamToDelete == null) {
             throw new NotFoundException();
@@ -127,6 +109,26 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             return "NOK";
         }
     }
+
+    @Override
+    public String update(BienTheSanPham bienTheSanPham, Integer id) {
+        BienTheSanPham bienTheSanPhamBefore = this.findById(id);
+        if (this.findById(id) == null) {
+            throw new NotFoundException();
+        }
+        try {
+            bienTheSanPham.setId(id);
+            bienTheSanPhamRepository.save(bienTheSanPham);
+            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
+            logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + bienTheSanPhamBefore.toString());
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "NOK";
+    }
+
+
 
     @Override
     public String updateSoLuong(Integer soLuong, Integer id) {
