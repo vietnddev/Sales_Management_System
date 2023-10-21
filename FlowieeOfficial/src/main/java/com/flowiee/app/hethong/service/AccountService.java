@@ -4,8 +4,6 @@ import com.flowiee.app.base.BaseService;
 import com.flowiee.app.hethong.entity.Account;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public interface AccountService extends BaseService<Account> {
     Account findByUsername(String username);

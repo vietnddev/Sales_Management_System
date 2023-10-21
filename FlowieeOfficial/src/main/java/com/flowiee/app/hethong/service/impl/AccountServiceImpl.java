@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account save(Account account) {
+    public String save(Account account) {
         Account accountSaved = accountRepository.save(account);
         //Ghi log
         SystemLog systemLog = SystemLog.builder()
@@ -72,22 +72,22 @@ public class AccountServiceImpl implements AccountService {
             .ip(FlowieeUtil.ACCOUNT_IP)
             .build();
         systemLogService.writeLog(systemLog);
-        return accountSaved;
+        return "OK";
     }
 
     @Override
-    public Account update(Account account) {
-        Account accountSaved = accountRepository.save(account);
+    public String update(Account entity, Integer entityId) {
+        Account accountSaved = accountRepository.save(entity);
         //Ghi log
         SystemLog systemLog = SystemLog.builder()
-            .module(SystemModule.HE_THONG.name())
-            .action(AccountAction.UPDATE_ACCOUNT.name())
-            .noiDung(account.toString())
-            .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
-            .ip(FlowieeUtil.ACCOUNT_IP)
-            .build();
+                .module(SystemModule.HE_THONG.name())
+                .action(AccountAction.UPDATE_ACCOUNT.name())
+                .noiDung(entity.toString())
+                .account(new Account(accountRepository.findIdByUsername(entity.getUsername())))
+                .ip(FlowieeUtil.ACCOUNT_IP)
+                .build();
         systemLogService.writeLog(systemLog);
-        return accountSaved;
+        return "OK";
     }
 
     @Override
@@ -105,6 +105,7 @@ public class AccountServiceImpl implements AccountService {
                 .build();
             systemLogService.writeLog(systemLog);
         }
+        return  "OK";
     }
 
     @Override

@@ -92,7 +92,7 @@ public class AccountController {
             accountEntity.setUsername(acc.getUsername());
             accountEntity.setPassword(acc.getPassword());
             accountEntity.setLastUpdatedBy(FlowieeUtil.ACCOUNT_USERNAME);
-            accountService.update(accountEntity);
+            accountService.update(accountEntity, id);
         }
         return "redirect:" + request.getHeader("referer");
     }
