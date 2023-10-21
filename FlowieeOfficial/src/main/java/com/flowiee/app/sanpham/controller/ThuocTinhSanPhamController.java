@@ -29,31 +29,31 @@ public class ThuocTinhSanPhamController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        thuocTinhSanPhamService.saveAttribute(thuocTinhSanPham);
+        thuocTinhSanPhamService.save(thuocTinhSanPham);
         return "redirect:" + request.getHeader("referer");
     }
 
     @Transactional
     @PostMapping(value = "/update/{id}")
     public String updateAttribute(@ModelAttribute("thuocTinhSanPham") ThuocTinhSanPham attribute,
-                                  HttpServletRequest request, @PathVariable("id") int id) {
+                                  HttpServletRequest request, @PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         attribute.setId(id);
-        thuocTinhSanPhamService.saveAttribute(attribute);
+        thuocTinhSanPhamService.update(attribute, id);
         return "redirect:" + request.getHeader("referer");
     }
 
     @Transactional
     @PostMapping(value = "/delete/{id}")
     public String deleteAttribute(@ModelAttribute("attribute") ThuocTinhSanPham attribute,
-                                  HttpServletRequest request, @PathVariable("id") int attributeID) {
+                                  HttpServletRequest request, @PathVariable("id") Integer attributeID) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (thuocTinhSanPhamService.findById(attributeID) != null) {
-            thuocTinhSanPhamService.deleteAttribute(attributeID);
+            thuocTinhSanPhamService.delete(attributeID);
             return "redirect:" + request.getHeader("referer");
         } else {
             throw new NotFoundException();
