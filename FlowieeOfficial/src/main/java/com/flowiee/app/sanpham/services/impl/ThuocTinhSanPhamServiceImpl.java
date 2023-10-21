@@ -24,6 +24,10 @@ public class ThuocTinhSanPhamServiceImpl implements ThuocTinhSanPhamService {
     @Autowired
     private SystemLogService systemLogService;
 
+    @Override
+    public List<ThuocTinhSanPham> findAll() {
+        return productAttributeRepository.findAll();
+    }
 
     @Override
     public List<ThuocTinhSanPham> getAllAttributes(int productVariantID){
@@ -33,25 +37,27 @@ public class ThuocTinhSanPhamServiceImpl implements ThuocTinhSanPhamService {
     }
 
     @Override
-    public void saveAttribute(ThuocTinhSanPham productAttribute){
+    public String save(ThuocTinhSanPham productAttribute){
         productAttributeRepository.save(productAttribute);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới thuộc tính sản phẩm");
+        return "OK";
     }
 
     @Override
-    public String updateAttribute(ThuocTinhSanPham attribute, Integer attributeId) {
+    public String update(ThuocTinhSanPham attribute, Integer attributeId) {
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật thuộc tính sản phẩm");
-        return null;
+        return "OK";
     }
 
     @Override
-    public ThuocTinhSanPham findById(int attributeID){
+    public ThuocTinhSanPham findById(Integer attributeID){
     	return productAttributeRepository.findById(attributeID).orElse(null);
     }
 
     @Override
-    public void deleteAttribute(int attributeID) {
-    	productAttributeRepository.deleteById(attributeID);
+    public String delete(Integer attributeId) {
+    	productAttributeRepository.deleteById(attributeId);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa thuộc tính sản phẩm");
+        return "OK";
     }
 }

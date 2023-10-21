@@ -1,19 +1,10 @@
 package com.flowiee.app.sanpham.services;
 
+import com.flowiee.app.base.BaseService;
 import com.flowiee.app.sanpham.entity.ThuocTinhSanPham;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface ThuocTinhSanPhamService {
-
+public interface ThuocTinhSanPhamService extends BaseService<ThuocTinhSanPham> {
     List<ThuocTinhSanPham> getAllAttributes(int productVariantID);
-
-    void saveAttribute(ThuocTinhSanPham productAttribute);
-
-    String updateAttribute(ThuocTinhSanPham attribute, Integer attributeId);
-
-    ThuocTinhSanPham findById(int attributeID);
-    
-    void deleteAttribute(int attributeID);
 }
