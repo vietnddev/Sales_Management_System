@@ -3,6 +3,7 @@ package com.flowiee.app.sanpham.services.impl;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.action.DonHangAction;
 import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.DonHangChiTiet;
 import com.flowiee.app.sanpham.repository.ChiTietDonHangRepository;
@@ -56,10 +57,10 @@ public class ChiTietDonHangServiceImpl implements ChiTietDonHangService {
             chiTietDonHangRepository.save(donHangChiTiet);
             systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Thêm mới item vào đơn hàng: " + donHangChiTiet.toString());
             logger.info(DonHangServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + donHangChiTiet.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -73,10 +74,10 @@ public class ChiTietDonHangServiceImpl implements ChiTietDonHangService {
             chiTietDonHangRepository.save(donHangChiTiet);
             systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật item of đơn hàng: " + donHangChiTiet.toString());
             logger.info(DonHangServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + donHangChiTiet.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -90,10 +91,10 @@ public class ChiTietDonHangServiceImpl implements ChiTietDonHangService {
             chiTietDonHangRepository.deleteById(id);
             systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Xóa item of đơn hàng: " + donHangChiTiet.toString());
             logger.info(DonHangServiceImpl.class.getName() + ": Xóa item of đơn hàng " + donHangChiTiet.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 }
