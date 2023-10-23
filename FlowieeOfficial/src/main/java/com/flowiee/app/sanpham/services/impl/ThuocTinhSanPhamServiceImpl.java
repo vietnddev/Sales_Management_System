@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.ThuocTinhSanPham;
@@ -40,13 +41,13 @@ public class ThuocTinhSanPhamServiceImpl implements ThuocTinhSanPhamService {
     public String save(ThuocTinhSanPham productAttribute){
         productAttributeRepository.save(productAttribute);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới thuộc tính sản phẩm");
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(ThuocTinhSanPham attribute, Integer attributeId) {
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật thuộc tính sản phẩm");
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -58,6 +59,6 @@ public class ThuocTinhSanPhamServiceImpl implements ThuocTinhSanPhamService {
     public String delete(Integer attributeId) {
     	productAttributeRepository.deleteById(attributeId);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa thuộc tính sản phẩm");
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }
