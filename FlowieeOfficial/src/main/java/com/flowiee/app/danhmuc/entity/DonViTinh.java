@@ -2,7 +2,9 @@ package com.flowiee.app.danhmuc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.sanpham.entity.DonHangChiTiet;
 import com.flowiee.app.sanpham.entity.SanPham;
+import com.flowiee.app.storage.entity.Material;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,6 +34,10 @@ public class DonViTinh extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "donViTinh", fetch = FetchType.LAZY)
     private List<SanPham> listSanPham;
+
+    @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
+    private List<Material> listMaterial;
+
 
     @Override
     public String toString() {

@@ -3,15 +3,16 @@ package com.flowiee.app.sanpham.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "product_variant_import")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

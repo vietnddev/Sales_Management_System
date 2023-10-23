@@ -11,7 +11,7 @@ import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.SystemLogService;
-import com.flowiee.app.khotailieu.service.impl.DocumentServiceImpl;
+import com.flowiee.app.storage.service.impl.DocumentServiceImpl;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;

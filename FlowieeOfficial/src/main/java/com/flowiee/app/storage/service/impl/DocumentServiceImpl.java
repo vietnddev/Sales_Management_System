@@ -1,16 +1,16 @@
-package com.flowiee.app.khotailieu.service.impl;
+package com.flowiee.app.storage.service.impl;
 
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.SystemLogService;
-import com.flowiee.app.khotailieu.entity.DocData;
-import com.flowiee.app.khotailieu.entity.Document;
-import com.flowiee.app.khotailieu.model.DocMetaResponse;
-import com.flowiee.app.khotailieu.model.DocumentType;
-import com.flowiee.app.khotailieu.repository.DocumentRepository;
-import com.flowiee.app.khotailieu.service.DocDataService;
-import com.flowiee.app.khotailieu.service.DocumentService;
+import com.flowiee.app.storage.entity.DocData;
+import com.flowiee.app.storage.entity.Document;
+import com.flowiee.app.storage.model.DocMetaResponse;
+import com.flowiee.app.storage.model.DocumentType;
+import com.flowiee.app.storage.repository.DocumentRepository;
+import com.flowiee.app.storage.service.DocDataService;
+import com.flowiee.app.storage.service.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

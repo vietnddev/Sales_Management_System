@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.services;
 
 import com.flowiee.app.base.BaseService;
-import com.flowiee.app.sanpham.entity.Material;
+import com.flowiee.app.storage.entity.Material;
 
 import java.util.List;
 

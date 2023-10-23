@@ -21,6 +21,6 @@ public interface MaterialImportRepository extends JpaRepository<MaterialImport, 
     @Query("from MaterialImport m where m.paidStatus=:paidStatus")
     List<MaterialImport> findByPaidStatus(String paidStatus);
 
-    @Query("from MaterialImport m where m.account.id=:accountId")
+    @Query("from MaterialImport m where m.receivedBy.id=:accountId")
     List<MaterialImport> findByAccountId(Integer accountId);
 }

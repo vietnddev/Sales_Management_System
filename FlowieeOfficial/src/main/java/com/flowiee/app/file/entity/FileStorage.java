@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.khotailieu.entity.Document;
+import com.flowiee.app.storage.entity.Document;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.SanPham;

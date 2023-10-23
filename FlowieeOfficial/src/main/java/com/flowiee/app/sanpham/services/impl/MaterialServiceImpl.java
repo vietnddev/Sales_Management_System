@@ -1,7 +1,7 @@
 package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.sanpham.entity.Material;
+import com.flowiee.app.storage.entity.Material;
 import com.flowiee.app.sanpham.repository.MaterialRepository;
 import com.flowiee.app.sanpham.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
