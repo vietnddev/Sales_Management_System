@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
 import com.flowiee.app.sanpham.repository.VoucherDetailRepository;
 import com.flowiee.app.sanpham.services.VoucherDetailService;
@@ -30,17 +31,32 @@ public class VoucherDetailServiceImpl implements VoucherDetailService {
 
     @Override
     public String save(VoucherDetail voucherDetail) {
+        if (voucherDetail == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         voucherDetailRepository.save(voucherDetail);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(VoucherDetail voucherDetail, Integer voucherDetailId) {
-        return null;
+        if (voucherDetail == null || voucherDetailId == null || voucherDetailId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        voucherDetail.setId(voucherDetailId);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
-        return null;
+        if (entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        VoucherDetail voucherDetail = this.findById(entityId);
+        if (voucherDetail == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        voucherDetailRepository.deleteById(entityId);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }
