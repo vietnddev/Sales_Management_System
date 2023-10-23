@@ -52,4 +52,14 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
         materialHistoryRepository.deleteById(entityId);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
+
+    @Override
+    public List<MaterialHistory> findByMaterialId(Integer materialId) {
+        return materialHistoryRepository.findByMaterialId(materialId);
+    }
+
+    @Override
+    public List<MaterialHistory> findByAction(String action) {
+        return materialHistoryRepository.findByAction(action);
+    }
 }
