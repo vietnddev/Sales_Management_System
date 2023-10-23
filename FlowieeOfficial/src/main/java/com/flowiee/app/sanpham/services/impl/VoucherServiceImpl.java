@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.Voucher;
 import com.flowiee.app.sanpham.entity.VoucherDetail;
@@ -70,7 +71,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public Voucher findById(Integer voucherId) {
-        return null;
+        return voucherRepository.findById(voucherId).get();
     }
 
     @Override
@@ -98,19 +99,32 @@ public class VoucherServiceImpl implements VoucherService {
                     voucherDetailService.save(voucherDetail);
                 }
             }
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
     public String update(Voucher voucher, Integer voucherId) {
-        return null;
+        if (voucher == null || voucherId == null || voucherId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        voucher.setId(voucherId);
+        voucherRepository.save(voucher);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String detele(Integer voucherId) {
-        return null;
+        if (voucherId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        Voucher voucher = this.findById(voucherId);
+        if (voucher == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        voucherRepository.deleteById(voucherId);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {
