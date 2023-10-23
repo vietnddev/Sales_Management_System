@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.sanpham.entity.Items;
 import com.flowiee.app.sanpham.repository.ItemsRepository;
 import com.flowiee.app.sanpham.services.ItemsService;
@@ -30,19 +31,34 @@ public class ItemsServiceImpl implements ItemsService {
 
     @Override
     public String save(Items items) {
+        if (items == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         itemsRepository.save(items);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(Items entity, Integer entityId) {
-        return "OK";
+        if (entity == null || entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        entity.setId(entityId);
+        itemsRepository.save(entity);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer id) {
+        if (id == null || id <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        Items items = this.findById(id);
+        if (items == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         itemsRepository.deleteById(id);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
