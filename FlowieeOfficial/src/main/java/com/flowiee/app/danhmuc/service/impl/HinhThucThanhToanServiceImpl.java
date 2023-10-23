@@ -4,6 +4,7 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.danhmuc.repository.HinhThucThanhToanRepository;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
@@ -45,10 +46,10 @@ public class HinhThucThanhToanServiceImpl implements HinhThucThanhToanService {
     public String save(HinhThucThanhToan hinhThucThanhToan) {
         try {
             hinhThucThanhToanRepository.save(hinhThucThanhToan);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -59,10 +60,10 @@ public class HinhThucThanhToanServiceImpl implements HinhThucThanhToanService {
                 throw new NotFoundException();
             }
             hinhThucThanhToanRepository.save(hinhThucThanhToan);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -73,9 +74,9 @@ public class HinhThucThanhToanServiceImpl implements HinhThucThanhToanService {
         }
         hinhThucThanhToanRepository.deleteById(id);
         if (this.findById(id) == null) {
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
