@@ -1,6 +1,7 @@
 package com.flowiee.app.hethong.service.impl;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.hethong.model.Role;
@@ -72,7 +73,7 @@ public class AccountServiceImpl implements AccountService {
             .ip(FlowieeUtil.ACCOUNT_IP)
             .build();
         systemLogService.writeLog(systemLog);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -87,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
                 .ip(FlowieeUtil.ACCOUNT_IP)
                 .build();
         systemLogService.writeLog(systemLog);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -105,7 +106,7 @@ public class AccountServiceImpl implements AccountService {
                 .build();
             systemLogService.writeLog(systemLog);
         }
-        return  "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
