@@ -1,5 +1,6 @@
 package com.flowiee.app.hethong.service.impl;
 
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.entity.AccountRole;
 import com.flowiee.app.hethong.model.*;
@@ -299,7 +300,7 @@ public class RoleServiceImpl implements RoleService {
         accountRole.setAction(actionKey);
         accountRole.setAccountId(accountId);
         roleRepository.save(accountRole);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -318,7 +319,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public String deleteAllRole(Integer accountId) {
         roleRepository.deleteByAccountId(accountId);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     private FlowieeRole buildFlowieeRole(Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
