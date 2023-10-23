@@ -3,6 +3,7 @@ package com.flowiee.app.sanpham.services.impl;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.GiaSanPham;
@@ -57,14 +58,17 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
 
     @Override
     public String save(GiaSanPham giaSanPham) {
+        if (giaSanPham == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         try {
             giaSanPhamRepository.save(giaSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Thêm mới giá sản phẩm: " + giaSanPham.toString());
             logger.info(GiaSanPhamServiceImpl.class.getName() + ": Thêm mới giá sản phẩm " + giaSanPham.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -91,10 +95,10 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
             String noiDungCapNhat = "Giá mới: " + giaSanPham.getGiaBan();
             systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Cập nhật giá sản phẩm: " + noiDung.toString(), "Giá sau khi cập nhật: " + noiDungCapNhat.toString());
             logger.info(GiaSanPhamServiceImpl.class.getName() + ": Cập nhật giá sản phẩm " + giaSanPham.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
     @Override
@@ -106,6 +110,6 @@ public class GiaSanPhamServiceImpl implements GiaSanPhamService {
         giaSanPhamRepository.deleteById(id);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Xóa giá sản phẩm: " + giaSanPham.toString());
         logger.info(GiaSanPhamServiceImpl.class.getName() + ": Xóa giá sản phẩm " + giaSanPham.toString());
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }
