@@ -86,4 +86,10 @@ public class EndPointUtil {
     public static String DANHMUC_TRANGTHAIGIAOHANG_EXPORT = "/danh-muc/trang-thai-giao-hang/export";
     public static String DANHMUC_TRANGTHAIGIAOHANG_INSERT = "/danh-muc/trang-thai-giao-hang/insert";
     public static String DANHMUC_TRANGTHAIGIAOHANG_VIEW = "/danh-muc/trang-thai-giao-hang";
+
+    public static String STORAGE_MATERIAL_TEMPLATE = "/storage/material/template";
+    public static String STORAGE_MATERIAL_IMPORT = "/storage/material/import";
+    public static String STORAGE_MATERIAL_EXPORT = "/storage/material/export";
+    public static String STORAGE_MATERIAL_INSERT = "/storage/material/insert";
+    public static String STORAGE_MATERIAL_VIEW = "/storage/material";
 }
