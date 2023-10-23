@@ -1,6 +1,7 @@
 package com.flowiee.app.danhmuc.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import com.flowiee.app.danhmuc.repository.TrangThaiDonHangRepository;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
@@ -27,12 +28,15 @@ public class TrangThaiDonHangServiceImpl implements TrangThaiDonHangService {
 
     @Override
     public String save(TrangThaiDonHang trangThaiDonHang) {
+        if (trangThaiDonHang == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         try {
             trangThaiDonHangRepository.save(trangThaiDonHang);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -43,10 +47,10 @@ public class TrangThaiDonHangServiceImpl implements TrangThaiDonHangService {
                 throw new NotFoundException();
             }
             trangThaiDonHangRepository.save(trangThaiDonHang);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -57,10 +61,10 @@ public class TrangThaiDonHangServiceImpl implements TrangThaiDonHangService {
                 throw new NotFoundException();
             }
             trangThaiDonHangRepository.deleteById(id);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
