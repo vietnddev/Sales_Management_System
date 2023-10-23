@@ -1,5 +1,6 @@
 package com.flowiee.app.hethong.service.impl;
 
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.entity.FlowieeImport;
 import com.flowiee.app.hethong.repository.FlowieeImportRepository;
 import com.flowiee.app.hethong.service.FlowieeImportService;
@@ -30,17 +31,33 @@ public class FlowieeImportImpl implements FlowieeImportService {
 
     @Override
     public String save(FlowieeImport flowieeImport) {
+        if (flowieeImport == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         flowieeImportRepository.save(flowieeImport);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(FlowieeImport entity, Integer entityId) {
-        return null;
+        if (entity == null || entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        entity.setId(entityId);
+        flowieeImportRepository.save(entity);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
-        return null;
+        if (entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        FlowieeImport flowieeImport = this.findById(entityId);
+        if (flowieeImport == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        flowieeImportRepository.deleteById(entityId);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }
