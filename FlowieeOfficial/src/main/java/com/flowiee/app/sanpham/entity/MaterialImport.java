@@ -3,6 +3,7 @@ package com.flowiee.app.sanpham.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
+import com.flowiee.app.hethong.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -48,6 +49,10 @@ public class MaterialImport extends BaseEntity implements Serializable {
 
     @Column(name = "received_time")
     private Date receivedTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "received_by", nullable = false)
+    private Account receivedBy;
 
     @Column(name = "note")
     private String note;
