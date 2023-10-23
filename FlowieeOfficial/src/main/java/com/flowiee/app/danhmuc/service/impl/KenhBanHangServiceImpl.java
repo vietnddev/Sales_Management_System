@@ -4,6 +4,7 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.danhmuc.repository.KenhBanHangRepository;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
@@ -45,10 +46,10 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
     public String save(KenhBanHang kenhBanHang) {
         try {
             kenhBanHangRepository.save(kenhBanHang);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -60,10 +61,10 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
             }
             kenhBanHang.setId(id);
             kenhBanHangRepository.save(kenhBanHang);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -74,9 +75,9 @@ public class KenhBanHangServiceImpl implements KenhBanHangService {
         }
         kenhBanHangRepository.deleteById(id);
         if (this.findById(id) == null) {
-            return "OK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
