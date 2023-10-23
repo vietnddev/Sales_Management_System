@@ -4,6 +4,7 @@ import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
 import com.flowiee.app.danhmuc.repository.LoaiTaiLieuRepository;
 import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
@@ -77,7 +78,7 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
         LoaiTaiLieu loaiTaiLieuSaved = loaiTaiLieuRepository.save(loaiTaiLieu);
         systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Thêm mới loại tài liệu: " + loaiTaiLieuSaved.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới loại tài liệu " + loaiTaiLieuSaved.toString());
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -92,9 +93,9 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
             LoaiTaiLieu loaiTaiLieuUpdated = loaiTaiLieuRepository.save(loaiTaiLieu);
             systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Cập nhật loại tài liệu: " + loaiTaiLieuUpdated.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật loại tài liệu " + loaiTaiLieuUpdated.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
@@ -107,9 +108,9 @@ public class LoaiTaiLieuServiceImpl implements LoaiTaiLieuService {
         if (findById(id) == null) {
             systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Xóa loại tài liệu: " + loaiTaiLieuToDelete.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Xóa loại tài liệu " + loaiTaiLieuToDelete.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } else {
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
