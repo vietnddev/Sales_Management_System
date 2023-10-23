@@ -2,10 +2,7 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.common.utils.CurrencyUtil;
-import com.flowiee.app.common.utils.ExcelUtil;
-import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.*;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.common.action.SanPhamAction;
@@ -90,11 +87,11 @@ public class SanPhamServiceImpl implements SanPhamService {
             productsRepository.save(sanPham);
             systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), "Thêm mới sản phẩm: " + sanPham.toString());
             logger.info(SanPhamServiceImpl.class.getName() + ": Thêm mới sản phẩm " + sanPham.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(SanPhamServiceImpl.class.getName() + ": Lỗi khi thêm mới sản phẩm", e.getCause());
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -123,11 +120,11 @@ public class SanPhamServiceImpl implements SanPhamService {
             }
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
             logger.info(SanPhamServiceImpl.class.getName() + ": Cập nhật sản phẩm " + sanPhamBefore.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(SanPhamServiceImpl.class.getName() + ": Lỗi khi cập nhật sản phẩm!", e.getCause());
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -147,11 +144,11 @@ public class SanPhamServiceImpl implements SanPhamService {
             productsRepository.deleteById(id);
             logger.info(SanPhamServiceImpl.class.getName() + ": Xóa sản phẩm " + sanPhamToDelete.toString());
             systemLogService.writeLog(module, SanPhamAction.DELETE_SANPHAM.name(), "Xóa sản phẩm: " + sanPhamToDelete.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(SanPhamServiceImpl.class.getName() + ": Lỗi khi xóa sản phẩm", e.getCause());
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
