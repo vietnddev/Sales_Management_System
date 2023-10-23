@@ -5,13 +5,12 @@ import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.repository.BienTheSanPhamRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.GiaSanPhamService;
-import com.flowiee.app.sanpham.services.SanPhamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,10 +81,10 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             bienTheSanPhamRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới biến thể sản phẩm: " + bienTheSanPham.toString());
             logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + bienTheSanPham.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -99,10 +98,10 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             bienTheSanPhamRepository.deleteById(entityId);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa biến thể sản phẩm: " + bienTheSanPhamToDelete.toString());
             logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Xóa biến thể sản phẩm " + bienTheSanPhamToDelete.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -117,11 +116,11 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
             bienTheSanPhamRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
             logger.info(BienTheSanPhamServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + bienTheSanPhamBefore.toString());
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
@@ -137,10 +136,10 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         try {
             bienTheSanPhamRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!", bienTheSanPham);
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 }
