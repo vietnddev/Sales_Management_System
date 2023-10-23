@@ -107,6 +107,22 @@
               </a>
             </li>
             <li class="nav-item">
+              <a th:href="@{/storage/goods}" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-up fa-rotate-90"></i>
+                <p>
+                  Nhập kho
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a th:href="@{/storage/material}" class="nav-link">
+                <i class="fa-solid fa-scroll nav-icon"></i>
+                <p>
+                  Nguyên vật liệu
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a th:href="@{/danh-muc/loai-tai-lieu}" class="nav-link">
                 <i class="fa-solid fa-file-code nav-icon"></i>
                 <p>
