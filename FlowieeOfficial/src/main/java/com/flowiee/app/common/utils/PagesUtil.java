@@ -22,6 +22,8 @@ public class PagesUtil {
     public static final String PAGE_DONHANG_BANHANG = "/pages/san-pham/ban-hang";
     public static final String PAGE_KHACHHANG = "/pages/san-pham/khach-hang";
     public static final String PAGE_KHACHHANG_CHITIET = "/pages/san-pham/khach-hang-chi-tiet";
+    public static final String PAGE_SANPHAM_SUPPLIER = "/pages/san-pham/supplier";
+    public static final String PAGE_SANPHAM_MATERIAL = "/pages/san-pham/material";
 
     public static final String PAGE_PROFILE = "pages/he-thong/profile";
 
@@ -34,6 +36,7 @@ public class PagesUtil {
     public static final String PAGE_DANHMUC_TRANGTHAI_DONHANG = "/pages/danh-muc/trang-thai-don-hang";
     public static final String PAGE_DANHMUC_MAUSAC = "/pages/danh-muc/loai-mau-sac";
     public static final String PAGE_DANHMUC_KICHCO = "/pages/danh-muc/loai-kich-co";
+    public static final String PAGE_DANHMUC_FABRICTYPE = "/pages/danh-muc/fabric-type";
 
     public static final String PAGE_STORAGE_DASHBOARD = "/pages/kho-tai-lieu/dashboard";
     public static final String PAGE_STORAGE_DOCUMENT = "/pages/kho-tai-lieu/document";
