@@ -2,21 +2,12 @@ package com.flowiee;
 
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.hethong.service.MailService;
-import com.flowiee.app.khotailieu.entity.Document;
-import com.flowiee.app.khotailieu.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 
 @CrossOrigin
 @EnableScheduling
