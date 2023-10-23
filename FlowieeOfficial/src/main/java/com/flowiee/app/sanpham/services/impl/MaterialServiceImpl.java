@@ -49,4 +49,9 @@ public class MaterialServiceImpl implements MaterialService {
         materialRepository.deleteById(entityId);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
+
+    @Override
+    public List<Material> findByCode(String code) {
+        return materialRepository.findByCode(code);
+    }
 }
