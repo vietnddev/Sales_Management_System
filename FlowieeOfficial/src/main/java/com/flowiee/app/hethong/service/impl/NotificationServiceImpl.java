@@ -1,5 +1,6 @@
 package com.flowiee.app.hethong.service.impl;
 
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.entity.Notification;
 import com.flowiee.app.hethong.repository.NotificationRepository;
 import com.flowiee.app.hethong.service.NotificationService;
@@ -39,18 +40,34 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public String save(Notification notification) {
+        if (notification == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         notificationRepository.save(notification);
         logger.info(NotificationServiceImpl.class.getName() + ": Insert notification " + notification.toString());
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(Notification entity, Integer entityId) {
-        return null;
+        if (entity == null || entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        entity.setId(entityId);
+        notificationRepository.save(entity);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
-        return null;
+        if (entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        Notification notification = this.findById(entityId);
+        if (notification == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        notificationRepository.deleteById(entityId);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }
