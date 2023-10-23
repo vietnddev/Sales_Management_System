@@ -42,7 +42,7 @@ public class MaterialImport extends BaseEntity implements Serializable {
     private Float paidAmount;
 
     @Column(name = "pay_status", nullable = false)
-    private String payStatus;
+    private String paidStatus;
 
     @Column(name = "order_time")
     private Date orderTime;
