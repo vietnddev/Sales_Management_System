@@ -23,7 +23,6 @@ public class PagesUtil {
     public static final String PAGE_KHACHHANG = "/pages/san-pham/khach-hang";
     public static final String PAGE_KHACHHANG_CHITIET = "/pages/san-pham/khach-hang-chi-tiet";
     public static final String PAGE_SANPHAM_SUPPLIER = "/pages/san-pham/supplier";
-    public static final String PAGE_SANPHAM_MATERIAL = "/pages/san-pham/material";
 
     public static final String PAGE_PROFILE = "pages/he-thong/profile";
 
@@ -38,10 +37,12 @@ public class PagesUtil {
     public static final String PAGE_DANHMUC_KICHCO = "/pages/danh-muc/loai-kich-co";
     public static final String PAGE_DANHMUC_FABRICTYPE = "/pages/danh-muc/fabric-type";
 
-    public static final String PAGE_STORAGE_DASHBOARD = "/pages/kho-tai-lieu/dashboard";
-    public static final String PAGE_STORAGE_DOCUMENT = "/pages/kho-tai-lieu/document";
-    public static final String PAGE_STORAGE_DOCUMENT_DETAIL = "/pages/kho-tai-lieu/document-detail";
-    public static final String PAGE_STORAGE_DOCTYPE_DETAIL = "/pages/kho-tai-lieu/doctype-detail";
+    public static final String PAGE_STORAGE_DASHBOARD = "/pages/kho/dashboard";
+    public static final String PAGE_STORAGE_DOCUMENT = "/pages/kho/document";
+    public static final String PAGE_STORAGE_DOCUMENT_DETAIL = "/pages/kho/document-detail";
+    public static final String PAGE_STORAGE_DOCTYPE_DETAIL = "/pages/kho/doctype-detail";
+    public static final String PAGE_STORAGE_MATERIAL = "/pages/kho/material";
+
 
     public static final String PAGE_UNAUTHORIZED= "/pages/exception/unauthorized";
     public static final String PAGE_NOT_FOUND = "/pages/exception/not-found";
