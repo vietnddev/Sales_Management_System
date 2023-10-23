@@ -3,6 +3,7 @@ package com.flowiee.app.sanpham.services.impl;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.KenhBanHang;
 import com.flowiee.app.danhmuc.entity.TrangThaiDonHang;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
@@ -98,7 +99,11 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public String save(DonHang entity) {
-        return null;
+        if (entity == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        donHangRepository.save(entity);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -138,10 +143,10 @@ public class DonHangServiceImpl implements DonHangService {
             systemLogService.writeLog(module, DonHangAction.CREATE_DONHANG.name(), "Thêm mới đơn hàng: " + donHang.toString());
             logger.info(DonHangServiceImpl.class.getName() + ": Thêm mới đơn hàng " + donHang.toString());
 
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -154,7 +159,7 @@ public class DonHangServiceImpl implements DonHangService {
         systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật đơn hàng: " + donHang.toString());
         logger.info(DonHangServiceImpl.class.getName() + ": Cập nhật đơn hàng " + donHang.toString());
         donHangRepository.save(donHang);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -166,7 +171,7 @@ public class DonHangServiceImpl implements DonHangService {
         donHangRepository.deleteById(id);
         systemLogService.writeLog(module, DonHangAction.DELETE_DONHANG.name(), "Xóa đơn hàng: " + donHang.toString());
         logger.info(DonHangServiceImpl.class.getName() + ": Xóa đơn hàng " + donHang.toString());
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
