@@ -1,5 +1,6 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.sanpham.entity.VoucherSanPham;
 import com.flowiee.app.sanpham.repository.VoucherSanPhamRepository;
 import com.flowiee.app.sanpham.services.VoucherSanPhamService;
@@ -31,7 +32,7 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
     @Override
     public String save(VoucherSanPham voucherSanPham) {
         voucherSanPhamRepository.save(voucherSanPham);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
             voucherSanPham.setId(id);
             voucherSanPhamRepository.save(voucherSanPham);
         }
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -48,6 +49,6 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
         if (this.findById(entityId) != null) {
             voucherSanPhamRepository.deleteById(entityId);
         }
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }
