@@ -10,7 +10,8 @@ public enum KhoTaiLieuAction {
     COPY_DOCUMENT("Copy tài liệu"),
     DOWNLOAD_DOCUMENT("Download tài liệu"),
     SHARE_DOCUMENT("Chia sẽ tài liệu"),
-    DOCTYPE_CONFIG_DOCUMENT("Cấu hình loại tài liệu");
+    DOCTYPE_CONFIG_DOCUMENT("Cấu hình loại tài liệu"),
+    MANAGEMENT_MATERIAL("Quản lý nguyên vật liệu");
 
 
     KhoTaiLieuAction(String label) {
