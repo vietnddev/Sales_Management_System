@@ -3,6 +3,7 @@ package com.flowiee.app.danhmuc.service.impl;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.entity.LoaiSanPham;
 import com.flowiee.app.danhmuc.repository.LoaiSanPhamRepository;
@@ -46,26 +47,26 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     @Override
     public String save(LoaiSanPham loaiSanPham) {
         if (findByTen(loaiSanPham.getTenLoai()) != null) {
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
         loaiSanPhamRepository.save(loaiSanPham);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(LoaiSanPham loaiSanPham, Integer id) {
         loaiSanPham.setId(id);
         loaiSanPhamRepository.save(loaiSanPham);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer id) {
         loaiSanPhamRepository.deleteById(id);
         if (findById(id) == null){
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } else {
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 

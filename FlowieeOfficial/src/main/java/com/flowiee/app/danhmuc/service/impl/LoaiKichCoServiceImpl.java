@@ -4,6 +4,7 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.repository.LoaiKichCoRepository;
 import com.flowiee.app.danhmuc.service.LoaiKichCoService;
@@ -51,10 +52,10 @@ public class LoaiKichCoServiceImpl implements LoaiKichCoService {
     public String save(LoaiKichCo loaiKichCo) {
         try {
             loaiKichCoRepository.save(loaiKichCo);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -65,10 +66,10 @@ public class LoaiKichCoServiceImpl implements LoaiKichCoService {
                 throw new NotFoundException();
             }
             loaiKichCoRepository.save(loaiKichCo);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -79,9 +80,9 @@ public class LoaiKichCoServiceImpl implements LoaiKichCoService {
         }
         loaiKichCoRepository.deleteById(id);
         if (this.findById(id) == null) {
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Override

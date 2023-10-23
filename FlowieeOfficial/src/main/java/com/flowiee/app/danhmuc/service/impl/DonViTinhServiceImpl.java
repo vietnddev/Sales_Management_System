@@ -4,7 +4,6 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.*;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
-import com.flowiee.app.danhmuc.entity.LoaiKichCo;
 import com.flowiee.app.danhmuc.repository.DonViTinhRepository;
 import com.flowiee.app.danhmuc.service.DonViTinhService;
 import com.flowiee.app.file.entity.FileStorage;
@@ -63,12 +62,15 @@ public class DonViTinhServiceImpl implements DonViTinhService {
 
     @Override
     public String save(DonViTinh donViTinh) {
+        if (donViTinh == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         try {
             donViTinhRepository.save(donViTinh);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -80,10 +82,10 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             }
             donViTinh.setId(id);
             donViTinhRepository.save(donViTinh);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -94,9 +96,9 @@ public class DonViTinhServiceImpl implements DonViTinhService {
         }
         donViTinhRepository.deleteById(id);
         if (this.findById(id) == null) {
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Transactional
@@ -185,11 +187,11 @@ public class DonViTinhServiceImpl implements DonViTinhService {
             notification.setImportId(flowieeImportRepository.findByStartTime(flowieeImport.getStartTime()).getId());
             notificationService.save(notification);
 
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Override

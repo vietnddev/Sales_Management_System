@@ -4,6 +4,7 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.danhmuc.entity.LoaiMauSac;
 import com.flowiee.app.danhmuc.repository.LoaiMauSacRepository;
 import com.flowiee.app.danhmuc.service.LoaiMauSacService;
@@ -45,10 +46,10 @@ public class LoaiMauSacServiceImpl implements LoaiMauSacService {
     public String save(LoaiMauSac loaiMauSac) {
         try {
             loaiMauSacRepository.save(loaiMauSac);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -59,10 +60,10 @@ public class LoaiMauSacServiceImpl implements LoaiMauSacService {
                 throw new NotFoundException();
             }
             loaiMauSacRepository.save(loaiMauSac);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return "NOK";
+            return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -73,9 +74,9 @@ public class LoaiMauSacServiceImpl implements LoaiMauSacService {
         }
         loaiMauSacRepository.deleteById(id);
         if (this.findById(id) == null) {
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         }
-        return "NOK";
+        return TagName.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
