@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.hethong.entity.SystemLog;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.hethong.service.AccountService;
@@ -39,6 +40,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public String save(Cart cart) {
+        if (cart == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
         cartRepository.save(cart);
         return "OK";
     }
