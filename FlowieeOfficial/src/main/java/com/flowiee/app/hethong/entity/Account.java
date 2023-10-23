@@ -9,6 +9,7 @@ import com.flowiee.app.khotailieu.entity.Document;
 import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.DonHangThanhToan;
 import com.flowiee.app.sanpham.entity.KhachHang;
+import com.flowiee.app.sanpham.entity.MaterialImport;
 import lombok.*;
 
 import javax.persistence.*;
@@ -75,7 +76,10 @@ public class Account extends BaseEntity implements Serializable{
     private List<KhachHang> listKhachHang;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<FlowieeImport> listImport;
+    private List<FlowieeImport> listHistoryImportData;
+
+    @OneToMany(mappedBy = "receivedBy", fetch = FetchType.LAZY)
+    private List<MaterialImport> listMaterialImport;
 
     @Transient
     private List<Role> role;
