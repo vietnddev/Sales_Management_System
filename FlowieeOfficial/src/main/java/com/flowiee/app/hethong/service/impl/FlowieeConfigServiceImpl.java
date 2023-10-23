@@ -36,32 +36,35 @@ public class FlowieeConfigServiceImpl implements FlowieeConfigService {
     @Override
     public String save(FlowieeConfig flowieeConfig) {
         flowieeConfigRepository.save(flowieeConfig);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(FlowieeConfig flowieeConfig, Integer id) {
         flowieeConfig.setId(id);
         flowieeConfigRepository.save(flowieeConfig);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer id) {
         flowieeConfigRepository.deleteById(id);
-        return "OK";
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public void defaultConfig() {
-        this.save(new FlowieeConfig(0,TagName.EMAIL_HOST,"Email host", "smtp",0));
-        this.save(new FlowieeConfig(0,TagName.EMAIL_PORT,"Email port", "587",0));
-        this.save(new FlowieeConfig(0,TagName.EMAIL_USERNAME,"Email username", "",0));
-        this.save(new FlowieeConfig(0,TagName.EMAIL_PASSWORD,"Email password", "",0));
-        this.save(new FlowieeConfig(0,TagName.TIMEOUT,"Thời gian timeout", "",0));
-        this.save(new FlowieeConfig(0,TagName.PATH_UPLOAD,"Thư mục lưu file upload", "",0));
-        this.save(new FlowieeConfig(0,TagName.SEND_MAIL_REPORT_DAILY,"Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "false",0));
-        this.save(new FlowieeConfig(0,TagName.MAX_SIZE_UPLOAD,"Dung lượng file tối đa cho phép upload", "",0));
-        this.save(new FlowieeConfig(0,TagName.EXTENSION_ALLOWED_UPLOAD,"Định dạng file được phép upload", "",0));
+        try {
+            this.save(new FlowieeConfig(0,TagName.EMAIL_HOST,"Email host", "smtp",0));
+            this.save(new FlowieeConfig(0,TagName.EMAIL_PORT,"Email port", "587",0));
+            this.save(new FlowieeConfig(0,TagName.EMAIL_USERNAME,"Email username", "",0));
+            this.save(new FlowieeConfig(0,TagName.EMAIL_PASSWORD,"Email password", "",0));
+            this.save(new FlowieeConfig(0,TagName.TIMEOUT,"Thời gian timeout", "",0));
+            this.save(new FlowieeConfig(0,TagName.PATH_UPLOAD,"Thư mục lưu file upload", "",0));
+            this.save(new FlowieeConfig(0,TagName.SEND_MAIL_REPORT_DAILY,"Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "false",0));
+            this.save(new FlowieeConfig(0,TagName.MAX_SIZE_UPLOAD,"Dung lượng file tối đa cho phép upload", "",0));
+            this.save(new FlowieeConfig(0,TagName.EXTENSION_ALLOWED_UPLOAD,"Định dạng file được phép upload", "",0));
+            logger.info(FlowieeConfigServiceImpl.class.getName() + ": setup default config");
+        } catch (Exception e) {}
     }
 }
