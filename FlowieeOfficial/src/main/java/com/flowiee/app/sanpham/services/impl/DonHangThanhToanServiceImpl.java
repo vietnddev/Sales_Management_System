@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.services.impl;
 
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.sanpham.entity.DonHangThanhToan;
 import com.flowiee.app.sanpham.repository.DonHangThanhToanRepository;
 import com.flowiee.app.sanpham.services.DonHangThanhToanService;
@@ -37,7 +38,7 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
         }
         try {
             donHangThanhToanRepository.save(donHangThanhToan);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             return e.getCause().getMessage();
@@ -52,7 +53,7 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
         try {
             donHangThanhToan.setId(id);
             donHangThanhToanRepository.save(donHangThanhToan);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             return e.getCause().getMessage();
@@ -66,7 +67,7 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
         }
         try {
             donHangThanhToanRepository.deleteById(id);
-            return "OK";
+            return TagName.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             return e.getCause().getMessage();
