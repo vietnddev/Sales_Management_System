@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -20,21 +21,18 @@ public class KhachHang extends BaseEntity implements Serializable {
 	@Column(name = "ten_khach_hang", length = 100, nullable = false)
 	private String tenKhachHang;
 
+	@Column(name = "birthday")
+	private Date birthday;
+
 	@Column(name = "gioi_tinh", nullable = false)
 	private boolean gioiTinh;
-
-	@Column(name = "so_dien_thoai", length = 20, nullable = false)
-	private String soDienThoai;
-
-	@Column(name = "email", length = 50, nullable = false)
-	private String email;
-
-	@Column(name = "dia_chi", length = 500, nullable = false)
-	private String diaChi;
 
 	@JsonIgnoreProperties("khachHang")
 	@OneToMany(mappedBy = "khachHang", fetch = FetchType.LAZY)
 	private List<DonHang> listDonHang;
+
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+	private List<CustomerContact> listCustomerContact;
 
 	public KhachHang(int id) {
 		super.id = id;
@@ -45,10 +43,6 @@ public class KhachHang extends BaseEntity implements Serializable {
 		return "KhachHang{" +
 				"id=" + id +
 				", tenKhachHang='" + tenKhachHang + '\'' +
-				", gioiTinh=" + gioiTinh +
-				", soDienThoai='" + soDienThoai + '\'' +
-				", email='" + email + '\'' +
-				", diaChi='" + diaChi + '\'' +
 				'}';
 	}
 }
