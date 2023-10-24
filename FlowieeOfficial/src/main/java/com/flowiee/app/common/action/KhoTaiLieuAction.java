@@ -11,7 +11,9 @@ public enum KhoTaiLieuAction {
     DOWNLOAD_DOCUMENT("Download tài liệu"),
     SHARE_DOCUMENT("Chia sẽ tài liệu"),
     DOCTYPE_CONFIG_DOCUMENT("Cấu hình loại tài liệu"),
-    MANAGEMENT_MATERIAL("Quản lý nguyên vật liệu");
+    MANAGEMENT_MATERIAL("Quản lý nguyên vật liệu"),
+    MANAGEMENT_GOODS_DRAFT("Tạo phiếu nhập kho hàng hóa"),
+    MANAGEMENT_GOODS_APPROVE("Duyệt nhập kho hàng hóa");
 
 
     KhoTaiLieuAction(String label) {
