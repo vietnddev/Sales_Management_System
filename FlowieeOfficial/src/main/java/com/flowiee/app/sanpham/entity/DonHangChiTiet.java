@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Table(name = "don_hang_chi_tiet")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DonHangChiTiet extends BaseEntity implements java.io.Serializable {
-
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "don_hang_id", nullable = false)

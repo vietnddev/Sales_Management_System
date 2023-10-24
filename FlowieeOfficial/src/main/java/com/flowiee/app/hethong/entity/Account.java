@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.hethong.model.Role;
+import com.flowiee.app.sanpham.entity.GoodsImport;
 import com.flowiee.app.storage.entity.DocShare;
 import com.flowiee.app.storage.entity.Document;
 import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.DonHangThanhToan;
 import com.flowiee.app.sanpham.entity.KhachHang;
-import com.flowiee.app.sanpham.entity.MaterialImport;
 import lombok.*;
 
 import javax.persistence.*;
@@ -79,7 +79,7 @@ public class Account extends BaseEntity implements Serializable{
     private List<FlowieeImport> listHistoryImportData;
 
     @OneToMany(mappedBy = "receivedBy", fetch = FetchType.LAZY)
-    private List<MaterialImport> listMaterialImport;
+    private List<GoodsImport> listGoodsImport;
 
     @Transient
     private List<Role> role;
