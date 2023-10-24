@@ -3,9 +3,8 @@ package com.flowiee.app.storage.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
-import com.flowiee.app.sanpham.entity.DonHang;
 import com.flowiee.app.sanpham.entity.MaterialHistory;
-import com.flowiee.app.sanpham.entity.MaterialImport;
+import com.flowiee.app.sanpham.entity.GoodsImport;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,5 +45,5 @@ public class Material extends BaseEntity implements Serializable {
     private List<MaterialHistory> listMaterialHistory;
 
     @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
-    private List<MaterialImport> listMaterialImport;
+    private List<GoodsImport> listGoodsImport;
 }

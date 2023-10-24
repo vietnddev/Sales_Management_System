@@ -194,7 +194,7 @@ public class DonHangServiceImpl implements DonHangService {
                 row.createCell(4).setCellValue(listData.get(i).getTongTienDonHang());
                 row.createCell(5).setCellValue("");
                 row.createCell(6).setCellValue(listData.get(i).getKhachHang().getTenKhachHang());
-                row.createCell(7).setCellValue(listData.get(i).getKhachHang().getDiaChi());
+                row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getDiaChi()
                 row.createCell(8).setCellValue(listData.get(i).getGhiChu());
                 for (int j = 0; j <= 8; j++) {
                     row.getCell(j).setCellStyle(ExcelUtil.setBorder(workbook.createCellStyle()));
