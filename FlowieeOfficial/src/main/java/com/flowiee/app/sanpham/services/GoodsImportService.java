@@ -21,4 +21,6 @@ public interface GoodsImportService extends BaseService<GoodsImport> {
     GoodsImport findDraftImportPresent(Integer createdBy);
 
     GoodsImport createDraftImport();
+
+    String updateStatus(Integer entityId, String status);
 }

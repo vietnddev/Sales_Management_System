@@ -10,6 +10,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,10 +20,6 @@ import java.util.Date;
 @Table(name = "goods_import")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GoodsImport extends BaseEntity implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "material_id")
-    private Material material;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
@@ -61,4 +58,10 @@ public class GoodsImport extends BaseEntity implements Serializable {
 
     @Column(name = "status", nullable = false)
     private String status;
+
+    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    private List<Material> listMaterial;
+
+    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    private List<BienTheSanPham> listBienTheSanPham;
 }

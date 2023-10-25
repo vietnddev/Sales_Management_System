@@ -18,6 +18,10 @@ import java.util.Date;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SanPhamBienTheImport extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goods_import_id")
+    private GoodsImport goodsImport;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id", nullable = false)
     private BienTheSanPham bienTheSanPham;
 

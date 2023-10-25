@@ -12,11 +12,13 @@ import com.flowiee.app.sanpham.services.GoodsImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/storage")
+@RequestMapping("/storage/goods")
 public class GoodsImportController {
     @Autowired
     private AccountService accountService;
@@ -27,7 +29,7 @@ public class GoodsImportController {
     @Autowired
     private KiemTraQuyenModuleKhoTaiLieu kiemTraQuyenModuleKho;
 
-    @GetMapping("/goods")
+    @GetMapping("")
     public ModelAndView loadPage() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
@@ -44,6 +46,45 @@ public class GoodsImportController {
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/reset/{id}")
+    public String clear(@PathVariable("id") Integer draftImportId) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+            goodsImportService.delete(draftImportId);
+            return "redirect:";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/send-approval/{id}")
+    public String sendApproval(@PathVariable("id") Integer importId) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+            goodsImportService.updateStatus(importId, "");
+            return "redirect:";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/approve/{id}")
+    public String approve(@PathVariable("id") Integer importId) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+            goodsImportService.updateStatus(importId, "");
+            return "redirect:";
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
     }
 }

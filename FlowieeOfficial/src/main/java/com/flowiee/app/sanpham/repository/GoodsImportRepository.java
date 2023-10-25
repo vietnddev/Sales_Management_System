@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface GoodsImportRepository extends JpaRepository<GoodsImport, Integer> {
-    @Query("from GoodsImport i where i.material.id=:materialId")
-    List<GoodsImport> findByMaterialId(Integer materialId);
+//    @Query("from GoodsImport i where i.material.id=:materialId")
+//    List<GoodsImport> findByMaterialId(Integer materialId);
 
     @Query("from GoodsImport i where i.supplier.id=:supplierId")
     List<GoodsImport> findBySupplierId(Integer supplierId);

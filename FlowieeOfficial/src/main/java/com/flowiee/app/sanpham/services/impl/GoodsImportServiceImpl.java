@@ -8,16 +8,21 @@ import com.flowiee.app.sanpham.services.GoodsImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class GoodsImportServiceImpl implements GoodsImportService {
     @Autowired
     private GoodsImportRepository goodsImportRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     private static String STATUS_DRAFT = "DRAFT";
-    private static String STATUS_NONAPPROVE = "DRAFT";
-    private static String STATUS_APPROVE = "DRAFT";
+    private static String STATUS_APPROVING = "APPROVING";
+    private static String STATUS_APPROVED = "APPROVED";
+    private static String STATUS_REJECT = "REJECT";
 
     @Override
     public List<GoodsImport> findAll() {
@@ -40,42 +45,80 @@ public class GoodsImportServiceImpl implements GoodsImportService {
 
     @Override
     public String update(GoodsImport entity, Integer entityId) {
-        return null;
+        if (entity == null || entityId == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        if (entityId <= 0 || this.findById(entityId) == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        entity.setId(entityId);
+        goodsImportRepository.save(entity);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
-        return null;
+        if (entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        GoodsImport goodsImport = this.findById(entityId);
+        if (goodsImport == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        goodsImportRepository.deleteById(entityId);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
-
+;
     @Override
     public List<GoodsImport> search(Integer materialId, Integer supplierId) {
-        return null;
+        List<GoodsImport> listData = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        return listData;
     }
 
     @Override
     public List<GoodsImport> findByMaterialId(Integer materialId) {
-        return null;
+        List<GoodsImport> listData = new ArrayList<>();
+        if (materialId != null && materialId >= 0) {
+            //listData = goodsImportRepository.findByMaterialId(materialId);
+        }
+        return listData;
     }
 
     @Override
     public List<GoodsImport> findBySupplierId(Integer supplierId) {
-        return null;
+        List<GoodsImport> listData = new ArrayList<>();
+        if (supplierId != null && supplierId >= 0) {
+            listData = goodsImportRepository.findBySupplierId(supplierId);
+        }
+        return listData;
     }
 
     @Override
     public List<GoodsImport> findByPaymentMethod(String paymentMethod) {
-        return null;
+        List<GoodsImport> listData = new ArrayList<>();
+        if (paymentMethod != null) {
+            listData = goodsImportRepository.findByPaymentMethod(paymentMethod);
+        }
+        return listData;
     }
 
     @Override
     public List<GoodsImport> findByPaidStatus(String paidStatus) {
-        return null;
+        List<GoodsImport> listData = new ArrayList<>();
+        if (paidStatus != null && FlowieeUtil.getPaymentStatusCategory().containsKey(paidStatus)) {
+            listData = goodsImportRepository.findByPaidStatus(paidStatus);
+        }
+        return listData;
     }
 
     @Override
     public List<GoodsImport> findByAccountId(Integer accountId) {
-        return null;
+        List<GoodsImport> listData = new ArrayList<>();
+        if (accountId != null && accountId > 0) {
+            listData = goodsImportRepository.findByReceiveBy(accountId);
+        }
+        return listData;
     }
 
     @Override
@@ -89,5 +132,19 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         goodsImport.setStatus(STATUS_DRAFT);
         goodsImport.setCreatedBy(String.valueOf(FlowieeUtil.ACCOUNT_ID));
         return goodsImport;
+    }
+
+    @Override
+    public String updateStatus(Integer entityId, String status) {
+        if (entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        GoodsImport goodsImport = this.findById(entityId);
+        if (goodsImport == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        goodsImport.setStatus(status);
+        goodsImportRepository.save(goodsImport);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }

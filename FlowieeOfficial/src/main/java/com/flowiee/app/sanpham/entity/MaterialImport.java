@@ -1,27 +1,31 @@
-package com.flowiee.app.storage.entity;
+package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.danhmuc.entity.DonViTinh;
-import com.flowiee.app.sanpham.entity.MaterialHistory;
-import com.flowiee.app.sanpham.entity.GoodsImport;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
-@Entity
-@Table(name = "material")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
+@Table(name = "material_import")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Material extends BaseEntity implements Serializable {
+public class MaterialImport extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
     private GoodsImport goodsImport;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
 
     @Column(name = "code", length = 20)
     private String code;
@@ -36,15 +40,12 @@ public class Material extends BaseEntity implements Serializable {
     @JoinColumn(name = "unit", nullable = false)
     private DonViTinh unit;
 
-    @Column(name = "location")
-    private String location;
+    @Column(name = "unit_price")
+    private Float unitPrice;
+
+    @Column(name = "discount")
+    private Float discount;
 
     @Column(name = "note")
     private String note;
-
-    @Column(name = "status", nullable = false)
-    private boolean status;
-
-    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
-    private List<MaterialHistory> listMaterialHistory;
 }
