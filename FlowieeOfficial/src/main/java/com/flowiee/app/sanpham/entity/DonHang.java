@@ -24,6 +24,18 @@ public class DonHang extends BaseEntity implements Serializable {
 	@Column(name = "ma_don_hang", length = 20, nullable = false)
 	private String maDonHang;
 
+	@Column(name = "receiver_name")
+	private String receiverName;
+
+	@Column(name = "receiver_phone")
+	private String receiverPhone;
+
+	@Column(name = "receiver_email")
+	private String receiverEmail;
+
+	@Column(name = "receiver_address")
+	private String receiverAddress;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "khach_hang_id", nullable = false)
 	private KhachHang khachHang;
