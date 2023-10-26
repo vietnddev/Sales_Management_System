@@ -6,7 +6,7 @@ import com.flowiee.app.sanpham.entity.GoodsImport;
 import java.util.List;
 
 public interface GoodsImportService extends BaseService<GoodsImport> {
-    List<GoodsImport> search(Integer materialId, Integer supplierId);
+    List<GoodsImport> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);
 
     List<GoodsImport> findByMaterialId(Integer materialId);
 

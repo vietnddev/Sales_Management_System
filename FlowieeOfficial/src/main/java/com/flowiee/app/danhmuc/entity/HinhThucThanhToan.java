@@ -36,4 +36,9 @@ public class HinhThucThanhToan extends BaseEntity implements Serializable {
     public String toString() {
         return "HinhThucThanhToan {id=" + id + ", maLoai=" + maLoai +", tenLoai=" + tenLoai + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai + "}";
     }
+
+    public HinhThucThanhToan (Integer id, String name) {
+        super.id = id;
+        this.tenLoai = name;
+    }
 }

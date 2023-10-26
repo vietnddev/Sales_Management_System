@@ -28,6 +28,9 @@ public class DonHangChiTiet extends BaseEntity implements java.io.Serializable {
 	@Column(name = "so_luong", nullable = false)
 	private int soLuong;
 
+	@Column(name = "voucher_code", length = 50)
+	private String voucherCode;
+
 	@Column(name = "ghi_chu", length = 500)
 	private String ghiChu;
 

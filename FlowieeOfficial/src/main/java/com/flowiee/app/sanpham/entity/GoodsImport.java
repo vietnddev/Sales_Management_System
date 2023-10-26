@@ -20,15 +20,12 @@ import java.util.List;
 @Table(name = "goods_import")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GoodsImport extends BaseEntity implements Serializable {
+    @Column(name = "title", nullable = false)
+    private String title;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
-
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Column(name = "unit_price")
-    private Float unitPrice;
 
     @Column(name = "discount")
     private Float discount;
@@ -64,4 +61,22 @@ public class GoodsImport extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
     private List<BienTheSanPham> listBienTheSanPham;
+
+    @Override
+    public String toString() {
+        return "GoodsImport{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", supplier=" + supplier +
+                ", discount=" + discount +
+                ", paymentMethod=" + paymentMethod +
+                ", paidAmount=" + paidAmount +
+                ", paidStatus='" + paidStatus + '\'' +
+                ", orderTime=" + orderTime +
+                ", receivedTime=" + receivedTime +
+                ", receivedBy=" + receivedBy +
+                ", note='" + note + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

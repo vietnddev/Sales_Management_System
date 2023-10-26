@@ -1,15 +1,21 @@
 package com.flowiee.app.sanpham.services.impl;
 
+import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
+import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.sanpham.entity.GoodsImport;
+import com.flowiee.app.sanpham.entity.Supplier;
 import com.flowiee.app.sanpham.repository.GoodsImportRepository;
 import com.flowiee.app.sanpham.services.GoodsImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -70,9 +76,59 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     }
 ;
     @Override
-    public List<GoodsImport> search(Integer materialId, Integer supplierId) {
+    public List<GoodsImport> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
         List<GoodsImport> listData = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
+        sql.append("SELECT i.ID, i.TITLE, s.NAME as SUPPLIER_NAME, pm.TEN_LOAI as PAYMENT_METHOD_NAME, i.PAY_STATUS, a.HO_TEN as RECEIVED_NAME, i.STATUS, ");
+        sql.append("       s.ID as SUPPLIER_ID, pm.ID as PAYMENT_METHOD_ID, a.ID as RECEIVED_ID, ");
+        sql.append("       i.ORDER_TIME, i.RECEIVED_TIME ");
+        sql.append("FROM goods_import i ");
+        sql.append("LEFT JOIN supplier s ON s.ID = i.SUPPLIER_ID ");
+        sql.append("LEFT JOIN dm_hinh_thuc_thanh_toan pm ON pm.ID = i.PAYMENT_METHOD ");
+        sql.append("LEFT JOIN account a ON a.ID = i.RECEIVED_BY ");
+        sql.append("WHERE i.TITLE LIKE '%").append(text != null ? text : "").append("%' ");
+        if (supplierId != null) {
+            sql.append("AND s.ID = ? ");
+        }
+        if (paymentMethod != null) {
+            sql.append("AND pm.ID = ? ");
+        }
+        if (payStatus != null) {
+            sql.append("i.PAY_STATUS = ? ");
+        }
+        if (importStatus != null) {
+            sql.append("i.STATUS = ?");
+        }
+        System.out.println(sql.toString());
+        Query query = entityManager.createNativeQuery(sql.toString());
+        int i = 1;
+        if (supplierId != null) {
+            query.setParameter(i++, supplierId);
+        }
+        if (paymentMethod != null) {
+            query.setParameter(i++, paymentMethod);
+        }
+        if (payStatus != null) {
+            query.setParameter(i++, payStatus);
+        }
+        if (importStatus != null) {
+            query.setParameter(i++, importStatus);
+        }
+        List<Object[]> data = query.getResultList();
+        for (Object[] o : data) {
+            GoodsImport goodsImport = new GoodsImport();
+            goodsImport.setId(Integer.parseInt(o[0].toString()));
+            goodsImport.setTitle(String.valueOf(o[1]));
+            goodsImport.setSupplier(new Supplier(Integer.parseInt(String.valueOf(o[7])), String.valueOf(o[2])));
+            goodsImport.setPaymentMethod(new HinhThucThanhToan(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
+            goodsImport.setPaidStatus(String.valueOf(o[4]));
+            goodsImport.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
+            goodsImport.setStatus(String.valueOf(o[6]));
+            goodsImport.setOrderTime(DateUtil.convertStringToDate(String.valueOf(o[10])));
+            goodsImport.setReceivedTime(DateUtil.convertStringToDate(String.valueOf(o[11])));
+            listData.add(goodsImport);
+        }
+        entityManager.close();
         return listData;
     }
 

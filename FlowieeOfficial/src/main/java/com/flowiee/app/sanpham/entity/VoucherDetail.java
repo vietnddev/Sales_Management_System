@@ -20,7 +20,7 @@ public class VoucherDetail extends BaseEntity implements Serializable {
     @JoinColumn(name = "voucher", nullable = false)
     private Voucher voucher;
 
-    @Column(name = "key_voucher", nullable = false, length = 15)
+    @Column(name = "code", nullable = false, length = 15)
     private String key;
 
     @Column(name = "active_time")
