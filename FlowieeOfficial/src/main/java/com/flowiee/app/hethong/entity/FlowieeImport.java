@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "flowiee_import")
+@Table(name = "entity_import")
 public class FlowieeImport extends BaseEntity {
     @Column(name = "module", nullable = false)
     private String module;

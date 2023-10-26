@@ -31,7 +31,7 @@ public class DonHangThanhToan extends BaseEntity implements Serializable {
     private HinhThucThanhToan hinhThucThanhToan;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nhan_vien", nullable = false)
+    @JoinColumn(name = "cashier", nullable = false)
     private Account thuNgan;
 
     @Column(name = "ghi_chu")

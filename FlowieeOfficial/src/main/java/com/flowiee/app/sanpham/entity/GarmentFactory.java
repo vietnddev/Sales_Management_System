@@ -34,6 +34,6 @@ public class GarmentFactory extends BaseEntity implements Serializable {
     @Column(name = "status")
     private String status;
 
-    @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
-    private List<SanPhamBienTheImport> listProductVariantImport;
+    @OneToMany(mappedBy = "garmentFactory", fetch = FetchType.LAZY)
+    private List<BienTheSanPham> listProductVariant;
 }

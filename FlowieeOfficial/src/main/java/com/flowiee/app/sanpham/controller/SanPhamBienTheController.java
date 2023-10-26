@@ -9,11 +9,11 @@ import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
-import com.flowiee.app.sanpham.entity.GiaSanPham;
+import com.flowiee.app.sanpham.entity.Price;
 import com.flowiee.app.sanpham.entity.ThuocTinhSanPham;
 import com.flowiee.app.sanpham.model.TrangThai;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
-import com.flowiee.app.sanpham.services.GiaSanPhamService;
+import com.flowiee.app.sanpham.services.PriceService;
 import com.flowiee.app.sanpham.services.ThuocTinhSanPhamService;
 import com.flowiee.app.common.authorization.KiemTraQuyenModuleSanPham;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class SanPhamBienTheController {
     @Autowired
     private ThuocTinhSanPhamService thuocTinhSanPhamService;
     @Autowired
-    private GiaSanPhamService giaSanPhamService;
+    private PriceService priceService;
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
@@ -50,12 +50,12 @@ public class SanPhamBienTheController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_BIENTHE);
         modelAndView.addObject("bienTheSanPham", new BienTheSanPham());
         modelAndView.addObject("thuocTinhSanPham", new ThuocTinhSanPham());
-        modelAndView.addObject("giaBanSanPham", new GiaSanPham());
+        modelAndView.addObject("giaBanSanPham", new Price());
         modelAndView.addObject("listThuocTinh", thuocTinhSanPhamService.getAllAttributes(bienTheSanPhamId));
         modelAndView.addObject("bienTheSanPhamId", bienTheSanPhamId);
         modelAndView.addObject("bienTheSanPham", bienTheSanPhamService.findById(bienTheSanPhamId));
         modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(bienTheSanPhamId));
-        modelAndView.addObject("listPrices", giaSanPhamService.findByBienTheSanPhamId(bienTheSanPhamId));
+        modelAndView.addObject("listPrices", priceService.findByBienTheSanPhamId(bienTheSanPhamId));
         FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(bienTheSanPhamId);
         if (imageActive == null) {
             imageActive = new FileStorage();
@@ -74,7 +74,7 @@ public class SanPhamBienTheController {
         bienTheSanPham.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
         bienTheSanPhamService.save(bienTheSanPham);
         //Khởi tạo giá default của giá bán
-        giaSanPhamService.save(GiaSanPham.builder().bienTheSanPham(bienTheSanPham).giaBan(0D).trangThai(true).build());
+        priceService.save(Price.builder().bienTheSanPham(bienTheSanPham).giaBan(0D).trangThai(true).build());
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -108,14 +108,14 @@ public class SanPhamBienTheController {
 
     @PostMapping(value = "/gia-ban/update/{id}")
     public String updateGiaBan(HttpServletRequest request,
-                               @ModelAttribute("giaSanPham") GiaSanPham giaSanPham,
+                               @ModelAttribute("giaSanPham") Price price,
                                @PathVariable("id") int idBienTheSanPham) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenQuanLyGiaBan()) {
             int idGiaBanHienTai = Integer.parseInt(request.getParameter("idGiaBan"));
-            giaSanPhamService.update(giaSanPham, idBienTheSanPham, idGiaBanHienTai);
+            priceService.update(price, idBienTheSanPham, idGiaBanHienTai);
         }
         return "redirect:" + request.getHeader("referer");
     }

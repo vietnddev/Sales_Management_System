@@ -10,7 +10,7 @@ import com.flowiee.app.hethong.service.SystemLogService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.repository.BienTheSanPhamRepository;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
-import com.flowiee.app.sanpham.services.GiaSanPhamService;
+import com.flowiee.app.sanpham.services.PriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
     @Autowired
     private BienTheSanPhamRepository bienTheSanPhamRepository;
     @Autowired
-    private GiaSanPhamService giaSanPhamService;
+    private PriceService priceService;
     @Autowired
     private SystemLogService systemLogService;
 
@@ -45,7 +45,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
     public List<BienTheSanPham> getListVariantOfProduct(int sanPhamId) {
         List<BienTheSanPham> listReturn = new ArrayList<>();
         bienTheSanPhamRepository.findListBienTheOfsanPham(sanPhamId).forEach(bienTheSanPham -> {
-            bienTheSanPham.setGiaSanPham(giaSanPhamService.findGiaHienTaiModel(bienTheSanPham.getId()));
+            bienTheSanPham.setPrice(priceService.findGiaHienTaiModel(bienTheSanPham.getId()));
             listReturn.add(bienTheSanPham);
         });
         return listReturn;
@@ -56,7 +56,7 @@ public class BienTheSanPhamServiceImpl implements BienTheSanPhamService {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();
         }
-        return giaSanPhamService.findGiaHienTai(id);
+        return priceService.findGiaHienTai(id);
     }
 
     @Override

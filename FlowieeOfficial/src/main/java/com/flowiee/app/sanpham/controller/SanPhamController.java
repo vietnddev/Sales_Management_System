@@ -13,7 +13,7 @@ import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
 import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
-import com.flowiee.app.sanpham.entity.GiaSanPham;
+import com.flowiee.app.sanpham.entity.Price;
 import com.flowiee.app.sanpham.entity.SanPham;
 import com.flowiee.app.sanpham.services.*;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -97,7 +97,7 @@ public class SanPhamController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_TONG_QUAN);
         modelAndView.addObject("sanPham", new SanPham());
         modelAndView.addObject("bienTheSanPham", new BienTheSanPham());
-        modelAndView.addObject("giaSanPham", new GiaSanPham());
+        modelAndView.addObject("giaSanPham", new Price());
         modelAndView.addObject("idSanPham", sanPhamId);
         // Load chi tiết thông tin sản phẩm
         modelAndView.addObject("detailProducts", productsService.findById(sanPhamId));
