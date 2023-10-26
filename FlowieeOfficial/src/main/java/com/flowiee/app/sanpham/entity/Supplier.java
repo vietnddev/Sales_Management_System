@@ -2,6 +2,7 @@ package com.flowiee.app.sanpham.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.storage.entity.Material;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,4 +40,10 @@ public class Supplier extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private List<GoodsImport> listGoodsImport;
+
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+    private List<BienTheSanPham> listBienTheSanPham;
+
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+    private List<Material> listMaterial;
 }

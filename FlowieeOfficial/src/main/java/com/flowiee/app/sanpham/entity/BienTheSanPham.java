@@ -53,14 +53,26 @@ public class BienTheSanPham extends BaseEntity implements Serializable {
     @JoinColumn(name = "chat_lieu_vai_id", nullable = false)
     private FabricType fabricType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "garment_factory_id")
+    private GarmentFactory garmentFactory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goods_import_id")
+    private GoodsImport goodsImport;
+
     @Transient
-    private GiaSanPham giaSanPham;
+    private Price price;
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<ThuocTinhSanPham> listThuocTinh;
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
-    private List<GiaSanPham> listGiaBan;
+    private List<Price> listGiaBan;
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<DonHangChiTiet> listDonHangChiTiet;
@@ -70,9 +82,6 @@ public class BienTheSanPham extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
     private List<Items> listItems;
-
-    @OneToMany(mappedBy = "bienTheSanPham", fetch = FetchType.LAZY)
-    private List<SanPhamBienTheImport> listProductVariantImport;
 
     @Override
     public String toString() {
@@ -84,7 +93,7 @@ public class BienTheSanPham extends BaseEntity implements Serializable {
                 ", trangThai='" + trangThai + '\'' +
                 ", loaiMauSac=" + loaiMauSac +
                 ", loaiKichCo=" + loaiKichCo +
-                ", giaSanPham=" + giaSanPham +
+                ", giaSanPham=" + price +
                 '}';
     }
 }
