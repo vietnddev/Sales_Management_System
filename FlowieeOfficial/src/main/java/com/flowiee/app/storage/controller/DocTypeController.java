@@ -1,6 +1,6 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleDanhMuc;
+import com.flowiee.app.authorization.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.utils.EndPointUtil;

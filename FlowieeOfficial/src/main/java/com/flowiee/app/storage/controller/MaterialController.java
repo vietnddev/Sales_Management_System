@@ -1,6 +1,6 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.authorization.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;

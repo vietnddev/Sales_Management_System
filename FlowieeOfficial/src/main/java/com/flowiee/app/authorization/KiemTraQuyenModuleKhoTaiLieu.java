@@ -1,4 +1,4 @@
-package com.flowiee.app.common.authorization;
+package com.flowiee.app.authorization;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.hethong.service.AccountService;

@@ -1,6 +1,6 @@
 package com.flowiee.app.dashboard.controller;
 
-import com.flowiee.app.common.authorization.KiemTraQuyenModuleDashboard;
+import com.flowiee.app.authorization.KiemTraQuyenModuleDashboard;
 import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.dashboard.model.DoanhThuCacNgayTheoThang;
