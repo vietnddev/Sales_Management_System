@@ -1,4 +1,4 @@
-package com.flowiee.app.common.config;
+package com.flowiee.app.authen;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.action.SystemAction;
