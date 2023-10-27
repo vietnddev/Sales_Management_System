@@ -1,6 +1,6 @@
 package com.flowiee.app.sanpham.controller;
 
-import com.flowiee.app.authorization.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.author.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.service.AccountService;

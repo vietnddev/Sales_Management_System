@@ -1,5 +1,6 @@
-package com.flowiee.app.common.config;
+package com.flowiee.app.authen;
 
+import com.flowiee.app.common.config.AccountDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

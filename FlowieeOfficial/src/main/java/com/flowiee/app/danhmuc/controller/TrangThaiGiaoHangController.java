@@ -1,6 +1,6 @@
 package com.flowiee.app.danhmuc.controller;
 
-import com.flowiee.app.authorization.KiemTraQuyenModuleDanhMuc;
+import com.flowiee.app.author.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;

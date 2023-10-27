@@ -1,7 +1,7 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.authorization.KiemTraQuyenModuleDanhMuc;
-import com.flowiee.app.authorization.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.author.KiemTraQuyenModuleDanhMuc;
+import com.flowiee.app.author.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;

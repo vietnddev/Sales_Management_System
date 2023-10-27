@@ -1,6 +1,6 @@
 package com.flowiee.app.hethong.controller;
 
-import com.flowiee.app.authorization.KiemTraQuyenModuleAdministrator;
+import com.flowiee.app.author.KiemTraQuyenModuleAdministrator;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.hethong.entity.FlowieeConfig;

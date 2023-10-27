@@ -1,4 +1,4 @@
-package com.flowiee.app.authorization;
+package com.flowiee.app.author;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.module.SystemModule;

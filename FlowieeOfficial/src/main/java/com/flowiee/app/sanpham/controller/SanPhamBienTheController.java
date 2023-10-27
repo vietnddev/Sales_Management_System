@@ -15,7 +15,7 @@ import com.flowiee.app.sanpham.model.TrangThai;
 import com.flowiee.app.sanpham.services.BienTheSanPhamService;
 import com.flowiee.app.sanpham.services.PriceService;
 import com.flowiee.app.sanpham.services.ThuocTinhSanPhamService;
-import com.flowiee.app.authorization.KiemTraQuyenModuleSanPham;
+import com.flowiee.app.author.KiemTraQuyenModuleSanPham;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
