@@ -3,11 +3,11 @@ The Flowiee Official
 
 Url: http://localhost:8085/login
 
-Frontend:
+Some main technologies are used on the FE side:
 + HTML, CSS, JavaScript
 + JQuery, Bootstrap
 
-Backend:
+Some main technologies are used on the BE side:
 + Java
 + Spring Boot, Spring Security, Spring Data JPA
 + Maven, Thymeleaf, Log4j
