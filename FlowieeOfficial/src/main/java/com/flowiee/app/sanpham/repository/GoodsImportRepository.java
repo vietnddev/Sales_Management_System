@@ -24,6 +24,6 @@ public interface GoodsImportRepository extends JpaRepository<GoodsImport, Intege
     @Query("from GoodsImport i where i.receivedBy.id=:accountId")
     List<GoodsImport> findByReceiveBy(Integer accountId);
 
-    @Query("from GoodsImport i where i.status=:status and i.createdBy.id=:createdBy")
+    @Query("from GoodsImport i where i.status=:status and i.createdBy=:createdBy")
     GoodsImport findDraftGoodsImportPresent(String status, String createdBy);
 }

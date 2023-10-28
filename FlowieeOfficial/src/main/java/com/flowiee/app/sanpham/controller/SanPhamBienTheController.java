@@ -108,7 +108,7 @@ public class SanPhamBienTheController {
 
     @PostMapping(value = "/gia-ban/update/{id}")
     public String updateGiaBan(HttpServletRequest request,
-                               @ModelAttribute("giaSanPham") Price price,
+                               @ModelAttribute("price") Price price,
                                @PathVariable("id") int idBienTheSanPham) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
