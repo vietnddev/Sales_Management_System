@@ -12,6 +12,3 @@ Some main technologies are used on the BE side:
 + Spring Boot, Spring Security, Spring Data JPA
 + Maven, Thymeleaf, Log4j
 + Oracle (about 50 entities), diagram: https://dbdiagram.io/d/64859460722eb77494c1ae83
-
-Tài liệu đặc tả chức năng
-https://docs.google.com/document/d/1q3W15YVfwf5MuP6xgJK67utzsbwyO2tyMqGyQDaEfgU/edit 
