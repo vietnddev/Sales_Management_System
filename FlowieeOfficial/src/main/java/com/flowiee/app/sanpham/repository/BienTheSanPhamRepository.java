@@ -15,4 +15,7 @@ public interface BienTheSanPhamRepository extends JpaRepository <BienTheSanPham,
 
     @Query("from BienTheSanPham b where b.sanPham.id=:sanPhamId and b.loaiMauSac.id=:mauSacId and b.loaiKichCo.id=:kichCoId")
     BienTheSanPham findByMauSacAndKichCo(int sanPhamId, int mauSacId, int kichCoId);
+
+    @Query("from BienTheSanPham b where b.goodsImport.id=:importId")
+    List<BienTheSanPham> findByImportId(Integer importId);
 }

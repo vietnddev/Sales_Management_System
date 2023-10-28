@@ -7,6 +7,7 @@ import com.flowiee.app.sanpham.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,5 +54,14 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public List<Material> findByCode(String code) {
         return materialRepository.findByCode(code);
+    }
+
+    @Override
+    public List<Material> findByImportId(Integer importId) {
+        List<Material> listData = new ArrayList<>();
+        if (importId != null && importId > 0) {
+            listData = materialRepository.findByImportId(importId);
+        }
+        return listData;
     }
 }

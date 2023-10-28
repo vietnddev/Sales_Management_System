@@ -5,6 +5,7 @@ import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.storage.entity.Material;
+import com.flowiee.app.storage.entity.MaterialTemp;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,7 +35,7 @@ public class GoodsImport extends BaseEntity implements Serializable {
     @JoinColumn(name = "payment_method")
     private HinhThucThanhToan paymentMethod;
 
-    @Column(name = "paidAmount")
+    @Column(name = "paid_amount")
     private Float paidAmount;
 
     @Column(name = "pay_status")
@@ -60,7 +61,17 @@ public class GoodsImport extends BaseEntity implements Serializable {
     private List<Material> listMaterial;
 
     @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
-    private List<BienTheSanPham> listBienTheSanPham;
+    private List<BienTheSanPham> listProductVariant;
+
+    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    private List<MaterialTemp> listMaterialTemp;
+
+    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    private List<ProductVariantTemp> listProductVariantTemp;
+
+    public GoodsImport(Integer id) {
+        super.id = id;
+    }
 
     @Override
     public String toString() {

@@ -11,4 +11,6 @@ public interface BienTheSanPhamService extends BaseService<BienTheSanPham> {
     Double getGiaBan(int id);
 
     String updateSoLuong(Integer soLuong, Integer id);
+
+    List<BienTheSanPham> findByImportId(Integer importId);
 }

@@ -3,14 +3,11 @@ package com.flowiee.app.sanpham.controller;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.danhmuc.service.DonViTinhService;
-import com.flowiee.app.danhmuc.service.LoaiKichCoService;
-import com.flowiee.app.danhmuc.service.LoaiMauSacService;
+import com.flowiee.app.danhmuc.service.*;
 import com.flowiee.app.file.entity.FileStorage;
 import com.flowiee.app.file.service.FileStorageService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.danhmuc.service.LoaiSanPhamService;
 import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.BienTheSanPham;
 import com.flowiee.app.sanpham.entity.Price;
@@ -54,6 +51,8 @@ public class SanPhamController {
     private LoaiSanPhamService loaiSanPhamService;
     @Autowired
     private DonViTinhService donViTinhService;
+    @Autowired
+    private FabricTypeService fabricTypeService;
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
@@ -111,6 +110,8 @@ public class SanPhamController {
         modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.getListVariantOfProduct(sanPhamId));
         // Danh sách đơn vị tính từ danh mục hệ thống
         modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
+        // Danh sách chất liệu vải từ danh mục hệ thống
+        modelAndView.addObject("listDmChatLieuVai", fabricTypeService.findAll());
         //List image
         modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
         //Image active

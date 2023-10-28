@@ -7,6 +7,7 @@ import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.sanpham.entity.GoodsImport;
 import com.flowiee.app.sanpham.entity.Supplier;
+import com.flowiee.app.sanpham.model.GoodsImportRequest;
 import com.flowiee.app.sanpham.repository.GoodsImportRepository;
 import com.flowiee.app.sanpham.services.GoodsImportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,32 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 ;
+
+    @Override
+    public String saveDraft(GoodsImportRequest request) {
+        if (request == null || request.getId() == null || request.getId() <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        GoodsImport goodsImport = this.findById(request.getId());
+        if (goodsImport == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        goodsImport.setId(request.getId());
+        goodsImport.setTitle(request.getTitle());
+        goodsImport.setSupplier(new Supplier(request.getSupplierId(), null));
+        goodsImport.setDiscount(request.getDiscount());
+        goodsImport.setPaymentMethod(new HinhThucThanhToan(request.getPaymentMethodId(), null));
+        goodsImport.setPaidAmount(request.getPaidAmount());
+        goodsImport.setPaidStatus(request.getStatus());
+        goodsImport.setOrderTime(request.getOrderTime());
+        goodsImport.setReceivedTime(request.getReceivedTime());
+        goodsImport.setReceivedBy(new Account(request.getReceivedBy()));
+        goodsImport.setNote(request.getNote());
+        goodsImport.setStatus(request.getStatus());
+        goodsImportRepository.save(goodsImport);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
+    }
+
     @Override
     public List<GoodsImport> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
         List<GoodsImport> listData = new ArrayList<>();
@@ -185,8 +212,10 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     @Override
     public GoodsImport createDraftImport() {
         GoodsImport goodsImport = new GoodsImport();
+        goodsImport.setTitle("Title");
         goodsImport.setStatus(STATUS_DRAFT);
         goodsImport.setCreatedBy(String.valueOf(FlowieeUtil.ACCOUNT_ID));
+        goodsImport = goodsImportRepository.save(goodsImport);
         return goodsImport;
     }
 

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface MaterialService extends BaseService<Material> {
     List<Material> findByCode(String code);
+
+    List<Material> findByImportId(Integer importId);
 }

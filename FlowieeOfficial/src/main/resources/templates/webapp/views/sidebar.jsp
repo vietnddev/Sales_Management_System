@@ -284,6 +284,12 @@
                     <p>Kích cỡ</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a th:href="@{/danh-muc/loai-vai}" class="nav-link">
+                    <i class="far nav-icon"></i>
+                    <p>Chất liệu vải</p>
+                  </a>
+                </li>
               </ul>
             </li>
             <li class="nav-item">

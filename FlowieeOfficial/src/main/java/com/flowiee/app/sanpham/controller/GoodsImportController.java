@@ -3,16 +3,23 @@ package com.flowiee.app.sanpham.controller;
 import com.flowiee.app.author.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
+import com.flowiee.app.danhmuc.service.KenhBanHangService;
+import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.NotificationService;
-import com.flowiee.app.sanpham.entity.GoodsImport;
-import com.flowiee.app.sanpham.services.GoodsImportService;
+import com.flowiee.app.sanpham.entity.*;
+import com.flowiee.app.sanpham.model.GoodsImportRequest;
+import com.flowiee.app.sanpham.services.*;
+import com.flowiee.app.storage.entity.Material;
+import com.flowiee.app.storage.entity.MaterialTemp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -23,9 +30,38 @@ public class GoodsImportController {
     @Autowired
     private GoodsImportService goodsImportService;
     @Autowired
+    private SupplierService supplierService;
+    @Autowired
+    private BienTheSanPhamService bienTheSanPhamService;
+    @Autowired
+    private ProductVariantTempService bienTheSanPhamServiceTemp;
+    @Autowired
+    private MaterialService materialService;
+    @Autowired
+    private MaterialTempService materialServiceTemp;
+    @Autowired
     private NotificationService notificationService;
     @Autowired
     private KiemTraQuyenModuleKhoTaiLieu kiemTraQuyenModuleKho;
+    //
+    @Autowired
+    private DonHangService donHangService;
+    @Autowired
+    private ChiTietDonHangService donHangChiTietService;
+    @Autowired
+    private KenhBanHangService kenhBanHangService;
+    @Autowired
+    private HinhThucThanhToanService hinhThucThanhToanService;
+    @Autowired
+    private KhachHangService khachHangService;
+    @Autowired
+    private TrangThaiDonHangService trangThaiDonHangService;
+    @Autowired
+    private DonHangThanhToanService donHangThanhToanService;
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private ItemsService itemsService;
 
     @GetMapping("")
     public ModelAndView loadPage() {
@@ -33,17 +69,75 @@ public class GoodsImportController {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
-            ModelAndView modelAndView = new ModelAndView("");
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DRAFT_IMPORT);
             GoodsImport goodsImportPresent = goodsImportService.findDraftImportPresent(FlowieeUtil.ACCOUNT_ID);
             if (goodsImportPresent == null) {
                 goodsImportPresent = goodsImportService.createDraftImport();
             }
             modelAndView.addObject("goodsImport", new GoodsImport());
             modelAndView.addObject("draftGoodsImport", goodsImportPresent);
+            modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelAndView.addObject("listBienTheSanPhamSelected", bienTheSanPhamServiceTemp.findByImportId(goodsImportPresent.getId()));
+            modelAndView.addObject("listMaterial", materialService.findAll());
+            modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(goodsImportPresent.getId()));
+            modelAndView.addObject("listSupplier", supplierService.findAll());
+            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listTrangThaiThanhToan", FlowieeUtil.getPaymentStatusCategory());
+            modelAndView.addObject("listNhanVien", accountService.findAll());
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            //
+            modelAndView.addObject("listDonHang", donHangService.findAll());modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
+            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
+            modelAndView.addObject("listKhachHang", khachHangService.findAll());
+            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            List<Cart> listCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
+            modelAndView.addObject("listCart", listCart);
             return modelAndView;
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/draft/add-product/{importId}")
+    public String addProductVariantToDraftImport(@PathVariable("importId") Integer importId, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        List<String> listProductVariantId = Arrays.stream(request.getParameterValues("productVariantId")).toList();
+        for (String productVariantId : listProductVariantId) {
+            BienTheSanPham bienTheSanPham = bienTheSanPhamService.findById(Integer.parseInt(productVariantId));
+            bienTheSanPham.setGoodsImport(new GoodsImport(importId));
+            bienTheSanPhamServiceTemp.save(ProductVariantTemp.convertFromProductVariant(bienTheSanPham));
+        }
+        return "redirect:/storage/goods";
+    }
+
+    @PostMapping("/draft/add-material/{importId}")
+    public String addMaterialToDraftImport(@PathVariable("importId") Integer importId, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        List<String> listMaterialId = Arrays.stream(request.getParameterValues("materialId")).toList();
+        for (String materialId : listMaterialId) {
+            Material material = materialService.findById(Integer.parseInt(materialId));
+            material.setGoodsImport(new GoodsImport(importId));
+            materialServiceTemp.save(MaterialTemp.convertFromMaterial(material));
+        }
+        return "redirect:/storage/goods";
+    }
+
+    @GetMapping("/draft/save")
+    public String update(@ModelAttribute("goodsImportRequest") GoodsImportRequest goodsImportRequest, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+            //goodsImportService.update(goodsImport, importId);
+            return "redirect:" + request.getHeader("referer");
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
     }
 

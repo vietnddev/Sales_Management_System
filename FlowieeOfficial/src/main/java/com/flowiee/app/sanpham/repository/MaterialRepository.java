@@ -11,4 +11,7 @@ import java.util.List;
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query("from Material m where m.code=:code")
     List<Material> findByCode(String code);
+
+    @Query("from Material m where m.goodsImport.id=:importId")
+    List<Material> findByImportId(Integer importId);
 }
