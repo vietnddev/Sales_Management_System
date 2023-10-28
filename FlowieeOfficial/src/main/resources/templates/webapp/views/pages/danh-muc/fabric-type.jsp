@@ -37,7 +37,7 @@
                             <div class="card-header">
                                 <div class="row justify-content-between">
                                     <div class="col-4" style="display: flex; align-items: center">
-                                        <h3 class="card-title"><strong>DANH MỤC KÊNH BÁN HÀNG</strong></h3>
+                                        <h3 class="card-title"><strong>DANH MỤC CHẤT LIỆU VẢI</strong></h3>
                                     </div>
                                     <div class="col-6 text-right">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -101,8 +101,8 @@
                                                 <div class="modal fade" th:id="'delete-' + ${list.id}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/danh-muc/don-vi-tinh/delete/{id}(id=${list.id})}"
-                                                                  th:object="${donViTinh}" method="post">
+                                                            <form th:action="@{/danh-muc/loai-vai/delete/{id}(id=${list.id})}"
+                                                                  th:object="${fabricType}" method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Xác nhận xóa đơn vị
                                                                         tính</strong>
@@ -138,8 +138,8 @@
                                                 <div class="modal fade" th:id="'update-' + ${list.id}">
                                                     <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/danh-muc/don-vi-tinh/update/{id}(id=${list.id})}"
-                                                                  th:object="${donViTinh}" method="post">
+                                                            <form th:action="@{/danh-muc/loai-vai/update/{id}(id=${list.id})}"
+                                                                  th:object="${fabricType}" method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Cập nhật đơn vị
                                                                         tính</strong>
@@ -283,8 +283,8 @@
                                 <div class="modal fade" id="insert">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <form th:action="@{/danh-muc/don-vi-tinh/insert}"
-                                                  th:object="${donViTinh}" method="post">
+                                            <form th:action="@{/danh-muc/loai-vai/insert}"
+                                                  th:object="${fabricType}" method="post">
                                                 <div class="modal-header">
                                                     <strong class="modal-title">Thêm mới đơn vị tính</strong>
                                                     <button type="button" class="close" data-dismiss="modal"

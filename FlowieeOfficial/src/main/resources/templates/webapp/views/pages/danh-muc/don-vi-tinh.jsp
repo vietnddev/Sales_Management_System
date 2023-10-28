@@ -37,7 +37,7 @@
                             <div class="card-header">
                                 <div class="row justify-content-between">
                                     <div class="col-4" style="display: flex; align-items: center">
-                                        <h3 class="card-title"><strong>DANH MỤC KÊNH BÁN HÀNG</strong></h3>
+                                        <h3 class="card-title"><strong>DANH MỤC ĐƠN VỊ TÍNH</strong></h3>
                                     </div>
                                     <div class="col-6 text-right">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"

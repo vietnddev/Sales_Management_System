@@ -318,6 +318,14 @@
                                                         <div class="col-12">
                                                             <div class="form-group">
                                                                 <label>
+                                                                    Mã loại
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Mã loại" required
+                                                                       name="maLoai"/>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>
                                                                     Tên loại tài liệu
                                                                 </label>
                                                                 <input type="text" class="form-control"
