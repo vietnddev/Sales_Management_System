@@ -3,6 +3,7 @@ package com.flowiee.app.sanpham.controller;
 import com.flowiee.app.author.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,6 +76,7 @@ public class GoodsImportController {
             if (goodsImportPresent == null) {
                 goodsImportPresent = goodsImportService.createDraftImport();
             }
+            modelAndView.addObject("goodsImportRequest", new GoodsImportRequest());
             modelAndView.addObject("goodsImport", new GoodsImport());
             modelAndView.addObject("draftGoodsImport", goodsImportPresent);
             modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
@@ -81,7 +84,19 @@ public class GoodsImportController {
             modelAndView.addObject("listMaterial", materialService.findAll());
             modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(goodsImportPresent.getId()));
             modelAndView.addObject("listSupplier", supplierService.findAll());
-            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+
+            List<HinhThucThanhToan> listHinhThucThanhToan = new ArrayList<>();
+            if (goodsImportPresent.getPaymentMethod() == null) {
+                listHinhThucThanhToan.add(new HinhThucThanhToan(null, "Chọn hình thức thanh toán"));
+                listHinhThucThanhToan.addAll(hinhThucThanhToanService.findAll());
+            } else {
+                listHinhThucThanhToan.add(goodsImportPresent.getPaymentMethod());
+                List<HinhThucThanhToan> listAfterRemove = hinhThucThanhToanService.findAll();
+                listAfterRemove.remove(goodsImportPresent.getPaymentMethod());
+                listHinhThucThanhToan.addAll(listAfterRemove);
+            }
+            modelAndView.addObject("listHinhThucThanhToan", listHinhThucThanhToan);
+
             modelAndView.addObject("listTrangThaiThanhToan", FlowieeUtil.getPaymentStatusCategory());
             modelAndView.addObject("listNhanVien", accountService.findAll());
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
@@ -128,13 +143,26 @@ public class GoodsImportController {
         return "redirect:/storage/goods";
     }
 
-    @GetMapping("/draft/save")
+    @PostMapping("/draft/save")
     public String update(@ModelAttribute("goodsImportRequest") GoodsImportRequest goodsImportRequest, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
-            //goodsImportService.update(goodsImport, importId);
+            System.out.println("id: " + goodsImportRequest.getId());
+            System.out.println("title: " + goodsImportRequest.getTitle());
+            System.out.println("supplierId: " + goodsImportRequest.getSupplierId());
+            System.out.println("discount: " + goodsImportRequest.getDiscount());
+            System.out.println("pme: " + goodsImportRequest.getPaymentMethodId());
+            System.out.println("amount: " + goodsImportRequest.getPaidAmount());
+            System.out.println("pSts: " + goodsImportRequest.getPaidStatus());
+            //System.out.println(goodsImportRequest.getOrderTime());
+            //System.out.println(goodsImportRequest.getReceivedTime());
+            System.out.println("receivedBy " + goodsImportRequest.getReceivedBy());
+            System.out.println("not " + goodsImportRequest.getNote());
+            System.out.println("sts " + goodsImportRequest.getStatus());
+            System.out.println(" ============ ");
+            goodsImportService.saveDraft(goodsImportRequest);
             return "redirect:" + request.getHeader("referer");
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;

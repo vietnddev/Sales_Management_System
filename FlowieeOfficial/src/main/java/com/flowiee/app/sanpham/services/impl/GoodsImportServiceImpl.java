@@ -93,11 +93,11 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         goodsImport.setPaymentMethod(new HinhThucThanhToan(request.getPaymentMethodId(), null));
         goodsImport.setPaidAmount(request.getPaidAmount());
         goodsImport.setPaidStatus(request.getStatus());
-        goodsImport.setOrderTime(request.getOrderTime());
-        goodsImport.setReceivedTime(request.getReceivedTime());
+        //goodsImport.setOrderTime(request.getOrderTime());
+        //goodsImport.setReceivedTime(request.getReceivedTime());
         goodsImport.setReceivedBy(new Account(request.getReceivedBy()));
         goodsImport.setNote(request.getNote());
-        goodsImport.setStatus(request.getStatus());
+        goodsImport.setStatus(STATUS_DRAFT);
         goodsImportRepository.save(goodsImport);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
