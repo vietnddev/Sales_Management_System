@@ -12,8 +12,8 @@ public class GoodsImportRequest {
     private Integer paymentMethodId;
     private Float paidAmount;
     private String paidStatus;
-    //private Date orderTime;
-    //private Date receivedTime;
+    private Date orderTime;
+    private Date receivedTime;
     private Integer receivedBy;
     private String note;
     private String status;

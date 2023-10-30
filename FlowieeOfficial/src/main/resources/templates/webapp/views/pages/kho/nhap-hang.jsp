@@ -262,6 +262,7 @@
                             <input type="text" class="form-control datetimepicker-input"
                                    data-target="#reservationdatetime_orderTime"
                                    id="orderTime"
+                                   th:value="${draftGoodsImport.orderTime}"
                                    required/>
                             <div class="input-group-append"
                                  data-target="#reservationdatetime_orderTime"
@@ -282,6 +283,7 @@
                             <input type="text" class="form-control datetimepicker-input"
                                    data-target="#reservationdatetime_receivedTime"
                                    id="receivedTime"
+                                   th:value="${draftGoodsImport.receivedTime}"
                                    required/>
                             <div class="input-group-append"
                                  data-target="#reservationdatetime_receivedTime"

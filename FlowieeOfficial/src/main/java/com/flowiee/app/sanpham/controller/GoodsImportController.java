@@ -7,6 +7,7 @@ import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
 import com.flowiee.app.danhmuc.service.HinhThucThanhToanService;
 import com.flowiee.app.danhmuc.service.KenhBanHangService;
 import com.flowiee.app.danhmuc.service.TrangThaiDonHangService;
+import com.flowiee.app.hethong.entity.Account;
 import com.flowiee.app.hethong.service.AccountService;
 import com.flowiee.app.hethong.service.NotificationService;
 import com.flowiee.app.sanpham.entity.*;
@@ -20,9 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/storage/goods")
@@ -83,7 +82,18 @@ public class GoodsImportController {
             modelAndView.addObject("listBienTheSanPhamSelected", bienTheSanPhamServiceTemp.findByImportId(goodsImportPresent.getId()));
             modelAndView.addObject("listMaterial", materialService.findAll());
             modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(goodsImportPresent.getId()));
-            modelAndView.addObject("listSupplier", supplierService.findAll());
+
+            List<Supplier> listSupplier = new ArrayList<>();
+            if (goodsImportPresent.getSupplier() == null) {
+                listSupplier.add(new Supplier(null, "Chọn supplier"));
+                listSupplier.addAll(supplierService.findAll());
+            } else {
+                listSupplier.add(goodsImportPresent.getSupplier());
+                List<Supplier> listSupplierTemp = supplierService.findAll();
+                listSupplierTemp.remove(goodsImportPresent.getSupplier());
+                listSupplier.addAll(listSupplierTemp);
+            }
+            modelAndView.addObject("listSupplier", listSupplier);
 
             List<HinhThucThanhToan> listHinhThucThanhToan = new ArrayList<>();
             if (goodsImportPresent.getPaymentMethod() == null) {
@@ -91,14 +101,36 @@ public class GoodsImportController {
                 listHinhThucThanhToan.addAll(hinhThucThanhToanService.findAll());
             } else {
                 listHinhThucThanhToan.add(goodsImportPresent.getPaymentMethod());
-                List<HinhThucThanhToan> listAfterRemove = hinhThucThanhToanService.findAll();
-                listAfterRemove.remove(goodsImportPresent.getPaymentMethod());
-                listHinhThucThanhToan.addAll(listAfterRemove);
+                List<HinhThucThanhToan> listHinhThucThanhToanTemp = hinhThucThanhToanService.findAll();
+                listHinhThucThanhToanTemp.remove(goodsImportPresent.getPaymentMethod());
+                listHinhThucThanhToan.addAll(listHinhThucThanhToanTemp);
             }
             modelAndView.addObject("listHinhThucThanhToan", listHinhThucThanhToan);
 
-            modelAndView.addObject("listTrangThaiThanhToan", FlowieeUtil.getPaymentStatusCategory());
-            modelAndView.addObject("listNhanVien", accountService.findAll());
+            List<Account> listAccount = new ArrayList<>();
+            if (goodsImportPresent.getReceivedBy() == null) {
+                listAccount.add(new Account(null, null, "Chọn người nhập hàng"));
+                listAccount.addAll(accountService.findAll());
+            } else {
+                listAccount.add(goodsImportPresent.getReceivedBy());
+                List<Account> lístAccountTemp = accountService.findAll();
+                lístAccountTemp.remove(goodsImportPresent.getReceivedBy());
+                listAccount.addAll(lístAccountTemp);
+            }
+            modelAndView.addObject("listNhanVien", listAccount);
+
+            Map<String, String> listTrangThaiThanhToan = new HashMap<>();
+            if (goodsImportPresent.getPaidStatus() == null || goodsImportPresent.getPaidStatus().isEmpty()) {
+                listTrangThaiThanhToan.put(null, "Chọn trạng thái thanh toán");
+                listTrangThaiThanhToan.putAll(FlowieeUtil.getPaymentStatusCategory());
+            } else {
+                listTrangThaiThanhToan.put(goodsImportPresent.getPaidStatus(), FlowieeUtil.getPaymentStatusCategory().get(goodsImportPresent.getPaidStatus()));
+                Map<String, String> listTrangThaiThanhToanTemp = FlowieeUtil.getPaymentStatusCategory();
+                listTrangThaiThanhToanTemp.remove(goodsImportPresent.getPaidStatus());
+                listTrangThaiThanhToan.putAll(listTrangThaiThanhToanTemp);
+            }
+            modelAndView.addObject("listTrangThaiThanhToan", listTrangThaiThanhToan);
+
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             //
             modelAndView.addObject("listDonHang", donHangService.findAll());modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
@@ -149,19 +181,8 @@ public class GoodsImportController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
-            System.out.println("id: " + goodsImportRequest.getId());
-            System.out.println("title: " + goodsImportRequest.getTitle());
-            System.out.println("supplierId: " + goodsImportRequest.getSupplierId());
-            System.out.println("discount: " + goodsImportRequest.getDiscount());
-            System.out.println("pme: " + goodsImportRequest.getPaymentMethodId());
-            System.out.println("amount: " + goodsImportRequest.getPaidAmount());
-            System.out.println("pSts: " + goodsImportRequest.getPaidStatus());
-            //System.out.println(goodsImportRequest.getOrderTime());
-            //System.out.println(goodsImportRequest.getReceivedTime());
-            System.out.println("receivedBy " + goodsImportRequest.getReceivedBy());
-            System.out.println("not " + goodsImportRequest.getNote());
-            System.out.println("sts " + goodsImportRequest.getStatus());
-            System.out.println(" ============ ");
+            System.out.println("getOrderTime " + goodsImportRequest.getOrderTime());
+            System.out.println("getReceivedTime " + goodsImportRequest.getReceivedTime());
             goodsImportService.saveDraft(goodsImportRequest);
             return "redirect:" + request.getHeader("referer");
         } else {

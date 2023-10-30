@@ -88,14 +88,24 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         }
         goodsImport.setId(request.getId());
         goodsImport.setTitle(request.getTitle());
-        goodsImport.setSupplier(new Supplier(request.getSupplierId(), null));
+        if (request.getSupplierId() != null && request.getSupplierId() > 0) {
+            goodsImport.setSupplier(new Supplier(request.getSupplierId(), null));
+        }
+        if (request.getPaymentMethodId() != null && request.getPaymentMethodId() > 0) {
+            goodsImport.setPaymentMethod(new HinhThucThanhToan(request.getPaymentMethodId(), null));
+        }
+        if (request.getReceivedBy() != null && request.getReceivedBy() > 0) {
+            goodsImport.setReceivedBy(new Account(request.getReceivedBy()));
+        }
         goodsImport.setDiscount(request.getDiscount());
-        goodsImport.setPaymentMethod(new HinhThucThanhToan(request.getPaymentMethodId(), null));
         goodsImport.setPaidAmount(request.getPaidAmount());
-        goodsImport.setPaidStatus(request.getStatus());
-        //goodsImport.setOrderTime(request.getOrderTime());
-        //goodsImport.setReceivedTime(request.getReceivedTime());
-        goodsImport.setReceivedBy(new Account(request.getReceivedBy()));
+        goodsImport.setPaidStatus(request.getPaidStatus());
+        if (request.getOrderTime() != null) {
+            goodsImport.setOrderTime(request.getOrderTime());
+        }
+        if (request.getReceivedTime() != null) {
+            goodsImport.setReceivedTime(request.getReceivedTime());
+        }
         goodsImport.setNote(request.getNote());
         goodsImport.setStatus(STATUS_DRAFT);
         goodsImportRepository.save(goodsImport);
