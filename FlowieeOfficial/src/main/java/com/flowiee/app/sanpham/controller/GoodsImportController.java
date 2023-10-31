@@ -1,6 +1,7 @@
 package com.flowiee.app.sanpham.controller;
 
 import com.flowiee.app.author.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.danhmuc.entity.HinhThucThanhToan;
@@ -78,6 +79,8 @@ public class GoodsImportController {
             modelAndView.addObject("goodsImportRequest", new GoodsImportRequest());
             modelAndView.addObject("goodsImport", new GoodsImport());
             modelAndView.addObject("draftGoodsImport", goodsImportPresent);
+            modelAndView.addObject("orderTime", goodsImportPresent.getOrderTime().toString().substring(0, 10));
+            modelAndView.addObject("receivedTime", goodsImportPresent.getReceivedTime().toString().substring(0, 10));
             modelAndView.addObject("listBienTheSanPham", bienTheSanPhamService.findAll());
             modelAndView.addObject("listBienTheSanPhamSelected", bienTheSanPhamServiceTemp.findByImportId(goodsImportPresent.getId()));
             modelAndView.addObject("listMaterial", materialService.findAll());
@@ -181,8 +184,8 @@ public class GoodsImportController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
-            System.out.println("getOrderTime " + goodsImportRequest.getOrderTime());
-            System.out.println("getReceivedTime " + goodsImportRequest.getReceivedTime());
+            goodsImportRequest.setOrderTime(DateUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
+            goodsImportRequest.setReceivedTime(DateUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
             goodsImportService.saveDraft(goodsImportRequest);
             return "redirect:" + request.getHeader("referer");
         } else {

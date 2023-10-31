@@ -46,6 +46,17 @@ public class DateUtil {
         return date;
     }
 
+    public static Date convertStringToDate(String dateString, String pattern) {
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing date: " + e.getMessage());
+        }
+        return date;
+    }
+
     public static Date formatDate(Date date, String pattern) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(pattern);

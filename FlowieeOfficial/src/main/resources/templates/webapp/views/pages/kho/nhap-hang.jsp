@@ -43,8 +43,8 @@
                         <input type="hidden" name="paymentMethodId" id="paymentMethodIdSubmit">
                         <input type="hidden" name="paidAmount" id="paidAmountSubmit">
                         <input type="hidden" name="paidStatus" id="paidStatusSubmit">
-                        <input type="hidden" name="orderTime" id="orderTimeSubmit">
-                        <input type="hidden" name="receivedTime" id="receivedTimeSubmit">
+                        <input type="hidden" name="orderTime_" id="orderTimeSubmit">
+                        <input type="hidden" name="receivedTime_" id="receivedTimeSubmit">
                         <input type="hidden" name="receivedBy" id="receivedBySubmit">
                         <input type="hidden" name="note" id="noteSubmit">
                         <input type="hidden" name="status" id="statusSubmit">
@@ -256,43 +256,15 @@
                     <span class="col-5" style="display: flex; align-items: center; font-weight: bold">
                         Thời gian đặt
                     </span>
-                    <div class="form-group col-sm-7 p-0">
-                        <div class="input-group date" id="reservationdatetime_orderTime"
-                             data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input"
-                                   data-target="#reservationdatetime_orderTime"
-                                   id="orderTime"
-                                   th:value="${draftGoodsImport.orderTime}"
-                                   required/>
-                            <div class="input-group-append"
-                                 data-target="#reservationdatetime_orderTime"
-                                 data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <input class="col-7 form-control" type="date" id="orderTime"
+                           th:value="${orderTime}"/>
                 </div>
-                <div class="form-group row" style="padding-right: 8px; margin-top: -15px; margin-bottom: 0px">
+                <div class="form-group row" style="padding-right: 8px">
                     <span class="col-5" style="display: flex; align-items: center; font-weight: bold">
                         Thời gian nhận
                     </span>
-                    <div class="form-group col-sm-7 p-0">
-                        <div class="input-group date" id="reservationdatetime_receivedTime"
-                             data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input"
-                                   data-target="#reservationdatetime_receivedTime"
-                                   id="receivedTime"
-                                   th:value="${draftGoodsImport.receivedTime}"
-                                   required/>
-                            <div class="input-group-append"
-                                 data-target="#reservationdatetime_receivedTime"
-                                 data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <input class="col-7 form-control" type="date" id="receivedTime"
+                           th:value="${receivedTime}"/>
                 </div>
                 <hr class="mt-0">
                 <div class="form-group row" style="padding-right: 8px">
