@@ -1,15 +1,15 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.author.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.config.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.danhmuc.service.DonViTinhService;
-import com.flowiee.app.hethong.service.AccountService;
-import com.flowiee.app.hethong.service.NotificationService;
+import com.flowiee.app.category.service.DonViTinhService;
+import com.flowiee.app.system.service.AccountService;
+import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.storage.entity.Material;
-import com.flowiee.app.sanpham.services.MaterialService;
+import com.flowiee.app.product.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

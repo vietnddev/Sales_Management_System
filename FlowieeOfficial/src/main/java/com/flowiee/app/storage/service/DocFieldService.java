@@ -1,6 +1,6 @@
 package com.flowiee.app.storage.service;
 
-import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
+import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.storage.entity.DocField;
 
 import java.util.List;

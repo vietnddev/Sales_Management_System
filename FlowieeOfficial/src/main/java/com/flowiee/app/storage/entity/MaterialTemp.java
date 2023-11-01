@@ -2,11 +2,11 @@ package com.flowiee.app.storage.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.danhmuc.entity.DonViTinh;
-import com.flowiee.app.sanpham.entity.GoodsImport;
-import com.flowiee.app.sanpham.entity.MaterialHistory;
-import com.flowiee.app.sanpham.entity.Price;
-import com.flowiee.app.sanpham.entity.Supplier;
+import com.flowiee.app.category.entity.DonViTinh;
+import com.flowiee.app.product.entity.GoodsImport;
+import com.flowiee.app.product.entity.MaterialHistory;
+import com.flowiee.app.product.entity.Price;
+import com.flowiee.app.product.entity.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,10 +1,10 @@
 package com.flowiee.app.storage.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
+import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.hethong.service.SystemLogService;
+import com.flowiee.app.system.service.SystemLogService;
 import com.flowiee.app.storage.entity.DocData;
 import com.flowiee.app.storage.entity.DocField;
 import com.flowiee.app.storage.entity.Document;

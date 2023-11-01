@@ -1,19 +1,18 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.author.KiemTraQuyenModuleDanhMuc;
-import com.flowiee.app.author.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
+import com.flowiee.app.config.KiemTraQuyenModuleKhoTaiLieu;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
-import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
-import com.flowiee.app.danhmuc.service.LoaiTaiLieuService;
-import com.flowiee.app.file.service.FileStorageService;
-import com.flowiee.app.hethong.service.MailService;
-import com.flowiee.app.hethong.service.NotificationService;
+import com.flowiee.app.category.entity.LoaiTaiLieu;
+import com.flowiee.app.category.service.LoaiTaiLieuService;
+import com.flowiee.app.storage.service.FileStorageService;
+import com.flowiee.app.system.service.MailService;
+import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.storage.entity.DocData;
 import com.flowiee.app.storage.entity.DocField;
 import com.flowiee.app.storage.entity.Document;
-import com.flowiee.app.storage.model.CayThuMuc;
 import com.flowiee.app.storage.model.DocMetaResponse;
 import com.flowiee.app.storage.model.DocumentType;
 import com.flowiee.app.storage.repository.DocumentRepository;
@@ -21,9 +20,9 @@ import com.flowiee.app.storage.service.DocDataService;
 import com.flowiee.app.storage.service.DocFieldService;
 import com.flowiee.app.storage.service.DocShareService;
 import com.flowiee.app.storage.service.DocumentService;
-import com.flowiee.app.hethong.service.SystemLogService;
-import com.flowiee.app.hethong.entity.Account;
-import com.flowiee.app.hethong.service.AccountService;
+import com.flowiee.app.system.service.SystemLogService;
+import com.flowiee.app.system.entity.Account;
+import com.flowiee.app.system.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -133,93 +132,6 @@ public class DocumentController {
         }
     }
 
-//    private CayThuMuc chuyenDoiSangCayThuMuc(Document document) {
-//        CayThuMuc cayThuMuc = new CayThuMuc();
-//        cayThuMuc.setId(document.getId());
-//        cayThuMuc.setTenThuMuc(document.getTen());
-//        //cayThuMuc.setListSubThuMuc(new ArrayList<>());
-//
-//        List<Document> subDocuments = documentService.findFolderByParentId(document.getId());
-//        List<CayThuMuc> subCayThuMucList = new ArrayList<>();
-//
-//        if (subDocuments != null) {
-//            for (Document subDocument : subDocuments) {
-//                CayThuMuc subCayThuMuc = chuyenDoiSangCayThuMuc(subDocument);
-//                if (subCayThuMuc != null) {
-//                    subCayThuMucList.add(subCayThuMuc);
-//                } else {
-//                    subCayThuMucList.add(new CayThuMuc());
-//                }
-//            }
-//        }
-//
-//
-//        cayThuMuc.setListSubThuMuc(subCayThuMucList);
-//        return cayThuMuc;
-//    }
-
-//    public List<CayThuMuc> layCayThuMuc() {
-//        List<Document> rootDocuments = documentService.findRootFolder();
-//        List<CayThuMuc> cayThuMucList = new ArrayList<>();
-//
-//        for (Document rootDocument : rootDocuments) {
-//            CayThuMuc cayThuMuc = chuyenDoiSangCayThuMuc(rootDocument);
-//            if (cayThuMuc != null) {
-//                cayThuMucList.add(cayThuMuc);
-//            } else {
-//                cayThuMucList.add(new CayThuMuc());
-//            }
-//        }
-//        return cayThuMucList;
-//    }
-
-    public List<CayThuMuc> buildTree() {
-        List<Document> documents = documentService.findAllFolder();
-
-        // Tạo một map để lưu các cấu trúc cây thư mục dưới dạng key-value
-        Map<Integer, CayThuMuc> map = new HashMap<>();
-
-        // Tạo danh sách gốc cho cây thư mục
-        List<CayThuMuc> roots = new ArrayList<>();
-
-        // Đầu tiên, hãy tạo tất cả các nút (CayThuMuc) từ danh sách tài liệu (documents)
-        for (Document document : documents) {
-            CayThuMuc cayThuMuc = new CayThuMuc();
-            cayThuMuc.setId(document.getId());
-            cayThuMuc.setTenThuMuc(document.getTen());
-            cayThuMuc.setListSubThuMuc(new ArrayList<>()); // Khởi tạo danh sách con trống ban đầu
-            map.put(document.getId(), cayThuMuc);
-
-            // Nếu là thư mục gốc (parentId == 0), thêm vào danh sách gốc
-            if (document.getParentId() == 0) {
-                roots.add(cayThuMuc);
-            }
-        }
-
-        // Sau đó, lặp qua danh sách tài liệu lần nữa để xây dựng cây thư mục
-        for (Document document : documents) {
-            int parentId = document.getParentId();
-
-            // Bỏ qua các thư mục gốc vì chúng đã được thêm vào danh sách gốc
-            if (parentId == 0) {
-                continue;
-            }
-
-            // Lấy CayThuMuc đại diện cho thư mục cha
-            CayThuMuc parentCayThuMuc = map.get(parentId);
-
-            // Nếu thư mục cha không tồn tại (có thể do dữ liệu không hợp lệ), thì bỏ qua thư mục này
-            if (parentCayThuMuc == null) {
-                continue;
-            }
-
-            // Lấy danh sách con của thư mục cha và thêm CayThuMuc hiện tại vào danh sách đó
-            parentCayThuMuc.getListSubThuMuc().add(map.get(document.getId()));
-        }
-
-        return roots;
-    }
-
     @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
         if (!accountService.isLogin()) {
@@ -238,43 +150,6 @@ public class DocumentController {
         if (!kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem() || !docShareService.isShared(documentId)) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
-        ///
-//        List<CayThuMuc> cayThuMuc = new ArrayList<>();
-//
-//        List<Document> listRoot = documentService.findRootDocument();
-//        for (Document docRoot : listRoot) {
-//            CayThuMuc rootFolder = new CayThuMuc();
-//            rootFolder.setId(docRoot.getId());
-//            rootFolder.setTenThuMuc(docRoot.getTen());
-//
-//            List<CayThuMuc> listSub = new ArrayList<>();
-//            List<Document> listSubDoc = documentService.findDocumentByParentId(docRoot.getId());
-//            if (listSubDoc != null) {
-//                for (Document doc : listSubDoc) {
-//                    CayThuMuc subFolder = new CayThuMuc();
-//                    subFolder.setId(doc.getId());
-//                    subFolder.setTenThuMuc(doc.getTen());
-//                    listSub.add(subFolder);
-//                }
-//            }
-//
-//            rootFolder.setListSubThuMuc(listSub);
-//            cayThuMuc.add(rootFolder);
-//
-//
-//        }
-//
-//        System.out.println(cayThuMuc);
-
-        //List<CayThuMuc> listCTM = layCayThuMuc();
-//
-//        List<CayThuMuc> cayThuMucList = cayThuMucService.layCayThuMuc();
-//        model.addAttribute("folders", cayThuMucList);
-
-         List<CayThuMuc> list = buildTree();
-        System.out.println(list);
-
-        ///
         if (document.getLoai().equals(DocumentType.FILE.name())) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT_DETAIL);
             modelAndView.addObject("docDetail", document);
@@ -330,34 +205,6 @@ public class DocumentController {
 
         return new ModelAndView();
     }
-
-//    public Document buildStorageTree(List<Document> storages) {
-//        Map<Integer, Document> storageMap = new HashMap<>();
-//        Document root = null;
-//
-//        // Tạo danh sách thư mục và thêm vào map
-//        for (Document storage : storages) {
-//            storageMap.put(storage.getId(), storage);
-//            if (storage.getParentId() == 0) {
-//                root = storage; // Thư mục gốc
-//            }
-//        }
-//
-//        // Xây dựng cây thư mục
-//        for (Document storage : storages) {
-//            Integer parentStorageId = storage.getParentId();
-//            if (parentStorageId != null) {
-//                Document parentStorage = storageMap.get(parentStorageId);
-//                if (parentStorage != null) {
-//                    parentStorage.addSubStorage(storage);
-//                }
-//            }
-//        }
-//
-//        return root;
-//    }
-
-
 
     //Insert FILE và FOLDER
     @PostMapping("/document/insert")

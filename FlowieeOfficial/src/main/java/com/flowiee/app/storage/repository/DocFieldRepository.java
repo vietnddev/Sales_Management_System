@@ -1,6 +1,6 @@
 package com.flowiee.app.storage.repository;
 
-import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
+import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.storage.entity.DocField;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,7 @@
 package com.flowiee.app.storage.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.danhmuc.entity.LoaiTaiLieu;
+import com.flowiee.app.category.entity.LoaiTaiLieu;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 

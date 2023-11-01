@@ -1,11 +1,9 @@
 package com.flowiee.app.common.utils;
 
-import com.flowiee.app.hethong.entity.Account;
-import org.apache.commons.text.StringEscapeUtils;
+import com.flowiee.app.system.entity.Account;
 
 import java.text.Normalizer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -13,6 +11,8 @@ public class FlowieeUtil {
     public static final Integer SYS_NOTI_ID = 0;
     public static final String ADMINISTRATOR = "admin";
     public static final String PATH_TEMPLATE_EXCEL = "src/main/resources/static/templates/excel";
+
+    public static final String CATEGORY = "";
 
     public static String getMaDonHang() {
         return "F" + DateUtil.now("yyMMddHHmmss");
