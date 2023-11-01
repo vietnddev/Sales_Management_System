@@ -5,5 +5,7 @@ import com.flowiee.app.base.BaseService;
 import java.util.List;
 
 public interface CategoryService extends BaseService<Category> {
-    List<Category> findByType(String categoryType);
+    List<Category> findRootCategory();
+
+    List<Category> findSubCategory(String categoryType);
 }

@@ -11,6 +11,7 @@ public class PagesUtil {
     public static final String PAGE_HETHONG_ROLE = "/pages/he-thong/role";
     public static final String PAGE_HETHONG_CONFIG = "/pages/he-thong/config";
     public static final String PAGE_HETHONG_NOTIFICATION = "/pages/he-thong/notification";
+    public static final String PAGE_HETHONG_CATEGORY = "/pages/he-thong/category";
 
     public static final String PAGE_THUVIEN = "/pages/san-pham/thu-vien-hinh-anh";
     public static final String PAGE_SANPHAM = "/pages/san-pham/san-pham";

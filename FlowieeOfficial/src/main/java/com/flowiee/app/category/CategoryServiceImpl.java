@@ -1,7 +1,9 @@
 package com.flowiee.app.category;
 
+import com.flowiee.app.common.utils.TagName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,28 +20,81 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findById(Integer entityId) {
-        return null;
+        return categoryRepository.findById(entityId).orElse(null);
     }
 
     @Override
     public String save(Category entity) {
-        return null;
+        if (entity == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        categoryRepository.save(entity);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
+    @Transactional
     @Override
     public String update(Category entity, Integer entityId) {
-        return null;
+        if (entity == null || entityId == null || entityId <= 0) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        entity.setId(entityId);
+        categoryRepository.save(entity);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
+    @Transactional
     @Override
     public String delete(Integer entityId) {
-        return null;
+        if (entityId == null || entityId <= 0 || this.findById(entityId) == null) {
+            return TagName.SERVICE_RESPONSE_FAIL;
+        }
+        categoryRepository.deleteById(entityId);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
-    public List<Category> findByType(String categoryType) {
-        List<Category> listData = new ArrayList<>();
+    public List<Category> findRootCategory() {
+        return categoryRepository.findRootCategory();
+    }
 
-        return listData;
+    @Override
+    public List<Category> findSubCategory(String categoryType) {
+        return categoryRepository.findSubCategory(categoryType);
+    }
+
+    private Boolean checkCategoryInUse(Integer categoryId) {
+        Category category = this.findById(categoryId);
+        switch (category.getType()) {
+            case "UNIT":
+                //to do something
+                break;
+            case "FABRICTYPE":
+                //to do something
+                break;
+            case "PAYMETHOD":
+                //to do something
+                break;
+            case "SALESCHANNEL":
+                //to do something
+                break;
+            case "SIZE":
+                // to do something
+                break;
+            case "COLOR":
+                // to do something
+                break;
+            case "PRODUCTTYPE":
+                // to do something
+                break;
+            case "DOCUMENTTYPE":
+                // to do something
+                break;
+            case "ORDERSTATUS":
+                // to do something
+                break;
+        }
+
+        return true;
     }
 }

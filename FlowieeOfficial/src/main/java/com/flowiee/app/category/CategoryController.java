@@ -2,8 +2,6 @@ package com.flowiee.app.category;
 
 import com.flowiee.app.category.entity.DonViTinh;
 import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.utils.EndPointUtil;
-import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
@@ -11,16 +9,14 @@ import com.flowiee.app.system.service.AccountService;
 import com.flowiee.app.system.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Controller("/category")
+@Controller
+@RequestMapping("/category")
 public class CategoryController {
     @Autowired
     private AccountService accountService;
@@ -31,12 +27,27 @@ public class CategoryController {
     @Autowired
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
 
-    @GetMapping("/{type}")
-    public ModelAndView findAll(@PathVariable("type") String categoryType) {
+    @GetMapping("")
+    public ModelAndView viewRootCategory() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        ModelAndView modelAndView = new ModelAndView();
+        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
+            modelAndView.addObject("category", new Category());
+            modelAndView.addObject("listCategory", categoryService.findRootCategory());
+            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            return modelAndView;
+        } else {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/{type}")
+    public ModelAndView viewSubCategory(@PathVariable("type") String categoryType) {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
             switch (categoryType) {
                 case "unit":
@@ -67,17 +78,16 @@ public class CategoryController {
                     categoryType = "ORDERSTATUS";
                     break;
             }
-            List<Category> listCategory = categoryService.findByType(categoryType);
-
-            modelAndView.addObject(PagesUtil.PAGE_DANHMUC_DONVITINH);
+            List<Category> listCategory = categoryService.findSubCategory(categoryType);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", listCategory);
             modelAndView.addObject("categoryType", categoryType);
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            return modelAndView;
         } else {
-            modelAndView.addObject(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
-        return modelAndView;
     }
 
     @PostMapping("/{type}/insert")
@@ -128,7 +138,7 @@ public class CategoryController {
         if (id <= 0) {
             throw new BadRequestException();
         }
-        donViTinhService.update(donViTinh, id);
+        //donViTinhService.update(donViTinh, id);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -137,7 +147,7 @@ public class CategoryController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        donViTinhService.delete(id);
+        //donViTinhService.delete(id);
         return "redirect:" + request.getHeader("referer");
     }
 }

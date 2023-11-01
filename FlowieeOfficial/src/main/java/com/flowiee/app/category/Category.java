@@ -33,6 +33,9 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@Column(name = "note", length = 255)
 	private String note;
 
+	@Column(name = "endpoint", length = 50)
+	private String endpoint;
+
 	@Column(name = "is_default", length = 1, nullable = false)
 	private String ísDefault;
 
