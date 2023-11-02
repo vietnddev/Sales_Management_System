@@ -71,7 +71,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         List<Float> listDoanhThu = new ArrayList<>();
         for (int i = 0; i < listData.get(0).length; i++) {
-            listDoanhThu.add(Float.parseFloat(String.valueOf(listData.get(0)[i])));
+            listDoanhThu.add(Float.parseFloat(String.valueOf(listData.get(0)[i] != null ? listData.get(0)[i] : 0)));
         }
 
         DoanhThuCacThangTheoNam dataReturn = new DoanhThuCacThangTheoNam();
