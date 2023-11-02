@@ -228,6 +228,14 @@
               </a>
             </li>
             <li class="nav-item">
+              <a th:href="@{/system/category}" class="nav-link">
+                <i class="fa-solid fa-list nav-icon"></i>
+                <p>
+                  System category
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fa-solid fa-list"></i>
                 <p>

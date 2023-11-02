@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@RequestMapping("/category")
+@RequestMapping("/system/category")
 public class CategoryController {
     @Autowired
     private AccountService accountService;
@@ -49,36 +51,7 @@ public class CategoryController {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
-            switch (categoryType) {
-                case "unit":
-                    categoryType = "UNIT";
-                    break;
-                case "fabric-type":
-                    categoryType = "FABRICTYPE";
-                    break;
-                case "pay-method":
-                    categoryType = "PAYMETHOD";
-                    break;
-                case "sales-channel":
-                    categoryType = "SALESCHANNEL";
-                    break;
-                case "size":
-                    categoryType = "SIZE";
-                    break;
-                case "color":
-                    categoryType = "COLOR";
-                    break;
-                case "product-type":
-                    categoryType = "PRODUCTTYPE";
-                    break;
-                case "document-type":
-                    categoryType = "DOCUMENTTYPE";
-                    break;
-                case "order-status":
-                    categoryType = "ORDERSTATUS";
-                    break;
-            }
-            List<Category> listCategory = categoryService.findSubCategory(categoryType);
+            List<Category> listCategory = categoryService.findSubCategory(getCategoryType(categoryType));
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", listCategory);
@@ -95,36 +68,7 @@ public class CategoryController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        switch (categoryType) {
-            case "unit":
-                categoryType = "UNIT";
-                break;
-            case "fabric-type":
-                categoryType = "FABRICTYPE";
-                break;
-            case "pay-method":
-                categoryType = "PAYMETHOD";
-                break;
-            case "sales-channel":
-                categoryType = "SALESCHANNEL";
-                break;
-            case "size":
-                categoryType = "SIZE";
-                break;
-            case "color":
-                categoryType = "COLOR";
-                break;
-            case "product-type":
-                categoryType = "PRODUCTTYPE";
-                break;
-            case "document-type":
-                categoryType = "DOCUMENTTYPE";
-                break;
-            case "order-status":
-                categoryType = "ORDERSTATUS";
-                break;
-        }
-        category.setType(categoryType);
+        category.setType(getCategoryType(categoryType));
         categoryService.save(category);
         return "redirect:";
     }
@@ -149,5 +93,23 @@ public class CategoryController {
         }
         //donViTinhService.delete(id);
         return "redirect:" + request.getHeader("referer");
+    }
+
+    private String getCategoryType(String typeInput) {
+        return categoryList().get(typeInput);
+    }
+
+    private Map<String, String> categoryList() {
+        Map<String, String> map = new HashMap<>();
+        map.put("unit", "UNIT");
+        map.put("pay-method", "PAYMETHOD");
+        map.put("fabric-type", "FABRICTYPE");
+        map.put("sales-channel", "SALESCHANNEL");
+        map.put("size", "SIZE");
+        map.put("color", "COLOR");
+        map.put("product-type", "PRODUCTTYPE");
+        map.put("document-type", "DOCUMENTTYPE");
+        map.put("order-status", "ORDERSTATUS");
+        return map;
     }
 }
