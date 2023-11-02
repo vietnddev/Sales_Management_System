@@ -1,11 +1,15 @@
 package com.flowiee.app.product.controller;
 
+import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.category.service.*;
 import com.flowiee.app.product.entity.Product;
+import com.flowiee.app.product.entity.ProductAttribute;
 import com.flowiee.app.product.entity.ProductVariant;
+import com.flowiee.app.product.model.TrangThai;
 import com.flowiee.app.storage.entity.FileStorage;
 import com.flowiee.app.storage.service.FileStorageService;
 import com.flowiee.app.system.service.AccountService;
@@ -56,16 +60,20 @@ public class ProductController {
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private PriceService priceService;
+    @Autowired
     private NotificationService notificationService;
     @Autowired
-    private KiemTraQuyenModuleSanPham kiemTraQuyenModule;
+    private KiemTraQuyenModuleSanPham validateRole;
 
     @GetMapping(value = "")
-    public ModelAndView getAllProducts() {
+    public ModelAndView viewAllProducts() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModule.kiemTraQuyenXem()) {
+        if (validateRole.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
             modelAndView.addObject("sanPham", new Product());
             modelAndView.addObject("listSanPham", productsService.findAll());
@@ -73,13 +81,13 @@ public class ProductController {
             modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
             modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            if (kiemTraQuyenModule.kiemTraQuyenThemMoi()) {
+            if (validateRole.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
+            if (validateRole.kiemTraQuyenCapNhat()) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (kiemTraQuyenModule.kiemTraQuyenXoa()) {
+            if (validateRole.kiemTraQuyenXoa()) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return modelAndView;
@@ -89,7 +97,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{id}")
-    public ModelAndView getDetailProduct(@PathVariable("id") int sanPhamId) {
+    public ModelAndView viewGeneralProduct(@PathVariable("id") Integer sanPhamId) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -121,8 +129,32 @@ public class ProductController {
         return modelAndView;
     }
 
+    @GetMapping(value = "/variant/{id}")
+    public ModelAndView viewDetailProduct(@PathVariable("id") Integer bienTheSanPhamId) {
+        // Show trang chi tiết của biến thể
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_BIENTHE);
+        modelAndView.addObject("bienTheSanPham", new ProductVariant());
+        modelAndView.addObject("thuocTinhSanPham", new ProductAttribute());
+        modelAndView.addObject("giaBanSanPham", new Price());
+        modelAndView.addObject("listThuocTinh", productAttributeService.getAllAttributes(bienTheSanPhamId));
+        modelAndView.addObject("bienTheSanPhamId", bienTheSanPhamId);
+        modelAndView.addObject("bienTheSanPham", productVariantService.findById(bienTheSanPhamId));
+        modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(bienTheSanPhamId));
+        modelAndView.addObject("listPrices", priceService.findByBienTheSanPhamId(bienTheSanPhamId));
+        FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(bienTheSanPhamId);
+        if (imageActive == null) {
+            imageActive = new FileStorage();
+        }
+        modelAndView.addObject("imageActive", imageActive);
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+        return modelAndView;
+    }
+
     @PostMapping(value = "/insert")
-    public String insertProduct(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
+    public String insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -130,9 +162,31 @@ public class ProductController {
         return "redirect:" + request.getHeader("referer");
     }
 
+    @PostMapping(value = "/variant/insert")
+    public String insertProductVariant(HttpServletRequest request, @ModelAttribute("bienTheSanPham") ProductVariant productVariant) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        productVariant.setTrangThai(TrangThai.KINH_DOANH.name());
+        productVariant.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
+        productVariantService.save(productVariant);
+        //Khởi tạo giá default của giá bán
+        priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).trangThai(true).build());
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @PostMapping(value = "/attribute/insert")
+    public String insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        productAttributeService.save(productAttribute);
+        return "redirect:" + request.getHeader("referer");
+    }
+
     @Transactional
     @PostMapping(value = "/update/{id}")
-    public String updateProduct(HttpServletRequest request, @ModelAttribute("sanPham") Product product, @PathVariable("id") int id) {
+    public String updateProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product, @PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -145,9 +199,35 @@ public class ProductController {
         return "redirect:" + request.getHeader("referer");
     }
 
+    @PostMapping(value = "/variant/update/{id}")
+    public String updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer id) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (productVariantService.findById(id) != null) {
+            //
+            System.out.println("Update successfully");
+        } else {
+            System.out.println("Record not found!");
+        }
+        return "redirect:" + request.getHeader("referer");
+    }
+
     @Transactional
+    @PostMapping(value = "/attribute/update/{id}")
+    public String updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
+                                  @PathVariable("id") Integer id,
+                                  HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        attribute.setId(id);
+        productAttributeService.update(attribute, id);
+        return "redirect:" + request.getHeader("referer");
+    }
+
     @PostMapping(value = "/delete/{id}")
-    public String deleteProduct(HttpServletRequest request, @PathVariable("id") int id) {
+    public String deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -160,10 +240,39 @@ public class ProductController {
         return "redirect:" + request.getHeader("referer");
     }
 
+    @PostMapping(value = "/variant/delete/{id}")
+    public String deleteProductVariant(HttpServletRequest request, @PathVariable("variantID") Integer variantID) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (productVariantService.findById(variantID) != null) {
+            productVariantService.delete(variantID);
+            System.out.println("Delete successfully");
+        } else {
+            System.out.println("Record not found!");
+        }
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @PostMapping(value = "/attribute/delete/{id}")
+    public String deleteAttribute(@ModelAttribute("attribute") ProductAttribute attribute,
+                                  @PathVariable("id") Integer attributeId,
+                                  HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (productAttributeService.findById(attributeId) != null) {
+            productAttributeService.delete(attributeId);
+            return "redirect:" + request.getHeader("referer");
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
     @PostMapping(value = "/active-image/{sanPhamId}")
-    public String activeProduct(HttpServletRequest request,
-                                @PathVariable("sanPhamId") Integer sanPhamId,
-                                @RequestParam("imageId") Integer imageId) {
+    public String activeImageOfProductOriginal(HttpServletRequest request,
+                                               @PathVariable("sanPhamId") Integer sanPhamId,
+                                               @RequestParam("imageId") Integer imageId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -174,12 +283,40 @@ public class ProductController {
         return "redirect:" + request.getHeader("referer");
     }
 
+    @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
+    public String activeImageOfProductVariant(HttpServletRequest request,
+                                              @PathVariable("sanPhamBienTheId") Integer sanPhamBienTheId,
+                                              @RequestParam("imageId") Integer imageId) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (sanPhamBienTheId == null || sanPhamBienTheId <= 0 || imageId == null || imageId <= 0) {
+            throw new NotFoundException();
+        }
+        fileStorageService.setImageActiveOfBienTheSanPham(sanPhamBienTheId, imageId);
+        return "redirect:" + request.getHeader("referer");
+    }
+
+    @PostMapping(value = "/gia-ban/update/{id}")
+    public String updateProductPrice(HttpServletRequest request,
+                                     @ModelAttribute("price") Price price,
+                                     @PathVariable("id") Integer idBienTheSanPham) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (validateRole.kiemTraQuyenQuanLyGiaBan()) {
+            int idGiaBanHienTai = Integer.parseInt(request.getParameter("idGiaBan"));
+            priceService.update(price, idBienTheSanPham, idGiaBanHienTai);
+        }
+        return "redirect:" + request.getHeader("referer");
+    }
+
     @GetMapping("/export")
     public ResponseEntity<?> exportData() {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
+        if (validateRole.kiemTraQuyenExport()) {
             byte[] dataExport = productsService.exportData(null);
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
