@@ -54,17 +54,17 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> findDocumentByParentId(int parentId) {
+    public List<Document> findDocumentByParentId(Integer parentId) {
         return documentRepository.findListDocumentByParentId(parentId);
     }
 
     @Override
-    public List<Document> findFolderByParentId(int parentId) {
+    public List<Document> findFolderByParentId(Integer parentId) {
         return documentRepository.findListFolderByParentId(parentId);
     }
 
     @Override
-    public List<Document> findFileByParentId(int parentId) {
+    public List<Document> findFileByParentId(Integer parentId) {
         return documentRepository.findListFileByParentId(parentId);
     }
 
@@ -74,7 +74,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document findById(int id) {
+    public Document findById(Integer id) {
         return documentRepository.findById(id).orElse(null);
     }
 
@@ -86,7 +86,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public String update(Document data, int documentId) {
+    public String update(Document data, Integer documentId) {
         Document document = this.findById(documentId);
         if (document != null) {
             document.setTen(data.getTen());
@@ -100,12 +100,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public String updateMetadata(Integer[] docDataIds, String[] docDataValues, int documentId) {
+    public String updateMetadata(Integer[] docDataIds, String[] docDataValues, Integer documentId) {
         Document document = this.findById(documentId);
         if (document == null) {
             throw new BadRequestException();
         }
-        for (int i = 0; i < docDataIds.length; i++) {
+        for (Integer i = 0; i < docDataIds.length; i++) {
             DocData docData = docDataService.findById(docDataIds[i]);
             if (docData != null) {
                 docData.setNoiDung(docDataValues[i]);
@@ -119,7 +119,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Transactional
     @Override
-    public String delete(int id) {
+    public String delete(Integer id) {
         Document document = this.findById(id);
         if (document != null) {
             documentRepository.deleteById(id);
@@ -132,7 +132,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocMetaResponse> getMetadata(int documentId) {
+    public List<DocMetaResponse> getMetadata(Integer documentId) {
         List<DocMetaResponse> listReturn = new ArrayList<>();
 
         Query result = entityManager.createQuery("SELECT d.id, d.noiDung, f.tenField, f.loaiField, f.batBuocNhap " +
@@ -156,46 +156,8 @@ public class DocumentServiceImpl implements DocumentService {
         return listReturn;
     }
 
-//    @Override
-//    public void getCayThuMucSTG() {
-//        List<Document> listThuMuc = documentRepository.findListFolder(DocumentType.FOLDER.name());
-//
-//        // Xây dựng cây thư mục và hiển thị
-//        Document root = buildStorageTree(listThuMuc);
-//        displayStorageTree(root, "");
-//    }
-
-//    public static Document buildStorageTree(List<Document> storages) {
-//        Map<Integer, Document> storageMap = new HashMap<>();
-//        Document root = null;
-//
-//        // Tạo danh sách thư mục và thêm vào map
-//        for (Document storage : storages) {
-//            storageMap.put(storage.getId(), storage);
-//            if (storage.getParentId() == 0) {
-//                root = storage; // Thư mục gốc
-//            }
-//        }
-//
-//        // Xây dựng cây thư mục
-//        for (Document storage : storages) {
-//            Integer parentStorageId = storage.getParentId();
-//            if (parentStorageId != null) {
-//                Document parentStorage = storageMap.get(parentStorageId);
-//                if (parentStorage != null) {
-//                    parentStorage.addSubStorage(storage);
-//                }
-//            }
-//        }
-//
-//        return root;
-//    }
-
-    // Hiển thị cây thư mục
-//    public static void displayStorageTree(Document storage, String indent) {
-//        System.out.println(indent + storage.getTen());
-//        for (Document subStorage : storage.getSubThuMuc()) {
-//            displayStorageTree(subStorage, indent + "    ");
-//        }
-//    }
+    @Override
+    public List<Document> findByDoctype(Integer docTypeId) {
+        return documentRepository.findDocumentByDocTypeId(docTypeId);
+    }
 }

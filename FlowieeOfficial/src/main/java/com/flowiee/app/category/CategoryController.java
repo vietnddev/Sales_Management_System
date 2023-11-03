@@ -1,7 +1,7 @@
 package com.flowiee.app.category;
 
-import com.flowiee.app.category.entity.DonViTinh;
 import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/system/category")
@@ -51,7 +49,7 @@ public class CategoryController {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
-            List<Category> listCategory = categoryService.findSubCategory(getCategoryType(categoryType));
+            List<Category> listCategory = categoryService.findSubCategory(CategoryUtil.getCategoryType(categoryType));
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", listCategory);
@@ -68,48 +66,30 @@ public class CategoryController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        category.setType(getCategoryType(categoryType));
+        category.setType(CategoryUtil.getCategoryType(categoryType));
         categoryService.save(category);
         return "redirect:";
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute("donViTinh") DonViTinh donViTinh,
-                         @PathVariable("id") int id, HttpServletRequest request) {
+    public String update(@ModelAttribute("category") Category category,
+                         @PathVariable("id") Integer categoryId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (id <= 0) {
+        if (categoryId <= 0) {
             throw new BadRequestException();
         }
-        //donViTinhService.update(donViTinh, id);
+        categoryService.update(category, categoryId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") int id, HttpServletRequest request) {
+    public String delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        //donViTinhService.delete(id);
+        categoryService.delete(categoryId);
         return "redirect:" + request.getHeader("referer");
-    }
-
-    private String getCategoryType(String typeInput) {
-        return categoryList().get(typeInput);
-    }
-
-    private Map<String, String> categoryList() {
-        Map<String, String> map = new HashMap<>();
-        map.put("unit", "UNIT");
-        map.put("pay-method", "PAYMETHOD");
-        map.put("fabric-type", "FABRICTYPE");
-        map.put("sales-channel", "SALESCHANNEL");
-        map.put("size", "SIZE");
-        map.put("color", "COLOR");
-        map.put("product-type", "PRODUCTTYPE");
-        map.put("document-type", "DOCUMENTTYPE");
-        map.put("order-status", "ORDERSTATUS");
-        return map;
     }
 }

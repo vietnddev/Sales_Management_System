@@ -1,17 +1,24 @@
 package com.flowiee.app.category;
 
+import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.product.services.ProductService;
+import com.flowiee.app.storage.entity.Document;
+import com.flowiee.app.storage.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private DocumentService documentService;
 
     @Override
     public List<Category> findAll() {
@@ -63,38 +70,27 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findSubCategory(categoryType);
     }
 
-    private Boolean checkCategoryInUse(Integer categoryId) {
+    private Boolean categoryInUse(Integer categoryId) {
         Category category = this.findById(categoryId);
-        switch (category.getType()) {
-            case "UNIT":
-                //to do something
-                break;
-            case "FABRICTYPE":
-                //to do something
-                break;
-            case "PAYMETHOD":
-                //to do something
-                break;
-            case "SALESCHANNEL":
-                //to do something
-                break;
-            case "SIZE":
-                // to do something
-                break;
-            case "COLOR":
-                // to do something
-                break;
-            case "PRODUCTTYPE":
-                // to do something
-                break;
-            case "DOCUMENTTYPE":
-                // to do something
-                break;
-            case "ORDERSTATUS":
-                // to do something
-                break;
-        }
+        if (category.getType().equals(CategoryUtil.UNIT)) {
 
-        return true;
+        } else if (category.getType().equals(CategoryUtil.FABRICTYPE)) {
+
+        } else if (category.getType().equals(CategoryUtil.PAYMETHOD)) {
+
+        } else if (category.getType().equals(CategoryUtil.SALESCHANNEL)) {
+
+        } else if (category.getType().equals(CategoryUtil.SIZE)) {
+
+        } else if (category.getType().equals(CategoryUtil.COLOR)) {
+
+        } else if (category.getType().equals(CategoryUtil.PRODUCTTYPE)) {
+
+        } else if (category.getType().equals(CategoryUtil.DOCUMENTTYPE)) {
+            if (!documentService.findByDoctype(categoryId).isEmpty()) return true;
+        } else if (category.getType().equals(CategoryUtil.ORDERSTATUS)) {
+
+        }
+        return false;
     }
 }

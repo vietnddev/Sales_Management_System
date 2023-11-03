@@ -13,25 +13,25 @@ public interface DocumentService {
 
     List<Document> findRootFile();
 
-    List<Document> findDocumentByParentId(int parentId);
+    List<Document> findDocumentByParentId(Integer parentId);
 
-    List<Document> findFolderByParentId(int parentId);
+    List<Document> findFolderByParentId(Integer parentId);
 
-    List<Document> findFileByParentId(int parentId);
+    List<Document> findFileByParentId(Integer parentId);
 
     List<Document> findAllFolder();
 
-    Document findById(int id);
+    Document findById(Integer id);
 
     Document save(Document document);
 
-    String update(Document document, int documentId);
+    String update(Document document, Integer documentId);
 
-    String updateMetadata(Integer[] docDataIds, String[] docDataValues, int documentId);
+    String updateMetadata(Integer[] docDataIds, String[] docDataValues, Integer documentId);
 
-    String delete(int id);
+    String delete(Integer id);
 
-    List<DocMetaResponse> getMetadata(int documentId);
+    List<DocMetaResponse> getMetadata(Integer documentId);
 
-    //void getCayThuMucSTG();
+    List<Document> findByDoctype(Integer docType);
 }
