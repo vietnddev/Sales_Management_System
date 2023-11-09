@@ -31,7 +31,7 @@ public class DocFieldController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.kiemTraRoleThemMoiDocument()) {
+        if (validateModuleStorage.update()) {
             docField.setTrangThai(false);
             docFieldService.save(docField);
             return "redirect:" + request.getHeader("referer");
@@ -47,7 +47,7 @@ public class DocFieldController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.kiemTraRoleCapNhatDocument()) {
+        if (validateModuleStorage.update()) {
             System.out.println(docField.toString());
             docFieldService.update(docField, docFieldId);
             return "redirect:" + request.getHeader("referer");
@@ -65,7 +65,7 @@ public class DocFieldController {
         if (docFieldService.findById(id) == null){
             throw new BadRequestException();
         }
-        if (validateModuleStorage.kiemTraRoleXoaDocument()) {
+        if (validateModuleStorage.delete()) {
             docFieldService.delete(id);
             return "redirect:" + request.getHeader("referer");
         } else {

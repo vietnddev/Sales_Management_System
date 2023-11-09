@@ -44,14 +44,14 @@ public class GoodsImportController {
     @Autowired
     private NotificationService notificationService;
     @Autowired
-    private ValidateModuleStorage kiemTraQuyenModuleKho;
+    private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping("")
     public ModelAndView loadPage() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+        if (validateModuleStorage.goodsImport()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DRAFT_IMPORT);
             GoodsImport goodsImportPresent = goodsImportService.findDraftImportPresent(FlowieeUtil.ACCOUNT_ID);
             if (goodsImportPresent == null) {
@@ -158,7 +158,7 @@ public class GoodsImportController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+        if (validateModuleStorage.goodsImport()) {
             goodsImportRequest.setOrderTime(DateUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
             goodsImportRequest.setReceivedTime(DateUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
             goodsImportService.saveDraft(goodsImportRequest);
@@ -203,7 +203,7 @@ public class GoodsImportController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+        if (validateModuleStorage.goodsImport()) {
             goodsImportService.update(goodsImport, importId);
             return "redirect:" + request.getHeader("referer");
         } else {
@@ -216,7 +216,7 @@ public class GoodsImportController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+        if (validateModuleStorage.goodsImport()) {
             goodsImportService.delete(draftImportId);
             return "redirect:";
         } else {
@@ -229,7 +229,7 @@ public class GoodsImportController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+        if (validateModuleStorage.goodsImport()) {
             goodsImportService.updateStatus(importId, "");
             return "redirect:";
         } else {
@@ -242,7 +242,7 @@ public class GoodsImportController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
+        if (validateModuleStorage.goodsImport()) {
             goodsImportService.updateStatus(importId, "");
             return "redirect:";
         } else {

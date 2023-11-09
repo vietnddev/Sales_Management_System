@@ -33,14 +33,14 @@ public class MaterialController {
     @Autowired
     private NotificationService notificationService;
     @Autowired
-    private ValidateModuleStorage kiemTraQuyenModuleKho;
+    private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping("")
     public ModelAndView loadPage() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleKho.kiemTraQuyenQuanLyMaterial()) {
+        if (validateModuleStorage.material()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_MATERIAL);
             modelAndView.addObject("material", new Material());
             modelAndView.addObject("listMaterial", materialService.findAll());

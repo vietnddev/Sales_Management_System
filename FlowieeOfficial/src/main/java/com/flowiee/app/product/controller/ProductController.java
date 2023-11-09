@@ -2,10 +2,10 @@ package com.flowiee.app.product.controller;
 
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.category.service.*;
 import com.flowiee.app.product.entity.Product;
 import com.flowiee.app.product.entity.ProductAttribute;
 import com.flowiee.app.product.entity.ProductVariant;
@@ -46,17 +46,7 @@ public class ProductController {
     @Autowired
     private ProductAttributeService productAttributeService;
     @Autowired
-    private LoaiMauSacService loaiMauSacService;
-    @Autowired
-    private LoaiKichCoService loaiKichCoService;
-    @Autowired
     private AccountService accountService;
-    @Autowired
-    private LoaiSanPhamService loaiSanPhamService;
-    @Autowired
-    private DonViTinhService donViTinhService;
-    @Autowired
-    private FabricTypeService fabricTypeService;
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
@@ -77,8 +67,8 @@ public class ProductController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
             modelAndView.addObject("sanPham", new Product());
             modelAndView.addObject("listSanPham", productsService.findAll());
-            modelAndView.addObject("listLoaiSanPham", loaiSanPhamService.findAll());
-            modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
+            modelAndView.addObject("listLoaiSanPham", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
+            modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
             modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             if (validateRole.kiemTraQuyenThemMoi()) {
@@ -108,18 +98,18 @@ public class ProductController {
         modelAndView.addObject("idSanPham", sanPhamId);
         // Load chi tiết thông tin sản phẩm
         modelAndView.addObject("detailProducts", productsService.findById(sanPhamId));
-        // Danh sách loại sản phẩm từ danh mục hệ thống
-        modelAndView.addObject("listTypeProducts", loaiSanPhamService.findAll());
-        // Danh sách màu sắc từ danh mục hệ thống
-        modelAndView.addObject("listDmMauSacSanPham", loaiMauSacService.findAll());
-        // Danh sách kích cỡ từ danh mục hệ thống
-        modelAndView.addObject("listDmKichCoSanPham", loaiKichCoService.findAll());
+        // Danh sách loại sản phẩm
+        modelAndView.addObject("listTypeProducts", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
+        // Danh sách màu sắc
+        modelAndView.addObject("listDmMauSacSanPham", categoryService.findSubCategory(CategoryUtil.COLOR));
+        // Danh sách kích cỡ
+        modelAndView.addObject("listDmKichCoSanPham", categoryService.findSubCategory(CategoryUtil.SIZE));
         // Load danh sách biến thể sản phẩm
         modelAndView.addObject("listBienTheSanPham", productVariantService.getListVariantOfProduct(sanPhamId));
-        // Danh sách đơn vị tính từ danh mục hệ thống
-        modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
-        // Danh sách chất liệu vải từ danh mục hệ thống
-        modelAndView.addObject("listDmChatLieuVai", fabricTypeService.findAll());
+        // Danh sách đơn vị tính
+        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
+        // Danh sách chất liệu vải
+        modelAndView.addObject("listDmChatLieuVai", categoryService.findSubCategory(CategoryUtil.FABRICTYPE));
         //List image
         modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
         //Image active
