@@ -17,7 +17,7 @@ public class KiemTraQuyenModuleDanhMuc {
 
     private final String module = SystemModule.DANH_MUC.name();
 
-    public boolean kiemTraQuyenXem() {
+    public boolean validateRead() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -29,7 +29,7 @@ public class KiemTraQuyenModuleDanhMuc {
         return false;
     }
 
-    public boolean kiemTraQuyenThemMoi() {
+    public boolean validateInsert() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -41,7 +41,7 @@ public class KiemTraQuyenModuleDanhMuc {
         return false;
     }
 
-    public boolean kiemTraQuyenCapNhat() {
+    public boolean validateUpdate() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -53,7 +53,7 @@ public class KiemTraQuyenModuleDanhMuc {
         return false;
     }
 
-    public boolean kiemTraQuyenXoa() {
+    public boolean validateDelete() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -65,7 +65,7 @@ public class KiemTraQuyenModuleDanhMuc {
         return false;
     }
 
-    public boolean kiemTraQuyenImport() {
+    public boolean validateImport() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -77,7 +77,7 @@ public class KiemTraQuyenModuleDanhMuc {
         return false;
     }
 
-    public boolean kiemTraQuyenExport() {
+    public boolean validateExport() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }

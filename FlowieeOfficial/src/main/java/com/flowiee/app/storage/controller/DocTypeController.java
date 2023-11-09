@@ -46,7 +46,7 @@ public class DocTypeController {
         if (username.isEmpty() || username == null) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+        if (kiemTraQuyenModuleDanhMuc.validateRead()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DANHMUC_LOAITAILIEU);
             List<LoaiTaiLieu> listLoaiTaiLieu = docTypeService.findAll();
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
@@ -56,13 +56,13 @@ public class DocTypeController {
             modelAndView.addObject("url_import", EndPointUtil.DANHMUC_LOAITAILIEU_IMPORT);
             modelAndView.addObject("url_export", EndPointUtil.DANHMUC_LOAITAILIEU_EXPORT);
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
+            if (kiemTraQuyenModuleDanhMuc.validateInsert()) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
+            if (kiemTraQuyenModuleDanhMuc.validateUpdate()) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
+            if (kiemTraQuyenModuleDanhMuc.validateDelete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return modelAndView;
@@ -77,7 +77,7 @@ public class DocTypeController {
         if (username.isEmpty() || username == null) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+        if (kiemTraQuyenModuleDanhMuc.validateRead()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCTYPE_DETAIL);
             List<DocField> listDocField = docFieldService.findByDocTypeId(new LoaiTaiLieu(id));
             modelAndView.addObject("listDocField", listDocField);
@@ -85,13 +85,13 @@ public class DocTypeController {
             modelAndView.addObject("nameDocType", docTypeService.findById(id).getTen().toUpperCase());
             modelAndView.addObject("docTypeId", id);
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
+            if (kiemTraQuyenModuleDanhMuc.validateInsert()) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
+            if (kiemTraQuyenModuleDanhMuc.validateUpdate()) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
+            if (kiemTraQuyenModuleDanhMuc.validateDelete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return modelAndView;
@@ -147,7 +147,7 @@ public class DocTypeController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenExport()) {
+        if (kiemTraQuyenModuleDanhMuc.validateImport()) {
             byte[] dataExport = docTypeService.exportTemplate();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
@@ -163,7 +163,7 @@ public class DocTypeController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenExport()) {
+        if (kiemTraQuyenModuleDanhMuc.validateExport()) {
             byte[] dataExport = docTypeService.exportData();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KiemTraQuyenModuleKhoTaiLieu {
+public class ValidateModuleStorage {
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -17,7 +17,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
 
     private final String module = SystemModule.KHO_TAI_LIEU.name();
 
-    public boolean kiemTraRoleXemDashboard() {
+    public boolean dashboard() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -29,7 +29,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleXemDocument() {
+    public boolean read() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -41,7 +41,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleThemMoiDocument() {
+    public boolean insert() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -53,7 +53,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleCapNhatDocument() {
+    public boolean update() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -65,7 +65,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleXoaDocument() {
+    public boolean delete() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -77,7 +77,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleDiChuyenDocument() {
+    public boolean move() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -89,7 +89,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleSaoChepDocument() {
+    public boolean copy() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -101,7 +101,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleDownloadDocument() {
+    public boolean download() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -113,7 +113,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraRoleChiaSeDocument() {
+    public boolean share() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -125,7 +125,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraQuyenQuanLyMaterial() {
+    public boolean material() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -137,7 +137,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraQuyenTaoPhieuNhapHang() {
+    public boolean goodsImport() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -149,7 +149,7 @@ public class KiemTraQuyenModuleKhoTaiLieu {
         return false;
     }
 
-    public boolean kiemTraQuyenDuyetNhapHang() {
+    public boolean goodsApprove() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }

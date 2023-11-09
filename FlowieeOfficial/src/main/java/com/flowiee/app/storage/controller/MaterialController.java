@@ -1,6 +1,6 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.config.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
@@ -33,7 +33,7 @@ public class MaterialController {
     @Autowired
     private NotificationService notificationService;
     @Autowired
-    private KiemTraQuyenModuleKhoTaiLieu kiemTraQuyenModuleKho;
+    private ValidateModuleStorage kiemTraQuyenModuleKho;
 
     @GetMapping("")
     public ModelAndView loadPage() {

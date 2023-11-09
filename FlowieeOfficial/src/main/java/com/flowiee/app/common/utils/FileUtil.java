@@ -16,7 +16,8 @@ import java.util.regex.Pattern;
 
 public class FileUtil {
     public static String rootPath = "src/main/resources/static/";
-
+    
+    public static String TEMPLATE_IE_DM_CATEGORY = "Template_IE_DM_Category";
     public static String TEMPLATE_IE_DM_LOAIKICHCO = "Template_IE_DM_LoaiKichCo";
     public static String TEMPLATE_IE_DM_LOAIMAUSAC = "Template_IE_DM_LoaiMauSac";
     public static String TEMPLATE_IE_DM_LOAIKENHBANHANG = "Template_IE_DM_LoaiKenhBanHang";

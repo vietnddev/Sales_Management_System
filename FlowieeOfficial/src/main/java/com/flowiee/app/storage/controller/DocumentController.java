@@ -1,7 +1,7 @@
 package com.flowiee.app.storage.controller;
 
 import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
-import com.flowiee.app.config.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
@@ -54,7 +54,7 @@ public class DocumentController {
     @Autowired
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
     @Autowired
-    private KiemTraQuyenModuleKhoTaiLieu kiemTraQuyenModuleKhoTaiLieu;
+    private ValidateModuleStorage validateModuleStorage;
     @Autowired
     private DocShareService docShareService;
     @Autowired
@@ -70,7 +70,7 @@ public class DocumentController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleXemDashboard()) {
+        if (validateModuleStorage.dashboard()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DASHBOARD);
             //Loại tài liệu
             List<LoaiTaiLieu> listLoaiTaiLieu = loaiTaiLieuService.findAll();
@@ -96,7 +96,7 @@ public class DocumentController {
         if (username.isEmpty() || username == null) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+        if (validateModuleStorage.read()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
             for (int i = 0; i < listRootDocument.size(); i++) {
@@ -117,13 +117,13 @@ public class DocumentController {
             //Parent name
             modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
+            if (validateModuleStorage.insert()) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
+            if (validateModuleStorage.update()) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
+            if (validateModuleStorage.delete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return modelAndView;
@@ -147,7 +147,7 @@ public class DocumentController {
             throw new NotFoundException();
         }
         //Kiểm tra quyền xem document
-        if (!kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem() || !docShareService.isShared(documentId)) {
+        if (!validateModuleStorage.read() || !docShareService.isShared(documentId)) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         if (document.getLoai().equals(DocumentType.FILE.name())) {
@@ -164,10 +164,10 @@ public class DocumentController {
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             //Cây thư mục
             //modelAndView.addObject("folders", list);
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
+            if (validateModuleStorage.update()) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
+            if (validateModuleStorage.delete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return modelAndView;
@@ -190,13 +190,13 @@ public class DocumentController {
             //Parent name
             modelAndView.addObject("documentParentName", document.getTen().toUpperCase());
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenThemMoi()) {
+            if (validateModuleStorage.insert()) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenCapNhat()) {
+            if (validateModuleStorage.update()) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXoa()) {
+            if (validateModuleStorage.delete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
 

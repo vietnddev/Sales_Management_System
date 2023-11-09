@@ -25,7 +25,6 @@ public class CategoryUtil {
         map.put("product-type", PRODUCTTYPE);
         map.put("document-type", DOCUMENTTYPE);
         map.put("order-status", ORDERSTATUS);
-
         return map.get(input);
     }
 }

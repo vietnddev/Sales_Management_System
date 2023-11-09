@@ -1,6 +1,6 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.config.KiemTraQuyenModuleKhoTaiLieu;
+import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -24,14 +24,14 @@ public class DocFieldController {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private KiemTraQuyenModuleKhoTaiLieu kiemTraQuyenModuleKhoTaiLieu;
+    private ValidateModuleStorage validateModuleStorage;
 
     @PostMapping("/insert")
     public String create(DocField docField, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleThemMoiDocument()) {
+        if (validateModuleStorage.kiemTraRoleThemMoiDocument()) {
             docField.setTrangThai(false);
             docFieldService.save(docField);
             return "redirect:" + request.getHeader("referer");
@@ -47,7 +47,7 @@ public class DocFieldController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleCapNhatDocument()) {
+        if (validateModuleStorage.kiemTraRoleCapNhatDocument()) {
             System.out.println(docField.toString());
             docFieldService.update(docField, docFieldId);
             return "redirect:" + request.getHeader("referer");
@@ -65,7 +65,7 @@ public class DocFieldController {
         if (docFieldService.findById(id) == null){
             throw new BadRequestException();
         }
-        if (kiemTraQuyenModuleKhoTaiLieu.kiemTraRoleXoaDocument()) {
+        if (validateModuleStorage.kiemTraRoleXoaDocument()) {
             docFieldService.delete(id);
             return "redirect:" + request.getHeader("referer");
         } else {
