@@ -3,18 +3,22 @@ package com.flowiee.app.category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "category")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Category extends BaseEntity implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = "type", length = 20, nullable = false)
 	private String type;
 

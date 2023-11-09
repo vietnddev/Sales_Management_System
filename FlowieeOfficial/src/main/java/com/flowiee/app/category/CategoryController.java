@@ -2,14 +2,22 @@ package com.flowiee.app.category;
 
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.CategoryUtil;
+import com.flowiee.app.common.utils.EndPointUtil;
+import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.system.service.AccountService;
 import com.flowiee.app.system.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +40,7 @@ public class CategoryController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+        if (kiemTraQuyenModuleDanhMuc.validateRead()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", categoryService.findRootCategory());
@@ -48,12 +56,16 @@ public class CategoryController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.kiemTraQuyenXem()) {
+        if (kiemTraQuyenModuleDanhMuc.validateRead()) {
             List<Category> listCategory = categoryService.findSubCategory(CategoryUtil.getCategoryType(categoryType));
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", listCategory);
             modelAndView.addObject("categoryType", categoryType);
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH);
+            modelAndView.addObject("url_template", EndPointUtil.DANHMUC_DONVITINH_TEMPLATE);
+            modelAndView.addObject("url_import", EndPointUtil.DANHMUC_DONVITINH_IMPORT);
+            modelAndView.addObject("url_export", EndPointUtil.DANHMUC_DONVITINH_EXPORT);
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             return modelAndView;
         } else {
@@ -62,26 +74,37 @@ public class CategoryController {
     }
 
     @PostMapping("/{type}/insert")
-    public String insert(@ModelAttribute("category") Category category, @PathVariable("type") String categoryType) {
+    public String insert(@ModelAttribute("category") Category category, 
+    					 @PathVariable("type") String categoryType,
+    					 HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        category.setType(CategoryUtil.getCategoryType(categoryType));
-        categoryService.save(category);
-        return "redirect:";
+        if (kiemTraQuyenModuleDanhMuc.validateInsert()) {
+        	category.setType(CategoryUtil.getCategoryType(categoryType));
+            categoryService.save(category);
+            return "redirect:" + request.getHeader("referer");	
+        } else {
+        	return PagesUtil.PAGE_UNAUTHORIZED;
+        }
     }
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("category") Category category,
-                         @PathVariable("id") Integer categoryId, HttpServletRequest request) {
+                         @PathVariable("id") Integer categoryId, 
+                         HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (categoryId <= 0) {
             throw new BadRequestException();
         }
-        categoryService.update(category, categoryId);
-        return "redirect:" + request.getHeader("referer");
+        if (kiemTraQuyenModuleDanhMuc.validateUpdate()) {
+        	categoryService.update(category, categoryId);
+            return "redirect:" + request.getHeader("referer");	
+        } else {
+        	return PagesUtil.PAGE_UNAUTHORIZED;
+        }
     }
 
     @PostMapping("/delete/{id}")
@@ -91,5 +114,50 @@ public class CategoryController {
         }
         categoryService.delete(categoryId);
         return "redirect:" + request.getHeader("referer");
+    }
+    
+    @GetMapping("/{type}/template")
+    public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
+        if (!accountService.isLogin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+        }
+        if (kiemTraQuyenModuleDanhMuc.validateImport()) {
+            byte[] dataExport = categoryService.exportTemplate(categoryType);
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("application", "force-download"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+            return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/{type}/import")
+    public String importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (kiemTraQuyenModuleDanhMuc.validateImport()) {
+            categoryService.importData(file, categoryType);
+            return "redirect:" + EndPointUtil.DANHMUC_DONVITINH_VIEW;
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @GetMapping("/{type}/export")
+    public ResponseEntity<?> exportData(@PathVariable("type") String categoryType) {
+        if (!accountService.isLogin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+        }
+        if (kiemTraQuyenModuleDanhMuc.validateExport()) {
+            byte[] dataExport = categoryService.exportData(categoryType);
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("application", "force-download"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+            return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+        }
     }
 }
