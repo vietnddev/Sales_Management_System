@@ -52,11 +52,6 @@ public class MaterialTempServiceImpl implements MaterialTempService {
     }
 
     @Override
-    public List<MaterialTemp> findByCode(String code) {
-        return materialTempRepository.findByCode(code);
-    }
-
-    @Override
     public List<MaterialTemp> findByImportId(Integer importId) {
         List<MaterialTemp> listData = new ArrayList<>();
         if (importId != null && importId > 0) {
@@ -64,4 +59,9 @@ public class MaterialTempServiceImpl implements MaterialTempService {
         }
         return listData;
     }
+
+	@Override
+	public MaterialTemp findMaterialInGoodsImport(Integer importId, Integer materialId) {
+		return materialTempRepository.findMaterialInGoodsImport(importId, materialId);
+	}
 }

@@ -23,6 +23,9 @@ import java.util.List;
 public class MaterialTemp extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Column(name = "material_id", nullable = false)
+	private Integer materialId;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
     private GoodsImport goodsImport;

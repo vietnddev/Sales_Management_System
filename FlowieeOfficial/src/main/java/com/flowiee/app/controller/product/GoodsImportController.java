@@ -140,7 +140,13 @@ public class GoodsImportController extends BaseController {
         for (String productVariantId : listProductVariantId) {
             ProductVariant productVariant = productVariantService.findById(Integer.parseInt(productVariantId));
             productVariant.setGoodsImport(new GoodsImport(importId));
-            bienTheSanPhamServiceTemp.save(ProductVariantTemp.convertFromProductVariant(productVariant));
+            
+            ProductVariantTemp temp = bienTheSanPhamServiceTemp.findProductVariantInGoodsImport(importId, productVariant.getId());
+            if (temp != null) {            	
+            	bienTheSanPhamServiceTemp.updateSoLuong(temp.getSoLuongKho() + 1, temp.getId());
+            } else {
+            	bienTheSanPhamServiceTemp.save(ProductVariantTemp.convertFromProductVariant(productVariant));
+            }         
         }
         return "redirect:/storage/goods";
     }
@@ -154,7 +160,14 @@ public class GoodsImportController extends BaseController {
         for (String materialId : listMaterialId) {
             Material material = materialService.findById(Integer.parseInt(materialId));
             material.setGoodsImport(new GoodsImport(importId));
-            materialServiceTemp.save(MaterialTemp.convertFromMaterial(material));
+            
+            MaterialTemp temp = materialServiceTemp.findMaterialInGoodsImport(importId, material.getId());
+            if (temp != null) {
+            	temp.setQuantity(temp.getQuantity() + 1);
+            	materialServiceTemp.update(temp, temp.getId());
+            } else {
+            	materialServiceTemp.save(MaterialTemp.convertFromMaterial(material));
+            }
         }
         return "redirect:/storage/goods";
     }

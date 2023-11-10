@@ -23,6 +23,9 @@ import java.util.List;
 public class ProductVariantTemp extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	@Column(name = "product_variant_id", nullable = false)
+	private Integer producVariantId;
+	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "san_pham_id", nullable = false)
     private Product product;

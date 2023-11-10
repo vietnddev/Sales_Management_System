@@ -2,13 +2,11 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.repository.product.ProductVariantTempRepository;
-import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductVariantTempService;
 import com.flowiee.app.service.system.SystemLogService;
 
@@ -28,8 +26,6 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
     @Autowired
     private ProductVariantTempRepository productVariantTempRepository;
     @Autowired
-    private PriceService priceService;
-    @Autowired
     private SystemLogService systemLogService;
 
     @Override
@@ -43,33 +39,9 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
     }
 
     @Override
-    public List<ProductVariantTemp> getListVariantOfProduct(int sanPhamId) {
-        List<ProductVariantTemp> listReturn = new ArrayList<>();
-        productVariantTempRepository.findListBienTheOfsanPham(sanPhamId).forEach(bienTheSanPham -> {
-            bienTheSanPham.setPrice(priceService.findGiaHienTaiModel(bienTheSanPham.getId()));
-            listReturn.add(bienTheSanPham);
-        });
-        return listReturn;
-    }
-
-    @Override
-    public Double getGiaBan(int id) {
-        if (id <= 0 || this.findById(id) == null) {
-            throw new NotFoundException();
-        }
-        return priceService.findGiaHienTai(id);
-    }
-
-    @Override
     public String save(ProductVariantTemp bienTheSanPham) {
         if (bienTheSanPham.getLoaiMauSac() == null || bienTheSanPham.getLoaiKichCo() == null) {
             throw new BadRequestException();
-        }
-        if (productVariantTempRepository.findByMauSacAndKichCo(bienTheSanPham.getProduct().getId(),
-                                                           bienTheSanPham.getLoaiMauSac().getId(),
-                                                           bienTheSanPham.getLoaiKichCo().getId()) != null)
-        {
-            throw new DataExistsException();
         }
         try {
             String tenBienTheSanPham = "";
@@ -152,4 +124,9 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
         }
         return listData;
     }
+
+	@Override
+	public ProductVariantTemp findProductVariantInGoodsImport(Integer importId, Integer productVariantId) {
+		return productVariantTempRepository.findProductVariantInGoodsImport(importId, productVariantId);
+	}
 }
