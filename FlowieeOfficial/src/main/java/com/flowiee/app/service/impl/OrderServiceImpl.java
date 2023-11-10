@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
@@ -9,9 +10,7 @@ import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.model.product.OrderRequest;
-import com.flowiee.app.category.entity.KenhBanHang;
-import com.flowiee.app.category.entity.TrangThaiDonHang;
-import com.flowiee.app.category.service.TrangThaiDonHangService;
+import com.flowiee.app.category.Category;
 import com.flowiee.app.common.action.DonHangAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.repository.product.OrderRepository;
@@ -56,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailService orderDetailService;
     @Autowired
-    private TrangThaiDonHangService trangThaiDonHangService;
+    private CategoryService categoryService;
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
@@ -75,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findByTrangThai(int trangThaiDonHangId) {
-        return orderRepository.findByTrangThaiDonHang(trangThaiDonHangService.findById(trangThaiDonHangId));
+        return orderRepository.findByTrangThaiDonHang(trangThaiDonHangId);
     }
 
     @Override
@@ -114,11 +113,11 @@ public class OrderServiceImpl implements OrderService {
             Order order = new Order();
             order.setMaDonHang(FlowieeUtil.getMaDonHang());
             order.setCustomer(new Customer(request.getKhachHang()));
-            order.setKenhBanHang(new KenhBanHang(request.getKenhBanHang()));
+            order.setKenhBanHang(new Category(request.getKenhBanHang(), null));
             order.setNhanVienBanHang(new Account(request.getNhanVienBanHang()));
             order.setGhiChu(request.getGhiChu());
             order.setThoiGianDatHang(request.getThoiGianDatHang());
-            order.setTrangThaiDonHang(new TrangThaiDonHang(request.getTrangThaiDonHang()));
+            order.setTrangThaiDonHang(new Category(request.getTrangThaiDonHang(), null));
             order.setTongTienDonHang(0D);
             orderRepository.save(order);
 
@@ -191,7 +190,7 @@ public class OrderServiceImpl implements OrderService {
                 row.createCell(0).setCellValue(i + 1);
                 row.createCell(1).setCellValue(listData.get(i).getMaDonHang());
                 row.createCell(2).setCellValue(listData.get(i).getThoiGianDatHang());
-                row.createCell(3).setCellValue(listData.get(i).getKenhBanHang().getTenLoai());
+                row.createCell(3).setCellValue(listData.get(i).getKenhBanHang().getName());
                 row.createCell(4).setCellValue(listData.get(i).getTongTienDonHang());
                 row.createCell(5).setCellValue("");
                 row.createCell(6).setCellValue(listData.get(i).getCustomer().getTenKhachHang());

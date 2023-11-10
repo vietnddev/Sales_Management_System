@@ -2,8 +2,14 @@ package com.flowiee.app.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.entity.GoodsImport;
+import com.flowiee.app.entity.Material;
+import com.flowiee.app.entity.MaterialTemp;
+import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.OrderDetail;
+import com.flowiee.app.entity.OrderPay;
 import com.flowiee.app.entity.Product;
+import com.flowiee.app.entity.ProductVariant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,8 +52,40 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	private String endpoint;
 
 	@Column(name = "is_default", length = 1, nullable = false)
-	private String ísDefault;
+	private String isDefault;
 
 	@Column(name = "status", length = 20, nullable = false)
 	private Boolean status;
+	
+	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
+	private List<GoodsImport> listPaymentMethod;
+	
+	@OneToMany(mappedBy = "kenhBanHang", fetch = FetchType.LAZY)
+	private List<Order> listKenhBanHang;
+	
+	@OneToMany(mappedBy = "fabricType", fetch = FetchType.LAZY)
+	private List<ProductVariant> listFabricType;
+	
+	@OneToMany(mappedBy = "loaiMauSac", fetch = FetchType.LAZY)
+	private List<ProductVariant> listLoaiMauSac;
+	
+	@OneToMany(mappedBy = "loaiKichCo", fetch = FetchType.LAZY)
+	private List<ProductVariant> listLoaiKichCo;
+	
+	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
+	private List<Material> listUnit;
+	
+	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
+	private List<MaterialTemp> listUnitTemp;
+	
+	@OneToMany(mappedBy = "hinhThucThanhToan", fetch = FetchType.LAZY)
+	private List<OrderPay> listPayMethod;
+
+	@OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
+	private List<Order> listTrangThaiDonHang;
+	
+	public Category(Integer id, String name) {
+		super.id = id;
+		this.name = name;
+	}
 }

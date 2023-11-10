@@ -13,5 +13,5 @@ public interface FlowieeConfigRepository extends JpaRepository<FlowieeConfig, In
     @Query("from FlowieeConfig order by sort")
     List<FlowieeConfig> findAll();
 
-    FlowieeConfig findByKey(String key);
+    FlowieeConfig findByCode(String code);
 }

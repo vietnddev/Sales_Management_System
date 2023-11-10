@@ -9,12 +9,13 @@ import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.model.product.GoodsImportRequest;
+import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.category.entity.HinhThucThanhToan;
-import com.flowiee.app.category.service.HinhThucThanhToanService;
+import com.flowiee.app.category.Category;
+import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.service.product.GoodsImportService;
 import com.flowiee.app.service.product.MaterialService;
 import com.flowiee.app.service.product.MaterialTempService;
@@ -49,7 +50,7 @@ public class GoodsImportController extends BaseController {
     @Autowired
     private MaterialTempService materialServiceTemp;
     @Autowired
-    private HinhThucThanhToanService hinhThucThanhToanService;
+    private CategoryService categoryService;
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
 
@@ -86,13 +87,13 @@ public class GoodsImportController extends BaseController {
             }
             modelAndView.addObject("listSupplier", listSupplier);
 
-            List<HinhThucThanhToan> listHinhThucThanhToan = new ArrayList<>();
+            List<Category> listHinhThucThanhToan = new ArrayList<>();
             if (goodsImportPresent.getPaymentMethod() == null) {
-                listHinhThucThanhToan.add(new HinhThucThanhToan(null, "Chọn hình thức thanh toán"));
-                listHinhThucThanhToan.addAll(hinhThucThanhToanService.findAll());
+                listHinhThucThanhToan.add(new Category(null, "Chọn hình thức thanh toán"));
+                listHinhThucThanhToan.addAll(categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
             } else {
                 listHinhThucThanhToan.add(goodsImportPresent.getPaymentMethod());
-                List<HinhThucThanhToan> listHinhThucThanhToanTemp = hinhThucThanhToanService.findAll();
+                List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(CategoryUtil.PAYMETHOD);
                 listHinhThucThanhToanTemp.remove(goodsImportPresent.getPaymentMethod());
                 listHinhThucThanhToan.addAll(listHinhThucThanhToanTemp);
             }

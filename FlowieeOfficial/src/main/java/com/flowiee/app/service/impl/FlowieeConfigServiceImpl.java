@@ -25,8 +25,8 @@ public class FlowieeConfigServiceImpl implements FlowieeConfigService {
     }
 
     @Override
-    public FlowieeConfig findByKey(String key) {
-        return flowieeConfigRepository.findByKey(key);
+    public FlowieeConfig findByKey(String code) {
+        return flowieeConfigRepository.findByCode(code);
     }
 
     @Override

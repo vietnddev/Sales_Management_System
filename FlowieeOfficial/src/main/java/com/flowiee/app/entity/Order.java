@@ -2,9 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.KenhBanHang;
-import com.flowiee.app.category.entity.TrangThaiDonHang;
-import com.flowiee.app.category.entity.TrangThaiGiaoHang;
+import com.flowiee.app.category.Category;
 
 import lombok.*;
 
@@ -57,17 +55,14 @@ public class Order extends BaseEntity implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "kenh_ban_hang", nullable = false)
-	private KenhBanHang kenhBanHang;
+	private Category kenhBanHang;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderPay> listOrderPay;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trang_thai_don_hang", nullable = false)
-	private TrangThaiDonHang trangThaiDonHang;
-
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-	private List<TrangThaiGiaoHang> listTrangThaiGiaoHang;
+	private Category trangThaiDonHang;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderDetail> listOrderDetail;

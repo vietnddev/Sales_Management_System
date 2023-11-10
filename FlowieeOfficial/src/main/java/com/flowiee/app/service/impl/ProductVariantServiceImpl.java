@@ -74,9 +74,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         try {
             String tenBienTheSanPham = "";
             if (productVariant.getTenBienThe().isEmpty()) {
-                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getLoaiKichCo().getTenLoai() + " - Màu " + productVariant.getLoaiMauSac().getTenLoai();
+                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getLoaiKichCo().getName() + " - Màu " + productVariant.getLoaiMauSac().getName();
             } else {
-                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getLoaiKichCo().getTenLoai() + " - Màu " + productVariant.getLoaiMauSac().getTenLoai();
+                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getLoaiKichCo().getName() + " - Màu " + productVariant.getLoaiMauSac().getName();
             }
             productVariant.setTenBienThe(tenBienTheSanPham);
             productVariantRepository.save(productVariant);

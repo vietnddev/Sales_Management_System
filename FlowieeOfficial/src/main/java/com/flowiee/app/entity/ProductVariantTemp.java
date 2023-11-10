@@ -2,9 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.FabricType;
-import com.flowiee.app.category.entity.LoaiKichCo;
-import com.flowiee.app.category.entity.LoaiMauSac;
+import com.flowiee.app.category.Category;
 
 import lombok.*;
 
@@ -47,15 +45,15 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mau_sac_id", nullable = false)
-    private LoaiMauSac loaiMauSac;
+    private Category loaiMauSac;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kich_co_id", nullable = false)
-    private LoaiKichCo loaiKichCo;
+    private Category loaiKichCo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_lieu_vai_id", nullable = false)
-    private FabricType fabricType;
+    private Category fabricType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "garment_factory_id")

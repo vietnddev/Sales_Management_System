@@ -6,7 +6,6 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.category.service.TrangThaiDonHangService;
 import com.flowiee.app.service.product.CartService;
 import com.flowiee.app.service.product.CustomerService;
 import com.flowiee.app.service.product.DonHangThanhToanService;
@@ -52,8 +51,6 @@ public class OrderController extends BaseController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private TrangThaiDonHangService trangThaiDonHangService;
-    @Autowired
     private DonHangThanhToanService donHangThanhToanService;
     @Autowired
     private CartService cartService;
@@ -75,7 +72,7 @@ public class OrderController extends BaseController {
             modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
             modelAndView.addObject("donHangRequest", new OrderRequest());
             modelAndView.addObject("donHang", new Order());            
             return baseView(modelAndView);
@@ -105,8 +102,8 @@ public class OrderController extends BaseController {
             modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : categoryService.findById(request.getHinhThucThanhToan()));
             modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
 
-            modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : trangThaiDonHangService.findById(request.getTrangThaiDonHang()));
-            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
+            modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : categoryService.findById(request.getTrangThaiDonHang()));
+            modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
 
             modelAndView.addObject("donHangRequest", new OrderRequest());
             modelAndView.addObject("donHang", new Order());
@@ -155,7 +152,7 @@ public class OrderController extends BaseController {
             modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());            
+            modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
 
             List<OrderCart> listOrderCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
             modelAndView.addObject("listCart", listOrderCart);

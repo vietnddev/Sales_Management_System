@@ -1,6 +1,5 @@
 package com.flowiee.app.repository.product;
 
-import com.flowiee.app.category.entity.TrangThaiDonHang;
 import com.flowiee.app.entity.Order;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    @Query("from Order d where d.trangThaiDonHang=:trangThaiDonHang")
-    List<Order> findByTrangThaiDonHang(TrangThaiDonHang trangThaiDonHang);
+    @Query("from Order d where d.trangThaiDonHang.id=:trangThaiDonHangId")
+    List<Order> findByTrangThaiDonHang(Integer trangThaiDonHangId);
 
     @Query("from Order d order by d.id desc")
     List<Order> findDonHangMoiNhat();

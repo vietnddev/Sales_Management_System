@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.category.Category;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.TagName;
@@ -7,7 +8,6 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.GoodsImport;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.model.product.GoodsImportRequest;
-import com.flowiee.app.category.entity.HinhThucThanhToan;
 import com.flowiee.app.repository.product.GoodsImportRepository;
 import com.flowiee.app.service.product.GoodsImportService;
 
@@ -92,7 +92,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
             goodsImport.setSupplier(new Supplier(request.getSupplierId(), null));
         }
         if (request.getPaymentMethodId() != null && request.getPaymentMethodId() > 0) {
-            goodsImport.setPaymentMethod(new HinhThucThanhToan(request.getPaymentMethodId(), null));
+            goodsImport.setPaymentMethod(new Category(request.getPaymentMethodId(), null));
         }
         if (request.getReceivedBy() != null && request.getReceivedBy() > 0) {
             goodsImport.setReceivedBy(new Account(request.getReceivedBy()));
@@ -158,7 +158,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
             goodsImport.setId(Integer.parseInt(o[0].toString()));
             goodsImport.setTitle(String.valueOf(o[1]));
             goodsImport.setSupplier(new Supplier(Integer.parseInt(String.valueOf(o[7])), String.valueOf(o[2])));
-            goodsImport.setPaymentMethod(new HinhThucThanhToan(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
+            goodsImport.setPaymentMethod(new Category(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
             goodsImport.setPaidStatus(String.valueOf(o[4]));
             goodsImport.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
             goodsImport.setStatus(String.valueOf(o[6]));

@@ -2,7 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.HinhThucThanhToan;
+import com.flowiee.app.category.Category;
 
 import lombok.*;
 
@@ -33,7 +33,7 @@ public class GoodsImport extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method")
-    private HinhThucThanhToan paymentMethod;
+    private Category paymentMethod;
 
     @Column(name = "paid_amount")
     private Float paidAmount;

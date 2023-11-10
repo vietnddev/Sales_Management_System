@@ -46,9 +46,9 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
         try {
             String tenBienTheSanPham = "";
             if (bienTheSanPham.getTenBienThe().isEmpty()) {
-                tenBienTheSanPham = bienTheSanPham.getProduct().getTenSanPham() + " - Size " + bienTheSanPham.getLoaiKichCo().getTenLoai() + " - Màu " + bienTheSanPham.getLoaiMauSac().getTenLoai();
+                tenBienTheSanPham = bienTheSanPham.getProduct().getTenSanPham() + " - Size " + bienTheSanPham.getLoaiKichCo().getName() + " - Màu " + bienTheSanPham.getLoaiMauSac().getName();
             } else {
-                tenBienTheSanPham = bienTheSanPham.getProduct().getTenSanPham() + " - " + bienTheSanPham.getTenBienThe() + " - Size " + bienTheSanPham.getLoaiKichCo().getTenLoai() + " - Màu " + bienTheSanPham.getLoaiMauSac().getTenLoai();
+                tenBienTheSanPham = bienTheSanPham.getProduct().getTenSanPham() + " - " + bienTheSanPham.getTenBienThe() + " - Size " + bienTheSanPham.getLoaiKichCo().getName() + " - Màu " + bienTheSanPham.getLoaiMauSac().getName();
             }
             bienTheSanPham.setTenBienThe(tenBienTheSanPham);
             productVariantTempRepository.save(bienTheSanPham);

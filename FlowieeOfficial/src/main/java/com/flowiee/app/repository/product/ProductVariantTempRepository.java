@@ -13,6 +13,6 @@ public interface ProductVariantTempRepository extends JpaRepository <ProductVari
     @Query("from ProductVariantTemp b where b.goodsImport.id=:importId")
     List<ProductVariantTemp> findByImportId(Integer importId);
     
-    @Query("from ProductVariantTemp p where p.goodsImport.id=:importId and p.producVariantId=:producVariantId")
+    @Query("from ProductVariantTemp p where p.goodsImport.id=:importId and p.producVariantId=:productVariantId")
     ProductVariantTemp findProductVariantInGoodsImport(Integer importId, Integer productVariantId);
 }

@@ -1,7 +1,7 @@
 package com.flowiee.app.entity;
 
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.HinhThucThanhToan;
+import com.flowiee.app.category.Category;
 
 import lombok.*;
 
@@ -30,7 +30,7 @@ public class OrderPay extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hinh_thuc_thanh_toan", nullable = false)
-    private HinhThucThanhToan hinhThucThanhToan;
+    private Category hinhThucThanhToan;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cashier", nullable = false)

@@ -2,7 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.DonViTinh;
+import com.flowiee.app.category.Category;
 
 import lombok.*;
 
@@ -39,7 +39,7 @@ public class Material extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit", nullable = false)
-    private DonViTinh unit;
+    private Category unit;
 
     @Column(name = "location")
     private String location;
