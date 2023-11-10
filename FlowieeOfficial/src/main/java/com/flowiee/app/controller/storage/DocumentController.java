@@ -272,7 +272,7 @@ public class DocumentController extends BaseController {
     }
 
     @PostMapping("/document/delete/{id}")
-    public String delete(@PathVariable("id") int id, HttpServletRequest request) {
+    public String deleteDocument(@PathVariable("id") int id, HttpServletRequest request) {
         String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
@@ -286,7 +286,7 @@ public class DocumentController extends BaseController {
     }
 
     @PostMapping("/document/move/{id}")
-    public String move() {
+    public String moveDocument() {
         String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
@@ -301,5 +301,52 @@ public class DocumentController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         return "";
+    }
+    
+    @PostMapping("/docfield/insert")
+    public String insertDocfield(DocField docField, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (validateModuleStorage.update()) {
+            docField.setTrangThai(false);
+            docFieldService.save(docField);
+            return "redirect:" + request.getHeader("referer");
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+    
+    @PostMapping(value = "/docfield/update/{id}", params = "update")
+    public String updateDocfield(HttpServletRequest request,
+                         @ModelAttribute("docField") DocField docField,
+                         @PathVariable("id") Integer docFieldId) {
+        if (!accountService.isLogin()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (validateModuleStorage.update()) {
+            System.out.println(docField.toString());
+            docFieldService.update(docField, docFieldId);
+            return "redirect:" + request.getHeader("referer");
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
+    }
+
+    @PostMapping("/docfield/delete/{id}")
+    public String deleteDocfield(@PathVariable("id") int id, HttpServletRequest request) {
+        String username = FlowieeUtil.ACCOUNT_USERNAME;
+        if (username == null || username.isEmpty()) {
+            return PagesUtil.PAGE_LOGIN;
+        }
+        if (docFieldService.findById(id) == null){
+            throw new BadRequestException();
+        }
+        if (validateModuleStorage.delete()) {
+            docFieldService.delete(id);
+            return "redirect:" + request.getHeader("referer");
+        } else {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
     }
 }
