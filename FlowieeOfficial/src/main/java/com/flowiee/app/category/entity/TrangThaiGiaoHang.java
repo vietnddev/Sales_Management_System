@@ -1,7 +1,8 @@
 package com.flowiee.app.category.entity;
 
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.product.entity.Order;
+import com.flowiee.app.entity.product.Order;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

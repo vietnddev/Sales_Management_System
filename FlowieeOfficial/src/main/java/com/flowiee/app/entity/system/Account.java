@@ -2,14 +2,15 @@ package com.flowiee.app.entity.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.entity.product.Customer;
+import com.flowiee.app.entity.product.GoodsImport;
+import com.flowiee.app.entity.product.Order;
+import com.flowiee.app.entity.product.OrderPay;
 import com.flowiee.app.model.system.Role;
-import com.flowiee.app.product.entity.Customer;
-import com.flowiee.app.product.entity.Order;
 import com.flowiee.app.storage.entity.FileStorage;
-import com.flowiee.app.product.entity.GoodsImport;
 import com.flowiee.app.storage.entity.DocShare;
 import com.flowiee.app.storage.entity.Document;
-import com.flowiee.app.product.entity.OrderPay;
+
 import lombok.*;
 
 import javax.persistence.*;

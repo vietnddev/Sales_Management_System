@@ -8,7 +8,7 @@ import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.storage.entity.Material;
-import com.flowiee.app.product.services.MaterialService;
+import com.flowiee.app.service.product.MaterialService;
 import com.flowiee.app.service.system.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;

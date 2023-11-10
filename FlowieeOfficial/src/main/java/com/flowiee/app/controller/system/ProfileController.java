@@ -4,7 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.entity.system.Account;
-import com.flowiee.app.product.services.OrderService;
+import com.flowiee.app.service.product.OrderService;
 import com.flowiee.app.service.system.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;

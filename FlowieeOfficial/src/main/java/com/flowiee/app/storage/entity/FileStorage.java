@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.entity.product.Product;
+import com.flowiee.app.entity.product.ProductVariant;
 import com.flowiee.app.entity.system.Account;
-import com.flowiee.app.product.entity.Product;
-import com.flowiee.app.product.entity.ProductVariant;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

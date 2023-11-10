@@ -2,7 +2,8 @@ package com.flowiee.app.category.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.product.entity.Product;
+import com.flowiee.app.entity.product.Product;
+
 import lombok.*;
 
 import javax.persistence.*;

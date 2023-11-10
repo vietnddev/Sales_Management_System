@@ -3,10 +3,11 @@ package com.flowiee.app.storage.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.DonViTinh;
-import com.flowiee.app.product.entity.MaterialHistory;
-import com.flowiee.app.product.entity.GoodsImport;
-import com.flowiee.app.product.entity.Price;
-import com.flowiee.app.product.entity.Supplier;
+import com.flowiee.app.entity.product.GoodsImport;
+import com.flowiee.app.entity.product.MaterialHistory;
+import com.flowiee.app.entity.product.Price;
+import com.flowiee.app.entity.product.Supplier;
+
 import lombok.*;
 
 import javax.persistence.*;
