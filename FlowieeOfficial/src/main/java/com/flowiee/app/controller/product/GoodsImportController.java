@@ -5,6 +5,8 @@ import com.flowiee.app.entity.product.GoodsImport;
 import com.flowiee.app.entity.product.ProductVariant;
 import com.flowiee.app.entity.product.ProductVariantTemp;
 import com.flowiee.app.entity.product.Supplier;
+import com.flowiee.app.entity.storage.Material;
+import com.flowiee.app.entity.storage.MaterialTemp;
 import com.flowiee.app.entity.system.Account;
 import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.common.utils.DateUtil;
@@ -20,8 +22,7 @@ import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.product.ProductVariantTempService;
 import com.flowiee.app.service.product.SupplierService;
 import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.storage.entity.Material;
-import com.flowiee.app.storage.entity.MaterialTemp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

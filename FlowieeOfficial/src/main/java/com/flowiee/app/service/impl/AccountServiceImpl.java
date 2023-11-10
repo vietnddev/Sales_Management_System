@@ -64,7 +64,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String save(Account account) {
-        Account accountSaved = accountRepository.save(account);
         //Ghi log
         SystemLog systemLog = SystemLog.builder()
             .module(SystemModule.HE_THONG.name())
@@ -79,7 +78,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String update(Account entity, Integer entityId) {
-        Account accountSaved = accountRepository.save(entity);
         //Ghi log
         SystemLog systemLog = SystemLog.builder()
                 .module(SystemModule.HE_THONG.name())

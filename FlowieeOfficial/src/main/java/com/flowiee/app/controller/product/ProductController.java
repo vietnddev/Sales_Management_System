@@ -6,25 +6,21 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.storage.entity.FileStorage;
-import com.flowiee.app.storage.service.FileStorageService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductAttributeService;
 import com.flowiee.app.service.product.ProductService;
 import com.flowiee.app.service.product.ProductVariantService;
+import com.flowiee.app.service.storage.FileStorageService;
 import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.NotificationService;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.entity.product.Price;
 import com.flowiee.app.entity.product.Product;
 import com.flowiee.app.entity.product.ProductAttribute;
 import com.flowiee.app.entity.product.ProductVariant;
+import com.flowiee.app.entity.storage.FileStorage;
 import com.flowiee.app.model.product.TrangThai;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -41,8 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(path = "/san-pham")
 public class ProductController extends BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-
     @Autowired
     private ProductService productsService;
     @Autowired
@@ -57,8 +51,6 @@ public class ProductController extends BaseController {
     private CategoryService categoryService;
     @Autowired
     private PriceService priceService;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private KiemTraQuyenModuleSanPham validateRole;
 

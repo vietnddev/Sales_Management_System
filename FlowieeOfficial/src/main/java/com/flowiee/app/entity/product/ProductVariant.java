@@ -6,7 +6,8 @@ import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.FabricType;
 import com.flowiee.app.category.entity.LoaiKichCo;
 import com.flowiee.app.category.entity.LoaiMauSac;
-import com.flowiee.app.storage.entity.FileStorage;
+import com.flowiee.app.entity.storage.FileStorage;
+
 import lombok.*;
 
 import javax.persistence.*;

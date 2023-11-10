@@ -4,12 +4,12 @@ import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
 import com.flowiee.app.entity.product.Product;
-import com.flowiee.app.storage.entity.FileStorage;
-import com.flowiee.app.storage.service.FileStorageService;
+import com.flowiee.app.entity.storage.FileStorage;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.repository.product.ProductRepository;
 import com.flowiee.app.service.product.ProductService;
+import com.flowiee.app.service.storage.FileStorageService;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 

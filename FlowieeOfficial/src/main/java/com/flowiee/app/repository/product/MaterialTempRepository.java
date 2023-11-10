@@ -1,9 +1,10 @@
 package com.flowiee.app.repository.product;
 
-import com.flowiee.app.storage.entity.MaterialTemp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import com.flowiee.app.entity.storage.MaterialTemp;
 
 import java.util.List;
 

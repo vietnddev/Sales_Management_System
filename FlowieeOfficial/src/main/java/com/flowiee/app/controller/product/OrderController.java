@@ -7,7 +7,6 @@ import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.category.service.TrangThaiDonHangService;
-import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.service.product.CartService;
 import com.flowiee.app.service.product.CustomerService;
 import com.flowiee.app.service.product.DonHangThanhToanService;
@@ -16,7 +15,6 @@ import com.flowiee.app.service.product.OrderDetailService;
 import com.flowiee.app.service.product.OrderService;
 import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.NotificationService;
 import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.entity.product.Customer;
 import com.flowiee.app.entity.product.Items;
@@ -24,9 +22,6 @@ import com.flowiee.app.entity.product.Order;
 import com.flowiee.app.entity.product.OrderCart;
 import com.flowiee.app.entity.product.OrderPay;
 import com.flowiee.app.model.product.OrderRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +39,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/don-hang")
 public class OrderController extends BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
-    private static final String module = SystemModule.SAN_PHAM.name();
-
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -67,8 +59,6 @@ public class OrderController extends BaseController {
     private CartService cartService;
     @Autowired
     private ItemsService itemsService;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.DonViTinh;
 import com.flowiee.app.category.entity.LoaiSanPham;
-import com.flowiee.app.storage.entity.FileStorage;
+import com.flowiee.app.entity.storage.FileStorage;
+
 import lombok.*;
 
 import javax.persistence.*;

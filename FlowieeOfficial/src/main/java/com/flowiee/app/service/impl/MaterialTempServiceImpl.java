@@ -1,9 +1,10 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.entity.storage.MaterialTemp;
 import com.flowiee.app.repository.product.MaterialTempRepository;
 import com.flowiee.app.service.product.MaterialTempService;
-import com.flowiee.app.storage.entity.MaterialTemp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

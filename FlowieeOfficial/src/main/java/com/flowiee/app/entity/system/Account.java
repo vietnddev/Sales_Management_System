@@ -6,10 +6,10 @@ import com.flowiee.app.entity.product.Customer;
 import com.flowiee.app.entity.product.GoodsImport;
 import com.flowiee.app.entity.product.Order;
 import com.flowiee.app.entity.product.OrderPay;
+import com.flowiee.app.entity.storage.DocShare;
+import com.flowiee.app.entity.storage.Document;
+import com.flowiee.app.entity.storage.FileStorage;
 import com.flowiee.app.model.system.Role;
-import com.flowiee.app.storage.entity.FileStorage;
-import com.flowiee.app.storage.entity.DocShare;
-import com.flowiee.app.storage.entity.Document;
 
 import lombok.*;
 

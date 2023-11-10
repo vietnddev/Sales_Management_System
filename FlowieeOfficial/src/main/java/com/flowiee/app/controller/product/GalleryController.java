@@ -2,12 +2,10 @@ package com.flowiee.app.controller.product;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.storage.service.FileStorageService;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.service.product.ProductService;
-import com.flowiee.app.service.system.AccountService;
-
+import com.flowiee.app.service.storage.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/san-pham/thu-vien-hinh-anh")
 public class GalleryController extends BaseController {
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
