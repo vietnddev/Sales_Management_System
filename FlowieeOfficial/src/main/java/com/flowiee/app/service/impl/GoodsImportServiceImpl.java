@@ -27,9 +27,9 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     private EntityManager entityManager;
 
     private static String STATUS_DRAFT = "DRAFT";
-    private static String STATUS_APPROVING = "APPROVING";
-    private static String STATUS_APPROVED = "APPROVED";
-    private static String STATUS_REJECT = "REJECT";
+//    private static String STATUS_APPROVING = "APPROVING";
+//    private static String STATUS_APPROVED = "APPROVED";
+//    private static String STATUS_REJECT = "REJECT";
 
     @Override
     public List<GoodsImport> findAll() {
@@ -151,7 +151,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         if (importStatus != null) {
             query.setParameter(i++, importStatus);
         }
-        List<Object[]> data = query.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Object[]> data = query.getResultList();
         for (Object[] o : data) {
             GoodsImport goodsImport = new GoodsImport();
             goodsImport.setId(Integer.parseInt(o[0].toString()));

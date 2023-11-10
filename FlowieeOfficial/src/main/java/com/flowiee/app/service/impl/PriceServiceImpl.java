@@ -8,7 +8,6 @@ import com.flowiee.app.entity.Price;
 import com.flowiee.app.repository.product.PriceRepository;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductVariantService;
-import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 
 import org.slf4j.Logger;
@@ -27,8 +26,6 @@ public class PriceServiceImpl implements PriceService {
     private PriceRepository priceRepository;
     @Autowired
     private ProductVariantService productVariantService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private SystemLogService systemLogService;
 

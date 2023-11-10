@@ -7,7 +7,6 @@ import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.product.CustomerRepository;
 import com.flowiee.app.service.product.CustomerService;
-import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 
 import org.slf4j.Logger;
@@ -24,8 +23,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private SystemLogService systemLogService;
 

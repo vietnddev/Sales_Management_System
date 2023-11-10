@@ -207,7 +207,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
-        fileInfo.setDocument(Document.builder().id(documentId).build());
+        fileInfo.setDocument(new Document(documentId));
         fileInfo.setAccount(FlowieeUtil.ACCOUNT);
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
@@ -248,7 +248,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setExtension(FileUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FileUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
-        fileInfo.setDocument(Document.builder().id(documentId).build());
+        fileInfo.setDocument(new Document(documentId));
         fileInfo.setAccount(FlowieeUtil.ACCOUNT);
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);

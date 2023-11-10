@@ -10,9 +10,7 @@ import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.repository.product.ProductRepository;
 import com.flowiee.app.service.product.ProductService;
 import com.flowiee.app.service.storage.FileStorageService;
-import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
-
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.ByteArrayOutputStream;
@@ -42,8 +39,6 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productsRepository;
     @Autowired
     private SystemLogService systemLogService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private FileStorageService fileService;
     @Autowired
@@ -171,7 +166,8 @@ public class ProductServiceImpl implements ProductService {
             strSQL.append("AND  sp.ID IN (sp.ID)");
         }
         Query result = entityManager.createNativeQuery(strSQL.toString());
-        List<Object[]> listData = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Object[]> listData = result.getResultList();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_E_SANPHAM + ".xlsx";

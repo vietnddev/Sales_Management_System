@@ -31,7 +31,8 @@ public class DashboardServiceImpl implements DashboardService {
         query.append("GROUP BY c.ten_loai, c.mau_nhan");
 
         Query result = entityManager.createNativeQuery(query.toString());
-        List<Object[]> listData = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Object[]> listData = result.getResultList();
 
         DoanhThuTheoKenhBanHang dataReturn = new DoanhThuTheoKenhBanHang();
         List<String> listTenOfKenh = new ArrayList<>();
@@ -68,7 +69,8 @@ public class DashboardServiceImpl implements DashboardService {
         query.append("WHERE EXTRACT(YEAR FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(YEAR FROM SYSDATE)");
 
         Query result = entityManager.createNativeQuery(query.toString());
-        List<Object[]> listData = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Object[]> listData = result.getResultList();
 
         List<Float> listDoanhThu = new ArrayList<>();
         for (int i = 0; i < listData.get(0).length; i++) {
@@ -100,7 +102,8 @@ public class DashboardServiceImpl implements DashboardService {
         query.append("ORDER BY all_dates.NGAY");
 
         Query result = entityManager.createNativeQuery(query.toString());
-        List<Object[]> listData = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Object[]> listData = result.getResultList();
 
         DoanhThuCacNgayTheoThang dataReturn = new DoanhThuCacNgayTheoThang();
         List<String> listNgay = new ArrayList<>();
@@ -134,7 +137,8 @@ public class DashboardServiceImpl implements DashboardService {
         query.append("WHERE ROWNUM <= 10");
 
         Query result = entityManager.createNativeQuery(query.toString());
-        List<Object[]> listData = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Object[]> listData = result.getResultList();
 
         TopSanPhamBanChay dataReturn = new TopSanPhamBanChay();
         List<String> listTenSanPham = new ArrayList<>();
@@ -156,7 +160,8 @@ public class DashboardServiceImpl implements DashboardService {
 //        return Integer.parseInt(String.valueOf(result.getSingleResult()));
         String query = "SELECT * FROM DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
         Query result = entityManager.createNativeQuery(query);
-        List<Order> listReturn = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Order> listReturn = result.getResultList();
         return listReturn;
     }
 
@@ -181,7 +186,8 @@ public class DashboardServiceImpl implements DashboardService {
 //        return Integer.parseInt(String.valueOf(result.getSingleResult()));
         String query = "SELECT * FROM KHACH_HANG c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
         Query result = entityManager.createNativeQuery(query);
-        List<Customer> listReturn = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Customer> listReturn = result.getResultList();
         return listReturn;
     }
 }

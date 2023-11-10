@@ -5,11 +5,9 @@ import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.LoaiTaiLieu;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -38,21 +36,9 @@ public class Document extends BaseEntity implements Serializable {
     @Column(name = "mo_ta")
     private String moTa;
 
-    @CreatedDate
-    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
-    private Date createdAt;
-
-    @PreUpdate
-    @PrePersist
-    public void updateTimeStamps() {
-        if (createdAt == null) {
-            createdAt = new Date();
-        }
-    }
-
     @JsonIgnoreProperties("listDocument")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false, insertable = true, updatable = true)
+    @JoinColumn(name = "created_by_wr", nullable = false, insertable = true, updatable = true)
     private Account account;
 
     @JsonIgnoreProperties("listDocument")
@@ -69,6 +55,14 @@ public class Document extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocShare> listDocShare;
 
+    public Document(Integer id) {
+    	super.id = id;
+    }
+    
+    public Document(Integer id, String name) {
+    	this.ten = name;
+    }
+    
     @Override
     public String toString() {
         return "Document{" +
@@ -82,11 +76,4 @@ public class Document extends BaseEntity implements Serializable {
             ", loaiTaiLieu=" + loaiTaiLieu +
             '}';
     }
-
-//    @Transient
-//    private List<Document> subThuMuc = new ArrayList<>();;
-//
-//    public void addSubStorage(Document subStorage) {
-//        subThuMuc.add(subStorage);
-//    }
 }

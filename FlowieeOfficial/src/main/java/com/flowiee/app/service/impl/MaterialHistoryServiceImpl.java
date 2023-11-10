@@ -49,7 +49,6 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
         if (entityId == null || entityId <= 0) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        MaterialHistory materialHistory = this.findById(entityId);
         materialHistoryRepository.deleteById(entityId);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }

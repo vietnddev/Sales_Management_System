@@ -140,7 +140,8 @@ public class DocumentServiceImpl implements DocumentService {
                                                         "FROM DocField f " +
                                                         "LEFT JOIN DocData d ON f.id = d.docField.id " +
                                                         "WHERE d.document.id = " + documentId);
-        List<Object[]> listData = result.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Object[]> listData = result.getResultList();
 
         if (!listData.isEmpty()) {
             for (Object[] data : listData) {

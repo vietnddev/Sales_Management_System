@@ -97,7 +97,7 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             //select-option danh sách thư mục
             List<Document> listFolder = new ArrayList<>();
-            listFolder.add(Document.builder().id(0).ten("--Chọn thư mục--").build());
+            listFolder.add(new Document(0, "--Chọn thư mục--"));
             listFolder.addAll(documentService.findAllFolder());
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
@@ -213,8 +213,8 @@ public class DocumentController extends BaseController {
             List<DocField> listDocField = docFieldService.findByDocTypeId(new LoaiTaiLieu(document.getLoaiTaiLieu().getId()));
             for (DocField docField : listDocField) {
                 DocData docData = DocData.builder()
-                        .docField(DocField.builder().id(docField.getId()).build())
-                        .document(Document.builder().id(document.getId()).build())
+                        .docField(new DocField(docField.getId()))
+                        .document(new Document(document.getId()))
                         .noiDung("").build();
                 docDataService.save(docData);
             }

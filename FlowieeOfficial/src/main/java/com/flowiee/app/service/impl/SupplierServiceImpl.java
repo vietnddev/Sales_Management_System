@@ -46,7 +46,6 @@ public class SupplierServiceImpl implements SupplierService {
         if (entityId == null || entityId <= 0) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        Supplier supplier = this.findById(entityId);
         supplierRepository.deleteById(entityId);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }

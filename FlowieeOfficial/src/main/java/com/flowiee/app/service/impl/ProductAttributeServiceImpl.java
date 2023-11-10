@@ -8,9 +8,6 @@ import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.repository.product.ProductAttributeRepository;
 import com.flowiee.app.service.product.ProductAttributeService;
 import com.flowiee.app.service.system.SystemLogService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +15,6 @@ import java.util.List;
 
 @Service
 public class ProductAttributeServiceImpl implements ProductAttributeService {
-    private static final Logger logger = LoggerFactory.getLogger(ProductAttributeServiceImpl.class);
     private static final String module = SystemModule.SAN_PHAM.getLabel();
 
     @Autowired

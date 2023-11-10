@@ -2,6 +2,11 @@ package com.flowiee.app.model.product;
 
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class VoucherRequest {
     private String title;
     private String description;

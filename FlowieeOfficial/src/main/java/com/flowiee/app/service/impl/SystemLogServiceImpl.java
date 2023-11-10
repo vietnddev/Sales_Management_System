@@ -4,7 +4,6 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.repository.system.SystemLogRepository;
-import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import java.util.List;
 public class SystemLogServiceImpl implements SystemLogService {
     @Autowired
     private SystemLogRepository logRepository;
-    @Autowired
-    private AccountService accountService;
 
     @Override
     public List<SystemLog> getAll() {

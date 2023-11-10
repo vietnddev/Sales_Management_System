@@ -47,7 +47,6 @@ public class MaterialServiceImpl implements MaterialService {
         if (entityId == null || entityId <= 0) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        Material material = this.findById(entityId);
         materialRepository.deleteById(entityId);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }

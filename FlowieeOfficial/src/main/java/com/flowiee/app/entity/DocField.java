@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.LoaiTaiLieu;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -49,18 +46,6 @@ public class DocField extends BaseEntity implements Serializable {
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;
 
-    @CreatedDate
-    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
-    private Date createdAt;
-
-    @PreUpdate
-    @PrePersist
-    public void updateTimeStamps() {
-        if (createdAt == null) {
-            createdAt = new Date();
-        }
-    }
-
     @JsonIgnoreProperties("listDocField")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loai_tai_lieu_id", nullable = false)
@@ -70,6 +55,10 @@ public class DocField extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "docField", fetch = FetchType.LAZY)
     private List<DocData> listDocData;
 
+    public DocField(Integer id) {
+    	super.id = id;
+    }
+    
     @Override
     public String toString() {
         return "DocField{" +
@@ -83,7 +72,6 @@ public class DocField extends BaseEntity implements Serializable {
                 ", batBuocNhap=" + batBuocNhap +
                 ", sapXep=" + sapXep +
                 ", trangThai=" + trangThai +
-                ", createdAt=" + createdAt +
                 ", loaiTaiLieu=" + loaiTaiLieu +
                 '}';
     }

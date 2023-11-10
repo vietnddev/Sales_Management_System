@@ -4,9 +4,10 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
+@SuppressWarnings("deprecation")
 public class CurrencyUtil {
     public static String formatToVND(Long currency) {
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         currencyFormat.setCurrency(Currency.getInstance("VND"));
         return currency != null ? currencyFormat.format(currency) : "0 VND";
     }

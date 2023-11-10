@@ -7,7 +7,6 @@ import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.repository.product.OrderCartRepository;
 import com.flowiee.app.service.product.CartService;
-import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,6 @@ public class CartServiceImpl implements CartService {
     private OrderCartRepository orderCartRepository;
     @Autowired
     private SystemLogService systemLogService;
-    @Autowired
-    private AccountService accountService;
 
     @Override
     public List<OrderCart> findAll() {

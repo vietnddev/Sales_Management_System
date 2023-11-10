@@ -33,4 +33,8 @@ public class FlowieeConfig extends BaseEntity implements Serializable {
 
 	@Column(name = "sort_config")
 	private Integer sort;
+	
+	public FlowieeConfig(Integer id, String key, String name, String value, Integer sort) {
+		
+	}
 }

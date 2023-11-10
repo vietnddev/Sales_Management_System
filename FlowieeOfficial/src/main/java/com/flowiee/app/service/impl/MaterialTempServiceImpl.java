@@ -47,7 +47,6 @@ public class MaterialTempServiceImpl implements MaterialTempService {
         if (entityId == null || entityId <= 0) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        MaterialTemp material = this.findById(entityId);
         materialTempRepository.deleteById(entityId);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
