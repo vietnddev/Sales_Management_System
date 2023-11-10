@@ -12,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
 @Controller
 @RequestMapping(value = "/he-thong/config")
 public class SystemConfigController extends BaseController {
@@ -31,10 +29,6 @@ public class SystemConfigController extends BaseController {
         }
         if (!kiemTraQuyenModuleAdministrator.kiemTraQuyenConfig()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
-        }
-        List<FlowieeConfig> listConfig = flowieeConfigService.findAll();
-        if (listConfig.isEmpty()) {
-            flowieeConfigService.defaultConfig();
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CONFIG);
         modelAndView.addObject("config", new FlowieeConfig());

@@ -72,22 +72,4 @@ public class GoodsImport extends BaseEntity implements Serializable {
     public GoodsImport(Integer id) {
         super.id = id;
     }
-
-    @Override
-    public String toString() {
-        return "GoodsImport{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", supplier=" + supplier +
-                ", discount=" + discount +
-                ", paymentMethod=" + paymentMethod +
-                ", paidAmount=" + paidAmount +
-                ", paidStatus='" + paidStatus + '\'' +
-                ", orderTime=" + orderTime +
-                ", receivedTime=" + receivedTime +
-                ", receivedBy=" + receivedBy +
-                ", note='" + note + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
 }

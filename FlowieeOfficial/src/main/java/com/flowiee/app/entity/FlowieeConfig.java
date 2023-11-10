@@ -22,16 +22,16 @@ import javax.persistence.*;
 public class FlowieeConfig extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "key_config", nullable = false)
-	private String key;
+	@Column(name = "code", nullable = false)
+	private String code;
 
-	@Column(name = "name_config", nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "value_config", length = 1000)
+	@Column(name = "value", length = 1000)
 	private String value;
 
-	@Column(name = "sort_config")
+	@Column(name = "sort")
 	private Integer sort;
 	
 	public FlowieeConfig(Integer id, String key, String name, String value, Integer sort) {
