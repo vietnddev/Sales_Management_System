@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
             throw new BadRequestException();
         }
         try {
-            product.setCreatedBy(FlowieeUtil.ACCOUNT_ID + "");
+            product.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
             productsRepository.save(product);
             systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info(ProductServiceImpl.class.getName() + ": Thêm mới sản phẩm " + product.toString());

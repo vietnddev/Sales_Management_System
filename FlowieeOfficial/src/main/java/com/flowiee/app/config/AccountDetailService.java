@@ -58,13 +58,8 @@ public class AccountDetailService implements UserDetailsService {
 			FlowieeUtil.ACCOUNT_USERNAME = accountEntity.getUsername();
 			FlowieeUtil.ACCOUNT = accountEntity;
 
-			SystemLog systemLog = SystemLog.builder()
-				.module(SystemModule.HE_THONG.name())
-				.action(SystemAction.LOGIN.name())
-				.noiDung(accountEntity.toString())
-				.account(new Account(accountEntity.getId()))
-				.ip(details != null ? details.getRemoteAddress() : "unknown").build();
-				systemLogService.writeLog(systemLog);
+			SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), SystemAction.LOGIN.name(), "LOGIN", null, accountEntity.getId(), details != null ? details.getRemoteAddress() : "unknown");
+			systemLogService.writeLog(systemLog);
 		} else {
 			System.out.println("Login thất bại");
 		}

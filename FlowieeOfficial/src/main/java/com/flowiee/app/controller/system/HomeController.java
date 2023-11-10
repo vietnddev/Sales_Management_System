@@ -26,7 +26,7 @@ public class HomeController {
             account.setSoDienThoai("0706820684");
             account.setGioiTinh(true);
             account.setTrangThai(true);
-            account.setCreatedBy("System");
+            account.setCreatedBy(0);
             accountService.save(account);
         }
         return "login";

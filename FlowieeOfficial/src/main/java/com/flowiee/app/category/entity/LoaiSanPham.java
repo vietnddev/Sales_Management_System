@@ -32,9 +32,9 @@ public class LoaiSanPham extends BaseEntity implements Serializable {
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;
 
-    @JsonIgnoreProperties("loaiSanPham")
-    @OneToMany(mappedBy = "loaiSanPham", fetch = FetchType.LAZY)
-    private List<Product> listProduct;
+//    @JsonIgnoreProperties("loaiSanPham")
+//    @OneToMany(mappedBy = "loaiSanPham", fetch = FetchType.LAZY)
+//    private List<Product> listProduct;
 
     @Override
     public String toString() {

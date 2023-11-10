@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer == null) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        customer.setCreatedBy(FlowieeUtil.ACCOUNT_ID + "");
+        customer.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
         customerRepository.save(customer);
         systemLogService.writeLog(module, KhachHangAction.CREATE_KHACHHANG.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Thêm mới khách hàng " + customer.toString());

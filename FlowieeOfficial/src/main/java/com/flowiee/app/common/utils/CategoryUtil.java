@@ -13,6 +13,7 @@ public class CategoryUtil {
     public static String PRODUCTTYPE = "PRODUCTTYPE";
     public static String DOCUMENTTYPE = "DOCUMENTTYPE";
     public static String ORDERSTATUS = "ORDERSTATUS";
+    public static String PAYMENTSTATUS = "PAYMENTSTATUS";
 
     public static String getCategoryType(String input) {
         Map<String, String> map = new HashMap<>();
@@ -25,6 +26,7 @@ public class CategoryUtil {
         map.put("product-type", PRODUCTTYPE);
         map.put("document-type", DOCUMENTTYPE);
         map.put("order-status", ORDERSTATUS);
+        map.put("payment-status", PAYMENTSTATUS);
         return map.get(input);
     }
 }

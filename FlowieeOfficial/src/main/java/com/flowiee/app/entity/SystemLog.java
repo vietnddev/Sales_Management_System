@@ -19,11 +19,6 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Column(name = "module", length = 50, nullable = false)
 	private String module;
 
-	@JsonIgnoreProperties("listLog")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by_wr", nullable = false)
-	private Account account;
-
 	@Column(name = "action",nullable = false)
 	private String action;
 
@@ -35,13 +30,21 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 
 	@Column(name = "ip", length = 20)
 	private String ip;
-
+	
+	public SystemLog (String module, String action, String value, String newValue, Integer createdBy, String ip) {
+		this.module = module;
+		this.action = action;
+		this.noiDung = value;
+		this.noiDungCapNhat = newValue;
+		super.createdBy = createdBy;
+		this.ip = ip;
+	}
+	
 	@Override
 	public String toString() {
 		return "SystemLog{" +
 				"id=" + id +
 				", module='" + module + '\'' +
-				", account=" + account +
 				", action='" + action + '\'' +
 				", noiDung='" + noiDung + '\'' +
 				", noiDungCapNhat='" + noiDungCapNhat + '\'' +

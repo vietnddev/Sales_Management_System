@@ -225,7 +225,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         GoodsImport goodsImport = new GoodsImport();
         goodsImport.setTitle("Title");
         goodsImport.setStatus(STATUS_DRAFT);
-        goodsImport.setCreatedBy(String.valueOf(FlowieeUtil.ACCOUNT_ID));
+        goodsImport.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
         goodsImport = goodsImportRepository.save(goodsImport);
         return goodsImport;
     }

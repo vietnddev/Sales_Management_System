@@ -2,10 +2,15 @@ package com.flowiee.app.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.entity.OrderDetail;
+import com.flowiee.app.entity.Product;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 import javax.persistence.*;
 

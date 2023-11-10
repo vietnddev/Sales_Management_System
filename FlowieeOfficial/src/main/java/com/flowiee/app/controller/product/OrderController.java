@@ -146,7 +146,7 @@ public class OrderController extends BaseController {
             List<OrderCart> orderCartCurrent = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
             if (orderCartCurrent.isEmpty()) {
                 OrderCart orderCart = new OrderCart();
-                orderCart.setCreatedBy(FlowieeUtil.ACCOUNT_ID + "");
+                orderCart.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
                 cartService.save(orderCart);
             }
             modelAndView.addObject("listDonHang", orderService.findAll());

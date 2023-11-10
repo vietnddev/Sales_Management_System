@@ -10,6 +10,7 @@ import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.RoleService;
 import com.flowiee.app.service.system.SystemLogService;
 import com.flowiee.app.common.action.AccountAction;
+import com.flowiee.app.common.action.SystemAction;
 import com.flowiee.app.common.module.SystemModule;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,28 +65,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String save(Account account) {
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-            .module(SystemModule.HE_THONG.name())
-            .action(AccountAction.CREATE_ACCOUNT.name())
-            .noiDung(account.toString())
-            .account(new Account(accountRepository.findIdByUsername(account.getUsername())))
-            .ip(FlowieeUtil.ACCOUNT_IP)
-            .build();
+    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.CREATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
         systemLogService.writeLog(systemLog);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(Account entity, Integer entityId) {
-        //Ghi log
-        SystemLog systemLog = SystemLog.builder()
-                .module(SystemModule.HE_THONG.name())
-                .action(AccountAction.UPDATE_ACCOUNT.name())
-                .noiDung(entity.toString())
-                .account(new Account(accountRepository.findIdByUsername(entity.getUsername())))
-                .ip(FlowieeUtil.ACCOUNT_IP)
-                .build();
+    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.UPDATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
         systemLogService.writeLog(systemLog);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
@@ -95,14 +82,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElse(null);
         if (account != null) {
             accountRepository.delete(account);
-            //Ghi log
-            SystemLog systemLog = SystemLog.builder()
-                .module(SystemModule.HE_THONG.name())
-                .action(AccountAction.DELETE_ACCOUNT.name())
-                .noiDung(account.toString())
-                .account(FlowieeUtil.ACCOUNT)
-                .ip(FlowieeUtil.ACCOUNT_IP)
-                .build();
+            SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.DELETE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
             systemLogService.writeLog(systemLog);
         }
         return TagName.SERVICE_RESPONSE_SUCCESS;

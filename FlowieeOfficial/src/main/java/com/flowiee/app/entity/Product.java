@@ -2,8 +2,6 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.DonViTinh;
-import com.flowiee.app.category.entity.LoaiSanPham;
 
 import lombok.*;
 
@@ -22,16 +20,14 @@ import java.util.List;
 public class Product extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loai_san_pham", nullable = false)
-    private LoaiSanPham loaiSanPham;
+	@Column(name = "loai_san_pham", nullable = false)
+    private Integer loaiSanPham;
 
     @Column(name = "ten_san_pham", nullable = false)
     private String tenSanPham;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "don_vi_tinh", nullable = false)
-    private DonViTinh donViTinh;
+    @Column(name = "don_vi_tinh", nullable = false)
+    private Integer donViTinh;
 
     @Lob
     @Column(name = "mo_ta_san_pham", length = 30000, nullable = true, columnDefinition = "CLOB")

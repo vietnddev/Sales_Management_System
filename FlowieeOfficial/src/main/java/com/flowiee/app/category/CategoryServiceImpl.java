@@ -1,7 +1,5 @@
 package com.flowiee.app.category;
 
-import com.flowiee.app.category.entity.DonViTinh;
-import com.flowiee.app.category.service.impl.DonViTinhServiceImpl;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.ExcelUtil;
@@ -202,7 +200,7 @@ public class CategoryServiceImpl implements CategoryService {
             //Save import
             FlowieeImport flowieeImport = new FlowieeImport();
             flowieeImport.setModule(MODULE);
-            flowieeImport.setEntity(DonViTinhServiceImpl.class.getName());
+            flowieeImport.setEntity(Category.class.getName());
             flowieeImport.setAccount(FlowieeUtil.ACCOUNT);
             flowieeImport.setStartTime(startTimeImport);
             flowieeImport.setEndTime(new Date());

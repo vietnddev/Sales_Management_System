@@ -51,7 +51,7 @@ public class CartServiceImpl implements CartService {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(SystemModule.SAN_PHAM.name());
         systemLog.setAction("DELETE_CART");
-        systemLog.setAccount(FlowieeUtil.ACCOUNT);
+        systemLog.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
         systemLog.setIp(FlowieeUtil.ACCOUNT_IP);
         systemLog.setNoiDung("DELETE CART");
         systemLogService.writeLog(systemLog);
