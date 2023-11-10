@@ -7,9 +7,9 @@ import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.category.service.LoaiTaiLieuService;
-import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.storage.entity.DocField;
 import com.flowiee.app.storage.service.DocFieldService;
 import com.flowiee.app.system.service.AccountService;
@@ -28,7 +28,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/danh-muc/loai-tai-lieu")
-public class DocTypeController {
+public class DocTypeController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -37,8 +37,6 @@ public class DocTypeController {
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
     @Autowired
     private DocFieldService docFieldService;
-    @Autowired
-    private NotificationService notificationService;
 
     @GetMapping("")
     public ModelAndView findAllDmLoaiTaiLieu() {
@@ -54,8 +52,7 @@ public class DocTypeController {
             modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAITAILIEU);
             modelAndView.addObject("url_template", EndPointUtil.DANHMUC_LOAITAILIEU_TEMPLATE);
             modelAndView.addObject("url_import", EndPointUtil.DANHMUC_LOAITAILIEU_IMPORT);
-            modelAndView.addObject("url_export", EndPointUtil.DANHMUC_LOAITAILIEU_EXPORT);
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            modelAndView.addObject("url_export", EndPointUtil.DANHMUC_LOAITAILIEU_EXPORT);            
             if (kiemTraQuyenModuleDanhMuc.validateInsert()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -65,7 +62,7 @@ public class DocTypeController {
             if (kiemTraQuyenModuleDanhMuc.validateDelete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -83,8 +80,7 @@ public class DocTypeController {
             modelAndView.addObject("listDocField", listDocField);
             modelAndView.addObject("docField", new DocField());
             modelAndView.addObject("nameDocType", docTypeService.findById(id).getTen().toUpperCase());
-            modelAndView.addObject("docTypeId", id);
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            modelAndView.addObject("docTypeId", id);            
             if (kiemTraQuyenModuleDanhMuc.validateInsert()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -94,7 +90,7 @@ public class DocTypeController {
             if (kiemTraQuyenModuleDanhMuc.validateDelete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

@@ -4,12 +4,10 @@ import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.EndPointUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.category.service.DonViTinhService;
 import com.flowiee.app.system.service.AccountService;
-import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.storage.entity.Material;
 import com.flowiee.app.product.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin
 @Controller
 @RequestMapping("/storage/material")
-public class MaterialController {
+public class MaterialController extends BaseController {
     @Autowired
     private MaterialService materialService;
     @Autowired
     private CategoryService categoryService;
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
 
@@ -47,12 +43,11 @@ public class MaterialController {
             modelAndView.addObject("material", new Material());
             modelAndView.addObject("listMaterial", materialService.findAll());
             modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             modelAndView.addObject("templateImportName", "Name");
             modelAndView.addObject("url_template", EndPointUtil.STORAGE_MATERIAL_TEMPLATE);
             modelAndView.addObject("url_import", EndPointUtil.STORAGE_MATERIAL_IMPORT);
             modelAndView.addObject("url_export", EndPointUtil.STORAGE_MATERIAL_EXPORT);
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

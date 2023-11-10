@@ -4,10 +4,10 @@ import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.category.service.LoaiTaiLieuService;
 import com.flowiee.app.storage.service.FileStorageService;
-import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.storage.entity.DocData;
 import com.flowiee.app.storage.entity.DocField;
 import com.flowiee.app.storage.entity.Document;
@@ -32,7 +32,7 @@ import java.util.*;
 @CrossOrigin
 @Controller
 @RequestMapping("/kho-tai-lieu")
-public class DocumentController {
+public class DocumentController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -49,8 +49,6 @@ public class DocumentController {
     private ValidateModuleStorage validateModuleStorage;
     @Autowired
     private DocShareService docShareService;
-    @Autowired
-    private NotificationService notificationService;
 
     //Dashboard
     @GetMapping("/dashboard")
@@ -69,9 +67,8 @@ public class DocumentController {
                 listSoLuongOfDocType.add(docType.getListDocument() != null ? docType.getListDocument().size() : 0);
             }
             modelAndView.addObject("reportOfDocType_listTen", listTenOfDocType);
-            modelAndView.addObject("reportOfDocType_listSoLuong", listSoLuongOfDocType);
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            modelAndView.addObject("reportOfDocType_listSoLuong", listSoLuongOfDocType);            
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -103,8 +100,7 @@ public class DocumentController {
             listFolder.addAll(documentService.findAllFolder());
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
-            modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");            
             if (validateModuleStorage.insert()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -114,7 +110,7 @@ public class DocumentController {
             if (validateModuleStorage.delete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -148,8 +144,7 @@ public class DocumentController {
             //Load file active
             modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
             //Load các version khác của document
-            modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));            
             //Cây thư mục
             //modelAndView.addObject("folders", list);
             if (validateModuleStorage.update()) {
@@ -158,7 +153,7 @@ public class DocumentController {
             if (validateModuleStorage.delete()) {
                 modelAndView.addObject("action_delete", "enable");
             }
-            return modelAndView;
+            return baseView(modelAndView);
         }
 
         if (document.getLoai().equals(DocumentType.FOLDER.name())) {
@@ -176,8 +171,7 @@ public class DocumentController {
             listFolder.addAll(documentService.findAllFolder());
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
-            modelAndView.addObject("documentParentName", document.getTen().toUpperCase());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            modelAndView.addObject("documentParentName", document.getTen().toUpperCase());            
             if (validateModuleStorage.insert()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -188,7 +182,7 @@ public class DocumentController {
                 modelAndView.addObject("action_delete", "enable");
             }
 
-            return modelAndView;
+            return baseView(modelAndView);
         }
 
         return new ModelAndView();

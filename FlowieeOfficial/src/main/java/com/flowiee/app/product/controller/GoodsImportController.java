@@ -4,11 +4,11 @@ import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.entity.HinhThucThanhToan;
 import com.flowiee.app.category.service.HinhThucThanhToanService;
 import com.flowiee.app.system.entity.Account;
 import com.flowiee.app.system.service.AccountService;
-import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.product.entity.*;
 import com.flowiee.app.product.model.GoodsImportRequest;
 import com.flowiee.app.product.services.*;
@@ -24,7 +24,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/storage/goods")
-public class GoodsImportController {
+public class GoodsImportController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -41,8 +41,6 @@ public class GoodsImportController {
     private MaterialTempService materialServiceTemp;
     @Autowired
     private HinhThucThanhToanService hinhThucThanhToanService;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
 
@@ -114,12 +112,11 @@ public class GoodsImportController {
                 listTrangThaiThanhToan.putAll(listTrangThaiThanhToanTemp);
             }
             modelAndView.addObject("listTrangThaiThanhToan", listTrangThaiThanhToan);
-
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            
             //
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

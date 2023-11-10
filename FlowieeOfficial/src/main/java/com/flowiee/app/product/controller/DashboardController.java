@@ -1,6 +1,7 @@
 package com.flowiee.app.product.controller;
 
 import com.flowiee.app.config.KiemTraQuyenModuleDashboard;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.product.model.DoanhThuCacNgayTheoThang;
@@ -23,7 +24,7 @@ import java.util.List;
 @Controller
 @CrossOrigin
 @RequestMapping("")
-public class DashboardController {
+public class DashboardController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -72,7 +73,7 @@ public class DashboardController {
             modelAndView.addObject("topSanPham_listTenSanPham", topSanPhamBanChay.getTenSanPham());
             modelAndView.addObject("topSanPham_listSoLuong", topSanPhamBanChay.getSoLuongDaBan());
 
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

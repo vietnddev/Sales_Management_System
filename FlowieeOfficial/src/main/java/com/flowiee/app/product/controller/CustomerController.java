@@ -1,10 +1,9 @@
 package com.flowiee.app.product.controller;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.product.entity.Customer;
 import com.flowiee.app.system.service.AccountService;
-import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.product.services.OrderService;
 import com.flowiee.app.product.services.CustomerService;
 import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
@@ -17,15 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/khach-hang")
-public class CustomerController {
+public class CustomerController extends BaseController {
     @Autowired
     private CustomerService customerService;
     @Autowired
     private AccountService accountService;
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
@@ -37,9 +34,8 @@ public class CustomerController {
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXemKhachHang()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_KHACHHANG);
             modelAndView.addObject("listKhachHang", customerService.findAll());
-            modelAndView.addObject("khachHang", new Customer());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            modelAndView.addObject("khachHang", new Customer());            
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -54,8 +50,7 @@ public class CustomerController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_KHACHHANG_CHITIET);
             modelAndView.addObject("khachHangDetail", customerService.findById(id));
             modelAndView.addObject("listDonHang", orderService.findByKhachHangId(id));
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

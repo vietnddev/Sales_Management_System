@@ -1,4 +1,9 @@
 package com.flowiee.app.product.controller;
 
-public class MaterialController {
+import org.springframework.stereotype.Controller;
+
+import com.flowiee.app.base.BaseController;
+
+@Controller
+public class MaterialController extends BaseController {
 }

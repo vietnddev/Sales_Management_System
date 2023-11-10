@@ -1,14 +1,13 @@
 package com.flowiee.app.category;
 
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.system.service.AccountService;
-import com.flowiee.app.system.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -25,13 +24,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/system/category")
-public class CategoryController {
+public class CategoryController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
     private CategoryService categoryService;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
 
@@ -43,9 +40,8 @@ public class CategoryController {
         if (kiemTraQuyenModuleDanhMuc.validateRead()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
             modelAndView.addObject("category", new Category());
-            modelAndView.addObject("listCategory", categoryService.findRootCategory());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            modelAndView.addObject("listCategory", categoryService.findRootCategory());            
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -66,8 +62,7 @@ public class CategoryController {
             modelAndView.addObject("url_template", EndPointUtil.DANHMUC_DONVITINH_TEMPLATE);
             modelAndView.addObject("url_import", EndPointUtil.DANHMUC_DONVITINH_IMPORT);
             modelAndView.addObject("url_export", EndPointUtil.DANHMUC_DONVITINH_EXPORT);
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

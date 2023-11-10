@@ -4,9 +4,8 @@ import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.category.service.HinhThucThanhToanService;
-import com.flowiee.app.category.service.KenhBanHangService;
 import com.flowiee.app.category.service.TrangThaiDonHangService;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.product.model.OrderRequest;
@@ -33,7 +32,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/don-hang")
-public class OrderController {
+public class OrderController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
     private static final String module = SystemModule.SAN_PHAM.name();
 
@@ -77,9 +76,8 @@ public class OrderController {
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
             modelAndView.addObject("donHangRequest", new OrderRequest());
-            modelAndView.addObject("donHang", new Order());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            modelAndView.addObject("donHang", new Order());            
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -111,8 +109,7 @@ public class OrderController {
 
             modelAndView.addObject("donHangRequest", new OrderRequest());
             modelAndView.addObject("donHang", new Order());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -132,8 +129,7 @@ public class OrderController {
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("donHang", new Order());
             modelAndView.addObject("donHangThanhToan", new OrderPay());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -158,8 +154,7 @@ public class OrderController {
             modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());            
 
             List<OrderCart> listOrderCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
             modelAndView.addObject("listCart", listOrderCart);
@@ -169,7 +164,7 @@ public class OrderController {
             modelAndView.addObject("khachHang", new Customer());
             modelAndView.addObject("cart", new OrderCart());
             modelAndView.addObject("items", new Items());
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

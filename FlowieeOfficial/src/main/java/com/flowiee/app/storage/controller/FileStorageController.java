@@ -1,5 +1,6 @@
 package com.flowiee.app.storage.controller;
 
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.system.service.AccountService;
 import com.flowiee.app.storage.service.FileStorageService;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class FileStorageController {
+public class FileStorageController extends BaseController {
 
     @Autowired
     private FileStorageService fileService;

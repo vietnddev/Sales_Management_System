@@ -1,6 +1,7 @@
 package com.flowiee.app.system.controller;
 
 import com.flowiee.app.config.KiemTraQuyenModulePhanQuyen;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.system.service.AccountService;
@@ -14,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/he-thong/nhom-quyen")
-public class NhomQuyenController {
+public class NhomQuyenController extends BaseController {
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -36,7 +37,7 @@ public class NhomQuyenController {
             if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
                 modelAndView.addObject("action_update", "enable");
             }
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }

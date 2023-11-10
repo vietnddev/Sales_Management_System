@@ -1,10 +1,10 @@
 package com.flowiee.app.system.controller;
 
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.system.entity.Account;
 import com.flowiee.app.system.service.AccountService;
-import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.product.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,14 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(path = "/profile")
-public class ProfileController {
+public class ProfileController extends BaseController {
 	@Autowired
 	private AccountService accountService;
 	@Autowired
-	private OrderService orderService;
-	@Autowired
-	private NotificationService notificationService;
-	BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
+	private OrderService orderService;	
 
 	@GetMapping("")
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
@@ -42,9 +39,8 @@ public class ProfileController {
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", profile);
-		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(profile.getId()));
-		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-		return modelAndView;
+		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(profile.getId()));		
+		return baseView(modelAndView);
 	}
 
 	@PostMapping("/update")
@@ -79,6 +75,7 @@ public class ProfileController {
 
 		Account profile = FlowieeUtil.ACCOUNT;
 
+		BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 		if (bCrypt.matches(password_old,
 				accountService.findByUsername(profile.getUsername()).getPassword())) {
 			if (password_new.equals(password_renew)) {

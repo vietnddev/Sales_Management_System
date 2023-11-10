@@ -1,6 +1,7 @@
 package com.flowiee.app.storage.controller;
 
 import com.flowiee.app.config.ValidateModuleStorage;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/kho-tai-lieu/docfield")
-public class DocFieldController {
+public class DocFieldController extends BaseController {
     @Autowired
     private DocFieldService docFieldService;
     @Autowired

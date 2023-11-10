@@ -1,11 +1,11 @@
 package com.flowiee.app.product.controller;
 
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.product.entity.Product;
 import com.flowiee.app.product.entity.ProductAttribute;
 import com.flowiee.app.product.entity.ProductVariant;
@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(path = "/san-pham")
-public class ProductController {
+public class ProductController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
@@ -69,8 +69,7 @@ public class ProductController {
             modelAndView.addObject("listSanPham", productsService.findAll());
             modelAndView.addObject("listLoaiSanPham", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
             modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
-            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);            
             if (validateRole.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
             }
@@ -80,7 +79,7 @@ public class ProductController {
             if (validateRole.kiemTraQuyenXoa()) {
                 modelAndView.addObject("action_delete", "enable");
             }
-            return modelAndView;
+            return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
@@ -114,9 +113,8 @@ public class ProductController {
         modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
         //Image active
         FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(sanPhamId);
-        modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-        return modelAndView;
+        modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());        
+        return baseView(modelAndView);
     }
 
     @GetMapping(value = "/variant/{id}")
@@ -138,9 +136,8 @@ public class ProductController {
         if (imageActive == null) {
             imageActive = new FileStorage();
         }
-        modelAndView.addObject("imageActive", imageActive);
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-        return modelAndView;
+        modelAndView.addObject("imageActive", imageActive);        
+        return baseView(modelAndView);
     }
 
     @PostMapping(value = "/insert")

@@ -1,6 +1,6 @@
 package com.flowiee.app.system.controller;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.system.service.AccountService;
 import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.system.service.SystemLogService;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value = "/he-thong/nhat-ky")
-public class LogController {
+public class LogController extends BaseController {
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
@@ -28,9 +28,8 @@ public class LogController {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_NHATKY);
-        modelAndView.addObject("listLog", systemLogService.getAll());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-        return modelAndView;
+        modelAndView.addObject("listLog", systemLogService.getAll());        
+        return baseView(modelAndView);
     }
 
 //    @GetMapping(value = "export")
