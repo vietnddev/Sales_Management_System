@@ -1,5 +1,6 @@
 package com.flowiee.app.system.controller;
 
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FlowieeUtil;
@@ -8,9 +9,7 @@ import com.flowiee.app.system.model.FlowieeRole;
 import com.flowiee.app.system.model.Role;
 import com.flowiee.app.system.entity.Account;
 import com.flowiee.app.system.service.AccountService;
-import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.system.service.RoleService;
-import com.flowiee.app.system.service.SystemLogService;
 import com.flowiee.app.common.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,15 +23,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping(path = "/he-thong/tai-khoan")
-public class AccountController {
+public class AccountController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private SystemLogService systemLogService;
-    @Autowired
-    private NotificationService notificationService;
 
     @GetMapping(value = "")
     public ModelAndView findAllAccount() {
@@ -41,11 +36,10 @@ public class AccountController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_LIST);
         modelAndView.addObject("account", new Account());
-        modelAndView.addObject("listAccount", accountService.findAll());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+        modelAndView.addObject("listAccount", accountService.findAll());       
         List<Role> newRole = new ArrayList<>();
-        modelAndView.addObject("list", newRole);
-        return modelAndView;
+        modelAndView.addObject("list", newRole);       
+        return baseView(modelAndView);
     }
 
     @GetMapping(value = "/{id}")
@@ -60,23 +54,22 @@ public class AccountController {
         //Account info
         Account accountInfo = accountService.findById(id);
         modelAndView.addObject("accountInfo", accountInfo);
-        return modelAndView;
+        return baseView(modelAndView);
     }
 
     @PostMapping(value = "/insert")
-    public ModelAndView save(HttpServletRequest request, @ModelAttribute("account") Account account) {
+    public String save(HttpServletRequest request, @ModelAttribute("account") Account account) {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return PagesUtil.PAGE_LOGIN;
         }
         if (accountService.findByUsername(account.getUsername()) != null) {
             throw new DataExistsException();
         }
-        ModelAndView modelAndView = new ModelAndView("redirect:/he-thong/tai-khoan");
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
         String password = account.getPassword();
         account.setPassword(bCrypt.encode(password));
         accountService.save(account);
-        return modelAndView;
+        return "redirect:/he-thong/tai-khoan";
     }
 
     @PostMapping(value = "/update/{id}")
