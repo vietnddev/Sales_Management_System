@@ -1,6 +1,5 @@
 package com.flowiee.app.storage.controller;
 
-import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
 import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
@@ -8,19 +7,16 @@ import com.flowiee.app.common.utils.*;
 import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.category.service.LoaiTaiLieuService;
 import com.flowiee.app.storage.service.FileStorageService;
-import com.flowiee.app.system.service.MailService;
 import com.flowiee.app.system.service.NotificationService;
 import com.flowiee.app.storage.entity.DocData;
 import com.flowiee.app.storage.entity.DocField;
 import com.flowiee.app.storage.entity.Document;
 import com.flowiee.app.storage.model.DocMetaResponse;
 import com.flowiee.app.storage.model.DocumentType;
-import com.flowiee.app.storage.repository.DocumentRepository;
 import com.flowiee.app.storage.service.DocDataService;
 import com.flowiee.app.storage.service.DocFieldService;
 import com.flowiee.app.storage.service.DocShareService;
 import com.flowiee.app.storage.service.DocumentService;
-import com.flowiee.app.system.service.SystemLogService;
 import com.flowiee.app.system.entity.Account;
 import com.flowiee.app.system.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,19 +44,11 @@ public class DocumentController {
     @Autowired
     private LoaiTaiLieuService loaiTaiLieuService;
     @Autowired
-    private SystemLogService systemLogService;
-    @Autowired
     private FileStorageService fileStorageService;
-    @Autowired
-    private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
     @Autowired
     private DocShareService docShareService;
-    @Autowired
-    private MailService mailService;
-    @Autowired
-    private DocumentRepository documentRepository;
     @Autowired
     private NotificationService notificationService;
 
