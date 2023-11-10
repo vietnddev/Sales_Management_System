@@ -24,7 +24,7 @@ public class BaseEntity {
 
     @Column(name = "created_by", updatable = false)
     @CreatedBy
-    private String createdBy;
+    protected Integer createdBy;
 
     @Column(name = "last_updated_at", columnDefinition = "timestamp default current_timestamp")
     @LastModifiedDate
