@@ -4,7 +4,7 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.product.Price;
+import com.flowiee.app.entity.Price;
 import com.flowiee.app.repository.product.PriceRepository;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductVariantService;

@@ -1,10 +1,10 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.product.ProductVariant;
-import com.flowiee.app.entity.product.Voucher;
-import com.flowiee.app.entity.product.VoucherDetail;
-import com.flowiee.app.entity.product.VoucherSanPham;
+import com.flowiee.app.entity.ProductVariant;
+import com.flowiee.app.entity.Voucher;
+import com.flowiee.app.entity.VoucherDetail;
+import com.flowiee.app.entity.VoucherSanPham;
 import com.flowiee.app.model.product.VoucherResponse;
 import com.flowiee.app.repository.product.VoucherRepository;
 import com.flowiee.app.service.product.ProductVariantService;

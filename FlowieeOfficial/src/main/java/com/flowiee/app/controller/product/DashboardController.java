@@ -1,8 +1,8 @@
 package com.flowiee.app.controller.product;
 
 import com.flowiee.app.config.KiemTraQuyenModuleDashboard;
-import com.flowiee.app.entity.product.Customer;
-import com.flowiee.app.entity.product.Order;
+import com.flowiee.app.entity.Customer;
+import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
 import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;

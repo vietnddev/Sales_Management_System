@@ -4,8 +4,8 @@ import lombok.Data;
 
 import java.util.List;
 
-import com.flowiee.app.entity.product.ProductVariant;
-import com.flowiee.app.entity.product.VoucherDetail;
+import com.flowiee.app.entity.ProductVariant;
+import com.flowiee.app.entity.VoucherDetail;
 
 @Data
 public class VoucherResponse {

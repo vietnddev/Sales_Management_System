@@ -4,7 +4,7 @@ import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.action.DonHangAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.product.OrderDetail;
+import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.repository.product.OrderDetailRepository;
 import com.flowiee.app.service.product.OrderDetailService;
 import com.flowiee.app.service.product.OrderService;

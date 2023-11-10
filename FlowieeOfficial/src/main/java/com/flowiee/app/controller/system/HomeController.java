@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.system;
 
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.system.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;

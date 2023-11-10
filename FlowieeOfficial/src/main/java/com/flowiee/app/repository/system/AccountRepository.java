@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.entity.Account;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer>{

@@ -2,7 +2,7 @@ package com.flowiee.app.service.system;
 
 import java.util.List;
 
-import com.flowiee.app.entity.system.SystemLog;
+import com.flowiee.app.entity.SystemLog;
 
 public interface SystemLogService {
     List<SystemLog> getAll();

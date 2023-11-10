@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.product.OrderPay;
+import com.flowiee.app.entity.OrderPay;
 import com.flowiee.app.repository.product.OrderPayRepository;
 import com.flowiee.app.service.product.DonHangThanhToanService;
 

@@ -1,6 +1,6 @@
 package com.flowiee.app.service.product;
 
-import com.flowiee.app.entity.product.Voucher;
+import com.flowiee.app.entity.Voucher;
 import com.flowiee.app.model.product.VoucherResponse;
 
 import java.util.List;

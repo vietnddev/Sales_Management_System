@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.storage.MaterialTemp;
+import com.flowiee.app.entity.MaterialTemp;
 import com.flowiee.app.repository.product.MaterialTempRepository;
 import com.flowiee.app.service.product.MaterialTempService;
 

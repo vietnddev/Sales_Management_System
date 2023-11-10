@@ -1,10 +1,10 @@
 package com.flowiee.app.controller.storage;
 
 import com.flowiee.app.config.ValidateModuleStorage;
-import com.flowiee.app.entity.storage.DocData;
-import com.flowiee.app.entity.storage.DocField;
-import com.flowiee.app.entity.storage.Document;
-import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.entity.Account;
+import com.flowiee.app.entity.DocData;
+import com.flowiee.app.entity.DocField;
+import com.flowiee.app.entity.Document;
 import com.flowiee.app.model.storage.DocMetaResponse;
 import com.flowiee.app.model.storage.DocumentType;
 import com.flowiee.app.service.storage.DocDataService;

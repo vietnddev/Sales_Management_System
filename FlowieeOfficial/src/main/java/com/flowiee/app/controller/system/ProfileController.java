@@ -3,7 +3,7 @@ package com.flowiee.app.controller.system;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.product.OrderService;
 import com.flowiee.app.service.system.AccountService;
 

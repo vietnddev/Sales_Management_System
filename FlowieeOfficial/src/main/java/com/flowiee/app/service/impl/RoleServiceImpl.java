@@ -1,8 +1,8 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.system.Account;
-import com.flowiee.app.entity.system.AccountRole;
+import com.flowiee.app.entity.Account;
+import com.flowiee.app.entity.AccountRole;
 import com.flowiee.app.model.system.ActionOfModule;
 import com.flowiee.app.model.system.FlowieeRole;
 import com.flowiee.app.model.system.ModuleOfFlowiee;

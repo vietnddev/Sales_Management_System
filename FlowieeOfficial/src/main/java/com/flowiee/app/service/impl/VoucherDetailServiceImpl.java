@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.product.VoucherDetail;
+import com.flowiee.app.entity.VoucherDetail;
 import com.flowiee.app.repository.product.VoucherDetailRepository;
 import com.flowiee.app.service.product.VoucherDetailService;
 

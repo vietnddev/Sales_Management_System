@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.storage;
 
 import com.flowiee.app.config.ValidateModuleStorage;
-import com.flowiee.app.entity.storage.DocField;
+import com.flowiee.app.entity.DocField;
 import com.flowiee.app.service.storage.DocFieldService;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.base.BaseController;

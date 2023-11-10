@@ -2,7 +2,7 @@ package com.flowiee.app.service.product;
 
 import java.util.List;
 
-import com.flowiee.app.entity.product.OrderCart;
+import com.flowiee.app.entity.OrderCart;
 
 public interface CartService {
     List<OrderCart> findAll();

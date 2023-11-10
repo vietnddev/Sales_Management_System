@@ -1,7 +1,7 @@
 package com.flowiee.app.category.entity;
 
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.entity.product.OrderPay;
+import com.flowiee.app.entity.OrderPay;
 
 import lombok.*;
 

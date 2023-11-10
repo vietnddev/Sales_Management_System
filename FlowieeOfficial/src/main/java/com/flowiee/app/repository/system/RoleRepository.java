@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.flowiee.app.entity.system.AccountRole;
+import com.flowiee.app.entity.AccountRole;
 
 import java.util.List;
 

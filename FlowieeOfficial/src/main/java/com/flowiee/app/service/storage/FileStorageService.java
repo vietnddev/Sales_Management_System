@@ -2,7 +2,7 @@ package com.flowiee.app.service.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.flowiee.app.entity.storage.FileStorage;
+import com.flowiee.app.entity.FileStorage;
 
 import java.io.IOException;
 import java.util.List;

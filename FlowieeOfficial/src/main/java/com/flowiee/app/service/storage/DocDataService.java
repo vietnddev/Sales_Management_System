@@ -2,7 +2,7 @@ package com.flowiee.app.service.storage;
 
 import java.util.List;
 
-import com.flowiee.app.entity.storage.DocData;
+import com.flowiee.app.entity.DocData;
 
 public interface DocDataService {
 

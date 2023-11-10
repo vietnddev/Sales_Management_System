@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
-import com.flowiee.app.entity.product.Voucher;
-import com.flowiee.app.entity.product.VoucherDetail;
+import com.flowiee.app.entity.Voucher;
+import com.flowiee.app.entity.VoucherDetail;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;

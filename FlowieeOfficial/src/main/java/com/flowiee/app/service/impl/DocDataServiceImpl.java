@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.entity.storage.DocData;
+import com.flowiee.app.entity.DocData;
 import com.flowiee.app.repository.storage.DocDataRepository;
 import com.flowiee.app.service.storage.DocDataService;
 

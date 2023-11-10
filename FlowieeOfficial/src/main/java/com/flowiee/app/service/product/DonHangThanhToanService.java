@@ -1,7 +1,7 @@
 package com.flowiee.app.service.product;
 
 import com.flowiee.app.base.BaseService;
-import com.flowiee.app.entity.product.OrderPay;
+import com.flowiee.app.entity.OrderPay;
 
 import java.util.List;
 

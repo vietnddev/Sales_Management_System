@@ -2,7 +2,7 @@ package com.flowiee.app.service.storage;
 
 import org.springframework.stereotype.Service;
 
-import com.flowiee.app.entity.storage.DocShare;
+import com.flowiee.app.entity.DocShare;
 
 import java.util.List;
 

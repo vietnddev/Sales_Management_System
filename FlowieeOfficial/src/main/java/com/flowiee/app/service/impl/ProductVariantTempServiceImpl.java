@@ -6,7 +6,7 @@ import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.product.ProductVariantTemp;
+import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.repository.product.ProductVariantTempRepository;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductVariantTempService;

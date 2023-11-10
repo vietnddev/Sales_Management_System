@@ -1,7 +1,7 @@
 package com.flowiee.app.service.product;
 
 import com.flowiee.app.base.BaseService;
-import com.flowiee.app.entity.storage.Material;
+import com.flowiee.app.entity.Material;
 
 import java.util.List;
 

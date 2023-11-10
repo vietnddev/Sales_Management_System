@@ -1,6 +1,6 @@
 package com.flowiee.app.service.storage;
 
-import com.flowiee.app.entity.storage.Document;
+import com.flowiee.app.entity.Document;
 import com.flowiee.app.model.storage.DocMetaResponse;
 
 import java.util.List;

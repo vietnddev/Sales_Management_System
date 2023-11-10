@@ -6,7 +6,7 @@ import com.flowiee.app.service.product.CustomerService;
 import com.flowiee.app.service.product.OrderService;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
-import com.flowiee.app.entity.product.Customer;
+import com.flowiee.app.entity.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

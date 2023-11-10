@@ -2,7 +2,7 @@ package com.flowiee.app.service.product;
 
 import java.util.List;
 
-import com.flowiee.app.entity.product.Price;
+import com.flowiee.app.entity.Price;
 
 public interface PriceService {
     List<Price> findAll();

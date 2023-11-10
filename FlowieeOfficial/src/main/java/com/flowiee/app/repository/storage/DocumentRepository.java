@@ -3,7 +3,7 @@ package com.flowiee.app.repository.storage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.flowiee.app.entity.storage.Document;
+import com.flowiee.app.entity.Document;
 
 import java.util.List;
 

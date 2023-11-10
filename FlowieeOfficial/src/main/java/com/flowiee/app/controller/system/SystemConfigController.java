@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.system;
 
 import com.flowiee.app.config.KiemTraQuyenModuleAdministrator;
-import com.flowiee.app.entity.system.FlowieeConfig;
+import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.FlowieeConfigService;
 import com.flowiee.app.base.BaseController;

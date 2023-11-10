@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.flowiee.app.entity.product.Order;
-import com.flowiee.app.entity.product.OrderDetail;
+import com.flowiee.app.entity.Order;
+import com.flowiee.app.entity.OrderDetail;
 
 import java.util.List;
 

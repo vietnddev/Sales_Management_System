@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.storage;
 
 import com.flowiee.app.config.ValidateModuleStorage;
-import com.flowiee.app.entity.storage.Material;
+import com.flowiee.app.entity.Material;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.EndPointUtil;

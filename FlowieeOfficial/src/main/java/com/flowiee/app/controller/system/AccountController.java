@@ -5,7 +5,7 @@ import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.entity.Account;
 import com.flowiee.app.model.system.ActionOfModule;
 import com.flowiee.app.model.system.FlowieeRole;
 import com.flowiee.app.model.system.Role;

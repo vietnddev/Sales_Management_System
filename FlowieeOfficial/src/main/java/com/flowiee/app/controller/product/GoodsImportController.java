@@ -1,13 +1,13 @@
 package com.flowiee.app.controller.product;
 
 import com.flowiee.app.config.ValidateModuleStorage;
-import com.flowiee.app.entity.product.GoodsImport;
-import com.flowiee.app.entity.product.ProductVariant;
-import com.flowiee.app.entity.product.ProductVariantTemp;
-import com.flowiee.app.entity.product.Supplier;
-import com.flowiee.app.entity.storage.Material;
-import com.flowiee.app.entity.storage.MaterialTemp;
-import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.entity.Account;
+import com.flowiee.app.entity.GoodsImport;
+import com.flowiee.app.entity.Material;
+import com.flowiee.app.entity.MaterialTemp;
+import com.flowiee.app.entity.ProductVariant;
+import com.flowiee.app.entity.ProductVariantTemp;
+import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;

@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.system.FlowieeImport;
+import com.flowiee.app.entity.FlowieeImport;
 import com.flowiee.app.repository.system.FlowieeImportRepository;
 import com.flowiee.app.service.system.FlowieeImportService;
 

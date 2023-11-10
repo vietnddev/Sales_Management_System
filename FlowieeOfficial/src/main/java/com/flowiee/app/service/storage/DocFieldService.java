@@ -1,7 +1,7 @@
 package com.flowiee.app.service.storage;
 
 import com.flowiee.app.category.entity.LoaiTaiLieu;
-import com.flowiee.app.entity.storage.DocField;
+import com.flowiee.app.entity.DocField;
 
 import java.util.List;
 

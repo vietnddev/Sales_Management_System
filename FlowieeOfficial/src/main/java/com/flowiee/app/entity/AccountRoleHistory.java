@@ -1,0 +1,30 @@
+package com.flowiee.app.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.app.base.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "account_role_history")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class AccountRoleHistory extends BaseEntity implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+    @Column(name = "role_remove", length = 500)
+    private String roleRemove;
+
+    @Column(name = "role_add", length = 500)
+    private String roleAdd;
+}

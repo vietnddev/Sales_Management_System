@@ -1,7 +1,7 @@
 package com.flowiee.app.repository.product;
 
 import com.flowiee.app.category.entity.TrangThaiDonHang;
-import com.flowiee.app.entity.product.Order;
+import com.flowiee.app.entity.Order;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
