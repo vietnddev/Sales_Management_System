@@ -2,9 +2,11 @@ package com.flowiee.app.storage.controller;
 
 import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.category.service.DonViTinhService;
 import com.flowiee.app.system.service.AccountService;
 import com.flowiee.app.system.service.NotificationService;
@@ -27,7 +29,7 @@ public class MaterialController {
     @Autowired
     private MaterialService materialService;
     @Autowired
-    private DonViTinhService donViTinhService;
+    private CategoryService categoryService;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -44,7 +46,7 @@ public class MaterialController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_MATERIAL);
             modelAndView.addObject("material", new Material());
             modelAndView.addObject("listMaterial", materialService.findAll());
-            modelAndView.addObject("listDonViTinh", donViTinhService.findAll());
+            modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
             modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
             modelAndView.addObject("templateImportName", "Name");
             modelAndView.addObject("url_template", EndPointUtil.STORAGE_MATERIAL_TEMPLATE);

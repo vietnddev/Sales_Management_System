@@ -1,8 +1,10 @@
 package com.flowiee.app.product.controller;
 
+import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.category.service.HinhThucThanhToanService;
 import com.flowiee.app.category.service.KenhBanHangService;
 import com.flowiee.app.category.service.TrangThaiDonHangService;
@@ -44,9 +46,7 @@ public class OrderController {
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired
-    private KenhBanHangService kenhBanHangService;
-    @Autowired
-    private HinhThucThanhToanService hinhThucThanhToanService;
+    private CategoryService categoryService;
     @Autowired
     private CustomerService customerService;
     @Autowired
@@ -71,8 +71,8 @@ public class OrderController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
             modelAndView.addObject("listDonHang", orderService.findAll());
             modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
-            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
+            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
@@ -100,11 +100,11 @@ public class OrderController {
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
 
-            modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : kenhBanHangService.findById(request.getKenhBanHang()));
-            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
+            modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : categoryService.findById(request.getKenhBanHang()));
+            modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
 
-            modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : hinhThucThanhToanService.findById(request.getHinhThucThanhToan()));
-            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : categoryService.findById(request.getHinhThucThanhToan()));
+            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
 
             modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : trangThaiDonHangService.findById(request.getTrangThaiDonHang()));
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
@@ -128,7 +128,7 @@ public class OrderController {
             modelAndView.addObject("donHangDetail", orderService.findById(id));
             modelAndView.addObject("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
             modelAndView.addObject("listThanhToan", donHangThanhToanService.findByDonHangId(id));
-            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("donHang", new Order());
             modelAndView.addObject("donHangThanhToan", new OrderPay());
@@ -154,8 +154,8 @@ public class OrderController {
             }
             modelAndView.addObject("listDonHang", orderService.findAll());
             modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-            modelAndView.addObject("listKenhBanHang", kenhBanHangService.findAll());
-            modelAndView.addObject("listHinhThucThanhToan", hinhThucThanhToanService.findAll());
+            modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
+            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
             modelAndView.addObject("listTrangThaiDonHang", trangThaiDonHangService.findAll());
