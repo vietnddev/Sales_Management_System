@@ -1,7 +1,8 @@
 package com.flowiee.app.storage.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.app.system.entity.Account;
+import com.flowiee.app.entity.system.Account;
+
 import lombok.*;
 
 import javax.persistence.*;

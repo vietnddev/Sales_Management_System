@@ -2,7 +2,8 @@ package com.flowiee.app.product.entity;
 
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.HinhThucThanhToan;
-import com.flowiee.app.system.entity.Account;
+import com.flowiee.app.entity.system.Account;
+
 import lombok.*;
 
 import javax.persistence.*;

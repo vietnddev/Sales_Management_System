@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.system.service.NotificationService;
+import com.flowiee.app.service.system.NotificationService;
 
 @Component
 public class BaseController {

@@ -1,11 +1,11 @@
 package com.flowiee.app.common.utils;
 
-import com.flowiee.app.system.entity.Account;
-
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.flowiee.app.entity.system.Account;
 
 public class FlowieeUtil {
     public static final Integer SYS_NOTI_ID = 0;

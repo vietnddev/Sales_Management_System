@@ -1,7 +1,8 @@
 package com.flowiee;
 
 import com.flowiee.app.common.utils.DateUtil;
-import com.flowiee.app.system.service.MailService;
+import com.flowiee.app.service.system.MailService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,9 +17,14 @@ public class FlowieeOfficialApplication {
     private MailService mailService;
 
     public static void main(String[] args) {
-        SpringApplication.run(FlowieeOfficialApplication.class, args);
-
-        System.out.println("FlowieeOfficialApplication started at " + DateUtil.now("dd/MM/yyyy HH:mm:ss"));
+    	try {
+    		SpringApplication.run(FlowieeOfficialApplication.class, args);
+    		
+    		System.out.println("FlowieeOfficialApplication started SUCCESS at " + DateUtil.now("dd/MM/yyyy HH:mm:ss"));
+    	} catch (Exception e) {    		
+    		System.out.println("INFO: " + e.getMessage());
+		}
+        
 
 //        int year = 2023; // Năm cần in danh sách tuần
 //

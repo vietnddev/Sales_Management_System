@@ -3,7 +3,7 @@ package com.flowiee.app.product.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.HinhThucThanhToan;
-import com.flowiee.app.system.entity.Account;
+import com.flowiee.app.entity.system.Account;
 import com.flowiee.app.storage.entity.Material;
 import com.flowiee.app.storage.entity.MaterialTemp;
 import lombok.*;

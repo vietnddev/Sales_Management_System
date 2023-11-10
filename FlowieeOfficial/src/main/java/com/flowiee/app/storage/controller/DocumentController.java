@@ -1,6 +1,8 @@
 package com.flowiee.app.storage.controller;
 
 import com.flowiee.app.config.ValidateModuleStorage;
+import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
@@ -17,8 +19,7 @@ import com.flowiee.app.storage.service.DocDataService;
 import com.flowiee.app.storage.service.DocFieldService;
 import com.flowiee.app.storage.service.DocShareService;
 import com.flowiee.app.storage.service.DocumentService;
-import com.flowiee.app.system.entity.Account;
-import com.flowiee.app.system.service.AccountService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

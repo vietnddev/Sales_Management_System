@@ -3,7 +3,7 @@ package com.flowiee.app.storage.service.impl;
 import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.system.service.SystemLogService;
+import com.flowiee.app.service.system.SystemLogService;
 import com.flowiee.app.storage.entity.DocData;
 import com.flowiee.app.storage.entity.Document;
 import com.flowiee.app.storage.model.DocMetaResponse;

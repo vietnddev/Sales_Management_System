@@ -5,7 +5,8 @@ import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.category.entity.KenhBanHang;
 import com.flowiee.app.category.entity.TrangThaiDonHang;
 import com.flowiee.app.category.entity.TrangThaiGiaoHang;
-import com.flowiee.app.system.entity.Account;
+import com.flowiee.app.entity.system.Account;
+
 import lombok.*;
 
 import javax.persistence.*;

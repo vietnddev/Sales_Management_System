@@ -6,11 +6,12 @@ import com.flowiee.app.common.exception.DataExistsException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.system.service.SystemLogService;
 import com.flowiee.app.product.entity.ProductVariantTemp;
 import com.flowiee.app.product.repository.ProductVariantTempRepository;
 import com.flowiee.app.product.services.PriceService;
 import com.flowiee.app.product.services.ProductVariantTempService;
+import com.flowiee.app.service.system.SystemLogService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

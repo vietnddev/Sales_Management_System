@@ -1,12 +1,13 @@
 package com.flowiee.app.config;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.entity.system.Account;
+import com.flowiee.app.entity.system.SystemLog;
+import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.system.SystemLogService;
 import com.flowiee.app.common.action.SystemAction;
-import com.flowiee.app.system.entity.Account;
-import com.flowiee.app.system.entity.SystemLog;
 import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.system.service.AccountService;
-import com.flowiee.app.system.service.SystemLogService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
