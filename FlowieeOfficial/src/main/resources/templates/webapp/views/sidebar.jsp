@@ -99,7 +99,7 @@
               <strong>KHO TÀI LIỆU</strong>
             </li>
             <li class="nav-item">
-              <a th:href="@{/kho-tai-lieu/dashboard}" class="nav-link">
+              <a th:href="@{/storage/dashboard}" class="nav-link">
                 <i class="fa-solid fa-chart-pie nav-icon"></i>
                 <p>
                   Tổng quan
@@ -131,7 +131,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/kho-tai-lieu/document}" class="nav-link">
+              <a th:href="@{/storage/document}" class="nav-link">
                 <i class="fa-solid fa-file-pdf nav-icon"></i>
                 <p>
                   Danh sách tài liệu

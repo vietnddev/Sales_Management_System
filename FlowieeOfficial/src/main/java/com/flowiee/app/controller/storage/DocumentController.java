@@ -32,7 +32,7 @@ import java.util.*;
 
 @CrossOrigin
 @Controller
-@RequestMapping("/kho-tai-lieu")
+@RequestMapping("/storage")
 public class DocumentController extends BaseController {
     @Autowired
     private AccountService accountService;
