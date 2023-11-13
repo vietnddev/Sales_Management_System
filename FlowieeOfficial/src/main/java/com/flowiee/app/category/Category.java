@@ -2,14 +2,7 @@ package com.flowiee.app.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.entity.GoodsImport;
-import com.flowiee.app.entity.Material;
-import com.flowiee.app.entity.MaterialTemp;
-import com.flowiee.app.entity.Order;
-import com.flowiee.app.entity.OrderDetail;
-import com.flowiee.app.entity.OrderPay;
-import com.flowiee.app.entity.Product;
-import com.flowiee.app.entity.ProductVariant;
+import com.flowiee.app.entity.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -83,7 +76,13 @@ public class Category extends BaseEntity implements java.io.Serializable {
 
 	@OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
 	private List<Order> listTrangThaiDonHang;
-	
+
+	@OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
+	private List<Document> listDocument;
+
+	@OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
+	private List<DocField> listDocfield;
+
 	public Category(Integer id, String name) {
 		super.id = id;
 		this.name = name;

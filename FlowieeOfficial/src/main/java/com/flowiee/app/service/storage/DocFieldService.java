@@ -1,6 +1,5 @@
 package com.flowiee.app.service.storage;
 
-import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.entity.DocField;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface DocFieldService {
 
     DocField findById(Integer id);
 
-    List<DocField> findByDocTypeId(LoaiTaiLieu loaiTaiLieu);
+    List<DocField> findByDocTypeId(Integer doctypeId);
 
     String save(DocField docField);
 

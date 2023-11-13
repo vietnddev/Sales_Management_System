@@ -52,9 +52,6 @@ public class Account extends BaseEntity implements Serializable{
     private boolean trangThai;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<Document> listDocument;
-
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)

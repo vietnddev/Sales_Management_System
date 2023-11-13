@@ -2,7 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.LoaiTaiLieu;
+import com.flowiee.app.category.Category;
 
 import lombok.*;
 
@@ -38,13 +38,8 @@ public class Document extends BaseEntity implements Serializable {
 
     @JsonIgnoreProperties("listDocument")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_wr", nullable = false, insertable = true, updatable = true)
-    private Account account;
-
-    @JsonIgnoreProperties("listDocument")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loai_tai_lieu_id", nullable = true, insertable = true, updatable = true)
-    private LoaiTaiLieu loaiTaiLieu;
+    @JoinColumn(name = "loai_tai_lieu_id")
+    private Category loaiTaiLieu;
 
     @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocData> listDocData;
@@ -72,7 +67,6 @@ public class Document extends BaseEntity implements Serializable {
             ", ten='" + ten + '\'' +
             ", aliasName='" + aliasName + '\'' +
             ", moTa='" + moTa + '\'' +
-            ", taiKhoan=" + account +
             ", loaiTaiLieu=" + loaiTaiLieu +
             '}';
     }

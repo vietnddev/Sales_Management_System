@@ -1,7 +1,8 @@
 package com.flowiee.app.controller.storage;
 
+import com.flowiee.app.category.Category;
+import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.config.ValidateModuleStorage;
-import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.entity.Document;
@@ -17,8 +18,6 @@ import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.category.entity.LoaiTaiLieu;
-import com.flowiee.app.category.service.LoaiTaiLieuService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,13 +42,13 @@ public class DocumentController extends BaseController {
     @Autowired
     private DocDataService docDataService;
     @Autowired
-    private LoaiTaiLieuService loaiTaiLieuService;
-    @Autowired
     private FileStorageService fileStorageService;
     @Autowired
-    private ValidateModuleStorage validateModuleStorage;
-    @Autowired
     private DocShareService docShareService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private ValidateModuleStorage validateModuleStorage;
 
     //Dashboard
     @GetMapping("/dashboard")
@@ -60,11 +59,11 @@ public class DocumentController extends BaseController {
         if (validateModuleStorage.dashboard()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DASHBOARD);
             //Loại tài liệu
-            List<LoaiTaiLieu> listLoaiTaiLieu = loaiTaiLieuService.findAll();
+            List<Category> listLoaiTaiLieu = categoryService.findSubCategory(CategoryUtil.DOCUMENTTYPE);
             List<String> listTenOfDocType = new ArrayList<>();
             List<Integer> listSoLuongOfDocType = new ArrayList<>();
-            for (LoaiTaiLieu docType : listLoaiTaiLieu) {
-                listTenOfDocType.add(docType.getTen());
+            for (Category docType : listLoaiTaiLieu) {
+                listTenOfDocType.add(docType.getName());
                 listSoLuongOfDocType.add(docType.getListDocument() != null ? docType.getListDocument().size() : 0);
             }
             modelAndView.addObject("reportOfDocType_listTen", listTenOfDocType);
@@ -91,7 +90,7 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listDocument", listRootDocument);
             modelAndView.addObject("document", new Document());
             //select-option danh sách loại tài liệu
-            List<LoaiTaiLieu> listLoaiTaiLieu = new ArrayList<>();
+            List<Category> listLoaiTaiLieu = new ArrayList<>();
             listLoaiTaiLieu.add(loaiTaiLieuService.findDocTypeDefault());
             listLoaiTaiLieu.addAll(loaiTaiLieuService.findAllWhereStatusTrue());
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
@@ -162,7 +161,7 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("document", new Document());
             modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
             //select-option danh loại tài liệu
-            List<LoaiTaiLieu> listLoaiTaiLieu = new ArrayList<>();
+            List<Category> listLoaiTaiLieu = new ArrayList<>();
             listLoaiTaiLieu.add(loaiTaiLieuService.findDocTypeDefault());
             listLoaiTaiLieu.addAll(loaiTaiLieuService.findAllWhereStatusTrue());
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
@@ -202,7 +201,7 @@ public class DocumentController extends BaseController {
             throw new NotFoundException();
         }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
-        document.setAccount(new Account(FlowieeUtil.ACCOUNT_ID));
+        document.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
         Document documentSaved = documentService.save(document);
         //Trường hợp document được tạo mới là file upload
         if (document.getLoai().equals(DocumentType.FILE.name()) && file != null) {

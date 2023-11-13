@@ -2,7 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.entity.LoaiTaiLieu;
+import com.flowiee.app.category.Category;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -49,7 +49,7 @@ public class DocField extends BaseEntity implements Serializable {
     @JsonIgnoreProperties("listDocField")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loai_tai_lieu_id", nullable = false)
-    private LoaiTaiLieu loaiTaiLieu;
+    private Category loaiTaiLieu;
 
     @JsonIgnoreProperties("docField")
     @OneToMany(mappedBy = "docField", fetch = FetchType.LAZY)

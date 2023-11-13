@@ -1,7 +1,6 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.category.entity.LoaiTaiLieu;
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.entity.DocData;
@@ -43,8 +42,8 @@ public class DocFieldServiceImpl implements DocFieldService {
     }
 
     @Override
-    public List<DocField> findByDocTypeId(LoaiTaiLieu loaiTaiLieu) {
-        return docFieldRepository.findByLoaiTaiLieu(loaiTaiLieu);
+    public List<DocField> findByDocTypeId(Integer doctypeId) {
+        return docFieldRepository.findByDoctype(doctypeId);
     }
 
     @Transactional(rollbackFor = Exception.class)
