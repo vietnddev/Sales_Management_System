@@ -60,7 +60,7 @@ public class OrderController extends BaseController {
     private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
 
     @GetMapping
-    public ModelAndView findAllDonHang() {
+    public ModelAndView viewAllOrders() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -82,7 +82,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping
-    public ModelAndView FilterListDonHang(@ModelAttribute("donHangRequest") OrderRequest request) {
+    public ModelAndView filterListDonHang(@ModelAttribute("donHangRequest") OrderRequest request) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -114,7 +114,7 @@ public class OrderController extends BaseController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView findDonHangDetail(@PathVariable("id") int id) {
+    public ModelAndView findDonHangDetail(@PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
@@ -169,7 +169,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/ban-hang/cart/{id}/add-items")
-    public String addItemsToCart(@PathVariable("id") int idCart, HttpServletRequest request) {
+    public String addItemsToCart(@PathVariable("id") Integer idCart, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -186,7 +186,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/ban-hang/cart/update/{id}")
-    public String updateItemsOfCart(@PathVariable("id") int id, @ModelAttribute("items") Items items) {
+    public String updateItemsOfCart(@PathVariable("id") Integer id, @ModelAttribute("items") Items items) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -200,7 +200,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/ban-hang/cart/delete/{id}")
-    public String deleteItemsOfCart(@PathVariable("id") int id) {
+    public String deleteItemsOfCart(@PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -243,7 +243,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute("donHang") Order order, @PathVariable("id") int id) {
+    public String update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -256,7 +256,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") int id) {
+    public String delete(@PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
@@ -269,7 +269,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/thanh-toan/{id}")
-    public String thanhToan(@PathVariable("id") int donHangId,
+    public String thanhToan(@PathVariable("id") Integer donHangId,
                             @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
