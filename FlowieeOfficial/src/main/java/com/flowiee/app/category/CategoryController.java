@@ -60,9 +60,9 @@ public class CategoryController extends BaseController {
             modelAndView.addObject("listCategory", listCategory);
             modelAndView.addObject("categoryType", categoryType);
             modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH);
-            modelAndView.addObject("url_template", EndPointUtil.DANHMUC_DONVITINH_TEMPLATE);
-            modelAndView.addObject("url_import", EndPointUtil.DANHMUC_DONVITINH_IMPORT);
-            modelAndView.addObject("url_export", EndPointUtil.DANHMUC_DONVITINH_EXPORT);
+            modelAndView.addObject("url_template", "");
+            modelAndView.addObject("url_import", "");
+            modelAndView.addObject("url_export", "");
             return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);

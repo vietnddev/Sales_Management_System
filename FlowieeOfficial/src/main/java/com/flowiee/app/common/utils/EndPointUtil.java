@@ -35,22 +35,22 @@ public class EndPointUtil {
     public static String DOCUMENT_EXPORT = "/kho-tai-lieu/export";
     public static String DOCUMENT_VIEW = "/kho-tai-lieu";
 
-    public static String DANHMUC_DONVITINH_TEMPLATE = "/danh-muc/don-vi-tinh/template";
-    public static String DANHMUC_DONVITINH_IMPORT = "/danh-muc/don-vi-tinh/import";
-    public static String DANHMUC_DONVITINH_EXPORT = "/danh-muc/don-vi-tinh/export";
-    public static String DANHMUC_DONVITINH_INSERT = "/danh-muc/don-vi-tinh/insert";
+    public static String CATEGORY_UNIT_TEMPLATE = "/danh-muc/don-vi-tinh/template";
+    public static String CATEGORY_UNIT_IMPORT = "/danh-muc/don-vi-tinh/import";
+    public static String CATEGORY_UNIT_EXPORT = "/danh-muc/don-vi-tinh/export";
+    public static String CATEGORY_UNIT_INSERT = "/danh-muc/don-vi-tinh/insert";
     public static String CATEGORY_UNIT_VIEW = "/system/category/unit";
 
-    public static String DANHMUC_KENHBANHANG_TEMPLATE = "/danh-muc/kenh-ban-hang/template";
-    public static String DANHMUC_KENHBANHANG_IMPORT = "/danh-muc/kenh-ban-hang/import";
-    public static String DANHMUC_KENHBANHANG_EXPORT = "/danh-muc/kenh-ban-hang/export";
-    public static String DANHMUC_KENHBANHANG_INSERT = "/danh-muc/kenh-ban-hang/insert";
+    public static String CATEGORY_SALESCHANNEL_TEMPLATE = "/danh-muc/kenh-ban-hang/template";
+    public static String CATEGORY_SALESCHANNEL_IMPORT = "/danh-muc/kenh-ban-hang/import";
+    public static String CATEGORY_SALESCHANNEL_EXPORT = "/danh-muc/kenh-ban-hang/export";
+    public static String CATEGORY_SALESCHANNEL_INSERT = "/danh-muc/kenh-ban-hang/insert";
     public static String CATEGORY_SALESCHANNEL_VIEW = "/system/category/sales-channel";
 
-    public static String DANHMUC_LOAIMAUSAC_TEMPLATE = "/danh-muc/loai-mau-sac/template";
-    public static String DANHMUC_LOAIMAUSAC_IMPORT = "/danh-muc/loai-mau-sac/import";
-    public static String DANHMUC_LOAIMAUSAC_EXPORT = "/danh-muc/loai-mau-sac/export";
-    public static String DANHMUC_LOAIMAUSAC_INSERT = "/danh-muc/loai-mau-sac/insert";
+    public static String CATEGORY_COLOR_TEMPLATE = "/danh-muc/loai-mau-sac/template";
+    public static String CATEGORY_COLOR_IMPORT = "/danh-muc/loai-mau-sac/import";
+    public static String CATEGORY_COLOR_EXPORT = "/danh-muc/loai-mau-sac/export";
+    public static String CATEGORY_COLOR_INSERT = "/danh-muc/loai-mau-sac/insert";
     public static String CATEGORY_COLOR_VIEW = "/system/category/color";
 
     public static String CATEGORY_SIZE_TEMPLATE = "/danh-muc/loai-kich-co/template";
@@ -83,10 +83,6 @@ public class EndPointUtil {
     public static String CATEGORY_ORDERSTATUS_INSERT = "/danh-muc/trang-thai-don-hang/insert";
     public static String CATEGORY_ORDERSTATUS_VIEW = "/system/category/order-status";
 
-    public static String DANHMUC_TRANGTHAIGIAOHANG_TEMPLATE = "/danh-muc/trang-thai-giao-hang/template";
-    public static String DANHMUC_TRANGTHAIGIAOHANG_IMPORT = "/danh-muc/trang-thai-giao-hang/import";
-    public static String DANHMUC_TRANGTHAIGIAOHANG_EXPORT = "/danh-muc/trang-thai-giao-hang/export";
-    public static String DANHMUC_TRANGTHAIGIAOHANG_INSERT = "/danh-muc/trang-thai-giao-hang/insert";
     public static String CATEGORY_BRAND_VIEW = "/system/category/brand";
 
     public static String CATEGORY_FABRICTYPE_VIEW = "/system/category/fabric-type";
