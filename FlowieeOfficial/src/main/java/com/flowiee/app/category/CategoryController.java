@@ -135,7 +135,7 @@ public class CategoryController extends BaseController {
         }
         if (kiemTraQuyenModuleDanhMuc.validateImport()) {
             categoryService.importData(file, categoryType);
-            return "redirect:" + EndPointUtil.DANHMUC_DONVITINH_VIEW;
+            return "redirect:/{type}";
         } else {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }

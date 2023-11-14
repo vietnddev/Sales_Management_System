@@ -220,7 +220,7 @@
               <strong>QUẢN TRỊ HỆ THỐNG</strong>
             </li>
             <li class="nav-item">
-              <a th:href="@{/he-thong/config}" class="nav-link">
+              <a th:href="@{${URL_SYSTEM_CONFIG}}" class="nav-link">
                 <i class="fa-solid fa-gear nav-icon"></i>
                 <p>
                   Cấu hình
@@ -245,55 +245,55 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a th:href="@{/system/category/document-type}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_DOCUMENTTYPE}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Loại tài liệu</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/product-type}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_PRODUCTTYPE}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Loại sản phẩm</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/unit}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_UNIT}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Đơn vị tính</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/sales-channel}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_SALESCHANNEL}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Kênh bán hàng</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/order-status}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_ORDERSTATUS}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Trạng thái đơn hàng</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/pay-method}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_PAYMETHOD}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Hình thức thanh toán</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/color}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_COLOR}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Màu sắc</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/size}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_SIZE}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Kích cỡ</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/system/category/fabric-type}" class="nav-link">
+                  <a th:href="@{${URL_CATEGORY_FABRICTYPE}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Chất liệu vải</p>
                   </a>
@@ -301,7 +301,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a th:href="@{/he-thong/nhom-quyen}" class="nav-link">
+              <a th:href="@{${URL_SYSTEM_ROLE}}" class="nav-link">
                 <i class="fa-solid fa-user-gear nav-icon"></i>
                 <p>
                   Nhóm quyền
@@ -309,7 +309,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/he-thong/tai-khoan}" class="nav-link">
+              <a th:href="@{${URL_SYSTEM_ACCOUNT}}" class="nav-link">
                 <i class="fa-solid fa-users nav-icon"></i>
                 <p>
                   Tài khoản hệ thống
@@ -317,7 +317,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/he-thong/nhat-ky}" class="nav-link">
+              <a th:href="@{${URL_SYSTEM_LOG}}" class="nav-link">
                 <i class="fa-solid fa-clock nav-icon"></i>
                 <p>
                   Nhật ký hệ thống

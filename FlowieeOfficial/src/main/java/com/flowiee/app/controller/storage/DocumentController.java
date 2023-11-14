@@ -91,8 +91,8 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("document", new Document());
             //select-option danh sách loại tài liệu
             List<Category> listLoaiTaiLieu = new ArrayList<>();
-            listLoaiTaiLieu.add(loaiTaiLieuService.findDocTypeDefault());
-            listLoaiTaiLieu.addAll(loaiTaiLieuService.findAllWhereStatusTrue());
+            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(CategoryUtil.DOCUMENTTYPE));
+            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(CategoryUtil.DOCUMENTTYPE));
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             //select-option danh sách thư mục
             List<Document> listFolder = new ArrayList<>();
@@ -162,8 +162,8 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
             //select-option danh loại tài liệu
             List<Category> listLoaiTaiLieu = new ArrayList<>();
-            listLoaiTaiLieu.add(loaiTaiLieuService.findDocTypeDefault());
-            listLoaiTaiLieu.addAll(loaiTaiLieuService.findAllWhereStatusTrue());
+            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(CategoryUtil.DOCUMENTTYPE));
+            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(CategoryUtil.DOCUMENTTYPE));
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             //select-option danh sách thư mục
             List<Document> listFolder = new ArrayList<>();
@@ -209,7 +209,7 @@ public class DocumentController extends BaseController {
             fileStorageService.saveFileOfDocument(file, documentSaved.getId());
 
             //Lưu giá trị default vào DocData
-            List<DocField> listDocField = docFieldService.findByDocTypeId(new LoaiTaiLieu(document.getLoaiTaiLieu().getId()));
+            List<DocField> listDocField = docFieldService.findByDocTypeId(document.getLoaiTaiLieu().getId());
             for (DocField docField : listDocField) {
                 DocData docData = DocData.builder()
                         .docField(new DocField(docField.getId()))
