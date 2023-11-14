@@ -10,6 +10,10 @@ public interface CategoryService extends BaseService<Category> {
     List<Category> findRootCategory();
 
     List<Category> findSubCategory(String categoryType);
+
+    Category findSubCategoryDefault(String categoryType);
+
+    List<Category> findSubCategoryUnDefault(String categoryType);
     
     String importData(MultipartFile fileImport, String categoryType);
 

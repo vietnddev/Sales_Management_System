@@ -110,6 +110,16 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findSubCategory(categoryType);
     }
 
+    @Override
+    public Category findSubCategoryDefault(String categoryType) {
+        return categoryRepository.findSubCategoryDefault(categoryType);
+    }
+
+    @Override
+    public List<Category> findSubCategoryUnDefault(String categoryType) {
+        return categoryRepository.findSubCategoryUnDefault(categoryType);
+    }
+
     private Boolean categoryInUse(Integer categoryId) {
         Category category = this.findById(categoryId);
         if (category.getType().equals(CategoryUtil.UNIT)) {
