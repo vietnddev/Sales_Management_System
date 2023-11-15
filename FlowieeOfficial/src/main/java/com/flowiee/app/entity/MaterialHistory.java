@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "material_history")
+@Table(name = "pro_material_history")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

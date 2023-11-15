@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "don_hang_thanh_toan")
+@Table(name = "pro_don_hang_thanh_toan")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

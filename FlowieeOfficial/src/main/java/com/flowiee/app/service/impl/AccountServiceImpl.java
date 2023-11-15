@@ -65,6 +65,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String save(Account account) {
+        accountRepository.save(account);
     	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.CREATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
         systemLogService.writeLog(systemLog);
         return TagName.SERVICE_RESPONSE_SUCCESS;
@@ -72,6 +73,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String update(Account entity, Integer entityId) {
+        entity.setId(entityId);
+        accountRepository.save(entity);
     	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.UPDATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
         systemLogService.writeLog(systemLog);
         return TagName.SERVICE_RESPONSE_SUCCESS;

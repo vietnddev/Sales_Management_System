@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "goods_import")
+@Table(name = "stg_goods_import")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

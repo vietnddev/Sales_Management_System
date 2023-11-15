@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @Builder
 @Entity
-@Table(name = "price")
+@Table(name = "pro_price")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Builder
 @Entity
-@Table(name = "flowiee_log")
+@Table(name = "sys_log")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

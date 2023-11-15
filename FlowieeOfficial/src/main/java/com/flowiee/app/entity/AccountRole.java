@@ -11,7 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table (name = "account_role")
+@Table (name = "sys_account_role")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

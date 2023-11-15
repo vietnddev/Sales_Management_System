@@ -12,7 +12,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "notification")
+@Table(name = "sys_notification")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

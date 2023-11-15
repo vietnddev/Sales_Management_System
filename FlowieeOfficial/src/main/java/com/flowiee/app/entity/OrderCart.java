@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "don_hang_cart")
+@Table(name = "pro_don_hang_cart")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

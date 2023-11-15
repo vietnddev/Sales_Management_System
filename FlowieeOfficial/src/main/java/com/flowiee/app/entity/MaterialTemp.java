@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "material_temp")
+@Table(name = "pro_material_temp")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

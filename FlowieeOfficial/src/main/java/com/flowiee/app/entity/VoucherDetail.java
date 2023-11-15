@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Builder
 @Entity
-@Table(name = "voucher_detail")
+@Table(name = "pro_voucher_detail")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

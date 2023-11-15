@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "garment_factory")
+@Table(name = "pro_garment_factory")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

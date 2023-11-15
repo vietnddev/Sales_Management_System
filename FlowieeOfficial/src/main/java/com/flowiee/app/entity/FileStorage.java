@@ -20,7 +20,7 @@ import java.time.Instant;
 
 @Builder
 @Entity
-@Table(name = "file_storage")
+@Table(name = "stg_file_storage")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

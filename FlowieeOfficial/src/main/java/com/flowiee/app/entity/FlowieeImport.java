@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "entity_import")
+@Table(name = "sys_entity_import")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Builder
 @Entity
-@Table(name = "product_variant_temp")
+@Table(name = "pro_product_variant_temp")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

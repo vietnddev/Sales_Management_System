@@ -13,7 +13,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "flowiee_config")
+@Table (name = "sys_config")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
