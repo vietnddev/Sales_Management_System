@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "customer_contact")
+@Table(name = "pro_customer_contact")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -22,9 +22,9 @@ import java.io.Serializable;
 public class AccountRoleHistory extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-    @Column(name = "role_remove", length = 500)
-    private String roleRemove;
+    @Column(name = "old_role", length = 500)
+    private String oldRole;
 
-    @Column(name = "role_add", length = 500)
-    private String roleAdd;
+    @Column(name = "new_role", length = 500)
+    private String newRole;
 }

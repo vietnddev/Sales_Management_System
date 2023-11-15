@@ -3,6 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
+import com.flowiee.app.category.Category;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Builder
 @Entity
-@Table(name = "san_pham")
+@Table(name = "pro_san_pham")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,17 +21,23 @@ import java.util.List;
 public class Product extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "loai_san_pham", nullable = false)
-    private Integer loaiSanPham;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_type_id", nullable = false)
+    private Category loaiSanPham;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id", nullable = false)
+    private Category brand;
 
     @Column(name = "ten_san_pham", nullable = false)
     private String tenSanPham;
 
-    @Column(name = "don_vi_tinh", nullable = false)
-    private Integer donViTinh;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
+    private Category unit;
 
     @Lob
-    @Column(name = "mo_ta_san_pham", length = 30000, nullable = true, columnDefinition = "CLOB")
+    @Column(name = "mo_ta_san_pham", length = 30000, columnDefinition = "TEXT")
     private String moTaSanPham;
 
     @Column(name = "trang_thai", nullable = false)
