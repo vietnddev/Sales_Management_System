@@ -44,7 +44,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a th:href="@{/san-pham}" class="nav-link">
+                  <a th:href="@{${URL_PRODUCT}}" class="nav-link">
                     <i class="far nav-icon"></i>
                     <p>Danh sách sản phẩm</p>
                   </a>
@@ -52,7 +52,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a th:href="@{/don-hang}" class="nav-link">
+              <a th:href="@{${URL_PRODUCT_ORDER}}" class="nav-link">
                 <i class="fa-solid fa-cart-shopping nav-icon"></i>
                 <p>
                   Đơn hàng
@@ -76,7 +76,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/khach-hang}" class="nav-link">
+              <a th:href="@{${URL_PRODUCT_CUSTOMER}}" class="nav-link">
                 <i class="fa-solid fa-user-tag"></i>
                 <p>
                   Khách hàng
@@ -115,7 +115,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/storage/material}" class="nav-link">
+              <a th:href="@{${URL_STORAGE_MATERIAL}}" class="nav-link">
                 <i class="fa-solid fa-scroll nav-icon"></i>
                 <p>
                   Nguyên vật liệu
@@ -131,7 +131,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/storage/document}" class="nav-link">
+              <a th:href="@{${URL_STORAGE_DOCUMENT}}" class="nav-link">
                 <i class="fa-solid fa-file-pdf nav-icon"></i>
                 <p>
                   Danh sách tài liệu
@@ -139,80 +139,6 @@
               </a>
             </li>
             <!---->
-
-            <!--
-            <li class="nav-header"><strong>QUẢN LÝ NHÂN VIÊN</strong></li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fa-solid fa-users nav-icon"></i>
-                <p>
-                  Danh sách nhân viên
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon"></i>
-                <p>
-                  Quản lý phép
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fa-solid fa-list-check nav-icon"></i>
-                <p>
-                  Bảng công
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Bảng công nhân viên</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Cài đặt ngày công</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fa-solid fa-calendar-days nav-icon"></i>
-                <p>
-                  Ca làm việc
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Cấu hình ca</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Phân ca</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fa-solid fa-calculator nav-icon"></i>
-                <p>
-                  Tính lương
-                </p>
-              </a>
-            </li>
-            -->
 
             <!---->
             <li class="nav-header">
@@ -228,7 +154,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/system/category}" class="nav-link">
+              <a th:href="@{${URL_CATEGORY}}" class="nav-link">
                 <i class="fa-solid fa-list nav-icon"></i>
                 <p>
                   System category
