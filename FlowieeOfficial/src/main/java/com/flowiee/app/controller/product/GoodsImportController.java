@@ -10,7 +10,6 @@ import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
@@ -179,8 +178,8 @@ public class GoodsImportController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (validateModuleStorage.goodsImport()) {
-            goodsImportRequest.setOrderTime(DateUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
-            goodsImportRequest.setReceivedTime(DateUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
+            goodsImportRequest.setOrderTime(FlowieeUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
+            goodsImportRequest.setReceivedTime(FlowieeUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
             goodsImportService.saveDraft(goodsImportRequest);
             return "redirect:" + request.getHeader("referer");
         } else {

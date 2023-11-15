@@ -85,7 +85,7 @@ public class DocumentController extends BaseController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
             for (int i = 0; i < listRootDocument.size(); i++) {
-                listRootDocument.get(i).setCreatedAt(DateUtil.formatDate(listRootDocument.get(i).getCreatedAt(),"dd/MM/yyyy"));
+                listRootDocument.get(i).setCreatedAt(FlowieeUtil.formatDate(listRootDocument.get(i).getCreatedAt(),"dd/MM/yyyy"));
             }
             modelAndView.addObject("listDocument", listRootDocument);
             modelAndView.addObject("document", new Document());

@@ -1,7 +1,6 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.category.Category;
-import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Account;
@@ -162,8 +161,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
             goodsImport.setPaidStatus(String.valueOf(o[4]));
             goodsImport.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
             goodsImport.setStatus(String.valueOf(o[6]));
-            goodsImport.setOrderTime(DateUtil.convertStringToDate(String.valueOf(o[10])));
-            goodsImport.setReceivedTime(DateUtil.convertStringToDate(String.valueOf(o[11])));
+            goodsImport.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(o[10])));
+            goodsImport.setReceivedTime(FlowieeUtil.convertStringToDate(String.valueOf(o[11])));
             listData.add(goodsImport);
         }
         entityManager.close();

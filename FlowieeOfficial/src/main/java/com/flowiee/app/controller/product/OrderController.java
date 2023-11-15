@@ -1,7 +1,6 @@
 package com.flowiee.app.controller.product;
 
 import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
@@ -220,7 +219,7 @@ public class OrderController extends BaseController {
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
             String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
             if (thoiGianDatHangString != null) {
-                orderRequest.setThoiGianDatHang(DateUtil.convertStringToDate(thoiGianDatHangString));
+                orderRequest.setThoiGianDatHang(FlowieeUtil.convertStringToDate(thoiGianDatHangString));
             } else {
                 orderRequest.setThoiGianDatHang(new Date());
             }
@@ -275,7 +274,7 @@ public class OrderController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
-            orderPay.setMaPhieu("PTT" + donHangId + DateUtil.now("yyMMddHHmmss"));
+            orderPay.setMaPhieu("PTT" + donHangId + FlowieeUtil.now("yyMMddHHmmss"));
             orderPay.setOrder(orderService.findById(donHangId));
             orderPay.setTrangThaiThanhToan(true);
             donHangThanhToanService.save(orderPay);

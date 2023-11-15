@@ -1,5 +1,6 @@
 package com.flowiee.app.controller.product;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.config.KiemTraQuyenModuleDashboard;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
@@ -8,7 +9,6 @@ import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
 import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.model.product.TopSanPhamBanChay;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.utils.CurrencyUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.service.product.DashboardService;
 import com.flowiee.app.service.system.AccountService;
@@ -46,9 +46,9 @@ public class DashboardController extends BaseController {
             modelAndView.addObject("soLuongDonHangHomNay", listOrderToDay.size());
             modelAndView.addObject("danhSachDonHangHomNay", listOrderToDay);
             //Doanh thu hôm nay
-            modelAndView.addObject("doanhThuHomNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuHomNay()));
+            modelAndView.addObject("doanhThuHomNay", FlowieeUtil.formatToVND(dashboardService.getDoanhThuHomNay()));
             //Doanh thu trong tháng này
-            modelAndView.addObject("doanhThuThangNay", CurrencyUtil.formatToVND(dashboardService.getDoanhThuThangNay()));
+            modelAndView.addObject("doanhThuThangNay", FlowieeUtil.formatToVND(dashboardService.getDoanhThuThangNay()));
             //Số lượng khách hàng mới trong tháng
             List<Customer> listCustomerThisMonth = dashboardService.getSoLuongKhachHangMoi();
             modelAndView.addObject("khachHangMoiTrongThang", listCustomerThisMonth.size());

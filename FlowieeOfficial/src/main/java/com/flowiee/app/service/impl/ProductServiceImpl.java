@@ -196,12 +196,12 @@ public class ProductServiceImpl implements ProductService {
                 row.createCell(3).setCellValue(tenSanPham);
                 row.createCell(4).setCellValue(kichCo);
                 row.createCell(5).setCellValue(mauSac);
-                row.createCell(6).setCellValue(CurrencyUtil.formatToVND(giaBan));
+                row.createCell(6).setCellValue(FlowieeUtil.formatToVND(giaBan));
                 row.createCell(7).setCellValue(soLuong);
                 row.createCell(8).setCellValue(daBan);
 
                 for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(ExcelUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FileUtil.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

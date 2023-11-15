@@ -4,9 +4,9 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.DateUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductAttributeService;
 import com.flowiee.app.service.product.ProductService;
@@ -151,7 +151,7 @@ public class ProductController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         productVariant.setTrangThai(TrangThai.KINH_DOANH.name());
-        productVariant.setMaSanPham(DateUtil.now("yyyyMMddHHmmss"));
+        productVariant.setMaSanPham(FlowieeUtil.now("yyyyMMddHHmmss"));
         productVariantService.save(productVariant);
         //Khởi tạo giá default của giá bán
         priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).trangThai(true).build());

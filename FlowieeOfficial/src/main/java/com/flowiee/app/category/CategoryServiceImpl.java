@@ -2,12 +2,10 @@ package com.flowiee.app.category;
 
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.ExcelUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.NotificationUtil;
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.entity.Document;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.FlowieeImport;
 import com.flowiee.app.entity.Notification;
@@ -166,9 +164,9 @@ public class CategoryServiceImpl implements CategoryService {
                     if (categoryName == null || categoryName.length() == 0) {
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
                         continue;
                     }
 
@@ -182,9 +180,9 @@ public class CategoryServiceImpl implements CategoryService {
                         isImportSuccess = false;
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(ExcelUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
                     } else {
                         importSuccess++;
                     }
@@ -262,7 +260,7 @@ public class CategoryServiceImpl implements CategoryService {
                 row.createCell(2).setCellValue(listData.get(i).getName());
                 row.createCell(3).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 3; j++) {
-                    row.getCell(j).setCellStyle(ExcelUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FileUtil.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.common.exception.NotFoundException;
-import com.flowiee.app.common.utils.ExcelUtil;
+import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Account;
@@ -197,7 +197,7 @@ public class OrderServiceImpl implements OrderService {
                 row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getDiaChi()
                 row.createCell(8).setCellValue(listData.get(i).getGhiChu());
                 for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(ExcelUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FileUtil.setBorder(workbook.createCellStyle()));
                 }
             }
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
