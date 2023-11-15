@@ -15,25 +15,23 @@ public class EndPointUtil {
     public static String SYSTEM_ACCOUNT_VIEW = "/he-thong/tai-khoan";
     public static String ACCOUNT_INSERT = "/he-thong/tai-khoan/insert";
 
-    public static String SANPHAM_TEMPLATE = "/san-pham/template";
-    public static String SANPHAM_IMPORT = "/san-pham/import";
-    public static String SANPHAM_EXPORT = "/san-pham/export";
-    public static String SANPHAM_VIEW = "/san-pham";
-    public static String SANPHAM_INSERT = "/san-pham/insert";
+    public static String PRODUCT_TEMPLATE = "/san-pham/template";
+    public static String PRODUCT_IMPORT = "/san-pham/import";
+    public static String PRODUCT_EXPORT = "/san-pham/export";
+    public static String PRODUCT_VIEW = "/san-pham";
+    public static String PRODUCT_INSERT = "/san-pham/insert";
+    public static String PRODUCT_ORDER_TEMPLATE = "/don-hang/template";
+    public static String PRODUCT_ORDER_IMPORT = "/don-hang/import";
+    public static String PRODUCT_ORDER_EXPORT = "/don-hang/export";
+    public static String PRODUCT_ORDER_VIEW = "/don-hang";
+    public static String PRODUCT_CUSTOMER_TEMPLATE = "/khach-hang/template";
+    public static String PRODUCT_CUSTOMER_IMPORT = "/khach-hang/import";
+    public static String PRODUCT_CUSTOMER_EXPORT = "/khach-hang/export";
+    public static String PRODUCT_CUSTOMER_VIEW = "/khach-hang";
+    public static String PRODUCT_CUSTOMER_INSERT = "/khach-hang/create";
+    public static String PRODUCT_SUPPLIER_VIEW = "/supplier";
 
-    public static String DONHANG_TEMPLATE = "/don-hang/template";
-    public static String DONHANG_IMPORT = "/don-hang/import";
-    public static String DONHANG_EXPORT = "/don-hang/export";
-    public static String DONHANG_VIEW = "/don-hang";
-
-    public static String KHACHHANG_TEMPLATE = "/khach-hang/template";
-    public static String KHACHHANG_IMPORT = "/khach-hang/import";
-    public static String KHACHHANG_EXPORT = "/khach-hang/export";
-    public static String KHACHHANG_VIEW = "/khach-hang";
-    public static String KHACHHANG_INSERT = "/khach-hang/create";
-
-    public static String DOCUMENT_EXPORT = "/kho-tai-lieu/export";
-    public static String DOCUMENT_VIEW = "/kho-tai-lieu";
+    public static String CATEGORY_VIEW = "/system/category";
 
     public static String CATEGORY_UNIT_TEMPLATE = "/danh-muc/don-vi-tinh/template";
     public static String CATEGORY_UNIT_IMPORT = "/danh-muc/don-vi-tinh/import";
@@ -87,6 +85,9 @@ public class EndPointUtil {
 
     public static String CATEGORY_FABRICTYPE_VIEW = "/system/category/fabric-type";
 
+    public static String STORAGE_DASHBOARD = "/kho-tai-lieu";
+    public static String STORAGE_DOCUMENT_VIEW = "/kho-tai-lieu";
+    public static String STORAGE_DOCUMENT_EXPORT = "/kho-tai-lieu/export";
     public static String STORAGE_MATERIAL_TEMPLATE = "/storage/material/template";
     public static String STORAGE_MATERIAL_IMPORT = "/storage/material/import";
     public static String STORAGE_MATERIAL_EXPORT = "/storage/material/export";
