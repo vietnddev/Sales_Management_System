@@ -59,7 +59,7 @@ public class AccountController extends BaseController {
     }
 
     @PostMapping(value = "/insert")
-    public String save(HttpServletRequest request, @ModelAttribute("account") Account account) {
+    public String save(@ModelAttribute("account") Account account) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }

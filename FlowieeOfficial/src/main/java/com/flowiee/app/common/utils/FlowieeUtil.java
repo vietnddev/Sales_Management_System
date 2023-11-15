@@ -1,8 +1,9 @@
 package com.flowiee.app.common.utils;
 
-import java.text.Normalizer;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import com.flowiee.app.entity.Account;
@@ -14,8 +15,48 @@ public class FlowieeUtil {
 
     public static final String CATEGORY = "";
 
+    public static Date convertStringToDate(String dateString) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing date: " + e.getMessage());
+        }
+        return date;
+    }
+
+    public static Date convertStringToDate(String dateString, String pattern) {
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing date: " + e.getMessage());
+        }
+        return date;
+    }
+
+    public static Date formatDate(Date date, String pattern) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            String formattedDateStr = sdf.format(date);
+            return sdf.parse(formattedDateStr);
+        } catch (ParseException e) {
+            System.out.println(e.getCause());
+            e.printStackTrace();
+            return date;
+        }
+    }
+
+    public static String formatToVND(Object currency) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        currencyFormat.setCurrency(Currency.getInstance("VND"));
+        return currency != null ? currencyFormat.format(currency) : "0 VND";
+    }
+
     public static String getMaDonHang() {
-        return "F" + DateUtil.now("yyMMddHHmmss");
+        return "F" + FlowieeUtil.now("yyMMddHHmmss");
     }
 
     public static String getMaDanhMuc(String categoryName) {
@@ -33,13 +74,22 @@ public class FlowieeUtil {
         return result.toString();
     }
 
-    public static Map<String, String> getOrderStatusCategory() {
-        Map<String, String> deliveryStatus = new HashMap<>();
-        deliveryStatus.put("PREPARING","Đang chuẩn bị");
-        deliveryStatus.put("NOT-DELIVERY","Đang chờ đơn vị vận chuyển tiếp nhận");
-        deliveryStatus.put("DELIVERING","Đang vận chuyển");
-        deliveryStatus.put("COMPLETED","Đã hoàn thành");
-        return deliveryStatus;
+    public static String getNamHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static String getThangHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static String getNgayHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
     }
 
     public static Map<String, String> getPaymentStatusCategory() {
@@ -48,6 +98,12 @@ public class FlowieeUtil {
         paymentStatus.put("PARTLY-PAID","Thanh toán một phần");
         paymentStatus.put("PAID","Đã thanh toán");
         return paymentStatus;
+    }
+
+    public static String now(String format) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
     }
 
     public static String ACCOUNT_IP = null;

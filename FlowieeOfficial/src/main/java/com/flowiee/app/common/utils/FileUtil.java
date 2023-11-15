@@ -2,6 +2,11 @@ package com.flowiee.app.common.utils;
 
 import com.flowiee.app.common.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayOutputStream;
@@ -54,9 +59,9 @@ public class FileUtil {
                 default:
                     throw new NotFoundException();
             }
-            path.append("/" + DateUtil.getNamHienTai());
-            path.append("/" + DateUtil.getThangHienTai());
-            path.append("/" + DateUtil.getNgayHienTai());
+            path.append("/" + FlowieeUtil.getNamHienTai());
+            path.append("/" + FlowieeUtil.getThangHienTai());
+            path.append("/" + FlowieeUtil.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -80,9 +85,9 @@ public class FileUtil {
             } else if (SystemModule.DANH_MUC.name().equals(systemModule)) {
                 path.append("/danh-muc");
             }
-            path.append("/" + DateUtil.getNamHienTai());
-            path.append("/" + DateUtil.getThangHienTai());
-            path.append("/" + DateUtil.getNgayHienTai());
+            path.append("/" + FlowieeUtil.getNamHienTai());
+            path.append("/" + FlowieeUtil.getThangHienTai());
+            path.append("/" + FlowieeUtil.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -100,9 +105,9 @@ public class FileUtil {
         try {
             StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
             path.append("/import");
-            path.append("/" + DateUtil.getNamHienTai());
-            path.append("/" + DateUtil.getThangHienTai());
-            path.append("/" + DateUtil.getNgayHienTai());
+            path.append("/" + FlowieeUtil.getNamHienTai());
+            path.append("/" + FlowieeUtil.getThangHienTai());
+            path.append("/" + FlowieeUtil.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -167,5 +172,24 @@ public class FileUtil {
             }
         }
         return stream.toByteArray();
+    }
+
+    public static XSSFCellStyle setBorder(XSSFCellStyle cellStyle) {
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        return cellStyle;
+    }
+
+    public static XSSFCellStyle highlightDataImportEror(XSSFCellStyle cellStyle, XSSFFont fontStyle) {
+        cellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        fontStyle.setColor(IndexedColors.RED.getIndex());
+
+        cellStyle.setFont(fontStyle);
+
+        return cellStyle;
     }
 }
