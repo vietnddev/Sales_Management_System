@@ -1,5 +1,6 @@
 package com.flowiee.app.base;
 
+import com.flowiee.app.common.utils.FlowieeUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -46,6 +47,9 @@ public class BaseEntity {
         lastUpdatedAt = new Date();
         if (createdAt == null) {
             createdAt = new Date();
+        }
+        if (createdBy == null) {
+            createdBy = FlowieeUtil.ACCOUNT_ID;
         }
     }
 }
