@@ -16,6 +16,7 @@ public class BaseController {
 	public ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
 		//sidebar
+		modelAndView.addObject("URL_CATEGORY", EndPointUtil.CATEGORY_VIEW);
 		modelAndView.addObject("URL_CATEGORY_UNIT", EndPointUtil.CATEGORY_UNIT_VIEW);
 		modelAndView.addObject("URL_CATEGORY_PAYMETHOD", EndPointUtil.CATEGORY_PAYMETHOD_VIEW);
 		modelAndView.addObject("URL_CATEGORY_FABRICTYPE", EndPointUtil.CATEGORY_FABRICTYPE_VIEW);
@@ -26,16 +27,13 @@ public class BaseController {
 		modelAndView.addObject("URL_CATEGORY_DOCUMENTTYPE", EndPointUtil.CATEGORY_DOCUMENTTYPE_VIEW);
 		modelAndView.addObject("URL_CATEGORY_ORDERSTATUS", EndPointUtil.CATEGORY_ORDERSTATUS_VIEW);
 		modelAndView.addObject("URL_CATEGORY_PAYMENTSTATUS", EndPointUtil.CATEGORY_PAYMETHOD_VIEW);
-		modelAndView.addObject("URL_PRODUCT_", "");
-		modelAndView.addObject("URL_PRODUCT_", "");
-		modelAndView.addObject("URL_PRODUCT_", "");
-		modelAndView.addObject("URL_PRODUCT_", "");
-		modelAndView.addObject("URL_PRODUCT_", "");
-		modelAndView.addObject("URL_STORAGE_", "");
-		modelAndView.addObject("URL_STORAGE_", "");
-		modelAndView.addObject("URL_STORAGE_", "");
-		modelAndView.addObject("URL_STORAGE_", "");
-		modelAndView.addObject("URL_STORAGE_", "");
+		modelAndView.addObject("URL_PRODUCT", EndPointUtil.PRODUCT_VIEW);
+		modelAndView.addObject("URL_PRODUCT_ORDER", EndPointUtil.PRODUCT_ORDER_VIEW);
+		modelAndView.addObject("URL_PRODUCT_CUSTOMER", EndPointUtil.PRODUCT_CUSTOMER_VIEW);
+		modelAndView.addObject("URL_PRODUCT_SUPPLIER", EndPointUtil.PRODUCT_SUPPLIER_VIEW);
+		modelAndView.addObject("URL_STORAGE_DASHBOARD", EndPointUtil.STORAGE_DASHBOARD);
+		modelAndView.addObject("URL_STORAGE_DOCUMENT", EndPointUtil.STORAGE_DOCUMENT_VIEW);
+		modelAndView.addObject("URL_STORAGE_MATERIAL", EndPointUtil.STORAGE_MATERIAL_VIEW);
 		modelAndView.addObject("URL_SYSTEM_CONFIG", EndPointUtil.SYSTEM_CONFIG_VIEW);
 		modelAndView.addObject("URL_SYSTEM_ROLE", EndPointUtil.SYSTEM_ROLE_VIEW);
 		modelAndView.addObject("URL_SYSTEM_LOG", EndPointUtil.SYSTEM_LOG_VIEW);
