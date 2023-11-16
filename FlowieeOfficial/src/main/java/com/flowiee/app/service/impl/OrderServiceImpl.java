@@ -151,6 +151,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findBySalesChannel(Integer salesChannelId) {
+        return orderRepository.findBySalesChannel(salesChannelId);
+    }
+
+    @Override
+    public List<Order> findByOrderStatus(Integer orderStatusId) {
+        return orderRepository.findByOrderStatus(orderStatusId);
+    }
+
+    @Override
     public String update(Order order, Integer id) {
         if (id <= 0 || this.findById(id) == null) {
             throw new NotFoundException();

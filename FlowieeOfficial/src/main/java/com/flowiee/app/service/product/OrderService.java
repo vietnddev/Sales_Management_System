@@ -23,4 +23,8 @@ public interface OrderService extends BaseService<Order> {
     ResponseEntity<?> exportDanhSachDonHang();
 
     String save(OrderRequest orderRequest);
+
+    List<Order> findBySalesChannel(Integer salesChannelId);
+
+    List<Order> findByOrderStatus(Integer orderStatusId);
 }

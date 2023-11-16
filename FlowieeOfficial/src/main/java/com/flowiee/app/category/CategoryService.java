@@ -14,6 +14,8 @@ public interface CategoryService extends BaseService<Category> {
     Category findSubCategoryDefault(String categoryType);
 
     List<Category> findSubCategoryUnDefault(String categoryType);
+
+    Boolean categoryInUse(Integer categoryId);
     
     String importData(MultipartFile fileImport, String categoryType);
 

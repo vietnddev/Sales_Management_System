@@ -215,4 +215,19 @@ public class ProductServiceImpl implements ProductService {
         }
         return stream.toByteArray();
     }
+
+    @Override
+    public List<Product> findByProductType(Integer productTypeId) {
+        return productsRepository.findByProductType(productTypeId);
+    }
+
+    @Override
+    public List<Product> findByUnit(Integer unitId) {
+        return productsRepository.findByUnit(unitId);
+    }
+
+    @Override
+    public List<Product> findByBrand(Integer brandId) {
+        return productsRepository.findByBrand(brandId);
+    }
 }

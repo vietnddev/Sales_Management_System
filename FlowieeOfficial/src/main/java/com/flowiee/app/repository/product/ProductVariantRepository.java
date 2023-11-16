@@ -18,4 +18,13 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
 
     @Query("from ProductVariant b where b.goodsImport.id=:importId")
     List<ProductVariant> findByImportId(Integer importId);
+
+    @Query("from ProductVariant p where p.fabricType.id=:fabricTypeId")
+    List<ProductVariant> findByFabricType(Integer fabricTypeId);
+
+    @Query("from ProductVariant p where p.color.id=:colorId")
+    List<ProductVariant> findByColor(Integer colorId);
+
+    @Query("from ProductVariant p where p.size.id=:sizeId")
+    List<ProductVariant> findBySize(Integer sizeId);
 }

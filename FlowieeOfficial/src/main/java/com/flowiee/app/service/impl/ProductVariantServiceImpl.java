@@ -154,4 +154,19 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         }
         return listData;
     }
+
+    @Override
+    public List<ProductVariant> findByFabricType(Integer fabricTypeId) {
+        return productVariantRepository.findByFabricType(fabricTypeId);
+    }
+
+    @Override
+    public List<ProductVariant> findBySize(Integer sizeId) {
+        return productVariantRepository.findBySize(sizeId);
+    }
+
+    @Override
+    public List<ProductVariant> findByColor(Integer colorId) {
+        return productVariantRepository.findByColor(colorId);
+    }
 }

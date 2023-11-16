@@ -14,4 +14,10 @@ public interface ProductVariantService extends BaseService<ProductVariant> {
     String updateSoLuong(Integer soLuong, Integer id);
 
     List<ProductVariant> findByImportId(Integer importId);
+
+    List<ProductVariant> findByFabricType(Integer fabricTypeId);
+
+    List<ProductVariant> findBySize(Integer sizeId);
+
+    List<ProductVariant> findByColor(Integer colorId);
 }

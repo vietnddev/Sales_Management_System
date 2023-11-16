@@ -11,7 +11,10 @@ import com.flowiee.app.entity.FlowieeImport;
 import com.flowiee.app.entity.Notification;
 import com.flowiee.app.repository.storage.FileStorageRepository;
 import com.flowiee.app.repository.system.FlowieeImportRepository;
+import com.flowiee.app.service.product.OrderPayService;
+import com.flowiee.app.service.product.OrderService;
 import com.flowiee.app.service.product.ProductService;
+import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.storage.DocumentService;
 import com.flowiee.app.service.storage.FileStorageService;
 import com.flowiee.app.service.system.FlowieeImportService;
@@ -45,6 +48,12 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductVariantService productVariantService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private OrderPayService orderPayService;
     @Autowired
     private DocumentService documentService;
     @Autowired
@@ -118,26 +127,49 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findSubCategoryUnDefault(categoryType);
     }
 
-    private Boolean categoryInUse(Integer categoryId) {
+    @Override
+    public Boolean categoryInUse(Integer categoryId) {
         Category category = this.findById(categoryId);
         if (category.getType().equals(CategoryUtil.UNIT)) {
-
+            if (!productService.findByProductType(categoryId).isEmpty()) {
+                return true;
+            } else if (!productService.findByUnit(categoryId).isEmpty()) {
+                return true;
+            } else if (!productService.findByBrand(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.FABRICTYPE)) {
-
+            if (!productVariantService.findByFabricType(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.PAYMETHOD)) {
-
+            if (!orderPayService.findByPayMethod(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.SALESCHANNEL)) {
-
+            if (!orderService.findBySalesChannel(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.SIZE)) {
-
+            if (!productVariantService.findBySize(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.COLOR)) {
-
+            if (!productVariantService.findByColor(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.PRODUCTTYPE)) {
-
+            if (!productService.findByProductType(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.DOCUMENTTYPE)) {
-            if (!documentService.findByDoctype(categoryId).isEmpty()) return true;
+            if (!documentService.findByDoctype(categoryId).isEmpty()) {
+                return true;
+            }
         } else if (category.getType().equals(CategoryUtil.ORDERSTATUS)) {
-
+            if (!orderService.findByOrderStatus(categoryId).isEmpty()) {
+                return true;
+            }
         }
         return false;
     }
