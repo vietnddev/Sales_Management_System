@@ -2,11 +2,12 @@ package com.flowiee.app.service.product;
 
 import com.flowiee.app.base.BaseService;
 import com.flowiee.app.entity.ProductVariant;
+import com.flowiee.app.model.product.ProductVariantResponse;
 
 import java.util.List;
 
 public interface ProductVariantService extends BaseService<ProductVariant> {
-    List<ProductVariant> getListVariantOfProduct(int sanPhamId);
+    List<ProductVariantResponse>  getListVariantOfProduct(Integer sanPhamId);
 
     Double getGiaBan(int id);
 
