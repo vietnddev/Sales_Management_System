@@ -202,6 +202,9 @@ public class DocumentController extends BaseController {
         }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
         document.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+        if (document.getParentId() == null) {
+            document.setParentId(0);
+        }
         Document documentSaved = documentService.save(document);
         //Trường hợp document được tạo mới là file upload
         if (document.getLoai().equals(DocumentType.FILE.name()) && file != null) {
