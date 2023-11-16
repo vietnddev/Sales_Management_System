@@ -7,7 +7,7 @@ public class EndPointUtil {
     public static String LOG_EXPORT = "/he-thong/nhat-ky/export";
     public static String SYSTEM_LOG_VIEW = "/he-thong/nhat-ky";
 
-    public static String SYSTEM_ROLE_VIEW = "/he-thong/nhat-ky";
+    public static String SYSTEM_ROLE_VIEW = "/he-thong/nhom-quyen";
 
     public static String ACCOUNT_TEMPLATE = "/he-thong/tai-khoan/template";
     public static String ACCOUNT_IMPORT = "/he-thong/tai-khoan/import";
@@ -85,9 +85,9 @@ public class EndPointUtil {
 
     public static String CATEGORY_FABRICTYPE_VIEW = "/system/category/fabric-type";
 
-    public static String STORAGE_DASHBOARD = "/kho-tai-lieu";
-    public static String STORAGE_DOCUMENT_VIEW = "/kho-tai-lieu";
-    public static String STORAGE_DOCUMENT_EXPORT = "/kho-tai-lieu/export";
+    public static String STORAGE_DASHBOARD = "/storage";
+    public static String STORAGE_DOCUMENT_VIEW = "/storage/document";
+    public static String STORAGE_DOCUMENT_EXPORT = "/storage/export";
     public static String STORAGE_MATERIAL_TEMPLATE = "/storage/material/template";
     public static String STORAGE_MATERIAL_IMPORT = "/storage/material/import";
     public static String STORAGE_MATERIAL_EXPORT = "/storage/material/export";
