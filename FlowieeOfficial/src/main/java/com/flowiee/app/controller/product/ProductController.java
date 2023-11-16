@@ -61,10 +61,11 @@ public class ProductController extends BaseController {
         }
         if (validateRole.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
-            modelAndView.addObject("sanPham", new Product());
+            modelAndView.addObject("product", new Product());
             modelAndView.addObject("listSanPham", productsService.findAll());
-            modelAndView.addObject("listLoaiSanPham", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
+            modelAndView.addObject("listProductType", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
             modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
+            modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.BRAND));
             modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);            
             if (validateRole.kiemTraQuyenThemMoi()) {
                 modelAndView.addObject("action_create", "enable");
@@ -105,6 +106,7 @@ public class ProductController extends BaseController {
         modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
         // Danh sách chất liệu vải
         modelAndView.addObject("listDmChatLieuVai", categoryService.findSubCategory(CategoryUtil.FABRICTYPE));
+        modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.FABRICTYPE));
         //List image
         modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
         //Image active
@@ -127,7 +129,7 @@ public class ProductController extends BaseController {
         modelAndView.addObject("bienTheSanPhamId", bienTheSanPhamId);
         modelAndView.addObject("bienTheSanPham", productVariantService.findById(bienTheSanPhamId));
         modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(bienTheSanPhamId));
-        modelAndView.addObject("listPrices", priceService.findByBienTheSanPhamId(bienTheSanPhamId));
+        modelAndView.addObject("listPrices", priceService.findPricesByProductVariant(bienTheSanPhamId));
         FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(bienTheSanPhamId);
         if (imageActive == null) {
             imageActive = new FileStorage();
@@ -280,7 +282,7 @@ public class ProductController extends BaseController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @PostMapping(value = "/gia-ban/update/{id}")
+    @PostMapping(value = "/variant/gia-ban/update/{id}")
     public String updateProductPrice(HttpServletRequest request,
                                      @ModelAttribute("price") Price price,
                                      @PathVariable("id") Integer idBienTheSanPham) {

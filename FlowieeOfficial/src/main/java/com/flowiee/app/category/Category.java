@@ -59,10 +59,10 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@OneToMany(mappedBy = "fabricType", fetch = FetchType.LAZY)
 	private List<ProductVariant> listFabricType;
 	
-	@OneToMany(mappedBy = "loaiMauSac", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "color", fetch = FetchType.LAZY)
 	private List<ProductVariant> listLoaiMauSac;
 	
-	@OneToMany(mappedBy = "loaiKichCo", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
 	private List<ProductVariant> listLoaiKichCo;
 	
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
@@ -83,7 +83,7 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
 	private List<DocField> listDocfield;
 
-	@OneToMany(mappedBy = "loaiSanPham", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "productType", fetch = FetchType.LAZY)
 	private List<Product> listProductByProductType;
 
 	@OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)

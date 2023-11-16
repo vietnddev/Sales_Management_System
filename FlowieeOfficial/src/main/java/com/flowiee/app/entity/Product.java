@@ -23,7 +23,7 @@ public class Product extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_type_id", nullable = false)
-    private Category loaiSanPham;
+    private Category productType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable = false)
@@ -60,12 +60,10 @@ public class Product extends BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Product{" +
-            "id=" + id +
-            ", loaiproduct=" + loaiSanPham +
-            ", tenSanPham='" + tenSanPham + '\'' +
-            ", moTaSanPham='" + moTaSanPham + '\'' +
-            ", trangThai=" + trangThai +
-            '}';
+        StringBuilder builder = new StringBuilder("Product {");
+        builder.append("id=").append(id).append(", ");
+        builder.append("name=").append(tenSanPham);
+        builder.append("}");
+        return builder.toString();
     }
 }

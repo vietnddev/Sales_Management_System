@@ -22,7 +22,7 @@ public class Document extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     @Column(name = "parent_id", nullable = false)
-    private int parentId;
+    private Integer parentId;
 
     @Column(name = "loai", nullable = false)
     private String loai;

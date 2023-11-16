@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface OrderCartRepository extends JpaRepository<OrderCart, Integer> {
     @Query("from OrderCart c where c.createdBy=:createdBy")
-    List<OrderCart> findByAccountId(String createdBy);
+    List<OrderCart> findByAccountId(Integer createdBy);
 }

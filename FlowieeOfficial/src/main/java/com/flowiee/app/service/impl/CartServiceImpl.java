@@ -27,8 +27,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<OrderCart> findByAccountId(int accountId) {
-        return orderCartRepository.findByAccountId(accountId + "");
+    public List<OrderCart> findByAccountId(Integer accountId) {
+        return orderCartRepository.findByAccountId(accountId);
     }
 
     @Override

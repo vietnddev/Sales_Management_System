@@ -43,11 +43,11 @@ public class ProductVariant extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mau_sac_id", nullable = false)
-    private Category loaiMauSac;
+    private Category color;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kich_co_id", nullable = false)
-    private Category loaiKichCo;
+    private Category size;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_lieu_vai_id", nullable = false)
@@ -85,15 +85,10 @@ public class ProductVariant extends BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "BienTheSanPham{" +
-                "sanPham=" + product +
-                ", maSanPham='" + maSanPham + '\'' +
-                ", tenBienThe='" + tenBienThe + '\'' +
-                ", soLuongKho=" + soLuongKho +
-                ", trangThai='" + trangThai + '\'' +
-                ", loaiMauSac=" + loaiMauSac +
-                ", loaiKichCo=" + loaiKichCo +
-                ", giaSanPham=" + price +
-                '}';
+        StringBuilder builder = new StringBuilder("ProductVariant {");
+        builder.append("id=").append(id).append(", ");
+        builder.append("name=").append(tenBienThe);
+        builder.append("}");
+        return builder.toString();
     }
 }

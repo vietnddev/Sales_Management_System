@@ -35,8 +35,8 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public List<Price> findByBienTheSanPhamId(int bienTheSanPhamId) {
-        return priceRepository.findListGiaBanOfSP(productVariantService.findById(bienTheSanPhamId));
+    public List<Price> findPricesByProductVariant(int bienTheSanPhamId) {
+        return priceRepository.findPricesByProductVariant(productVariantService.findById(bienTheSanPhamId));
     }
 
     @Override
@@ -47,11 +47,6 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public Double findGiaHienTai(int bienTheSanPhamId) {
         return priceRepository.findGiaBanHienTai(productVariantService.findById(bienTheSanPhamId), true);
-    }
-
-    @Override
-    public Price findGiaHienTaiModel(int bienTheSanPhamId) {
-        return priceRepository.findGiaBanHienTaiModel(productVariantService.findById(bienTheSanPhamId), true);
     }
 
     @Override

@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String save(Product product) {
-        if (product.getLoaiSanPham() == null ||
+        if (product.getProductType() == null ||
             product.getTenSanPham() == null) {
             throw new BadRequestException();
         }

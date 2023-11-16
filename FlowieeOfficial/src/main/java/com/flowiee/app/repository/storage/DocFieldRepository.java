@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface DocFieldRepository extends JpaRepository<DocField, Integer> {
-    @Query("from DocField d where d.loaiTaiLieu=:loaiTaiLieu order by d.sapXep")
+    @Query("from DocField d where d.loaiTaiLieu.id=:loaiTaiLieu order by d.sapXep")
     List<DocField> findByDoctype(Integer loaiTaiLieu);
 }

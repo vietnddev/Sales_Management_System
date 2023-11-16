@@ -1,6 +1,6 @@
 package com.flowiee;
 
-import com.flowiee.app.common.utils.DateUtil;
+import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.service.system.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class FlowieeOfficialApplication {
     	try {
     		SpringApplication.run(FlowieeOfficialApplication.class, args);
     		
-    		System.out.println("FlowieeOfficialApplication started SUCCESS at " + DateUtil.now("dd/MM/yyyy HH:mm:ss"));
+    		System.out.println("FlowieeOfficialApplication started SUCCESS at " + FlowieeUtil.now("dd/MM/yyyy HH:mm:ss"));
     	} catch (Exception e) {    		
     		System.out.println("INFO: " + e.getMessage());
 		}

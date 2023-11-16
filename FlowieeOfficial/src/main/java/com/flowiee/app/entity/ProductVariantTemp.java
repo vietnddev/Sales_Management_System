@@ -94,8 +94,8 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
         productVariantTemp.setSoLuongKho(productVariant.getSoLuongKho());
         productVariantTemp.setSoLuongDaBan(productVariant.getSoLuongDaBan());
         productVariantTemp.setTrangThai(productVariant.getTrangThai());
-        productVariantTemp.setLoaiMauSac(productVariant.getLoaiMauSac());
-        productVariantTemp.setLoaiKichCo(productVariant.getLoaiKichCo());
+        productVariantTemp.setLoaiMauSac(productVariant.getColor());
+        productVariantTemp.setLoaiKichCo(productVariant.getSize());
         productVariantTemp.setFabricType(productVariant.getFabricType());
         productVariantTemp.setGarmentFactory(productVariant.getGarmentFactory());
         productVariantTemp.setSupplier(productVariant.getSupplier());

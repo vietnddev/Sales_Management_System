@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -216,7 +217,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
 
     @Override
     public GoodsImport findDraftImportPresent(Integer createdBy) {
-        return goodsImportRepository.findDraftGoodsImportPresent(STATUS_DRAFT, String.valueOf(createdBy));
+        return goodsImportRepository.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
     }
 
     @Override
@@ -225,6 +226,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         goodsImport.setTitle("Title");
         goodsImport.setStatus(STATUS_DRAFT);
         goodsImport.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+        goodsImport.setOrderTime(new Date());
+        goodsImport.setReceivedTime(new Date());
         goodsImport = goodsImportRepository.save(goodsImport);
         return goodsImport;
     }

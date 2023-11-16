@@ -7,7 +7,7 @@ import com.flowiee.app.entity.OrderCart;
 public interface CartService {
     List<OrderCart> findAll();
 
-    List<OrderCart> findByAccountId(int accountId);
+    List<OrderCart> findByAccountId(Integer accountId);
 
     OrderCart findById(int id);
 

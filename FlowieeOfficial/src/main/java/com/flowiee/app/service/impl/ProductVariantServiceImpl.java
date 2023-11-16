@@ -7,6 +7,7 @@ import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariant;
+import com.flowiee.app.model.product.ProductVariantResponse;
 import com.flowiee.app.repository.product.ProductVariantRepository;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductVariantService;
@@ -43,11 +44,12 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public List<ProductVariant> getListVariantOfProduct(int sanPhamId) {
-        List<ProductVariant> listReturn = new ArrayList<>();
+    public List<ProductVariantResponse> getListVariantOfProduct(Integer sanPhamId) {
+        List<ProductVariantResponse> listReturn = new ArrayList<>();
         productVariantRepository.findListBienTheOfsanPham(sanPhamId).forEach(bienTheSanPham -> {
-            bienTheSanPham.setPrice(priceService.findGiaHienTaiModel(bienTheSanPham.getId()));
-            listReturn.add(bienTheSanPham);
+            ProductVariantResponse dataModel = ProductVariantResponse.fromProductVariant(bienTheSanPham);
+            dataModel.setPrices(priceService.findPricesByProductVariant(dataModel.getId()));
+            listReturn.add(dataModel);
         });
         return listReturn;
     }
@@ -62,21 +64,21 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public String save(ProductVariant productVariant) {
-        if (productVariant.getLoaiMauSac() == null || productVariant.getLoaiKichCo() == null) {
+        if (productVariant.getColor() == null || productVariant.getSize() == null) {
             throw new BadRequestException();
         }
         if (productVariantRepository.findByMauSacAndKichCo(productVariant.getProduct().getId(),
-                                                           productVariant.getLoaiMauSac().getId(),
-                                                           productVariant.getLoaiKichCo().getId()) != null)
+                                                           productVariant.getColor().getId(),
+                                                           productVariant.getSize().getId()) != null)
         {
             throw new DataExistsException();
         }
         try {
             String tenBienTheSanPham = "";
             if (productVariant.getTenBienThe().isEmpty()) {
-                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getLoaiKichCo().getName() + " - Màu " + productVariant.getLoaiMauSac().getName();
+                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
             } else {
-                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getLoaiKichCo().getName() + " - Màu " + productVariant.getLoaiMauSac().getName();
+                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
             }
             productVariant.setTenBienThe(tenBienTheSanPham);
             productVariantRepository.save(productVariant);

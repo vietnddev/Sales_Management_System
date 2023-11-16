@@ -58,8 +58,7 @@ public class CustomerController extends BaseController {
     }
 
     @PostMapping("/create")
-    public String createKhachHang(@ModelAttribute("khachHang") Customer customer,
-                                  HttpServletRequest request) {
+    public String createKhachHang(@ModelAttribute("khachHang") Customer customer) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
