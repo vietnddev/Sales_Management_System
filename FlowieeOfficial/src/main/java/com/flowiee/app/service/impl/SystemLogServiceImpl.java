@@ -9,16 +9,36 @@ import com.flowiee.app.service.system.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SystemLogServiceImpl implements SystemLogService {
     @Autowired
     private SystemLogRepository logRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public List<SystemLog> getAll() {
-        return logRepository.findAll();
+        List<SystemLog> dataReturn = new ArrayList<>();
+        String srtSQL = "select l.id, l.module, l.action, l.noi_dung, l.noi_dung_cap_nhat, l.ip, a.username from sys_log l inner join sys_account a on a.id = l.created_by";
+        Query result = entityManager.createNativeQuery(srtSQL);
+        List<Object[]> listData = result.getResultList();
+        for (Object[] data : listData) {
+            SystemLog systemLog = new SystemLog();
+            systemLog.setId(Integer.parseInt(String.valueOf(data[0])));
+            systemLog.setModule(String.valueOf(data[1]));
+            systemLog.setAction(String.valueOf(data[2]));
+            systemLog.setNoiDung(String.valueOf(data[3]));
+            systemLog.setNoiDungCapNhat(String.valueOf(data[4]));
+            systemLog.setIp(String.valueOf(data[5]));
+            systemLog.setUsername(String.valueOf(data[6]));
+            dataReturn.add(systemLog);
+        }
+        return dataReturn;
     }
 
     @Override

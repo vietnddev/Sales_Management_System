@@ -30,7 +30,10 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 
 	@Column(name = "ip", length = 20)
 	private String ip;
-	
+
+	@Transient
+	private String username;
+
 	public SystemLog (String module, String action, String value, String newValue, Integer createdBy, String ip) {
 		this.module = module;
 		this.action = action;
