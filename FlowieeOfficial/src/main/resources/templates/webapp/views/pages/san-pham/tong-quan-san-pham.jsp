@@ -303,33 +303,35 @@
                         <div class="col-sm-9" style="max-height: 470px; overflow: scroll">
                             <table class="table table-bordered">
                                 <thead>
-                                <th>#</th>
-                                <th>Tên biến thể</th>
-                                <th>Màu sắc</th>
-                                <th>Kích cỡ</th>
-                                <th>Số lượng</th>
-                                <th>Giá bán</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
+                                    <th>#</th>
+                                    <th>Tên biến thể</th>
+                                    <th>Màu sắc</th>
+                                    <th>Kích cỡ</th>
+                                    <th>Số lượng</th>
+                                    <th>Đã bán</th>
+                                    <th>Giá bán</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
                                 </thead>
                                 <tbody>
                                 <tr th:each="var, index : ${listBienTheSanPham}">
                                     <td th:text="${index.index + 1}"></td>
                                     <td>
                                         <a th:href="@{/san-pham/variant/{id}(id=${var.id})}"
-                                           th:text="${var.tenBienThe}">
+                                           th:text="${var.name}">
                                         </a>
                                     </td>
-                                    <td th:text="${var.loaiMauSac.tenLoai}"></td>
-                                    <td th:text="${var.loaiKichCo.tenLoai}"></td>
-                                    <td th:text="${var.soLuongKho}"></td>
+                                    <td th:text="${var.color.name}"></td>
+                                    <td th:text="${var.size.name}"></td>
+                                    <td th:text="${var.quantity}"></td>
+                                    <td th:text="${var.sell}"></td>
                                     <td>
-                                                <span th:text="${var.price.giaBan}"
+                                                <span th:text="${var.prices.get(0).giaBan}"
                                                       style="color: #007bff; cursor: pointer"
                                                       data-toggle="modal"
                                                       th:data-target="'#modalLichSuGiaBan_' + ${var.id}"></span>
                                     </td>
-                                    <td th:text="${var.trangThai}"></td>
+                                    <td th:text="${var.status}"></td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-info"
                                                 title="Cập nhật biến thể sản phẩm">
@@ -366,7 +368,7 @@
                                                             <div class="form-group row">
                                                                 <label class="col-sm-4">Giá hiện tại</label>
                                                                 <input class="col-sm-8 form-control" type="text"
-                                                                       th:value="${var.price.giaBan}" readonly>
+                                                                       th:value="${var.prices.get(0).giaBan}" readonly>
                                                             </div>
                                                             <div class="form-group row">
                                                                 <label class="col-sm-4">Giá điều chỉnh</label>
@@ -376,7 +378,7 @@
                                                         </div>
                                                         <div class="modal-footer justify-content-end">
                                                             <input type="hidden" name="idGiaBan"
-                                                                   th:value="${var.price.id}">
+                                                                   th:value="${var.prices.get(0).id}">
                                                             <button type="button" class="btn btn-sm btn-default"
                                                                     data-dismiss="modal">Hủy
                                                             </button>
@@ -452,25 +454,36 @@
                                           th:text="${detailProducts.tenSanPham}"></textarea>
                             </div>
                             <div class="form-group">
+                                <label>Nhãn hiệu</label>
+                                <select class="custom-select" name="brand">
+                                    <option
+                                            th:each="lsBrand, iterStat : ${listBrand}"
+                                            th:value="${lsBrand.id}"
+                                            th:text="${lsBrand.name}"></option>
+                                    <option th:value="${detailProducts.productType.id}"
+                                            th:text="${detailProducts.productType.name}" selected></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label>Loại sản phẩm</label>
-                                <select class="custom-select" name="loaiSanPham">
+                                <select class="custom-select" name="productType">
                                     <option
                                             th:each="lstype, iterStat : ${listTypeProducts}"
                                             th:value="${lstype.id}"
-                                            th:text="${lstype.tenLoai}"></option>
-                                    <option th:value="${detailProducts.loaiSanPham.id}"
-                                            th:text="${detailProducts.loaiSanPham.tenLoai}" selected></option>
+                                            th:text="${lstype.name}"></option>
+                                    <option th:value="${detailProducts.productType.id}"
+                                            th:text="${detailProducts.productType.name}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Đơn vị tính</label>
-                                <select class="custom-select" name="donViTinh">
+                                <select class="custom-select" name="unit">
                                     <option
                                             th:each="lsDvt, iterStat : ${listDonViTinh}"
                                             th:value="${lsDvt.id}"
-                                            th:text="${lsDvt.tenLoai}"></option>
-                                    <option th:value="${detailProducts.donViTinh.id}"
-                                            th:text="${detailProducts.donViTinh.tenLoai}" selected></option>
+                                            th:text="${lsDvt.name}"></option>
+                                    <option th:value="${detailProducts.unit.id}"
+                                            th:text="${detailProducts.unit.name}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -527,7 +540,7 @@
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <input type="hidden" name="sanPham"
+                                                    <input type="hidden" name="product"
                                                            th:value="${detailProducts.id}"/>
                                                     <input type="hidden" name="maSanPham" value=""/>
                                                     <div class="form-group">
@@ -540,25 +553,25 @@
                                                         <select class="custom-select" name="fabricType">
                                                             <option th:each="lsFabric, iterStat : ${listDmChatLieuVai}"
                                                                     th:value="${lsFabric.id}"
-                                                                    th:text="${lsFabric.tenLoai}"
+                                                                    th:text="${lsFabric.name}"
                                                                     th:selected="${iterStat.index == 0}"></option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Chọn màu sắc</label>
-                                                        <select class="custom-select" name="loaiMauSac">
+                                                        <select class="custom-select" name="color">
                                                             <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
                                                                     th:value="${lsColor.id}"
-                                                                    th:text="${lsColor.tenLoai}"
+                                                                    th:text="${lsColor.name}"
                                                                     th:selected="${iterStat.index == 0}"></option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Chọn kích cỡ</label>
-                                                        <select class="custom-select" name="loaiKichCo">
+                                                        <select class="custom-select" name="size">
                                                             <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
                                                                     th:value="${lsSize.id}"
-                                                                    th:text="${lsSize.tenLoai}"
+                                                                    th:text="${lsSize.name}"
                                                                     th:selected="${iterStat.index == 0}"></option>
                                                         </select>
                                                     </div>

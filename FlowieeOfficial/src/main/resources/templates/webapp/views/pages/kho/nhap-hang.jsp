@@ -73,7 +73,7 @@
                                     name="productVariantId" required>
                                 <option th:each="option : ${listBienTheSanPham}"
                                         th:value="${option.id}"
-                                        th:text="${option.sanPham.tenSanPham} + ' - ' + ${option.tenBienThe}">
+                                        th:text="${option.product.tenSanPham} + ' - ' + ${option.tenBienThe}">
                                 </option>
                             </select>
                         </div>
@@ -234,7 +234,7 @@
                             required>
                         <option th:each="payMethod : ${listHinhThucThanhToan}"
                                 th:value="${payMethod.id}"
-                                th:text="${payMethod.tenLoai}">
+                                th:text="${payMethod.name}">
                         </option>
                     </select>
                 </div>

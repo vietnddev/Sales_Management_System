@@ -87,7 +87,7 @@
                                                 </th:block>
                                             </td>
                                             <td th:text="${list.name}"></td>
-                                            <td th:text="${list.unit.tenLoai}"></td>
+                                            <td th:text="${list.unit.name}"></td>
                                             <td th:text="${list.quantity}"></td>
                                             <td th:text="${list.location}"></td>
                                             <td th:text="${list.note}"></td>
@@ -167,7 +167,7 @@
                                                                                 <label>Tên loại</label>
                                                                                 <input type="text" class="form-control"
                                                                                        placeholder="Tên loại" required
-                                                                                       name="tenLoai"
+                                                                                       name="name"
                                                                                        th:value="${list.name}"/>
                                                                             </div>
                                                                             <div class="form-group">
@@ -323,7 +323,7 @@
                                                                     data-placeholder="Đơn vị tính">
                                                                 <option th:each="u : ${listDonViTinh}"
                                                                         th:value="${u.id}"
-                                                                        th:text="${u.tenLoai}">
+                                                                        th:text="${u.name}">
                                                                 </option>
                                                             </select>
                                                         </div>

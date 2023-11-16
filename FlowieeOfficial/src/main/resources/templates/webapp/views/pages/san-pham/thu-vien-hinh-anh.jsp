@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                                 <div class="filter-container p-0 row col-sm-12">
-                                    <div class="filtr-item col-sm-2" th:data-category="${list.sanPham.id}"
+                                    <div class="filtr-item col-sm-2" th:data-category="${list.product.id}"
                                          th:each="list : ${listImages}"
                                          style="min-height: 200px; width: 100%; display: inline;">
                                         <a th:href="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"

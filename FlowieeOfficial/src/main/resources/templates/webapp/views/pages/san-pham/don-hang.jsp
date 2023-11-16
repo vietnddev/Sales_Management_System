@@ -61,11 +61,11 @@
                                             <option selected
                                                     th:value="${selected_kenhBanHang.id}"
                                                     th:if="${selected_kenhBanHang != null}"
-                                                    th:text="${selected_kenhBanHang.tenLoai}">
+                                                    th:text="${selected_kenhBanHang.name}">
                                             </option>
                                             <option th:each="channel : ${listKenhBanHang}"
                                                     th:value="${channel.id}"
-                                                    th:text="${channel.tenLoai}">
+                                                    th:text="${channel.name}">
                                             </option>
                                         </select>
                                         <select class="custom-select col-sm" name="hinhThucThanhToan"
@@ -77,11 +77,11 @@
                                             <option selected
                                                     th:value="${selected_hinhThucThanhToan.id}"
                                                     th:if="${selected_hinhThucThanhToan != null}"
-                                                    th:text="${selected_hinhThucThanhToan.tenLoai}">
+                                                    th:text="${selected_hinhThucThanhToan.name}">
                                             </option>
                                             <option th:each="typePayment : ${listHinhThucThanhToan}"
                                                     th:value="${typePayment.id}"
-                                                    th:text="${typePayment.tenLoai}">
+                                                    th:text="${typePayment.name}">
                                             </option>
                                         </select>
                                         <select class="custom-select col-sm" name="trangThaiDonHang"
@@ -92,11 +92,11 @@
                                             <option selected
                                                     th:value="${selected_trangThaiDonHang.id}"
                                                     th:if="${selected_trangThaiDonHang != null}"
-                                                    th:text="${selected_trangThaiDonHang.ten}">
+                                                    th:text="${selected_trangThaiDonHang.name}">
                                             </option>
                                             <option th:each="status : ${listTrangThaiDonHang}"
                                                     th:value="${status.id}"
-                                                    th:text="${status.ten}">
+                                                    th:text="${status.name}">
                                             </option>
                                         </select>
                                         <select class="custom-select col-sm" name="nhanVienBanHang??"
@@ -147,7 +147,7 @@
                                     <td th:text="${list.khachHang.diaChi}"></td>
                                     <td th:text="${list.khachHang.tenKhachHang}"></td>
                                     <td th:text="${list.tongTienDonHang}"></td>
-                                    <td th:text="${list.kenhBanHang.tenLoai}"></td>
+                                    <td th:text="${list.kenhBanHang.name}"></td>
                                     <td th:text="${list.ghiChu}"></td>
                                     <td th:text="${list.trangThaiDonHang.ten}"></td>
                                     <td>

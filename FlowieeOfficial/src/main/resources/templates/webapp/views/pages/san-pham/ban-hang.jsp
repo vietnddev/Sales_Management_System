@@ -46,7 +46,7 @@
                                                         name="bienTheSanPhamId" required>
                                                     <option th:each="option : ${listBienTheSanPham}"
                                                             th:value="${option.id}"
-                                                            th:text="${option.sanPham.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
+                                                            th:text="${option.product.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
                                                     </option>
                                                 </select>
                                             </div>
@@ -74,9 +74,9 @@
                                                 <tr th:each="item, itemIndex : ${cart.listItems}">
                                                     <td th:text="${itemIndex.index + 1}"></td>
                                                     <td class="text-left">
-                                                        <input type="hidden" id="bienTheSanPhamId" th:value="${item.bienTheSanPham.Id}"/>
-                                                        <a th:text="${item.bienTheSanPham.tenBienThe}"
-                                                           th:href="@{/san-pham/variant/{id}(id=${item.bienTheSanPham.id})}"></a>
+                                                        <input type="hidden" id="bienTheSanPhamId" th:value="${item.productVariant.Id}"/>
+                                                        <a th:text="${item.productVariant.tenBienThe}"
+                                                           th:href="@{/san-pham/variant/{id}(id=${item.productVariant.id})}"></a>
                                                         <input class="form-control form-control-sm" name="ghiChu"
                                                                th:value="${item.ghiChu}" readonly>
                                                     </td>
@@ -109,7 +109,7 @@
                                                                             <input type="hidden" name="id"
                                                                                    th:value="${item.id}">
                                                                             <input type="hidden" name="bienTheSanPham"
-                                                                                   th:value="${item.bienTheSanPham.id}">
+                                                                                   th:value="${item.productVariant.id}">
                                                                             <div class="form-group row"
                                                                                  style="display: flex; align-items: center;
                                                                                                         margin: 0 0 15px 0">
@@ -118,7 +118,7 @@
                                                                                 <input class="col-sm-8 form-control"
                                                                                        type="number" name="soLuong"
                                                                                        min="1"
-                                                                                       max="[[${item.bienTheSanPham.soLuongKho}]]"
+                                                                                       max="[[${item.productVariant.soLuongKho}]]"
                                                                                        th:value="${item.soLuong}"/>
                                                                             </div>
                                                                             <div class="form-group row"
@@ -173,7 +173,7 @@
                                                                                    value="0"/>
                                                                             Xác nhận xóa sản phẩm
                                                                             <span class="badge badge-info"
-                                                                                  th:text="${item.bienTheSanPham.tenBienThe}"></span>
+                                                                                  th:text="${item.productVariant.tenBienThe}"></span>
                                                                             khỏi giỏ hàng!
                                                                         </div>
                                                                         <div class="modal-footer justify-content-end">
@@ -303,7 +303,7 @@
                                                     required>
                                                 <option th:each="channel : ${listKenhBanHang}"
                                                         th:value="${channel.id}"
-                                                        th:text="${channel.tenLoai}">
+                                                        th:text="${channel.name}">
                                                 </option>
                                             </select>
                                         </div>
@@ -319,7 +319,7 @@
                                                     required>
                                                 <option th:each="payType : ${listHinhThucThanhToan}"
                                                         th:value="${payType.id}"
-                                                        th:text="${payType.tenLoai}">
+                                                        th:text="${payType.name}">
                                                 </option>
                                             </select>
                                         </div>
@@ -335,7 +335,7 @@
                                                     required>
                                                 <option th:each="status : ${listTrangThaiDonHang}"
                                                         th:value="${status.id}"
-                                                        th:text="${status.ten}">
+                                                        th:text="${status.name}">
                                                 </option>
                                             </select>
                                         </div>

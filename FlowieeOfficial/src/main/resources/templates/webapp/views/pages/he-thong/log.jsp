@@ -49,7 +49,7 @@
                                     <tbody>
                                         <tr th:each="log, index : ${listLog}">
                                             <td th:text="${index.index + 1}"></td>
-                                            <td th:text="${log.account.username}"></td>
+                                            <td th:text="${log.username}"></td>
                                             <td th:text="${log.module}"></td>
                                             <td th:text="${log.action}" style="max-width: 100px"></td>
                                             <td th:text="${log.noiDung}" style="max-width: 250px"></td>

@@ -29,27 +29,12 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-header"><strong>QUẢN LÝ BÁN HÀNG</strong></li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a th:href="@{${URL_PRODUCT}}" class="nav-link">
                 <i class="fa-solid fa-shirt nav-icon"></i>
                 <p>
                   Sản phẩm
-                  <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a th:href="@{/danh-muc/loai-san-pham}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Loại sản phẩm</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a th:href="@{${URL_PRODUCT}}" class="nav-link">
-                    <i class="far nav-icon"></i>
-                    <p>Danh sách sản phẩm</p>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_PRODUCT_ORDER}}" class="nav-link">
@@ -119,14 +104,6 @@
                 <i class="fa-solid fa-scroll nav-icon"></i>
                 <p>
                   Nguyên vật liệu
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a th:href="@{/danh-muc/loai-tai-lieu}" class="nav-link">
-                <i class="fa-solid fa-file-code nav-icon"></i>
-                <p>
-                  Loại tài liệu
                 </p>
               </a>
             </li>

@@ -77,22 +77,22 @@
                                                      th:if="${list.loai == 'FILE'}"></td>
                                             <td th:text="${list.createdAt}"></td>
                                             <td style="max-width: 300px">
-                                                <a th:href="@{/kho-tai-lieu/document/{aliasName}-{id}(aliasName=${list.aliasName}, id=${list.id})}"
+                                                <a th:href="@{/storage/document/{aliasName}-{id}(aliasName=${list.aliasName}, id=${list.id})}"
                                                    th:text="${list.ten}" th:if="${list.loai == 'FOLDER'}"></a>
-                                                <a th:href="@{/kho-tai-lieu/document/{aliasName}-{id}(aliasName=${list.aliasName}, id=${list.id})}"
+                                                <a th:href="@{/storage/document/{aliasName}-{id}(aliasName=${list.aliasName}, id=${list.id})}"
                                                    th:text="${list.ten}" th:if="${list.loai == 'FILE'}"></a>
                                             </td>
                                             <th:block th:if="${list.loaiTaiLieu == null}">
                                                 <td th:text="''"></td>
                                             </th:block>
                                             <th:block th:if="${list.loaiTaiLieu != null}">
-                                                <td th:text="${list.loaiTaiLieu.ten}"></td>
+                                                <td th:text="${list.loaiTaiLieu.name}"></td>
                                             </th:block>
                                             <td th:text="${list.moTa}"></td>
                                             <td>
                                                 <button class="btn btn-outline-info btn-sm" style="margin-bottom: 4px;">
                                                     <a
-                                                            th:href="@{/kho-tai-lieu/document/{id}(id=${list.id})}"><i
+                                                            th:href="@{/storage/document/{id}(id=${list.id})}"><i
                                                             class="fa-solid fa-eye"></i></a></button>
                                                 <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
                                                         th:data-target="'#update-' + ${list.id}"
@@ -109,7 +109,7 @@
                                                 <div class="modal fade" th:id="'delete-' + ${list.id}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/kho-tai-lieu/document/delete/{id}(id=${list.id})}"
+                                                            <form th:action="@{/storage/document/delete/{id}(id=${list.id})}"
                                                                   th:object="${document}" method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Xác nhận xóa tài
@@ -146,7 +146,7 @@
                                                 <div class="modal fade" th:id="'update-' + ${list.id}">
                                                     <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/kho-tai-lieu/document/update/{id}(id=${list.id})}"
+                                                            <form th:action="@{/storage/document/update/{id}(id=${list.id})}"
                                                                   th:object="${document}" method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Cập nhật loại tài
@@ -218,7 +218,7 @@
                                 <div class="modal fade" id="insert">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <form th:action="@{/kho-tai-lieu/document/insert}"
+                                            <form th:action="@{/storage/document/insert}"
                                                   th:object="${document}" method="post"
                                                   enctype="multipart/form-data">
                                                 <div class="modal-header">
@@ -247,7 +247,7 @@
                                                                         name="loaiTaiLieu">
                                                                     <option th:each="list : ${listLoaiTaiLieu}"
                                                                             th:value="${list.id}"
-                                                                            th:text="${list.ten}">
+                                                                            th:text="${list.name}">
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -292,7 +292,7 @@
                                 <div class="modal fade" id="insert-folder">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <form th:action="@{/kho-tai-lieu/document/insert}"
+                                            <form th:action="@{/storage/document/insert}"
                                                   th:object="${document}" method="post"
                                                   enctype="multipart/form-data">
                                                 <div class="modal-header">

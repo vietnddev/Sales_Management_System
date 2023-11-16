@@ -346,7 +346,7 @@
                                                 <div class="modal-body">
                                                     <div class="row text-left">
                                                         <div class="col-12">
-                                                            <input type="hidden" name="bienTheSanPham"
+                                                            <input type="hidden" name="productVariant"
                                                                    th:value="${bienTheSanPhamId}"/>
                                                             <div class="form-group">
                                                                 <label>Tên thuộc tính</label>
@@ -385,12 +385,12 @@
                         <div class="row w-100" style="max-height: 400px; overflow: scroll">
                             <table class="table table-bordered mt-2">
                                 <thead>
-                                <th>#</th>
-                                <th>Tên thuộc tính</th>
-                                <th>Giá trị</th>
-                                <th>Sắp xếp</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
+                                    <th>#</th>
+                                    <th>Tên thuộc tính</th>
+                                    <th>Giá trị</th>
+                                    <th>Sắp xếp</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
                                 </thead>
                                 <tbody>
                                 <tr th:each="list, index : ${listThuocTinh}">
@@ -427,7 +427,7 @@
                                         <td>
                                             <input type="hidden" name="id" th:value="${list.id}">
                                             <input type="hidden" name="bienTheSanPham"
-                                                   th:value="${list.bienTheSanPham.id}">
+                                                   th:value="${list.productVariant.id}">
                                             <button type="submit" class="btn btn-sm btn-info">Cập nhật
                                             </button>
                                             <button type="button" class="btn btn-sm btn-danger"

@@ -21,7 +21,7 @@
     <div th:replace="sidebar :: sidebar"></div>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper mt-3">
+    <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
@@ -78,9 +78,9 @@
                                                 <a th:href="@{/san-pham/{id}(id=${list.id})}"
                                                    th:text="${list.tenSanPham}"></a>
                                             </td>
-                                            <td th:text="${list.loaiSanPham.tenLoai}">
+                                            <td th:text="${list.productType.name}">
                                             </td>
-                                            <td th:text="${list.donViTinh.tenLoai}">
+                                            <td th:text="${list.unit.name}">
                                             </td>
                                             <td>
                                                 <th:block th:if="${list.trangThai}">
@@ -166,26 +166,39 @@
                                                                         <div class="form-group">
                                                                             <label>Loại sản phẩm</label>
                                                                             <select class="custom-select"
-                                                                                    name="loaiSanPham">
-                                                                                <option th:each="lstype, iterStat : ${listLoaiSanPham}"
+                                                                                    name="productType">
+                                                                                <option th:each="lstype, iterStat : ${listproductType}"
                                                                                         th:value="${lstype.id}"
-                                                                                        th:text="${lstype.tenLoai}">
+                                                                                        th:text="${lstype.name}">
                                                                                 </option>
-                                                                                <option th:text="${list.loaiSanPham.tenLoai}"
-                                                                                        th:value="${list.loaiSanPham.id}"
+                                                                                <option th:text="${list.productType.name}"
+                                                                                        th:value="${list.productType.id}"
                                                                                         selected></option>
                                                                             </select>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label>Đơn vị tính</label>
                                                                             <select class="custom-select"
-                                                                                    name="donViTinh">
+                                                                                    name="unit">
                                                                                 <option th:each="lsDvt, iterStat : ${listDonViTinh}"
                                                                                         th:value="${lsDvt.id}"
-                                                                                        th:text="${lsDvt.tenLoai}">
+                                                                                        th:text="${lsDvt.name}">
                                                                                 </option>
-                                                                                <option th:text="${list.donViTinh.tenLoai}"
-                                                                                        th:value="${list.donViTinh.id}"
+                                                                                <option th:text="${list.unit.name}"
+                                                                                        th:value="${list.unit.id}"
+                                                                                        selected></option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label>Nhãn hiệu</label>
+                                                                            <select class="custom-select"
+                                                                                    name="brand">
+                                                                                <option th:each="lsBrand, iterStat : ${listBrand}"
+                                                                                        th:value="${lsBrand.id}"
+                                                                                        th:text="${lsBrand.name}">
+                                                                                </option>
+                                                                                <option th:text="${list.brand.name}"
+                                                                                        th:value="${list.brand.id}"
                                                                                         selected></option>
                                                                             </select>
                                                                         </div>
@@ -302,7 +315,7 @@
                                 <div class="modal fade" id="insert">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form th:action="@{/san-pham/insert}" th:object="${sanPham}" method="post">
+                                            <form th:action="@{/san-pham/insert}" th:object="${product}" method="post">
                                                 <div class="modal-header">
                                                     <strong class="modal-title">Thêm mới sản phẩm</strong>
                                                     <button type="button" class="close" data-dismiss="modal"
@@ -320,21 +333,31 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Loại sản phẩm</label>
-                                                                <select class="custom-select" name="loaiSanPham">
-                                                                    <option th:each="lstype, iterStat : ${listLoaiSanPham}"
+                                                                <select class="custom-select" name="productType">
+                                                                    <option th:each="lstype, iterStat : ${listProductType}"
                                                                             th:value="${lstype.id}"
-                                                                            th:text="${lstype.tenLoai}"
+                                                                            th:text="${lstype.name}"
                                                                             th:selected="${iterStat.index == 0}"></option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Đơn vị tính</label>
                                                                 <select class="custom-select"
-                                                                        name="donViTinh">
+                                                                        name="unit">
                                                                     <option th:each="lsDvt, iterStat : ${listDonViTinh}"
                                                                             th:value="${lsDvt.id}"
-                                                                            th:text="${lsDvt.tenLoai}"
+                                                                            th:text="${lsDvt.name}"
                                                                             th:selected="${iterStat.index == 0}">
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Nhãn hiệu</label>
+                                                                <select class="custom-select"
+                                                                        name="brand">
+                                                                    <option th:each="lsBrand, iterStat : ${listBrand}"
+                                                                            th:value="${lsBrand.id}"
+                                                                            th:text="${lsBrand.name}">
                                                                     </option>
                                                                 </select>
                                                             </div>

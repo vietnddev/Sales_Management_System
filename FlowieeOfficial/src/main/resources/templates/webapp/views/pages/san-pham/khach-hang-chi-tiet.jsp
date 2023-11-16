@@ -65,17 +65,9 @@
                                                     <span class="col-sm-6">Giới tính</span>
                                                     <span class="col-sm-6">[[${khachHangDetail.gioiTinh}]]</span>
                                                 </div>
-                                                <div class="row mb-2">
-                                                    <span class="col-sm-6">Số điện thoại</span>
-                                                    <span class="col-sm-6">[[${khachHangDetail.soDienThoai}]]</span>
-                                                </div>
-                                                <div class="row mb-2">
-                                                    <span class="col-sm-6">Email</span>
-                                                    <span class="col-sm-6">[[${khachHangDetail.email}]]</span>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="col-sm-6">Địa chỉ</span>
-                                                    <span class="col-sm-6">[[${khachHangDetail.diaChi}]]</span>
+                                                <div class="row mb-2" th:each="contact : ${khachHangDetail.listCustomerContact}">
+                                                    <span class="col-sm-6" th:text="${contact.code}"></span>
+                                                    <span class="col-sm-6" th:text="${contact.value}"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -85,7 +77,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="row mb-2">
-                                                    <span class="col-sm-6">Tổng số hóa đơn: [[${khachHangDetail.listDonHang.size()}]]</span>
+                                                    <span class="col-sm-6">Tổng số hóa đơn: [[${khachHangDetail.listOrder.size()}]]</span>
                                                     <span class="col-sm-6">Ngày bắt đầu mua hàng: 12/12/2022</span>
                                                 </div>
                                                 <div class="row">

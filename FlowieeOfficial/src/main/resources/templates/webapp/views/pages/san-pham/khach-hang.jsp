@@ -8,6 +8,12 @@
     <div th:replace="header :: stylesheets">
         <!--Nhúng các file css, icon,...-->
     </div>
+
+    <style>
+        .table td.vertical-center {
+            vertical-align: middle;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -23,7 +29,7 @@
     <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
         <!-- Main content -->
         <section class="content">
-            <div class="container-fluid">
+            <div class="container-fluid vertical-center">
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
                     <div class="col-12">
@@ -98,23 +104,30 @@
                                             <th>STT</th>
                                             <th>Tên khách hàng</th>
                                             <th>Giới tính</th>
-                                            <th>Số điện thoại</th>
-                                            <th>Email</th>
-                                            <th>Địa chỉ</th>
+                                            <th>Liên hệ</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr th:each="list, index : ${listKhachHang}">
-                                            <td th:text="${index.index + 1}"></td>
-                                            <td>
-                                                <a th:href="@{/khach-hang/{id}(id=${list.id})}"
-                                                   th:text="${list.tenKhachHang}"></a>
+                                            <td th:text="${index.index + 1}" class="vertical-center"></td>
+                                            <td class="vertical-center">
+                                                <a th:href="@{/khach-hang/{id}(id=${list.id})}" th:text="${list.tenKhachHang}"></a>
                                             </td>
-                                            <td th:if="${list.gioiTinh}">Nam</td>
-                                            <td th:if="!${list.gioiTinh}">Nữ</td>
-                                            <td th:text="${list.soDienThoai}"></td>
-                                            <td th:text="${list.email}"></td>
-                                            <td th:text="${list.diaChi}"></td>
+                                            <td th:if="${list.gioiTinh}" class="vertical-center">Nam</td>
+                                            <td th:if="!${list.gioiTinh}" class="vertical-center">Nữ</td>
+                                            <td>
+                                                <th:block th:each="contact : ${list.listCustomerContact}">
+                                                    <span>[[${contact.code}]] : [[${contact.value}]]</span> <br>
+                                                </th:block>
+                                            </td>
+                                            <td class="vertical-center">
+                                                <button class="btn btn-outline-info btn-sm">
+                                                    <a th:href="@{/khach-hang/{id}(id=${list.id})}">
+                                                        <i class="fa-solid fa-eye"></i>
+                                                    </a>
+                                                </button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -122,9 +135,8 @@
                                             <th>STT</th>
                                             <th>Tên khách hàng</th>
                                             <th>Giới tính</th>
-                                            <th>Số điện thoại</th>
-                                            <th>Email</th>
-                                            <th>Địa chỉ</th>
+                                            <th>Liên hệ</th>
+                                            <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
