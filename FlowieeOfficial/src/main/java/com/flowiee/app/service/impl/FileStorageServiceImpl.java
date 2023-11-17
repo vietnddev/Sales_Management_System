@@ -1,7 +1,5 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
@@ -26,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.NotActiveException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
@@ -119,25 +116,16 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public List<FileStorage> getImageOfSanPham(int sanPhamId) {
-        if (productService.findById(sanPhamId) == null) {
-            throw new BadRequestException();
-        }
         return fileRepository.findImageOfSanPham(sanPhamId);
     }
 
     @Override
     public List<FileStorage> getImageOfSanPhamBienThe(int bienTheSanPhamId) {
-        if (productVariantService.findById(bienTheSanPhamId) == null) {
-            throw new BadRequestException();
-        }
         return fileRepository.findImageOfSanPhamBienThe(bienTheSanPhamId);
     }
 
     @Override
     public List<FileStorage> getFileOfDocument(int documentId) {
-        if (documentService.findById(documentId) == null) {
-            throw new BadRequestException();
-        }
         return fileRepository.findFileOfDocument(documentId);
     }
 

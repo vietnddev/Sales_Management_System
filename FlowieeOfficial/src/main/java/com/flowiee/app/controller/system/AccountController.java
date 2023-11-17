@@ -1,6 +1,7 @@
 package com.flowiee.app.controller.system;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.config.author.ValidateModuleSystem;
 import com.flowiee.app.exception.DataExistsException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.FlowieeUtil;
@@ -29,11 +30,16 @@ public class AccountController extends BaseController {
     private AccountService accountService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ValidateModuleSystem validateModuleSystem;
 
     @GetMapping(value = "")
     public ModelAndView findAllAccount() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        if (!validateModuleSystem.readAccount()) {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_LIST);
         modelAndView.addObject("account", new Account());
@@ -47,6 +53,9 @@ public class AccountController extends BaseController {
     public ModelAndView findDetailAccountById(@PathVariable("id") Integer accountId) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        if (!validateModuleSystem.readAccount()) {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
@@ -62,6 +71,9 @@ public class AccountController extends BaseController {
     public String save(@ModelAttribute("account") Account account) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (!validateModuleSystem.insertAccount()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (accountService.findByUsername(account.getUsername()) != null) {
             throw new DataExistsException("Username exists!");
@@ -80,6 +92,9 @@ public class AccountController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleSystem.updateAccount()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }
@@ -97,6 +112,9 @@ public class AccountController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleSystem.deleteAccount()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (accountId <= 0 ||accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }
@@ -110,6 +128,9 @@ public class AccountController extends BaseController {
     public String updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (!validateModuleSystem.updateAccount()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");

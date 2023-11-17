@@ -1,7 +1,5 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
@@ -74,10 +72,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String save(Product product) {
-        if (product.getProductType() == null ||
-            product.getTenSanPham() == null) {
-            throw new BadRequestException();
-        }
         try {
             product.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
             productsRepository.save(product);

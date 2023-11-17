@@ -1,6 +1,6 @@
 package com.flowiee.app.controller.product;
 
-import com.flowiee.app.config.ValidateModuleStorage;
+import com.flowiee.app.config.author.ValidateModuleStorage;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.GoodsImport;
 import com.flowiee.app.entity.Material;

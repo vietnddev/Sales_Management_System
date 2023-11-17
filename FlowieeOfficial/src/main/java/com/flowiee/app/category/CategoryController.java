@@ -1,11 +1,10 @@
 package com.flowiee.app.category;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
+import com.flowiee.app.config.author.ValidateModuleCategory;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.system.AccountService;
 
@@ -31,14 +30,14 @@ public class CategoryController extends BaseController {
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    private KiemTraQuyenModuleDanhMuc kiemTraQuyenModuleDanhMuc;
+    private ValidateModuleCategory validateModuleCategory;
 
     @GetMapping("")
     public ModelAndView viewRootCategory() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.validateRead()) {
+        if (validateModuleCategory.readCategory()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", categoryService.findRootCategory());            
@@ -53,7 +52,7 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (!kiemTraQuyenModuleDanhMuc.validateRead()) {
+        if (!validateModuleCategory.readCategory()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
@@ -78,7 +77,7 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleDanhMuc.validateInsert()) {
+        if (!validateModuleCategory.insertCategory()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
@@ -96,7 +95,7 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleDanhMuc.validateUpdate()) {
+        if (!validateModuleCategory.updateCategory()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
@@ -123,7 +122,7 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (!kiemTraQuyenModuleDanhMuc.validateImport()) {
+        if (!validateModuleCategory.importCategory()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
@@ -141,7 +140,7 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleDanhMuc.validateImport()) {
+        if (!validateModuleCategory.importCategory()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
@@ -156,7 +155,7 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (!kiemTraQuyenModuleDanhMuc.validateExport()) {
+        if (!validateModuleCategory.readCategory()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
         }
         byte[] dataExport = categoryService.exportData(categoryType);

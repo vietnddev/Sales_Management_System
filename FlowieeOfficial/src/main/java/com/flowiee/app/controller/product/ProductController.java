@@ -2,6 +2,7 @@ package com.flowiee.app.controller.product;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
+import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.FileUtil;
@@ -13,7 +14,6 @@ import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.storage.FileStorageService;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Price;
 import com.flowiee.app.entity.Product;
@@ -51,14 +51,14 @@ public class ProductController extends BaseController {
     @Autowired
     private PriceService priceService;
     @Autowired
-    private KiemTraQuyenModuleSanPham validateRole;
+    private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping(value = "")
     public ModelAndView viewAllProducts() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (!validateRole.kiemTraQuyenXem()) {
+        if (!validateModuleProduct.readProduct()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
@@ -68,13 +68,13 @@ public class ProductController extends BaseController {
         modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
         modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.BRAND));
         modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
-        if (validateRole.kiemTraQuyenThemMoi()) {
+        if (validateModuleProduct.insertProduct()) {
             modelAndView.addObject("action_create", "enable");
         }
-        if (validateRole.kiemTraQuyenCapNhat()) {
+        if (validateModuleProduct.updateProduct()) {
             modelAndView.addObject("action_update", "enable");
         }
-        if (validateRole.kiemTraQuyenXoa()) {
+        if (validateModuleProduct.deleteProduct()) {
             modelAndView.addObject("action_delete", "enable");
         }
         return baseView(modelAndView);
@@ -84,6 +84,9 @@ public class ProductController extends BaseController {
     public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        if (!validateModuleProduct.readProduct()) {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         if (productId <= 0 || productsService.findById(productId) == null) {
             throw new NotFoundException("Product not found!");
@@ -122,6 +125,9 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
+        if (!validateModuleProduct.readProduct()) {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+        }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_BIENTHE);
         modelAndView.addObject("bienTheSanPham", new ProductVariant());
         modelAndView.addObject("thuocTinhSanPham", new ProductAttribute());
@@ -144,6 +150,9 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.insertProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         productsService.save(product);
         return "redirect:" + request.getHeader("referer");
     }
@@ -152,6 +161,9 @@ public class ProductController extends BaseController {
     public String insertProductVariant(HttpServletRequest request, @ModelAttribute("bienTheSanPham") ProductVariant productVariant) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (!validateModuleProduct.updateProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
         productVariant.setTrangThai(TrangThai.KINH_DOANH.name());
         productVariant.setMaSanPham(FlowieeUtil.now("yyyyMMddHHmmss"));
@@ -166,6 +178,9 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.updateProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         productAttributeService.save(productAttribute);
         return "redirect:" + request.getHeader("referer");
     }
@@ -175,6 +190,9 @@ public class ProductController extends BaseController {
     public String updateProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product, @PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (!validateModuleProduct.updateProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (product == null|| id <= 0 || productsService.findById(id) == null) {
             throw new NotFoundException("Product not found!");
@@ -187,6 +205,9 @@ public class ProductController extends BaseController {
     public String updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer id) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (!validateModuleProduct.updateProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (productVariantService.findById(id) == null) {
             throw new NotFoundException("Product variant not found!");
@@ -203,6 +224,9 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.updateProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (id <= 0 || productAttributeService.findById(id) == null) {
             throw new NotFoundException("Product attribute not found!");
         }
@@ -216,6 +240,9 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.deleteProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (productsService.findById(id) == null) {
             throw new NotFoundException("Product not found!");
         }
@@ -227,6 +254,9 @@ public class ProductController extends BaseController {
     public String deleteProductVariant(HttpServletRequest request, @PathVariable("id") Integer productVariantId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (!validateModuleProduct.updateProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (productVariantService.findById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
@@ -242,12 +272,14 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.updateProduct()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (productAttributeService.findById(attributeId) == null) {
             throw new NotFoundException("Product attribute not found!");
         }
         productAttributeService.delete(attributeId);
         return "redirect:" + request.getHeader("referer");
-
     }
 
     @PostMapping(value = "/active-image/{sanPhamId}")
@@ -256,6 +288,9 @@ public class ProductController extends BaseController {
                                                @RequestParam("imageId") Integer imageId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (!validateModuleProduct.updateImage()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (sanPhamId == null || sanPhamId <= 0 || imageId == null || imageId <= 0) {
             throw new NotFoundException("Product or image not found!");
@@ -271,6 +306,9 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.updateImage()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (sanPhamBienTheId == null || sanPhamBienTheId <= 0 || imageId == null || imageId <= 0) {
             throw new NotFoundException("Product variant or image not found!");
         }
@@ -285,7 +323,7 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!validateRole.kiemTraQuyenQuanLyGiaBan()) {
+        if (!validateModuleProduct.priceManagement()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (price == null || productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
@@ -301,7 +339,7 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (validateRole.kiemTraQuyenExport()) {
+        if (validateModuleProduct.readProduct()) {
             byte[] dataExport = productsService.exportData(null);
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));

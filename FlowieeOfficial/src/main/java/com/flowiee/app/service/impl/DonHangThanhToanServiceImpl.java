@@ -34,9 +34,6 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
 
     @Override
     public String save(OrderPay orderPay) {
-        if (orderPay.getOrder().getId() <= 0) {
-            throw new BadRequestException();
-        }
         try {
             orderPayRepository.save(orderPay);
             return TagName.SERVICE_RESPONSE_SUCCESS;

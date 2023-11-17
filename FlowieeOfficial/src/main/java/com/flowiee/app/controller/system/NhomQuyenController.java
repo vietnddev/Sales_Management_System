@@ -1,6 +1,6 @@
 package com.flowiee.app.controller.system;
 
-import com.flowiee.app.config.KiemTraQuyenModulePhanQuyen;
+import com.flowiee.app.config.author.ValidateModuleSystem;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.NotificationService;
 import com.flowiee.app.service.system.RoleService;
@@ -24,23 +24,22 @@ public class NhomQuyenController extends BaseController {
     @Autowired
     private NotificationService notificationService;
     @Autowired
-    private KiemTraQuyenModulePhanQuyen kiemTraQuyenModule;
+    private ValidateModuleSystem validateModuleSystem;
 
     @GetMapping
-    public ModelAndView showAllRole() {
+    public ModelAndView readRole() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModule.kiemTraQuyenXem()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_ROLE);
-            modelAndView.addObject("listRole", roleService.findAllRole());
-            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-            if (kiemTraQuyenModule.kiemTraQuyenCapNhat()) {
-                modelAndView.addObject("action_update", "enable");
-            }
-            return baseView(modelAndView);
-        } else {
+        if (!validateModuleSystem.readPermission()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_ROLE);
+        modelAndView.addObject("listRole", roleService.findAllRole());
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+        if (validateModuleSystem.updatePermission()) {
+            modelAndView.addObject("action_update", "enable");
+        }
+        return baseView(modelAndView);
     }
 }

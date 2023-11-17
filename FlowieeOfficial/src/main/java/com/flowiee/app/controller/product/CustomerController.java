@@ -2,11 +2,11 @@ package com.flowiee.app.controller.product;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.product.CustomerService;
 import com.flowiee.app.service.product.OrderService;
 import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.entity.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +24,14 @@ public class CustomerController extends BaseController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
+    private ValidateModuleProduct validateModuleSanPham;
 
     @GetMapping
     public ModelAndView findAllKhachHang() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXemKhachHang()) {
+        if (validateModuleSanPham.readCustomer()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_KHACHHANG);
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("khachHang", new Customer());            
@@ -46,7 +46,7 @@ public class CustomerController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenXemKhachHang()) {
+        if (!validateModuleSanPham.readCustomer()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         if (customerService.findById(id) == null) {
@@ -63,7 +63,7 @@ public class CustomerController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiKhachHang()) {
+        if (!validateModuleSanPham.insertCustomer()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (customer == null) {
@@ -79,7 +79,7 @@ public class CustomerController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatKhachHang()) {
+        if (!validateModuleSanPham.updateCustomer()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (customer == null || id <= 0 || customerService.findById(id) == null) {
@@ -94,7 +94,7 @@ public class CustomerController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenXoaKhachHang()) {
+        if (!validateModuleSanPham.deleteCustomer()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (id <= 0 || customerService.findById(id) == null) {

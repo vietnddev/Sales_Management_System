@@ -1,6 +1,6 @@
 package com.flowiee.app.controller.system;
 
-import com.flowiee.app.config.KiemTraQuyenModuleAdministrator;
+import com.flowiee.app.config.author.ValidateModuleSystem;
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.system.AccountService;
@@ -19,7 +19,7 @@ public class SystemConfigController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private KiemTraQuyenModuleAdministrator kiemTraQuyenModuleAdministrator;
+    private ValidateModuleSystem validateModuleSystem;
     @Autowired
     private FlowieeConfigService flowieeConfigService;
 
@@ -28,7 +28,7 @@ public class SystemConfigController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (!kiemTraQuyenModuleAdministrator.kiemTraQuyenConfig()) {
+        if (!validateModuleSystem.setupConfig()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CONFIG);
@@ -43,7 +43,7 @@ public class SystemConfigController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleAdministrator.kiemTraQuyenConfig()) {
+        if (!validateModuleSystem.setupConfig()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         if (configId <= 0 || flowieeConfigService.findById(configId) == null) {

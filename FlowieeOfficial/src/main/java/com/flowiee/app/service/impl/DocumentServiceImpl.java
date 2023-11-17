@@ -103,9 +103,6 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public String updateMetadata(Integer[] docDataIds, String[] docDataValues, Integer documentId) {
         Document document = this.findById(documentId);
-        if (document == null) {
-            throw new BadRequestException();
-        }
         for (Integer i = 0; i < docDataIds.length; i++) {
             DocData docData = docDataService.findById(docDataIds[i]);
             if (docData != null) {

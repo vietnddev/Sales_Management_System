@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ModelAndView exceptionHandler(BadRequestException ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ModelAndView exceptionHandler(DataExistsException ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;

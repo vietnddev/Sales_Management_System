@@ -1,4 +1,4 @@
-package com.flowiee.app.config;
+package com.flowiee.app.config.authen;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

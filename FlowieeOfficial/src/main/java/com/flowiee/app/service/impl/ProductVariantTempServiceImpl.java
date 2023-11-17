@@ -40,9 +40,6 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
 
     @Override
     public String save(ProductVariantTemp bienTheSanPham) {
-        if (bienTheSanPham.getLoaiMauSac() == null || bienTheSanPham.getLoaiKichCo() == null) {
-            throw new BadRequestException();
-        }
         try {
             String tenBienTheSanPham = "";
             if (bienTheSanPham.getTenBienThe().isEmpty()) {
@@ -92,13 +89,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
 
     @Override
     public String updateSoLuong(Integer soLuong, Integer id) {
-        if (id < 0) {
-            throw new BadRequestException();
-        }
         ProductVariantTemp bienTheSanPham = this.findById(id);
-        if (bienTheSanPham == null) {
-            throw new BadRequestException();
-        }
         bienTheSanPham.setSoLuongKho(bienTheSanPham.getSoLuongKho() - soLuong);
         try {
             productVariantTempRepository.save(bienTheSanPham);

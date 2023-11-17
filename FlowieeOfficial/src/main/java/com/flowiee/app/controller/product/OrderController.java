@@ -5,6 +5,7 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
+import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.product.CartService;
 import com.flowiee.app.service.product.CustomerService;
@@ -14,7 +15,6 @@ import com.flowiee.app.service.product.OrderDetailService;
 import com.flowiee.app.service.product.OrderService;
 import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Items;
 import com.flowiee.app.entity.Order;
@@ -57,28 +57,27 @@ public class OrderController extends BaseController {
     @Autowired
     private ItemsService itemsService;
     @Autowired
-    private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
+    private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping
     public ModelAndView viewAllOrders() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
-            modelAndView.addObject("listDonHang", orderService.findAll());
-            modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-            modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
-            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
-            modelAndView.addObject("listKhachHang", customerService.findAll());
-            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-            modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
-            modelAndView.addObject("donHangRequest", new OrderRequest());
-            modelAndView.addObject("donHang", new Order());            
-            return baseView(modelAndView);
-        } else {
+        if (!validateModuleProduct.readOrder()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
+        modelAndView.addObject("listDonHang", orderService.findAll());
+        modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
+        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
+        modelAndView.addObject("donHangRequest", new OrderRequest());
+        modelAndView.addObject("donHang", new Order());
+        return baseView(modelAndView);
     }
 
     @PostMapping
@@ -86,31 +85,30 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
-            modelAndView.addObject("listDonHang", orderService.findAll(request.getSearchTxt(),
-                                                                                   request.getThoiGianDatHangSearch(),
-                                                                                   request.getKenhBanHang(),
-                                                                                   request.getTrangThaiDonHang()));
-            modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-            modelAndView.addObject("listKhachHang", customerService.findAll());
-            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-
-            modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : categoryService.findById(request.getKenhBanHang()));
-            modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
-
-            modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : categoryService.findById(request.getHinhThucThanhToan()));
-            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
-
-            modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : categoryService.findById(request.getTrangThaiDonHang()));
-            modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
-
-            modelAndView.addObject("donHangRequest", new OrderRequest());
-            modelAndView.addObject("donHang", new Order());
-            return baseView(modelAndView);
-        } else {
+        if (!validateModuleProduct.readOrder()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
+        modelAndView.addObject("listDonHang", orderService.findAll(request.getSearchTxt(),
+                                                                       request.getThoiGianDatHangSearch(),
+                                                                       request.getKenhBanHang(),
+                                                                       request.getTrangThaiDonHang()));
+        modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+
+        modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : categoryService.findById(request.getKenhBanHang()));
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
+
+        modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : categoryService.findById(request.getHinhThucThanhToan()));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
+
+        modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : categoryService.findById(request.getTrangThaiDonHang()));
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
+
+        modelAndView.addObject("donHangRequest", new OrderRequest());
+        modelAndView.addObject("donHang", new Order());
+        return baseView(modelAndView);
     }
 
     @GetMapping("/{id}")
@@ -121,7 +119,7 @@ public class OrderController extends BaseController {
         if (id <= 0 || orderService.findById(id) == null) {
             throw new NotFoundException("Order not found!");
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
+        if (!validateModuleProduct.readOrder()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_CHITIET);
@@ -140,7 +138,7 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
+        if (!validateModuleProduct.insertOrder()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_BANHANG);
@@ -174,6 +172,9 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.insertOrder()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (idCart <= 0 || cartService.findById(idCart) == null) {
             throw new NotFoundException("Cart not found!");
         }
@@ -194,6 +195,9 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.insertOrder()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         if (id <= 0 || cartService.findById(id) == null) {
             throw new NotFoundException("Cart not found!");
         }
@@ -211,6 +215,9 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (!validateModuleProduct.insertOrder()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
+        }
         itemsService.findByCartId(id).forEach(items -> {
             itemsService.delete(items.getId());
         });
@@ -224,7 +231,7 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
+        if (!validateModuleProduct.insertOrder()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
@@ -253,7 +260,7 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
+        if (!validateModuleProduct.updateOrder()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         orderService.update(order, id);
@@ -265,7 +272,7 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
+        if (!validateModuleProduct.deleteOrder()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         orderService.delete(id);
@@ -278,7 +285,7 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
+        if (!validateModuleProduct.updateOrder()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
         orderPay.setMaPhieu("PTT" + donHangId + FlowieeUtil.now("yyMMddHHmmss"));
@@ -293,7 +300,7 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenExportDonHang()) {
+        if (validateModuleProduct.readOrder()) {
             return orderService.exportDanhSachDonHang();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);

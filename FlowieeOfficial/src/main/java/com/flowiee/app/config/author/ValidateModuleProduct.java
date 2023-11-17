@@ -1,18 +1,18 @@
-package com.flowiee.app.config;
+package com.flowiee.app.config.author;
 
+import com.flowiee.app.common.action.DonHangAction;
+import com.flowiee.app.common.action.KhachHangAction;
+import com.flowiee.app.common.action.SanPhamAction;
+import com.flowiee.app.common.action.VoucherAction;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.RoleService;
-import com.flowiee.app.common.action.DonHangAction;
-import com.flowiee.app.common.action.KhachHangAction;
-import com.flowiee.app.common.action.VoucherAction;
-import com.flowiee.app.common.action.SanPhamAction;
-import com.flowiee.app.common.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class KiemTraQuyenModuleSanPham {
+@Component
+public class ValidateModuleProduct {
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -20,7 +20,7 @@ public class KiemTraQuyenModuleSanPham {
 
     private final String module = SystemModule.SAN_PHAM.name();
 
-    public boolean kiemTraQuyenXem() {
+    public boolean readProduct() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -32,7 +32,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenThemMoi() {
+    public boolean insertProduct() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -44,7 +44,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenCapNhat() {
+    public boolean updateProduct() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -56,7 +56,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenXoa() {
+    public boolean deleteProduct() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -68,7 +68,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenImport() {
+    public boolean importProduct() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -80,7 +80,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenUploadHinhAnh() {
+    public boolean updateImage() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -92,7 +92,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenQuanLyGiaBan() {
+    public boolean priceManagement() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -104,7 +104,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenBaoCaoThongKe() {
+    public boolean report() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -116,8 +116,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    /* KIỂM TRA QUYỀN ĐƠN HÀNG */
-    public boolean kiemTraQuyenXemDonHang() {
+    public boolean readOrder() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -129,7 +128,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenThemMoiDonHang() {
+    public boolean insertOrder() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -141,7 +140,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenCapNhatDonHang() {
+    public boolean updateOrder() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -153,7 +152,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenXoaDonHang() {
+    public boolean deleteOrder() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -165,19 +164,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenExportDonHang() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = DonHangAction.EXPORT_DONHANG.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean kiemTraQuyenXemKhachHang() {
+    public boolean readCustomer() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -189,7 +176,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenThemMoiKhachHang() {
+    public boolean insertCustomer() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -201,7 +188,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenCapNhatKhachHang() {
+    public boolean updateCustomer() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -213,7 +200,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenXoaKhachHang() {
+    public boolean deleteCustomer() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -225,7 +212,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenXemVoucher() {
+    public boolean readVoucher() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -237,7 +224,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenThemVoucher() {
+    public boolean insertVoucher() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -249,7 +236,7 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenUpdateVoucher() {
+    public boolean updateVoucher() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
@@ -261,23 +248,11 @@ public class KiemTraQuyenModuleSanPham {
         return false;
     }
 
-    public boolean kiemTraQuyenDeleteVoucher() {
+    public boolean deleteVoucher() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = VoucherAction.DELETE_VOUCHER.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean kiemTraQuyenExport() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = SanPhamAction.EXPORT_SANPHAM.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;

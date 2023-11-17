@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.product;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.config.KiemTraQuyenModuleDashboard;
+import com.flowiee.app.config.author.ValidateModuleDashboard;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
@@ -29,7 +29,7 @@ public class DashboardController extends BaseController {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private KiemTraQuyenModuleDashboard kiemTraQuyenModuleDashboard;
+    private ValidateModuleDashboard validateModuleDashboard;
     @Autowired
     private DashboardService dashboardService;
 
@@ -38,7 +38,7 @@ public class DashboardController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDashboard.kiemTraQuyenXem()) {
+        if (validateModuleDashboard.readDashboard()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DASHBOARD);
                         
             //Số lượng đơn hàng hôm nay

@@ -1,39 +1,27 @@
-package com.flowiee.app.config;
+package com.flowiee.app.config.author;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.RoleService;
-import com.flowiee.app.common.action.RoleAction;
+import com.flowiee.app.common.action.DashboardAction;
 import com.flowiee.app.common.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KiemTraQuyenModulePhanQuyen {
+public class ValidateModuleDashboard {
     @Autowired
     private RoleService roleService;
     @Autowired
     private AccountService accountService;
 
-    private final String module = SystemModule.HE_THONG.name();
+    private final String module = SystemModule.DASHBOARD.name();
 
-    public boolean kiemTraQuyenXem() {
+    public boolean readDashboard() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = RoleAction.READ_ROLE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean kiemTraQuyenCapNhat() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = RoleAction.UPDATE_ROLE.name();
+        final String action = DashboardAction.READ_DASHBOARD.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;

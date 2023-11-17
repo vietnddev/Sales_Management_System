@@ -61,15 +61,6 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public String save(ProductVariant productVariant) {
-        if (productVariant.getColor() == null || productVariant.getSize() == null) {
-            throw new BadRequestException();
-        }
-        if (productVariantRepository.findByMauSacAndKichCo(productVariant.getProduct().getId(),
-                                                           productVariant.getColor().getId(),
-                                                           productVariant.getSize().getId()) != null)
-        {
-            throw new DataExistsException();
-        }
         try {
             String tenBienTheSanPham = "";
             if (productVariant.getTenBienThe().isEmpty()) {
@@ -119,13 +110,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public String updateSoLuong(Integer soLuong, Integer id) {
-        if (id < 0) {
-            throw new BadRequestException();
-        }
         ProductVariant productVariant = this.findById(id);
-        if (productVariant == null) {
-            throw new BadRequestException();
-        }
         productVariant.setSoLuongKho(productVariant.getSoLuongKho() - soLuong);
         try {
             productVariantRepository.save(productVariant);

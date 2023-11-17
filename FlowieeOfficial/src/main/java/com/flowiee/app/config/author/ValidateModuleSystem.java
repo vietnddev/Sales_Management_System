@@ -1,27 +1,29 @@
-package com.flowiee.app.config;
+package com.flowiee.app.config.author;
 
+import com.flowiee.app.common.action.AccountAction;
+import com.flowiee.app.common.action.LogAction;
+import com.flowiee.app.common.action.RoleAction;
+import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.RoleService;
-import com.flowiee.app.common.action.KhoTaiLieuAction;
-import com.flowiee.app.common.module.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ValidateModuleStorage {
+@Component
+public class ValidateModuleSystem {
     @Autowired
     private RoleService roleService;
     @Autowired
     private AccountService accountService;
 
-    private final String module = SystemModule.KHO_TAI_LIEU.name();
+    private final String module = SystemModule.HE_THONG.name();
 
-    public boolean dashboard() {
+    public boolean readPermission() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.DASHBOARD_DOCUMENT.name();
+        final String action = RoleAction.READ_ROLE.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -29,11 +31,11 @@ public class ValidateModuleStorage {
         return false;
     }
 
-    public boolean read() {
+    public boolean updatePermission() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.READ_DOCUMENT.name();
+        final String action = RoleAction.UPDATE_ROLE.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -41,11 +43,11 @@ public class ValidateModuleStorage {
         return false;
     }
 
-    public boolean insert() {
+    public boolean readAccount() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.CREATE_DOCUMENT.name();
+        final String action = AccountAction.READ_ACCOUNT.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -53,11 +55,11 @@ public class ValidateModuleStorage {
         return false;
     }
 
-    public boolean update() {
+    public boolean insertAccount() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.UPDATE_DOCUMENT.name();
+        final String action = AccountAction.CREATE_ACCOUNT.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -65,11 +67,11 @@ public class ValidateModuleStorage {
         return false;
     }
 
-    public boolean delete() {
+    public boolean updateAccount() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.DELETE_DOCUMENT.name();
+        final String action = AccountAction.UPDATE_ACCOUNT.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -77,11 +79,11 @@ public class ValidateModuleStorage {
         return false;
     }
 
-    public boolean move() {
+    public boolean deleteAccount() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.MOVE_DOCUMENT.name();
+        final String action = AccountAction.DELETE_ACCOUNT.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -89,11 +91,11 @@ public class ValidateModuleStorage {
         return false;
     }
 
-    public boolean copy() {
+    public boolean readLog() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.COPY_DOCUMENT.name();
+        final String action = LogAction.READ_LOG.name();
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -101,59 +103,11 @@ public class ValidateModuleStorage {
         return false;
     }
 
-    public boolean download() {
+    public boolean setupConfig() {
         if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhoTaiLieuAction.DOWNLOAD_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean share() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = KhoTaiLieuAction.SHARE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean material() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = KhoTaiLieuAction.MANAGEMENT_MATERIAL.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean goodsImport() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = KhoTaiLieuAction.MANAGEMENT_GOODS_DRAFT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean goodsApprove() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = KhoTaiLieuAction.MANAGEMENT_GOODS_APPROVE.name();
+        final String action = "CONFIG";
         int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;

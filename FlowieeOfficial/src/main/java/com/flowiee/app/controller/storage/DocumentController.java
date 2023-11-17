@@ -2,7 +2,7 @@ package com.flowiee.app.controller.storage;
 
 import com.flowiee.app.category.Category;
 import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.config.ValidateModuleStorage;
+import com.flowiee.app.config.author.ValidateModuleStorage;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.entity.Document;

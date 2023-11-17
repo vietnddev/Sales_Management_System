@@ -2,6 +2,7 @@ package com.flowiee.app.controller.system;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.config.author.ValidateModuleSystem;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.NotificationService;
 import com.flowiee.app.service.system.SystemLogService;
@@ -21,11 +22,16 @@ public class LogController extends BaseController {
     private AccountService accountService;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    ValidateModuleSystem validateModuleSystem;
 
     @GetMapping(value = "")
     public ModelAndView getAllLog() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        if (!validateModuleSystem.readLog()) {
+            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_NHATKY);
         modelAndView.addObject("listLog", systemLogService.getAll());        

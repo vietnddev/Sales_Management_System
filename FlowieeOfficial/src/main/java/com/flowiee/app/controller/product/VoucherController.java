@@ -2,6 +2,7 @@ package com.flowiee.app.controller.product;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.product.VoucherService;
 import com.flowiee.app.service.system.AccountService;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
 import com.flowiee.app.entity.Voucher;
 import com.flowiee.app.entity.VoucherDetail;
 
@@ -32,14 +32,14 @@ public class VoucherController extends BaseController {
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired
-    private KiemTraQuyenModuleSanPham kiemTraQuyenModuleSanPham;
+    private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping
     public ModelAndView showVoucherPage() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
+        if (validateModuleProduct.readVoucher()) {
             Map<String, String> voucherType = new HashMap<>();
             voucherType.put("BOTH", "Bao gồm chữ và số");
             voucherType.put("NUMBER", "Chỉ số");
@@ -63,7 +63,7 @@ public class VoucherController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenThemVoucher()) {
+        if (!validateModuleProduct.insertVoucher()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
