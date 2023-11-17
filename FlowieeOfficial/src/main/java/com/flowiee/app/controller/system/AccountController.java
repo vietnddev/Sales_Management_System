@@ -1,8 +1,8 @@
 package com.flowiee.app.controller.system;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.exception.DataExistsException;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.DataExistsException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
@@ -37,24 +37,24 @@ public class AccountController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_LIST);
         modelAndView.addObject("account", new Account());
-        modelAndView.addObject("listAccount", accountService.findAll());       
+        modelAndView.addObject("listAccount", accountService.findAll());
         List<Role> newRole = new ArrayList<>();
-        modelAndView.addObject("list", newRole);       
+        modelAndView.addObject("list", newRole);
         return baseView(modelAndView);
     }
 
     @GetMapping(value = "/{id}")
-    public ModelAndView findDetailAccountById(@PathVariable("id") Integer id) {
+    public ModelAndView findDetailAccountById(@PathVariable("id") Integer accountId) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
+        if (accountId <= 0 || accountService.findById(accountId) == null) {
+            throw new NotFoundException("Account not found!");
+        }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_DETAIL);
-        //Role
-        List<FlowieeRole> roleOfAccount = roleService.findAllRoleByAccountId(id);
+        List<FlowieeRole> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
         modelAndView.addObject("listRole", roleOfAccount);
-        //Account info
-        Account accountInfo = accountService.findById(id);
-        modelAndView.addObject("accountInfo", accountInfo);
+        modelAndView.addObject("accountInfo", accountService.findById(accountId));
         return baseView(modelAndView);
     }
 
@@ -64,7 +64,7 @@ public class AccountController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (accountService.findByUsername(account.getUsername()) != null) {
-            throw new DataExistsException();
+            throw new DataExistsException("Username exists!");
         }
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
         String password = account.getPassword();
@@ -75,31 +75,32 @@ public class AccountController extends BaseController {
 
     @PostMapping(value = "/update/{id}")
     public String update(@ModelAttribute("account") Account accountEntity,
-                         @PathVariable("id") int id,
+                         @PathVariable("id") Integer accountId,
                          HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        Account acc = accountService.findById(id);
-        if (acc != null) {
-            accountEntity.setId(id);
-            accountEntity.setUsername(acc.getUsername());
-            accountEntity.setPassword(acc.getPassword());
-            accountEntity.setLastUpdatedBy(FlowieeUtil.ACCOUNT_USERNAME);
-            accountService.update(accountEntity, id);
+        if (accountId <= 0 || accountService.findById(accountId) == null) {
+            throw new NotFoundException("Account not found!");
         }
+        Account acc = accountService.findById(accountId);
+        accountEntity.setId(accountId);
+        accountEntity.setUsername(acc.getUsername());
+        accountEntity.setPassword(acc.getPassword());
+        accountEntity.setLastUpdatedBy(FlowieeUtil.ACCOUNT_USERNAME);
+        accountService.update(accountEntity, accountId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping(value = "/delete/{id}")
-    public String deleteAccount(@PathVariable int id) {
+    public String deleteAccount(@PathVariable Integer accountId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (accountService.findById(id) == null) {
-            throw new NotFoundException();
+        if (accountId <= 0 ||accountService.findById(accountId) == null) {
+            throw new NotFoundException("Account not found!");
         }
-        Account account = accountService.findById(id);
+        Account account = accountService.findById(accountId);
         account.setTrangThai(false);
         accountService.save(account);
         return "redirect:/he-thong/tai-khoan";
@@ -110,24 +111,20 @@ public class AccountController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (accountService.findById(accountId) == null) {
-            throw new NotFoundException();
+        if (accountId <= 0 || accountService.findById(accountId) == null) {
+            throw new NotFoundException("Account not found!");
         }
-        try {
-            roleService.deleteAllRole(accountId);
-            List<ActionOfModule> listAction = roleService.findAllAction();
-            for (int i = 0; i < listAction.size(); i++) {
-                ActionOfModule sysAction = listAction.get(i);
-                String clientActionKey = request.getParameter(sysAction.getActionKey());
-                if (clientActionKey != null) {
-                    Boolean isAuthorSelected = clientActionKey.equals("on") ? true : false;
-                    if (isAuthorSelected) {
-                        roleService.updatePermission(sysAction.getModuleKey(), sysAction.getActionKey(), accountId);
-                    }
+        roleService.deleteAllRole(accountId);
+        List<ActionOfModule> listAction = roleService.findAllAction();
+        for (int i = 0; i < listAction.size(); i++) {
+            ActionOfModule sysAction = listAction.get(i);
+            String clientActionKey = request.getParameter(sysAction.getActionKey());
+            if (clientActionKey != null) {
+                Boolean isAuthorSelected = clientActionKey.equals("on") ? true : false;
+                if (isAuthorSelected) {
+                    roleService.updatePermission(sysAction.getModuleKey(), sysAction.getActionKey(), accountId);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return "redirect:/he-thong/tai-khoan/" + accountId;
     }

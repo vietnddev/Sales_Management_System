@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.repository.storage.DocDataRepository;
 import com.flowiee.app.service.storage.DocDataService;
@@ -29,11 +29,7 @@ public class DocDataServiceImpl implements DocDataService {
 
     public DocData delete(int id) {
         DocData docDataToDelete = findById(id);
-        if (docDataToDelete != null) {
-            docDataRepository.deleteById(id);
-            return docDataToDelete;
-        } else {
-            throw new NotFoundException();
-        }
+        docDataRepository.deleteById(id);
+        return docDataToDelete;
     }
 }

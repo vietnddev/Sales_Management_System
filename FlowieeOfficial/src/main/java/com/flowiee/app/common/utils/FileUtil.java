@@ -1,6 +1,6 @@
 package com.flowiee.app.common.utils;
 
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -56,8 +56,6 @@ public class FileUtil {
                 case DANH_MUC:
                     path.append("/danh-muc");
                     break;
-                default:
-                    throw new NotFoundException();
             }
             path.append("/" + FlowieeUtil.getNamHienTai());
             path.append("/" + FlowieeUtil.getThangHienTai());

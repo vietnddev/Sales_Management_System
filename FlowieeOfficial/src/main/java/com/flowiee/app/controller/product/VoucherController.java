@@ -63,28 +63,27 @@ public class VoucherController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemVoucher()) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                voucher.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
-                voucher.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            List<Integer> listBienTheSP = new ArrayList<>();
-            String[] pbienTheSP = request.getParameterValues("bienTheSanPhamId");
-            if (pbienTheSP != null) {
-                for (String id : pbienTheSP) {
-                    listBienTheSP.add(Integer.parseInt(id));
-                }
-            }
-            if (listBienTheSP.size() > 0) {
-                voucherService.save(voucher, listBienTheSP);
-            }
-            return new ModelAndView("redirect:/san-pham/voucher");
-        } else {
+        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenThemVoucher()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            voucher.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
+            voucher.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        List<Integer> listBienTheSP = new ArrayList<>();
+        String[] pbienTheSP = request.getParameterValues("bienTheSanPhamId");
+        if (pbienTheSP != null) {
+            for (String id : pbienTheSP) {
+                listBienTheSP.add(Integer.parseInt(id));
+            }
+        }
+        if (listBienTheSP.size() > 0) {
+            voucherService.save(voucher, listBienTheSP);
+        }
+        return new ModelAndView("redirect:/san-pham/voucher");
     }
 }

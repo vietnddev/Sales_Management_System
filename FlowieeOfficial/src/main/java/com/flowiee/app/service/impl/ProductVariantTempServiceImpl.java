@@ -1,8 +1,8 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.action.SanPhamAction;
-import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariantTemp;
@@ -64,9 +64,6 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
     @Override
     public String delete(Integer entityId) {
         ProductVariantTemp bienTheSanPhamToDelete = this.findById(entityId);
-        if (bienTheSanPhamToDelete == null) {
-            throw new NotFoundException();
-        }
         try {
             productVariantTempRepository.deleteById(entityId);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa biến thể sản phẩm: " + bienTheSanPhamToDelete.toString());
@@ -81,9 +78,6 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
     @Override
     public String update(ProductVariantTemp bienTheSanPham, Integer id) {
         ProductVariantTemp bienTheSanPhamBefore = this.findById(id);
-        if (this.findById(id) == null) {
-            throw new NotFoundException();
-        }
         try {
             bienTheSanPham.setId(id);
             productVariantTempRepository.save(bienTheSanPham);

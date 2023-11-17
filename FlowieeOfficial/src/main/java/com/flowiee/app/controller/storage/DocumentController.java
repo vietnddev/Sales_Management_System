@@ -14,8 +14,7 @@ import com.flowiee.app.service.storage.DocShareService;
 import com.flowiee.app.service.storage.DocumentService;
 import com.flowiee.app.service.storage.FileStorageService;
 import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
 import com.flowiee.app.base.BaseController;
 
@@ -123,12 +122,9 @@ public class DocumentController extends BaseController {
         }
         String aliasName = FileUtil.getAliasNameFromAliasPath(aliasPath);
         int documentId = FileUtil.getIdFromAliasPath(aliasPath);
-        if (documentService.findById(documentId) == null) {
-            throw new NotFoundException();
-        }
         Document document = documentService.findById(documentId);
         if (!(aliasName + "-" + documentId).equals(document.getAliasName() + "-" + document.getId())) {
-            throw new NotFoundException();
+            throw new NotFoundException("Document not found!");
         }
         //Kiểm tra quyền xem document
         if (!validateModuleStorage.read() || !docShareService.isShared(documentId)) {
@@ -197,9 +193,6 @@ public class DocumentController extends BaseController {
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (document.getTen().isEmpty()) {
-            throw new NotFoundException();
-        }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
         document.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
         if (document.getParentId() == null) {
@@ -225,84 +218,80 @@ public class DocumentController extends BaseController {
     }
 
     @PostMapping("/document/change-file/{id}")
-    public String changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") int id, HttpServletRequest request) throws IOException {
+    public String changeFile(@RequestParam("file") MultipartFile file,
+                             @PathVariable("id") Integer documentId,
+                             HttpServletRequest request) throws IOException {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (id <= 0 || file.isEmpty()) {
-            throw new NotFoundException();
+        if (documentId <= 0 || documentService.findById(documentId) == null) {
+            throw new NotFoundException("Document not found!");
         }
-        fileStorageService.changFileOfDocument(file, id);
+        fileStorageService.changFileOfDocument(file, documentId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/document/update/{id}")
     public String update(@ModelAttribute("document") Document document,
-                         @PathVariable("id") int id, HttpServletRequest request) {
+                         @PathVariable("id") Integer documentId, HttpServletRequest request) {
         String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username.isEmpty() || username == null) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (id <= 0) {
-            throw new BadRequestException();
+        if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
+            throw new NotFoundException("Document not found!");
         }
-        if (documentService.findById(id) == null) {
-            throw new NotFoundException();
-        }
-        documentService.update(document, id);
+        documentService.update(document, documentId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @GetMapping("/document/update-metadata/{id}")
     public String updateMetadata(HttpServletRequest request,
-                                 @PathVariable("id") int documentId,
+                                 @PathVariable("id") Integer documentId,
                                  @RequestParam("docDataId") Integer[] docDataIds,
                                  @RequestParam("docDataValue") String[] docDataValues) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (documentId <= 0) {
-            throw new BadRequestException();
+        if (documentId <= 0 || documentService.findById(documentId) == null) {
+            throw new NotFoundException("Document not found!");
         }
-        if (documentService.findById(documentId) == null) {
-            throw new NotFoundException();
-        }
-
         documentService.updateMetadata(docDataIds, docDataValues, documentId);
-
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/document/delete/{id}")
-    public String deleteDocument(@PathVariable("id") int id, HttpServletRequest request) {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username.isEmpty() || username == null) {
+    public String deleteDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        Document document = documentService.findById(id);
-        if (id <= 0 || document == null) {
-            throw new BadRequestException();
+        if (documentId <= 0 || documentService.findById(documentId) == null) {
+            throw new NotFoundException("Document not found!");
         }
-        documentService.delete(id);
+        documentService.delete(documentId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/document/move/{id}")
-    public String moveDocument() {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username.isEmpty() || username == null) {
+    public String moveDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        return "";
+        if (documentId <= 0 || documentService.findById(documentId) == null) {
+            throw new NotFoundException("Document not found!");
+        }
+        return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/document/share/{id}")
-    public String share() {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username.isEmpty() || username == null) {
+    public String share(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        return "";
+        if (documentId <= 0 || documentService.findById(documentId) == null) {
+            throw new NotFoundException("Document not found!");
+        }
+        return "redirect:" + request.getHeader("referer");
     }
     
     @PostMapping("/docfield/insert")
@@ -310,45 +299,44 @@ public class DocumentController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.update()) {
-            docField.setTrangThai(false);
-            docFieldService.save(docField);
-            return "redirect:" + request.getHeader("referer");
-        } else {
+        if (!validateModuleStorage.update()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        docField.setTrangThai(false);
+        docFieldService.save(docField);
+        return "redirect:" + request.getHeader("referer");
     }
     
     @PostMapping(value = "/docfield/update/{id}", params = "update")
     public String updateDocfield(HttpServletRequest request,
-                         @ModelAttribute("docField") DocField docField,
-                         @PathVariable("id") Integer docFieldId) {
+                                 @ModelAttribute("docField") DocField docField,
+                                 @PathVariable("id") Integer docFieldId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.update()) {
-            System.out.println(docField.toString());
-            docFieldService.update(docField, docFieldId);
-            return "redirect:" + request.getHeader("referer");
-        } else {
+        if (!validateModuleStorage.update()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        if (docFieldId <= 0 || documentService.findById(docFieldId) == null) {
+            throw new NotFoundException("Docfield not found!");
+        }
+        docFieldService.update(docField, docFieldId);
+        return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/docfield/delete/{id}")
-    public String deleteDocfield(@PathVariable("id") int id, HttpServletRequest request) {
+    public String deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
         String username = FlowieeUtil.ACCOUNT_USERNAME;
         if (username == null || username.isEmpty()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (docFieldService.findById(id) == null){
-            throw new BadRequestException();
-        }
-        if (validateModuleStorage.delete()) {
-            docFieldService.delete(id);
-            return "redirect:" + request.getHeader("referer");
-        } else {
+        if (!validateModuleStorage.delete()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        if (docFieldService.findById(docfiledId) == null){
+            throw new NotFoundException("Docfield not found!");
+        }
+        docFieldService.delete(docfiledId);
+        return "redirect:" + request.getHeader("referer");
     }
 }

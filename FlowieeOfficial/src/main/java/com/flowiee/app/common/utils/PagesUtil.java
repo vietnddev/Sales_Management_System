@@ -47,7 +47,6 @@ public class PagesUtil {
 
 
     public static final String PAGE_UNAUTHORIZED= "/pages/exception/unauthorized";
-    public static final String PAGE_NOT_FOUND = "/pages/exception/not-found";
     public static final String PAGE_ERROR = "/pages/exception/error";
 
     public static final String PAGE_CONGVIEC_LICHLAMVIEC= "/pages/cong-viec/lich-lam-viec";

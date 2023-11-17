@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.action.DonHangAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
@@ -42,18 +42,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public List<OrderDetail> findByDonHangId(Integer donHangId) {
-        if (donHangId <= 0 || orderService.findById(donHangId) == null) {
-            throw new NotFoundException();
-        }
         return orderDetailRepository.findByDonHangId(orderService.findById(donHangId));
     }
 
     @Override
     @Transactional
     public String save(OrderDetail orderDetail) {
-        if (orderDetail.getOrder() == null) {
-            throw new NotFoundException();
-        }
         try {
             orderDetailRepository.save(orderDetail);
             systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
@@ -67,9 +61,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public String update(OrderDetail orderDetail, Integer id) {
-        if (id <=0 || this.findById(id) == null || orderDetail.getOrder() == null) {
-            throw new NotFoundException();
-        }
         try {
             orderDetail.setId(id);
             orderDetailRepository.save(orderDetail);
@@ -85,9 +76,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public String delete(Integer id) {
         OrderDetail orderDetail = this.findById(id);
-        if (id <= 0 || orderDetail == null) {
-            throw new NotFoundException();
-        }
         try {
             orderDetailRepository.deleteById(id);
             systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Xóa item of đơn hàng: " + orderDetail.toString());

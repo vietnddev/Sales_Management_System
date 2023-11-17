@@ -30,17 +30,15 @@ public class ProfileController extends BaseController {
 	@Autowired
 	private OrderService orderService;	
 
-	@GetMapping("")
+	@GetMapping
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
 		if (!accountService.isLogin()) {
 			return new ModelAndView(PagesUtil.PAGE_LOGIN);
 		}
-		Account profile = FlowieeUtil.ACCOUNT;
-
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_PROFILE);
 		modelAndView.addObject("message", message);
-		modelAndView.addObject("profile", profile);
-		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(profile.getId()));		
+		modelAndView.addObject("profile", FlowieeUtil.ACCOUNT);
+		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(FlowieeUtil.ACCOUNT.getId()));
 		return baseView(modelAndView);
 	}
 

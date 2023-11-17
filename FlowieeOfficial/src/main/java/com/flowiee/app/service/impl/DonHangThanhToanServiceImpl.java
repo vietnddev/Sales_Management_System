@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.OrderPay;
 import com.flowiee.app.repository.product.OrderPayRepository;
@@ -48,9 +48,6 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
 
     @Override
     public String update(OrderPay orderPay, Integer id) {
-        if (this.findById(id) == null || orderPay.getHinhThucThanhToan() == null) {
-            throw new NotFoundException();
-        }
         try {
             orderPay.setId(id);
             orderPayRepository.save(orderPay);
@@ -63,9 +60,6 @@ public class DonHangThanhToanServiceImpl implements DonHangThanhToanService {
 
     @Override
     public String delete(Integer id) {
-        if (this.findById(id) == null) {
-            throw new NotFoundException();
-        }
         try {
             orderPayRepository.deleteById(id);
             return TagName.SERVICE_RESPONSE_SUCCESS;

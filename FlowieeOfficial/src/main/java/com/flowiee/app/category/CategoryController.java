@@ -1,11 +1,12 @@
 package com.flowiee.app.category;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.KiemTraQuyenModuleDanhMuc;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.system.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,20 +53,22 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.validateRead()) {
-            List<Category> listCategory = categoryService.findSubCategory(CategoryUtil.getCategoryType(categoryType));
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
-            modelAndView.addObject("category", new Category());
-            modelAndView.addObject("listCategory", listCategory);
-            modelAndView.addObject("categoryType", categoryType);
-            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH);
-            modelAndView.addObject("url_template", "");
-            modelAndView.addObject("url_import", "");
-            modelAndView.addObject("url_export", "");
-            return baseView(modelAndView);
-        } else {
+        if (!kiemTraQuyenModuleDanhMuc.validateRead()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        if (CategoryUtil.getCategoryType(categoryType) == null) {
+            throw new NotFoundException("Category not found!");
+        }
+        List<Category> listCategory = categoryService.findSubCategory(CategoryUtil.getCategoryType(categoryType));
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
+        modelAndView.addObject("category", new Category());
+        modelAndView.addObject("listCategory", listCategory);
+        modelAndView.addObject("categoryType", categoryType);
+        modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH);
+        modelAndView.addObject("url_template", "");
+        modelAndView.addObject("url_import", "");
+        modelAndView.addObject("url_export", "");
+        return baseView(modelAndView);
     }
 
     @PostMapping("/{type}/insert")
@@ -75,13 +78,15 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleDanhMuc.validateInsert()) {
-        	category.setType(CategoryUtil.getCategoryType(categoryType));
-            categoryService.save(category);
-            return "redirect:" + request.getHeader("referer");	
-        } else {
-        	return PagesUtil.PAGE_UNAUTHORIZED;
+        if (!kiemTraQuyenModuleDanhMuc.validateInsert()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        if (CategoryUtil.getCategoryType(categoryType) == null) {
+            throw new NotFoundException("Category not found!");
+        }
+        category.setType(CategoryUtil.getCategoryType(categoryType));
+        categoryService.save(category);
+        return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/update/{id}")
@@ -91,21 +96,23 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (categoryId <= 0) {
-            throw new BadRequestException();
+        if (!kiemTraQuyenModuleDanhMuc.validateUpdate()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
-        if (kiemTraQuyenModuleDanhMuc.validateUpdate()) {
-        	categoryService.update(category, categoryId);
-            return "redirect:" + request.getHeader("referer");	
-        } else {
-        	return PagesUtil.PAGE_UNAUTHORIZED;
+        if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
+            throw new NotFoundException("Category not found!");
         }
+        categoryService.update(category, categoryId);
+        return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
+            throw new NotFoundException("Category not found!");
         }
         categoryService.delete(categoryId);
         return "redirect:" + request.getHeader("referer");
@@ -116,15 +123,17 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.validateImport()) {
-            byte[] dataExport = categoryService.exportTemplate(categoryType);
-            HttpHeaders header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
-            return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
-        } else {
+        if (!kiemTraQuyenModuleDanhMuc.validateImport()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        if (CategoryUtil.getCategoryType(categoryType) == null) {
+            throw new NotFoundException("Category not found!");
+        }
+        byte[] dataExport = categoryService.exportTemplate(categoryType);
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "force-download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+        return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 
     @PostMapping("/{type}/import")
@@ -132,12 +141,14 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleDanhMuc.validateImport()) {
-            categoryService.importData(file, categoryType);
-            return "redirect:/{type}";
-        } else {
+        if (!kiemTraQuyenModuleDanhMuc.validateImport()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        if (CategoryUtil.getCategoryType(categoryType) == null) {
+            throw new NotFoundException("Category not found!");
+        }
+        categoryService.importData(file, categoryType);
+        return "redirect:/{type}";
     }
 
     @GetMapping("/{type}/export")
@@ -145,14 +156,13 @@ public class CategoryController extends BaseController {
         if (!accountService.isLogin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleDanhMuc.validateExport()) {
-            byte[] dataExport = categoryService.exportData(categoryType);
-            HttpHeaders header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
-            return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
-        } else {
+        if (!kiemTraQuyenModuleDanhMuc.validateExport()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        byte[] dataExport = categoryService.exportData(categoryType);
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "force-download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+        return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 }

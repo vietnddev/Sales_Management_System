@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.*;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
@@ -67,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
         if (product != null) {
             return product;
         } else {
-            logger.error("Lỗi khi findById sản phẩm!", new NotFoundException());
+            logger.error("Lỗi khi findById sản phẩm!");
             return new Product();
         }
     }
@@ -94,9 +94,6 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public String update(Product product, Integer id) {
-        if (id <= 0 || this.findById(id) == null) {
-            throw new NotFoundException();
-        }
         Product productBefore = this.findById(id);
         try {
             product.setId(id);
@@ -127,15 +124,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public String delete(Integer id) {
-        if (id <= 0) {
-            logger.error("Lỗi khi xóa sản phẩm!", new NotFoundException());
-            throw new NotFoundException();
-        }
         Product productToDelete = this.findById(id);
-        if (productToDelete == null) {
-            logger.error(ProductServiceImpl.class.getName() + ": Lỗi khi xóa sản phẩm", new NotFoundException());
-            throw new NotFoundException();
-        }
         try {
             productsRepository.deleteById(id);
             logger.info(ProductServiceImpl.class.getName() + ": Xóa sản phẩm " + productToDelete.toString());

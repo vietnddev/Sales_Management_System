@@ -8,6 +8,7 @@ import com.flowiee.app.entity.MaterialTemp;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.entity.Supplier;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
@@ -136,6 +137,9 @@ public class GoodsImportController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
+        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+            throw new NotFoundException("Goods import to add product not found!");
+        }
         List<String> listProductVariantId = Arrays.stream(request.getParameterValues("productVariantId")).toList();
         for (String productVariantId : listProductVariantId) {
             ProductVariant productVariant = productVariantService.findById(Integer.parseInt(productVariantId));
@@ -155,6 +159,9 @@ public class GoodsImportController extends BaseController {
     public String addMaterialToDraftImport(@PathVariable("importId") Integer importId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+            throw new NotFoundException("Goods import to add material not found!");
         }
         List<String> listMaterialId = Arrays.stream(request.getParameterValues("materialId")).toList();
         for (String materialId : listMaterialId) {
@@ -196,23 +203,6 @@ public class GoodsImportController extends BaseController {
                 System.out.println(o.toString());
             }
         }
-
-//        if (!accountService.isLogin()) {
-//            return new ModelAndView(PagesUtil.PAGE_LOGIN);
-//        }
-//        if (kiemTraQuyenModuleKho.kiemTraQuyenTaoPhieuNhapHang()) {
-//            ModelAndView modelAndView = new ModelAndView("");
-//            GoodsImport goodsImportPresent = goodsImportService.findDraftImportPresent(FlowieeUtil.ACCOUNT_ID);
-//            if (goodsImportPresent == null) {
-//                goodsImportPresent = goodsImportService.createDraftImport();
-//            }
-//            modelAndView.addObject("goodsImport", new GoodsImport());
-//            modelAndView.addObject("draftGoodsImport", goodsImportPresent);
-//            modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
-//            return modelAndView;
-//        } else {
-//            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
-//        }
     }
 
     @GetMapping("/update/{id}")
@@ -222,12 +212,14 @@ public class GoodsImportController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.goodsImport()) {
-            goodsImportService.update(goodsImport, importId);
-            return "redirect:" + request.getHeader("referer");
-        } else {
+        if (!validateModuleStorage.goodsImport()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+            throw new NotFoundException("Goods import not found!");
+        }
+        goodsImportService.update(goodsImport, importId);
+        return "redirect:" + request.getHeader("referer");
     }
 
     @GetMapping("/reset/{id}")
@@ -235,12 +227,14 @@ public class GoodsImportController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.goodsImport()) {
-            goodsImportService.delete(draftImportId);
-            return "redirect:";
-        } else {
+        if (draftImportId <= 0 || goodsImportService.findById(draftImportId) == null) {
+            throw new NotFoundException("Goods import not found!");
+        }
+        if (!validateModuleStorage.goodsImport()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        goodsImportService.delete(draftImportId);
+        return "redirect:";
     }
 
     @PostMapping("/send-approval/{id}")
@@ -248,12 +242,14 @@ public class GoodsImportController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.goodsImport()) {
-            goodsImportService.updateStatus(importId, "");
-            return "redirect:";
-        } else {
+        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+            throw new NotFoundException("Goods import not found!");
+        }
+        if (!validateModuleStorage.goodsImport()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        goodsImportService.updateStatus(importId, "");
+        return "redirect:";
     }
 
     @PostMapping("/approve/{id}")
@@ -261,11 +257,13 @@ public class GoodsImportController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateModuleStorage.goodsImport()) {
-            goodsImportService.updateStatus(importId, "");
-            return "redirect:";
-        } else {
+        if (!validateModuleStorage.goodsImport()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+            throw new NotFoundException("Goods import not found!");
+        }
+        goodsImportService.updateStatus(importId, "");
+        return "redirect:";
     }
 }

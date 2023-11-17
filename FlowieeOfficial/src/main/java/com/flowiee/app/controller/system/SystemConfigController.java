@@ -2,6 +2,7 @@ package com.flowiee.app.controller.system;
 
 import com.flowiee.app.config.KiemTraQuyenModuleAdministrator;
 import com.flowiee.app.entity.FlowieeConfig;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.FlowieeConfigService;
 import com.flowiee.app.base.BaseController;
@@ -38,14 +39,17 @@ public class SystemConfigController extends BaseController {
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("config") FlowieeConfig config,
-                         @PathVariable("id") Integer id) {
+                         @PathVariable("id") Integer configId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (!kiemTraQuyenModuleAdministrator.kiemTraQuyenConfig()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
-        flowieeConfigService.update(config, id);
+        if (configId <= 0 || flowieeConfigService.findById(configId) == null) {
+            throw new NotFoundException("Config not found!");
+        }
+        flowieeConfigService.update(config, configId);
         return "redirect:/he-thong/config";
     }
 }

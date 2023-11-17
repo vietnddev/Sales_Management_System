@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
@@ -68,12 +68,6 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public String update(Price price, int bienTheSanPhamId, int giaSanPhamId) {
         try {
-            if (bienTheSanPhamId <= 0 || productVariantService.findById(bienTheSanPhamId) == null) {
-                throw new NotFoundException();
-            }
-            if (giaSanPhamId <= 0 || this.findById(giaSanPhamId) == null) {
-                throw new NotFoundException();
-            }
             //Chuyển trạng thái giá hiện tại về false
             Price disableGiaCu = this.findById(giaSanPhamId);
             disableGiaCu.setTrangThai(false);
@@ -97,9 +91,6 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public String delete(int id) {
         Price price = this.findById(id);
-        if (id <= 0 || price == null) {
-            throw new NotFoundException();
-        }
         priceRepository.deleteById(id);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Xóa giá sản phẩm: " + price.toString());
         logger.info(PriceServiceImpl.class.getName() + ": Xóa giá sản phẩm " + price.toString());

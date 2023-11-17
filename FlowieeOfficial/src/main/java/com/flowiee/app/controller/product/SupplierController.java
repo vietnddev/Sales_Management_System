@@ -7,11 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.config.KiemTraQuyenModuleSanPham;
-import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.service.product.SupplierService;
 import com.flowiee.app.service.system.AccountService;

@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.entity.DocData;

@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.entity.DocData;
@@ -70,9 +70,6 @@ public class DocFieldServiceImpl implements DocFieldService {
 
     @Override
     public String update(DocField docField, Integer docFieldId) {
-        if (docField == null || docFieldId == null || docFieldId <= 0) {
-            throw new NotFoundException();
-        }
         docField.setId(docFieldId);
         docFieldRepository.save(docField);
         systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Cập nhật doc_field: " + docField.toString());
@@ -83,13 +80,9 @@ public class DocFieldServiceImpl implements DocFieldService {
     @Override
     public DocField delete(Integer id) {
         DocField docFieldToDelete = findById(id);
-        if (docFieldToDelete != null) {
-            docFieldRepository.deleteById(id);
-            systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Xóa doc_field: " + docFieldToDelete.toString());
-            logger.info(DocumentServiceImpl.class.getName() + ": Xóa doc_field " + docFieldToDelete.toString());
-            return docFieldToDelete;
-        } else {
-            throw new NotFoundException();
-        }
+        docFieldRepository.deleteById(id);
+        systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Xóa doc_field: " + docFieldToDelete.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Xóa doc_field " + docFieldToDelete.toString());
+        return docFieldToDelete;
     }
 }

@@ -2,12 +2,12 @@ package com.flowiee.app.controller.storage;
 
 import com.flowiee.app.config.ValidateModuleStorage;
 import com.flowiee.app.entity.Material;
-import com.flowiee.app.common.exception.BadRequestException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.EndPointUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.product.MaterialService;
 import com.flowiee.app.service.system.AccountService;
 
@@ -70,8 +70,8 @@ public class MaterialController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (materialId <= 0) {
-            throw new BadRequestException();
+        if (materialId <= 0 || materialService.findById(materialId) == null) {
+            throw new NotFoundException("Material not found!");
         }
         materialService.update(material, materialId);
         return "redirect:" + request.getHeader("referer");
@@ -81,6 +81,9 @@ public class MaterialController extends BaseController {
     public String delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (materialId <= 0 || materialService.findById(materialId) == null) {
+            throw new NotFoundException("Material not found!");
         }
         materialService.delete(materialId);
         return "redirect:" + request.getHeader("referer");

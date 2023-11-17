@@ -1,8 +1,8 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.exception.DataExistsException;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.exception.DataExistsException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
@@ -56,9 +56,6 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public Double getGiaBan(int id) {
-        if (id <= 0 || this.findById(id) == null) {
-            throw new NotFoundException();
-        }
         return priceService.findGiaHienTai(id);
     }
 
@@ -94,9 +91,6 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public String delete(Integer entityId) {
         ProductVariant productVariantToDelete = this.findById(entityId);
-        if (productVariantToDelete == null) {
-            throw new NotFoundException();
-        }
         try {
             productVariantRepository.deleteById(entityId);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
@@ -111,9 +105,6 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public String update(ProductVariant productVariant, Integer id) {
         ProductVariant productVariantBefore = this.findById(id);
-        if (this.findById(id) == null) {
-            throw new NotFoundException();
-        }
         try {
             productVariant.setId(id);
             productVariantRepository.save(productVariant);

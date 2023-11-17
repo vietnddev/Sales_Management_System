@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.exception.BadRequestException;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
@@ -76,9 +76,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public String setImageActiveOfSanPham(Integer sanPhamId, Integer imageId) {
-        if (sanPhamId == null || sanPhamId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException();
-        }
         //Bỏ image default hiện tại
         FileStorage imageActiving = fileRepository.findImageActiveOfSanPham(sanPhamId, true);
         if (imageActiving != null) {
@@ -98,9 +95,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public String setImageActiveOfBienTheSanPham(Integer bienTheSanPhamId, Integer imageId) {
-        if (bienTheSanPhamId == null || bienTheSanPhamId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException();
-        }
         //Bỏ image default hiện tại
         FileStorage imageActiving = fileRepository.findImageActiveOfSanPhamBienThe(bienTheSanPhamId, true);
         if (imageActiving != null) {
@@ -229,9 +223,6 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String changFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
         Document document = documentService.findById(documentId);
-        if (document == null) {
-            throw new NotActiveException();
-        }
         //Set inactive cho các version cũ
         List<FileStorage> listDocFile = document.getListDocFile();
         for (FileStorage docFile : listDocFile) {
@@ -263,9 +254,6 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String changeImageSanPham(MultipartFile fileAttached, int fileId) {
         Long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileToChange = this.findById(fileId);
-        if (fileToChange == null) {
-            throw new NotFoundException();
-        }
         //Delete file vật lý cũ
         try {
             File file = new File(FileUtil.rootPath + fileToChange.getDirectoryPath() + "/" + fileToChange.getTenFileKhiLuu());
@@ -299,9 +287,6 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String delete(int id) {
         FileStorage fileStorage = fileRepository.findById(id).orElse(null);
-        if (fileStorage == null) {
-            throw new NotFoundException();
-        }
         fileRepository.deleteById(id);
         //Xóa file trên ổ cứng
         File file = new File(FileUtil.rootPath + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());

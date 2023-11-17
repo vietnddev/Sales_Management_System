@@ -2,10 +2,10 @@ package com.flowiee.app.controller.product;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.exception.BadRequestException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductAttributeService;
@@ -59,41 +59,44 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (validateRole.kiemTraQuyenXem()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
-            modelAndView.addObject("product", new Product());
-            modelAndView.addObject("listSanPham", productsService.findAll());
-            modelAndView.addObject("listProductType", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
-            modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
-            modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.BRAND));
-            modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);            
-            if (validateRole.kiemTraQuyenThemMoi()) {
-                modelAndView.addObject("action_create", "enable");
-            }
-            if (validateRole.kiemTraQuyenCapNhat()) {
-                modelAndView.addObject("action_update", "enable");
-            }
-            if (validateRole.kiemTraQuyenXoa()) {
-                modelAndView.addObject("action_delete", "enable");
-            }
-            return baseView(modelAndView);
-        } else {
+        if (!validateRole.kiemTraQuyenXem()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+
         }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
+        modelAndView.addObject("product", new Product());
+        modelAndView.addObject("listSanPham", productsService.findAll());
+        modelAndView.addObject("listProductType", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
+        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
+        modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.BRAND));
+        modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
+        if (validateRole.kiemTraQuyenThemMoi()) {
+            modelAndView.addObject("action_create", "enable");
+        }
+        if (validateRole.kiemTraQuyenCapNhat()) {
+            modelAndView.addObject("action_update", "enable");
+        }
+        if (validateRole.kiemTraQuyenXoa()) {
+            modelAndView.addObject("action_delete", "enable");
+        }
+        return baseView(modelAndView);
     }
 
     @GetMapping(value = "/{id}")
-    public ModelAndView viewGeneralProduct(@PathVariable("id") Integer sanPhamId) {
+    public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        }
+        if (productId <= 0 || productsService.findById(productId) == null) {
+            throw new NotFoundException("Product not found!");
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_TONG_QUAN);
         modelAndView.addObject("sanPham", new Product());
         modelAndView.addObject("bienTheSanPham", new ProductVariant());
         modelAndView.addObject("giaSanPham", new Price());
-        modelAndView.addObject("idSanPham", sanPhamId);
+        modelAndView.addObject("idSanPham", productId);
         // Load chi tiết thông tin sản phẩm
-        modelAndView.addObject("detailProducts", productsService.findById(sanPhamId));
+        modelAndView.addObject("detailProducts", productsService.findById(productId));
         // Danh sách loại sản phẩm
         modelAndView.addObject("listTypeProducts", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
         // Danh sách màu sắc
@@ -101,16 +104,16 @@ public class ProductController extends BaseController {
         // Danh sách kích cỡ
         modelAndView.addObject("listDmKichCoSanPham", categoryService.findSubCategory(CategoryUtil.SIZE));
         // Load danh sách biến thể sản phẩm
-        modelAndView.addObject("listBienTheSanPham", productVariantService.getListVariantOfProduct(sanPhamId));
+        modelAndView.addObject("listBienTheSanPham", productVariantService.getListVariantOfProduct(productId));
         // Danh sách đơn vị tính
         modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
         // Danh sách chất liệu vải
         modelAndView.addObject("listDmChatLieuVai", categoryService.findSubCategory(CategoryUtil.FABRICTYPE));
         modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.FABRICTYPE));
         //List image
-        modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(sanPhamId));
+        modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(productId));
         //Image active
-        FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(sanPhamId);
+        FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(productId);
         modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());        
         return baseView(modelAndView);
     }
@@ -175,12 +178,10 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (id <= 0 || productsService.findById(id) == null) {
+        if (product == null|| id <= 0 || productsService.findById(id) == null) {
             throw new BadRequestException();
         }
         productsService.update(product, id);
-
-
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -189,22 +190,23 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (productVariantService.findById(id) != null) {
-            //
-            System.out.println("Update successfully");
-        } else {
-            System.out.println("Record not found!");
+        if (productVariantService.findById(id) == null) {
+            throw new NotFoundException("Product variant not found!");
         }
+        productVariantService.delete(id);
         return "redirect:" + request.getHeader("referer");
     }
 
     @Transactional
     @PostMapping(value = "/attribute/update/{id}")
     public String updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
-                                  @PathVariable("id") Integer id,
-                                  HttpServletRequest request) {
+                                        @PathVariable("id") Integer id,
+                                        HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (id <= 0 || productAttributeService.findById(id) == null) {
+            throw new NotFoundException("Product attribute not found!");
         }
         attribute.setId(id);
         productAttributeService.update(attribute, id);
@@ -216,26 +218,22 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (productsService.findById(id) != null) {
-            productsService.delete(id);
-            System.out.println("Delete successfully");
-        } else {
-            System.out.println("Product not found!");
+        if (productsService.findById(id) == null) {
+            throw new NotFoundException("Product not found!");
         }
+        productsService.delete(id);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping(value = "/variant/delete/{id}")
-    public String deleteProductVariant(HttpServletRequest request, @PathVariable("variantID") Integer variantID) {
+    public String deleteProductVariant(HttpServletRequest request, @PathVariable("id") Integer productVariantId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (productVariantService.findById(variantID) != null) {
-            productVariantService.delete(variantID);
-            System.out.println("Delete successfully");
-        } else {
-            System.out.println("Record not found!");
+        if (productVariantService.findById(productVariantId) == null) {
+            throw new NotFoundException("Product variant not found!");
         }
+        productVariantService.delete(productVariantId);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -246,12 +244,12 @@ public class ProductController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (productAttributeService.findById(attributeId) != null) {
-            productAttributeService.delete(attributeId);
-            return "redirect:" + request.getHeader("referer");
-        } else {
-            throw new NotFoundException();
+        if (productAttributeService.findById(attributeId) == null) {
+            throw new NotFoundException("Product attribute not found!");
         }
+        productAttributeService.delete(attributeId);
+        return "redirect:" + request.getHeader("referer");
+
     }
 
     @PostMapping(value = "/active-image/{sanPhamId}")
@@ -262,7 +260,7 @@ public class ProductController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (sanPhamId == null || sanPhamId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException();
+            throw new NotFoundException("Product or image not found!");
         }
         fileStorageService.setImageActiveOfSanPham(sanPhamId, imageId);
         return "redirect:" + request.getHeader("referer");
@@ -276,7 +274,7 @@ public class ProductController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (sanPhamBienTheId == null || sanPhamBienTheId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException();
+            throw new NotFoundException("Product variant or image not found!");
         }
         fileStorageService.setImageActiveOfBienTheSanPham(sanPhamBienTheId, imageId);
         return "redirect:" + request.getHeader("referer");
@@ -285,14 +283,18 @@ public class ProductController extends BaseController {
     @PostMapping(value = "/variant/gia-ban/update/{id}")
     public String updateProductPrice(HttpServletRequest request,
                                      @ModelAttribute("price") Price price,
-                                     @PathVariable("id") Integer idBienTheSanPham) {
+                                     @PathVariable("id") Integer productVariantId) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (validateRole.kiemTraQuyenQuanLyGiaBan()) {
-            int idGiaBanHienTai = Integer.parseInt(request.getParameter("idGiaBan"));
-            priceService.update(price, idBienTheSanPham, idGiaBanHienTai);
+        if (!validateRole.kiemTraQuyenQuanLyGiaBan()) {
+            return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        if (price == null || productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
+            throw new NotFoundException("Product variant or price not found!");
+        }
+        int idGiaBanHienTai = Integer.parseInt(request.getParameter("idGiaBan"));
+        priceService.update(price, productVariantId, idGiaBanHienTai);
         return "redirect:" + request.getHeader("referer");
     }
 

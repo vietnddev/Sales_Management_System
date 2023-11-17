@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.common.exception.NotFoundException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.TagName;
@@ -162,9 +162,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String update(Order order, Integer id) {
-        if (id <= 0 || this.findById(id) == null) {
-            throw new NotFoundException();
-        }
         order.setId(id);
         systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + order.toString());
@@ -175,9 +172,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String delete(Integer id) {
         Order order = this.findById(id);
-        if (id <= 0 || order == null) {
-            throw new NotFoundException();
-        }
         orderRepository.deleteById(id);
         systemLogService.writeLog(module, DonHangAction.DELETE_DONHANG.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());

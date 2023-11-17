@@ -5,6 +5,7 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.product.CartService;
 import com.flowiee.app.service.product.CustomerService;
 import com.flowiee.app.service.product.DonHangThanhToanService;
@@ -88,9 +89,9 @@ public class OrderController extends BaseController {
         if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG);
             modelAndView.addObject("listDonHang", orderService.findAll(request.getSearchTxt(),
-                    request.getThoiGianDatHangSearch(),
-                    request.getKenhBanHang(),
-                    request.getTrangThaiDonHang()));
+                                                                                   request.getThoiGianDatHangSearch(),
+                                                                                   request.getKenhBanHang(),
+                                                                                   request.getTrangThaiDonHang()));
             modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
             modelAndView.addObject("listKhachHang", customerService.findAll());
             modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
@@ -117,19 +118,21 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_CHITIET);
-            modelAndView.addObject("donHangDetail", orderService.findById(id));
-            modelAndView.addObject("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
-            modelAndView.addObject("listThanhToan", donHangThanhToanService.findByDonHangId(id));
-            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
-            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-            modelAndView.addObject("donHang", new Order());
-            modelAndView.addObject("donHangThanhToan", new OrderPay());
-            return baseView(modelAndView);
-        } else {
+        if (id <= 0 || orderService.findById(id) == null) {
+            throw new NotFoundException("Order not found!");
+        }
+        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenXem()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_CHITIET);
+        modelAndView.addObject("donHangDetail", orderService.findById(id));
+        modelAndView.addObject("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
+        modelAndView.addObject("listThanhToan", donHangThanhToanService.findByDonHangId(id));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
+        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+        modelAndView.addObject("donHang", new Order());
+        modelAndView.addObject("donHangThanhToan", new OrderPay());
+        return baseView(modelAndView);
     }
 
     @GetMapping("/ban-hang")
@@ -137,40 +140,42 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_BANHANG);
-            List<OrderCart> orderCartCurrent = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
-            if (orderCartCurrent.isEmpty()) {
-                OrderCart orderCart = new OrderCart();
-                orderCart.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
-                cartService.save(orderCart);
-            }
-            modelAndView.addObject("listDonHang", orderService.findAll());
-            modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-            modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
-            modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
-            modelAndView.addObject("listKhachHang", customerService.findAll());
-            modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-            modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
-
-            List<OrderCart> listOrderCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
-            modelAndView.addObject("listCart", listOrderCart);
-
-            modelAndView.addObject("donHangRequest", new OrderRequest());
-            modelAndView.addObject("donHang", new Order());
-            modelAndView.addObject("khachHang", new Customer());
-            modelAndView.addObject("cart", new OrderCart());
-            modelAndView.addObject("items", new Items());
-            return baseView(modelAndView);
-        } else {
+        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_BANHANG);
+        List<OrderCart> orderCartCurrent = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
+        if (orderCartCurrent.isEmpty()) {
+            OrderCart orderCart = new OrderCart();
+            orderCart.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+            cartService.save(orderCart);
+        }
+        modelAndView.addObject("listDonHang", orderService.findAll());
+        modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(CategoryUtil.SALESCHANNEL));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
+        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
+
+        List<OrderCart> listOrderCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
+        modelAndView.addObject("listCart", listOrderCart);
+
+        modelAndView.addObject("donHangRequest", new OrderRequest());
+        modelAndView.addObject("donHang", new Order());
+        modelAndView.addObject("khachHang", new Customer());
+        modelAndView.addObject("cart", new OrderCart());
+        modelAndView.addObject("items", new Items());
+        return baseView(modelAndView);
     }
 
     @PostMapping("/ban-hang/cart/{id}/add-items")
     public String addItemsToCart(@PathVariable("id") Integer idCart, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (idCart <= 0 || cartService.findById(idCart) == null) {
+            throw new NotFoundException("Cart not found!");
         }
         List<String> listBienTheSanPham = Arrays.stream(request.getParameterValues("bienTheSanPhamId")).toList();
         for (String bTSanPhamId : listBienTheSanPham) {
@@ -188,6 +193,9 @@ public class OrderController extends BaseController {
     public String updateItemsOfCart(@PathVariable("id") Integer id, @ModelAttribute("items") Items items) {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
+        }
+        if (id <= 0 || cartService.findById(id) == null) {
+            throw new NotFoundException("Cart not found!");
         }
         items.setOrderCart(cartService.findById(id));
         if (items.getSoLuong() > 0) {
@@ -216,29 +224,28 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
-            String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
-            if (thoiGianDatHangString != null) {
-                orderRequest.setThoiGianDatHang(FlowieeUtil.convertStringToDate(thoiGianDatHangString));
-            } else {
-                orderRequest.setThoiGianDatHang(new Date());
-            }
-            List<Integer> listBtspIdInt = new ArrayList<>();
-            List<String> listBtspIdString = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
-            for (String idString : listBtspIdString) {
-                listBtspIdInt.add(Integer.parseInt(idString));
-            }
-            orderRequest.setListBienTheSanPham(listBtspIdInt);
-            orderRequest.setTrangThaiThanhToan(false);
-            orderService.save(orderRequest);
-            //Sau khi đã lưu đơn hàng thì xóa all items
-            itemsService.findByCartId(orderRequest.getCartId()).forEach(items -> {
-                itemsService.delete(items.getId());
-            });
-            return "redirect:/don-hang";
-        } else {
+        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenThemMoiDonHang()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
+        if (thoiGianDatHangString != null) {
+            orderRequest.setThoiGianDatHang(FlowieeUtil.convertStringToDate(thoiGianDatHangString));
+        } else {
+            orderRequest.setThoiGianDatHang(new Date());
+        }
+        List<Integer> listProductVariantId = new ArrayList<>();
+        List<String> listBtspIdString = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
+        for (String idString : listBtspIdString) {
+            listProductVariantId.add(Integer.parseInt(idString));
+        }
+        orderRequest.setListBienTheSanPham(listProductVariantId);
+        orderRequest.setTrangThaiThanhToan(false);
+        orderService.save(orderRequest);
+        //Sau khi đã lưu đơn hàng thì xóa all items
+        itemsService.findByCartId(orderRequest.getCartId()).forEach(items -> {
+            itemsService.delete(items.getId());
+        });
+        return "redirect:/don-hang";
     }
 
     @PostMapping("/update/{id}")
@@ -246,12 +253,11 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
-            orderService.update(order, id);
-            return "redirect:/don-hang";
-        } else {
+        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        orderService.update(order, id);
+        return "redirect:/don-hang";
     }
 
     @PostMapping("/delete/{id}")
@@ -259,12 +265,11 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
-            orderService.delete(id);
-            return "redirect:/don-hang";
-        } else {
+        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        orderService.delete(id);
+        return "redirect:/don-hang";
     }
 
     @PostMapping("/thanh-toan/{id}")
@@ -273,15 +278,14 @@ public class OrderController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
-        if (kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
-            orderPay.setMaPhieu("PTT" + donHangId + FlowieeUtil.now("yyMMddHHmmss"));
-            orderPay.setOrder(orderService.findById(donHangId));
-            orderPay.setTrangThaiThanhToan(true);
-            donHangThanhToanService.save(orderPay);
-            return "redirect:/don-hang/" + donHangId;
-        } else {
+        if (!kiemTraQuyenModuleSanPham.kiemTraQuyenCapNhatDonHang()) {
             return PagesUtil.PAGE_UNAUTHORIZED;
         }
+        orderPay.setMaPhieu("PTT" + donHangId + FlowieeUtil.now("yyMMddHHmmss"));
+        orderPay.setOrder(orderService.findById(donHangId));
+        orderPay.setTrangThaiThanhToan(true);
+        donHangThanhToanService.save(orderPay);
+        return "redirect:/don-hang/" + donHangId;
     }
 
     @GetMapping("/export")
