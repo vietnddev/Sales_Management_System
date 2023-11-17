@@ -5,7 +5,6 @@ import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.CategoryUtil;
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductAttributeService;
@@ -61,7 +60,6 @@ public class ProductController extends BaseController {
         }
         if (!validateRole.kiemTraQuyenXem()) {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
-
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM);
         modelAndView.addObject("product", new Product());
@@ -179,7 +177,7 @@ public class ProductController extends BaseController {
             return PagesUtil.PAGE_LOGIN;
         }
         if (product == null|| id <= 0 || productsService.findById(id) == null) {
-            throw new BadRequestException();
+            throw new NotFoundException("Product not found!");
         }
         productsService.update(product, id);
         return "redirect:" + request.getHeader("referer");
