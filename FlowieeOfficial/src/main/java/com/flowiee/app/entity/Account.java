@@ -70,7 +70,7 @@ public class Account extends BaseEntity implements Serializable{
     private List<FlowieeImport> listHistoryImportData;
 
     @OneToMany(mappedBy = "receivedBy", fetch = FetchType.LAZY)
-    private List<GoodsImport> listGoodsImport;
+    private List<TicketImportGoods> listTicketImportGoods;
 
     @Transient
     private List<Role> role;

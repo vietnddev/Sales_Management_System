@@ -12,13 +12,13 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "stg_goods_import")
+@Table(name = "stg_ticket_export_goods")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class GoodsImport extends BaseEntity implements Serializable {
+public class TicketImportGoods extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "title", nullable = false)
@@ -69,7 +69,7 @@ public class GoodsImport extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
     private List<ProductVariantTemp> listProductVariantTemp;
 
-    public GoodsImport(Integer id) {
+    public TicketImportGoods(Integer id) {
         super.id = id;
     }
 }

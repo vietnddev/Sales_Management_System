@@ -160,4 +160,16 @@ public class ValidateModuleStorage {
         }
         return false;
     }
+
+    public boolean exportGoods() {
+        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = KhoTaiLieuAction.MANAGEMENT_GOODS_APPROVE.name();
+        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -51,7 +51,7 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	private Boolean status;
 	
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
-	private List<GoodsImport> listPaymentMethod;
+	private List<TicketImportGoods> listPaymentMethod;
 	
 	@OneToMany(mappedBy = "kenhBanHang", fetch = FetchType.LAZY)
 	private List<Order> listKenhBanHang;

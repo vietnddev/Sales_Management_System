@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "account_role_history")
+@Table(name = "sys_account_role_history")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

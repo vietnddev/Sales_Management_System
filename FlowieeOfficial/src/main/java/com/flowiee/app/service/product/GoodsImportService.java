@@ -1,29 +1,29 @@
 package com.flowiee.app.service.product;
 
 import com.flowiee.app.base.BaseService;
-import com.flowiee.app.entity.GoodsImport;
+import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.model.product.GoodsImportRequest;
 
 import java.util.List;
 
-public interface GoodsImportService extends BaseService<GoodsImport> {
+public interface GoodsImportService extends BaseService<TicketImportGoods> {
     String saveDraft(GoodsImportRequest goodsImportRequest);
 
-    List<GoodsImport> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);
+    List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);
 
-    List<GoodsImport> findByMaterialId(Integer materialId);
+    List<TicketImportGoods> findByMaterialId(Integer materialId);
 
-    List<GoodsImport> findBySupplierId(Integer supplierId);
+    List<TicketImportGoods> findBySupplierId(Integer supplierId);
 
-    List<GoodsImport> findByPaymentMethod(String paymentMethod);
+    List<TicketImportGoods> findByPaymentMethod(String paymentMethod);
 
-    List<GoodsImport> findByPaidStatus(String paidStatus);
+    List<TicketImportGoods> findByPaidStatus(String paidStatus);
 
-    List<GoodsImport> findByAccountId(Integer accountId);
+    List<TicketImportGoods> findByAccountId(Integer accountId);
 
-    GoodsImport findDraftImportPresent(Integer createdBy);
+    TicketImportGoods findDraftImportPresent(Integer createdBy);
 
-    GoodsImport createDraftImport();
+    TicketImportGoods createDraftImport();
 
     String updateStatus(Integer entityId, String status);
 }

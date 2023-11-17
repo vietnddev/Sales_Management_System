@@ -22,7 +22,7 @@ public class Material extends BaseEntity implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
-    private GoodsImport goodsImport;
+    private TicketImportGoods ticketImportGoods;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")

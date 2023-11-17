@@ -23,7 +23,7 @@ public class ProductVariantResponse extends ProductVariant implements Serializab
     private Category fabricType;
     private GarmentFactory garmentFactory;
     private Supplier supplier;
-    private GoodsImport goodsImport;
+    private TicketImportGoods ticketImportGoods;
     private List<Price> prices;
 
     public static ProductVariantResponse fromProductVariant(ProductVariant input) {
@@ -40,7 +40,7 @@ public class ProductVariantResponse extends ProductVariant implements Serializab
         response.setFabricType(input.getFabricType());
         response.setGarmentFactory(input.getGarmentFactory());
         response.setSupplier(input.getSupplier());
-        response.setGoodsImport(input.getGoodsImport());
+        response.setTicketImportGoods(input.getTicketImportGoods());
         return response;
     }
 }

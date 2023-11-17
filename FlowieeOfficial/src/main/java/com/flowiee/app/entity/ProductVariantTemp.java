@@ -65,7 +65,7 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
-    private GoodsImport goodsImport;
+    private TicketImportGoods ticketImportGoods;
 
     @Transient
     private Price price;
@@ -99,7 +99,7 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
         productVariantTemp.setFabricType(productVariant.getFabricType());
         productVariantTemp.setGarmentFactory(productVariant.getGarmentFactory());
         productVariantTemp.setSupplier(productVariant.getSupplier());
-        productVariantTemp.setGoodsImport(productVariant.getGoodsImport());
+        productVariantTemp.setTicketImportGoods(productVariant.getTicketImportGoods());
         productVariantTemp.setPrice(productVariant.getPrice());
         productVariantTemp.setListThuocTinh(productVariant.getListThuocTinh());
         productVariantTemp.setListGiaBan(productVariant.getListGiaBan());

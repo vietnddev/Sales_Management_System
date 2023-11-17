@@ -44,6 +44,7 @@ public class PagesUtil {
     public static final String PAGE_STORAGE_DOCTYPE_DETAIL = "/pages/kho/doctype-detail";
     public static final String PAGE_STORAGE_MATERIAL = "/pages/kho/material";
     public static final String PAGE_STORAGE_DRAFT_IMPORT = "/pages/kho/nhap-hang";
+    public static final String PAGE_STORAGE_TICKET_EXPORT = "/pages/kho/xuat-hang";
 
 
     public static final String PAGE_UNAUTHORIZED= "/pages/exception/unauthorized";

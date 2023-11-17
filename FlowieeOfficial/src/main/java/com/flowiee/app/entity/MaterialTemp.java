@@ -28,7 +28,7 @@ public class MaterialTemp extends BaseEntity implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
-    private GoodsImport goodsImport;
+    private TicketImportGoods ticketImportGoods;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
@@ -65,7 +65,7 @@ public class MaterialTemp extends BaseEntity implements Serializable {
     public static MaterialTemp convertFromMaterial(Material material) {
         MaterialTemp materialTemp = new MaterialTemp();
         materialTemp.setId(material.getId());
-        materialTemp.setGoodsImport(material.getGoodsImport());
+        materialTemp.setTicketImportGoods(material.getTicketImportGoods());
         materialTemp.setSupplier(material.getSupplier());
         materialTemp.setCode(material.getCode());
         materialTemp.setName(material.getName());

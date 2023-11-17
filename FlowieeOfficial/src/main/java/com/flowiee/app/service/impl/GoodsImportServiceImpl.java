@@ -4,7 +4,7 @@ import com.flowiee.app.category.Category;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Account;
-import com.flowiee.app.entity.GoodsImport;
+import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.repository.product.GoodsImportRepository;
@@ -32,17 +32,17 @@ public class GoodsImportServiceImpl implements GoodsImportService {
 //    private static String STATUS_REJECT = "REJECT";
 
     @Override
-    public List<GoodsImport> findAll() {
+    public List<TicketImportGoods> findAll() {
         return goodsImportRepository.findAll();
     }
 
     @Override
-    public GoodsImport findById(Integer entityId) {
+    public TicketImportGoods findById(Integer entityId) {
         return goodsImportRepository.findById(entityId).get();
     }
 
     @Override
-    public String save(GoodsImport entity) {
+    public String save(TicketImportGoods entity) {
         if (entity == null) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
@@ -51,7 +51,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     }
 
     @Override
-    public String update(GoodsImport entity, Integer entityId) {
+    public String update(TicketImportGoods entity, Integer entityId) {
         if (entity == null || entityId == null) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
@@ -68,8 +68,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         if (entityId == null || entityId <= 0) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        GoodsImport goodsImport = this.findById(entityId);
-        if (goodsImport == null) {
+        TicketImportGoods ticketImportGoods = this.findById(entityId);
+        if (ticketImportGoods == null) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
         goodsImportRepository.deleteById(entityId);
@@ -82,39 +82,39 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         if (request == null || request.getId() == null || request.getId() <= 0) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        GoodsImport goodsImport = this.findById(request.getId());
-        if (goodsImport == null) {
+        TicketImportGoods ticketImportGoods = this.findById(request.getId());
+        if (ticketImportGoods == null) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        goodsImport.setId(request.getId());
-        goodsImport.setTitle(request.getTitle());
+        ticketImportGoods.setId(request.getId());
+        ticketImportGoods.setTitle(request.getTitle());
         if (request.getSupplierId() != null && request.getSupplierId() > 0) {
-            goodsImport.setSupplier(new Supplier(request.getSupplierId(), null));
+            ticketImportGoods.setSupplier(new Supplier(request.getSupplierId(), null));
         }
         if (request.getPaymentMethodId() != null && request.getPaymentMethodId() > 0) {
-            goodsImport.setPaymentMethod(new Category(request.getPaymentMethodId(), null));
+            ticketImportGoods.setPaymentMethod(new Category(request.getPaymentMethodId(), null));
         }
         if (request.getReceivedBy() != null && request.getReceivedBy() > 0) {
-            goodsImport.setReceivedBy(new Account(request.getReceivedBy()));
+            ticketImportGoods.setReceivedBy(new Account(request.getReceivedBy()));
         }
-        goodsImport.setDiscount(request.getDiscount());
-        goodsImport.setPaidAmount(request.getPaidAmount());
-        goodsImport.setPaidStatus(request.getPaidStatus());
+        ticketImportGoods.setDiscount(request.getDiscount());
+        ticketImportGoods.setPaidAmount(request.getPaidAmount());
+        ticketImportGoods.setPaidStatus(request.getPaidStatus());
         if (request.getOrderTime() != null) {
-            goodsImport.setOrderTime(request.getOrderTime());
+            ticketImportGoods.setOrderTime(request.getOrderTime());
         }
         if (request.getReceivedTime() != null) {
-            goodsImport.setReceivedTime(request.getReceivedTime());
+            ticketImportGoods.setReceivedTime(request.getReceivedTime());
         }
-        goodsImport.setNote(request.getNote());
-        goodsImport.setStatus(STATUS_DRAFT);
-        goodsImportRepository.save(goodsImport);
+        ticketImportGoods.setNote(request.getNote());
+        ticketImportGoods.setStatus(STATUS_DRAFT);
+        goodsImportRepository.save(ticketImportGoods);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
-    public List<GoodsImport> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
-        List<GoodsImport> listData = new ArrayList<>();
+    public List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
+        List<TicketImportGoods> listData = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT i.ID, i.TITLE, s.NAME as SUPPLIER_NAME, pm.TEN_LOAI as PAYMENT_METHOD_NAME, i.PAY_STATUS, a.HO_TEN as RECEIVED_NAME, i.STATUS, ");
         sql.append("       s.ID as SUPPLIER_ID, pm.ID as PAYMENT_METHOD_ID, a.ID as RECEIVED_ID, ");
@@ -154,25 +154,25 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         @SuppressWarnings("unchecked")
 		List<Object[]> data = query.getResultList();
         for (Object[] o : data) {
-            GoodsImport goodsImport = new GoodsImport();
-            goodsImport.setId(Integer.parseInt(o[0].toString()));
-            goodsImport.setTitle(String.valueOf(o[1]));
-            goodsImport.setSupplier(new Supplier(Integer.parseInt(String.valueOf(o[7])), String.valueOf(o[2])));
-            goodsImport.setPaymentMethod(new Category(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
-            goodsImport.setPaidStatus(String.valueOf(o[4]));
-            goodsImport.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
-            goodsImport.setStatus(String.valueOf(o[6]));
-            goodsImport.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(o[10])));
-            goodsImport.setReceivedTime(FlowieeUtil.convertStringToDate(String.valueOf(o[11])));
-            listData.add(goodsImport);
+            TicketImportGoods ticketImportGoods = new TicketImportGoods();
+            ticketImportGoods.setId(Integer.parseInt(o[0].toString()));
+            ticketImportGoods.setTitle(String.valueOf(o[1]));
+            ticketImportGoods.setSupplier(new Supplier(Integer.parseInt(String.valueOf(o[7])), String.valueOf(o[2])));
+            ticketImportGoods.setPaymentMethod(new Category(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
+            ticketImportGoods.setPaidStatus(String.valueOf(o[4]));
+            ticketImportGoods.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
+            ticketImportGoods.setStatus(String.valueOf(o[6]));
+            ticketImportGoods.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(o[10])));
+            ticketImportGoods.setReceivedTime(FlowieeUtil.convertStringToDate(String.valueOf(o[11])));
+            listData.add(ticketImportGoods);
         }
         entityManager.close();
         return listData;
     }
 
     @Override
-    public List<GoodsImport> findByMaterialId(Integer materialId) {
-        List<GoodsImport> listData = new ArrayList<>();
+    public List<TicketImportGoods> findByMaterialId(Integer materialId) {
+        List<TicketImportGoods> listData = new ArrayList<>();
         if (materialId != null && materialId >= 0) {
             //listData = goodsImportRepository.findByMaterialId(materialId);
         }
@@ -180,8 +180,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     }
 
     @Override
-    public List<GoodsImport> findBySupplierId(Integer supplierId) {
-        List<GoodsImport> listData = new ArrayList<>();
+    public List<TicketImportGoods> findBySupplierId(Integer supplierId) {
+        List<TicketImportGoods> listData = new ArrayList<>();
         if (supplierId != null && supplierId >= 0) {
             listData = goodsImportRepository.findBySupplierId(supplierId);
         }
@@ -189,8 +189,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     }
 
     @Override
-    public List<GoodsImport> findByPaymentMethod(String paymentMethod) {
-        List<GoodsImport> listData = new ArrayList<>();
+    public List<TicketImportGoods> findByPaymentMethod(String paymentMethod) {
+        List<TicketImportGoods> listData = new ArrayList<>();
         if (paymentMethod != null) {
             listData = goodsImportRepository.findByPaymentMethod(paymentMethod);
         }
@@ -198,8 +198,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     }
 
     @Override
-    public List<GoodsImport> findByPaidStatus(String paidStatus) {
-        List<GoodsImport> listData = new ArrayList<>();
+    public List<TicketImportGoods> findByPaidStatus(String paidStatus) {
+        List<TicketImportGoods> listData = new ArrayList<>();
         if (paidStatus != null && FlowieeUtil.getPaymentStatusCategory().containsKey(paidStatus)) {
             listData = goodsImportRepository.findByPaidStatus(paidStatus);
         }
@@ -207,8 +207,8 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     }
 
     @Override
-    public List<GoodsImport> findByAccountId(Integer accountId) {
-        List<GoodsImport> listData = new ArrayList<>();
+    public List<TicketImportGoods> findByAccountId(Integer accountId) {
+        List<TicketImportGoods> listData = new ArrayList<>();
         if (accountId != null && accountId > 0) {
             listData = goodsImportRepository.findByReceiveBy(accountId);
         }
@@ -216,20 +216,20 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     }
 
     @Override
-    public GoodsImport findDraftImportPresent(Integer createdBy) {
+    public TicketImportGoods findDraftImportPresent(Integer createdBy) {
         return goodsImportRepository.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
     }
 
     @Override
-    public GoodsImport createDraftImport() {
-        GoodsImport goodsImport = new GoodsImport();
-        goodsImport.setTitle("Title");
-        goodsImport.setStatus(STATUS_DRAFT);
-        goodsImport.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
-        goodsImport.setOrderTime(new Date());
-        goodsImport.setReceivedTime(new Date());
-        goodsImport = goodsImportRepository.save(goodsImport);
-        return goodsImport;
+    public TicketImportGoods createDraftImport() {
+        TicketImportGoods ticketImportGoods = new TicketImportGoods();
+        ticketImportGoods.setTitle("Title");
+        ticketImportGoods.setStatus(STATUS_DRAFT);
+        ticketImportGoods.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+        ticketImportGoods.setOrderTime(new Date());
+        ticketImportGoods.setReceivedTime(new Date());
+        ticketImportGoods = goodsImportRepository.save(ticketImportGoods);
+        return ticketImportGoods;
     }
 
     @Override
@@ -237,12 +237,12 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         if (entityId == null || entityId <= 0) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        GoodsImport goodsImport = this.findById(entityId);
-        if (goodsImport == null) {
+        TicketImportGoods ticketImportGoods = this.findById(entityId);
+        if (ticketImportGoods == null) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        goodsImport.setStatus(status);
-        goodsImportRepository.save(goodsImport);
+        ticketImportGoods.setStatus(status);
+        goodsImportRepository.save(ticketImportGoods);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 }

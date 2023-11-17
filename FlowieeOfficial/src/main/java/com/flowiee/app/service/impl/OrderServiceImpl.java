@@ -1,7 +1,5 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.TagName;
@@ -54,8 +52,6 @@ public class OrderServiceImpl implements OrderService {
     private ProductVariantService productVariantService;
     @Autowired
     private OrderDetailService orderDetailService;
-    @Autowired
-    private CategoryService categoryService;
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
@@ -135,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
                 orderDetailService.save(orderDetail);
                 totalMoneyOfDonHang += productVariantService.getGiaBan(idBienTheSP);
                 //Update lại số lượng trong kho của sản phẩm
-                productVariantService.updateSoLuong(soLuongSanPhamInCart, idBienTheSP);
+                //productVariantService.updateSoLuong(soLuongSanPhamInCart, idBienTheSP);
             }
             orderSaved.setTongTienDonHang(totalMoneyOfDonHang);
             orderRepository.save(orderSaved);
@@ -163,9 +159,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String update(Order order, Integer id) {
         order.setId(id);
+        orderRepository.save(order);
         systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + order.toString());
-        orderRepository.save(order);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
 
