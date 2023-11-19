@@ -62,7 +62,7 @@
                         <!--./ End Image chính-->
 
                         <div class="row mt-2">
-                            <button type="button" class="btn btn-success w-50"
+                            <button type="button" class="btn btn-sm btn-success w-25"
                                     style="margin: auto"
                                     data-toggle="modal"
                                     data-target="#modalUploadImage"
