@@ -13,6 +13,6 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query("from Material m where m.code=:code")
     List<Material> findByCode(String code);
 
-    @Query("from Material m where m.goodsImport.id=:importId")
+    @Query("from Material m where m.ticketImportGoods.id=:importId")
     List<Material> findByImportId(Integer importId);
 }

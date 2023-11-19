@@ -45,7 +45,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Autowired
     private DocumentService documentService;
     @Autowired
-    FileStorageService fileService;
+    private FileStorageService fileService;
 
     @Override
     public FileStorage findById(int fileId) {

@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "stg_ticket_export_goods")
+@Table(name = "stg_ticket_import_goods")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -57,16 +57,16 @@ public class TicketImportGoods extends BaseEntity implements Serializable {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
     private List<Material> listMaterial;
 
-    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
     private List<ProductVariant> listProductVariant;
 
-    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
     private List<MaterialTemp> listMaterialTemp;
 
-    @OneToMany(mappedBy = "goodsImport", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
     private List<ProductVariantTemp> listProductVariantTemp;
 
     public TicketImportGoods(Integer id) {
