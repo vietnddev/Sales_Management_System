@@ -50,8 +50,7 @@
                                             Export
                                         </a>
                                         <button type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#insert"
-                                                th:if="${action_create == 'enable'}">
+                                                data-target="#insert">
                                                 <i class="fa-solid fa-circle-plus"></i>
                                                 Thêm mới
                                         </button>
@@ -228,6 +227,64 @@
                                 </table>
                             </div>
                             <!-- /.card-body -->
+
+                            <!-- modal insert -->
+                            <div class="modal fade" id="insert">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <form th:action="@{'/system/category/' + ${categoryType} + '/insert'}"
+                                              th:object="${category}" method="post">
+                                            <div class="modal-header">
+                                                <strong class="modal-title">Thêm mới danh mục</strong>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="form-group">
+                                                            <label>Mã loại</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="Mã loại" required
+                                                                   name="code"/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Tên loại</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="Tên loại" required
+                                                                   name="name"/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Ghi chú</label>
+                                                            <textarea class="form-control" rows="5"
+                                                                      placeholder="Ghi chú"
+                                                                      name="note"></textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Trạng thái</label>
+                                                            <select class="custom-select" name="trangThai">
+                                                                <option value="true" selected>Sử dụng</option>
+                                                                <option value="false">Không sử dụng</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer justify-content-end"
+                                                     style="margin-bottom: -15px;">
+                                                    <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Hủy
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
 
                             <!-- modal import -->
                             <div class="modal fade" id="import">
