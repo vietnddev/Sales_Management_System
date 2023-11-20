@@ -17,14 +17,7 @@ public class FlowieeOfficialApplication {
     private MailService mailService;
 
     public static void main(String[] args) {
-    	try {
-    		SpringApplication.run(FlowieeOfficialApplication.class, args);
-    		
-    		System.out.println("FlowieeOfficialApplication started SUCCESS at " + FlowieeUtil.now("dd/MM/yyyy HH:mm:ss"));
-    	} catch (Exception e) {    		
-    		System.out.println("INFO: " + e.getMessage());
-		}
-        
+		SpringApplication.run(FlowieeOfficialApplication.class, args);
 
 //        int year = 2023; // Năm cần in danh sách tuần
 //
