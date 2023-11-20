@@ -41,12 +41,6 @@ public class NotificationUtil {
     public static final String DELETE_DATA_SUCCESS = "Xóa dữ liệu THÀNH CÔNG!";
     public static final String DELETE_DATA_FAIL = "Xóa dữ liệu THẤT BẠI!";
 
-    public static final String DATA_EXISTS = "Dữ liệu đã tồn tại!";
-    public static final String DATA_NOT_FOUND = "Dữ liệu không được tìm thấy!";
-
-    public static final String FILE_NOT_FOUND = "File không tồn tại!";
-
-    public static final String RESOURCE_NOT_FOUND = "Tài nguyên không tồn tại!";
-
-    public static final String PAGE_NOT_FOUND = "Trang không tồn tại!";
+    public static final String ERROR_FORBIDDEN = "You are not authorized to use this function!";
+    public static final String ERROR_NOTFOUND = "The resource you are accessing dose not found!";
 }

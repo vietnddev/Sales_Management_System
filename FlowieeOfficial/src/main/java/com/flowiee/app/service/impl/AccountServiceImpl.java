@@ -32,8 +32,8 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> findAll() {
         List<Account> listAccountReturn = new ArrayList<>();
         for (Account account : accountRepository.findAll()) {
-            account.setRole(roleService.findAllRole());
-            for (Role role : account.getRole()) {
+            account.setListRole(roleService.findAllRole());
+            for (Role role : account.getListRole()) {
                 String module = role.getModule().keySet().toString().replaceAll("\\[|\\]", "").replaceAll("\"", "");;
                 if (role.getAction() != null) {
                     for (Role.Action act : role.getAction()) {
@@ -65,6 +65,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String save(Account account) {
+        if (account.getRole() != null && account.getRole().equals(FlowieeUtil.ADMINISTRATOR)) {
+            account.setRole("ADMIN");
+        } else {
+            account.setRole("USER");
+        }
         accountRepository.save(account);
     	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.CREATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
         systemLogService.writeLog(systemLog);
@@ -72,9 +77,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String update(Account entity, Integer entityId) {
-        entity.setId(entityId);
-        accountRepository.save(entity);
+    public String update(Account account, Integer entityId) {
+        account.setId(entityId);
+        if (account.getRole() != null && account.getRole().equals(FlowieeUtil.ADMINISTRATOR)) {
+            account.setRole("ADMIN");
+        } else {
+            account.setRole("USER");
+        }
+        accountRepository.save(account);
     	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.UPDATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
         systemLogService.writeLog(systemLog);
         return TagName.SERVICE_RESPONSE_SUCCESS;

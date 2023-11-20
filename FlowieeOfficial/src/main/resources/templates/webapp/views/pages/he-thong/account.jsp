@@ -108,7 +108,7 @@
                                                                         id="custom-tabs-one-tab"
                                                                         role="tablist">
                                                                         <li class="nav-item"
-                                                                            th:each="role : ${list.role}">
+                                                                            th:each="role : ${list.listRole}">
                                                                             <a class="nav-link"
                                                                                th:id="'#' + ${role.module.entrySet().iterator().next().key} + '_' + ${list.id}"
                                                                                data-toggle="pill"
@@ -129,7 +129,7 @@
                                                                         <div class="tab-pane fade"
                                                                              role="tabpanel"
                                                                              aria-labelledby="custom-tabs-one-home-tab"
-                                                                             th:each="role : ${list.role}"
+                                                                             th:each="role : ${list.listRole}"
                                                                              th:id="${role.module.entrySet().iterator().next().key} + '_' + ${list.id}">
                                                                             <table class="table table-bordered table-striped w-100">
                                                                                 <thead>

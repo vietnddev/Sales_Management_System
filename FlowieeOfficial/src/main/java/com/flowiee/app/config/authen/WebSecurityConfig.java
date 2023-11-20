@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		httpSecurity
 				.authorizeRequests()
+				.antMatchers("/he-thong/config", "/he-thong/tai-khoan", "/he-thong/nhat-ky").hasRole("ADMIN")
 				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**")
 				.permitAll()
 				.anyRequest().authenticated()
@@ -73,6 +74,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.deleteCookies("JSESSIONID") // Xóa cookies sau khi đăng xuất
 				.invalidateHttpSession(true) // Hủy phiên làm việc
 				.and()
-				.userDetailsService(userDetailsService()); ;
+				.userDetailsService(userDetailsService())
+				//Page default if you are not authorized
+				.exceptionHandling().accessDeniedPage("/error/403");
 	}
 }

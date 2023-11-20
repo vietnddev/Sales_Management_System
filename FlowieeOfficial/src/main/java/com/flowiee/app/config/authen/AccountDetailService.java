@@ -38,7 +38,7 @@ public class AccountDetailService implements UserDetailsService {
 		if (accountEntity != null) {
 			// Thiết lập role
 			List<GrantedAuthority> grantlist = new ArrayList<GrantedAuthority>();
-			GrantedAuthority authority = new SimpleGrantedAuthority("USER");
+			GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + accountEntity.getRole());
 			grantlist.add(authority);
 
 			userDetails = new org.springframework.security.core.userdetails.User(accountEntity.getUsername(),

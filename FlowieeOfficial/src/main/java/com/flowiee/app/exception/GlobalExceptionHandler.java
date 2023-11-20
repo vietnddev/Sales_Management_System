@@ -33,6 +33,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ModelAndView exceptionHandler(ForbiddenException ex) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        modelAndView.addObject("error", error);
+        return modelAndView;
+    }
+
+    @ExceptionHandler
     public ModelAndView exceptionHandler(Exception ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);

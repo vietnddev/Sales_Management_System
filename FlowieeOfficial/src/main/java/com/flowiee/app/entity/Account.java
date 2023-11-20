@@ -48,6 +48,9 @@ public class Account extends BaseEntity implements Serializable{
     @Column(name = "ghi_chu")
     private String ghiChu;
 
+    @Column(name = "role")
+    private String role;
+
     @Column(name = "trang_thai")
     private boolean trangThai;
 
@@ -73,7 +76,7 @@ public class Account extends BaseEntity implements Serializable{
     private List<TicketImportGoods> listTicketImportGoods;
 
     @Transient
-    private List<Role> role;
+    private List<Role> listRole;
 
     @Override
     public String toString() {
