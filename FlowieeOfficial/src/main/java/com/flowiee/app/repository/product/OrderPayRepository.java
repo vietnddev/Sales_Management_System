@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface OrderPayRepository extends JpaRepository<OrderPay, Integer> {
     @Query("from OrderPay d where d.order.id=:id")
-    List<OrderPay> findByDonHangId(int id);
+    List<OrderPay> findByOrder(int id);
 
     @Query("from OrderPay o where o.hinhThucThanhToan.id=:payMethodId")
     List<OrderPay> findByPayMethod(Integer payMethodId);

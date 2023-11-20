@@ -7,13 +7,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.product.CartService;
-import com.flowiee.app.service.product.CustomerService;
-import com.flowiee.app.service.product.DonHangThanhToanService;
-import com.flowiee.app.service.product.ItemsService;
-import com.flowiee.app.service.product.OrderDetailService;
-import com.flowiee.app.service.product.OrderService;
-import com.flowiee.app.service.product.ProductVariantService;
+import com.flowiee.app.service.product.*;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Items;
@@ -51,7 +45,7 @@ public class OrderController extends BaseController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private DonHangThanhToanService donHangThanhToanService;
+    private OrderPayService orderPayService;
     @Autowired
     private CartService cartService;
     @Autowired
@@ -125,7 +119,7 @@ public class OrderController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_CHITIET);
         modelAndView.addObject("donHangDetail", orderService.findById(id));
         modelAndView.addObject("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
-        modelAndView.addObject("listThanhToan", donHangThanhToanService.findByDonHangId(id));
+        modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("donHang", new Order());
@@ -291,7 +285,7 @@ public class OrderController extends BaseController {
         orderPay.setMaPhieu("PTT" + donHangId + FlowieeUtil.now("yyMMddHHmmss"));
         orderPay.setOrder(orderService.findById(donHangId));
         orderPay.setTrangThaiThanhToan(true);
-        donHangThanhToanService.save(orderPay);
+        orderPayService.save(orderPay);
         return "redirect:/don-hang/" + donHangId;
     }
 

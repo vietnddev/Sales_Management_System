@@ -47,4 +47,9 @@ public class OrderPayServiceImpl implements OrderPayService {
     public List<OrderPay> findByPayMethod(Integer payMethodId) {
         return orderPayRepository.findByPayMethod(payMethodId);
     }
+
+    @Override
+    public List<OrderPay> findByOrder(Integer orderId) {
+        return orderPayRepository.findByOrder(orderId);
+    }
 }
