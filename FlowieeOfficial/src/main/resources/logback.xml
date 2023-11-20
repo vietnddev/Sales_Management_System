@@ -6,14 +6,16 @@
             <maxHistory>30</maxHistory> <!-- Số lượng file log cũ để giữ lại -->
         </rollingPolicy>
         <encoder>
-            <Pattern>%d %p %C{1.} [%t]: %m%n</Pattern>
+<!--            <Pattern>%d %p %C{1.} [%t]: %m%n</Pattern>-->
+            <Pattern>%d %highlight(%-5level) %C{1.} [%t]: %m%n</Pattern>
         </encoder>
     </appender>
 
     <!-- Appender để ghi log ra console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <Pattern>%d %p %C{1.} [%t]: %m%n</Pattern>
+<!--            <Pattern>%d %p %C{1.} [%t]: %m%n</Pattern>-->
+            <Pattern>%d %highlight(%-5level) %C{1.} [%t]: %m%n</Pattern>
         </encoder>
     </appender>
 
