@@ -92,6 +92,7 @@
                                                                     </div>
                                                                     <div class="modal-footer justify-content-end"
                                                                          style="margin-bottom: -15px;">
+                                                                        <input type="hidden" name="code" th:value="${list.code}">
                                                                         <button type="button" class="btn btn-default"
                                                                                 data-dismiss="modal">Hủy
                                                                         </button>
