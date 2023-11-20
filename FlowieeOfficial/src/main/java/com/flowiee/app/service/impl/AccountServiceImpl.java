@@ -14,6 +14,8 @@ import com.flowiee.app.common.action.SystemAction;
 import com.flowiee.app.common.module.SystemModule;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
         for (Account account : accountRepository.findAll()) {
             account.setListRole(roleService.findAllRole());
             for (Role role : account.getListRole()) {
-                String module = role.getModule().keySet().toString().replaceAll("\\[|\\]", "").replaceAll("\"", "");;
+                String module = role.getModule().keySet().toString().replaceAll("\\[|\\]", "").replaceAll("\"", "");
                 if (role.getAction() != null) {
                     for (Role.Action act : role.getAction()) {
                         if (roleService.isAuthorized(account.getId(), module, act.getKeyAction())) {
@@ -103,7 +105,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean isLogin() {
-        Account account = FlowieeUtil.ACCOUNT;
-        return account != null ? true : false;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName() != null;
     }
 }
