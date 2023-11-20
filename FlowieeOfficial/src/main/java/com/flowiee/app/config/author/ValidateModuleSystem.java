@@ -20,11 +20,11 @@ public class ValidateModuleSystem {
     private final String module = SystemModule.HE_THONG.name();
 
     public boolean readPermission() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = RoleAction.READ_ROLE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -32,11 +32,11 @@ public class ValidateModuleSystem {
     }
 
     public boolean updatePermission() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = RoleAction.UPDATE_ROLE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -44,11 +44,11 @@ public class ValidateModuleSystem {
     }
 
     public boolean readAccount() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.READ_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -56,11 +56,11 @@ public class ValidateModuleSystem {
     }
 
     public boolean insertAccount() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.CREATE_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -68,11 +68,11 @@ public class ValidateModuleSystem {
     }
 
     public boolean updateAccount() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.UPDATE_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -80,11 +80,11 @@ public class ValidateModuleSystem {
     }
 
     public boolean deleteAccount() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = AccountAction.DELETE_ACCOUNT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -92,11 +92,11 @@ public class ValidateModuleSystem {
     }
 
     public boolean readLog() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = LogAction.READ_LOG.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -104,11 +104,11 @@ public class ValidateModuleSystem {
     }
 
     public boolean setupConfig() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = "CONFIG";
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }

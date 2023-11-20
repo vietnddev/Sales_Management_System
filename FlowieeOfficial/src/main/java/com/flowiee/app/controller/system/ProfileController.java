@@ -1,7 +1,6 @@
 package com.flowiee.app.controller.system;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.product.OrderService;
@@ -37,8 +36,8 @@ public class ProfileController extends BaseController {
 		}
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_PROFILE);
 		modelAndView.addObject("message", message);
-		modelAndView.addObject("profile", FlowieeUtil.ACCOUNT);
-		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(FlowieeUtil.ACCOUNT.getId()));
+		modelAndView.addObject("profile", accountService.findCurrentAccount());
+		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(accountService.findCurrentAccountId()));
 		return baseView(modelAndView);
 	}
 
@@ -72,7 +71,7 @@ public class ProfileController extends BaseController {
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");
 
-		Account profile = FlowieeUtil.ACCOUNT;
+		Account profile = accountService.findCurrentAccount();
 
 		BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 		if (bCrypt.matches(password_old,

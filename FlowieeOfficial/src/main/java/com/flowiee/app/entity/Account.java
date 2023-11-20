@@ -78,6 +78,9 @@ public class Account extends BaseEntity implements Serializable{
     @Transient
     private List<Role> listRole;
 
+    @Transient
+    private String ip;
+
     @Override
     public String toString() {
         return "Account{" +

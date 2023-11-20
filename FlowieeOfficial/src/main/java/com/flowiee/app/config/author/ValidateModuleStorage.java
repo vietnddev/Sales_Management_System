@@ -18,11 +18,11 @@ public class ValidateModuleStorage {
     private final String module = SystemModule.KHO_TAI_LIEU.name();
 
     public boolean dashboard() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DASHBOARD_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -30,11 +30,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean read() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.READ_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -42,11 +42,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean insert() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.CREATE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -54,11 +54,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean update() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.UPDATE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -66,11 +66,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean delete() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DELETE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -78,11 +78,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean move() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.MOVE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -90,11 +90,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean copy() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.COPY_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -102,11 +102,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean download() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.DOWNLOAD_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -114,11 +114,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean share() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.SHARE_DOCUMENT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -126,11 +126,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean material() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.MANAGEMENT_MATERIAL.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -138,11 +138,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean goodsImport() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.MANAGEMENT_GOODS_DRAFT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -150,11 +150,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean goodsApprove() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.MANAGEMENT_GOODS_APPROVE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -162,11 +162,11 @@ public class ValidateModuleStorage {
     }
 
     public boolean exportGoods() {
-        if (FlowieeUtil.ACCOUNT_USERNAME.equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = KhoTaiLieuAction.MANAGEMENT_GOODS_APPROVE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.ACCOUNT_USERNAME);
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }

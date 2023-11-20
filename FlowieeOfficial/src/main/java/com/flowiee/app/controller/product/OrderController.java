@@ -136,10 +136,10 @@ public class OrderController extends BaseController {
             return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DONHANG_BANHANG);
-        List<OrderCart> orderCartCurrent = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
+        List<OrderCart> orderCartCurrent = cartService.findByAccountId(accountService.findCurrentAccountId());
         if (orderCartCurrent.isEmpty()) {
             OrderCart orderCart = new OrderCart();
-            orderCart.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+            orderCart.setCreatedBy(accountService.findCurrentAccountId());
             cartService.save(orderCart);
         }
         modelAndView.addObject("listDonHang", orderService.findAll());
@@ -150,7 +150,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(CategoryUtil.ORDERSTATUS));
 
-        List<OrderCart> listOrderCart = cartService.findByAccountId(FlowieeUtil.ACCOUNT_ID);
+        List<OrderCart> listOrderCart = cartService.findByAccountId(accountService.findCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);
 
         modelAndView.addObject("donHangRequest", new OrderRequest());

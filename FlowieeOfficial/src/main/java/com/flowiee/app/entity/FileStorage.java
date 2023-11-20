@@ -93,7 +93,6 @@ public class FileStorage extends BaseEntity implements Serializable {
             this.extension = FileUtil.getExtension(file.getOriginalFilename());
             this.contentType = file.getContentType();
             this.directoryPath = FileUtil.getPathDirectoty(pModule).substring(FileUtil.getPathDirectoty(pModule).indexOf("uploads"));
-            this.account = FlowieeUtil.ACCOUNT;
             this.isActive = false;
         } catch (Exception e) {
             e.printStackTrace();

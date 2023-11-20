@@ -102,7 +102,7 @@ public class AccountController extends BaseController {
         accountEntity.setId(accountId);
         accountEntity.setUsername(acc.getUsername());
         accountEntity.setPassword(acc.getPassword());
-        accountEntity.setLastUpdatedBy(FlowieeUtil.ACCOUNT_USERNAME);
+        accountEntity.setLastUpdatedBy(accountService.findCurrentAccountUsername());
         accountService.update(accountEntity, accountId);
         return "redirect:" + request.getHeader("referer");
     }

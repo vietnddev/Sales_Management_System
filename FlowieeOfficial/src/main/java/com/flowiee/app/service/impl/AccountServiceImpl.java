@@ -10,12 +10,11 @@ import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.RoleService;
 import com.flowiee.app.service.system.SystemLogService;
 import com.flowiee.app.common.action.AccountAction;
-import com.flowiee.app.common.action.SystemAction;
 import com.flowiee.app.common.module.SystemModule;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,6 +65,47 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account findCurrentAccount() {
+        Account account = null;
+        WebAuthenticationDetails details = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            Object authDetails = authentication.getDetails();
+            if (authDetails instanceof WebAuthenticationDetails) {
+                details = (WebAuthenticationDetails) authDetails;
+            }
+            account = this.findByUsername(authentication.getName());
+            account.setIp(details != null ? details.getRemoteAddress() : "unknown");
+        }
+        return account;
+    }
+
+    @Override
+    public String findCurrentAccountUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName().substring(0, authentication.getName().indexOf("_"));
+    }
+
+    @Override
+    public String findCurrentAccountIp() {
+        WebAuthenticationDetails details = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            Object authDetails = authentication.getDetails();
+            if (authDetails instanceof WebAuthenticationDetails) {
+                details = (WebAuthenticationDetails) authDetails;
+            }
+        }
+        return details != null ? details.getRemoteAddress() : "unknown";
+    }
+
+    @Override
+    public Integer findCurrentAccountId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return Integer.parseInt(authentication.getName().substring(authentication.getName().indexOf("_") + 1));
+    }
+
+    @Override
     public String save(Account account) {
         if (account.getRole() != null && account.getRole().equals(FlowieeUtil.ADMINISTRATOR)) {
             account.setRole("ADMIN");
@@ -73,7 +113,7 @@ public class AccountServiceImpl implements AccountService {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.CREATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
+    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.CREATE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
@@ -87,7 +127,7 @@ public class AccountServiceImpl implements AccountService {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.UPDATE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
+    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.UPDATE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return TagName.SERVICE_RESPONSE_SUCCESS;
     }
@@ -97,7 +137,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElse(null);
         if (account != null) {
             accountRepository.delete(account);
-            SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.DELETE_ACCOUNT.name(), "", null, FlowieeUtil.ACCOUNT_ID, FlowieeUtil.ACCOUNT_IP);
+            SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.DELETE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
             systemLogService.writeLog(systemLog);
         }
         return TagName.SERVICE_RESPONSE_SUCCESS;

@@ -17,6 +17,7 @@ import com.flowiee.app.service.product.ProductService;
 import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.storage.DocumentService;
 import com.flowiee.app.service.storage.FileStorageService;
+import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.FlowieeImportService;
 import com.flowiee.app.service.system.NotificationService;
 
@@ -66,7 +67,9 @@ public class CategoryServiceImpl implements CategoryService {
     private FileStorageService fileStorageService;
     @Autowired
     private FileStorageRepository fileStorageRepository;
-    
+    @Autowired
+    private AccountService accountService;
+
     @Override
     public List<Category> findAll() {
         return categoryRepository.findAll();
@@ -235,13 +238,14 @@ public class CategoryServiceImpl implements CategoryService {
             fileStorage.setGhiChu("IMPORT");
             fileStorage.setStatus(false);
             fileStorage.setActive(false);
+            fileStorage.setAccount(accountService.findCurrentAccount());
             fileStorageService.saveFileOfImport(fileImport, fileStorage);
 
             //Save import
             FlowieeImport flowieeImport = new FlowieeImport();
             flowieeImport.setModule(MODULE);
             flowieeImport.setEntity(Category.class.getName());
-            flowieeImport.setAccount(FlowieeUtil.ACCOUNT);
+            flowieeImport.setAccount(accountService.findCurrentAccount());
             flowieeImport.setStartTime(startTimeImport);
             flowieeImport.setEndTime(new Date());
             flowieeImport.setResult(resultOfFlowieeImport);
@@ -254,7 +258,7 @@ public class CategoryServiceImpl implements CategoryService {
             Notification notification = new Notification();
             notification.setTitle(resultOfFlowieeImport);
             notification.setSend(FlowieeUtil.SYS_NOTI_ID);
-            notification.setReceive(FlowieeUtil.ACCOUNT_ID);
+            notification.setReceive(accountService.findCurrentAccountId());
             notification.setType(NotificationUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);

@@ -7,6 +7,9 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -49,7 +52,8 @@ public class BaseEntity {
             createdAt = new Date();
         }
         if (createdBy == null) {
-            createdBy = FlowieeUtil.ACCOUNT_ID;
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            createdBy = Integer.parseInt(authentication.getName().substring(authentication.getName().indexOf("_"), authentication.getName().length() - 1));
         }
     }
 }

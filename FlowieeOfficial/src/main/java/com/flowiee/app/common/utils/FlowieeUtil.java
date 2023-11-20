@@ -105,9 +105,4 @@ public class FlowieeUtil {
         LocalDateTime now = LocalDateTime.now();
         return dateTimeFormatter.format(now);
     }
-
-    public static String ACCOUNT_IP = null;
-    public static Integer ACCOUNT_ID = null;
-    public static String ACCOUNT_USERNAME = null;
-    public static Account ACCOUNT = null;
 }

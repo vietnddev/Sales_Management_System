@@ -1,8 +1,12 @@
 package com.flowiee.app.controller.product;
 
+import com.flowiee.app.config.author.ValidateModuleProduct;
+import com.flowiee.app.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,8 +23,10 @@ public class SupplierController extends BaseController {
 	private AccountService accountService;
 	@Autowired
 	private SupplierService supplierService;
+	@Autowired
+	private ValidateModuleProduct validateModuleProduct;
 
-	@GetMapping(value = "")
+	@GetMapping
 	public ModelAndView viewAllProducts() {
 		if (!accountService.isLogin()) {
 			return new ModelAndView(PagesUtil.PAGE_LOGIN);
@@ -29,5 +35,20 @@ public class SupplierController extends BaseController {
 		modelAndView.addObject("supplier", new Supplier());
 		modelAndView.addObject("listSuplier", supplierService.findAll());		
 		return baseView(modelAndView);
+	}
+
+	@PostMapping("/insert")
+	public String insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
+		if (!accountService.isLogin()) {
+			return PagesUtil.PAGE_LOGIN;
+		}
+		if (!validateModuleProduct.insertSupplier()) {
+			return PagesUtil.PAGE_UNAUTHORIZED;
+		}
+		if (supplier == null) {
+			throw new NotFoundException("Customer not found!");
+		}
+		supplierService.save(supplier);
+		return "redirect:/product/supplier";
 	}
 }

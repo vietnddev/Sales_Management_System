@@ -11,5 +11,13 @@ public interface AccountService extends BaseService<Account> {
 
     int findIdByUsername(String username);
 
+    Account findCurrentAccount();
+
+    String findCurrentAccountUsername();
+
+    String findCurrentAccountIp();
+
+    Integer findCurrentAccountId();
+
     boolean isLogin();
 }

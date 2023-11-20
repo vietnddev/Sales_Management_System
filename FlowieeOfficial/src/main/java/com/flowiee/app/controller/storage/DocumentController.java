@@ -76,8 +76,7 @@ public class DocumentController extends BaseController {
     //Màn hình root
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
         if (validateModuleStorage.read()) {
@@ -189,12 +188,11 @@ public class DocumentController extends BaseController {
     public String insert(HttpServletRequest request,
                          @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
-        document.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+        document.setCreatedBy(accountService.findCurrentAccountId());
         if (document.getParentId() == null) {
             document.setParentId(0);
         }
@@ -234,8 +232,7 @@ public class DocumentController extends BaseController {
     @PostMapping("/document/update/{id}")
     public String update(@ModelAttribute("document") Document document,
                          @PathVariable("id") Integer documentId, HttpServletRequest request) {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username.isEmpty() || username == null) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
@@ -326,8 +323,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/docfield/delete/{id}")
     public String deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username == null || username.isEmpty()) {
+        if (!accountService.isLogin()) {
             return PagesUtil.PAGE_LOGIN;
         }
         if (!validateModuleStorage.delete()) {

@@ -8,6 +8,7 @@ import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.repository.product.ProductRepository;
 import com.flowiee.app.service.product.ProductService;
 import com.flowiee.app.service.storage.FileStorageService;
+import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -39,6 +40,8 @@ public class ProductServiceImpl implements ProductService {
     private SystemLogService systemLogService;
     @Autowired
     private FileStorageService fileService;
+    @Autowired
+    private AccountService accountService;
     @Autowired
     private EntityManager entityManager;
 
@@ -73,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String save(Product product) {
         try {
-            product.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+            product.setCreatedBy(accountService.findCurrentAccountId());
             productsRepository.save(product);
             systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info(ProductServiceImpl.class.getName() + ": Thêm mới sản phẩm " + product.toString());
@@ -91,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
         Product productBefore = this.findById(id);
         try {
             product.setId(id);
-            product.setLastUpdatedBy(FlowieeUtil.ACCOUNT_ID + "");
+            product.setLastUpdatedBy(accountService.findCurrentAccountUsername());
             productsRepository.save(product);
             String noiDungLog = "";
             String noiDungLogUpdate = "";

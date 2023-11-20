@@ -1,6 +1,5 @@
 package com.flowiee.app.config.authen;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.service.system.AccountService;
@@ -41,9 +40,7 @@ public class AccountDetailService implements UserDetailsService {
 			GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + accountEntity.getRole());
 			grantlist.add(authority);
 
-			userDetails = new org.springframework.security.core.userdetails.User(accountEntity.getUsername(),
-					accountEntity.getPassword(), grantlist);
-
+			userDetails = new org.springframework.security.core.userdetails.User(accountEntity.getUsername() + "_" + accountEntity.getId(), accountEntity.getPassword(), grantlist);
 			WebAuthenticationDetails details = null;
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			if (authentication != null) {
@@ -52,12 +49,6 @@ public class AccountDetailService implements UserDetailsService {
 					details = (WebAuthenticationDetails) authDetails;
 				}
 			}
-
-			FlowieeUtil.ACCOUNT_IP = details != null ? details.getRemoteAddress() : "unknown";
-			FlowieeUtil.ACCOUNT_ID = accountEntity.getId();
-			FlowieeUtil.ACCOUNT_USERNAME = accountEntity.getUsername();
-			FlowieeUtil.ACCOUNT = accountEntity;
-
 			SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), SystemAction.LOGIN.name(), "LOGIN", null, accountEntity.getId(), details != null ? details.getRemoteAddress() : "unknown");
 			systemLogService.writeLog(systemLog);
 		} else {

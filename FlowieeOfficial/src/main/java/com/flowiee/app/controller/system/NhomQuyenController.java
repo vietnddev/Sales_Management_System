@@ -36,7 +36,7 @@ public class NhomQuyenController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.ACCOUNT_ID));
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(accountService.findCurrentAccountId()));
         if (validateModuleSystem.updatePermission()) {
             modelAndView.addObject("action_update", "enable");
         }

@@ -1,11 +1,11 @@
 package com.flowiee.app.controller.product;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.service.product.ProductService;
 import com.flowiee.app.service.storage.FileStorageService;
+import com.flowiee.app.service.system.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,18 +19,19 @@ public class GalleryController extends BaseController {
     private FileStorageService fileStorageService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private AccountService accountService;
 
     @GetMapping("")
     public ModelAndView getAllFiles() {
-        String username = FlowieeUtil.ACCOUNT_USERNAME;
-        if (username != null && !username.isEmpty()){
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_THUVIEN);
-            // Lấy tất cả ảnh cho page thư viện
-            modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
-            // Lấy danh sách tên sản phẩm
-            modelAndView.addObject("listSanPham", productService.findAll());            
-            return baseView(modelAndView);
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.PAGE_LOGIN);
         }
-        return new ModelAndView(PagesUtil.PAGE_LOGIN);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_THUVIEN);
+        // Lấy tất cả ảnh cho page thư viện
+        modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
+        // Lấy danh sách tên sản phẩm
+        modelAndView.addObject("listSanPham", productService.findAll());
+        return baseView(modelAndView);
     }
 }

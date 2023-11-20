@@ -7,6 +7,7 @@ import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.product.CustomerRepository;
 import com.flowiee.app.service.product.CustomerService;
+import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 
 import org.slf4j.Logger;
@@ -25,6 +26,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
     @Autowired
     private SystemLogService systemLogService;
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public List<Customer> findAll() {
@@ -41,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer == null) {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
-        customer.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+        customer.setCreatedBy(accountService.findCurrentAccountId());
         customerRepository.save(customer);
         systemLogService.writeLog(module, KhachHangAction.CREATE_KHACHHANG.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Thêm mới khách hàng " + customer.toString());

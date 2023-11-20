@@ -61,7 +61,7 @@ public class TicketImportGoodsController extends BaseController {
         }
         if (validateModuleStorage.goodsImport()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DRAFT_IMPORT);
-            TicketImportGoods ticketImportGoodsPresent = goodsImportService.findDraftImportPresent(FlowieeUtil.ACCOUNT_ID);
+            TicketImportGoods ticketImportGoodsPresent = goodsImportService.findDraftImportPresent(accountService.findCurrentAccountId());
             if (ticketImportGoodsPresent == null) {
                 ticketImportGoodsPresent = goodsImportService.createDraftImport();
             }

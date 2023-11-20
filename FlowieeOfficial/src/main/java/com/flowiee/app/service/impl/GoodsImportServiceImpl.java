@@ -10,6 +10,7 @@ import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.repository.product.GoodsImportRepository;
 import com.flowiee.app.service.product.GoodsImportService;
 
+import com.flowiee.app.service.system.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ import java.util.List;
 public class GoodsImportServiceImpl implements GoodsImportService {
     @Autowired
     private GoodsImportRepository goodsImportRepository;
+    @Autowired
+    private AccountService accountService;
     @Autowired
     private EntityManager entityManager;
 
@@ -225,7 +228,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         TicketImportGoods ticketImportGoods = new TicketImportGoods();
         ticketImportGoods.setTitle("Title");
         ticketImportGoods.setStatus(STATUS_DRAFT);
-        ticketImportGoods.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
+        ticketImportGoods.setCreatedBy(accountService.findCurrentAccountId());
         ticketImportGoods.setOrderTime(new Date());
         ticketImportGoods.setReceivedTime(new Date());
         ticketImportGoods = goodsImportRepository.save(ticketImportGoods);

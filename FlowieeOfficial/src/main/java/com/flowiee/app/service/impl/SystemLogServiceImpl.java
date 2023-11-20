@@ -4,6 +4,7 @@ import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.repository.system.SystemLogRepository;
+import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.util.List;
 public class SystemLogServiceImpl implements SystemLogService {
     @Autowired
     private SystemLogRepository logRepository;
+    @Autowired
+    private AccountService accountService;
     @Autowired
     private EntityManager entityManager;
 
@@ -48,29 +51,25 @@ public class SystemLogServiceImpl implements SystemLogService {
 
     @Override
     public SystemLog writeLog(String module, String action, String noiDung) {
-        Account account = FlowieeUtil.ACCOUNT;
-
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(null);
-        systemLog.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
-        systemLog.setIp(FlowieeUtil.ACCOUNT_IP);
+        systemLog.setCreatedBy(accountService.findCurrentAccountId());
+        systemLog.setIp(accountService.findCurrentAccountIp());
         return logRepository.save(systemLog);
     }
 
     @Override
     public SystemLog writeLog(String module, String action, String noiDung, String noiDungCapNhat) {
-        Account account = FlowieeUtil.ACCOUNT;
-
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(noiDungCapNhat);
-        systemLog.setCreatedBy(FlowieeUtil.ACCOUNT_ID);
-        systemLog.setIp(FlowieeUtil.ACCOUNT_IP);
+        systemLog.setCreatedBy(accountService.findCurrentAccountId());
+        systemLog.setIp(accountService.findCurrentAccountIp());
         return logRepository.save(systemLog);
     }
 }
