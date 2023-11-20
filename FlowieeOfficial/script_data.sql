@@ -79,3 +79,5 @@ INSERT INTO pro_customer(TEN_KHACH_HANG, GIOI_TINH) VALUES ('Bùi Văn Tấn Đ�
 INSERT INTO pro_customer(TEN_KHACH_HANG, GIOI_TINH) VALUES ('Nguyễn Thành Nam', true);
 INSERT INTO pro_customer(TEN_KHACH_HANG, GIOI_TINH) VALUES ('Nguyễn Hoàng Duy', true);
 INSERT INTO pro_customer(TEN_KHACH_HANG, GIOI_TINH) VALUES ('Nguyễn Chí Hải', true);
+
+INSERT INTO pro_don_hang(MA_DON_HANG, THOI_GIAN_DAT_HANG, KHACH_HANG_ID, KENH_BAN_HANG, NHAN_VIEN_BAN_HANG, TRANG_THAI_DON_HANG) VALUES('000', current_timestamp, (SELECT ID FROM pro_customer WHERE TEN_KHACH_HANG = 'Nguyễn Đức Việt' LIMIT 1), (SELECT ID FROM category WHERE TYPE = 'SALESCHANNEL' LIMIT 1), (SELECT ID FROM sys_account WHERE USERNAME = 'admin'), (SELECT ID FROM category WHERE TYPE = 'ORDERSTATUS' LIMIT 1));
