@@ -51,6 +51,9 @@ public class Product extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductHistory> listProductHistory;
+
     @Transient
     private FileStorage imageActive;
 

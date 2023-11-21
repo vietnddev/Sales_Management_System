@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "pro_san_pham_thuoc_tinh")
@@ -33,6 +34,9 @@ public class ProductAttribute extends BaseEntity implements Serializable {
 
     @Column(name = "trang_thai", nullable = false)
     private boolean trangThai;
+
+    @OneToMany(mappedBy = "productAttribute", fetch = FetchType.LAZY)
+    private List<ProductHistory> listProductHistory;
 
     @Override
     public String toString() {

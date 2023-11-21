@@ -83,6 +83,9 @@ public class ProductVariant extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
     private List<Items> listItems;
 
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    private List<ProductHistory> listProductHistory;
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("ProductVariant {");
