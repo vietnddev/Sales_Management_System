@@ -14,7 +14,7 @@ public class ErrorController {
     @GetMapping("/403")
     public ModelAndView forbiddenException() {
         ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), NotificationUtil.ERROR_FORBIDDEN);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
     }
@@ -22,7 +22,7 @@ public class ErrorController {
     @GetMapping("/404")
     public ModelAndView notfoundException() {
         ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), NotificationUtil.ERROR_NOTFOUND);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
     }

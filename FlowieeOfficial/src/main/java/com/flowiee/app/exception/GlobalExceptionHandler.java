@@ -11,7 +11,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ModelAndView exceptionHandler(NotFoundException ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
     }
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ModelAndView exceptionHandler(BadRequestException ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
     }
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ModelAndView exceptionHandler(DataExistsException ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
     }
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ModelAndView exceptionHandler(ForbiddenException ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
     }
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ModelAndView exceptionHandler(Exception ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_ERROR);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
     }

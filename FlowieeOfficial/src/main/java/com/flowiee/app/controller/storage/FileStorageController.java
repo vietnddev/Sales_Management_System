@@ -30,7 +30,7 @@ public class FileStorageController extends BaseController {
     public String uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                        @PathVariable("id") Integer productId) throws Exception {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (productId <= 0 || productService.findById(productId) == null) {
             throw new NotFoundException("Product not found!");
@@ -46,7 +46,7 @@ public class FileStorageController extends BaseController {
     public String uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                               @PathVariable("id") Integer productVariantId) throws Exception {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
@@ -63,7 +63,7 @@ public class FileStorageController extends BaseController {
                              @PathVariable("id") Integer fileId,
                              HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (fileId <= 0 || fileService.findById(fileId) == null) {
             throw new NotFoundException("Image not found");
@@ -78,7 +78,7 @@ public class FileStorageController extends BaseController {
     @PostMapping("/file/delete/{id}")
     public String delete(HttpServletRequest request, @PathVariable("id") Integer fileId) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (fileId <= 0 || fileService.findById(fileId) == null) {
             throw new NotFoundException("Image not found!");

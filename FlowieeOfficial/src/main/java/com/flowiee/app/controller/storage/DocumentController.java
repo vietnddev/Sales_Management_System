@@ -53,10 +53,10 @@ public class DocumentController extends BaseController {
     @GetMapping("/dashboard")
     public ModelAndView showDashboardOfSTG() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (validateModuleStorage.dashboard()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DASHBOARD);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
             //Loại tài liệu
             List<Category> listLoaiTaiLieu = categoryService.findSubCategory(CategoryUtil.DOCUMENTTYPE);
             List<String> listTenOfDocType = new ArrayList<>();
@@ -69,7 +69,7 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("reportOfDocType_listSoLuong", listSoLuongOfDocType);            
             return baseView(modelAndView);
         } else {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
     }
 
@@ -77,10 +77,10 @@ public class DocumentController extends BaseController {
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (validateModuleStorage.read()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
             for (int i = 0; i < listRootDocument.size(); i++) {
                 listRootDocument.get(i).setCreatedAt(FlowieeUtil.formatDate(listRootDocument.get(i).getCreatedAt(),"dd/MM/yyyy"));
@@ -110,14 +110,14 @@ public class DocumentController extends BaseController {
             }
             return baseView(modelAndView);
         } else {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
     }
 
     @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         String aliasName = FileUtil.getAliasNameFromAliasPath(aliasPath);
         int documentId = FileUtil.getIdFromAliasPath(aliasPath);
@@ -127,10 +127,10 @@ public class DocumentController extends BaseController {
         }
         //Kiểm tra quyền xem document
         if (!validateModuleStorage.read() || !docShareService.isShared(documentId)) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (document.getLoai().equals(DocumentType.FILE.name())) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT_DETAIL);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT_DETAIL);
             modelAndView.addObject("docDetail", document);
             modelAndView.addObject("document", new Document());
             //load metadata
@@ -152,7 +152,7 @@ public class DocumentController extends BaseController {
         }
 
         if (document.getLoai().equals(DocumentType.FOLDER.name())) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_DOCUMENT);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
             modelAndView.addObject("document", new Document());
             modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
             //select-option danh loại tài liệu
@@ -189,7 +189,7 @@ public class DocumentController extends BaseController {
                          @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         document.setAliasName(FileUtil.generateAliasName(document.getTen()));
         document.setCreatedBy(accountService.findCurrentAccountId());
@@ -220,7 +220,7 @@ public class DocumentController extends BaseController {
                              @PathVariable("id") Integer documentId,
                              HttpServletRequest request) throws IOException {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -233,7 +233,7 @@ public class DocumentController extends BaseController {
     public String update(@ModelAttribute("document") Document document,
                          @PathVariable("id") Integer documentId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -248,7 +248,7 @@ public class DocumentController extends BaseController {
                                  @RequestParam("docDataId") Integer[] docDataIds,
                                  @RequestParam("docDataValue") String[] docDataValues) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -260,7 +260,7 @@ public class DocumentController extends BaseController {
     @PostMapping("/document/delete/{id}")
     public String deleteDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -272,7 +272,7 @@ public class DocumentController extends BaseController {
     @PostMapping("/document/move/{id}")
     public String moveDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -283,7 +283,7 @@ public class DocumentController extends BaseController {
     @PostMapping("/document/share/{id}")
     public String share(@PathVariable("id") Integer documentId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -294,10 +294,10 @@ public class DocumentController extends BaseController {
     @PostMapping("/docfield/insert")
     public String insertDocfield(DocField docField, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleStorage.update()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         docField.setTrangThai(false);
         docFieldService.save(docField);
@@ -309,10 +309,10 @@ public class DocumentController extends BaseController {
                                  @ModelAttribute("docField") DocField docField,
                                  @PathVariable("id") Integer docFieldId) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleStorage.update()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (docFieldId <= 0 || documentService.findById(docFieldId) == null) {
             throw new NotFoundException("Docfield not found!");
@@ -324,10 +324,10 @@ public class DocumentController extends BaseController {
     @PostMapping("/docfield/delete/{id}")
     public String deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleStorage.delete()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (docFieldService.findById(docfiledId) == null){
             throw new NotFoundException("Docfield not found!");

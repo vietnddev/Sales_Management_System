@@ -29,9 +29,9 @@ public class SupplierController extends BaseController {
 	@GetMapping
 	public ModelAndView viewAllProducts() {
 		if (!accountService.isLogin()) {
-			return new ModelAndView(PagesUtil.PAGE_LOGIN);
+			return new ModelAndView(PagesUtil.SYS_LOGIN);
 		}
-		ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_SUPPLIER);
+		ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_SUPPLIER);
 		modelAndView.addObject("supplier", new Supplier());
 		modelAndView.addObject("listSuplier", supplierService.findAll());		
 		return baseView(modelAndView);
@@ -40,10 +40,10 @@ public class SupplierController extends BaseController {
 	@PostMapping("/insert")
 	public String insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
 		if (!accountService.isLogin()) {
-			return PagesUtil.PAGE_LOGIN;
+			return PagesUtil.SYS_LOGIN;
 		}
 		if (!validateModuleProduct.insertSupplier()) {
-			return PagesUtil.PAGE_UNAUTHORIZED;
+			return PagesUtil.SYS_UNAUTHORIZED;
 		}
 		if (supplier == null) {
 			throw new NotFoundException("Customer not found!");

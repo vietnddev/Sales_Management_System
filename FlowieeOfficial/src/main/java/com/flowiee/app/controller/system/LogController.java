@@ -28,12 +28,12 @@ public class LogController extends BaseController {
     @GetMapping(value = "")
     public ModelAndView getAllLog() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleSystem.readLog()) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_NHATKY);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_LOG);
         modelAndView.addObject("listLog", systemLogService.getAll());        
         return baseView(modelAndView);
     }

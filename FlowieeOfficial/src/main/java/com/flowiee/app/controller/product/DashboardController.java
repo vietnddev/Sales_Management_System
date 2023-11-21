@@ -36,10 +36,10 @@ public class DashboardController extends BaseController {
     @GetMapping
     public ModelAndView reportDoanhThu() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (validateModuleDashboard.readDashboard()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_DASHBOARD);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_DASHBOARD);
                         
             //Số lượng đơn hàng hôm nay
             List<Order> listOrderToDay = dashboardService.getSoLuongDonHangHomNay();
@@ -76,7 +76,7 @@ public class DashboardController extends BaseController {
 
             return baseView(modelAndView);
         } else {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
     }
 }

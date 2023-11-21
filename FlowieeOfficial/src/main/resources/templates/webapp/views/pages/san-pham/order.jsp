@@ -123,33 +123,35 @@
                         <div class="card-body align-items-center">
                             <table class="table table-bordered table-striped align-items-center">
                                 <thead class="align-self-center">
-                                <tr class="align-self-center">
-                                    <th>STT</th>
-                                    <th>Mã đơn hàng</th>
-                                    <th>Thời gian đặt hàng</th>
-                                    <th>Địa chỉ giao hàng</th>
-                                    <th>Khách hàng</th>
-                                    <th>Số tiền</th>
-                                    <th>Kênh bán hàng</th>
-                                    <th>Ghi chú</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
-                                </tr>
+                                    <tr class="align-self-center">
+                                        <th>STT</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Thời gian đặt hàng</th>
+                                        <th>Địa chỉ giao hàng</th>
+                                        <th>Khách hàng</th>
+                                        <th>SĐT nhận hàng</th>
+                                        <th>Số tiền</th>
+                                        <th>Kênh bán hàng</th>
+                                        <th>Ghi chú</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="list, index : ${listDonHang}">
+                                <tr th:each="list, index : ${listOrder}">
                                     <td th:text="${index.index + 1}"></td>
                                     <td>
                                         <a th:href="@{/don-hang/{id}(id=${list.id})}"
                                            th:text="${list.maDonHang}"></a>
                                     </td>
                                     <td th:text="${list.thoiGianDatHang}"></td>
-                                    <td th:text="${list.khachHang.diaChi}"></td>
-                                    <td th:text="${list.khachHang.tenKhachHang}"></td>
+                                    <td th:text="${list.receiverAddress}"></td>
+                                    <td th:text="${list.customer.tenKhachHang}"></td>
+                                    <td th:text="${list.receiverPhone}"></td>
                                     <td th:text="${list.tongTienDonHang}"></td>
                                     <td th:text="${list.kenhBanHang.name}"></td>
                                     <td th:text="${list.ghiChu}"></td>
-                                    <td th:text="${list.trangThaiDonHang.ten}"></td>
+                                    <td th:text="${list.trangThaiDonHang.name}"></td>
                                     <td>
                                         <button class="btn btn-outline-info btn-sm">
                                             <a th:href="@{/don-hang/{id}(id=${list.id})}">

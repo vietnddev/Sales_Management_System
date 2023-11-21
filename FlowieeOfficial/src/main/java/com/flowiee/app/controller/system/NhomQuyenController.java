@@ -29,12 +29,12 @@ public class NhomQuyenController extends BaseController {
     @GetMapping
     public ModelAndView readRole() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleSystem.readPermission()) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_ROLE);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
         modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(accountService.findCurrentAccountId()));
         if (validateModuleSystem.updatePermission()) {

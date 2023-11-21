@@ -37,10 +37,10 @@ public class MaterialController extends BaseController {
     @GetMapping("")
     public ModelAndView loadPage() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (validateModuleStorage.material()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_STORAGE_MATERIAL);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
             modelAndView.addObject("material", new Material());
             modelAndView.addObject("listMaterial", materialService.findAll());
             modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
@@ -50,14 +50,14 @@ public class MaterialController extends BaseController {
             modelAndView.addObject("url_export", EndPointUtil.STORAGE_MATERIAL_EXPORT);
             return baseView(modelAndView);
         } else {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
     }
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("material") Material material) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         material.setStatus(true);
         materialService.save(material);
@@ -68,7 +68,7 @@ public class MaterialController extends BaseController {
     public String update(@ModelAttribute("material") Material material,
                          @PathVariable("id") Integer materialId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");
@@ -80,7 +80,7 @@ public class MaterialController extends BaseController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");
@@ -97,7 +97,7 @@ public class MaterialController extends BaseController {
     @PostMapping("/import")
     public String importData(@RequestParam("file") MultipartFile file) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
 //            donViTinhService.importData(file);
@@ -111,7 +111,7 @@ public class MaterialController extends BaseController {
     @GetMapping("/export")
     public ResponseEntity<?> exportData() {
         if (!accountService.isLogin()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_LOGIN);
         }
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
 //            byte[] dataExport = donViTinhService.exportData();

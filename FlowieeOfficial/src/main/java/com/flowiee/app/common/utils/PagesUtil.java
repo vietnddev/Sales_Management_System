@@ -1,54 +1,38 @@
 package com.flowiee.app.common.utils;
 
 public class PagesUtil {
-    public static final String PAGE_LOGIN = "/login";
+    public static final String CTG_CATEGORY = "/pages/he-thong/category";
 
-    public static final String PAGE_DASHBOARD = "/pages/dashboard/dashboard";
+    public static final String SYS_LOGIN = "/login";
+    public static final String SYS_ACCOUNT = "/pages/he-thong/account";
+    public static final String SYS_ACCOUNT_DETAIL = "/pages/he-thong/account-detail";
+    public static final String SYS_LOG = "/pages/he-thong/log";
+    public static final String SYS_ROLE = "/pages/he-thong/role";
+    public static final String SYS_CONFIG = "/pages/he-thong/config";
+    public static final String SYS_NOTIFICATION = "/pages/he-thong/notification";
+    public static final String SYS_PROFILE = "pages/he-thong/profile";
+    public static final String SYS_UNAUTHORIZED= "/pages/exception/unauthorized";
+    public static final String SYS_ERROR = "/pages/exception/error";
 
-    public static final String PAGE_HETHONG_TAIKHOAN_LIST = "/pages/he-thong/account";
-    public static final String PAGE_HETHONG_TAIKHOAN_DETAIL = "/pages/he-thong/account-detail";
-    public static final String PAGE_HETHONG_NHATKY = "/pages/he-thong/log";
-    public static final String PAGE_HETHONG_ROLE = "/pages/he-thong/role";
-    public static final String PAGE_HETHONG_CONFIG = "/pages/he-thong/config";
-    public static final String PAGE_HETHONG_NOTIFICATION = "/pages/he-thong/notification";
-    public static final String PAGE_HETHONG_CATEGORY = "/pages/he-thong/category";
-
-    public static final String PAGE_THUVIEN = "/pages/san-pham/thu-vien-hinh-anh";
-    public static final String PAGE_SANPHAM = "/pages/san-pham/san-pham";
-    public static final String PAGE_SANPHAM_TONG_QUAN = "/pages/san-pham/tong-quan-san-pham";
-    public static final String PAGE_SANPHAM_BIENTHE = "/pages/san-pham/chi-tiet-san-pham";
-    public static final String PAGE_SANPHAM_VOUCHER = "/pages/san-pham/voucher";
-    public static final String PAGE_DONHANG = "/pages/san-pham/don-hang";
-    public static final String PAGE_DONHANG_CHITIET = "/pages/san-pham/don-hang-chi-tiet";
-    public static final String PAGE_DONHANG_BANHANG = "/pages/san-pham/ban-hang";
-    public static final String PAGE_KHACHHANG = "/pages/san-pham/khach-hang";
-    public static final String PAGE_KHACHHANG_CHITIET = "/pages/san-pham/khach-hang-chi-tiet";
-    public static final String PAGE_SANPHAM_SUPPLIER = "/pages/san-pham/supplier";
-
-    public static final String PAGE_PROFILE = "pages/he-thong/profile";
-
-    public static final String PAGE_DANHMUC_HETHONG = "/pages/danh-muc/danh-muc-he-thong";
-    public static final String PAGE_DANHMUC_LOAITAILIEU = "/pages/danh-muc/loai-tai-lieu";
-    public static final String PAGE_DANHMUC_LOAISANPHAM = "/pages/danh-muc/loai-san-pham";
-    public static final String PAGE_DANHMUC_DONVITINH = "/pages/danh-muc/don-vi-tinh";
-    public static final String PAGE_DANHMUC_HINHTHUC_THANHTOAN = "/pages/danh-muc/hinh-thuc-thanh-toan";
-    public static final String PAGE_DANHMUC_KENHBANHANG = "/pages/danh-muc/kenh-ban-hang";
-    public static final String PAGE_DANHMUC_TRANGTHAI_DONHANG = "/pages/danh-muc/trang-thai-don-hang";
-    public static final String PAGE_DANHMUC_MAUSAC = "/pages/danh-muc/loai-mau-sac";
-    public static final String PAGE_DANHMUC_KICHCO = "/pages/danh-muc/loai-kich-co";
-    public static final String PAGE_DANHMUC_FABRICTYPE = "/pages/danh-muc/fabric-type";
-
-    public static final String PAGE_STORAGE_DASHBOARD = "/pages/kho/dashboard";
-    public static final String PAGE_STORAGE_DOCUMENT = "/pages/kho/document";
-    public static final String PAGE_STORAGE_DOCUMENT_DETAIL = "/pages/kho/document-detail";
-    public static final String PAGE_STORAGE_DOCTYPE_DETAIL = "/pages/kho/doctype-detail";
-    public static final String PAGE_STORAGE_MATERIAL = "/pages/kho/material";
-    public static final String PAGE_STORAGE_DRAFT_IMPORT = "/pages/kho/nhap-hang";
-    public static final String PAGE_STORAGE_TICKET_EXPORT = "/pages/kho/xuat-hang";
+    public static final String PRO_DASHBOARD = "/pages/dashboard/dashboard";
+    public static final String PRO_GALLERY = "/pages/san-pham/gallery";
+    public static final String PRO_PRODUCT = "/pages/san-pham/product";
+    public static final String PRO_PRODUCT_INFO = "/pages/san-pham/product-info";
+    public static final String PRO_PRODUCT_VARIANT = "/pages/san-pham/product-variant";
+    public static final String PRO_VOUCHER = "/pages/san-pham/voucher";
+    public static final String PRO_ORDER = "/pages/san-pham/order";
+    public static final String PRO_ORDER_DETAIL = "/pages/san-pham/order-detail";
+    public static final String PRO_ORDER_SELL = "/pages/san-pham/sell";
+    public static final String PRO_CUSTOMER = "/pages/san-pham/customer";
+    public static final String PRO_CUSTOMER_DETAIL = "/pages/san-pham/customer-detail";
+    public static final String PRO_SUPPLIER = "/pages/san-pham/supplier";
 
 
-    public static final String PAGE_UNAUTHORIZED= "/pages/exception/unauthorized";
-    public static final String PAGE_ERROR = "/pages/exception/error";
-
-    public static final String PAGE_CONGVIEC_LICHLAMVIEC= "/pages/cong-viec/lich-lam-viec";
+    public static final String STG_DASHBOARD = "/pages/kho/dashboard";
+    public static final String STG_DOCUMENT = "/pages/kho/document";
+    public static final String STG_DOCUMENT_DETAIL = "/pages/kho/document-detail";
+    public static final String STG_DOCTYPE_DETAIL = "/pages/kho/doctype-detail";
+    public static final String STG_MATERIAL = "/pages/kho/material";
+    public static final String STG_TICKET_IMPORT = "/pages/kho/goods-import";
+    public static final String STG_TICKET_EXPORT = "/pages/kho/goods-export";
 }

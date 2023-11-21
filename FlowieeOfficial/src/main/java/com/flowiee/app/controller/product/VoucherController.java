@@ -37,7 +37,7 @@ public class VoucherController extends BaseController {
     @GetMapping
     public ModelAndView showVoucherPage() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (validateModuleProduct.readVoucher()) {
             Map<String, String> voucherType = new HashMap<>();
@@ -45,7 +45,7 @@ public class VoucherController extends BaseController {
             voucherType.put("NUMBER", "Chỉ số");
             voucherType.put("TEXT", "Chỉ chữ");
 
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_SANPHAM_VOUCHER);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
             modelAndView.addObject("listVoucher", voucherService.findAll());
             modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
             modelAndView.addObject("listVoucherType", voucherType);
@@ -53,7 +53,7 @@ public class VoucherController extends BaseController {
             modelAndView.addObject("voucherDetail", new VoucherDetail());            
             return baseView(modelAndView);
         } else {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
     }
 
@@ -61,10 +61,10 @@ public class VoucherController extends BaseController {
     public ModelAndView insertVoucher(@ModelAttribute("voucher") Voucher voucher,
                                       HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleProduct.insertVoucher()) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {

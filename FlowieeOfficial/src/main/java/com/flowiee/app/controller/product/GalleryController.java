@@ -25,9 +25,9 @@ public class GalleryController extends BaseController {
     @GetMapping("")
     public ModelAndView getAllFiles() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_THUVIEN);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
         // Lấy tất cả ảnh cho page thư viện
         modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
         // Lấy danh sách tên sản phẩm

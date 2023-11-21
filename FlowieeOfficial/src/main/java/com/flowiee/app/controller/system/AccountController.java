@@ -36,12 +36,12 @@ public class AccountController extends BaseController {
     @GetMapping(value = "")
     public ModelAndView findAllAccount() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleSystem.readAccount()) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_LIST);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ACCOUNT);
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
         List<Role> newRole = new ArrayList<>();
@@ -52,15 +52,15 @@ public class AccountController extends BaseController {
     @GetMapping(value = "/{id}")
     public ModelAndView findDetailAccountById(@PathVariable("id") Integer accountId) {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleSystem.readAccount()) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_TAIKHOAN_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ACCOUNT_DETAIL);
         List<FlowieeRole> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
         modelAndView.addObject("listRole", roleOfAccount);
         modelAndView.addObject("accountInfo", accountService.findById(accountId));
@@ -70,10 +70,10 @@ public class AccountController extends BaseController {
     @PostMapping(value = "/insert")
     public String save(@ModelAttribute("account") Account account) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleSystem.insertAccount()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (accountService.findByUsername(account.getUsername()) != null) {
             throw new DataExistsException("Username exists!");
@@ -90,10 +90,10 @@ public class AccountController extends BaseController {
                          @PathVariable("id") Integer accountId,
                          HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleSystem.updateAccount()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
@@ -110,10 +110,10 @@ public class AccountController extends BaseController {
     @PostMapping(value = "/delete/{id}")
     public String deleteAccount(@PathVariable Integer accountId) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleSystem.deleteAccount()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (accountId <= 0 ||accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
@@ -127,10 +127,10 @@ public class AccountController extends BaseController {
     @PostMapping("/update-permission/{id}")
     public String updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleSystem.updateAccount()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");

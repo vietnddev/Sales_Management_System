@@ -35,9 +35,9 @@ public class HomeController {
     @GetMapping(value = "/change-password")
     public String showPageChangePassword() {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
-        return PagesUtil.PAGE_UNAUTHORIZED;
+        return PagesUtil.SYS_UNAUTHORIZED;
     }
     @GetMapping(value = "/change-password", params = "submit")
     public void submitChangePassword(){

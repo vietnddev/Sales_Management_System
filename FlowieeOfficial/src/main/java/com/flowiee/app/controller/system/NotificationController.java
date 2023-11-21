@@ -21,9 +21,9 @@ public class NotificationController extends BaseController {
     @GetMapping
     public ModelAndView getAllNotification() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_NOTIFICATION);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_NOTIFICATION);
         modelAndView.addObject("notification", new Notification());        
         return baseView(modelAndView);        
     }

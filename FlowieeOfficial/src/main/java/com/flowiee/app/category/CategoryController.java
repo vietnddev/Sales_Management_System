@@ -35,31 +35,31 @@ public class CategoryController extends BaseController {
     @GetMapping("")
     public ModelAndView viewRootCategory() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (validateModuleCategory.readCategory()) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", categoryService.findRootCategory());            
             return baseView(modelAndView);
         } else {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
     }
 
     @GetMapping("/{type}")
     public ModelAndView viewSubCategory(@PathVariable("type") String categoryType) {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleCategory.readCategory()) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         List<Category> listCategory = categoryService.findSubCategory(CategoryUtil.getCategoryType(categoryType));
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CATEGORY);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listCategory", listCategory);
         modelAndView.addObject("categoryType", categoryType);
@@ -75,10 +75,10 @@ public class CategoryController extends BaseController {
     					 @PathVariable("type") String categoryType,
     					 HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleCategory.insertCategory()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
@@ -93,10 +93,10 @@ public class CategoryController extends BaseController {
                          @PathVariable("id") Integer categoryId, 
                          HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleCategory.updateCategory()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
             throw new NotFoundException("Category not found!");
@@ -108,7 +108,7 @@ public class CategoryController extends BaseController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
             throw new NotFoundException("Category not found!");
@@ -120,10 +120,10 @@ public class CategoryController extends BaseController {
     @GetMapping("/{type}/template")
     public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
         if (!accountService.isLogin()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleCategory.importCategory()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
@@ -138,10 +138,10 @@ public class CategoryController extends BaseController {
     @PostMapping("/{type}/import")
     public String importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleCategory.importCategory()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (CategoryUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
@@ -153,10 +153,10 @@ public class CategoryController extends BaseController {
     @GetMapping("/{type}/export")
     public ResponseEntity<?> exportData(@PathVariable("type") String categoryType) {
         if (!accountService.isLogin()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_LOGIN);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleCategory.readCategory()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.PAGE_UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
         byte[] dataExport = categoryService.exportData(categoryType);
         HttpHeaders header = new HttpHeaders();

@@ -26,12 +26,12 @@ public class SystemConfigController extends BaseController {
     @GetMapping
     public ModelAndView showConfig() {
         if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.PAGE_LOGIN);
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
         if (!validateModuleSystem.setupConfig()) {
-            return new ModelAndView(PagesUtil.PAGE_UNAUTHORIZED);
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PAGE_HETHONG_CONFIG);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_CONFIG);
         modelAndView.addObject("config", new FlowieeConfig());
         modelAndView.addObject("listConfig", flowieeConfigService.findAll());        
         return baseView(modelAndView);
@@ -41,10 +41,10 @@ public class SystemConfigController extends BaseController {
     public String update(@ModelAttribute("config") FlowieeConfig config,
                          @PathVariable("id") Integer configId) {
         if (!accountService.isLogin()) {
-            return PagesUtil.PAGE_LOGIN;
+            return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleSystem.setupConfig()) {
-            return PagesUtil.PAGE_UNAUTHORIZED;
+            return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (configId <= 0 || flowieeConfigService.findById(configId) == null) {
             throw new NotFoundException("Config not found!");

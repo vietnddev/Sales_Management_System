@@ -27,7 +27,7 @@ public class EndPointUtil {
     public static String PRODUCT_CUSTOMER_TEMPLATE = "/khach-hang/template";
     public static String PRODUCT_CUSTOMER_IMPORT = "/khach-hang/import";
     public static String PRODUCT_CUSTOMER_EXPORT = "/khach-hang/export";
-    public static String PRODUCT_CUSTOMER_VIEW = "/khach-hang";
+    public static String PRODUCT_CUSTOMER_VIEW = "/customer";
     public static String PRODUCT_CUSTOMER_INSERT = "/khach-hang/create";
     public static String PRODUCT_SUPPLIER_VIEW = "/supplier";
 
