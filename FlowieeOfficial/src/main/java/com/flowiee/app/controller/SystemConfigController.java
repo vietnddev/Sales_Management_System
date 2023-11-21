@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.system;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.config.author.ValidateModuleSystem;
 import com.flowiee.app.entity.FlowieeConfig;

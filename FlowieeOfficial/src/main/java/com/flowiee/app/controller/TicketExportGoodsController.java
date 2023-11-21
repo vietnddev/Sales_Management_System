@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.storage;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;

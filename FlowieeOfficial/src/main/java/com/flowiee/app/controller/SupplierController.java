@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.product;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;

@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.system;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.entity.Account;

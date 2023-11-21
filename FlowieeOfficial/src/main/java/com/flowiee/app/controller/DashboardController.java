@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.product;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.config.author.ValidateModuleDashboard;

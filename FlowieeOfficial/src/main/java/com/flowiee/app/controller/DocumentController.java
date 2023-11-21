@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.storage;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.category.Category;
 import com.flowiee.app.category.CategoryService;
