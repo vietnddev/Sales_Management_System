@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Items;
-import com.flowiee.app.repository.product.ItemsRepository;
+import com.flowiee.app.repository.ItemsRepository;
 import com.flowiee.app.service.product.ItemsService;
 
 import org.springframework.beans.factory.annotation.Autowired;

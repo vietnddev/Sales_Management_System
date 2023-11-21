@@ -5,7 +5,7 @@ import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductAttribute;
 import com.flowiee.app.entity.ProductVariant;
-import com.flowiee.app.repository.product.ProductAttributeRepository;
+import com.flowiee.app.repository.ProductAttributeRepository;
 import com.flowiee.app.service.product.ProductAttributeService;
 import com.flowiee.app.service.system.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;

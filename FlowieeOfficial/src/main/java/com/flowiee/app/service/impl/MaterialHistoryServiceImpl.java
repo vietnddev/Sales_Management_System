@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.MaterialHistory;
-import com.flowiee.app.repository.product.MaterialHistoryRepository;
+import com.flowiee.app.repository.MaterialHistoryRepository;
 import com.flowiee.app.service.product.MaterialHistoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;

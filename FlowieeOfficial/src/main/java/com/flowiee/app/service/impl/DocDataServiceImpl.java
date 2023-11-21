@@ -1,8 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.entity.DocData;
-import com.flowiee.app.repository.storage.DocDataRepository;
+import com.flowiee.app.repository.DocDataRepository;
 import com.flowiee.app.service.storage.DocDataService;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,13 +1,12 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.Document;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductVariant;
-import com.flowiee.app.repository.storage.FileStorageRepository;
+import com.flowiee.app.repository.FileStorageRepository;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.service.product.ProductService;
 import com.flowiee.app.service.product.ProductVariantService;

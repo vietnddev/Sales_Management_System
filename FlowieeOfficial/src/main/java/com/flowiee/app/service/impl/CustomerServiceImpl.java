@@ -1,11 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.common.action.KhachHangAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Customer;
-import com.flowiee.app.repository.product.CustomerRepository;
+import com.flowiee.app.repository.CustomerRepository;
 import com.flowiee.app.service.product.CustomerService;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;

@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Notification;
-import com.flowiee.app.repository.system.NotificationRepository;
+import com.flowiee.app.repository.NotificationRepository;
 import com.flowiee.app.service.system.NotificationService;
 
 import org.slf4j.Logger;

@@ -1,14 +1,11 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.exception.DataExistsException;
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.model.product.ProductVariantResponse;
-import com.flowiee.app.repository.product.ProductVariantRepository;
+import com.flowiee.app.repository.ProductVariantRepository;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.system.SystemLogService;

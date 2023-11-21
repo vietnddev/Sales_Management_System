@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.CustomerContact;
-import com.flowiee.app.repository.product.CustomerContactRepository;
+import com.flowiee.app.repository.CustomerContactRepository;
 import com.flowiee.app.service.product.CustomerContactService;
 
 import org.springframework.beans.factory.annotation.Autowired;

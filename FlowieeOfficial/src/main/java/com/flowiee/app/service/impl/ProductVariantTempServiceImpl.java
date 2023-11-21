@@ -1,12 +1,10 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.action.SanPhamAction;
-import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariantTemp;
-import com.flowiee.app.repository.product.ProductVariantTempRepository;
+import com.flowiee.app.repository.ProductVariantTempRepository;
 import com.flowiee.app.service.product.ProductVariantTempService;
 import com.flowiee.app.service.system.SystemLogService;
 

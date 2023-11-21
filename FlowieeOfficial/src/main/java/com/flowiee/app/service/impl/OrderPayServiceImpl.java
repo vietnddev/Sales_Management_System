@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.OrderPay;
-import com.flowiee.app.repository.product.OrderPayRepository;
+import com.flowiee.app.repository.OrderPayRepository;
 import com.flowiee.app.service.product.OrderPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

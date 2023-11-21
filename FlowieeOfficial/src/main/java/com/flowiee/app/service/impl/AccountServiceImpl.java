@@ -5,7 +5,7 @@ import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.model.system.Role;
-import com.flowiee.app.repository.system.AccountRepository;
+import com.flowiee.app.repository.AccountRepository;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.RoleService;
 import com.flowiee.app.service.system.SystemLogService;

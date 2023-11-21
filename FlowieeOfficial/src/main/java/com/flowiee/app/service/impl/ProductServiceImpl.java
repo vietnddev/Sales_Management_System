@@ -5,7 +5,7 @@ import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.repository.product.ProductRepository;
+import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.service.product.ProductService;
 import com.flowiee.app.service.storage.FileStorageService;
 import com.flowiee.app.service.system.AccountService;

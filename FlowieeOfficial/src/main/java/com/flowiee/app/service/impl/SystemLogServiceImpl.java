@@ -1,9 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
-import com.flowiee.app.repository.system.SystemLogRepository;
+import com.flowiee.app.repository.SystemLogRepository;
 import com.flowiee.app.service.system.AccountService;
 import com.flowiee.app.service.system.SystemLogService;
 

@@ -1,11 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Price;
-import com.flowiee.app.repository.product.PriceRepository;
+import com.flowiee.app.repository.PriceRepository;
 import com.flowiee.app.service.product.PriceService;
 import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.system.SystemLogService;

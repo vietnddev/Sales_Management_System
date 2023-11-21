@@ -6,7 +6,7 @@ import com.flowiee.app.entity.Voucher;
 import com.flowiee.app.entity.VoucherDetail;
 import com.flowiee.app.entity.VoucherSanPham;
 import com.flowiee.app.model.product.VoucherResponse;
-import com.flowiee.app.repository.product.VoucherRepository;
+import com.flowiee.app.repository.VoucherRepository;
 import com.flowiee.app.service.product.ProductVariantService;
 import com.flowiee.app.service.product.VoucherDetailService;
 import com.flowiee.app.service.product.VoucherSanPhamService;
