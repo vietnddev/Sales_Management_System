@@ -39,8 +39,8 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public Price findById(int id) {
-        return priceRepository.findById(id).orElse(null);
+    public Price findById(Integer priceId) {
+        return priceRepository.findById(priceId).orElse(null);
     }
 
     @Override
@@ -65,10 +65,15 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public String update(Price price, int bienTheSanPhamId, int giaSanPhamId) {
+    public String update(Price entity, Integer entityId) {
+        return null;
+    }
+
+    @Override
+    public String update(Price price, int bienTheSanPhamId, int priceId) {
         try {
             //Chuyển trạng thái giá hiện tại về false
-            Price disableGiaCu = this.findById(giaSanPhamId);
+            Price disableGiaCu = this.findById(priceId);
             disableGiaCu.setTrangThai(false);
             priceRepository.save(disableGiaCu);
             //Thêm giá mới
@@ -87,10 +92,11 @@ public class PriceServiceImpl implements PriceService {
             return TagName.SERVICE_RESPONSE_FAIL;
         }
     }
+
     @Override
-    public String delete(int id) {
-        Price price = this.findById(id);
-        priceRepository.deleteById(id);
+    public String delete(Integer priceId) {
+        Price price = this.findById(priceId);
+        priceRepository.deleteById(priceId);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Xóa giá sản phẩm: " + price.toString());
         logger.info(PriceServiceImpl.class.getName() + ": Xóa giá sản phẩm " + price.toString());
         return TagName.SERVICE_RESPONSE_SUCCESS;

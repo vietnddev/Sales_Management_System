@@ -53,7 +53,7 @@ public class BaseEntity {
         }
         if (createdBy == null) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            createdBy = Integer.parseInt(authentication.getName().substring(authentication.getName().indexOf("_"), authentication.getName().length() - 1));
+            createdBy = Integer.parseInt(authentication.getName().substring(authentication.getName().indexOf("_") + 1));
         }
     }
 }

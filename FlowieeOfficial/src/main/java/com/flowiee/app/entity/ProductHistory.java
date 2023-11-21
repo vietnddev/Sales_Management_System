@@ -44,9 +44,11 @@ public class ProductHistory extends BaseEntity implements Serializable {
     @Column(name = "field_name", nullable = false)
     private String fieldName;
 
-    @Column(name = "old_value", nullable = false, length = 9999)
+    @Lob
+    @Column(name = "old_value", nullable = false, length = 9999, columnDefinition = "TEXT")
     private String oldValue;
 
-    @Column(name = "new_value", nullable = false, length = 9999)
+    @Lob
+    @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "TEXT")
     private String newValue;
 }
