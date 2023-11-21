@@ -67,6 +67,9 @@ public class Order extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderDetail> listOrderDetail;
 
+	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+	private List<OrderHistory> listOrderHistory;
+
 	@Override
 	public String toString() {
 		return "DonHang{" +

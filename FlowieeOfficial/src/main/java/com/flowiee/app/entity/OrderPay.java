@@ -8,6 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "pro_don_hang_thanh_toan")
@@ -41,6 +42,9 @@ public class OrderPay extends BaseEntity implements Serializable {
 
     @Column(name = "trang_thai_thanh_toan", nullable = false)
     private boolean trangThaiThanhToan;
+
+    @OneToMany(mappedBy = "orderPay", fetch = FetchType.LAZY)
+    private List<OrderHistory> listOrderHistory;
 
     @Override
     public String toString() {

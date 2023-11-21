@@ -5,6 +5,7 @@ import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @Entity
@@ -38,6 +39,9 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 
 	@Column(name = "trang_thai", nullable = false)
 	private boolean trangThai;
+
+	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY)
+	private List<OrderHistory> listOrderHistory;
 
 	@Override
 	public String toString() {
