@@ -47,8 +47,23 @@ public class FileStorageServiceImpl implements FileStorageService {
     private FileStorageService fileService;
 
     @Override
-    public FileStorage findById(int fileId) {
+    public List<FileStorage> findAll() {
+        return null;
+    }
+
+    @Override
+    public FileStorage findById(Integer fileId) {
         return fileRepository.findById(fileId).orElse(null);
+    }
+
+    @Override
+    public String save(FileStorage entity) {
+        return null;
+    }
+
+    @Override
+    public String update(FileStorage entity, Integer entityId) {
+        return null;
     }
 
     @Override
@@ -272,9 +287,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public String delete(int id) {
-        FileStorage fileStorage = fileRepository.findById(id).orElse(null);
-        fileRepository.deleteById(id);
+    public String delete(Integer fileId) {
+        FileStorage fileStorage = fileRepository.findById(fileId).orElse(null);
+        fileRepository.deleteById(fileId);
         //Xóa file trên ổ cứng
         File file = new File(FileUtil.rootPath + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
         System.out.println("Path of file in dic" + file.getPath());

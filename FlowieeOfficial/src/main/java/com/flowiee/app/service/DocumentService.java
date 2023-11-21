@@ -1,11 +1,13 @@
 package com.flowiee.app.service;
 
+import com.flowiee.app.base.BaseService;
 import com.flowiee.app.entity.Document;
 import com.flowiee.app.model.storage.DocMetaResponse;
 
 import java.util.List;
 
-public interface DocumentService {
+public interface DocumentService extends BaseService<Document> {
+    Document saveReturnEntity(Document document);
 
     List<Document> findRootDocument();
 
@@ -21,15 +23,7 @@ public interface DocumentService {
 
     List<Document> findAllFolder();
 
-    Document findById(Integer id);
-
-    Document save(Document document);
-
-    String update(Document document, Integer documentId);
-
     String updateMetadata(Integer[] docDataIds, String[] docDataValues, Integer documentId);
-
-    String delete(Integer id);
 
     List<DocMetaResponse> getMetadata(Integer documentId);
 

@@ -1,5 +1,6 @@
 package com.flowiee.app.service;
 
+import com.flowiee.app.base.BaseService;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.flowiee.app.entity.FileStorage;
@@ -7,7 +8,7 @@ import com.flowiee.app.entity.FileStorage;
 import java.io.IOException;
 import java.util.List;
 
-public interface FileStorageService {
+public interface FileStorageService extends BaseService<FileStorage> {
 
     List<FileStorage> getAllImageSanPham(String module);
 
@@ -27,12 +28,7 @@ public interface FileStorageService {
 
     String changFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
 
-
-    String delete(int id);
-
     String changeImageSanPham(MultipartFile fileToChange, int fileId);
-
-    FileStorage findById(int fileId);
 
     FileStorage findFileIsActiveOfDocument(int documentId);
 

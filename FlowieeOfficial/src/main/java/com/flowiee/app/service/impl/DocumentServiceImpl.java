@@ -2,6 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.action.KhoTaiLieuAction;
 import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.Document;
 import com.flowiee.app.model.storage.DocMetaResponse;
@@ -74,12 +75,25 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public List<Document> findAll() {
+        return null;
+    }
+
+    @Override
     public Document findById(Integer id) {
         return documentRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Document save(Document document) {
+    public String save(Document document) {
+        systemLogService.writeLog(module, KhoTaiLieuAction.CREATE_DOCUMENT.name(), "Thêm mới tài liệu: " + document.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
+        documentRepository.save(document);
+        return TagName.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public Document saveReturnEntity(Document document) {
         systemLogService.writeLog(module, KhoTaiLieuAction.CREATE_DOCUMENT.name(), "Thêm mới tài liệu: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
         return documentRepository.save(document);
@@ -116,10 +130,10 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Transactional
     @Override
-    public String delete(Integer id) {
-        Document document = this.findById(id);
+    public String delete(Integer documentId) {
+        Document document = this.findById(documentId);
         if (document != null) {
-            documentRepository.deleteById(id);
+            documentRepository.deleteById(documentId);
             systemLogService.writeLog(module, KhoTaiLieuAction.DELETE_DOCUMENT.name(), "Xóa tài liệu: " + document.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Xóa tài liệu " + document.toString());
             return "OK";
