@@ -8,7 +8,10 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Builder
 @Entity
@@ -68,5 +71,36 @@ public class Product extends BaseEntity implements Serializable {
         builder.append("name=").append(tenSanPham);
         builder.append("}");
         return builder.toString();
+    }
+
+    public Map<String, String> compareTo(Product productToCompare) {
+        Map<String, String> map = new HashMap<>();
+        if (!this.productType.getName().equals(productToCompare.getProductType().getName())) {
+            map.put("Product type", this.productType.getName() + "#" + productToCompare.getProductType().getName());
+        }
+        if (!this.brand.getName().equals(productToCompare.getBrand().getName())) {
+            map.put("Brand name", this.brand.getName() + "#" + productToCompare.getBrand().getName());
+        }
+        if (!this.unit.getName().equals(productToCompare.getUnit().getName())) {
+            map.put("Unit name", this.unit.getName() + "#" + productToCompare.getUnit().getName());
+        }
+        if (!this.tenSanPham.equals(productToCompare.getTenSanPham())) {
+            map.put("Product name", this.tenSanPham + "#" + productToCompare.getTenSanPham());
+        }
+        if (!this.moTaSanPham.equals(productToCompare.getMoTaSanPham())) {
+            String descriptionOld = this.moTaSanPham.length() > 9999 ? this.moTaSanPham.substring(0, 9999) : this.moTaSanPham;
+            String descriptionNew = productToCompare.getMoTaSanPham().length() > 9999 ? productToCompare.getMoTaSanPham().substring(0, 9999) : productToCompare.getMoTaSanPham();
+            map.put("Product description", descriptionOld + "#" + descriptionNew);
+        }
+        if (!this.trangThai == productToCompare.isTrangThai()) {
+            map.put("Product status", this.trangThai + "#" + productToCompare.isTrangThai());
+        }
+        if ((this.imageActive != null && productToCompare.getImageActive() != null) && !this.imageActive.getId().equals(productToCompare.getImageActive().getId())) {
+            map.put("Image active", this.imageActive.getId() + "#" + productToCompare.getId());
+        }
+        if ((this.listBienThe != null && productToCompare.getListBienThe() != null) && this.listBienThe.size() < productToCompare.getListBienThe().size()) {
+            map.put("Insert new product variant", "#");
+        }
+        return map;
     }
 }

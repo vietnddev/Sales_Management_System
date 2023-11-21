@@ -5,11 +5,9 @@ import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.common.action.SanPhamAction;
 import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.repository.ProductRepository;
-import com.flowiee.app.service.ProductService;
-import com.flowiee.app.service.FileStorageService;
-import com.flowiee.app.service.AccountService;
-import com.flowiee.app.service.SystemLogService;
+import com.flowiee.app.service.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -28,6 +26,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -44,6 +43,8 @@ public class ProductServiceImpl implements ProductService {
     private AccountService accountService;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private ProductHistoryService productHistoryService;
 
     @Override
     public List<Product> findAll() {
@@ -90,12 +91,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public String update(Product product, Integer id) {
-        Product productBefore = this.findById(id);
+    public String update(Product productToUpdate, Integer productId) {
         try {
-            product.setId(id);
-            product.setLastUpdatedBy(accountService.findCurrentAccountUsername());
-            productsRepository.save(product);
+            Product productBefore = this.findById(productId);
+            productBefore.compareTo(productToUpdate).forEach((key, value) -> {
+                ProductHistory productHistory = new ProductHistory();
+                productHistory.setTitle("Update product");
+                productHistory.setProduct(new Product(productId));
+                productHistory.setFieldName(key);
+                productHistory.setOldValue(value.substring(0, value.indexOf("#")));
+                productHistory.setNewValue(value.substring(value.indexOf("#") + 1));
+                productHistoryService.save(productHistory);
+            });
+
+            productToUpdate.setId(productId);
+            productToUpdate.setLastUpdatedBy(accountService.findCurrentAccountUsername());
+            productsRepository.save(productToUpdate);
             String noiDungLog = "";
             String noiDungLogUpdate = "";
             if (productBefore.toString().length() > 1950) {
@@ -103,10 +114,10 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 noiDungLog = productBefore.toString();
             }
-            if (product.toString().length() > 1950) {
-                noiDungLogUpdate = product.toString().substring(0, 1950);
+            if (productToUpdate.toString().length() > 1950) {
+                noiDungLogUpdate = productToUpdate.toString().substring(0, 1950);
             } else {
-                noiDungLogUpdate = product.toString();
+                noiDungLogUpdate = productToUpdate.toString();
             }
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
             logger.info(ProductServiceImpl.class.getName() + ": Cập nhật sản phẩm " + productBefore.toString());
