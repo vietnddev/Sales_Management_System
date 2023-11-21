@@ -12,10 +12,7 @@ import com.flowiee.app.category.Category;
 import com.flowiee.app.common.action.DonHangAction;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.repository.product.OrderRepository;
-import com.flowiee.app.service.product.ItemsService;
-import com.flowiee.app.service.product.OrderDetailService;
-import com.flowiee.app.service.product.OrderService;
-import com.flowiee.app.service.product.ProductVariantService;
+import com.flowiee.app.service.product.*;
 import com.flowiee.app.service.system.SystemLogService;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -39,6 +36,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,10 +54,19 @@ public class OrderServiceImpl implements OrderService {
     private SystemLogService systemLogService;
     @Autowired
     private ItemsService itemsService;
+    @Autowired
+    private CustomerContactService customerContactService;
 
     @Override
     public List<Order> findAll() {
-        return orderRepository.findAll();
+        List<Order> listOrder = new ArrayList<>();
+        for (Order order : orderRepository.findAll()) {
+            order.getCustomer().setPhoneDefault(customerContactService.findPhoneUseDefault(order.getCustomer().getId()));
+            order.getCustomer().setEmailDefault(customerContactService.findEmailUseDefault(order.getCustomer().getId()));
+            order.getCustomer().setAddressDefault(customerContactService.findAddressUseDefault(order.getCustomer().getId()));
+            listOrder.add(order);
+        }
+        return listOrder;
     }
 
     @Override

@@ -66,4 +66,47 @@ public class CustomerContactServiceImpl implements CustomerContactService {
         }
         return listData;
     }
+
+    @Override
+    public String setContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
+        CustomerContact customerContactUsingDefault = new CustomerContact();
+        if (contactCode.equals("PHONE")) {
+            customerContactUsingDefault = customerContactRepository.findPhoneUseDefault(customerId);
+        } else if (contactCode.equals("EMAIL")) {
+            customerContactUsingDefault = customerContactRepository.findEmailUseDefault(customerId);
+        } else if (contactCode.equals("ADDRESS")) {
+            customerContactUsingDefault = customerContactRepository.findAddressUseDefault(customerId);
+        }
+        if (customerContactUsingDefault != null) {
+            customerContactUsingDefault.setDefault(false);
+            customerContactRepository.save(customerContactUsingDefault);
+        }
+        CustomerContact customerContactToUseDefault = this.findById(contactId);
+        customerContactToUseDefault.setDefault(true);
+        this.update(customerContactToUseDefault, customerContactToUseDefault.getId());
+        return TagName.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String setContactUnUseDefault(Integer contactId) {
+        CustomerContact customerContact = this.findById(contactId);
+        customerContact.setDefault(false);
+        this.update(customerContact, customerContact.getId());
+        return TagName.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String findPhoneUseDefault(Integer customerId) {
+        return customerContactRepository.findPhoneUseDefault(customerId).getValue();
+    }
+
+    @Override
+    public String findEmailUseDefault(Integer customerId) {
+        return customerContactRepository.findEmailUseDefault(customerId).getValue();
+    }
+
+    @Override
+    public String findAddressUseDefault(Integer customerId) {
+        return customerContactRepository.findAddressUseDefault(customerId).getValue();
+    }
 }

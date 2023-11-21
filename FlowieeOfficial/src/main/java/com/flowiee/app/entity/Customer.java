@@ -29,6 +29,15 @@ public class Customer extends BaseEntity implements Serializable {
 	@Column(name = "gioi_tinh", nullable = false)
 	private boolean gioiTinh;
 
+	@Transient
+	private String phoneDefault;
+
+	@Transient
+	private String emailDefault;
+
+	@Transient
+	private String addressDefault;
+
 	@JsonIgnoreProperties("customer")
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
 	private List<Order> listOrder;

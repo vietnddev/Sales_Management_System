@@ -47,8 +47,8 @@
                                         <div class="modal fade" id="modelAddKhachHang">
                                             <div class="modal-dialog">
                                                 <div class="modal-content text-left">
-                                                    <form th:action="@{/khach-hang/create}"
-                                                          th:object="${khachHang}" method="post">
+                                                    <form th:action="@{/customer/insert}"
+                                                          th:object="${customer}" method="post">
                                                         <div class="modal-header">
                                                             <strong class="modal-title">Thêm mới khách hàng</strong>
                                                             <button type="button" class="close" data-dismiss="modal"
@@ -109,7 +109,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="list, index : ${listKhachHang}">
+                                        <tr th:each="list, index : ${listCustomer}">
                                             <td th:text="${index.index + 1}" class="vertical-center"></td>
                                             <td class="vertical-center">
                                                 <a th:href="@{/khach-hang/{id}(id=${list.id})}" th:text="${list.tenKhachHang}"></a>
