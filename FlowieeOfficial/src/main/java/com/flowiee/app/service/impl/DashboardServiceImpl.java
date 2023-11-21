@@ -6,7 +6,7 @@ import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
 import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.model.product.TopSanPhamBanChay;
-import com.flowiee.app.service.product.DashboardService;
+import com.flowiee.app.service.DashboardService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.common.utils.TagName;
-import com.flowiee.app.service.system.MailService;
+import com.flowiee.app.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;

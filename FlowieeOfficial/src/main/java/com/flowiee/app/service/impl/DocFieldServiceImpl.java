@@ -6,9 +6,9 @@ import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.entity.Document;
 import com.flowiee.app.repository.DocFieldRepository;
-import com.flowiee.app.service.storage.DocDataService;
-import com.flowiee.app.service.storage.DocFieldService;
-import com.flowiee.app.service.system.SystemLogService;
+import com.flowiee.app.service.DocDataService;
+import com.flowiee.app.service.DocFieldService;
+import com.flowiee.app.service.SystemLogService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

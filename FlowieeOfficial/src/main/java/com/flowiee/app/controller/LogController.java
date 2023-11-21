@@ -3,9 +3,9 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.author.ValidateModuleSystem;
-import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.NotificationService;
-import com.flowiee.app.service.system.SystemLogService;
+import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.NotificationService;
+import com.flowiee.app.service.SystemLogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

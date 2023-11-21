@@ -4,10 +4,10 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.product.CustomerContactService;
-import com.flowiee.app.service.product.CustomerService;
-import com.flowiee.app.service.product.OrderService;
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.CustomerContactService;
+import com.flowiee.app.service.CustomerService;
+import com.flowiee.app.service.OrderService;
+import com.flowiee.app.service.AccountService;
 import com.flowiee.app.entity.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;

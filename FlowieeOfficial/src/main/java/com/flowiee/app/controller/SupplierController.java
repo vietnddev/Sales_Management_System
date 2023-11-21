@@ -13,8 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.entity.Supplier;
-import com.flowiee.app.service.product.SupplierService;
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.SupplierService;
+import com.flowiee.app.service.AccountService;
 
 @Controller
 @RequestMapping(path = "/product/supplier")

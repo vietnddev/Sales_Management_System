@@ -2,8 +2,8 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.repository.SystemLogRepository;
-import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.SystemLogService;
+import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.SystemLogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

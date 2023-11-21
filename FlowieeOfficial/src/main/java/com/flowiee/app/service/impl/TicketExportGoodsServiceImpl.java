@@ -4,9 +4,9 @@ import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.entity.TicketExportGoods;
 import com.flowiee.app.repository.TicketExportGoodsRepository;
-import com.flowiee.app.service.product.OrderService;
-import com.flowiee.app.service.product.ProductVariantService;
-import com.flowiee.app.service.storage.TicketExportGoodsService;
+import com.flowiee.app.service.OrderService;
+import com.flowiee.app.service.ProductVariantService;
+import com.flowiee.app.service.TicketExportGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -10,8 +10,8 @@ import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.model.product.TopSanPhamBanChay;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
-import com.flowiee.app.service.product.DashboardService;
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.DashboardService;
+import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

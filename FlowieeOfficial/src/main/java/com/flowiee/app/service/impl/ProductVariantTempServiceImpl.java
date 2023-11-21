@@ -5,8 +5,8 @@ import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.repository.ProductVariantTempRepository;
-import com.flowiee.app.service.product.ProductVariantTempService;
-import com.flowiee.app.service.system.SystemLogService;
+import com.flowiee.app.service.ProductVariantTempService;
+import com.flowiee.app.service.SystemLogService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

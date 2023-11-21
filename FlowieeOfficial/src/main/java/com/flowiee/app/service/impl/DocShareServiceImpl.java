@@ -3,8 +3,8 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.common.utils.FlowieeUtil;
 import com.flowiee.app.entity.DocShare;
 import com.flowiee.app.repository.DocShareRepository;
-import com.flowiee.app.service.storage.DocShareService;
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.DocShareService;
+import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

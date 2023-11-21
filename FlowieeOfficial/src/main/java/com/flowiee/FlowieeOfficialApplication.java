@@ -1,7 +1,6 @@
 package com.flowiee;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.service.system.MailService;
+import com.flowiee.app.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

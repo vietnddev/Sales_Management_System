@@ -6,9 +6,9 @@ import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.model.product.ProductVariantResponse;
 import com.flowiee.app.repository.ProductVariantRepository;
-import com.flowiee.app.service.product.PriceService;
-import com.flowiee.app.service.product.ProductVariantService;
-import com.flowiee.app.service.system.SystemLogService;
+import com.flowiee.app.service.PriceService;
+import com.flowiee.app.service.ProductVariantService;
+import com.flowiee.app.service.SystemLogService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.repository.DocDataRepository;
-import com.flowiee.app.service.storage.DocDataService;
+import com.flowiee.app.service.DocDataService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -8,8 +8,8 @@ import com.flowiee.app.model.system.FlowieeRole;
 import com.flowiee.app.model.system.ModuleOfFlowiee;
 import com.flowiee.app.model.system.Role;
 import com.flowiee.app.repository.RoleRepository;
-import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.RoleService;
+import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.RoleService;
 import com.flowiee.app.common.action.*;
 import com.flowiee.app.common.module.SystemModule;
 

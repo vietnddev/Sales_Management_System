@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.repository.MaterialRepository;
-import com.flowiee.app.service.product.MaterialService;
+import com.flowiee.app.service.MaterialService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

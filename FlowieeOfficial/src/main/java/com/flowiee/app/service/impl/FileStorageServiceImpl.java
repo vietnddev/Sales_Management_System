@@ -8,11 +8,11 @@ import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.repository.FileStorageRepository;
 import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.service.product.ProductService;
-import com.flowiee.app.service.product.ProductVariantService;
-import com.flowiee.app.service.storage.DocumentService;
-import com.flowiee.app.service.storage.FileStorageService;
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.ProductService;
+import com.flowiee.app.service.ProductVariantService;
+import com.flowiee.app.service.DocumentService;
+import com.flowiee.app.service.FileStorageService;
+import com.flowiee.app.service.AccountService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

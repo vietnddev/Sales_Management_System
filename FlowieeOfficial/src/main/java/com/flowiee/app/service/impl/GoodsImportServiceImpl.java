@@ -8,9 +8,9 @@ import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.repository.GoodsImportRepository;
-import com.flowiee.app.service.product.GoodsImportService;
+import com.flowiee.app.service.GoodsImportService;
 
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

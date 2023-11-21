@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.GarmentFactory;
 import com.flowiee.app.repository.GarmentFactoryRepository;
-import com.flowiee.app.service.product.GarmentFactoryService;
+import com.flowiee.app.service.GarmentFactoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -3,8 +3,8 @@ package com.flowiee.app.config.author;
 import com.flowiee.app.common.action.*;
 import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.RoleService;
+import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

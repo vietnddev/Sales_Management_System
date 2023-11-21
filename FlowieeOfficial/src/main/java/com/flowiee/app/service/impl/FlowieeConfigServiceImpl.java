@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.repository.FlowieeConfigRepository;
-import com.flowiee.app.service.system.FlowieeConfigService;
+import com.flowiee.app.service.FlowieeConfigService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.VoucherDetail;
 import com.flowiee.app.repository.VoucherDetailRepository;
-import com.flowiee.app.service.product.VoucherDetailService;
+import com.flowiee.app.service.VoucherDetailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

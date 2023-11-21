@@ -8,8 +8,8 @@ import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.product.MaterialService;
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.MaterialService;
+import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

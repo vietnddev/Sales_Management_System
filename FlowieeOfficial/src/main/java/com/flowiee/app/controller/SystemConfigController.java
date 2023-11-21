@@ -3,8 +3,8 @@ package com.flowiee.app.controller;
 import com.flowiee.app.config.author.ValidateModuleSystem;
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.FlowieeConfigService;
+import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.FlowieeConfigService;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
 

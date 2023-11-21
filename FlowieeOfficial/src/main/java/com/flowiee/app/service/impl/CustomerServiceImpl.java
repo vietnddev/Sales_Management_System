@@ -5,9 +5,9 @@ import com.flowiee.app.common.module.SystemModule;
 import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.CustomerRepository;
-import com.flowiee.app.service.product.CustomerService;
-import com.flowiee.app.service.system.AccountService;
-import com.flowiee.app.service.system.SystemLogService;
+import com.flowiee.app.service.CustomerService;
+import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.SystemLogService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

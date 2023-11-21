@@ -6,7 +6,7 @@ import com.flowiee.app.common.utils.FileUtil;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.config.author.ValidateModuleCategory;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.system.AccountService;
+import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
