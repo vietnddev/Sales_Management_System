@@ -5,7 +5,7 @@ import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
 import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
-import com.flowiee.app.model.product.TopSanPhamBanChay;
+import com.flowiee.app.model.product.TopBestSeller;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface DashboardService {
 
     DoanhThuCacNgayTheoThang getDoanhThuCacNgayTheoThang();
 
-    TopSanPhamBanChay getTopSanPhamBanChay();
+    TopBestSeller getTopSanPhamBanChay();
 
     List<Order> getSoLuongDonHangHomNay();
 

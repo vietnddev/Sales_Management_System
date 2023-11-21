@@ -11,7 +11,7 @@ public class PagesUtil {
     public static final String SYS_CONFIG = "/pages/he-thong/config";
     public static final String SYS_NOTIFICATION = "/pages/he-thong/notification";
     public static final String SYS_PROFILE = "pages/he-thong/profile";
-    public static final String SYS_UNAUTHORIZED= "/pages/exception/unauthorized";
+    public static final String SYS_UNAUTHORIZED = "/pages/exception/unauthorized";
     public static final String SYS_ERROR = "/pages/exception/error";
 
     public static final String PRO_DASHBOARD = "/pages/dashboard/dashboard";

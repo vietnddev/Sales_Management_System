@@ -1,6 +1,6 @@
 package com.flowiee.app.model.product;
 
-public enum TrangThai {
+public enum ProductStatus {
     KINH_DOANH,
     NGUNG_KINH_DOANH
 }

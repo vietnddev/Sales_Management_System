@@ -7,7 +7,7 @@ import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
 import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
-import com.flowiee.app.model.product.TopSanPhamBanChay;
+import com.flowiee.app.model.product.TopBestSeller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.common.utils.PagesUtil;
 import com.flowiee.app.service.DashboardService;
@@ -70,9 +70,9 @@ public class DashboardController extends BaseController {
             modelAndView.addObject("doanhThuOfDay_listDoanhThu", doanhThuCacNgayTheoThang.getListDoanhThu());
 
             //Bar chart - Top sản phẩm bán chạy
-            TopSanPhamBanChay topSanPhamBanChay = dashboardService.getTopSanPhamBanChay();
-            modelAndView.addObject("topSanPham_listTenSanPham", topSanPhamBanChay.getTenSanPham());
-            modelAndView.addObject("topSanPham_listSoLuong", topSanPhamBanChay.getSoLuongDaBan());
+            TopBestSeller topBestSeller = dashboardService.getTopSanPhamBanChay();
+            modelAndView.addObject("topSanPham_listTenSanPham", topBestSeller.getTenSanPham());
+            modelAndView.addObject("topSanPham_listSoLuong", topBestSeller.getSoLuongDaBan());
 
             return baseView(modelAndView);
         } else {

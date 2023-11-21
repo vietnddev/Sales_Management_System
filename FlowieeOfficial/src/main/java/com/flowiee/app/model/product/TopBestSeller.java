@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TopSanPhamBanChay {
+public class TopBestSeller {
     private List<String> tenSanPham;
     private List<Integer> soLuongDaBan;
 }

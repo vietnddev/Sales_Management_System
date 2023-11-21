@@ -19,16 +19,16 @@ public class BaseController {
 		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(accountService.findCurrentAccountId()));
 		//sidebar
 		modelAndView.addObject("URL_CATEGORY", EndPointUtil.CATEGORY_VIEW);
-		modelAndView.addObject("URL_CATEGORY_UNIT", EndPointUtil.CATEGORY_UNIT_VIEW);
-		modelAndView.addObject("URL_CATEGORY_PAYMETHOD", EndPointUtil.CATEGORY_PAYMETHOD_VIEW);
-		modelAndView.addObject("URL_CATEGORY_FABRICTYPE", EndPointUtil.CATEGORY_FABRICTYPE_VIEW);
-		modelAndView.addObject("URL_CATEGORY_SALESCHANNEL", EndPointUtil.CATEGORY_SALESCHANNEL_VIEW);
-		modelAndView.addObject("URL_CATEGORY_SIZE", EndPointUtil.CATEGORY_SIZE_VIEW);
-		modelAndView.addObject("URL_CATEGORY_COLOR", EndPointUtil.CATEGORY_COLOR_VIEW);
-		modelAndView.addObject("URL_CATEGORY_PRODUCTTYPE", EndPointUtil.CATEGORY_PRODUCTTYPE_VIEW);
-		modelAndView.addObject("URL_CATEGORY_DOCUMENTTYPE", EndPointUtil.CATEGORY_DOCUMENTTYPE_VIEW);
-		modelAndView.addObject("URL_CATEGORY_ORDERSTATUS", EndPointUtil.CATEGORY_ORDERSTATUS_VIEW);
-		modelAndView.addObject("URL_CATEGORY_PAYMENTSTATUS", EndPointUtil.CATEGORY_PAYMETHOD_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_UNIT", EndPointUtil.CATEGORY_UNIT_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_PAYMETHOD", EndPointUtil.CATEGORY_PAYMETHOD_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_FABRICTYPE", EndPointUtil.CATEGORY_FABRICTYPE_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_SALESCHANNEL", EndPointUtil.CATEGORY_SALESCHANNEL_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_SIZE", EndPointUtil.CATEGORY_SIZE_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_COLOR", EndPointUtil.CATEGORY_COLOR_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_PRODUCTTYPE", EndPointUtil.CATEGORY_PRODUCTTYPE_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_DOCUMENTTYPE", EndPointUtil.CATEGORY_DOCUMENTTYPE_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_ORDERSTATUS", EndPointUtil.CATEGORY_ORDERSTATUS_VIEW);
+//		modelAndView.addObject("URL_CATEGORY_PAYMENTSTATUS", EndPointUtil.CATEGORY_PAYMETHOD_VIEW);
 		modelAndView.addObject("URL_PRODUCT", EndPointUtil.PRODUCT_VIEW);
 		modelAndView.addObject("URL_PRODUCT_ORDER", EndPointUtil.PRODUCT_ORDER_VIEW);
 		modelAndView.addObject("URL_PRODUCT_CUSTOMER", EndPointUtil.PRODUCT_CUSTOMER_VIEW);

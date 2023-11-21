@@ -5,7 +5,7 @@ import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
 import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
 import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
-import com.flowiee.app.model.product.TopSanPhamBanChay;
+import com.flowiee.app.model.product.TopBestSeller;
 import com.flowiee.app.service.DashboardService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +124,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public TopSanPhamBanChay getTopSanPhamBanChay() {
+    public TopBestSeller getTopSanPhamBanChay() {
         StringBuilder query = new StringBuilder("SELECT * ");
         query.append("FROM (");
         query.append("SELECT s.TEN_BIEN_THE, NVL(SUM(d.SO_LUONG), 0) AS Total ");
@@ -140,7 +140,7 @@ public class DashboardServiceImpl implements DashboardService {
         @SuppressWarnings("unchecked")
 		List<Object[]> listData = result.getResultList();
 
-        TopSanPhamBanChay dataReturn = new TopSanPhamBanChay();
+        TopBestSeller dataReturn = new TopBestSeller();
         List<String> listTenSanPham = new ArrayList<>();
         List<Integer> listSoLuongDaBan = new ArrayList<>();
         for (Object[] data : listData) {
