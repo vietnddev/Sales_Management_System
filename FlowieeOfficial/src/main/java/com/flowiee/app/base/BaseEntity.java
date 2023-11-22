@@ -1,6 +1,5 @@
 package com.flowiee.app.base;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
