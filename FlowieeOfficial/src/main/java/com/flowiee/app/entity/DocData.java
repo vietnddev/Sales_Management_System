@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
 @Builder
 @Entity
@@ -35,17 +34,8 @@ public class DocData extends BaseEntity implements Serializable {
     @JoinColumn(name = "document_id", nullable = false)
     private Document document;
 
-    @CreatedDate
-    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)
-    private Date createdAt;
-
-    @PreUpdate
-    @PrePersist
-    public void updateTimeStamps() {
-        if (createdAt == null) {
-            createdAt = new Date();
-        }
-    }
+    @OneToMany(mappedBy = "docData", fetch = FetchType.LAZY)
+    private List<DocHistory> listDocHistory;
 
     @Override
     public String toString() {

@@ -50,6 +50,9 @@ public class Document extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocShare> listDocShare;
 
+    @OneToMany(mappedBy = "document", fetch = FetchType.LAZY)
+    private List<DocHistory> listDocHistory;
+
     public Document(Integer id) {
     	super.id = id;
     }

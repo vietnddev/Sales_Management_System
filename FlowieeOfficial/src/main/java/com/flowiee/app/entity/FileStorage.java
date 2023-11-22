@@ -3,7 +3,6 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +16,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 
 @Builder
 @Entity
@@ -83,6 +83,9 @@ public class FileStorage extends BaseEntity implements Serializable {
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
+
+    @OneToMany(mappedBy = "fileStorage", fetch = FetchType.LAZY)
+    private List<DocHistory> listDocHistory;
 
     public FileStorage(MultipartFile file, String pModule) {
         try {
