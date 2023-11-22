@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/he-thong/nhom-quyen")
-public class NhomQuyenController extends BaseController {
+public class RoleController extends BaseController {
     @Autowired
     private RoleService roleService;
     @Autowired
