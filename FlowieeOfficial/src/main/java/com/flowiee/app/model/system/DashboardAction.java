@@ -1,4 +1,4 @@
-package com.flowiee.app.common.action;
+package com.flowiee.app.model.system;
 
 public enum DashboardAction {
     READ_DASHBOARD("Xem dashboard");

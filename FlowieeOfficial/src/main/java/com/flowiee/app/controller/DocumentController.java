@@ -15,9 +15,11 @@ import com.flowiee.app.service.DocumentService;
 import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.common.utils.*;
 import com.flowiee.app.base.BaseController;
 
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +60,7 @@ public class DocumentController extends BaseController {
         if (validateModuleStorage.dashboard()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
             //Loại tài liệu
-            List<Category> listLoaiTaiLieu = categoryService.findSubCategory(CategoryUtil.DOCUMENTTYPE);
+            List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.DOCUMENTTYPE);
             List<String> listTenOfDocType = new ArrayList<>();
             List<Integer> listSoLuongOfDocType = new ArrayList<>();
             for (Category docType : listLoaiTaiLieu) {
@@ -89,8 +91,8 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("document", new Document());
             //select-option danh sách loại tài liệu
             List<Category> listLoaiTaiLieu = new ArrayList<>();
-            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(CategoryUtil.DOCUMENTTYPE));
-            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(CategoryUtil.DOCUMENTTYPE));
+            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.DOCUMENTTYPE));
+            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.DOCUMENTTYPE));
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             //select-option danh sách thư mục
             List<Document> listFolder = new ArrayList<>();
@@ -119,8 +121,8 @@ public class DocumentController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
-        String aliasName = FileUtil.getAliasNameFromAliasPath(aliasPath);
-        int documentId = FileUtil.getIdFromAliasPath(aliasPath);
+        String aliasName = FlowieeUtil.getAliasNameFromAliasPath(aliasPath);
+        int documentId = FlowieeUtil.getIdFromAliasPath(aliasPath);
         Document document = documentService.findById(documentId);
         if (!(aliasName + "-" + documentId).equals(document.getAliasName() + "-" + document.getId())) {
             throw new NotFoundException("Document not found!");
@@ -157,8 +159,8 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
             //select-option danh loại tài liệu
             List<Category> listLoaiTaiLieu = new ArrayList<>();
-            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(CategoryUtil.DOCUMENTTYPE));
-            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(CategoryUtil.DOCUMENTTYPE));
+            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.DOCUMENTTYPE));
+            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.DOCUMENTTYPE));
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             //select-option danh sách thư mục
             List<Document> listFolder = new ArrayList<>();
@@ -191,7 +193,7 @@ public class DocumentController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        document.setAliasName(FileUtil.generateAliasName(document.getTen()));
+        document.setAliasName(FlowieeUtil.generateAliasName(document.getTen()));
         document.setCreatedBy(accountService.findCurrentAccountId());
         if (document.getParentId() == null) {
             document.setParentId(0);

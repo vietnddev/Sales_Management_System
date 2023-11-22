@@ -1,6 +1,6 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.AccountService;
 

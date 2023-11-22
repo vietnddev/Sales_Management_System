@@ -1,4 +1,4 @@
-package com.flowiee.app.common.module;
+package com.flowiee.app.model.system;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

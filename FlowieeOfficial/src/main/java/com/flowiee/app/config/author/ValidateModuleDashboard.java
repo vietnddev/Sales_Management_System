@@ -1,10 +1,10 @@
 package com.flowiee.app.config.author;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
-import com.flowiee.app.common.action.DashboardAction;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.DashboardAction;
+import com.flowiee.app.model.system.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

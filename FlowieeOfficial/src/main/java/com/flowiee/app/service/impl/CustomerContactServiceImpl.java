@@ -1,10 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.CustomerContact;
 import com.flowiee.app.repository.CustomerContactRepository;
 import com.flowiee.app.service.CustomerContactService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,33 +29,33 @@ public class CustomerContactServiceImpl implements CustomerContactService {
     @Override
     public String save(CustomerContact entity) {
         if (entity == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         customerContactRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(CustomerContact entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0 || this.findByCustomerId(entityId) == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         entity.setId(entityId);
         customerContactRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
         if (entityId == null || entityId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         CustomerContact customerContact = this.findById(entityId);
         if (customerContact == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         customerContactRepository.deleteById(entityId);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CustomerContactServiceImpl implements CustomerContactService {
         CustomerContact customerContactToUseDefault = this.findById(contactId);
         customerContactToUseDefault.setDefault(true);
         this.update(customerContactToUseDefault, customerContactToUseDefault.getId());
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class CustomerContactServiceImpl implements CustomerContactService {
         CustomerContact customerContact = this.findById(contactId);
         customerContact.setDefault(false);
         this.update(customerContact, customerContact.getId());
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override

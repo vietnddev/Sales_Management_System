@@ -2,9 +2,9 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.config.author.ValidateModuleStorage;
 import com.flowiee.app.entity.Material;
-import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.EndPointUtil;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.EndPointUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
@@ -43,7 +43,7 @@ public class MaterialController extends BaseController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
             modelAndView.addObject("material", new Material());
             modelAndView.addObject("listMaterial", materialService.findAll());
-            modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
+            modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
             modelAndView.addObject("templateImportName", "Name");
             modelAndView.addObject("url_template", EndPointUtil.STORAGE_MATERIAL_TEMPLATE);
             modelAndView.addObject("url_import", EndPointUtil.STORAGE_MATERIAL_IMPORT);

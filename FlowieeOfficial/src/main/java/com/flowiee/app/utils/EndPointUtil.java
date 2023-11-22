@@ -1,4 +1,4 @@
-package com.flowiee.app.common.utils;
+package com.flowiee.app.utils;
 
 public class EndPointUtil {
     public static String NOTIFICATION_VIEW = "/he-thong/notification";

@@ -1,10 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.repository.FlowieeConfigRepository;
 import com.flowiee.app.service.FlowieeConfigService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,19 +37,19 @@ public class FlowieeConfigServiceImpl implements FlowieeConfigService {
     @Override
     public String save(FlowieeConfig flowieeConfig) {
         flowieeConfigRepository.save(flowieeConfig);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(FlowieeConfig flowieeConfig, Integer id) {
         flowieeConfig.setId(id);
         flowieeConfigRepository.save(flowieeConfig);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer id) {
         flowieeConfigRepository.deleteById(id);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

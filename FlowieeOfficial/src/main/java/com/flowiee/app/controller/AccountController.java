@@ -4,7 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.config.author.ValidateModuleSystem;
 import com.flowiee.app.exception.DataExistsException;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.model.system.ActionOfModule;
 import com.flowiee.app.model.system.FlowieeRole;

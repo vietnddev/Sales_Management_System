@@ -1,6 +1,6 @@
 package com.flowiee.app.base;
 
-import com.flowiee.app.common.utils.EndPointUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

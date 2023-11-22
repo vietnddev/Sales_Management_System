@@ -1,4 +1,4 @@
-package com.flowiee.app.common.action;
+package com.flowiee.app.model.system;
 
 public enum KhoTaiLieuAction {
     DASHBOARD_DOCUMENT("Xem dashboard STG"),

@@ -1,14 +1,14 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.action.SanPhamAction;
-import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.model.system.SanPhamAction;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.entity.Price;
 import com.flowiee.app.repository.PriceRepository;
 import com.flowiee.app.service.PriceService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +51,16 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public String save(Price price) {
         if (price == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         try {
             priceRepository.save(price);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Thêm mới giá sản phẩm: " + price.toString());
             logger.info(PriceServiceImpl.class.getName() + ": Thêm mới giá sản phẩm " + price.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -86,10 +86,10 @@ public class PriceServiceImpl implements PriceService {
             String noiDungCapNhat = "Giá mới: " + price.getGiaBan();
             systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Cập nhật giá sản phẩm: " + noiDung.toString(), "Giá sau khi cập nhật: " + noiDungCapNhat.toString());
             logger.info(PriceServiceImpl.class.getName() + ": Cập nhật giá sản phẩm " + price.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -99,6 +99,6 @@ public class PriceServiceImpl implements PriceService {
         priceRepository.deleteById(priceId);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_PRICE_SANPHAM.name(), "Xóa giá sản phẩm: " + price.toString());
         logger.info(PriceServiceImpl.class.getName() + ": Xóa giá sản phẩm " + price.toString());
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

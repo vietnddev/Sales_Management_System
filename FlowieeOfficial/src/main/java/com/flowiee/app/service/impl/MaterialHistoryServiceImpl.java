@@ -1,10 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.MaterialHistory;
 import com.flowiee.app.repository.MaterialHistoryRepository;
 import com.flowiee.app.service.MaterialHistoryService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,29 +28,29 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     @Override
     public String save(MaterialHistory entity) {
         if (entity == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         materialHistoryRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(MaterialHistory entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         entity.setId(entityId);
         materialHistoryRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
         if (entityId == null || entityId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         materialHistoryRepository.deleteById(entityId);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override

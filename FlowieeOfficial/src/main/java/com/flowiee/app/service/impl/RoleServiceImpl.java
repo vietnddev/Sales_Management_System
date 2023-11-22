@@ -1,18 +1,13 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.AccountRole;
-import com.flowiee.app.model.system.ActionOfModule;
-import com.flowiee.app.model.system.FlowieeRole;
-import com.flowiee.app.model.system.ModuleOfFlowiee;
-import com.flowiee.app.model.system.Role;
+import com.flowiee.app.model.system.*;
 import com.flowiee.app.repository.RoleRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
-import com.flowiee.app.common.action.*;
-import com.flowiee.app.common.module.SystemModule;
 
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -304,7 +299,7 @@ public class RoleServiceImpl implements RoleService {
         accountRole.setAction(actionKey);
         accountRole.setAccountId(accountId);
         roleRepository.save(accountRole);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -323,7 +318,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public String deleteAllRole(Integer accountId) {
         roleRepository.deleteByAccountId(accountId);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     private FlowieeRole buildFlowieeRole(Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {

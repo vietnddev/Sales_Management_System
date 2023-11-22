@@ -1,12 +1,12 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.entity.TicketExportGoods;
 import com.flowiee.app.repository.TicketExportGoodsRepository;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.TicketExportGoodsService;
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,18 +44,18 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
         for (OrderDetail d : listOrderDetail) {
             productVariantService.updateSoLuong(productVariantService.findById(d.getProductVariant().getId()).getSoLuongKho() - d.getSoLuong(), d.getProductVariant().getId());
         }
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(TicketExportGoods ticket, Integer entityId) {
         ticket.setId(entityId);
         ticketExportGoodsRepository.save(ticket);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

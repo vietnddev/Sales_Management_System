@@ -1,6 +1,5 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.entity.Voucher;
 import com.flowiee.app.entity.VoucherDetail;
@@ -12,6 +11,7 @@ import com.flowiee.app.service.VoucherDetailService;
 import com.flowiee.app.service.VoucherSanPhamService;
 import com.flowiee.app.service.VoucherService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,32 +100,32 @@ public class VoucherServiceImpl implements VoucherService {
                     voucherDetailService.save(voucherDetail);
                 }
             }
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         }
-        return TagName.SERVICE_RESPONSE_FAIL;
+        return AppConstants.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
     public String update(Voucher voucher, Integer voucherId) {
         if (voucher == null || voucherId == null || voucherId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         voucher.setId(voucherId);
         voucherRepository.save(voucher);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String detele(Integer voucherId) {
         if (voucherId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         Voucher voucher = this.findById(voucherId);
         if (voucher == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         voucherRepository.deleteById(voucherId);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {

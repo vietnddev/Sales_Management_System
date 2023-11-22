@@ -4,16 +4,15 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.CategoryService;
 import com.flowiee.app.config.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.service.PriceService;
 import com.flowiee.app.service.ProductAttributeService;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.service.AccountService;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Price;
 import com.flowiee.app.entity.Product;
@@ -64,10 +63,10 @@ public class ProductController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
         modelAndView.addObject("listSanPham", productsService.findAll());
-        modelAndView.addObject("listProductType", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
-        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
-        modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.BRAND));
-        modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_I_SANPHAM);
+        modelAndView.addObject("listProductType", categoryService.findSubCategory(AppConstants.PRODUCTTYPE));
+        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
+        modelAndView.addObject("listBrand", categoryService.findSubCategory(AppConstants.BRAND));
+        modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
         if (validateModuleProduct.insertProduct()) {
             modelAndView.addObject("action_create", "enable");
         }
@@ -99,18 +98,18 @@ public class ProductController extends BaseController {
         // Load chi tiết thông tin sản phẩm
         modelAndView.addObject("detailProducts", productsService.findById(productId));
         // Danh sách loại sản phẩm
-        modelAndView.addObject("listTypeProducts", categoryService.findSubCategory(CategoryUtil.PRODUCTTYPE));
+        modelAndView.addObject("listTypeProducts", categoryService.findSubCategory(AppConstants.PRODUCTTYPE));
         // Danh sách màu sắc
-        modelAndView.addObject("listDmMauSacSanPham", categoryService.findSubCategory(CategoryUtil.COLOR));
+        modelAndView.addObject("listDmMauSacSanPham", categoryService.findSubCategory(AppConstants.COLOR));
         // Danh sách kích cỡ
-        modelAndView.addObject("listDmKichCoSanPham", categoryService.findSubCategory(CategoryUtil.SIZE));
+        modelAndView.addObject("listDmKichCoSanPham", categoryService.findSubCategory(AppConstants.SIZE));
         // Load danh sách biến thể sản phẩm
         modelAndView.addObject("listBienTheSanPham", productVariantService.getListVariantOfProduct(productId));
         // Danh sách đơn vị tính
-        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(CategoryUtil.UNIT));
+        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
         // Danh sách chất liệu vải
-        modelAndView.addObject("listDmChatLieuVai", categoryService.findSubCategory(CategoryUtil.FABRICTYPE));
-        modelAndView.addObject("listBrand", categoryService.findSubCategory(CategoryUtil.FABRICTYPE));
+        modelAndView.addObject("listDmChatLieuVai", categoryService.findSubCategory(AppConstants.FABRICTYPE));
+        modelAndView.addObject("listBrand", categoryService.findSubCategory(AppConstants.FABRICTYPE));
         //List image
         modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(productId));
         //Image active
@@ -343,7 +342,7 @@ public class ProductController extends BaseController {
             byte[] dataExport = productsService.exportData(null);
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_E_SANPHAM + ".xlsx");
+            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx");
             return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);

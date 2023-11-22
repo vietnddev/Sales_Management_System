@@ -1,13 +1,13 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.action.SanPhamAction;
-import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.model.system.SanPhamAction;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.repository.ProductVariantTempRepository;
 import com.flowiee.app.service.ProductVariantTempService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +49,10 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
             productVariantTempRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới biến thể sản phẩm: " + bienTheSanPham.toString());
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + bienTheSanPham.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -63,10 +63,10 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
             productVariantTempRepository.deleteById(entityId);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa biến thể sản phẩm: " + bienTheSanPhamToDelete.toString());
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Xóa biến thể sản phẩm " + bienTheSanPhamToDelete.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -78,11 +78,11 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
             productVariantTempRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + bienTheSanPhamBefore.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return TagName.SERVICE_RESPONSE_FAIL;
+        return AppConstants.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
@@ -92,10 +92,10 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
         try {
             productVariantTempRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!", bienTheSanPham);
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 

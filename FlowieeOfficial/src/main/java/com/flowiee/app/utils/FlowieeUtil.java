@@ -1,7 +1,6 @@
-package com.flowiee.app.common.utils;
+package com.flowiee.app.utils;
 
-import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.SystemModule;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -14,25 +13,127 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.text.Normalizer;
+import java.text.*;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Pattern;
 
-public class FileUtil {
-    public static String rootPath = "src/main/resources/static/";
-    
-    public static String TEMPLATE_IE_DM_CATEGORY = "Template_IE_DM_Category";
-    public static String TEMPLATE_IE_DM_LOAIKICHCO = "Template_IE_DM_LoaiKichCo";
-    public static String TEMPLATE_IE_DM_LOAIMAUSAC = "Template_IE_DM_LoaiMauSac";
-    public static String TEMPLATE_IE_DM_LOAIKENHBANHANG = "Template_IE_DM_LoaiKenhBanHang";
-    public static String TEMPLATE_IE_DM_LOAIHINHTHUCTHANHTOAN = "Template_IE_DM_LoaiHinhThucThanhToan";
-    public static String TEMPLATE_IE_DM_LOAIDONVITINH = "Template_IE_DM_LoaiDonViTinh";
-    public static String TEMPLATE_IE_DM_LOAISANPHAM = "Template_IE_DM_LoaiSanPham";
-    public static String TEMPLATE_IE_DM_LOAITAILIEU = "Template_IE_DM_LoaiTaiLieu";
-    public static String TEMPLATE_IE_DM_FABRICTYPE = "Template_IE_DM_FabricType";
-    public static String TEMPLATE_I_SANPHAM = "Template_I_DanhSachSanPham";
-    public static String TEMPLATE_E_SANPHAM = "Template_E_DanhSachSanPham";
+public class FlowieeUtil {
+    public static final Integer SYS_NOTI_ID = 0;
+    public static final String ADMINISTRATOR = "admin";
+    public static final String PATH_TEMPLATE_EXCEL = "src/main/resources/static/templates/excel";
+
+    public static final String CATEGORY = "";
+
+    public static Date convertStringToDate(String dateString) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing date: " + e.getMessage());
+        }
+        return date;
+    }
+
+    public static Date convertStringToDate(String dateString, String pattern) {
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing date: " + e.getMessage());
+        }
+        return date;
+    }
+
+    public static Date formatDate(Date date, String pattern) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            String formattedDateStr = sdf.format(date);
+            return sdf.parse(formattedDateStr);
+        } catch (ParseException e) {
+            System.out.println(e.getCause());
+            e.printStackTrace();
+            return date;
+        }
+    }
+
+    public static String formatToVND(Object currency) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        currencyFormat.setCurrency(Currency.getInstance("VND"));
+        return currency != null ? currencyFormat.format(currency) : "0 VND";
+    }
+
+    public static String getMaDonHang() {
+        return "F" + FlowieeUtil.now("yyMMddHHmmss");
+    }
+
+    public static String getMaDanhMuc(String categoryName) {
+        String normalized = Normalizer.normalize(categoryName, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("[^\\p{ASCII}]");
+        String strTemp = pattern.matcher(normalized).replaceAll("").replaceAll(" ", "").toUpperCase();
+
+        StringBuilder result = new StringBuilder();
+        for (char c : strTemp.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    }
+
+    public static String getNamHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static String getThangHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static String getNgayHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static Map<String, String> getPaymentStatusCategory() {
+        Map<String, String> paymentStatus = new HashMap<>();
+        paymentStatus.put("UNPAID","Chưa thanh toán");
+        paymentStatus.put("PARTLY-PAID","Thanh toán một phần");
+        paymentStatus.put("PAID","Đã thanh toán");
+        return paymentStatus;
+    }
+
+    public static String now(String format) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static String getCategoryType(String input) {
+        Map<String, String> map = new HashMap<>();
+        map.put("unit", AppConstants.UNIT);
+        map.put("pay-method", AppConstants.PAYMETHOD);
+        map.put("fabric-type", AppConstants.FABRICTYPE);
+        map.put("sales-channel", AppConstants.SALESCHANNEL);
+        map.put("size", AppConstants.SIZE);
+        map.put("color", AppConstants.COLOR);
+        map.put("product-type", AppConstants.PRODUCTTYPE);
+        map.put("document-type", AppConstants.DOCUMENTTYPE);
+        map.put("order-status", AppConstants.ORDERSTATUS);
+        map.put("payment-status", AppConstants.PAYMENTSTATUS);
+        map.put("brand", AppConstants.BRAND);
+        return map.get(input);
+    }
 
     public static String getExtension(String fileName) {
         String extension = "";

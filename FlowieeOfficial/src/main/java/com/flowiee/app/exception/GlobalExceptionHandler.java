@@ -1,6 +1,6 @@
 package com.flowiee.app.exception;
 
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

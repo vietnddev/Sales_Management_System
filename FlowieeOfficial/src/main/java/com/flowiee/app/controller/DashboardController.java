@@ -1,6 +1,6 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.config.author.ValidateModuleDashboard;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
@@ -9,7 +9,7 @@ import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
 import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
 import com.flowiee.app.model.product.TopBestSeller;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.service.DashboardService;
 import com.flowiee.app.service.AccountService;
 

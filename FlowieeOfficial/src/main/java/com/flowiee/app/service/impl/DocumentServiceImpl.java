@@ -1,8 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.action.KhoTaiLieuAction;
-import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.model.system.KhoTaiLieuAction;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.Document;
 import com.flowiee.app.model.storage.DocMetaResponse;
@@ -12,6 +11,7 @@ import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocumentService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ public class DocumentServiceImpl implements DocumentService {
         systemLogService.writeLog(module, KhoTaiLieuAction.CREATE_DOCUMENT.name(), "Thêm mới tài liệu: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
         documentRepository.save(document);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override

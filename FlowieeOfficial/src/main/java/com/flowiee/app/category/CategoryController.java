@@ -1,9 +1,9 @@
 package com.flowiee.app.category;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.config.author.ValidateModuleCategory;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.AccountService;
@@ -55,15 +55,15 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.readCategory()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
-        if (CategoryUtil.getCategoryType(categoryType) == null) {
+        if (FlowieeUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        List<Category> listCategory = categoryService.findSubCategory(CategoryUtil.getCategoryType(categoryType));
+        List<Category> listCategory = categoryService.findSubCategory(FlowieeUtil.getCategoryType(categoryType));
         ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listCategory", listCategory);
         modelAndView.addObject("categoryType", categoryType);
-        modelAndView.addObject("templateImportName", FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH);
+        modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH);
         modelAndView.addObject("url_template", "");
         modelAndView.addObject("url_import", "");
         modelAndView.addObject("url_export", "");
@@ -80,10 +80,10 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.insertCategory()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (CategoryUtil.getCategoryType(categoryType) == null) {
+        if (FlowieeUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        category.setType(CategoryUtil.getCategoryType(categoryType));
+        category.setType(FlowieeUtil.getCategoryType(categoryType));
         categoryService.save(category);
         return "redirect:" + request.getHeader("referer");
     }
@@ -125,13 +125,13 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.importCategory()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
-        if (CategoryUtil.getCategoryType(categoryType) == null) {
+        if (FlowieeUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         byte[] dataExport = categoryService.exportTemplate(categoryType);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
         return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 
@@ -143,7 +143,7 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.importCategory()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (CategoryUtil.getCategoryType(categoryType) == null) {
+        if (FlowieeUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         categoryService.importData(file, categoryType);
@@ -161,7 +161,7 @@ public class CategoryController extends BaseController {
         byte[] dataExport = categoryService.exportData(categoryType);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + FileUtil.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
         return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 }

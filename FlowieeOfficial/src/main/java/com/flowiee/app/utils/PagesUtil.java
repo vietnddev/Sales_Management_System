@@ -1,4 +1,4 @@
-package com.flowiee.app.common.utils;
+package com.flowiee.app.utils;
 
 public class PagesUtil {
     public static final String CTG_CATEGORY = "/pages/system/category";

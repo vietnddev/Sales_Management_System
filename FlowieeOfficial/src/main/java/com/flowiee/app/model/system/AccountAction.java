@@ -1,4 +1,4 @@
-package com.flowiee.app.common.action;
+package com.flowiee.app.model.system;
 
 public enum AccountAction {
     READ_ACCOUNT("Xem danh sách tài khoản"),

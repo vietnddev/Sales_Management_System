@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.action.KhoTaiLieuAction;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.KhoTaiLieuAction;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.entity.Document;

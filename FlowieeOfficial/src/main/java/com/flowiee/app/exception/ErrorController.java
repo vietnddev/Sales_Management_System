@@ -1,7 +1,7 @@
 package com.flowiee.app.exception;
 
-import com.flowiee.app.common.utils.NotificationUtil;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.MessagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ErrorController {
     @GetMapping("/403")
     public ModelAndView forbiddenException() {
-        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), NotificationUtil.ERROR_FORBIDDEN);
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), MessagesUtil.ERROR_FORBIDDEN);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;
@@ -21,7 +21,7 @@ public class ErrorController {
 
     @GetMapping("/404")
     public ModelAndView notfoundException() {
-        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), NotificationUtil.ERROR_NOTFOUND);
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), MessagesUtil.ERROR_NOTFOUND);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return modelAndView;

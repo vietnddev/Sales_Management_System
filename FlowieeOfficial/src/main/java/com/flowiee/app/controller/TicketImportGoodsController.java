@@ -10,9 +10,9 @@ import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.product.GoodsImportRequest;
-import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.category.Category;
 import com.flowiee.app.category.CategoryService;
@@ -90,10 +90,10 @@ public class TicketImportGoodsController extends BaseController {
             List<Category> listHinhThucThanhToan = new ArrayList<>();
             if (ticketImportGoodsPresent.getPaymentMethod() == null) {
                 listHinhThucThanhToan.add(new Category(null, "Chọn hình thức thanh toán"));
-                listHinhThucThanhToan.addAll(categoryService.findSubCategory(CategoryUtil.PAYMETHOD));
+                listHinhThucThanhToan.addAll(categoryService.findSubCategory(AppConstants.PAYMETHOD));
             } else {
                 listHinhThucThanhToan.add(ticketImportGoodsPresent.getPaymentMethod());
-                List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(CategoryUtil.PAYMETHOD);
+                List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(AppConstants.PAYMETHOD);
                 listHinhThucThanhToanTemp.remove(ticketImportGoodsPresent.getPaymentMethod());
                 listHinhThucThanhToan.addAll(listHinhThucThanhToanTemp);
             }

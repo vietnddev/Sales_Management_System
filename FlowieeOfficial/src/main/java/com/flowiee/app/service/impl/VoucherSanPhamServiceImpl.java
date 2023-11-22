@@ -1,10 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.VoucherSanPham;
 import com.flowiee.app.repository.VoucherSanPhamRepository;
 import com.flowiee.app.service.VoucherSanPhamService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
     @Override
     public String save(VoucherSanPham voucherSanPham) {
         voucherSanPhamRepository.save(voucherSanPham);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
             voucherSanPham.setId(id);
             voucherSanPhamRepository.save(voucherSanPham);
         }
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -50,6 +50,6 @@ public class VoucherSanPhamServiceImpl implements VoucherSanPhamService {
         if (this.findById(entityId) != null) {
             voucherSanPhamRepository.deleteById(entityId);
         }
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

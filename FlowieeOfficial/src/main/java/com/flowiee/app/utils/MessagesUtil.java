@@ -1,6 +1,6 @@
-package com.flowiee.app.common.utils;
+package com.flowiee.app.utils;
 
-public class NotificationUtil {
+public class MessagesUtil {
     public static final String NOTI_TYPE_IMPORT = "IMPORT";
     public static final String NOTI_TYPE_EXPORT = "IMPORT";
 

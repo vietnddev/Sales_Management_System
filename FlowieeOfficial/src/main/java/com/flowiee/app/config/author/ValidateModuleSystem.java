@@ -1,10 +1,10 @@
 package com.flowiee.app.config.author;
 
-import com.flowiee.app.common.action.AccountAction;
-import com.flowiee.app.common.action.LogAction;
-import com.flowiee.app.common.action.RoleAction;
-import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.model.system.AccountAction;
+import com.flowiee.app.model.system.LogAction;
+import com.flowiee.app.model.system.RoleAction;
+import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,7 @@ import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.FlowieeConfigService;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

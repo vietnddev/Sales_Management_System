@@ -1,13 +1,14 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.*;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
-import com.flowiee.app.common.action.SanPhamAction;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.SanPhamAction;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.service.*;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.FlowieeUtil;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -26,7 +27,6 @@ import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -81,11 +81,11 @@ public class ProductServiceImpl implements ProductService {
             productsRepository.save(product);
             systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info(ProductServiceImpl.class.getName() + ": Thêm mới sản phẩm " + product.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(ProductServiceImpl.class.getName() + ": Lỗi khi thêm mới sản phẩm", e.getCause());
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -121,11 +121,11 @@ public class ProductServiceImpl implements ProductService {
             }
             systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
             logger.info(ProductServiceImpl.class.getName() + ": Cập nhật sản phẩm " + productBefore.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(ProductServiceImpl.class.getName() + ": Lỗi khi cập nhật sản phẩm!", e.getCause());
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -137,11 +137,11 @@ public class ProductServiceImpl implements ProductService {
             productsRepository.deleteById(id);
             logger.info(ProductServiceImpl.class.getName() + ": Xóa sản phẩm " + productToDelete.toString());
             systemLogService.writeLog(module, SanPhamAction.DELETE_SANPHAM.name(), "Xóa sản phẩm: " + productToDelete.toString());
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(ProductServiceImpl.class.getName() + ": Lỗi khi xóa sản phẩm", e.getCause());
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
 
@@ -167,8 +167,8 @@ public class ProductServiceImpl implements ProductService {
 		List<Object[]> listData = result.getResultList();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_E_SANPHAM + ".xlsx";
-        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
+        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
@@ -198,7 +198,7 @@ public class ProductServiceImpl implements ProductService {
                 row.createCell(8).setCellValue(daBan);
 
                 for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(FileUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FlowieeUtil.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

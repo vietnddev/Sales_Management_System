@@ -4,8 +4,8 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.SystemLogService;
-import com.flowiee.app.common.action.SystemAction;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.SystemAction;
+import com.flowiee.app.model.system.SystemModule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.entity.DocShare;
 import com.flowiee.app.repository.DocShareRepository;
 import com.flowiee.app.service.DocShareService;

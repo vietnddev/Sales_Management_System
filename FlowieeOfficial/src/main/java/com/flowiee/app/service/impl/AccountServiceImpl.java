@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.model.system.Role;
@@ -9,8 +9,8 @@ import com.flowiee.app.repository.AccountRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
-import com.flowiee.app.common.action.AccountAction;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.AccountAction;
+import com.flowiee.app.model.system.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -115,7 +115,7 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
     	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.CREATE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
         systemLogService.writeLog(systemLog);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
     	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.UPDATE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
         systemLogService.writeLog(systemLog);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -140,7 +140,7 @@ public class AccountServiceImpl implements AccountService {
             SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.DELETE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
             systemLogService.writeLog(systemLog);
         }
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override

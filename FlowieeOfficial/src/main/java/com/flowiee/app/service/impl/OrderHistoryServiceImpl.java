@@ -1,9 +1,9 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.OrderHistory;
 import com.flowiee.app.repository.OrderHistoryRepository;
 import com.flowiee.app.service.OrderHistoryService;
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,20 +27,20 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     @Override
     public String save(OrderHistory orderHistory) {
         orderHistoryRepository.save(orderHistory);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(OrderHistory orderHistory, Integer orderHistoryId) {
         orderHistory.setId(orderHistoryId);
         orderHistoryRepository.save(orderHistory);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer orderHistoryId) {
         orderHistoryRepository.deleteById(orderHistoryId);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override

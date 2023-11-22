@@ -1,8 +1,8 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.common.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.service.AccountService;

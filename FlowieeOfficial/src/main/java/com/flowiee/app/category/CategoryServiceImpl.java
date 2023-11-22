@@ -1,11 +1,7 @@
 package com.flowiee.app.category;
 
-import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.common.utils.CategoryUtil;
-import com.flowiee.app.common.utils.FileUtil;
-import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.common.utils.NotificationUtil;
-import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.utils.*;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.FlowieeImport;
 import com.flowiee.app.entity.Notification;
@@ -83,31 +79,31 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String save(Category entity) {
         if (entity == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         categoryRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Transactional
     @Override
     public String update(Category entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         entity.setId(entityId);
         categoryRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Transactional
     @Override
     public String delete(Integer entityId) {
         if (entityId == null || entityId <= 0 || this.findById(entityId) == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         categoryRepository.deleteById(entityId);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -133,7 +129,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Boolean categoryInUse(Integer categoryId) {
         Category category = this.findById(categoryId);
-        if (category.getType().equals(CategoryUtil.UNIT)) {
+        if (category.getType().equals(AppConstants.UNIT)) {
             if (!productService.findByProductType(categoryId).isEmpty()) {
                 return true;
             } else if (!productService.findByUnit(categoryId).isEmpty()) {
@@ -141,35 +137,35 @@ public class CategoryServiceImpl implements CategoryService {
             } else if (!productService.findByBrand(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.FABRICTYPE)) {
+        } else if (category.getType().equals(AppConstants.FABRICTYPE)) {
             if (!productVariantService.findByFabricType(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.PAYMETHOD)) {
+        } else if (category.getType().equals(AppConstants.PAYMETHOD)) {
             if (!orderPayService.findByPayMethod(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.SALESCHANNEL)) {
+        } else if (category.getType().equals(AppConstants.SALESCHANNEL)) {
             if (!orderService.findBySalesChannel(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.SIZE)) {
+        } else if (category.getType().equals(AppConstants.SIZE)) {
             if (!productVariantService.findBySize(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.COLOR)) {
+        } else if (category.getType().equals(AppConstants.COLOR)) {
             if (!productVariantService.findByColor(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.PRODUCTTYPE)) {
+        } else if (category.getType().equals(AppConstants.PRODUCTTYPE)) {
             if (!productService.findByProductType(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.DOCUMENTTYPE)) {
+        } else if (category.getType().equals(AppConstants.DOCUMENTTYPE)) {
             if (!documentService.findByDoctype(categoryId).isEmpty()) {
                 return true;
             }
-        } else if (category.getType().equals(CategoryUtil.ORDERSTATUS)) {
+        } else if (category.getType().equals(AppConstants.ORDERSTATUS)) {
             if (!orderService.findByOrderStatus(categoryId).isEmpty()) {
                 return true;
             }
@@ -199,9 +195,9 @@ public class CategoryServiceImpl implements CategoryService {
                     if (categoryName == null || categoryName.length() == 0) {
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(FlowieeUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(FlowieeUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(FlowieeUtil.highlightDataImportEror(cellStyle, fontStyle));
                         continue;
                     }
 
@@ -215,9 +211,9 @@ public class CategoryServiceImpl implements CategoryService {
                         isImportSuccess = false;
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(FileUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(FlowieeUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(FlowieeUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(FlowieeUtil.highlightDataImportEror(cellStyle, fontStyle));
                     } else {
                         importSuccess++;
                     }
@@ -227,10 +223,10 @@ public class CategoryServiceImpl implements CategoryService {
             workbook.close();
 
             if (isImportSuccess) {
-                resultOfFlowieeImport = NotificationUtil.IMPORT_DM_DONVITINH_SUCCESS;
+                resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_SUCCESS;
                 detailOfFlowieeImport = importSuccess + " / " + totalRecord;
             } else {
-                resultOfFlowieeImport = NotificationUtil.IMPORT_DM_DONVITINH_FAIL;
+                resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_FAIL;
                 detailOfFlowieeImport = importSuccess + " / " + totalRecord;
             }
             //Save file attach to storage
@@ -259,29 +255,29 @@ public class CategoryServiceImpl implements CategoryService {
             notification.setTitle(resultOfFlowieeImport);
             notification.setSend(FlowieeUtil.SYS_NOTI_ID);
             notification.setReceive(accountService.findCurrentAccountId());
-            notification.setType(NotificationUtil.NOTI_TYPE_IMPORT);
+            notification.setType(MessagesUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);
             notification.setImportId(flowieeImportRepository.findByStartTime(flowieeImport.getStartTime()).getId());
             notificationService.save(notification);
 
-            return TagName.SERVICE_RESPONSE_SUCCESS;
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return TagName.SERVICE_RESPONSE_FAIL;
+        return AppConstants.SERVICE_RESPONSE_FAIL;
 	}
 
 	@Override
 	public byte[] exportTemplate(String categoryType) {
-		return FileUtil.exportTemplate(FileUtil.TEMPLATE_IE_DM_CATEGORY);
+		return FlowieeUtil.exportTemplate(AppConstants.TEMPLATE_IE_DM_CATEGORY);
 	}
 
 	@Override
 	public byte[] exportData(String categoryType) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
-        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + FileUtil.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
+        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
@@ -296,7 +292,7 @@ public class CategoryServiceImpl implements CategoryService {
                 row.createCell(2).setCellValue(listData.get(i).getName());
                 row.createCell(3).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 3; j++) {
-                    row.getCell(j).setCellStyle(FileUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FlowieeUtil.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

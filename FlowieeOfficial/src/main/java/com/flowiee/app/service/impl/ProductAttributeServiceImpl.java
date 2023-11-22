@@ -1,13 +1,13 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.action.SanPhamAction;
-import com.flowiee.app.common.module.SystemModule;
-import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.model.system.SanPhamAction;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.entity.ProductAttribute;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.repository.ProductAttributeRepository;
 import com.flowiee.app.service.ProductAttributeService;
 import com.flowiee.app.service.SystemLogService;
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,13 +38,13 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     public String save(ProductAttribute productAttribute){
         productAttributeRepository.save(productAttribute);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới thuộc tính sản phẩm");
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(ProductAttribute attribute, Integer attributeId) {
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật thuộc tính sản phẩm");
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -56,6 +56,6 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     public String delete(Integer attributeId) {
     	productAttributeRepository.deleteById(attributeId);
         systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa thuộc tính sản phẩm");
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

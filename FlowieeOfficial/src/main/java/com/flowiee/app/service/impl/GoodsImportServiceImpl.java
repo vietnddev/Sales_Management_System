@@ -1,8 +1,8 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.category.Category;
-import com.flowiee.app.common.utils.FlowieeUtil;
-import com.flowiee.app.common.utils.TagName;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
@@ -47,47 +47,47 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     @Override
     public String save(TicketImportGoods entity) {
         if (entity == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         goodsImportRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(TicketImportGoods entity, Integer entityId) {
         if (entity == null || entityId == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         if (entityId <= 0 || this.findById(entityId) == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         entity.setId(entityId);
         goodsImportRepository.save(entity);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String delete(Integer entityId) {
         if (entityId == null || entityId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         TicketImportGoods ticketImportGoods = this.findById(entityId);
         if (ticketImportGoods == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         goodsImportRepository.deleteById(entityId);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 ;
 
     @Override
     public String saveDraft(GoodsImportRequest request) {
         if (request == null || request.getId() == null || request.getId() <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         TicketImportGoods ticketImportGoods = this.findById(request.getId());
         if (ticketImportGoods == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         ticketImportGoods.setId(request.getId());
         ticketImportGoods.setTitle(request.getTitle());
@@ -112,7 +112,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
         ticketImportGoods.setNote(request.getNote());
         ticketImportGoods.setStatus(STATUS_DRAFT);
         goodsImportRepository.save(ticketImportGoods);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -238,14 +238,14 @@ public class GoodsImportServiceImpl implements GoodsImportService {
     @Override
     public String updateStatus(Integer entityId, String status) {
         if (entityId == null || entityId <= 0) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         TicketImportGoods ticketImportGoods = this.findById(entityId);
         if (ticketImportGoods == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         ticketImportGoods.setStatus(status);
         goodsImportRepository.save(ticketImportGoods);
-        return TagName.SERVICE_RESPONSE_SUCCESS;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

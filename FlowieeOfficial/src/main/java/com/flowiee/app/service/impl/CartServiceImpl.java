@@ -1,14 +1,14 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.common.utils.TagName;
 import com.flowiee.app.entity.OrderCart;
 import com.flowiee.app.entity.SystemLog;
-import com.flowiee.app.common.module.SystemModule;
+import com.flowiee.app.model.system.SystemModule;
 import com.flowiee.app.repository.OrderCartRepository;
 import com.flowiee.app.service.CartService;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public String save(OrderCart orderCart) {
         if (orderCart == null) {
-            return TagName.SERVICE_RESPONSE_FAIL;
+            return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         orderCartRepository.save(orderCart);
         return "OK";
