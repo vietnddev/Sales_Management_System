@@ -6,7 +6,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "pro_san_pham_thuoc_tinh")
@@ -47,5 +49,10 @@ public class ProductAttribute extends BaseEntity implements Serializable {
                 ", sort=" + sort +
                 ", trangThai=" + trangThai +
                 '}';
+    }
+
+    public Map<String, String> compareTo(ProductAttribute entityToCompare) {
+        Map<String, String> map = new HashMap<>();
+        return map;
     }
 }

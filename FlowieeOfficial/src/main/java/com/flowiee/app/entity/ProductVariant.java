@@ -9,7 +9,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Entity
@@ -93,5 +95,10 @@ public class ProductVariant extends BaseEntity implements Serializable {
         builder.append("name=").append(tenBienThe);
         builder.append("}");
         return builder.toString();
+    }
+
+    public Map<String, String> compareTo(ProductVariant entityToCompare) {
+        Map<String, String> map = new HashMap<>();
+        return map;
     }
 }
