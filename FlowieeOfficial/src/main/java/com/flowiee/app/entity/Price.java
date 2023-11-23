@@ -47,6 +47,11 @@ public class Price extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "productPrice", fetch = FetchType.LAZY)
     private List<ProductHistory> listProductHistory;
 
+    public Price (Integer id, Double priceSell) {
+        super.id = id;
+        this.giaBan = priceSell;
+    }
+
     @Override
     public String toString() {
         return "GiaSanPham{" +

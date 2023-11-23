@@ -72,4 +72,9 @@ public class TicketImportGoods extends BaseEntity implements Serializable {
     public TicketImportGoods(Integer id) {
         super.id = id;
     }
+
+    public TicketImportGoods(Integer id, String title) {
+        super.id = id;
+        this.title = title;
+    }
 }

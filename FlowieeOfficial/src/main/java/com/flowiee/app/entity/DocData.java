@@ -8,7 +8,9 @@ import lombok.*;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Entity
@@ -45,5 +47,13 @@ public class DocData extends BaseEntity implements Serializable {
             ", docField=" + docField +
             ", document=" + document +
             '}';
+    }
+
+    public Map<String, String> compareTo(DocData entityToCompare) {
+        Map<String, String> map = new HashMap<>();
+        if (!this.getNoiDung().equals(entityToCompare.getNoiDung())) {
+            map.put("DocData - " + this.getDocField().getTenField(), this.getNoiDung() + "#" + entityToCompare.getNoiDung());
+        }
+        return map;
     }
 }

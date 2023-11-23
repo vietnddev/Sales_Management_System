@@ -10,9 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ProductVariantRepository extends JpaRepository <ProductVariant, Integer>{
-    @Query("from ProductVariant b where b.product.id=:sanPhamId order by b.color.name")
-    List<ProductVariant> findListBienTheOfsanPham(int sanPhamId);
-
     @Query("from ProductVariant b where b.product.id=:sanPhamId and b.color.id=:mauSacId and b.size.id=:kichCoId")
     ProductVariant findByMauSacAndKichCo(int sanPhamId, int mauSacId, int kichCoId);
 

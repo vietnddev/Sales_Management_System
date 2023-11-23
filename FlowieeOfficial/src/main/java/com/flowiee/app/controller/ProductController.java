@@ -104,7 +104,7 @@ public class ProductController extends BaseController {
         // Danh sách kích cỡ
         modelAndView.addObject("listDmKichCoSanPham", categoryService.findSubCategory(AppConstants.SIZE));
         // Load danh sách biến thể sản phẩm
-        modelAndView.addObject("listBienTheSanPham", productVariantService.getListVariantOfProduct(productId));
+        modelAndView.addObject("listBienTheSanPham", productVariantService.findAllProductVariantOfProduct(productId));
         // Danh sách đơn vị tính
         modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
         // Danh sách chất liệu vải

@@ -64,6 +64,11 @@ public class Product extends BaseEntity implements Serializable {
         super.id = id;
     }
 
+    public Product(Integer id, String name) {
+        super.id = id;
+        this.tenSanPham = name;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("Product {");

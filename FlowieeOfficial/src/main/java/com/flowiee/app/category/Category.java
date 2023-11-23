@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.entity.*;
 
+import com.flowiee.app.utils.FlowieeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.*;
 
@@ -92,8 +96,31 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
 	private List<Product> listProductByUnit;
 
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+	private List<CategoryHistory> listCategoryHistory;
+
 	public Category(Integer id, String name) {
 		super.id = id;
 		this.name = name;
+	}
+
+	public Map<String, String> compareTo(Category categoryToCompare) {
+		Map<String, String> map = new HashMap<>();
+		if (!this.getCode().equals(categoryToCompare.getCode())) {
+			map.put("Code", this.getCode() + "#" + categoryToCompare.getCode());
+		}
+		if (!this.getName().equals(categoryToCompare.getName())) {
+			map.put("Name", this.getName() + "#" + categoryToCompare.getName());
+		}
+		if (!this.getColor().equals(categoryToCompare.getColor())) {
+			map.put("Color label", this.getColor() + "#" + categoryToCompare.getColor());
+		}
+		if (!this.getNote().equals(categoryToCompare.getNote())) {
+			map.put("Note", this.getNote() + "#" + categoryToCompare.getNote());
+		}
+		if ("N".equals(this.getIsDefault()) && "Y".equals(categoryToCompare.getIsDefault())) {
+			map.put("Use default","#" + FlowieeUtil.now("HH:mm:ss dd/MM/yyyy"));
+		}
+		return map;
 	}
 }

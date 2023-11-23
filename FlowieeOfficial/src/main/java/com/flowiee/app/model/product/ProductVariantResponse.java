@@ -28,6 +28,7 @@ public class ProductVariantResponse extends ProductVariant implements Serializab
 
     public static ProductVariantResponse fromProductVariant(ProductVariant input) {
         ProductVariantResponse response = new ProductVariantResponse();
+        response.setProduct(input.getProduct());
         response.setId(input.getId());
         response.setCode(input.getMaSanPham());
         response.setName(input.getTenBienThe());

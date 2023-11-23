@@ -10,7 +10,7 @@ public class PagesUtil {
     public static final String SYS_ROLE = "/pages/system/role";
     public static final String SYS_CONFIG = "/pages/system/config";
     public static final String SYS_NOTIFICATION = "/pages/system/notification";
-    public static final String SYS_PROFILE = "pages/he-thong/profile";
+    public static final String SYS_PROFILE = "pages/system/profile";
     public static final String SYS_UNAUTHORIZED = "/pages/system/unauthorized";
     public static final String SYS_ERROR = "/pages/system/error";
 

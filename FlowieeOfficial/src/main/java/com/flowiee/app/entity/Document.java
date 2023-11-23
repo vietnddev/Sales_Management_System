@@ -8,7 +8,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Entity
@@ -72,5 +74,24 @@ public class Document extends BaseEntity implements Serializable {
             ", moTa='" + moTa + '\'' +
             ", loaiTaiLieu=" + loaiTaiLieu +
             '}';
+    }
+
+    public Map<String, String> compareTo(Document documentToCompare) {
+        Map<String, String> map = new HashMap<>();
+        if (!this.getParentId().equals(documentToCompare.getParentId())) {
+            map.put("Move", "From " +this.getParentId() + "#To " + documentToCompare.getParentId());
+        }
+        if (!this.getTen().equals(documentToCompare.getTen())) {
+            map.put("Document name", this.getTen() + "#" + documentToCompare.getTen());
+        }
+        if (!this.getLoaiTaiLieu().getName().equals(documentToCompare.getLoaiTaiLieu().getName())) {
+            map.put("Document type", this.getLoaiTaiLieu().getName() + "#" + documentToCompare.getLoaiTaiLieu().getName());
+        }
+        if (!this.getMoTa().equals(documentToCompare.getMoTa())) {
+            String descriptionOld = this.getMoTa().length() > 9999 ? this.getMoTa().substring(0, 9999) : this.getMoTa();
+            String descriptionNew = documentToCompare.getMoTa().length() > 9999 ? documentToCompare.getMoTa().substring(0, 9999) : documentToCompare.getMoTa();
+            map.put("Description", descriptionOld + "#" + descriptionNew);
+        }
+        return map;
     }
 }

@@ -7,7 +7,7 @@ import com.flowiee.app.model.product.ProductVariantResponse;
 import java.util.List;
 
 public interface ProductVariantService extends BaseService<ProductVariant> {
-    List<ProductVariantResponse>  getListVariantOfProduct(Integer sanPhamId);
+    List<ProductVariantResponse>  findAllProductVariantOfProduct(Integer productId);
 
     Double getGiaBan(int id);
 

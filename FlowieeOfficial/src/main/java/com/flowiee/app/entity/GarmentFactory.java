@@ -38,4 +38,9 @@ public class GarmentFactory extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "garmentFactory", fetch = FetchType.LAZY)
     private List<ProductVariant> listProductVariant;
+
+    public GarmentFactory(Integer id, String name) {
+        super.id = id;
+        this.name = name;
+    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Table(name = "pro_san_pham_thuoc_tinh")
+@Table(name = "pro_product_attribute")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -53,6 +53,12 @@ public class ProductAttribute extends BaseEntity implements Serializable {
 
     public Map<String, String> compareTo(ProductAttribute entityToCompare) {
         Map<String, String> map = new HashMap<>();
+        if (!this.getTenThuocTinh().equals(entityToCompare.getTenThuocTinh())) {
+            map.put("Product attribute name", this.getTenThuocTinh() + "#" + entityToCompare.getTenThuocTinh());
+        }
+        if (!this.getGiaTriThuocTinh().equals(entityToCompare.getGiaTriThuocTinh())) {
+            map.put("Product attribute value", this.getGiaTriThuocTinh() + "#" + entityToCompare.getGiaTriThuocTinh());
+        }
         return map;
     }
 }
