@@ -1,10 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.category.Category;
+import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.model.system.SanPhamAction;
-import com.flowiee.app.model.system.SystemModule;
-import com.flowiee.app.model.product.ProductVariantResponse;
+import com.flowiee.app.model.role.SanPhamAction;
+import com.flowiee.app.model.role.SystemModule;
+import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.repository.ProductVariantRepository;
 import com.flowiee.app.service.PriceService;
 import com.flowiee.app.service.ProductVariantService;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.sql.SQLData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,10 +46,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public List<ProductVariantResponse> findAllProductVariantOfProduct(Integer productId) {
-        List<ProductVariantResponse> listReturn = new ArrayList<>();
+    public List<ProductVariantDTO> findAllProductVariantOfProduct(Integer productId) {
+        List<ProductVariantDTO> listReturn = new ArrayList<>();
         for (ProductVariant productVariant : this.findData(AppConstants.PRODUCT, String.valueOf(productId))) {
-            ProductVariantResponse dataModel = ProductVariantResponse.fromProductVariant(productVariant);
+            ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
             dataModel.setPrices(priceService.findPricesByProductVariant(dataModel.getId()));
             listReturn.add(dataModel);
         }

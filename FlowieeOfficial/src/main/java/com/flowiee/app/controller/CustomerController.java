@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
-import com.flowiee.app.config.author.ValidateModuleProduct;
+import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.CustomerContactService;
 import com.flowiee.app.service.CustomerService;

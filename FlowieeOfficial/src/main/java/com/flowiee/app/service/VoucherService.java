@@ -1,12 +1,12 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.entity.Voucher;
-import com.flowiee.app.model.product.VoucherResponse;
+import com.flowiee.app.dto.VoucherDTO;
 
 import java.util.List;
 
 public interface VoucherService {
-    List<VoucherResponse> findAll();
+    List<VoucherDTO> findAll();
 
     Voucher findById(Integer voucherId);
 

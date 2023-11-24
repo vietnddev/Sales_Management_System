@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.AccountRole;
-import com.flowiee.app.model.system.*;
+import com.flowiee.app.model.role.*;
 import com.flowiee.app.repository.RoleRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;

@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
-import com.flowiee.app.config.author.ValidateModuleStorage;
+import com.flowiee.app.security.author.ValidateModuleStorage;
 import com.flowiee.app.service.TicketExportGoodsService;
 import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

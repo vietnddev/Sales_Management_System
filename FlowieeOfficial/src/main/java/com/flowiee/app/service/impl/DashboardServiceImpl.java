@@ -2,10 +2,10 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
-import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
-import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
-import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
-import com.flowiee.app.model.product.TopBestSeller;
+import com.flowiee.app.model.DoanhThuCacNgayTheoThangModel;
+import com.flowiee.app.model.DoanhThuCacThangTheoNamModel;
+import com.flowiee.app.model.DoanhThuTheoKenhBanHangModel;
+import com.flowiee.app.model.TopBestSellerModel;
 import com.flowiee.app.service.DashboardService;
 
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class DashboardServiceImpl implements DashboardService {
     private EntityManager entityManager;
 
     @Override
-    public DoanhThuTheoKenhBanHang getDoanhThuTheoKenhBanHang() {
+    public DoanhThuTheoKenhBanHangModel getDoanhThuTheoKenhBanHang() {
         StringBuilder strSQL = new StringBuilder("SELECT c.NAME, c.COLOR, NVL(SUM(d.TONG_TIEN_DON_HANG),0) AS TOTAL ");
         strSQL.append("FROM (SELECT * FROM CATEGORY WHERE TYPE = 'SALESCHANNEL') c ");
         strSQL.append("LEFT JOIN PRO_DON_HANG d ON c.ID = d.KENH_BAN_HANG ");
@@ -38,7 +38,7 @@ public class DashboardServiceImpl implements DashboardService {
         @SuppressWarnings("unchecked")
 		List<Object[]> listData = result.getResultList();
 
-        DoanhThuTheoKenhBanHang dataReturn = new DoanhThuTheoKenhBanHang();
+        DoanhThuTheoKenhBanHangModel dataReturn = new DoanhThuTheoKenhBanHangModel();
         List<String> listTenOfKenh = new ArrayList<>();
         List<Float> listDoanhThuOfKenh = new ArrayList<>();
         List<String> listMauSacOfKenh = new ArrayList<>();
@@ -55,7 +55,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public DoanhThuCacThangTheoNam getDoanhThuCacThangTheoNam() {
+    public DoanhThuCacThangTheoNamModel getDoanhThuCacThangTheoNam() {
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 1 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_1, ");
         strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 2 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_2, ");
@@ -81,14 +81,14 @@ public class DashboardServiceImpl implements DashboardService {
             listDoanhThu.add(Float.parseFloat(String.valueOf(listData.get(0)[i] != null ? listData.get(0)[i] : 0)));
         }
 
-        DoanhThuCacThangTheoNam dataReturn = new DoanhThuCacThangTheoNam();
+        DoanhThuCacThangTheoNamModel dataReturn = new DoanhThuCacThangTheoNamModel();
         dataReturn.setDoanhThu(listDoanhThu);
 
         return dataReturn;
     }
 
     @Override
-    public DoanhThuCacNgayTheoThang getDoanhThuCacNgayTheoThang() {
+    public DoanhThuCacNgayTheoThangModel getDoanhThuCacNgayTheoThang() {
         // Lấy ngày bắt đầu của tháng hiện tại
         LocalDate ngayBatDau = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
         // Lấy ngày kết thúc của tháng hiện tại
@@ -109,7 +109,7 @@ public class DashboardServiceImpl implements DashboardService {
         @SuppressWarnings("unchecked")
 		List<Object[]> listData = result.getResultList();
 
-        DoanhThuCacNgayTheoThang dataReturn = new DoanhThuCacNgayTheoThang();
+        DoanhThuCacNgayTheoThangModel dataReturn = new DoanhThuCacNgayTheoThangModel();
         List<String> listNgay = new ArrayList<>();
         List<Float> listDoanhThu = new ArrayList<>();
 
@@ -128,7 +128,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public TopBestSeller getTopSanPhamBanChay() {
+    public TopBestSellerModel getTopSanPhamBanChay() {
         StringBuilder strSQL = new StringBuilder("SELECT * ");
         strSQL.append("FROM (");
         strSQL.append("SELECT s.VARIANT_NAME, NVL(SUM(d.SO_LUONG), 0) AS Total ");
@@ -144,7 +144,7 @@ public class DashboardServiceImpl implements DashboardService {
         @SuppressWarnings("unchecked")
 		List<Object[]> listData = result.getResultList();
 
-        TopBestSeller dataReturn = new TopBestSeller();
+        TopBestSellerModel dataReturn = new TopBestSellerModel();
         List<String> listTenSanPham = new ArrayList<>();
         List<Integer> listSoLuongDaBan = new ArrayList<>();
         for (Object[] data : listData) {

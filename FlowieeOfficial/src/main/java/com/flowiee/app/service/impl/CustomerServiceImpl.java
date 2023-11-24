@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.system.KhachHangAction;
-import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.model.role.KhachHangAction;
+import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.CustomerRepository;
 import com.flowiee.app.service.CustomerService;

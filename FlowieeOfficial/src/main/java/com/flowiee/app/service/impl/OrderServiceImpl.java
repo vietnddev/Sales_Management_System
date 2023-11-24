@@ -1,13 +1,13 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
-import com.flowiee.app.model.product.OrderResponse;
+import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.FlowieeUtil;
-import com.flowiee.app.model.product.OrderRequest;
-import com.flowiee.app.category.Category;
-import com.flowiee.app.model.system.DonHangAction;
-import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.model.request.OrderRequest;
+import com.flowiee.app.entity.Category;
+import com.flowiee.app.model.role.DonHangAction;
+import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
@@ -230,8 +230,8 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private List<OrderResponse> findData() {
-        List<OrderResponse> dataResponse = new ArrayList<>();
+    private List<OrderDTO> findData() {
+        List<OrderDTO> dataResponse = new ArrayList<>();
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("o.ID as ORDER_ID_0, o.MA_DON_HANG as MA_DON_HANG_1, o.THOI_GIAN_DAT_HANG as ORDER_TIME_2, o.RECEIVER_ADDRESS as RECEIVER_ADDRESS_3,");
         strSQL.append("o.RECEIVER_PHONE as RECEIVER_PHONE_4,o.RECEIVER_NAME as RECEIVER_NAME_5, c.ID as ORDERBY_ID_6, c.TEN_KHACH_HANG as ORDER_BY_NAME_7,");
@@ -250,7 +250,7 @@ public class OrderServiceImpl implements OrderService {
         Query query = entityManager.createNativeQuery(strSQL.toString());
         List<Object[]> listData = query.getResultList();
         for (Object[] data : listData) {
-            OrderResponse order = new OrderResponse();
+            OrderDTO order = new OrderDTO();
             order.setOrderId(Integer.parseInt(String.valueOf(data[0])));
             order.setOrderCode(String.valueOf(data[1]));
             order.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(data[2])));

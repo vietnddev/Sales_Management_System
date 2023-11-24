@@ -1,14 +1,14 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.config.author.ValidateModuleSystem;
+import com.flowiee.app.security.author.ValidateModuleSystem;
 import com.flowiee.app.exception.DataExistsException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
-import com.flowiee.app.model.system.ActionOfModule;
-import com.flowiee.app.model.system.FlowieeRole;
-import com.flowiee.app.model.system.Role;
+import com.flowiee.app.model.role.ActionOfModule;
+import com.flowiee.app.model.role.FlowieeRole;
+import com.flowiee.app.model.role.Role;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 

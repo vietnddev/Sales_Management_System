@@ -1,6 +1,6 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.config.author.ValidateModuleSystem;
+import com.flowiee.app.security.author.ValidateModuleSystem;
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.AccountService;

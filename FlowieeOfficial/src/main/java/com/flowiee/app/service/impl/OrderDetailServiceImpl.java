@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.system.DonHangAction;
-import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.model.role.DonHangAction;
+import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.repository.OrderDetailRepository;
 import com.flowiee.app.service.OrderDetailService;

@@ -70,4 +70,18 @@ public class AppConstants {
             return label;
         }
     }
+
+    public enum DOCUMENT_TYPE {
+        FI("File"),
+        FO("Folder");
+        private final String label;
+
+        DOCUMENT_TYPE(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
 }

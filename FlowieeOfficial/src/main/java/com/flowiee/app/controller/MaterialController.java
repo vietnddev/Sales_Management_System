@@ -1,12 +1,12 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.config.author.ValidateModuleStorage;
+import com.flowiee.app.security.author.ValidateModuleStorage;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.category.CategoryService;
+import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.MaterialService;
 import com.flowiee.app.service.AccountService;

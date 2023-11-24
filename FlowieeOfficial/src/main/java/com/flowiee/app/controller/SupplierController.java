@@ -1,6 +1,6 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.config.author.ValidateModuleProduct;
+import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -2,7 +2,7 @@ package com.flowiee.app.service;
 
 import com.flowiee.app.base.BaseService;
 import com.flowiee.app.entity.Order;
-import com.flowiee.app.model.product.OrderRequest;
+import com.flowiee.app.model.request.OrderRequest;
 
 import org.springframework.http.ResponseEntity;
 

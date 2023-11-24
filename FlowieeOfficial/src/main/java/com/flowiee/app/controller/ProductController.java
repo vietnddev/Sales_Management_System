@@ -1,8 +1,8 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.config.author.ValidateModuleProduct;
+import com.flowiee.app.service.CategoryService;
+import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.FlowieeUtil;
@@ -18,7 +18,6 @@ import com.flowiee.app.entity.Price;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductAttribute;
 import com.flowiee.app.entity.ProductVariant;
-import com.flowiee.app.model.product.ProductStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -164,7 +163,7 @@ public class ProductController extends BaseController {
         if (!validateModuleProduct.updateProduct()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        productVariant.setTrangThai(ProductStatus.KINH_DOANH.name());
+        productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.A.name());
         productVariant.setMaSanPham(FlowieeUtil.now("yyyyMMddHHmmss"));
         productVariantService.save(productVariant);
         //Khởi tạo giá default của giá bán

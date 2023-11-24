@@ -1,11 +1,10 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.system.KhoTaiLieuAction;
-import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.model.role.KhoTaiLieuAction;
+import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.Document;
-import com.flowiee.app.model.storage.DocMetaResponse;
-import com.flowiee.app.model.storage.DocumentType;
+import com.flowiee.app.dto.DocMetaDTO;
 import com.flowiee.app.repository.DocumentRepository;
 import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocumentService;
@@ -71,7 +70,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<Document> findAllFolder() {
-        return documentRepository.findAllFolder(DocumentType.FOLDER.name());
+        return documentRepository.findAllFolder(AppConstants.DOCUMENT_TYPE.FO.name());
     }
 
     @Override
@@ -143,8 +142,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocMetaResponse> getMetadata(Integer documentId) {
-        List<DocMetaResponse> listReturn = new ArrayList<>();
+    public List<DocMetaDTO> getMetadata(Integer documentId) {
+        List<DocMetaDTO> listReturn = new ArrayList<>();
 
         Query result = entityManager.createQuery("SELECT d.id, d.noiDung, f.tenField, f.loaiField, f.batBuocNhap " +
                                                         "FROM DocField f " +
@@ -155,7 +154,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         if (!listData.isEmpty()) {
             for (Object[] data : listData) {
-                DocMetaResponse metadata = new DocMetaResponse();
+                DocMetaDTO metadata = new DocMetaDTO();
                 metadata.setDocDataId(Integer.parseInt(String.valueOf(data[0])));
                 metadata.setDocDataValue(data[1] != null ? String.valueOf(data[1]) : "");
                 metadata.setDocFieldName(String.valueOf(data[2]));

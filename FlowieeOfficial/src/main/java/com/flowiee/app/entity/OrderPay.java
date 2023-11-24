@@ -1,7 +1,6 @@
 package com.flowiee.app.entity;
 
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.category.Category;
 
 import lombok.*;
 

@@ -3,8 +3,6 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.category.Category;
-import com.flowiee.app.utils.AppConstants;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +10,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Builder
 @Entity

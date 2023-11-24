@@ -1,13 +1,12 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.category.Category;
-import com.flowiee.app.category.CategoryService;
-import com.flowiee.app.config.author.ValidateModuleStorage;
+import com.flowiee.app.entity.Category;
+import com.flowiee.app.service.CategoryService;
+import com.flowiee.app.security.author.ValidateModuleStorage;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.entity.Document;
-import com.flowiee.app.model.storage.DocMetaResponse;
-import com.flowiee.app.model.storage.DocumentType;
+import com.flowiee.app.dto.DocMetaDTO;
 import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocFieldService;
 import com.flowiee.app.service.DocShareService;
@@ -131,13 +130,13 @@ public class DocumentController extends BaseController {
         if (!validateModuleStorage.read() || !docShareService.isShared(documentId)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
-        if (document.getLoai().equals(DocumentType.FILE.name())) {
+        if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FI.name())) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT_DETAIL);
             modelAndView.addObject("docDetail", document);
             modelAndView.addObject("document", new Document());
             //load metadata
-            List<DocMetaResponse> docMetaResponse = documentService.getMetadata(documentId);
-            modelAndView.addObject("listDocDataInfo", docMetaResponse);
+            List<DocMetaDTO> docMetaDTO = documentService.getMetadata(documentId);
+            modelAndView.addObject("listDocDataInfo", docMetaDTO);
             //Load file active
             modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
             //Load các version khác của document
@@ -153,7 +152,7 @@ public class DocumentController extends BaseController {
             return baseView(modelAndView);
         }
 
-        if (document.getLoai().equals(DocumentType.FOLDER.name())) {
+        if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FO.name())) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
             modelAndView.addObject("document", new Document());
             modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
@@ -200,7 +199,7 @@ public class DocumentController extends BaseController {
         }
         Document documentSaved = documentService.saveReturnEntity(document);
         //Trường hợp document được tạo mới là file upload
-        if (document.getLoai().equals(DocumentType.FILE.name()) && file != null) {
+        if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FI.name()) && file != null) {
             //Lưu file đính kèm vào thư mục chứ file upload
             fileStorageService.saveFileOfDocument(file, documentSaved.getId());
 

@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.system.SanPhamAction;
-import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.model.role.SanPhamAction;
+import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Price;
 import com.flowiee.app.repository.PriceRepository;
 import com.flowiee.app.service.PriceService;

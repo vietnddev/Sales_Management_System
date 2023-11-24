@@ -2,21 +2,21 @@ package com.flowiee.app.service;
 
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
-import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
-import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
-import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
-import com.flowiee.app.model.product.TopBestSeller;
+import com.flowiee.app.model.DoanhThuCacNgayTheoThangModel;
+import com.flowiee.app.model.DoanhThuCacThangTheoNamModel;
+import com.flowiee.app.model.DoanhThuTheoKenhBanHangModel;
+import com.flowiee.app.model.TopBestSellerModel;
 
 import java.util.List;
 
 public interface DashboardService {
-    DoanhThuTheoKenhBanHang getDoanhThuTheoKenhBanHang();
+    DoanhThuTheoKenhBanHangModel getDoanhThuTheoKenhBanHang();
 
-    DoanhThuCacThangTheoNam getDoanhThuCacThangTheoNam();
+    DoanhThuCacThangTheoNamModel getDoanhThuCacThangTheoNam();
 
-    DoanhThuCacNgayTheoThang getDoanhThuCacNgayTheoThang();
+    DoanhThuCacNgayTheoThangModel getDoanhThuCacNgayTheoThang();
 
-    TopBestSeller getTopSanPhamBanChay();
+    TopBestSellerModel getTopSanPhamBanChay();
 
     List<Order> getSoLuongDonHangHomNay();
 

@@ -4,7 +4,7 @@ import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.entity.Voucher;
 import com.flowiee.app.entity.VoucherDetail;
 import com.flowiee.app.entity.VoucherSanPham;
-import com.flowiee.app.model.product.VoucherResponse;
+import com.flowiee.app.dto.VoucherDTO;
 import com.flowiee.app.repository.VoucherRepository;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.VoucherDetailService;
@@ -32,28 +32,28 @@ public class VoucherServiceImpl implements VoucherService {
     private ProductVariantService productVariantService;
 
     @Override
-    public List<VoucherResponse> findAll() {
+    public List<VoucherDTO> findAll() {
         List<Voucher> listVoucher = voucherRepository.findAll();
-        List<VoucherResponse> listVoucherResponse = new ArrayList<>();
+        List<VoucherDTO> listVoucherDTO = new ArrayList<>();
         for (Voucher voucher : listVoucher) {
-            VoucherResponse voucherResponse = new VoucherResponse();
-            voucherResponse.setId(voucher.getId());
-            voucherResponse.setTitle(voucher.getTitle());
-            voucherResponse.setDescription(voucher.getDescription());
-            voucherResponse.setDoiTuongApDung(voucher.getDoiTuongApDung());
-            voucherResponse.setVoucherType(voucher.getVoucherType());
-            voucherResponse.setQuantity(voucher.getQuantity());
-            voucherResponse.setLengthOfKey(voucher.getLengthOfKey());
-            voucherResponse.setDiscount(voucher.getDiscount());
-            voucherResponse.setMaxPriceDiscount(voucher.getMaxPriceDiscount());
-            voucherResponse.setStatus(voucher.isStatus());
+            VoucherDTO voucherDTO = new VoucherDTO();
+            voucherDTO.setId(voucher.getId());
+            voucherDTO.setTitle(voucher.getTitle());
+            voucherDTO.setDescription(voucher.getDescription());
+            voucherDTO.setDoiTuongApDung(voucher.getDoiTuongApDung());
+            voucherDTO.setVoucherType(voucher.getVoucherType());
+            voucherDTO.setQuantity(voucher.getQuantity());
+            voucherDTO.setLengthOfKey(voucher.getLengthOfKey());
+            voucherDTO.setDiscount(voucher.getDiscount());
+            voucherDTO.setMaxPriceDiscount(voucher.getMaxPriceDiscount());
+            voucherDTO.setStatus(voucher.isStatus());
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            voucherResponse.setStartTime(dateFormat.format(voucher.getStartTime()));
-            voucherResponse.setEndTime(dateFormat.format(voucher.getEndTime()));
+            voucherDTO.setStartTime(dateFormat.format(voucher.getStartTime()));
+            voucherDTO.setEndTime(dateFormat.format(voucher.getEndTime()));
 
             List<VoucherDetail> listVoucherDetail = voucherDetailService.findByVoucherId(voucher.getId());
-            voucherResponse.setListVoucherDetail(listVoucherDetail);
+            voucherDTO.setListVoucherDetail(listVoucherDetail);
 
             List<VoucherSanPham> listVoucherSanPham = voucherSanPhamService.findByVoucherId(voucher.getId());
             List<ProductVariant> listSanPhamApDung = new ArrayList<>();
@@ -63,11 +63,11 @@ public class VoucherServiceImpl implements VoucherService {
                      listSanPhamApDung.add(sanPhamApDung);
                  }
             }
-            voucherResponse.setListSanPhamApDung(listSanPhamApDung);
+            voucherDTO.setListSanPhamApDung(listSanPhamApDung);
 
-            listVoucherResponse.add(voucherResponse);
+            listVoucherDTO.add(voucherDTO);
         }
-        return listVoucherResponse;
+        return listVoucherDTO;
     }
 
     @Override

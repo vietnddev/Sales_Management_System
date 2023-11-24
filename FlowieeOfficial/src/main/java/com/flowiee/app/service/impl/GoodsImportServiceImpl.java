@@ -1,12 +1,12 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.category.Category;
+import com.flowiee.app.entity.Category;
+import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
-import com.flowiee.app.model.product.GoodsImportRequest;
 import com.flowiee.app.repository.GoodsImportRepository;
 import com.flowiee.app.service.GoodsImportService;
 
@@ -81,7 +81,7 @@ public class GoodsImportServiceImpl implements GoodsImportService {
 ;
 
     @Override
-    public String saveDraft(GoodsImportRequest request) {
+    public String saveDraft(TicketImportGoodsRequest request) {
         if (request == null || request.getId() == null || request.getId() <= 0) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }

@@ -1,10 +1,10 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.entity.AccountRole;
-import com.flowiee.app.model.system.ActionOfModule;
-import com.flowiee.app.model.system.FlowieeRole;
-import com.flowiee.app.model.system.ModuleOfFlowiee;
-import com.flowiee.app.model.system.Role;
+import com.flowiee.app.model.role.ActionOfModule;
+import com.flowiee.app.model.role.FlowieeRole;
+import com.flowiee.app.model.role.ModuleOfFlowiee;
+import com.flowiee.app.model.role.Role;
 
 import java.util.List;
 

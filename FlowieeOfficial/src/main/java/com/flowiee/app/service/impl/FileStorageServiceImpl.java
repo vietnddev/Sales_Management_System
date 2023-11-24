@@ -6,7 +6,7 @@ import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.repository.FileStorageRepository;
-import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.DocumentService;

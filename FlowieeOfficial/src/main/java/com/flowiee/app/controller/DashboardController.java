@@ -1,13 +1,13 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.utils.FlowieeUtil;
-import com.flowiee.app.config.author.ValidateModuleDashboard;
+import com.flowiee.app.security.author.ValidateModuleDashboard;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
-import com.flowiee.app.model.product.DoanhThuCacNgayTheoThang;
-import com.flowiee.app.model.product.DoanhThuCacThangTheoNam;
-import com.flowiee.app.model.product.DoanhThuTheoKenhBanHang;
-import com.flowiee.app.model.product.TopBestSeller;
+import com.flowiee.app.model.DoanhThuCacNgayTheoThangModel;
+import com.flowiee.app.model.DoanhThuCacThangTheoNamModel;
+import com.flowiee.app.model.DoanhThuTheoKenhBanHangModel;
+import com.flowiee.app.model.TopBestSellerModel;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.service.DashboardService;
@@ -55,24 +55,24 @@ public class DashboardController extends BaseController {
             modelAndView.addObject("danhSachkhachHangMoiTrongThang", listCustomerThisMonth);
 
             //Pie chart - Doanh thu theo kênh bán hàng
-            DoanhThuTheoKenhBanHang doanhThuTheoKenhBanHang = dashboardService.getDoanhThuTheoKenhBanHang();
-            modelAndView.addObject("doanhThuOfKBH_listTen", doanhThuTheoKenhBanHang.getTenOfKenh());
-            modelAndView.addObject("doanhThuOfKBH_listDoanhThu", doanhThuTheoKenhBanHang.getDoanhThuOfKenh());
-            modelAndView.addObject("doanhThuOfKBH_listMauSac", doanhThuTheoKenhBanHang.getMauSac());
+            DoanhThuTheoKenhBanHangModel doanhThuTheoKenhBanHangModel = dashboardService.getDoanhThuTheoKenhBanHang();
+            modelAndView.addObject("doanhThuOfKBH_listTen", doanhThuTheoKenhBanHangModel.getTenOfKenh());
+            modelAndView.addObject("doanhThuOfKBH_listDoanhThu", doanhThuTheoKenhBanHangModel.getDoanhThuOfKenh());
+            modelAndView.addObject("doanhThuOfKBH_listMauSac", doanhThuTheoKenhBanHangModel.getMauSac());
 
             //Line chart - Doanh thu các tháng theo năm
-            DoanhThuCacThangTheoNam doanhThuCacThangTheoNam = dashboardService.getDoanhThuCacThangTheoNam();
-            modelAndView.addObject("doanhThuOfMonth_listDoanhThu", doanhThuCacThangTheoNam.getDoanhThu());
+            DoanhThuCacThangTheoNamModel doanhThuCacThangTheoNamModel = dashboardService.getDoanhThuCacThangTheoNam();
+            modelAndView.addObject("doanhThuOfMonth_listDoanhThu", doanhThuCacThangTheoNamModel.getDoanhThu());
 
             //Line chart - Doanh thu các ngày theo tháng
-            DoanhThuCacNgayTheoThang doanhThuCacNgayTheoThang = dashboardService.getDoanhThuCacNgayTheoThang();
-            modelAndView.addObject("doanhThuOfDay_listNgay", doanhThuCacNgayTheoThang.getListNgay());
-            modelAndView.addObject("doanhThuOfDay_listDoanhThu", doanhThuCacNgayTheoThang.getListDoanhThu());
+            DoanhThuCacNgayTheoThangModel doanhThuCacNgayTheoThangModel = dashboardService.getDoanhThuCacNgayTheoThang();
+            modelAndView.addObject("doanhThuOfDay_listNgay", doanhThuCacNgayTheoThangModel.getListNgay());
+            modelAndView.addObject("doanhThuOfDay_listDoanhThu", doanhThuCacNgayTheoThangModel.getListDoanhThu());
 
             //Bar chart - Top sản phẩm bán chạy
-            TopBestSeller topBestSeller = dashboardService.getTopSanPhamBanChay();
-            modelAndView.addObject("topSanPham_listTenSanPham", topBestSeller.getTenSanPham());
-            modelAndView.addObject("topSanPham_listSoLuong", topBestSeller.getSoLuongDaBan());
+            TopBestSellerModel topBestSellerModel = dashboardService.getTopSanPhamBanChay();
+            modelAndView.addObject("topSanPham_listTenSanPham", topBestSellerModel.getTenSanPham());
+            modelAndView.addObject("topSanPham_listSoLuong", topBestSellerModel.getSoLuongDaBan());
 
             return baseView(modelAndView);
         } else {

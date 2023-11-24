@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
-import com.flowiee.app.config.author.ValidateModuleSystem;
+import com.flowiee.app.security.author.ValidateModuleSystem;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.NotificationService;
 import com.flowiee.app.service.SystemLogService;

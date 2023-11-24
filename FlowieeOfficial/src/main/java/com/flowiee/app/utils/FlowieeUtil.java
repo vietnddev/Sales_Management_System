@@ -1,6 +1,6 @@
 package com.flowiee.app.utils;
 
-import com.flowiee.app.model.system.SystemModule;
+import com.flowiee.app.model.role.SystemModule;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;

@@ -1,6 +1,6 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.config.author.ValidateModuleStorage;
+import com.flowiee.app.security.author.ValidateModuleStorage;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Material;
@@ -9,13 +9,13 @@ import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.model.product.GoodsImportRequest;
+import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.category.Category;
-import com.flowiee.app.category.CategoryService;
+import com.flowiee.app.entity.Category;
+import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.service.GoodsImportService;
 import com.flowiee.app.service.MaterialService;
 import com.flowiee.app.service.MaterialTempService;
@@ -65,7 +65,7 @@ public class TicketImportGoodsController extends BaseController {
             if (ticketImportGoodsPresent == null) {
                 ticketImportGoodsPresent = goodsImportService.createDraftImport();
             }
-            modelAndView.addObject("goodsImportRequest", new GoodsImportRequest());
+            modelAndView.addObject("goodsImportRequest", new TicketImportGoodsRequest());
             modelAndView.addObject("goodsImport", new TicketImportGoods());
             modelAndView.addObject("draftGoodsImport", ticketImportGoodsPresent);
             modelAndView.addObject("orderTime", ticketImportGoodsPresent.getOrderTime().toString().substring(0, 10));
@@ -180,14 +180,14 @@ public class TicketImportGoodsController extends BaseController {
     }
 
     @PostMapping("/draft/save")
-    public String update(@ModelAttribute("goodsImportRequest") GoodsImportRequest goodsImportRequest, HttpServletRequest request) {
+    public String update(@ModelAttribute("goodsImportRequest") TicketImportGoodsRequest ticketImportGoodsRequest, HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
         if (validateModuleStorage.goodsImport()) {
-            goodsImportRequest.setOrderTime(FlowieeUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
-            goodsImportRequest.setReceivedTime(FlowieeUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
-            goodsImportService.saveDraft(goodsImportRequest);
+            ticketImportGoodsRequest.setOrderTime(FlowieeUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
+            ticketImportGoodsRequest.setReceivedTime(FlowieeUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
+            goodsImportService.saveDraft(ticketImportGoodsRequest);
             return "redirect:" + request.getHeader("referer");
         } else {
             return PagesUtil.SYS_UNAUTHORIZED;
