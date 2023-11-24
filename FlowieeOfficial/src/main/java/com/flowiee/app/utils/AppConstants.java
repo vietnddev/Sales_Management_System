@@ -3,6 +3,9 @@ package com.flowiee.app.utils;
 public class AppConstants {
     public static String rootPath = "src/main/resources/static/";
 
+    public static String TICKETIMPORT = "TICKETIMPORT";
+    public static String TICKETEXPORT = "TICKETEXPORT";
+    public static String PRODUCT = "PRODUCT";
     public static String UNIT = "UNIT";
     public static String PAYMETHOD = "PAYMETHOD";
     public static String FABRICTYPE = "FABRICTYPE";
@@ -39,4 +42,32 @@ public class AppConstants {
 
     public static final String SERVICE_RESPONSE_SUCCESS = "OK";
     public static final String SERVICE_RESPONSE_FAIL = "NOK";
+
+    public enum PRODUCT_STATUS {
+        A("Active"),
+        I("Inactive");
+        private final String label;
+
+        PRODUCT_STATUS(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
+
+    public enum PRICE_STATUS {
+        A("Active"),
+        I("Inactive");
+        private final String label;
+
+        PRICE_STATUS(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
 }
