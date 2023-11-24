@@ -168,7 +168,7 @@ public class ProductController extends BaseController {
         productVariant.setMaSanPham(FlowieeUtil.now("yyyyMMddHHmmss"));
         productVariantService.save(productVariant);
         //Khởi tạo giá default của giá bán
-        priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).trangThai(true).build());
+        priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.A.name()).build());
         return "redirect:" + request.getHeader("referer");
     }
 

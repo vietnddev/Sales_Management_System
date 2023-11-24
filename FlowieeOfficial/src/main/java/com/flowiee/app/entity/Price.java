@@ -3,6 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
+import com.flowiee.app.utils.AppConstants;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,8 +42,8 @@ public class Price extends BaseEntity implements Serializable {
     @Column(name = "unit_sell")
     private String unitSell;
 
-    @Column(name = "trang_thai", nullable = false)
-    private boolean trangThai;
+    @Column(name = "status", nullable = false, length = 10)
+    private String status;
 
     @OneToMany(mappedBy = "productPrice", fetch = FetchType.LAZY)
     private List<ProductHistory> listProductHistory;
@@ -58,7 +59,7 @@ public class Price extends BaseEntity implements Serializable {
                 "id=" + id +
                 ", bienTheSanPham=" + productVariant +
                 ", giaBan=" + giaBan +
-                ", trangThai=" + trangThai +
+                ", trangThai=" + status +
                 '}';
     }
 }

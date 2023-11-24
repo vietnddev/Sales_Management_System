@@ -37,7 +37,7 @@ public class Order extends BaseEntity implements Serializable {
 	private String receiverAddress;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "khach_hang_id", nullable = false)
+	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
 	@Column(name = "ghi_chu", length = 500)

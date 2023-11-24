@@ -284,7 +284,7 @@ public class OrderController extends BaseController {
         }
         orderPay.setMaPhieu("PTT" + donHangId + FlowieeUtil.now("yyMMddHHmmss"));
         orderPay.setOrder(orderService.findById(donHangId));
-        orderPay.setTrangThaiThanhToan(true);
+        orderPay.setPaymentStatus(true);
         orderPayService.save(orderPay);
         return "redirect:/don-hang/" + donHangId;
     }

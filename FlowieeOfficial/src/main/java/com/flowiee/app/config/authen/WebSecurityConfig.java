@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				//Page login
 				.formLogin().loginPage("/login").permitAll()
 				//Login OK thì redirect vào page danh sách sản phẩm
-				.defaultSuccessUrl("/san-pham")
+				.defaultSuccessUrl("/")
 				.failureUrl("/login?success=fail")
 				.loginProcessingUrl("/j_spring_security_check")
 				.authenticationDetailsSource(authenticationDetailsSource())

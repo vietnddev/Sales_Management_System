@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
 import com.flowiee.app.category.Category;
+import com.flowiee.app.utils.AppConstants;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.Objects;
 
 @Builder
 @Entity
-@Table(name = "pro_san_pham")
+@Table(name = "pro_product")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -40,11 +41,11 @@ public class Product extends BaseEntity implements Serializable {
     private Category unit;
 
     @Lob
-    @Column(name = "mo_ta_san_pham", length = 30000, columnDefinition = "TEXT")
+    @Column(name = "mo_ta_san_pham", length = 30000, columnDefinition = "CLOB")
     private String moTaSanPham;
 
-    @Column(name = "trang_thai", nullable = false)
-    private boolean trangThai;
+    @Column(name = "status", nullable = false, length = 10)
+    private String status;
 
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
@@ -97,8 +98,8 @@ public class Product extends BaseEntity implements Serializable {
             String descriptionNew = productToCompare.getMoTaSanPham().length() > 9999 ? productToCompare.getMoTaSanPham().substring(0, 9999) : productToCompare.getMoTaSanPham();
             map.put("Product description", descriptionOld + "#" + descriptionNew);
         }
-        if (!this.trangThai == productToCompare.isTrangThai()) {
-            map.put("Product status", this.trangThai + "#" + productToCompare.isTrangThai());
+        if (!this.status.equals(productToCompare.getStatus())) {
+            map.put("Product status", this.status + "#" + productToCompare.getStatus());
         }
         if ((this.imageActive != null && productToCompare.getImageActive() != null) && !this.imageActive.getId().equals(productToCompare.getImageActive().getId())) {
             map.put("Image active", this.imageActive.getId() + "#" + productToCompare.getId());

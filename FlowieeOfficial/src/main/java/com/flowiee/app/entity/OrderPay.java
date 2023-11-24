@@ -40,22 +40,14 @@ public class OrderPay extends BaseEntity implements Serializable {
     @Column(name = "ghi_chu")
     private String ghiChu;
 
-    @Column(name = "trang_thai_thanh_toan", nullable = false)
-    private boolean trangThaiThanhToan;
+    @Column(name = "payment_status", nullable = false)
+    private Boolean paymentStatus;
 
     @OneToMany(mappedBy = "orderPay", fetch = FetchType.LAZY)
     private List<OrderHistory> listOrderHistory;
 
-    @Override
-    public String toString() {
-        return "DonHangThanhToan{" +
-                "donHang=" + order +
-                ", maPhieu='" + maPhieu + '\'' +
-                ", thoiGianThanhToan=" + thoiGianThanhToan +
-                ", hinhThucThanhToan=" + hinhThucThanhToan +
-                ", thuNgan=" + thuNgan +
-                ", ghiChu='" + ghiChu + '\'' +
-                ", trangThaiThanhToan=" + trangThaiThanhToan +
-                '}';
+    public OrderPay(int id, boolean paymentStatus) {
+        super.id = id;
+        this.paymentStatus = paymentStatus;
     }
 }

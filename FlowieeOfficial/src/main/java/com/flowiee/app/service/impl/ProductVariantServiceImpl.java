@@ -49,9 +49,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public List<ProductVariantResponse> findAllProductVariantOfProduct(Integer productId) {
         List<ProductVariantResponse> listReturn = new ArrayList<>();
-        String where = "WHERE v.PRODUCT_ID = " + productId;
-        String orderBy = "ORDER BY c.NAME";
-        for (ProductVariant productVariant : this.findData(where, orderBy)) {
+        for (ProductVariant productVariant : this.findData(AppConstants.PRODUCT, String.valueOf(productId))) {
             ProductVariantResponse dataModel = ProductVariantResponse.fromProductVariant(productVariant);
             dataModel.setPrices(priceService.findPricesByProductVariant(dataModel.getId()));
             listReturn.add(dataModel);
@@ -129,29 +127,25 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public List<ProductVariant> findByImportId(Integer ticketImportId) {
-        String where = "WHERE v.TICKET_IMPORT_ID = " + ticketImportId;
-        return findData(where, null);
+        return findData(AppConstants.TICKETIMPORT, String.valueOf(ticketImportId));
     }
 
     @Override
     public List<ProductVariant> findByFabricType(Integer fabricTypeId) {
-        String where = "WHERE v.FABRIC_ID = " + fabricTypeId;
-        return findData(where, null);
+        return findData(AppConstants.FABRICTYPE, String.valueOf(fabricTypeId));
     }
 
     @Override
     public List<ProductVariant> findBySize(Integer sizeId) {
-        String where = "WHERE v.SIZE_ID = " + sizeId;
-        return findData(where, null);
+        return findData(AppConstants.SIZE, String.valueOf(sizeId));
     }
 
     @Override
     public List<ProductVariant> findByColor(Integer colorId) {
-        String where = "WHERE v.COLOR_ID = " + colorId;
-        return findData(where, null);
+        return findData(AppConstants.COLOR, String.valueOf(colorId));
     }
 
-    private List<ProductVariant> findData(String where, String orderBy) {
+    private List<ProductVariant> findData(String where, String valueWhere) {
         List<ProductVariant> dataResponse = new ArrayList<>();
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("p.ID as PRODUCT_ID_0, p.TEN_SAN_PHAM as PRODUCT_NAME_1, v.ID as PRODUCT_VARIANT_ID_2, v.VARIANT_CODE as VARIANT_CODE_3, ");
@@ -160,21 +154,34 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         strSQL.append("g.ID as GARMENT_FACTORY_ID_13, g.NAME as GARMENT_FACTORY_NAME_14, sp.ID as SUPPLIER_ID_15, sp.NAME as SUPPLIER_NAME_16, ");
         strSQL.append("ti.ID as TICKET_IMPORT_ID_17, ti.TITLE as TICKET_IMPORT_TITLE_18, pr.ID as PRICE_ID_19, pr.GIA_BAN as PRICE_SELL_20, v.TRANG_THAI as PRODUCT_VARIANT_STATUS_21 ");
         strSQL.append("FROM pro_product_variant v ");
-        strSQL.append("LEFT JOIN pro_san_pham p ON p.ID = v.PRODUCT_ID ");
-        strSQL.append("LEFT JOIN pro_garment_factory g ON g.ID = v.GARMENT_FACTORY_ID ");
-        strSQL.append("LEFT JOIN pro_supplier sp ON sp.ID = v.SUPPLIER_ID ");
-        strSQL.append("LEFT JOIN pro_price pr ON pr.PRODUCT_VARIANT_ID = v.ID AND pr.TRANG_THAI = true ");
-        strSQL.append("LEFT JOIN stg_ticket_import_goods ti ON ti.ID = v.TICKET_IMPORT_ID ");
-        strSQL.append("LEFT JOIN category c ON c.ID = v.COLOR_ID ");
-        strSQL.append("LEFT JOIN category s ON s.ID = v.SIZE_ID ");
-        strSQL.append("LEFT JOIN category f ON f.ID = v.FABRIC_ID ");
-        if (where != null) {
-            strSQL.append(where).append(" ");
+        strSQL.append("LEFT JOIN PRO_PRODUCT p ON p.ID = v.PRODUCT_ID ");
+        strSQL.append("LEFT JOIN PRO_GARMENT_FACTORY g ON g.ID = v.GARMENT_FACTORY_ID ");
+        strSQL.append("LEFT JOIN PRO_SUPPLIER sp ON sp.ID = v.SUPPLIER_ID ");
+        strSQL.append("LEFT JOIN PRO_PRICE pr ON pr.PRODUCT_VARIANT_ID = v.ID AND pr.STATUS = '" + AppConstants.PRICE_STATUS.A.name() + "' ");
+        strSQL.append("LEFT JOIN STG_TICKET_IMPORT_GOODS ti ON ti.ID = v.TICKET_IMPORT_ID ");
+        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'COLOR') c ON c.ID = v.COLOR_ID ");
+        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'SIZE') s ON s.ID = v.SIZE_ID ");
+        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'FABRICTYPE') f ON f.ID = v.FABRIC_ID ");
+        if (AppConstants.PRODUCT.equals(where)) {
+            strSQL.append("WHERE v.PRODUCT_ID = ?");
         }
-        if (orderBy != null) {
-            strSQL.append(orderBy);
+        if (AppConstants.COLOR.equals(where)) {
+            strSQL.append("WHERE v.COLOR_ID = ?");
         }
+        if (AppConstants.SIZE.equals(where)) {
+            strSQL.append("WHERE v.SIZE_ID = ?");
+        }
+        if (AppConstants.FABRICTYPE.equals(where)) {
+            strSQL.append("WHERE v.FABRIC_ID = ?");
+        }
+        if (AppConstants.TICKETIMPORT.equals(where)) {
+            strSQL.append("WHERE v.TICKET_IMPORT_ID = ?");
+        }
+        logger.info("[SQL findData]: " + strSQL.toString());
         Query query = entityManager.createNativeQuery(strSQL.toString());
+        if (where != null) {
+            query.setParameter(1, valueWhere);
+        }
         List<Object[]> listData = query.getResultList();
         for (Object[] data : listData) {
             ProductVariant productVariant = new ProductVariant();

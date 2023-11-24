@@ -37,10 +37,10 @@ public class CategoryHistory extends BaseEntity implements Serializable {
     private String fieldName;
 
     @Lob
-    @Column(name = "old_value", nullable = false, length = 9999, columnDefinition = "TEXT")
+    @Column(name = "old_value", nullable = false, length = 9999, columnDefinition = "CLOB")
     private String oldValue;
 
     @Lob
-    @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "TEXT")
+    @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
     private String newValue;
 }

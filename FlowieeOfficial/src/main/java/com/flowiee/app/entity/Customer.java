@@ -49,6 +49,11 @@ public class Customer extends BaseEntity implements Serializable {
 		super.id = id;
 	}
 
+	public Customer(int id, String customerName) {
+		super.id = id;
+		this.tenKhachHang = customerName;
+	}
+
 	@Override
 	public String toString() {
 		return "KhachHang{" +

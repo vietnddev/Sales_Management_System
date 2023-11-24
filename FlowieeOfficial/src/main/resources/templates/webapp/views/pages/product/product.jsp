@@ -82,13 +82,7 @@
                                             </td>
                                             <td th:text="${list.unit.name}">
                                             </td>
-                                            <td>
-                                                <th:block th:if="${list.trangThai}">
-                                                    Kinh doanh
-                                                </th:block>
-                                                <th:block th:if="!${list.trangThai}">
-                                                    Ngừng kinh doanh
-                                                </th:block>
+                                            <td th:text="${list.status}">
                                             </td>
                                             <td>
                                                 <button class="btn btn-outline-info btn-sm">
@@ -210,10 +204,10 @@
                                                                                       th:text="${list.moTaSanPham}"></textarea>
                                                                         </div>
                                                                         <div class="form-group"
-                                                                             th:if="${list.trangThai}">
+                                                                             th:if="${list.status}">
                                                                             <label>Trạng thái</label>
                                                                             <select class="custom-select"
-                                                                                    name="trangThai">
+                                                                                    name="status">
                                                                                 <option value="true" selected>Kinh
                                                                                     doanh
                                                                                 </option>
@@ -222,10 +216,10 @@
                                                                             </select>
                                                                         </div>
                                                                         <div class="form-group"
-                                                                             th:if="not ${list.trangThai}">
+                                                                             th:if="not ${list.status}">
                                                                             <label>Trạng thái</label>
                                                                             <select class="custom-select"
-                                                                                    name="trangThai">
+                                                                                    name="status">
                                                                                 <option value="true">Kinh doanh</option>
                                                                                 <option value="false" selected>Ngừng
                                                                                     kinh doanh
@@ -369,7 +363,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Trạng thái</label>
-                                                                <select class="custom-select" name="trangThai">
+                                                                <select class="custom-select" name="status">
                                                                     <option value="true" selected>Đang kinh doanh
                                                                     </option>
                                                                     <option value="false">Ngừng kinh doanh</option>

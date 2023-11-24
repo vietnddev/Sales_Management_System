@@ -45,7 +45,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Double findGiaHienTai(int bienTheSanPhamId) {
-        return priceRepository.findGiaBanHienTai(productVariantService.findById(bienTheSanPhamId), true);
+        return priceRepository.findGiaBanHienTai(productVariantService.findById(bienTheSanPhamId), AppConstants.PRICE_STATUS.A.name());
     }
 
     @Override
@@ -74,12 +74,12 @@ public class PriceServiceImpl implements PriceService {
         try {
             //Chuyển trạng thái giá hiện tại về false
             Price disableGiaCu = this.findById(priceId);
-            disableGiaCu.setTrangThai(false);
+            disableGiaCu.setStatus(AppConstants.PRICE_STATUS.I.name());
             priceRepository.save(disableGiaCu);
             //Thêm giá mới
             price.setId(0);
             price.setProductVariant(productVariantService.findById(bienTheSanPhamId));
-            price.setTrangThai(true);
+            price.setStatus(AppConstants.PRICE_STATUS.A.name());
             priceRepository.save(price);
             //Lưu log
             String noiDung = "Giá cũ:  " + disableGiaCu.getGiaBan();
