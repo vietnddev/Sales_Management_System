@@ -1,20 +1,19 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.base.BaseService;
+import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.request.OrderRequest;
 
 import org.springframework.http.ResponseEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderService extends BaseService<Order> {
-
-    List<Order> findAll(String searchTxt, String thoiGianDatHang, int kenhBanHangId, int trangThaiDonHangId);
+    public List<OrderDTO> findAll(OrderDTO orderDTO);
 
     List<Order> findByTrangThai(int trangThaiDonHangId);
-
-    List<Order> search();
 
     List<Order> findByKhachHangId(int id);
 

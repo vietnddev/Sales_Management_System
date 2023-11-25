@@ -36,6 +36,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -61,29 +62,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findAll() {
         List<Order> listOrder = new ArrayList<>();
-        for (Order order : orderRepository.findAll()) {
-            order.getCustomer().setPhoneDefault(customerContactService.findPhoneUseDefault(order.getCustomer().getId()));
-            order.getCustomer().setEmailDefault(customerContactService.findEmailUseDefault(order.getCustomer().getId()));
-            order.getCustomer().setAddressDefault(customerContactService.findAddressUseDefault(order.getCustomer().getId()));
-            listOrder.add(order);
-        }
+//        for (Order order : orderRepository.findAll()) {
+//            order.getCustomer().setPhoneDefault(customerContactService.findPhoneUseDefault(order.getCustomer().getId()));
+//            order.getCustomer().setEmailDefault(customerContactService.findEmailUseDefault(order.getCustomer().getId()));
+//            order.getCustomer().setAddressDefault(customerContactService.findAddressUseDefault(order.getCustomer().getId()));
+//            listOrder.add(order);
+//        }
         return listOrder;
     }
 
     @Override
-    public List<Order> findAll(String searchTxt, String thoiGianDatHang,
-                               int kenhBanHangId, int trangThaiDonHangId) {
-        return orderRepository.findAll(searchTxt, kenhBanHangId, trangThaiDonHangId);
+    public List<OrderDTO> findAll(OrderDTO orderDTO) {
+        return this.findData(orderDTO);
     }
 
     @Override
     public List<Order> findByTrangThai(int trangThaiDonHangId) {
         return orderRepository.findByTrangThaiDonHang(trangThaiDonHangId);
-    }
-
-    @Override
-    public List<Order> search() {
-        return null;
     }
 
     @Override
@@ -230,15 +225,15 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private List<OrderDTO> findData() {
+    private List<OrderDTO> findData(OrderDTO orderDTO) {
         List<OrderDTO> dataResponse = new ArrayList<>();
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("o.ID as ORDER_ID_0, o.MA_DON_HANG as MA_DON_HANG_1, o.THOI_GIAN_DAT_HANG as ORDER_TIME_2, o.RECEIVER_ADDRESS as RECEIVER_ADDRESS_3,");
-        strSQL.append("o.RECEIVER_PHONE as RECEIVER_PHONE_4,o.RECEIVER_NAME as RECEIVER_NAME_5, c.ID as ORDERBY_ID_6, c.TEN_KHACH_HANG as ORDER_BY_NAME_7,");
-        strSQL.append("o.TONG_TIEN_DON_HANG as TOTAL_AMOUNT_8, sc.ID as SALES_CHANNEL_ID_9, sc.NAME as SALES_CHANNEL_NAME_10, o.GHI_CHU as NOTE_11, ");
-        strSQL.append("os.ID as ORDER_STATUS_ID_12, os.NAME as ORDER_STATUS_NAME_13, op.ID as ORDER_PAY_ID_14, op.PAYMENT_STATUS as ORDER_PAY_STATUS_15, ");
-        strSQL.append("pm.ID as PAYMENT_METHOD_ID_16, pm.NAME as PAYMENT_METHOD_NAME_17, acc.ID as CASHIER_ID_18, acc.HO_TEN as CASHIER_NAME_19, ");
-        strSQL.append("o.CREATED_BY as CREATED_BY_ID_20, o.CREATED_AT as CREATED_AT_21");
+        strSQL.append("o.RECEIVER_PHONE as RECEIVER_PHONE_4,o.RECEIVER_NAME as RECEIVER_NAME_5, NVL(c.ID,0) as ORDERBY_ID_6, c.TEN_KHACH_HANG as ORDER_BY_NAME_7,");
+        strSQL.append("NVL(o.TONG_TIEN_DON_HANG,0) as TOTAL_AMOUNT_8, NVL(sc.ID,0) as SALES_CHANNEL_ID_9, sc.NAME as SALES_CHANNEL_NAME_10, o.GHI_CHU as NOTE_11, ");
+        strSQL.append("NVL(os.ID,0) as ORDER_STATUS_ID_12, os.NAME as ORDER_STATUS_NAME_13, NVL(op.ID,0) as ORDER_PAY_ID_14, op.PAYMENT_STATUS as ORDER_PAY_STATUS_15, ");
+        strSQL.append("NVL(pm.ID,0) as PAYMENT_METHOD_ID_16, pm.NAME as PAYMENT_METHOD_NAME_17, NVL(acc.ID,0) as CASHIER_ID_18, acc.HO_TEN as CASHIER_NAME_19, ");
+        strSQL.append("NVL(o.CREATED_BY,0) as CREATED_BY_ID_20, o.CREATED_AT as CREATED_AT_21 ");
         strSQL.append("FROM PRO_DON_HANG o ");
         strSQL.append("LEFT JOIN PRO_CUSTOMER c ON c.ID = o.CUSTOMER_ID ");
         strSQL.append("LEFT JOIN PRO_DON_HANG_THANH_TOAN op ON op.DON_HANG_ID = o.ID ");
@@ -253,14 +248,14 @@ public class OrderServiceImpl implements OrderService {
             OrderDTO order = new OrderDTO();
             order.setOrderId(Integer.parseInt(String.valueOf(data[0])));
             order.setOrderCode(String.valueOf(data[1]));
-            order.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(data[2])));
-            order.setReceiverAddress(String.valueOf(data[3]));
-            order.setReceiverPhone(String.valueOf(data[4]));
+            order.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            order.setReceiverAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
+            order.setReceiverPhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
             order.setReceiverName(String.valueOf(data[5]));
             order.setOrderBy(new Customer(Integer.parseInt(String.valueOf(data[6])), String.valueOf(data[7])));
             order.setTotalAmount(Double.parseDouble(String.valueOf(data[8])));
             order.setSalesChannel(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
-            order.setNote(String.valueOf(data[11]));
+            order.setNote(String.valueOf(data[11]) != null ? String.valueOf(data[11]) : "-");
             order.setOrderStatus(new Category(Integer.parseInt(String.valueOf(data[12])), String.valueOf(data[13])));
             order.setOrderPay(new OrderPay(Integer.parseInt(String.valueOf(data[14])), Boolean.parseBoolean(String.valueOf(data[15]))));
             order.setPayMethod(new Category(Integer.parseInt(String.valueOf(data[16])), String.valueOf(data[17])));

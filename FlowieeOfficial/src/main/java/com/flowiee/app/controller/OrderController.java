@@ -1,5 +1,6 @@
 package com.flowiee.app.controller;
 
+import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.utils.PagesUtil;
@@ -62,7 +63,7 @@ public class OrderController extends BaseController {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
-        modelAndView.addObject("listOrder", orderService.findAll());
+        modelAndView.addObject("listOrder", orderService.findAll(new OrderDTO()));
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.SALESCHANNEL));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.PAYMETHOD));
@@ -83,10 +84,7 @@ public class OrderController extends BaseController {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
-        modelAndView.addObject("listDonHang", orderService.findAll(request.getSearchTxt(),
-                                                                       request.getThoiGianDatHangSearch(),
-                                                                       request.getKenhBanHang(),
-                                                                       request.getTrangThaiDonHang()));
+        modelAndView.addObject("listDonHang", orderService.findAll(new OrderDTO()));
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKhachHang", customerService.findAll());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());

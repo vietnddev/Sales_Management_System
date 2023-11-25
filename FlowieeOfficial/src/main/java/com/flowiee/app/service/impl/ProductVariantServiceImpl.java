@@ -147,11 +147,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     private List<ProductVariant> findData(String where, String valueWhere) {
         List<ProductVariant> dataResponse = new ArrayList<>();
         StringBuilder strSQL = new StringBuilder("SELECT ");
-        strSQL.append("p.ID as PRODUCT_ID_0, p.TEN_SAN_PHAM as PRODUCT_NAME_1, v.ID as PRODUCT_VARIANT_ID_2, v.VARIANT_CODE as VARIANT_CODE_3, ");
-        strSQL.append("v.VARIANT_NAME as PRODUCT_VARIANT_NAME_4, c.ID as COLOR_ID_5, c.NAME as COLOR_NAME_6, s.ID as SIZE_ID_7, s.NAME as SIZE_NAME_8, ");
-        strSQL.append("f.ID as FABRIC_ID_9, f.NAME as FABRIC_NAME_10, v.QUANTITY_STG as QUANTITY_STG_11, v.QUANTITY_SELL as QUANTITY_SELL_12, ");
-        strSQL.append("g.ID as GARMENT_FACTORY_ID_13, g.NAME as GARMENT_FACTORY_NAME_14, sp.ID as SUPPLIER_ID_15, sp.NAME as SUPPLIER_NAME_16, ");
-        strSQL.append("ti.ID as TICKET_IMPORT_ID_17, ti.TITLE as TICKET_IMPORT_TITLE_18, pr.ID as PRICE_ID_19, pr.GIA_BAN as PRICE_SELL_20, v.TRANG_THAI as PRODUCT_VARIANT_STATUS_21 ");
+        strSQL.append("NVL(p.ID,0) as PRODUCT_ID_0, p.TEN_SAN_PHAM as PRODUCT_NAME_1, NVL(v.ID,0) as PRODUCT_VARIANT_ID_2, v.VARIANT_CODE as VARIANT_CODE_3, ");
+        strSQL.append("v.VARIANT_NAME as PRODUCT_VARIANT_NAME_4, NVL(c.ID,0) as COLOR_ID_5, c.NAME as COLOR_NAME_6, NVL(s.ID,0) as SIZE_ID_7, s.NAME as SIZE_NAME_8, ");
+        strSQL.append("NVL(f.ID,0) as FABRIC_ID_9, f.NAME as FABRIC_NAME_10, v.QUANTITY_STG as QUANTITY_STG_11, v.QUANTITY_SELL as QUANTITY_SELL_12, ");
+        strSQL.append("NVL(g.ID,0) as GARMENT_FACTORY_ID_13, g.NAME as GARMENT_FACTORY_NAME_14, NVL(sp.ID,0) as SUPPLIER_ID_15, sp.NAME as SUPPLIER_NAME_16, ");
+        strSQL.append("NVL(ti.ID,0) as TICKET_IMPORT_ID_17, ti.TITLE as TICKET_IMPORT_TITLE_18, NVL(pr.ID,0) as PRICE_ID_19, pr.GIA_BAN as PRICE_SELL_20, v.TRANG_THAI as PRODUCT_VARIANT_STATUS_21 ");
         strSQL.append("FROM pro_product_variant v ");
         strSQL.append("LEFT JOIN PRO_PRODUCT p ON p.ID = v.PRODUCT_ID ");
         strSQL.append("LEFT JOIN PRO_GARMENT_FACTORY g ON g.ID = v.GARMENT_FACTORY_ID ");
@@ -193,9 +193,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             productVariant.setFabricType( new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
             productVariant.setSoLuongKho(Integer.parseInt(String.valueOf(data[11])));
             productVariant.setSoLuongDaBan(Integer.parseInt(String.valueOf(data[12])));
-            productVariant.setGarmentFactory(new GarmentFactory(Integer.parseInt(String.valueOf(data[13] != null ? data[13] : "0")), String.valueOf(data[14])));
-            productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15] != null ? data[15] : "0")), String.valueOf(data[16])));
-            productVariant.setTicketImportGoods(new TicketImportGoods(Integer.parseInt(String.valueOf(data[17] != null ? data[17] : "0")), String.valueOf(data[18])));
+            productVariant.setGarmentFactory(new GarmentFactory(Integer.parseInt(String.valueOf(data[13])), String.valueOf(data[14])));
+            productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15])), String.valueOf(data[16])));
+            productVariant.setTicketImportGoods(new TicketImportGoods(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
             productVariant.setPrice(new Price(Integer.parseInt(String.valueOf(data[19])), Double.parseDouble(String.valueOf(data[20]))));
             productVariant.setTrangThai(String.valueOf(data[21]));
             dataResponse.add(productVariant);
