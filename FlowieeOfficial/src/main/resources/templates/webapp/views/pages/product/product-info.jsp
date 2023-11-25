@@ -426,8 +426,7 @@
                                                     <td th:text="${index.index + 1}"></td>
                                                     <td th:text="${p.giaBan}"></td>
                                                     <td th:text="${p.createdAt}"></td>
-                                                    <td th:if="${p.trangThai}">Đang sử dụng</td>
-                                                    <td th:if="not ${p.trangThai}">Đã sử dụng</td>
+                                                    <td th:text="${p.status}"></td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -488,13 +487,13 @@
                             </div>
                             <div class="form-group">
                                 <label>Trạng thái</label>
-                                <select class="custom-select" name="trangThai"
-                                        th:if="${detailProducts.trangThai}">
+                                <select class="custom-select" name="status"
+                                        th:if="${detailProducts.status}">
                                     <option value="true" selected>Kinh doanh</option>
                                     <option value="false">Ngừng kinh doanh</option>
                                 </select>
-                                <select class="custom-select" name="trangThai"
-                                        th:if="not ${detailProducts.trangThai}">
+                                <select class="custom-select" name="status"
+                                        th:if="not ${detailProducts.status}">
                                     <option value="true">Kinh doanh</option>
                                     <option value="false" selected>Ngừng kinh doanh</option>
                                 </select>

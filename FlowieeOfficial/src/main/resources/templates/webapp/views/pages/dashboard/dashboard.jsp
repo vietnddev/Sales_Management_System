@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Flowiee | Quản lý sản phẩm - Báo cáo thống kê</title>
+    <title>Flowiee Offical | Dashboard</title>
     <div th:replace="header :: stylesheets">
         <!--Nhúng các file css, icon,...-->
     </div>
@@ -28,14 +28,13 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>[[${soLuongDonHangHomNay}]]</h3>
-                                <p>Đơn hàng hôm nay</p>
+                                <p>Orders today</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-bag"></i>
                             </div>
                             <a href="#" class="small-box-footer"
-                               data-toggle="modal" data-target="#modalDanhSachDonHangToDay">Chi tiết
-                                <i class="fas fa-arrow-circle-right"></i>
+                               data-toggle="modal" data-target="#modalDanhSachDonHangToDay">Detail <i class="fas fa-arrow-circle-right"></i>
                             </a>
                             <div class="modal fade" id="modalDanhSachDonHangToDay">
                                 <div class="modal-dialog modal-lg">
@@ -83,12 +82,12 @@
                         <div class="small-box bg-success">
                             <div class="inner">
                                 <h3>[[${doanhThuHomNay}]]</h3>
-                                <p>Doanh thu hôm nay</p>
+                                <p>Revenue today</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->
@@ -97,12 +96,12 @@
                         <div class="small-box bg-primary">
                             <div class="inner">
                                 <h3>[[${doanhThuThangNay}]]</h3>
-                                <p>Doanh thu tháng này</p>
+                                <p>Revenue this month</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
                             </div>
-                            <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->
@@ -111,12 +110,12 @@
                         <div class="small-box bg-warning">
                             <div class="inner">
                                 <h3>[[${khachHangMoiTrongThang}]]</h3>
-                                <p>Khách hàng mới</p>
+                                <p>Customers new</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-person-add"></i>
                             </div>
-                            <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->

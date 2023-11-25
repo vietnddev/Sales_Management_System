@@ -32,7 +32,7 @@
               <a th:href="@{${URL_PRODUCT}}" class="nav-link">
                 <i class="fa-solid fa-shirt nav-icon"></i>
                 <p>
-                  Sản phẩm
+                  Products
                 </p>
               </a>
             </li>
@@ -40,15 +40,15 @@
               <a th:href="@{${URL_PRODUCT_ORDER}}" class="nav-link">
                 <i class="fa-solid fa-cart-shopping nav-icon"></i>
                 <p>
-                  Đơn hàng
+                  Orders
                 </p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{/don-hang/ban-hang}" class="nav-link">
-                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <i class="fa-solid fa-file-invoice-dollar"></i> 
                 <p>
-                  Bán hàng
+                  Sell goods
                 </p>
               </a>
             </li>

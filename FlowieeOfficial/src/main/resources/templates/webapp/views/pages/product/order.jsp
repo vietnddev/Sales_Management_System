@@ -141,34 +141,34 @@
                                 <tr th:each="list, index : ${listOrder}">
                                     <td th:text="${index.index + 1}"></td>
                                     <td>
-                                        <a th:href="@{/don-hang/{id}(id=${list.id})}"
-                                           th:text="${list.maDonHang}"></a>
+                                        <a th:href="@{/don-hang/{id}(id=${list.orderId})}"
+                                           th:text="${list.orderCode}"></a>
                                     </td>
-                                    <td th:text="${list.thoiGianDatHang}"></td>
+                                    <td th:text="${list.orderTime}"></td>
                                     <td th:text="${list.receiverAddress}"></td>
-                                    <td th:text="${list.customer.tenKhachHang}"></td>
+                                    <td th:text="${list.orderBy.tenKhachHang}"></td>
                                     <td th:text="${list.receiverPhone}"></td>
-                                    <td th:text="${list.tongTienDonHang}"></td>
-                                    <td th:text="${list.kenhBanHang.name}"></td>
-                                    <td th:text="${list.ghiChu}"></td>
-                                    <td th:text="${list.trangThaiDonHang.name}"></td>
+                                    <td th:text="${list.totalAmount}"></td>
+                                    <td th:text="${list.salesChannel.name}"></td>
+                                    <td th:text="${list.note}"></td>
+                                    <td th:text="${list.orderStatus.name}"></td>
                                     <td>
                                         <button class="btn btn-outline-info btn-sm">
-                                            <a th:href="@{/don-hang/{id}(id=${list.id})}">
+                                            <a th:href="@{/don-hang/{id}(id=${list.orderId})}">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a></button>
                                         <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
-                                                th:data-target="'#update-' + ${list.id}">
+                                                th:data-target="'#update-' + ${list.orderId}">
                                             <i class="fa-solid fa-pencil"></i>
                                         </button>
                                         <button class="btn btn-outline-danger btn-sm" data-toggle="modal"
-                                                th:data-target="'#delete-' + ${list.id}">
+                                                th:data-target="'#delete-' + ${list.orderId}">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
-                                        <div class="modal fade" th:id="'delete-' + ${list.id}">
+                                        <div class="modal fade" th:id="'delete-' + ${list.orderId}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form th:action="@{/don-hang/delete/{id}(id=${list.id})}"
+                                                    <form th:action="@{/don-hang/delete/{id}(id=${list.orderId})}"
                                                           th:object="${donHang}" method="post">
                                                         <div class="modal-header">
                                                             <strong class="modal-title">Xác nhận xóa sản
@@ -181,7 +181,7 @@
                                                         <div class="modal-body">
                                                             <div class="card-body">
                                                                 Sản phẩm <strong class="badge text-bg-info"
-                                                                                 th:text="${list.maDonHang}"
+                                                                                 th:text="${list.orderCode}"
                                                                                  style="font-size: 16px;"></strong>
                                                                 sẽ bị xóa vĩnh viễn!
                                                             </div>

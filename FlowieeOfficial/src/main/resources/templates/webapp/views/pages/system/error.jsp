@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Danh mục loại tài liệu</title>
+    <title>Flowiee official | Error</title>
     <div th:replace="header :: stylesheets">
         <!--Nhúng các file css, icon,...-->
     </div>
