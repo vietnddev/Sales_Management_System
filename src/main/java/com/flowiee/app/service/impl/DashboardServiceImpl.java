@@ -2,12 +2,10 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
-import com.flowiee.app.model.DoanhThuCacNgayTheoThangModel;
-import com.flowiee.app.model.DoanhThuCacThangTheoNamModel;
-import com.flowiee.app.model.DoanhThuTheoKenhBanHangModel;
-import com.flowiee.app.model.TopBestSellerModel;
+import com.flowiee.app.model.*;
 import com.flowiee.app.service.DashboardService;
 
+import com.flowiee.app.utils.FlowieeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,185 +15,138 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DashboardServiceImpl implements DashboardService {
-    private static final Logger logger = LoggerFactory.getLogger(ProductVariantServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DashboardServiceImpl.class);
 
     @Autowired
     private EntityManager entityManager;
 
     @Override
-    public DoanhThuTheoKenhBanHangModel getDoanhThuTheoKenhBanHang() {
-        StringBuilder strSQL = new StringBuilder("SELECT c.NAME, c.COLOR, NVL(SUM(d.TONG_TIEN_DON_HANG),0) AS TOTAL ");
-        strSQL.append("FROM (SELECT * FROM CATEGORY WHERE TYPE = 'SALESCHANNEL') c ");
-        strSQL.append("LEFT JOIN PRO_DON_HANG d ON c.ID = d.KENH_BAN_HANG ");
-        strSQL.append("GROUP BY c.NAME, c.COLOR");
-        logger.info("[getDoanhThuTheoKenhBanHang() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL.toString());
-        @SuppressWarnings("unchecked")
-		List<Object[]> listData = result.getResultList();
+    @SuppressWarnings("unchecked")
+    public DashboardModel loadDashboard() {
+        logger.info("Start loadDashboard(): " + FlowieeUtil.now("YYYY/MM/dd HH:mm:ss"));
 
-        DoanhThuTheoKenhBanHangModel dataReturn = new DoanhThuTheoKenhBanHangModel();
-        List<String> listTenOfKenh = new ArrayList<>();
-        List<Float> listDoanhThuOfKenh = new ArrayList<>();
-        List<String> listMauSacOfKenh = new ArrayList<>();
-        for (Object[] data : listData) {
-            listTenOfKenh.add(String.valueOf(data[0]));
-            listDoanhThuOfKenh.add(Float.parseFloat(String.valueOf(data[2])));
-            listMauSacOfKenh.add(String.valueOf(data[1]));
+        //Revenue today
+        String revenueTodaySQL = "SELECT NVL(SUM(d.tong_tien_don_hang), 0) FROM PRO_DON_HANG d WHERE TRUNC(d.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
+        logger.info("[getRevenueToday() - SQL findData]: " + revenueTodaySQL);
+        Query revenueTodayQuery = entityManager.createNativeQuery(revenueTodaySQL);
+        String revenueToday = FlowieeUtil.formatToVND(Float.parseFloat(String.valueOf(revenueTodayQuery.getSingleResult())));
+        entityManager.close();
+
+        //Revenue this month
+        String revenueThisMonthSQL = "SELECT NVL(SUM(d.TONG_TIEN_DON_HANG), 0) FROM PRO_DON_HANG d WHERE EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(MONTH FROM SYSDATE)";
+        logger.info("[getRevenueThisMonth() - SQL findData]: " + revenueThisMonthSQL);
+        Query revenueThisMonthSQLQuery = entityManager.createNativeQuery(revenueThisMonthSQL);
+        String revenueThisMonth = FlowieeUtil.formatToVND(Float.parseFloat(String.valueOf(revenueThisMonthSQLQuery.getSingleResult())));
+        entityManager.close();
+
+        //Customers new
+        String customersNewSQL = "SELECT * FROM PRO_CUSTOMER c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
+        logger.info("[getCustomersNew() - SQL findData]: " + customersNewSQL);
+        Query customersNewQuery = entityManager.createNativeQuery(customersNewSQL);
+        List<Customer> customersNew = customersNewQuery.getResultList();
+        entityManager.close();
+
+        //Orders today
+        String ordersTodaySQL = "SELECT * FROM PRO_DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
+        logger.info("[getOrdersToday() - SQL findData]: " + ordersTodaySQL);
+        Query ordersTodayQuery = entityManager.createNativeQuery(ordersTodaySQL);
+        List<Order> ordersToday = ordersTodayQuery.getResultList();
+        entityManager.close();
+
+        //Products top sell
+        String productsTopSellSQL = "SELECT * FROM " +
+                                    "(SELECT s.VARIANT_NAME, NVL(SUM(d.SO_LUONG), 0) AS Total " +
+                                    "FROM PRO_PRODUCT_VARIANT s " +
+                                    "LEFT JOIN PRO_DON_HANG_CHI_TIET d ON s.id = d.BIEN_THE_SAN_PHAM_ID " +
+                                    "GROUP BY s.ID, s.VARIANT_NAME " +
+                                    "ORDER BY total DESC) " +
+                                    "WHERE ROWNUM <= 10";
+        logger.info("[getProductsTopSell() - SQL findData]: " + productsTopSellSQL);
+        Query productsTopSellSQLQuery = entityManager.createNativeQuery(productsTopSellSQL);
+        List<Object[]> productsTopSellResultList = productsTopSellSQLQuery.getResultList();
+        LinkedHashMap<String, Integer> productsTopSell = new LinkedHashMap<>();
+        for (Object[] data : productsTopSellResultList) {
+            productsTopSell.put(String.valueOf(data[0]), Integer.parseInt(String.valueOf(data[1])));
         }
-        dataReturn.setTenOfKenh(listTenOfKenh);
-        dataReturn.setDoanhThuOfKenh(listDoanhThuOfKenh);
-        dataReturn.setMauSac(listMauSacOfKenh);
+        entityManager.close();
 
-        return dataReturn;
-    }
-
-    @Override
-    public DoanhThuCacThangTheoNamModel getDoanhThuCacThangTheoNam() {
-        StringBuilder strSQL = new StringBuilder("SELECT ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 1 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_1, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 2 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_2, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 3 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_3, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 4 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_4,");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 5 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_5, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 6 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_6, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 7 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_7, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 8 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_8,");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 9 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_9, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 10 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_10, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 11 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_11, ");
-        strSQL.append("SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 12 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_12 ");
-        strSQL.append("FROM PRO_DON_HANG d ");
-        strSQL.append("WHERE EXTRACT(YEAR FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(YEAR FROM SYSDATE)");
-        logger.info("[getDoanhThuCacThangTheoNam() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL.toString());
-        @SuppressWarnings("unchecked")
-		List<Object[]> listData = result.getResultList();
-
-        List<Float> listDoanhThu = new ArrayList<>();
-        for (int i = 0; i < listData.get(0).length; i++) {
-            listDoanhThu.add(Float.parseFloat(String.valueOf(listData.get(0)[i] != null ? listData.get(0)[i] : 0)));
+        //Revenue month of year
+        String revenueMonthOfYearSQL = "SELECT SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 1 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS JAN, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 2 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS FEB, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 3 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS MAR, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 4 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS APRIL, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 5 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS MAY, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 6 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS JUN, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 7 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS JUL, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 8 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS AUG," +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 9 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS SEP, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 10 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS OCT, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 11 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS NOV, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 12 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS DEC " +
+                                       "FROM PRO_DON_HANG d " +
+                                       "WHERE EXTRACT(YEAR FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(YEAR FROM SYSDATE)";
+        logger.info("[getRevenueMonthOfYearSQL() - SQL findData]: " + revenueMonthOfYearSQL);
+        Query revenueMonthOfYearSQLQuery = entityManager.createNativeQuery(revenueMonthOfYearSQL);
+        List<Object[]> revenueMonthOfYearSQLResultList = revenueMonthOfYearSQLQuery.getResultList();
+        LinkedHashMap<Integer, Float> revenueMonthOfYear = new LinkedHashMap<>();
+        for (int i = 0; i < revenueMonthOfYearSQLResultList.get(0).length; i++) {
+            revenueMonthOfYear.put(i + 1, Float.parseFloat(String.valueOf(revenueMonthOfYearSQLResultList.get(0)[i] != null ? revenueMonthOfYearSQLResultList.get(0)[i] : 0)));
         }
+        entityManager.close();
 
-        DoanhThuCacThangTheoNamModel dataReturn = new DoanhThuCacThangTheoNamModel();
-        dataReturn.setDoanhThu(listDoanhThu);
-
-        return dataReturn;
-    }
-
-    @Override
-    public DoanhThuCacNgayTheoThangModel getDoanhThuCacNgayTheoThang() {
-        // Lấy ngày bắt đầu của tháng hiện tại
-        LocalDate ngayBatDau = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-        // Lấy ngày kết thúc của tháng hiện tại
-        LocalDate ngayKetThuc = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
-
-        StringBuilder strSQL = new StringBuilder("WITH all_dates AS (");
-        strSQL.append("SELECT TO_DATE('" + ngayBatDau + "', 'YYYY-MM-DD') + LEVEL - 1 AS NGAY ");
-        strSQL.append("FROM DUAL ");
-        strSQL.append("CONNECT BY LEVEL <= TO_DATE('" + ngayKetThuc + "', 'YYYY-MM-DD') - TO_DATE('" + ngayBatDau + "', 'YYYY-MM-DD') + 1");
-        strSQL.append(") ");
-        strSQL.append("SELECT all_dates.NGAY, NVL(SUM(PRO_DON_HANG.TONG_TIEN_DON_HANG), 0) AS DOANH_THU ");
-        strSQL.append("FROM all_dates ");
-        strSQL.append("LEFT JOIN PRO_DON_HANG ON TRUNC(PRO_DON_HANG.THOI_GIAN_DAT_HANG) = all_dates.NGAY ");
-        strSQL.append("GROUP BY all_dates.NGAY ");
-        strSQL.append("ORDER BY all_dates.NGAY");
-        logger.info("[getDoanhThuCacNgayTheoThang() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL.toString());
-        @SuppressWarnings("unchecked")
-		List<Object[]> listData = result.getResultList();
-
-        DoanhThuCacNgayTheoThangModel dataReturn = new DoanhThuCacNgayTheoThangModel();
-        List<String> listNgay = new ArrayList<>();
-        List<Float> listDoanhThu = new ArrayList<>();
-
-        int i = 1;
-        for (Object[] data : listData) {
-            listNgay.add("Ngày " + i);
-            i++;
-
-            listDoanhThu.add(Float.parseFloat(String.valueOf(data[1])));
+        //Revenue day of month
+        LocalDate firstDay = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate lastDay = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+        String revenueDayOfMonthSQL = "WITH all_dates AS " +
+                                      "( " +
+                                      "SELECT TO_DATE('" + firstDay + "', 'YYYY-MM-DD') + LEVEL - 1 AS DAY " +
+                                      "FROM DUAL CONNECT BY LEVEL <= TO_DATE('" + lastDay + "', 'YYYY-MM-DD') - TO_DATE('" + firstDay + "', 'YYYY-MM-DD') + 1" +
+                                      ") " +
+                                      "SELECT all_dates.DAY, NVL(SUM(PRO_DON_HANG.TONG_TIEN_DON_HANG), 0) AS REVENUE " +
+                                      "FROM all_dates " +
+                                      "LEFT JOIN PRO_DON_HANG ON TRUNC(PRO_DON_HANG.THOI_GIAN_DAT_HANG) = all_dates.DAY " +
+                                      "GROUP BY all_dates.DAY " +
+                                      "ORDER BY all_dates.DAY";
+        logger.info("[getRevenueDayOfMonth() - SQL findData]: " + revenueDayOfMonthSQL);
+        Query revenueDayOfMonthSQLQuery = entityManager.createNativeQuery(revenueDayOfMonthSQL);
+        List<Object[]> revenueDayOfMonthSQLResultList = revenueDayOfMonthSQLQuery.getResultList();
+        LinkedHashMap<String, Float> revenueDayOfMonth = new LinkedHashMap<>();
+        for (int i = 0; i < revenueDayOfMonthSQLResultList.size(); i++) {
+            revenueDayOfMonth.put("Day " + (i + 1), Float.parseFloat(String.valueOf(revenueDayOfMonthSQLResultList.get(i)[1])));
         }
+        entityManager.close();
 
-        dataReturn.setListNgay(listNgay);
-        dataReturn.setListDoanhThu(listDoanhThu);
-
-        return dataReturn;
-    }
-
-    @Override
-    public TopBestSellerModel getTopSanPhamBanChay() {
-        StringBuilder strSQL = new StringBuilder("SELECT * ");
-        strSQL.append("FROM (");
-        strSQL.append("SELECT s.VARIANT_NAME, NVL(SUM(d.SO_LUONG), 0) AS Total ");
-        strSQL.append("FROM PRO_PRODUCT_VARIANT s ");
-        strSQL.append("LEFT JOIN PRO_DON_HANG_CHI_TIET d ");
-        strSQL.append("ON s.id = d.BIEN_THE_SAN_PHAM_ID ");
-        strSQL.append("GROUP BY s.ID, s.VARIANT_NAME ");
-        strSQL.append("ORDER BY total DESC");
-        strSQL.append(") ");
-        strSQL.append("WHERE ROWNUM <= 10");
-        logger.info("[getTopSanPhamBanChay() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL.toString());
-        @SuppressWarnings("unchecked")
-		List<Object[]> listData = result.getResultList();
-
-        TopBestSellerModel dataReturn = new TopBestSellerModel();
-        List<String> listTenSanPham = new ArrayList<>();
-        List<Integer> listSoLuongDaBan = new ArrayList<>();
-        for (Object[] data : listData) {
-            listTenSanPham.add(String.valueOf(data[0]));
-            listSoLuongDaBan.add(Integer.parseInt(String.valueOf(data[1])));
+        //Revenue by sales channel
+        String revenueBySalesChannelSQL = "SELECT c.NAME, c.COLOR, NVL(SUM(d.TONG_TIEN_DON_HANG),0) AS TOTAL " +
+                                          "FROM (SELECT * FROM CATEGORY WHERE TYPE = 'SALESCHANNEL') c " +
+                                          "LEFT JOIN PRO_DON_HANG d ON c.ID = d.KENH_BAN_HANG " +
+                                          "GROUP BY c.NAME, c.COLOR";
+        logger.info("[getRevenueBySalesChannel() - SQL findData]: " + revenueBySalesChannelSQL);
+        Query revenueBySalesChannelQuery = entityManager.createNativeQuery(revenueBySalesChannelSQL);
+        List<Object[]> revenueBySalesChannelResultList = revenueBySalesChannelQuery.getResultList();
+        LinkedHashMap<String, Float> revenueSalesChannel = new LinkedHashMap<>();
+        for (Object[] data : revenueBySalesChannelResultList) {
+            revenueSalesChannel.put(String.valueOf(data[0]), Float.parseFloat(String.valueOf(data[2])));
         }
-        dataReturn.setTenSanPham(listTenSanPham);
-        dataReturn.setSoLuongDaBan(listSoLuongDaBan);
+        entityManager.close();
 
-        return dataReturn;
-    }
+        DashboardModel dashboard = new DashboardModel();
+        dashboard.setRevenueToday(revenueToday);
+        dashboard.setRevenueThisMonth(revenueThisMonth);
+        dashboard.setOrdersTodayQty(ordersToday.size());
+        dashboard.setListOrdersToday(ordersToday);
+        dashboard.setCustomersNewInMonthQty(customersNew.size());
+        dashboard.setListCustomersNewInMonth(customersNew);
+        dashboard.setRevenueDayOfMonth(revenueDayOfMonth);
+        dashboard.setRevenueMonthOfYear(revenueMonthOfYear);
+        dashboard.setRevenueSalesChannel(revenueSalesChannel);
+        dashboard.setProductsTopSell(productsTopSell);
 
-    @Override
-    public List<Order> getSoLuongDonHangHomNay() {
-//        String query = "SELECT NVL(COUNT(*), 0) FROM DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
-//        Query result = entityManager.createNativeQuery(query);
-//        return Integer.parseInt(String.valueOf(result.getSingleResult()));
-        String strSQL = "SELECT * FROM PRO_DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
-        logger.info("[getSoLuongDonHangHomNay() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL);
-        @SuppressWarnings("unchecked")
-		List<Order> listReturn = result.getResultList();
-        return listReturn;
-    }
-
-    @Override
-    public Float getDoanhThuHomNay() {
-        String strSQL = "SELECT NVL(SUM(d.tong_tien_don_hang), 0) FROM PRO_DON_HANG d WHERE TRUNC(d.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
-        logger.info("[getDoanhThuHomNay() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL);
-        return Float.parseFloat(String.valueOf(result.getSingleResult()));
-    }
-
-    @Override
-    public Float getDoanhThuThangNay() {
-        String strSQL = "SELECT NVL(SUM(d.TONG_TIEN_DON_HANG), 0) FROM PRO_DON_HANG d WHERE EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(MONTH FROM SYSDATE)";
-        logger.info("[getDoanhThuThangNay() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL);
-        return Float.parseFloat(String.valueOf(result.getSingleResult()));
-    }
-
-    @Override
-    public List<Customer> getSoLuongKhachHangMoi() {
-//        String query = "SELECT NVL(COUNT(*), 0) FROM KHACH_HANG c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
-//        Query result = entityManager.createNativeQuery(query);
-//        return Integer.parseInt(String.valueOf(result.getSingleResult()));
-        String strSQL = "SELECT * FROM PRO_CUSTOMER c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
-        logger.info("[getSoLuongKhachHangMoi() - SQL findData]: " + strSQL.toString());
-        Query result = entityManager.createNativeQuery(strSQL);
-        @SuppressWarnings("unchecked")
-		List<Customer> listReturn = result.getResultList();
-        return listReturn;
+        logger.info("Finished loadDashboard(): " + FlowieeUtil.now("YYYY/MM/dd HH:mm:ss"));
+        return dashboard;
     }
 }
