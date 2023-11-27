@@ -1,0 +1,329 @@
+2023-11-27 13:27:10,290 [34mINFO [0;39m org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-11-27 13:27:10,301 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on DUCVIET with PID 51960 (D:\App\Flowiee\target\classes started by DELL in D:\App\Flowiee)
+2023-11-27 13:27:10,302 [34mINFO [0;39m org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-11-27 13:27:10,336 [34mINFO [0;39m org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\DELL\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/DELL/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
+2023-11-27 13:27:10,336 [34mINFO [0;39m org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-27 13:27:10,336 [34mINFO [0;39m org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-27 13:27:12,168 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-27 13:27:12,267 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 91 ms. Found 37 JPA repository interfaces.
+2023-11-27 13:27:12,680 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-11-27 13:27:12,687 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:12,688 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-11-27 13:27:12,688 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-11-27 13:27:12,732 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-11-27 13:27:12,733 [34mINFO [0;39m org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 2396 ms
+2023-11-27 13:27:12,863 [34mINFO [0;39m org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-27 13:27:12,912 [34mINFO [0;39m org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-11-27 13:27:13,030 [34mINFO [0;39m org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-11-27 13:27:13,104 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
+2023-11-27 13:27:13,111 [31mWARN [0;39m com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-11-27 13:27:13,416 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
+2023-11-27 13:27:13,442 [34mINFO [0;39m org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-11-27 13:27:14,620 [34mINFO [0;39m org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-27 13:27:14,628 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:15,058 [31mWARN [0;39m org.hibernate.dialect.function.TemplateRenderer [restartedMain]: HHH000174: Function template anticipated 4 arguments, but 1 arguments encountered
+2023-11-27 13:27:15,505 [31mWARN [0;39m org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-27 13:27:15,762 [34mINFO [0;39m org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@35c0374b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5c8daed0, org.springframework.security.web.context.SecurityContextPersistenceFilter@1cec37c0, org.springframework.security.web.header.HeaderWriterFilter@30e7ffd0, org.springframework.web.filter.CorsFilter@69f0800f, org.springframework.security.web.authentication.logout.LogoutFilter@1326e77f, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@37fc0a19, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@4c597972, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@30f438c4, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2d16a862, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@71e906a1, org.springframework.security.web.session.SessionManagementFilter@cff0c88, org.springframework.security.web.access.ExceptionTranslationFilter@1b6e97a2, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@564951de]
+2023-11-27 13:27:16,025 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-11-27 13:27:16,039 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:16,050 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-11-27 13:27:16,060 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 6.024 seconds (JVM running for 6.771)
+2023-11-27 13:27:23,525 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener [File Watcher]: Restarting due to 285 class path changes (0 additions, 285 deletions, 0 modifications)
+2023-11-27 13:27:23,539 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-8]: Pausing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:23,539 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-8]: Stopping service [Tomcat]
+2023-11-27 13:27:23,541 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-8]: Stopping ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:23,542 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-8]: Destroying ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:23,551 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [Thread-8]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:23,561 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [Thread-8]: HikariPool-1 - Shutdown initiated...
+2023-11-27 13:27:23,573 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [Thread-8]: HikariPool-1 - Shutdown completed.
+2023-11-27 13:27:23,632 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on DUCVIET with PID 51960 (D:\App\Flowiee\target\classes started by DELL in D:\App\Flowiee)
+2023-11-27 13:27:23,632 [34mINFO [0;39m org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-11-27 13:27:23,703 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-27 13:27:23,704 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2023-11-27 13:27:23,757 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8080 (http)
+2023-11-27 13:27:23,757 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-27 13:27:23,758 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-11-27 13:27:23,758 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-11-27 13:27:23,772 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-11-27 13:27:23,772 [34mINFO [0;39m org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 139 ms
+2023-11-27 13:27:23,780 [31mWARN [0;39m org.springframework.context.support.AbstractApplicationContext [restartedMain]: Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception; nested exception is org.springframework.boot.autoconfigure.jdbc.DataSourceProperties$DataSourceBeanCreationException: Failed to determine a suitable driver class
+2023-11-27 13:27:23,781 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Stopping service [Tomcat]
+2023-11-27 13:27:23,785 [34mINFO [0;39m org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener [restartedMain]: 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-11-27 13:27:23,798 [1;31mERROR[0;39m org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter [restartedMain]: 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+2023-11-27 13:27:25,468 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on DUCVIET with PID 51960 (D:\App\Flowiee\target\classes started by DELL in D:\App\Flowiee)
+2023-11-27 13:27:25,468 [34mINFO [0;39m org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-11-27 13:27:25,539 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-27 13:27:25,540 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2023-11-27 13:27:25,586 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-11-27 13:27:25,586 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:25,586 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-11-27 13:27:25,587 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-11-27 13:27:25,598 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-11-27 13:27:25,598 [34mINFO [0;39m org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 127 ms
+2023-11-27 13:27:25,616 [34mINFO [0;39m org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-27 13:27:25,618 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-2 - Starting...
+2023-11-27 13:27:25,618 [31mWARN [0;39m com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-11-27 13:27:25,670 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-2 - Start completed.
+2023-11-27 13:27:25,670 [34mINFO [0;39m org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-11-27 13:27:25,726 [34mINFO [0;39m org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-27 13:27:25,726 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:25,739 [31mWARN [0;39m org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-27 13:27:25,805 [31mWARN [0;39m org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration [restartedMain]: 
+
+Using generated security password: 4d27c1ad-5780-4754-a7d7-ecf8c1edfa03
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2023-11-27 13:27:25,818 [34mINFO [0;39m org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@415fc9b4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@21e1f3f4, org.springframework.security.web.context.SecurityContextPersistenceFilter@75b91dd0, org.springframework.security.web.header.HeaderWriterFilter@2d984d95, org.springframework.security.web.csrf.CsrfFilter@49788a5f, org.springframework.security.web.authentication.logout.LogoutFilter@662ca425, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7019552f, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@540fadfd, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@1b6b6aca, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@56a06823, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@31d7c23a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5eccc570, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4e5ff8f4, org.springframework.security.web.session.SessionManagementFilter@781e5afe, org.springframework.security.web.access.ExceptionTranslationFilter@5ef34b26, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@367ad487]
+2023-11-27 13:27:25,830 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-11-27 13:27:25,838 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:25,843 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-11-27 13:27:25,848 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 0.395 seconds (JVM running for 16.56)
+2023-11-27 13:27:25,861 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener [restartedMain]: Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+   SpringBootWebSecurityConfiguration.SecurityFilterChainConfiguration matched:
+      - AllNestedConditions 2 matched 0 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter,org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) did not find any beans; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
+
+   SpringBootWebSecurityConfiguration.WebSecurityEnablerConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.security.config.annotation.web.configuration.EnableWebSecurity' (OnClassCondition)
+      - @ConditionalOnMissingBean (names: springSecurityFilterChain; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   UserDetailsServiceAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.security.authentication.AuthenticationManager' (OnClassCondition)
+      - @ConditionalOnBean (types: org.springframework.security.config.annotation.ObjectPostProcessor; SearchStrategy: all) found bean 'objectPostProcessor'; @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationManager,org.springframework.security.authentication.AuthenticationProvider,org.springframework.security.core.userdetails.UserDetailsService,org.springframework.security.authentication.AuthenticationManagerResolver,org.springframework.security.oauth2.jwt.JwtDecoder,org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector,org.springframework.security.oauth2.client.registration.ClientRegistrationRepository,org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+
+Negative matches:
+-----------------
+
+    None
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2023-11-27 13:27:31,507 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener [File Watcher]: Restarting due to 252 class path changes (252 additions, 0 deletions, 0 modifications)
+2023-11-27 13:27:31,514 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-10]: Pausing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:31,515 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-10]: Stopping service [Tomcat]
+2023-11-27 13:27:31,517 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-10]: Stopping ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:31,518 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-10]: Destroying ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:31,519 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [Thread-10]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:31,519 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [Thread-10]: HikariPool-2 - Shutdown initiated...
+2023-11-27 13:27:31,523 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [Thread-10]: HikariPool-2 - Shutdown completed.
+2023-11-27 13:27:31,575 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on DUCVIET with PID 51960 (D:\App\Flowiee\target\classes started by DELL in D:\App\Flowiee)
+2023-11-27 13:27:31,576 [34mINFO [0;39m org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-11-27 13:27:32,527 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-27 13:27:32,573 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 46 ms. Found 37 JPA repository interfaces.
+2023-11-27 13:27:32,643 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-11-27 13:27:32,643 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:32,644 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-11-27 13:27:32,644 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-11-27 13:27:32,655 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-11-27 13:27:32,655 [34mINFO [0;39m org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 1078 ms
+2023-11-27 13:27:32,682 [34mINFO [0;39m org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-27 13:27:32,687 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-3 - Starting...
+2023-11-27 13:27:32,687 [31mWARN [0;39m com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-11-27 13:27:32,724 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-3 - Start completed.
+2023-11-27 13:27:32,724 [34mINFO [0;39m org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-11-27 13:27:33,222 [34mINFO [0;39m org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-27 13:27:33,223 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:33,436 [31mWARN [0;39m org.hibernate.dialect.function.TemplateRenderer [restartedMain]: HHH000174: Function template anticipated 4 arguments, but 1 arguments encountered
+2023-11-27 13:27:33,813 [31mWARN [0;39m org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-27 13:27:33,900 [34mINFO [0;39m org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7298030b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1a59ab66, org.springframework.security.web.context.SecurityContextPersistenceFilter@4b0f6097, org.springframework.security.web.header.HeaderWriterFilter@56fd7d1, org.springframework.web.filter.CorsFilter@1f949a01, org.springframework.security.web.authentication.logout.LogoutFilter@683513ae, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@779e4ad6, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@3a389ca7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@178226a6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6c28aad8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6137e0f0, org.springframework.security.web.session.SessionManagementFilter@37a06653, org.springframework.security.web.access.ExceptionTranslationFilter@43a3fe5e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6c908731]
+2023-11-27 13:27:33,932 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-11-27 13:27:33,941 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:33,943 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-11-27 13:27:33,947 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 2.386 seconds (JVM running for 24.658)
+2023-11-27 13:27:33,948 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener [restartedMain]: Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+    None
+
+
+Negative matches:
+-----------------
+
+   SpringBootWebSecurityConfiguration.SecurityFilterChainConfiguration:
+      Did not match:
+         - AllNestedConditions 1 matched 1 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter,org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) found beans of type 'org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter' webSecurityConfig; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
+
+   SpringBootWebSecurityConfiguration.WebSecurityEnablerConfiguration:
+      Did not match:
+         - @ConditionalOnMissingBean (names: springSecurityFilterChain; SearchStrategy: all) found beans named springSecurityFilterChain (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.security.config.annotation.web.configuration.EnableWebSecurity' (OnClassCondition)
+
+   UserDetailsServiceAutoConfiguration:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationManager,org.springframework.security.authentication.AuthenticationProvider,org.springframework.security.core.userdetails.UserDetailsService,org.springframework.security.authentication.AuthenticationManagerResolver,org.springframework.security.oauth2.jwt.JwtDecoder,org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector,org.springframework.security.oauth2.client.registration.ClientRegistrationRepository,org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository; SearchStrategy: all) found beans of type 'org.springframework.security.authentication.AuthenticationManager' authenticationManagerBean and found beans of type 'org.springframework.security.core.userdetails.UserDetailsService' accountDetailService (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.security.authentication.AuthenticationManager' (OnClassCondition)
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2023-11-27 13:27:40,898 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener [File Watcher]: Restarting due to 3 class path changes (0 additions, 0 deletions, 3 modifications)
+2023-11-27 13:27:40,904 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-18]: Pausing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:40,904 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-18]: Stopping service [Tomcat]
+2023-11-27 13:27:40,905 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-18]: Stopping ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:40,906 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [Thread-18]: Destroying ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:40,910 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [Thread-18]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:40,911 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [Thread-18]: HikariPool-3 - Shutdown initiated...
+2023-11-27 13:27:40,916 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [Thread-18]: HikariPool-3 - Shutdown completed.
+2023-11-27 13:27:40,966 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on DUCVIET with PID 51960 (D:\App\Flowiee\target\classes started by DELL in D:\App\Flowiee)
+2023-11-27 13:27:40,967 [34mINFO [0;39m org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-11-27 13:27:41,060 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-27 13:27:41,103 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 42 ms. Found 37 JPA repository interfaces.
+2023-11-27 13:27:41,159 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-11-27 13:27:41,160 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:41,160 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-11-27 13:27:41,160 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-11-27 13:27:41,186 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-11-27 13:27:41,186 [34mINFO [0;39m org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 219 ms
+2023-11-27 13:27:41,219 [34mINFO [0;39m org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-27 13:27:41,221 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-4 - Starting...
+2023-11-27 13:27:41,221 [31mWARN [0;39m com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-11-27 13:27:41,262 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-4 - Start completed.
+2023-11-27 13:27:41,262 [34mINFO [0;39m org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-11-27 13:27:41,658 [34mINFO [0;39m org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-27 13:27:41,658 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:41,811 [31mWARN [0;39m org.hibernate.dialect.function.TemplateRenderer [restartedMain]: HHH000174: Function template anticipated 4 arguments, but 1 arguments encountered
+2023-11-27 13:27:42,162 [31mWARN [0;39m org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-27 13:27:42,245 [34mINFO [0;39m org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3b681000, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1bd2ca52, org.springframework.security.web.context.SecurityContextPersistenceFilter@25790bad, org.springframework.security.web.header.HeaderWriterFilter@7108d57b, org.springframework.web.filter.CorsFilter@6ada9811, org.springframework.security.web.authentication.logout.LogoutFilter@79108508, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@3c79a011, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@542733d4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1b6ac224, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2c7e7f3f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@70ebf0d, org.springframework.security.web.session.SessionManagementFilter@13b57558, org.springframework.security.web.access.ExceptionTranslationFilter@442f5046, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2ca18778]
+2023-11-27 13:27:42,276 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-11-27 13:27:42,285 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:27:42,288 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-11-27 13:27:42,292 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 1.343 seconds (JVM running for 33.004)
+2023-11-27 13:27:42,294 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener [restartedMain]: Condition evaluation unchanged
+2023-11-27 13:27:53,375 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:27:53,375 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-4 - Shutdown initiated...
+2023-11-27 13:27:53,381 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-4 - Shutdown completed.
+2023-11-27 13:28:50,114 [34mINFO [0;39m org.springframework.test.context.support.AbstractTestContextBootstrapper [main]: Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.flowiee.app.FlowieeOfficialApplicationTests], using SpringBootContextLoader
+2023-11-27 13:28:50,118 [34mINFO [0;39m org.springframework.test.context.support.AbstractContextLoader [main]: Could not detect default resource locations for test class [com.flowiee.app.FlowieeOfficialApplicationTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+2023-11-27 13:28:50,119 [34mINFO [0;39m org.springframework.test.context.support.AnnotationConfigContextLoaderUtils [main]: Could not detect default configuration classes for test class [com.flowiee.app.FlowieeOfficialApplicationTests]: FlowieeOfficialApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-11-27 13:28:50,191 [34mINFO [0;39m org.springframework.boot.test.context.SpringBootTestContextBootstrapper [main]: Found @SpringBootConfiguration com.flowiee.FlowieeOfficialApplication for test class com.flowiee.app.FlowieeOfficialApplicationTests
+2023-11-27 13:28:50,244 [34mINFO [0;39m org.springframework.test.context.support.AbstractTestContextBootstrapper [main]: Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener]
+2023-11-27 13:28:50,256 [34mINFO [0;39m org.springframework.test.context.support.AbstractTestContextBootstrapper [main]: Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@5286c33a, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@6e6d5d29, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@5c530d1e, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@6c25e6c4, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@85e6769, org.springframework.test.context.support.DirtiesContextTestExecutionListener@c5ee75e, org.springframework.test.context.transaction.TransactionalTestExecutionListener@48a12036, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@bf1ec20, org.springframework.test.context.event.EventPublishingTestExecutionListener@70efb718, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@b70da4c, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@4a11eb84, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@4e858e0a, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@435fb7b5, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@4e70a728, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@b7838a9, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@696f0212, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@5733f295]
+2023-11-27 13:28:50,496 [34mINFO [0;39m org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-11-27 13:28:50,501 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [main]: Starting FlowieeOfficialApplicationTests using Java 19.0.2 on DUCVIET with PID 57008 (started by DELL in D:\App\Flowiee)
+2023-11-27 13:28:50,501 [34mINFO [0;39m org.springframework.boot.SpringApplication [main]: No active profile set, falling back to 1 default profile: "default"
+2023-11-27 13:28:51,857 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [main]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-27 13:28:51,985 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [main]: Finished Spring Data repository scanning in 122 ms. Found 37 JPA repository interfaces.
+2023-11-27 13:28:52,684 [34mINFO [0;39m org.hibernate.jpa.internal.util.LogHelper [main]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-27 13:28:52,720 [34mINFO [0;39m org.hibernate.Version [main]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-11-27 13:28:52,830 [34mINFO [0;39m org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-11-27 13:28:52,927 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [main]: HikariPool-1 - Starting...
+2023-11-27 13:28:52,932 [31mWARN [0;39m com.zaxxer.hikari.util.DriverDataSource [main]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-11-27 13:28:53,108 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [main]: HikariPool-1 - Start completed.
+2023-11-27 13:28:53,126 [34mINFO [0;39m org.hibernate.dialect.Dialect [main]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-11-27 13:28:54,428 [34mINFO [0;39m org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-27 13:28:54,436 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:28:55,040 [31mWARN [0;39m org.hibernate.dialect.function.TemplateRenderer [main]: HHH000174: Function template anticipated 4 arguments, but 1 arguments encountered
+2023-11-27 13:28:55,554 [31mWARN [0;39m org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-27 13:28:56,050 [34mINFO [0;39m org.springframework.security.web.DefaultSecurityFilterChain [main]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@424769f2, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1467dcd0, org.springframework.security.web.context.SecurityContextPersistenceFilter@61aaec51, org.springframework.security.web.header.HeaderWriterFilter@57cc7d9e, org.springframework.web.filter.CorsFilter@1ea6446b, org.springframework.security.web.authentication.logout.LogoutFilter@7d6f094e, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@484f7fad, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@6654e105, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6587c92f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@18a8a40e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@39d0775c, org.springframework.security.web.session.SessionManagementFilter@52dbd3d, org.springframework.security.web.access.ExceptionTranslationFilter@72e36d0f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@76527a00]
+2023-11-27 13:28:56,402 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [main]: Started FlowieeOfficialApplicationTests in 6.122 seconds (JVM running for 6.854)
+2023-11-27 13:28:56,589 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:28:56,590 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-11-27 13:28:56,596 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
+2023-11-27 13:29:36,423 [34mINFO [0;39m org.hibernate.validator.internal.util.Version [background-preinit]: HV000001: Hibernate Validator 6.2.5.Final
+2023-11-27 13:29:36,434 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Starting FlowieeOfficialApplication using Java 19.0.2 on DUCVIET with PID 23200 (D:\App\Flowiee\target\classes started by DELL in D:\App\Flowiee)
+2023-11-27 13:29:36,435 [34mINFO [0;39m org.springframework.boot.SpringApplication [restartedMain]: No active profile set, falling back to 1 default profile: "default"
+2023-11-27 13:29:36,468 [34mINFO [0;39m org.springframework.boot.logging.DeferredLog [restartedMain]: The Class-Path manifest attribute in C:\Users\DELL\.m2\repository\com\oracle\database\jdbc\ojdbc8\21.5.0.0\ojdbc8-21.5.0.0.jar referenced one or more files that do not exist: file:/C:/Users/DELL/.m2/repository/com/oracle/database/jdbc/ojdbc8/21.5.0.0/oraclepki.jar
+2023-11-27 13:29:36,468 [34mINFO [0;39m org.springframework.boot.logging.DeferredLog [restartedMain]: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-27 13:29:36,468 [34mINFO [0;39m org.springframework.boot.logging.DeferredLog [restartedMain]: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-27 13:29:36,857 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-27 13:29:36,954 [34mINFO [0;39m org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain]: Finished Spring Data repository scanning in 92 ms. Found 37 JPA repository interfaces.
+2023-11-27 13:29:37,303 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat initialized with port(s): 8085 (http)
+2023-11-27 13:29:37,308 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:29:37,310 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting service [Tomcat]
+2023-11-27 13:29:37,310 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting Servlet engine: [Apache Tomcat/9.0.71]
+2023-11-27 13:29:37,358 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Initializing Spring embedded WebApplicationContext
+2023-11-27 13:29:37,358 [34mINFO [0;39m org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain]: Root WebApplicationContext: initialization completed in 890 ms
+2023-11-27 13:29:37,459 [34mINFO [0;39m org.hibernate.jpa.internal.util.LogHelper [restartedMain]: HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-27 13:29:37,490 [34mINFO [0;39m org.hibernate.Version [restartedMain]: HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-11-27 13:29:37,572 [34mINFO [0;39m org.hibernate.annotations.common.reflection.java.JavaReflectionManager [restartedMain]: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-11-27 13:29:37,623 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Starting...
+2023-11-27 13:29:37,627 [31mWARN [0;39m com.zaxxer.hikari.util.DriverDataSource [restartedMain]: Registered driver with driverClassName=oracle.jdbc.driver.OracleDriver was not found, trying direct instantiation.
+2023-11-27 13:29:37,793 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [restartedMain]: HikariPool-1 - Start completed.
+2023-11-27 13:29:37,809 [34mINFO [0;39m org.hibernate.dialect.Dialect [restartedMain]: HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+2023-11-27 13:29:38,738 [34mINFO [0;39m org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain]: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-27 13:29:38,744 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [restartedMain]: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:29:39,122 [31mWARN [0;39m org.hibernate.dialect.function.TemplateRenderer [restartedMain]: HHH000174: Function template anticipated 4 arguments, but 1 arguments encountered
+2023-11-27 13:29:39,545 [31mWARN [0;39m org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain]: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-27 13:29:39,774 [34mINFO [0;39m org.springframework.security.web.DefaultSecurityFilterChain [restartedMain]: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@16f58e04, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4c9ba7f5, org.springframework.security.web.context.SecurityContextPersistenceFilter@3d9ba245, org.springframework.security.web.header.HeaderWriterFilter@119ca05c, org.springframework.web.filter.CorsFilter@6b6c4ad7, org.springframework.security.web.authentication.logout.LogoutFilter@77f57fbd, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@3c6021b7, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@5714c25, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@32c25641, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@a62ee2f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@25834f6b, org.springframework.security.web.session.SessionManagementFilter@6c88604d, org.springframework.security.web.access.ExceptionTranslationFilter@303fbeee, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7527470b]
+2023-11-27 13:29:40,013 [34mINFO [0;39m org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain]: LiveReload server is running on port 35729
+2023-11-27 13:29:40,026 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [restartedMain]: Starting ProtocolHandler ["http-nio-8085"]
+2023-11-27 13:29:40,037 [34mINFO [0;39m org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain]: Tomcat started on port(s): 8085 (http) with context path ''
+2023-11-27 13:29:40,047 [34mINFO [0;39m org.springframework.boot.StartupInfoLogger [restartedMain]: Started FlowieeOfficialApplication in 3.819 seconds (JVM running for 4.375)
+2023-11-27 13:29:43,348 [34mINFO [0;39m org.apache.juli.logging.DirectJDKLog [http-nio-8085-exec-2]: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-27 13:29:43,349 [34mINFO [0;39m org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-2]: Initializing Servlet 'dispatcherServlet'
+2023-11-27 13:29:43,349 [34mINFO [0;39m org.springframework.web.servlet.FrameworkServlet [http-nio-8085-exec-2]: Completed initialization in 0 ms
+2023-11-27 13:29:55,328 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getSoLuongDonHangHomNay() - SQL findData]: SELECT * FROM PRO_DON_HANG D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)
+2023-11-27 13:29:55,464 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getDoanhThuHomNay() - SQL findData]: SELECT NVL(SUM(d.tong_tien_don_hang), 0) FROM PRO_DON_HANG d WHERE TRUNC(d.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)
+2023-11-27 13:29:55,496 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getDoanhThuThangNay() - SQL findData]: SELECT NVL(SUM(d.TONG_TIEN_DON_HANG), 0) FROM PRO_DON_HANG d WHERE EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(MONTH FROM SYSDATE)
+2023-11-27 13:29:55,513 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getSoLuongKhachHangMoi() - SQL findData]: SELECT * FROM PRO_CUSTOMER c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)
+2023-11-27 13:29:55,546 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getDoanhThuTheoKenhBanHang() - SQL findData]: SELECT c.NAME, c.COLOR, NVL(SUM(d.TONG_TIEN_DON_HANG),0) AS TOTAL FROM (SELECT * FROM CATEGORY WHERE TYPE = 'SALESCHANNEL') c LEFT JOIN PRO_DON_HANG d ON c.ID = d.KENH_BAN_HANG GROUP BY c.NAME, c.COLOR
+2023-11-27 13:29:55,620 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getDoanhThuCacThangTheoNam() - SQL findData]: SELECT SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 1 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_1, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 2 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_2, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 3 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_3, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 4 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_4,SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 5 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_5, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 6 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_6, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 7 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_7, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 8 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_8,SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 9 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_9, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 10 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_10, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 11 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_11, SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 12 THEN d.TONG_TIEN_DON_HANG ELSE 0 END) AS THANG_12 FROM PRO_DON_HANG d WHERE EXTRACT(YEAR FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(YEAR FROM SYSDATE)
+2023-11-27 13:29:55,670 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getDoanhThuCacNgayTheoThang() - SQL findData]: WITH all_dates AS (SELECT TO_DATE('2023-11-01', 'YYYY-MM-DD') + LEVEL - 1 AS NGAY FROM DUAL CONNECT BY LEVEL <= TO_DATE('2023-11-30', 'YYYY-MM-DD') - TO_DATE('2023-11-01', 'YYYY-MM-DD') + 1) SELECT all_dates.NGAY, NVL(SUM(PRO_DON_HANG.TONG_TIEN_DON_HANG), 0) AS DOANH_THU FROM all_dates LEFT JOIN PRO_DON_HANG ON TRUNC(PRO_DON_HANG.THOI_GIAN_DAT_HANG) = all_dates.NGAY GROUP BY all_dates.NGAY ORDER BY all_dates.NGAY
+2023-11-27 13:29:55,687 [34mINFO [0;39m com.flowiee.app.service.impl.DashboardServiceImpl [http-nio-8085-exec-9]: [getTopSanPhamBanChay() - SQL findData]: SELECT * FROM (SELECT s.VARIANT_NAME, NVL(SUM(d.SO_LUONG), 0) AS Total FROM PRO_PRODUCT_VARIANT s LEFT JOIN PRO_DON_HANG_CHI_TIET d ON s.id = d.BIEN_THE_SAN_PHAM_ID GROUP BY s.ID, s.VARIANT_NAME ORDER BY total DESC) WHERE ROWNUM <= 10
+2023-11-27 13:41:03,125 [34mINFO [0;39m org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook]: Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-27 13:41:03,127 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown initiated...
+2023-11-27 13:41:03,136 [34mINFO [0;39m com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook]: HikariPool-1 - Shutdown completed.
