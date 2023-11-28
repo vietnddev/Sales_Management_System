@@ -3,7 +3,6 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.security.author.ValidateModuleSystem;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.NotificationService;
 import com.flowiee.app.service.SystemLogService;
 
@@ -18,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class LogController extends BaseController {
     @Autowired
     private SystemLogService systemLogService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     NotificationService notificationService;
     @Autowired

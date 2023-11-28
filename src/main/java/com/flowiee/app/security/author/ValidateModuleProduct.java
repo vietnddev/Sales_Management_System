@@ -1,6 +1,7 @@
 package com.flowiee.app.security.author;
 
 import com.flowiee.app.model.role.*;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
@@ -14,13 +15,25 @@ public class ValidateModuleProduct {
     @Autowired
     private AccountService accountService;
 
-    private final String module = SystemModule.SAN_PHAM.name();
+    private final String module = SystemModule.PRODUCT.name();
+    
+    public boolean readDashboard() {
+        if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
+            return true;
+        }
+        final String action = ProductAction.PRO_PRODUCT_DASHBOARD.name();
+        int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
+        if (roleService.isAuthorized(accountId, module, action)) {
+            return true;
+        }
+        return false;
+    }
 
     public boolean readProduct() {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.READ_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_READ.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -32,7 +45,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.CREATE_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_CREATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -44,7 +57,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.UPDATE_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_UPDATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -56,7 +69,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.DELETE_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_DELETE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -68,7 +81,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.IMPORT_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_IMPORT.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -80,7 +93,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.UPDATE_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_UPDATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -92,7 +105,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.UPDATE_PRICE_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_PRICE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -104,7 +117,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SanPhamAction.REPORT_SANPHAM.name();
+        final String action = ProductAction.PRO_PRODUCT_REPORT.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -116,7 +129,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DonHangAction.READ_DONHANG.name();
+        final String action = ProductAction.PRO_ORDERS_READ.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -128,7 +141,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DonHangAction.CREATE_DONHANG.name();
+        final String action = ProductAction.PRO_ORDERS_CREATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -140,7 +153,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DonHangAction.UPDATE_DONHANG.name();
+        final String action = ProductAction.PRO_ORDERS_UPDATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -152,7 +165,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = DonHangAction.DELETE_DONHANG.name();
+        final String action = ProductAction.PRO_ORDERS_DELETE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -164,7 +177,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhachHangAction.READ_KHACHHANG.name();
+        final String action = ProductAction.PRO_CUSTOMER_READ.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -176,7 +189,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhachHangAction.CREATE_KHACHHANG.name();
+        final String action = ProductAction.PRO_CUSTOMER_CREATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -188,7 +201,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhachHangAction.UPDATE_KHACHHANG.name();
+        final String action = ProductAction.PRO_CUSTOMER_UPDATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -200,7 +213,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = KhachHangAction.DELETE_KHACHHANG.name();
+        final String action = ProductAction.PRO_CUSTOMER_DELETE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -212,7 +225,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = VoucherAction.READ_VOUCHER.name();
+        final String action = ProductAction.PRO_VOUCHER_READ.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -224,7 +237,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = VoucherAction.CREATE_VOUCHER.name();
+        final String action = ProductAction.PRO_VOUCHER_CREATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -236,7 +249,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = VoucherAction.UPDATE_VOUCHER.name();
+        final String action = ProductAction.PRO_VOUCHER_UPDATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -248,7 +261,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = VoucherAction.DELETE_VOUCHER.name();
+        final String action = ProductAction.PRO_VOUCHER_DELETE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -260,7 +273,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SupplierAction.READ_SUPPLIER.name();
+        final String action = ProductAction.PRO_SUPPLIER_READ.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -272,7 +285,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SupplierAction.CREATE_SUPPLIER.name();
+        final String action = ProductAction.PRO_SUPPLIER_CREATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -284,7 +297,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SupplierAction.UPDATE_SUPPLIER.name();
+        final String action = ProductAction.PRO_SUPPLIER_UPDATE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
@@ -296,7 +309,7 @@ public class ValidateModuleProduct {
         if (accountService.findCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
             return true;
         }
-        final String action = SupplierAction.DELETE_SUPPLIER.name();
+        final String action = ProductAction.PRO_SUPPLIER_DELETE.name();
         int accountId = accountService.findIdByUsername(accountService.findCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;

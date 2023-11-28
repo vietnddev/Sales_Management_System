@@ -3,6 +3,11 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.AccountRole;
 import com.flowiee.app.model.role.*;
+import com.flowiee.app.model.role.SystemAction.CategoryAction;
+import com.flowiee.app.model.role.SystemAction.DashboardAction;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
+import com.flowiee.app.model.role.SystemAction.StorageAction;
+import com.flowiee.app.model.role.SystemAction.SysAction;
 import com.flowiee.app.repository.RoleRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
@@ -34,66 +39,36 @@ public class RoleServiceImpl implements RoleService {
             response.setModule(module);
 
             switch (sys) {
-                case DASHBOARD:
-                    List<Role.Action> actionDashboard = new ArrayList<>();
-                    for (DashboardAction action : DashboardAction.values()) {
-                        Role.Action ac = new Role.Action();
-                        ac.setKeyAction(action.name());
-                        ac.setValueAction(action.getLabel());
-                        actionDashboard.add(ac);
+                case PRODUCT:
+                    List<Role.Action> listActionProduct = new ArrayList<>();
+                    for (ProductAction actionProduct : ProductAction.values()) {
+                        listActionProduct.add(new Role.Action(actionProduct.name(), actionProduct.getLabel()));
                     }
-                    response.setAction(actionDashboard);
+                    response.setAction(listActionProduct);
                     break;
-                case SAN_PHAM:
-                    List<Role.Action> listActionSanPham = new ArrayList<>();
-                    for (SanPhamAction actionSanPham : SanPhamAction.values()) {
-                        Role.Action action = new Role.Action();
-                        action.setKeyAction(actionSanPham.name());
-                        action.setValueAction(actionSanPham.getLabel());
-                        listActionSanPham.add(action);
+                case STORAGE:
+                    List<Role.Action> listActionStaroge = new ArrayList<>();
+                    for (StorageAction actionStorage : StorageAction.values()) {
+                    	listActionStaroge.add(new Role.Action(actionStorage.name(), actionStorage.getLabel()));
                     }
-                    response.setAction(listActionSanPham);
+                    response.setAction(listActionStaroge);
                     break;
-                case KHO_TAI_LIEU:
-                    List<Role.Action> listActionKhoTaiLieu = new ArrayList<>();
-                    for (KhoTaiLieuAction actionKhoTaiLieu : KhoTaiLieuAction.values()) {
-                        Role.Action action = new Role.Action();
-                        action.setKeyAction(actionKhoTaiLieu.name());
-                        action.setValueAction(actionKhoTaiLieu.getLabel());
-                        listActionKhoTaiLieu.add(action);
+                case CATEGORY:
+                    List<Role.Action> listActionCategory = new ArrayList<>();
+                    for (CategoryAction actionCategory : CategoryAction.values()) {
+                    	listActionCategory.add(new Role.Action(actionCategory.name(), actionCategory.getLabel()));
                     }
-                    response.setAction(listActionKhoTaiLieu);
+                    response.setAction(listActionCategory);
                     break;
-                case DANH_MUC:
-                    List<Role.Action> listActionDanhMuc = new ArrayList<>();
-                    for (DanhMucAction actionDanhMuc : DanhMucAction.values()) {
-                        Role.Action action = new Role.Action();
-                        action.setKeyAction(actionDanhMuc.name());
-                        action.setValueAction(actionDanhMuc.getLabel());
-                        listActionDanhMuc.add(action);
-                    }
-                    response.setAction(listActionDanhMuc);
-                    break;
-                case HE_THONG:
+                case SYSTEM:
                     List<Role.Action> listActionSystem = new ArrayList<>();
-                    for (AccountAction actionAccount : AccountAction.values()) {
-                        Role.Action action = new Role.Action();
-                        action.setKeyAction(actionAccount.name());
-                        action.setValueAction(actionAccount.getLabel());
-                        listActionSystem.add(action);
+                    for (SysAction actionSystem : SysAction.values()) {
+                    	listActionSystem.add(new Role.Action(actionSystem.name(), actionSystem.getLabel()));
                     }
                     response.setAction(listActionSystem);
                     break;
-                case THU_VIEN_ANH:
-                    List<Role.Action> listActionAlbum = new ArrayList<>();
-                    for (ThuVienAnhAction actionAlbum : ThuVienAnhAction.values()) {
-                        Role.Action action = new Role.Action();
-                        action.setKeyAction(actionAlbum.name());
-                        action.setValueAction(actionAlbum.getLabel());
-                        listActionAlbum.add(action);
-                    }
-                    response.setAction(listActionAlbum);
-                    break;
+			default:
+				break;
             }
             listReturn.add(response);
         }
@@ -109,34 +84,24 @@ public class RoleServiceImpl implements RoleService {
         List<FlowieeRole> listReturn = new ArrayList<>();
 
         for (SystemModule sys : SystemModule.values()) {
-            switch (sys) {
-                case DASHBOARD:
-                    for (DashboardAction actions : DashboardAction.values()) {
+            switch (sys) {  
+                case PRODUCT:
+                    for (ProductAction actions : ProductAction.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
-                case SAN_PHAM:
-                    for (SanPhamAction actions : SanPhamAction.values()) {
+                case STORAGE:
+                    for (StorageAction actions : StorageAction.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
-                case KHO_TAI_LIEU:
-                    for (KhoTaiLieuAction actions : KhoTaiLieuAction.values()) {
+                case SYSTEM:
+                    for (SysAction actions : SysAction.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
-                case DANH_MUC:
-                    for (DanhMucAction actions : DanhMucAction.values()) {
-                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
-                    }
-                    break;
-                case HE_THONG:
-                    for (AccountAction actions : AccountAction.values()) {
-                        listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
-                    }
-                    break;
-                case THU_VIEN_ANH:
-                    for (ThuVienAnhAction actions : ThuVienAnhAction.values()) {
+                case CATEGORY:
+                    for (CategoryAction actions : CategoryAction.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
@@ -171,33 +136,23 @@ public class RoleServiceImpl implements RoleService {
         List<String> listActionKey = new ArrayList<>();
         for (SystemModule sys : SystemModule.values()) {
             switch (sys) {
-                case DASHBOARD:
-                    for (DashboardAction actions : DashboardAction.values()) {
+                case PRODUCT:
+                    for (ProductAction actions : ProductAction.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
-                case SAN_PHAM:
-                    for (SanPhamAction actions : SanPhamAction.values()) {
+                case STORAGE:
+                    for (StorageAction actions : StorageAction.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
-                case KHO_TAI_LIEU:
-                    for (KhoTaiLieuAction actions : KhoTaiLieuAction.values()) {
+                case SYSTEM:
+                    for (SysAction actions : SysAction.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
-                case DANH_MUC:
-                    for (DanhMucAction actions : DanhMucAction.values()) {
-                        listActionKey.add(actions.name());
-                    }
-                    break;
-                case HE_THONG:
-                    for (AccountAction actions : AccountAction.values()) {
-                        listActionKey.add(actions.name());
-                    }
-                    break;
-                case THU_VIEN_ANH:
-                    for (ThuVienAnhAction actions : ThuVienAnhAction.values()) {
+                case CATEGORY:
+                    for (CategoryAction actions : CategoryAction.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
@@ -211,65 +166,24 @@ public class RoleServiceImpl implements RoleService {
         List<ActionOfModule> listAction = new ArrayList<>();
         for (SystemModule sysModule : SystemModule.values()) {
             switch (sysModule) {
-                case DASHBOARD:
-                    for (DashboardAction sysAction : DashboardAction.values()) {
-                        ActionOfModule actionOfModule = new ActionOfModule();
-                        actionOfModule.setActionKey(sysAction.name());
-                        actionOfModule.setActionLabel(sysAction.getLabel());
-                        actionOfModule.setModuleKey(sysModule.name());
-                        listAction.add(actionOfModule);
+                case PRODUCT:
+                    for (ProductAction sysAction : ProductAction.values()) {
+                        listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;
-                case SAN_PHAM:
-                    for (SanPhamAction sysAction : SanPhamAction.values()) {
-                        ActionOfModule actionOfModule = new ActionOfModule();
-                        actionOfModule.setActionKey(sysAction.name());
-                        actionOfModule.setActionLabel(sysAction.getLabel());
-                        actionOfModule.setModuleKey(sysModule.name());
-                        listAction.add(actionOfModule);
-                    }
-                    for (VoucherAction sysAction : VoucherAction.values()) {
-                        ActionOfModule actionOfModule = new ActionOfModule();
-                        actionOfModule.setActionKey(sysAction.name());
-                        actionOfModule.setActionLabel(sysAction.getLabel());
-                        actionOfModule.setModuleKey(sysModule.name());
-                        listAction.add(actionOfModule);
+                case STORAGE:
+                    for (StorageAction sysAction : StorageAction.values()) {
+                    	listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;
-                case KHO_TAI_LIEU:
-                    for (KhoTaiLieuAction sysAction : KhoTaiLieuAction.values()) {
-                        ActionOfModule actionOfModule = new ActionOfModule();
-                        actionOfModule.setActionKey(sysAction.name());
-                        actionOfModule.setActionLabel(sysAction.getLabel());
-                        actionOfModule.setModuleKey(sysModule.name());
-                        listAction.add(actionOfModule);
+                case SYSTEM:
+                    for (SysAction sysAction : SysAction.values()) {
+                    	listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;
-                case DANH_MUC:
-                    for (DanhMucAction sysAction : DanhMucAction.values()) {
-                        ActionOfModule actionOfModule = new ActionOfModule();
-                        actionOfModule.setActionKey(sysAction.name());
-                        actionOfModule.setActionLabel(sysAction.getLabel());
-                        actionOfModule.setModuleKey(sysModule.name());
-                        listAction.add(actionOfModule);
-                    }
-                    break;
-                case HE_THONG:
-                    for (AccountAction sysAction : AccountAction.values()) {
-                        ActionOfModule actionOfModule = new ActionOfModule();
-                        actionOfModule.setActionKey(sysAction.name());
-                        actionOfModule.setActionLabel(sysAction.getLabel());
-                        actionOfModule.setModuleKey(sysModule.name());
-                        listAction.add(actionOfModule);
-                    }
-                    break;
-                case THU_VIEN_ANH:
-                    for (ThuVienAnhAction sysAction : ThuVienAnhAction.values()) {
-                        ActionOfModule actionOfModule = new ActionOfModule();
-                        actionOfModule.setActionKey(sysAction.name());
-                        actionOfModule.setActionLabel(sysAction.getLabel());
-                        actionOfModule.setModuleKey(sysModule.name());
-                        listAction.add(actionOfModule);
+                case CATEGORY:
+                    for (CategoryAction sysAction : CategoryAction.values()) {
+                    	listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;
             }

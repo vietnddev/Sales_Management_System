@@ -148,15 +148,18 @@ public class FlowieeUtil {
         try {
             StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
             switch (systemModule) {
-                case KHO_TAI_LIEU:
-                    path.append("/kho-tai-lieu");
+                case STORAGE:
+                    path.append("/storage");
                     break;
-                case SAN_PHAM:
-                    path.append("/san-pham");
+                case PRODUCT:
+                    path.append("/product");
                     break;
-                case DANH_MUC:
-                    path.append("/danh-muc");
+                case CATEGORY:
+                    path.append("/category");
                     break;
+                default:
+                	path.append("/system");
+                	break;
             }
             path.append("/" + FlowieeUtil.getNamHienTai());
             path.append("/" + FlowieeUtil.getThangHienTai());
@@ -177,12 +180,12 @@ public class FlowieeUtil {
     public static String getPathDirectoty(String systemModule) {
         try {
             StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
-            if (SystemModule.KHO_TAI_LIEU.name().equals(systemModule)) {
-                path.append("/kho-tai-lieu");
-            } else if (SystemModule.SAN_PHAM.name().equals(systemModule)) {
-                path.append("/san-pham");
-            } else if (SystemModule.DANH_MUC.name().equals(systemModule)) {
-                path.append("/danh-muc");
+            if (SystemModule.STORAGE.name().equals(systemModule)) {
+                path.append("/storage");
+            } else if (SystemModule.PRODUCT.name().equals(systemModule)) {
+                path.append("/product");
+            } else if (SystemModule.CATEGORY.name().equals(systemModule)) {
+                path.append("/category");
             }
             path.append("/" + FlowieeUtil.getNamHienTai());
             path.append("/" + FlowieeUtil.getThangHienTai());

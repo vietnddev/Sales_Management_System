@@ -8,7 +8,7 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.repository.GoodsImportRepository;
-import com.flowiee.app.service.GoodsImportService;
+import com.flowiee.app.service.TicketImportGoodsService;
 
 import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class GoodsImportServiceImpl implements GoodsImportService {
+public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     @Autowired
     private GoodsImportRepository goodsImportRepository;
     @Autowired

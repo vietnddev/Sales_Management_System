@@ -6,7 +6,6 @@ import com.flowiee.app.entity.DocShare;
 
 import java.util.List;
 
-@Service
 public interface DocShareService {
 
     List<DocShare> findAll();

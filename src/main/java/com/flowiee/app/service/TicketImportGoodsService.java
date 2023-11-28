@@ -6,7 +6,7 @@ import com.flowiee.app.model.request.TicketImportGoodsRequest;
 
 import java.util.List;
 
-public interface GoodsImportService extends BaseService<TicketImportGoods> {
+public interface TicketImportGoodsService extends BaseService<TicketImportGoods> {
     String saveDraft(TicketImportGoodsRequest ticketImportGoodsRequest);
 
     List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);

@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.role.DonHangAction;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.repository.OrderDetailRepository;
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
     private static final Logger logger = LoggerFactory.getLogger(OrderDetailServiceImpl.class);
-    private static final String module = SystemModule.SAN_PHAM.name();
+    private static final String module = SystemModule.PRODUCT.name();
 
     @Autowired
     private OrderService orderService;
@@ -49,7 +49,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public String save(OrderDetail orderDetail) {
         try {
             orderDetailRepository.save(orderDetail);
-            systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -63,7 +63,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         try {
             orderDetail.setId(id);
             orderDetailRepository.save(orderDetail);
-            systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         OrderDetail orderDetail = this.findById(id);
         try {
             orderDetailRepository.deleteById(id);
-            systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Xóa item of đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {

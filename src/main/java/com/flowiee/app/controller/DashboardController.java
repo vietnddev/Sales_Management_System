@@ -1,14 +1,10 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.model.*;
-import com.flowiee.app.utils.FlowieeUtil;
-import com.flowiee.app.security.author.ValidateModuleDashboard;
-import com.flowiee.app.entity.Customer;
-import com.flowiee.app.entity.Order;
+import com.flowiee.app.model.DashboardModel;
+import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.service.DashboardService;
-import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,16 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
 @Controller
 @CrossOrigin
 @RequestMapping("")
 public class DashboardController extends BaseController {
     @Autowired
-    private AccountService accountService;
-    @Autowired
-    private ValidateModuleDashboard validateModuleDashboard;
+    private ValidateModuleProduct validateModuleProduct;
     @Autowired
     private DashboardService dashboardService;
 
@@ -35,7 +27,7 @@ public class DashboardController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
-        if (validateModuleDashboard.readDashboard()) {
+        if (validateModuleProduct.readDashboard()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_DASHBOARD);
 
             DashboardModel dashboard = dashboardService.loadDashboard();

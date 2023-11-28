@@ -4,7 +4,6 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.OrderService;
-import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,8 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(path = "/profile")
 public class ProfileController extends BaseController {
-	@Autowired
-	private AccountService accountService;
 	@Autowired
 	private OrderService orderService;	
 

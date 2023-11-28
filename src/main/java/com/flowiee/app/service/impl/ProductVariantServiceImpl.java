@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.model.role.SanPhamAction;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.repository.ProductVariantRepository;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class ProductVariantServiceImpl implements ProductVariantService {
     private static final Logger logger = LoggerFactory.getLogger(ProductVariantServiceImpl.class);
-    private static final String module = SystemModule.SAN_PHAM.name();
+    private static final String module = SystemModule.PRODUCT.name();
 
     @Autowired
     private ProductVariantRepository productVariantRepository;
@@ -72,7 +72,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             }
             productVariant.setTenBienThe(tenBienTheSanPham);
             productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới biến thể sản phẩm: " + productVariant.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant.toString());
             logger.info(ProductVariantServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + productVariant.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         ProductVariant productVariantToDelete = this.findById(entityId);
         try {
             productVariantRepository.deleteById(entityId);
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
             logger.info(ProductVariantServiceImpl.class.getName() + ": Xóa biến thể sản phẩm " + productVariantToDelete.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         try {
             productVariant.setId(id);
             productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
             logger.info(ProductVariantServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + productVariantBefore.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -116,7 +116,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         productVariant.setSoLuongKho(productVariant.getSoLuongKho() - soLuong);
         try {
             productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!", productVariant);
@@ -144,7 +144,8 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         return findData(AppConstants.COLOR, String.valueOf(colorId));
     }
 
-    private List<ProductVariant> findData(String where, String valueWhere) {
+    @SuppressWarnings("unchecked")
+	private List<ProductVariant> findData(String where, String valueWhere) {
         List<ProductVariant> dataResponse = new ArrayList<>();
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("NVL(p.ID,0) as PRODUCT_ID_0, p.TEN_SAN_PHAM as PRODUCT_NAME_1, NVL(v.ID,0) as PRODUCT_VARIANT_ID_2, v.VARIANT_CODE as VARIANT_CODE_3, ");

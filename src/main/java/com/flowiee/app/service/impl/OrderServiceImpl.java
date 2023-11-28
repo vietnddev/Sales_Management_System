@@ -6,7 +6,7 @@ import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.model.request.OrderRequest;
 import com.flowiee.app.entity.Category;
-import com.flowiee.app.model.role.DonHangAction;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.service.*;
@@ -36,13 +36,12 @@ import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
-    private static final String module = SystemModule.SAN_PHAM.name();
+    private static final String module = SystemModule.PRODUCT.name();
 
     @Autowired
     private OrderRepository orderRepository;
@@ -139,7 +138,7 @@ public class OrderServiceImpl implements OrderService {
             orderSaved.setTongTienDonHang(totalMoneyOfDonHang);
             orderRepository.save(orderSaved);
 
-            systemLogService.writeLog(module, DonHangAction.CREATE_DONHANG.name(), "Thêm mới đơn hàng: " + order.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Thêm mới đơn hàng " + order.toString());
 
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -163,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
     public String update(Order order, Integer id) {
         order.setId(id);
         orderRepository.save(order);
-        systemLogService.writeLog(module, DonHangAction.UPDATE_DONHANG.name(), "Cập nhật đơn hàng: " + order.toString());
+        systemLogService.writeLog(module, ProductAction.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + order.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -172,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
     public String delete(Integer id) {
         Order order = this.findById(id);
         orderRepository.deleteById(id);
-        systemLogService.writeLog(module, DonHangAction.DELETE_DONHANG.name(), "Xóa đơn hàng: " + order.toString());
+        systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -225,7 +224,8 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private List<OrderDTO> findData(OrderDTO orderDTO) {
+    @SuppressWarnings("unchecked")
+	private List<OrderDTO> findData(OrderDTO orderDTO) {
         List<OrderDTO> dataResponse = new ArrayList<>();
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("o.ID as ORDER_ID_0, o.MA_DON_HANG as MA_DON_HANG_1, o.THOI_GIAN_DAT_HANG as ORDER_TIME_2, o.RECEIVER_ADDRESS as RECEIVER_ADDRESS_3,");

@@ -5,7 +5,6 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.FileStorageService;
-import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +18,6 @@ public class GalleryController extends BaseController {
     private FileStorageService fileStorageService;
     @Autowired
     private ProductService productService;
-    @Autowired
-    private AccountService accountService;
 
     @GetMapping("")
     public ModelAndView getAllFiles() {
@@ -29,7 +26,7 @@ public class GalleryController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
         // Lấy tất cả ảnh cho page thư viện
-        modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.SAN_PHAM.name()));
+        modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
         // Lấy danh sách tên sản phẩm
         modelAndView.addObject("listSanPham", productService.findAll());
         return baseView(modelAndView);

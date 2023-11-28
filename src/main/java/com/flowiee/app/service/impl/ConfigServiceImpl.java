@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.repository.FlowieeConfigRepository;
-import com.flowiee.app.service.FlowieeConfigService;
+import com.flowiee.app.service.ConfigService;
 
 import com.flowiee.app.utils.AppConstants;
 import org.slf4j.Logger;
@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FlowieeConfigServiceImpl implements FlowieeConfigService {
-    private static final Logger logger = LoggerFactory.getLogger(FlowieeConfigServiceImpl.class);
+public class ConfigServiceImpl implements ConfigService {
+    private static final Logger logger = LoggerFactory.getLogger(ConfigServiceImpl.class);
 
     @Autowired
     private FlowieeConfigRepository flowieeConfigRepository;

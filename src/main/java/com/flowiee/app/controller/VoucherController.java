@@ -5,7 +5,6 @@ import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.VoucherService;
-import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/san-pham/voucher")
 public class VoucherController extends BaseController {
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private VoucherService voucherService;
     @Autowired

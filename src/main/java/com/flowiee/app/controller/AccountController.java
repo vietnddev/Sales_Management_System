@@ -9,7 +9,6 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.model.role.ActionOfModule;
 import com.flowiee.app.model.role.FlowieeRole;
 import com.flowiee.app.model.role.Role;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ import java.util.List;
 @Controller
 @RequestMapping(path = "/he-thong/tai-khoan")
 public class AccountController extends BaseController {
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private RoleService roleService;
     @Autowired

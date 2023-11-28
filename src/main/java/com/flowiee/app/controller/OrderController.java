@@ -9,7 +9,6 @@ import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.*;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Items;
 import com.flowiee.app.entity.Order;
@@ -37,8 +36,6 @@ public class OrderController extends BaseController {
     private OrderService orderService;
     @Autowired
     private OrderDetailService donHangChiTietService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired

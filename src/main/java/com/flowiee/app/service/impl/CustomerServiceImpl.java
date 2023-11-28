@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.role.KhachHangAction;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.CustomerRepository;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
-    private static final String module = SystemModule.SAN_PHAM.name();
+    private static final String module = SystemModule.PRODUCT.name();
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -45,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customer.setCreatedBy(accountService.findCurrentAccountId());
         customerRepository.save(customer);
-        systemLogService.writeLog(module, KhachHangAction.CREATE_KHACHHANG.name(), "Thêm mới khách hàng: " + customer.toString());
+        systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_CREATE.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Thêm mới khách hàng " + customer.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -57,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customer.setId(id);
         customerRepository.save(customer);
-        systemLogService.writeLog(module, KhachHangAction.UPDATE_KHACHHANG.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
+        systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_UPDATE.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Cập nhật khách hàng " + customer.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -69,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLog(module, KhachHangAction.DELETE_KHACHHANG.name(), "Xóa khách hàng: " + customer.toString());
+        systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Xóa khách hàng " + customer.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }

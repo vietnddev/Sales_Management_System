@@ -149,19 +149,19 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
-        fileInfo.setModule(SystemModule.SAN_PHAM.name());
+        fileInfo.setModule(SystemModule.PRODUCT.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).substring(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
         fileInfo.setProduct(new Product(sanPhamId));
         fileInfo.setAccount(new Account(accountService.findIdByUsername(accountService.findCurrentAccountUsername())));
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -172,13 +172,13 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
-        fileInfo.setModule(SystemModule.SAN_PHAM.name());
+        fileInfo.setModule(SystemModule.PRODUCT.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).substring(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
         //
         ProductVariant productVariant = productVariantService.findById(bienTheId);
         fileInfo.setProductVariant(productVariant);
@@ -187,7 +187,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -197,19 +197,19 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
-        fileInfo.setModule(SystemModule.KHO_TAI_LIEU.name());
+        fileInfo.setModule(SystemModule.STORAGE.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FlowieeUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).substring(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).indexOf("uploads")));
         fileInfo.setDocument(new Document(documentId));
         fileInfo.setAccount(accountService.findCurrentAccount());
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -235,19 +235,19 @@ public class FileStorageServiceImpl implements FileStorageService {
         //Save file mới vào hệ thống
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
-        fileInfo.setModule(SystemModule.KHO_TAI_LIEU.name());
+        fileInfo.setModule(SystemModule.STORAGE.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).substring(FlowieeUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU).indexOf("uploads")));
+        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).substring(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).indexOf("uploads")));
         fileInfo.setDocument(new Document(documentId));
         fileInfo.setAccount(accountService.findCurrentAccount());
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.KHO_TAI_LIEU) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -272,13 +272,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileToChange.setKichThuocFile(fileAttached.getSize());
         fileToChange.setExtension(FlowieeUtil.getExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
-        fileToChange.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM).substring(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM).indexOf("uploads")));
+        fileToChange.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).substring(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
         fileToChange.setAccount(new Account(accountService.findCurrentAccountId()));
         fileRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload
         try {
-            Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.SAN_PHAM) + "/" + currentTime + "_" + fileAttached.getOriginalFilename());
+            Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileAttached.getOriginalFilename());
             fileAttached.transferTo(path);
         } catch (Exception e) {
             logger.error("Lưu file change vào thư mục chứa file upload thất bại!", e.getCause().getMessage());

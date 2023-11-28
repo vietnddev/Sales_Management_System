@@ -16,13 +16,12 @@ import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.service.GoodsImportService;
+import com.flowiee.app.service.TicketImportGoodsService;
 import com.flowiee.app.service.MaterialService;
 import com.flowiee.app.service.MaterialTempService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.ProductVariantTempService;
 import com.flowiee.app.service.SupplierService;
-import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,9 +35,7 @@ import java.util.*;
 @RequestMapping("/storage/goods")
 public class TicketImportGoodsController extends BaseController {
     @Autowired
-    private AccountService accountService;
-    @Autowired
-    private GoodsImportService goodsImportService;
+    private TicketImportGoodsService ticketImportGoodsService;
     @Autowired
     private SupplierService productService;
     @Autowired
@@ -59,11 +56,11 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
-        if (validateModuleStorage.goodsImport()) {
+        if (validateModuleStorage.importGoods()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_TICKET_IMPORT);
-            TicketImportGoods ticketImportGoodsPresent = goodsImportService.findDraftImportPresent(accountService.findCurrentAccountId());
+            TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(accountService.findCurrentAccountId());
             if (ticketImportGoodsPresent == null) {
-                ticketImportGoodsPresent = goodsImportService.createDraftImport();
+                ticketImportGoodsPresent = ticketImportGoodsService.createDraftImport();
             }
             modelAndView.addObject("goodsImportRequest", new TicketImportGoodsRequest());
             modelAndView.addObject("goodsImport", new TicketImportGoods());
@@ -137,7 +134,7 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import to add product not found!");
         }
         List<String> listProductVariantId = Arrays.stream(request.getParameterValues("productVariantId")).toList();
@@ -160,7 +157,7 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import to add material not found!");
         }
         List<String> listMaterialId = Arrays.stream(request.getParameterValues("materialId")).toList();
@@ -184,10 +181,10 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        if (validateModuleStorage.goodsImport()) {
+        if (validateModuleStorage.importGoods()) {
             ticketImportGoodsRequest.setOrderTime(FlowieeUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
             ticketImportGoodsRequest.setReceivedTime(FlowieeUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
-            goodsImportService.saveDraft(ticketImportGoodsRequest);
+            ticketImportGoodsService.saveDraft(ticketImportGoodsRequest);
             return "redirect:" + request.getHeader("referer");
         } else {
             return PagesUtil.SYS_UNAUTHORIZED;
@@ -197,7 +194,7 @@ public class TicketImportGoodsController extends BaseController {
     @ResponseBody
     @GetMapping("/search")
     public void search() {
-        List<TicketImportGoods> data = goodsImportService.search(null, 1, null, null, null);
+        List<TicketImportGoods> data = ticketImportGoodsService.search(null, 1, null, null, null);
         if (data != null) {
             for (TicketImportGoods o : data) {
                 System.out.println(o.toString());
@@ -212,13 +209,13 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        if (!validateModuleStorage.goodsImport()) {
+        if (!validateModuleStorage.importGoods()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        goodsImportService.update(ticketImportGoods, importId);
+        ticketImportGoodsService.update(ticketImportGoods, importId);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -227,13 +224,13 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        if (draftImportId <= 0 || goodsImportService.findById(draftImportId) == null) {
+        if (draftImportId <= 0 || ticketImportGoodsService.findById(draftImportId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        if (!validateModuleStorage.goodsImport()) {
+        if (!validateModuleStorage.importGoods()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        goodsImportService.delete(draftImportId);
+        ticketImportGoodsService.delete(draftImportId);
         return "redirect:";
     }
 
@@ -242,13 +239,13 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        if (!validateModuleStorage.goodsImport()) {
+        if (!validateModuleStorage.importGoods()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        goodsImportService.updateStatus(importId, "");
+        ticketImportGoodsService.updateStatus(importId, "");
         return "redirect:";
     }
 
@@ -257,13 +254,13 @@ public class TicketImportGoodsController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        if (!validateModuleStorage.goodsImport()) {
+        if (!validateModuleStorage.importGoods()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (importId <= 0 || goodsImportService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        goodsImportService.updateStatus(importId, "");
+        ticketImportGoodsService.updateStatus(importId, "");
         return "redirect:";
     }
 }

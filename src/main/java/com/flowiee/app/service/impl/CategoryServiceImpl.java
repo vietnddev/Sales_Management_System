@@ -33,7 +33,7 @@ import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-	private static final String MODULE = SystemModule.DANH_MUC.name();
+	private static final String MODULE = SystemModule.CATEGORY.name();
 	
     @Autowired
     private CategoryRepository categoryRepository;
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private NotificationService notificationService;
     @Autowired
-    private FlowieeImportService flowieeImportService;
+    private ImportService importService;
     @Autowired
     private FlowieeImportRepository flowieeImportRepository;
     @Autowired
@@ -224,7 +224,7 @@ public class CategoryServiceImpl implements CategoryService {
                 detailOfFlowieeImport = importSuccess + " / " + totalRecord;
             }
             //Save file attach to storage
-            FileStorage fileStorage = new FileStorage(fileImport, SystemModule.DANH_MUC.name());
+            FileStorage fileStorage = new FileStorage(fileImport, SystemModule.CATEGORY.name());
             fileStorage.setGhiChu("IMPORT");
             fileStorage.setStatus(false);
             fileStorage.setActive(false);
@@ -243,7 +243,7 @@ public class CategoryServiceImpl implements CategoryService {
             flowieeImport.setSuccessRecord(importSuccess);
             flowieeImport.setTotalRecord(totalRecord);
             flowieeImport.setFileId(fileStorageRepository.findByCreatedTime(fileStorage.getCreatedAt()).getId());
-            flowieeImportService.save(flowieeImport);
+            importService.save(flowieeImport);
 
             Notification notification = new Notification();
             notification.setTitle(resultOfFlowieeImport);

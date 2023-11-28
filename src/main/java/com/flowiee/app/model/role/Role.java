@@ -12,6 +12,11 @@ public class Role {
         private boolean isChecked;
         private String keyAction;
         private String valueAction;
+        
+        public Action(String key, String value) {
+        	this.keyAction = key;
+        	this.valueAction = value;
+        }
     }
 
     private Map<String, String> module;

@@ -8,7 +8,6 @@ import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.security.author.ValidateModuleCategory;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -27,8 +26,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/system/category")
 public class CategoryController extends BaseController {
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private CategoryService categoryService;
     @Autowired

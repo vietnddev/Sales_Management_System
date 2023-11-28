@@ -5,6 +5,6 @@ import com.flowiee.app.entity.FlowieeImport;
 
 import java.util.List;
 
-public interface FlowieeImportService extends BaseService<FlowieeImport> {
+public interface ImportService extends BaseService<FlowieeImport> {
     List<FlowieeImport> findByAccountId(Integer accountId);
 }

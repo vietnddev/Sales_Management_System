@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.role.KhoTaiLieuAction;
+import com.flowiee.app.model.role.SystemAction.StorageAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class DocFieldServiceImpl implements DocFieldService {
     public static final Logger logger = LoggerFactory.getLogger(DocFieldServiceImpl.class);
-    private static final String module = SystemModule.KHO_TAI_LIEU.name();
+    private static final String module = SystemModule.STORAGE.name();
 
     @Autowired
     private DocFieldRepository docFieldRepository;
@@ -59,7 +59,7 @@ public class DocFieldServiceImpl implements DocFieldService {
                 docData.setDocument(document);
                 docDataService.save(docData);
             }
-            systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Thêm mới doc_field: " + docField.toString());
+            systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Thêm mới doc_field: " + docField.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới doc_field " + docField.toString());
         } catch (Exception e) {
             logger.error("An error occurred while insert new docField!", e.getCause().toString());
@@ -71,7 +71,7 @@ public class DocFieldServiceImpl implements DocFieldService {
     public String update(DocField docField, Integer docFieldId) {
         docField.setId(docFieldId);
         docFieldRepository.save(docField);
-        systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Cập nhật doc_field: " + docField.toString());
+        systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Cập nhật doc_field: " + docField.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật doc_field " + docFieldId.toString());
         return "OK";
     }
@@ -80,7 +80,7 @@ public class DocFieldServiceImpl implements DocFieldService {
     public DocField delete(Integer id) {
         DocField docFieldToDelete = findById(id);
         docFieldRepository.deleteById(id);
-        systemLogService.writeLog(module, KhoTaiLieuAction.DOCTYPE_CONFIG_DOCUMENT.name(), "Xóa doc_field: " + docFieldToDelete.toString());
+        systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field: " + docFieldToDelete.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Xóa doc_field " + docFieldToDelete.toString());
         return docFieldToDelete;
     }

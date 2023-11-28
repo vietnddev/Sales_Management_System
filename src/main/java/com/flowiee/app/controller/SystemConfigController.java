@@ -3,8 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.security.author.ValidateModuleSystem;
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.AccountService;
-import com.flowiee.app.service.FlowieeConfigService;
+import com.flowiee.app.service.ConfigService;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
 
@@ -17,11 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/he-thong/config")
 public class SystemConfigController extends BaseController {
     @Autowired
-    private AccountService accountService;
-    @Autowired
     private ValidateModuleSystem validateModuleSystem;
     @Autowired
-    private FlowieeConfigService flowieeConfigService;
+    private ConfigService configService;
 
     @GetMapping
     public ModelAndView showConfig() {
@@ -33,7 +30,7 @@ public class SystemConfigController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_CONFIG);
         modelAndView.addObject("config", new FlowieeConfig());
-        modelAndView.addObject("listConfig", flowieeConfigService.findAll());        
+        modelAndView.addObject("listConfig", configService.findAll());        
         return baseView(modelAndView);
     }
 
@@ -46,10 +43,10 @@ public class SystemConfigController extends BaseController {
         if (!validateModuleSystem.setupConfig()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (configId <= 0 || flowieeConfigService.findById(configId) == null) {
+        if (configId <= 0 || configService.findById(configId) == null) {
             throw new NotFoundException("Config not found!");
         }
-        flowieeConfigService.update(config, configId);
+        configService.update(config, configId);
         return "redirect:/he-thong/config";
     }
 }

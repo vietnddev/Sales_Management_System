@@ -1,7 +1,6 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.security.author.ValidateModuleSystem;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.NotificationService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.base.BaseController;
@@ -19,8 +18,6 @@ public class RoleController extends BaseController {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private AccountService accountService;
-    @Autowired
     private NotificationService notificationService;
     @Autowired
     private ValidateModuleSystem validateModuleSystem;
@@ -36,9 +33,6 @@ public class RoleController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
         modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(accountService.findCurrentAccountId()));
-        if (validateModuleSystem.updatePermission()) {
-            modelAndView.addObject("action_update", "enable");
-        }
         return baseView(modelAndView);
     }
 }

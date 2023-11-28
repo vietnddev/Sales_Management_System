@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
-import com.flowiee.app.model.role.SanPhamAction;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.repository.ProductRepository;
@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
-    private static final String module = SystemModule.SAN_PHAM.name();
+    private static final String module = SystemModule.PRODUCT.name();
 
     @Autowired
     private ProductRepository productsRepository;
@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             product.setCreatedBy(accountService.findCurrentAccountId());
             productsRepository.save(product);
-            systemLogService.writeLog(module, SanPhamAction.CREATE_SANPHAM.name(), "Thêm mới sản phẩm: " + product.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info(ProductServiceImpl.class.getName() + ": Thêm mới sản phẩm " + product.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -119,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 noiDungLogUpdate = productToUpdate.toString();
             }
-            systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
             logger.info(ProductServiceImpl.class.getName() + ": Cập nhật sản phẩm " + productBefore.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -136,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             productsRepository.deleteById(id);
             logger.info(ProductServiceImpl.class.getName() + ": Xóa sản phẩm " + productToDelete.toString());
-            systemLogService.writeLog(module, SanPhamAction.DELETE_SANPHAM.name(), "Xóa sản phẩm: " + productToDelete.toString());
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();

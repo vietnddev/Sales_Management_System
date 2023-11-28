@@ -9,7 +9,6 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.MaterialService;
-import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +28,6 @@ public class MaterialController extends BaseController {
     private MaterialService materialService;
     @Autowired
     private CategoryService categoryService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
 

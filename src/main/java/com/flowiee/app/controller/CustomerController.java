@@ -7,7 +7,6 @@ import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.CustomerContactService;
 import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.OrderService;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.entity.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ public class CustomerController extends BaseController {
     private CustomerService customerService;
     @Autowired
     private CustomerContactService customerContactService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private OrderService orderService;
     @Autowired

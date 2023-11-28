@@ -11,7 +11,6 @@ import com.flowiee.app.service.ProductAttributeService;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.FileStorageService;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Price;
@@ -40,8 +39,6 @@ public class ProductController extends BaseController {
     private ProductVariantService productVariantService;
     @Autowired
     private ProductAttributeService productAttributeService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired

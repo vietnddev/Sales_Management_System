@@ -51,7 +51,7 @@ public class CartServiceImpl implements CartService {
     public String delete(int id) {
         orderCartRepository.deleteById(id);
         SystemLog systemLog = new SystemLog();
-        systemLog.setModule(SystemModule.SAN_PHAM.name());
+        systemLog.setModule(SystemModule.PRODUCT.name());
         systemLog.setAction("DELETE_CART");
         systemLog.setCreatedBy(accountService.findCurrentAccountId());
         systemLog.setIp(accountService.findCurrentAccountIp());

@@ -5,18 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public enum SystemModule {
-    SAN_PHAM("SẢN PHẨM"),
+    PRODUCT("SẢN PHẨM"),
 
-    THU_VIEN_ANH("THƯ VIỆN ẢNH"),
+    STORAGE("KHO TÀI LIỆU"),
 
-    KHO_TAI_LIEU("KHO TÀI LIỆU"),
+    SYSTEM("HỆ THỐNG"),
 
-    HE_THONG("HỆ THỐNG"),
-
-    DANH_MUC("DANH MỤC"),
-
-
-    DASHBOARD("DASHBOARD");
+    CATEGORY("DANH MỤC");
 
     private final String label;
 

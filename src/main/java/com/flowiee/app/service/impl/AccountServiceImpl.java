@@ -5,11 +5,11 @@ import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.model.role.Role;
+import com.flowiee.app.model.role.SystemAction.SysAction;
 import com.flowiee.app.repository.AccountRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
-import com.flowiee.app.model.role.AccountAction;
 import com.flowiee.app.model.role.SystemModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -113,7 +113,7 @@ public class AccountServiceImpl implements AccountService {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.CREATE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
+    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -127,7 +127,7 @@ public class AccountServiceImpl implements AccountService {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.UPDATE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
+    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -137,7 +137,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElse(null);
         if (account != null) {
             accountRepository.delete(account);
-            SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), AccountAction.DELETE_ACCOUNT.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
+            SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "", null, this.findCurrentAccountId(), this.findCurrentAccountIp());
             systemLogService.writeLog(systemLog);
         }
         return AppConstants.SERVICE_RESPONSE_SUCCESS;

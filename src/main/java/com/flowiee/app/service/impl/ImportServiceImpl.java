@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.FlowieeImport;
 import com.flowiee.app.repository.FlowieeImportRepository;
-import com.flowiee.app.service.FlowieeImportService;
+import com.flowiee.app.service.ImportService;
 
 import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FlowieeImportImpl implements FlowieeImportService {
+public class ImportServiceImpl implements ImportService {
     @Autowired
     private FlowieeImportRepository flowieeImportRepository;
 

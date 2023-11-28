@@ -14,13 +14,10 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.service.SupplierService;
-import com.flowiee.app.service.AccountService;
 
 @Controller
 @RequestMapping(path = "/product/supplier")
 public class SupplierController extends BaseController {
-	@Autowired
-	private AccountService accountService;
 	@Autowired
 	private SupplierService supplierService;
 	@Autowired

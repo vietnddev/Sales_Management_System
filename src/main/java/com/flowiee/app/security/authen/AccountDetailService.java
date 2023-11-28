@@ -4,7 +4,7 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.SystemLogService;
-import com.flowiee.app.model.role.SystemAction;
+import com.flowiee.app.model.role.SystemAction.SysAction;
 import com.flowiee.app.model.role.SystemModule;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class AccountDetailService implements UserDetailsService {
 					details = (WebAuthenticationDetails) authDetails;
 				}
 			}
-			SystemLog systemLog = new SystemLog(SystemModule.HE_THONG.name(), SystemAction.LOGIN.name(), "LOGIN", null, accountEntity.getId(), details != null ? details.getRemoteAddress() : "unknown");
+			SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_LOGIN.name(), "LOGIN", null, accountEntity.getId(), details != null ? details.getRemoteAddress() : "unknown");
 			systemLogService.writeLog(systemLog);
 		} else {
 			System.out.println("Login thất bại");

@@ -4,7 +4,6 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.security.author.ValidateModuleStorage;
 import com.flowiee.app.service.TicketExportGoodsService;
-import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class TicketExportGoodsController extends BaseController {
     @Autowired
     private TicketExportGoodsService ticketExportGoodsService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
 

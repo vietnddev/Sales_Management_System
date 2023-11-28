@@ -12,7 +12,6 @@ import com.flowiee.app.service.DocFieldService;
 import com.flowiee.app.service.DocShareService;
 import com.flowiee.app.service.DocumentService;
 import com.flowiee.app.service.FileStorageService;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.base.BaseController;
 
@@ -33,8 +32,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/storage")
 public class DocumentController extends BaseController {
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private DocumentService documentService;
     @Autowired

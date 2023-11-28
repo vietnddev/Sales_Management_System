@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.model.role.SanPhamAction;
+import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.ProductAttribute;
 import com.flowiee.app.entity.ProductVariant;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 public class ProductAttributeServiceImpl implements ProductAttributeService {
-    private static final String module = SystemModule.SAN_PHAM.getLabel();
+    private static final String module = SystemModule.PRODUCT.getLabel();
 
     @Autowired
     private ProductAttributeRepository productAttributeRepository;
@@ -37,13 +37,13 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     @Override
     public String save(ProductAttribute productAttribute){
         productAttributeRepository.save(productAttribute);
-        systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Thêm mới thuộc tính sản phẩm");
+        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới thuộc tính sản phẩm");
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(ProductAttribute attribute, Integer attributeId) {
-        systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Cập nhật thuộc tính sản phẩm");
+        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật thuộc tính sản phẩm");
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
@@ -55,7 +55,7 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     @Override
     public String delete(Integer attributeId) {
     	productAttributeRepository.deleteById(attributeId);
-        systemLogService.writeLog(module, SanPhamAction.UPDATE_SANPHAM.name(), "Xóa thuộc tính sản phẩm");
+        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Xóa thuộc tính sản phẩm");
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }
