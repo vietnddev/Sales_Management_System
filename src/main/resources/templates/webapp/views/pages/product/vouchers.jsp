@@ -71,7 +71,11 @@
                                     <tbody>
                                         <tr th:each="list, index : ${listVoucher}">
                                             <td th:text="${index.index + 1}"></td>
-                                            <td th:text="${list.title}"></td>
+                                            <td>
+                                                <a th:href="@{/san-pham/voucher/detail/{id}(id=${list.id})}">
+                                                    <span th:text="${list.title}"></span>
+                                                </a>
+                                            </td>
                                             <td>
                                                 <th:block th:each="spApplied, index : ${list.listSanPhamApDung}">
                                                     <span th:text="${index.index + 1} + ' '"></span>
@@ -104,7 +108,7 @@
                                             <td>
                                                 <button class="btn btn-info btn-sm" data-toggle="modal"
                                                         th:data-target="'#detail-' + ${list.id}">
-                                                    <i class="fa-solid fa-circle-info"></i>
+                                                    <i class="fa-solid fa-pencil"></i>
                                                 </button>
 
                                                 <div class="modal fade" th:id="'detail-' + ${list.id}">
@@ -129,10 +133,10 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            <tr th:each="detail, index : ${list.listVoucherDetail}">
+                                                                            <tr th:each="detail, index : ${list.listVoucherTicket}">
                                                                                 <td th:text="${index.index + 1}"></td>
-                                                                                <td th:text="${detail.key}"></td>
-                                                                                <td th:text="${detail.khachHang != null} ? ${detail.khachHang.tenKhachHang} : ''"></td>
+                                                                                <td th:text="${detail.code}"></td>
+                                                                                <td th:text="${detail.customer != null} ? ${detail.customer.tenKhachHang} : ''"></td>
                                                                                 <td th:text="${detail.activeTime}"></td>
                                                                                 <td th:text="${detail.status == false} ? 'Chưa sử dụng' : 'Đã sử dụng'"></td>
                                                                             </tr>
@@ -192,7 +196,7 @@
                                                                 name="bienTheSanPhamId" required>
                                                             <option th:each="option : ${listBienTheSanPham}"
                                                                     th:value="${option.id}"
-                                                                    th:text="${option.sanPham.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
+                                                                    th:text="${option.product.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
                                                             </option>
                                                         </select>
                                                     </div>

@@ -63,6 +63,7 @@
                                             <th>Tên sản phẩm</th>
                                             <th>Loại sản phẩm</th>
                                             <th>Đơn vị tính</th>
+                                            <th>Chường trình khuyến mãi</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
                                         </tr>
@@ -78,12 +79,10 @@
                                                 <a th:href="@{/san-pham/{id}(id=${list.id})}"
                                                    th:text="${list.tenSanPham}"></a>
                                             </td>
-                                            <td th:text="${list.productType.name}">
-                                            </td>
-                                            <td th:text="${list.unit.name}">
-                                            </td>
-                                            <td th:text="${list.status}">
-                                            </td>
+                                            <td th:text="${list.productType.name}"></td>
+                                            <td th:text="${list.unit.name}"></td>
+                                            <td></td>
+                                            <td th:text="${list.status}"></td>
                                             <td>
                                                 <button class="btn btn-outline-info btn-sm">
                                                     <a th:href="@{/san-pham/{id}(id=${list.id})}">
@@ -255,6 +254,7 @@
                                             <th>Tên sản phẩm</th>
                                             <th>Loại sản phẩm</th>
                                             <th>Đơn vị tính</th>
+                                            <th>Chương trình khuyến mãi</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
                                         </tr>
