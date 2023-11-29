@@ -10,21 +10,21 @@ import java.util.Date;
 
 @Builder
 @Entity
-@Table(name = "pro_voucher_detail")
+@Table(name = "pro_voucher_ticket")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class VoucherDetail extends BaseEntity implements Serializable {
+public class VoucherTicket extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "voucher", nullable = false)
-    private Voucher voucher;
+    @JoinColumn(name = "voucher_info_id", nullable = false)
+    private VoucherInfo voucherInfo;
 
     @Column(name = "code", nullable = false, length = 15)
-    private String key;
+    private String code;
 
     @Column(name = "active_time")
     private Date activeTime;

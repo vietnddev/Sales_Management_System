@@ -3,6 +3,7 @@ package com.flowiee.app.utils;
 public class PagesUtil {
     public static final String CTG_CATEGORY = "/pages/system/category";
 
+
     public static final String SYS_LOGIN = "/login";
     public static final String SYS_ACCOUNT = "/pages/system/account";
     public static final String SYS_ACCOUNT_DETAIL = "/pages/system/account-detail";
@@ -19,7 +20,8 @@ public class PagesUtil {
     public static final String PRO_PRODUCT = "/pages/product/product";
     public static final String PRO_PRODUCT_INFO = "/pages/product/product-info";
     public static final String PRO_PRODUCT_VARIANT = "/pages/product/product-variant";
-    public static final String PRO_VOUCHER = "/pages/product/voucher";
+    public static final String PRO_VOUCHER = "/pages/product/vouchers";
+    public static final String PRO_VOUCHER_DETAIL = "/pages/product/voucher-detail";
     public static final String PRO_ORDER = "/pages/product/order";
     public static final String PRO_ORDER_DETAIL = "/pages/product/order-detail";
     public static final String PRO_ORDER_SELL = "/pages/product/sell";

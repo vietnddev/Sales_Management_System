@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Entity
@@ -16,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Voucher extends BaseEntity implements Serializable {
+public class VoucherInfo extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "title", nullable = false)
@@ -51,4 +52,7 @@ public class Voucher extends BaseEntity implements Serializable {
 
     @Column(name = "status", nullable = false)
     private boolean status;
+
+    @OneToMany(mappedBy = "voucherInfo", fetch = FetchType.LAZY)
+    private List<VoucherTicket> listVoucherTicket;
 }

@@ -84,4 +84,19 @@ public class AppConstants {
             return label;
         }
     }
+
+    public enum VOUCHER_TYPE {
+        TEXT("Chữ"),
+        NUMBER("Số"),
+        BOTH("Chữ và số");
+        private final String label;
+
+        VOUCHER_TYPE(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class VoucherSanPham extends BaseEntity implements Serializable {
+public class VoucherApply extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "san_pham_id", nullable = false)

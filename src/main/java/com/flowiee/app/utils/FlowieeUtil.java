@@ -7,6 +7,9 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -243,17 +246,11 @@ public class FlowieeUtil {
     }
 
     public static int getIdFromAliasPath(String alias) {
-        // Tìm vị trí của dấu "-" cuối cùng
-        int lastDashIndex = alias.lastIndexOf("-");
-        //Trả về id bằng cách cắt chuỗi từ vị trí cuối cùng của dấu "-" đến cuối chuỗi
-        return Integer.parseInt(alias.substring(lastDashIndex + 1));
+        return Integer.parseInt(alias.substring(alias.lastIndexOf("-") + 1));
     }
 
     public static String getAliasNameFromAliasPath(String alias) {
-        // Tìm vị trí của dấu "-" cuối cùng
-        int lastDashIndex = alias.lastIndexOf("-");
-        //Trả về name bằng cách cắt chuỗi từ đầu đến vị trí cuối cùng của dấu "-"
-        return alias.substring(0, lastDashIndex);
+        return alias.substring(0, alias.lastIndexOf("-"));
     }
 
     public static byte[] exportTemplate(String templateName) {
@@ -293,5 +290,41 @@ public class FlowieeUtil {
         cellStyle.setFont(fontStyle);
 
         return cellStyle;
+    }
+
+    public static Integer getCurrentAccountId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return Integer.parseInt(authentication.getName().substring(authentication.getName().indexOf("_") + 1));
+        }
+        return null;
+    }
+
+    public static String getCurrentAccountUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return authentication.getName().substring(0, authentication.getName().indexOf("_"));
+        }
+        return null;
+    }
+
+    public static String getCurrentAccountIp() {
+        WebAuthenticationDetails details = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            Object authDetails = authentication.getDetails();
+            if (authDetails instanceof WebAuthenticationDetails) {
+                details = (WebAuthenticationDetails) authDetails;
+            }
+        }
+        return details != null ? details.getRemoteAddress() : "unknown";
+    }
+
+    public static Map<String, String> getVoucherType() {
+        Map<String, String> voucherTypes = new HashMap<>();
+        voucherTypes.put(AppConstants.VOUCHER_TYPE.BOTH.name(), AppConstants.VOUCHER_TYPE.BOTH.getLabel());
+        voucherTypes.put(AppConstants.VOUCHER_TYPE.NUMBER.name(), AppConstants.VOUCHER_TYPE.NUMBER.getLabel());
+        voucherTypes.put(AppConstants.VOUCHER_TYPE.TEXT.name(), AppConstants.VOUCHER_TYPE.TEXT.getLabel());
+        return voucherTypes;
     }
 }
