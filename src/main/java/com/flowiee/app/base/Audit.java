@@ -1,5 +1,6 @@
 package com.flowiee.app.base;
 
+import com.flowiee.app.utils.FlowieeUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -49,8 +50,10 @@ public class Audit {
             createdAt = new Date();
         }
         if (createdBy == null) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            createdBy = Integer.parseInt(authentication.getName().substring(authentication.getName().indexOf("_") + 1));
+            createdBy = FlowieeUtil.getCurrentAccountId();
+        }
+        if (lastUpdatedBy == null) {
+            lastUpdatedBy = FlowieeUtil.getCurrentAccountUsername();
         }
     }
 }
