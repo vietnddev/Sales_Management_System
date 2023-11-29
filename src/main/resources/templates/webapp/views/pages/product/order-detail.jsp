@@ -82,7 +82,7 @@
                                                     <tr th:each="list, index : ${listDonHangDetail}">
                                                         <td th:text="${index.index + 1}"></td>
                                                         <td th:text="${list.bienTheSanPham.tenBienThe}"></td>
-                                                        <td th:text="${list.bienTheSanPham.sanPham.donViTinh.tenLoai}"></td>
+                                                        <td th:text="${list.bienTheSanPham.product.unit.name}"></td>
                                                         <td th:text="${list.soLuong}"></td>
                                                         <td>vnđ</td>
                                                         <td>0</td>
@@ -215,13 +215,13 @@
                                                         data-toggle="modal"
                                                         data-target="#modalThanhToan"
                                                         disabled
-                                                        th:if="${donHangDetail.listDonHangThanhToan.size() > 0}">
+                                                        th:if="${donHangDetail.listOrderPay.size() > 0}">
                                                         Đã thanh toán
                                                 </button>
                                                 <button type="button" class="btn btn-success"
                                                         data-toggle="modal"
                                                         data-target="#modalThanhToan"
-                                                        th:if="${donHangDetail.listDonHangThanhToan.size() == 0}">
+                                                        th:if="${donHangDetail.listOrderPay.size() == 0}">
                                                         Thanh toán
                                                 </button>
                                                 <!--POPUP THANH TOÁN-->
@@ -268,7 +268,7 @@
                                                                                 required>
                                                                             <option th:each="payType : ${listHinhThucThanhToan}"
                                                                                     th:value="${payType.id}"
-                                                                                    th:text="${payType.tenLoai}">
+                                                                                    th:text="${payType.name}">
                                                                             </option>
                                                                         </select>
                                                                     </div>

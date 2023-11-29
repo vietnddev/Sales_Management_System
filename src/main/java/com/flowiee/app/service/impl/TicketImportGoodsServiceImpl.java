@@ -228,7 +228,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         TicketImportGoods ticketImportGoods = new TicketImportGoods();
         ticketImportGoods.setTitle("Title");
         ticketImportGoods.setStatus(STATUS_DRAFT);
-        ticketImportGoods.setCreatedBy(accountService.findCurrentAccountId());
+        ticketImportGoods.setCreatedBy(FlowieeUtil.getCurrentAccountId());
         ticketImportGoods.setOrderTime(new Date());
         ticketImportGoods.setReceivedTime(new Date());
         ticketImportGoods = goodsImportRepository.save(ticketImportGoods);

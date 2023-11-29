@@ -48,7 +48,7 @@
               <a th:href="@{/don-hang/ban-hang}" class="nav-link">
                 <i class="fa-solid fa-file-invoice-dollar"></i> 
                 <p>
-                  Sell goods
+                  Sales
                 </p>
               </a>
             </li>
@@ -69,7 +69,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/san-pham/thu-vien-hinh-anh}" class="nav-link">
+              <a th:href="@{/san-pham/gallery}" class="nav-link">
                 <i class="fa-solid fa-image nav-icon"></i>
                 <p>
                   Thư viện
@@ -95,7 +95,15 @@
               <a th:href="@{/storage/goods}" class="nav-link">
                 <i class="fa-solid fa-cloud-arrow-up fa-rotate-90"></i>
                 <p>
-                  Nhập kho
+                  Nhập hàng
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a th:href="@{/storage/ticket-export}" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-down fa-rotate-90 nav-icon"></i>
+                <p>
+                  Xuất hàng
                 </p>
               </a>
             </li>

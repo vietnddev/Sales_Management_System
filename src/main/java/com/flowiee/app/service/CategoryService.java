@@ -12,6 +12,8 @@ public interface CategoryService extends BaseService<Category> {
 
     List<Category> findSubCategory(String categoryType);
 
+    List<Category> findSubCategory(List<String> categoryTypes);
+
     Category findSubCategoryDefault(String categoryType);
 
     List<Category> findSubCategoryUnDefault(String categoryType);

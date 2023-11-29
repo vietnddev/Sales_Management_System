@@ -58,12 +58,6 @@
             Dashboard
           </a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block border"
-            style="border-radius: 20px; font-weight: bold; background-color: aliceblue">
-          <a th:href="@{/lich-lam-viec}" class="nav-link"><i class="fa-solid fa-calendar-days"></i>
-            Lịch làm việc
-          </a>
-        </li>
       </ul>
 
       <!-- Right navbar links -->
@@ -77,12 +71,12 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/profile}">
+          <a class="nav-link" th:href="@{/sys/profile}">
             <i class="fa-regular fa-user"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/logout}">
+          <a class="nav-link" th:href="@{/sys/logout}">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </li>

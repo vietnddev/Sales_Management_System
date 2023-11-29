@@ -59,18 +59,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 				.and()
 				//Page login
-				.formLogin().loginPage("/login").permitAll()
+				.formLogin().loginPage("/sys/login").permitAll()
 				//Login OK thì redirect vào page danh sách sản phẩm
 				.defaultSuccessUrl("/")
-				.failureUrl("/login?success=fail")
+				.failureUrl("/sys/login?success=fail")
 				.loginProcessingUrl("/j_spring_security_check")
 				.authenticationDetailsSource(authenticationDetailsSource())
 				.and()
 				.httpBasic()
 				.and()
 				.logout()
-				.logoutUrl("/logout") // Endpoint cho đăng xuất
-				.logoutSuccessUrl("/login") // Đường dẫn sau khi đăng xuất thành công
+				.logoutUrl("/sys/logout") // Endpoint cho đăng xuất
+				.logoutSuccessUrl("/sys/login") // Đường dẫn sau khi đăng xuất thành công
 				.deleteCookies("JSESSIONID") // Xóa cookies sau khi đăng xuất
 				.invalidateHttpSession(true) // Hủy phiên làm việc
 				.and()

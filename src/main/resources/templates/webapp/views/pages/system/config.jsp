@@ -58,7 +58,7 @@
                                                 <div class="modal fade" th:id="'modalUpdateConfig_' + ${list.id}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/he-thong/config/update/{id}(id=${list.id})}" th:object="${config}"
+                                                            <form th:action="@{/sys/config/update/{id}(id=${list.id})}" th:object="${config}"
                                                                   method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Cập nhật cấu hình</strong>

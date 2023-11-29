@@ -111,6 +111,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> findSubCategory(List<String> categoryTypes) {
+        return categoryRepository.findSubCategory(categoryTypes);
+    }
+
+    @Override
     public Category findSubCategoryDefault(String categoryType) {
         return categoryRepository.findSubCategoryDefault(categoryType);
     }
@@ -248,7 +253,7 @@ public class CategoryServiceImpl implements CategoryService {
             Notification notification = new Notification();
             notification.setTitle(resultOfFlowieeImport);
             notification.setSend(FlowieeUtil.SYS_NOTI_ID);
-            notification.setReceive(accountService.findCurrentAccountId());
+            notification.setReceive(FlowieeUtil.getCurrentAccountId());
             notification.setType(MessagesUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);

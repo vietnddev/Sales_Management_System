@@ -108,7 +108,7 @@
                                                                         <div class="modal-body">
                                                                             <input type="hidden" name="id"
                                                                                    th:value="${item.id}">
-                                                                            <input type="hidden" name="bienTheSanPham"
+                                                                            <input type="hidden" name="productVariant"
                                                                                    th:value="${item.productVariant.id}">
                                                                             <div class="form-group row"
                                                                                  style="display: flex; align-items: center;

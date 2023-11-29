@@ -4,6 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.security.author.ValidateModuleSystem;
 import com.flowiee.app.exception.DataExistsException;
 import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.model.role.ActionOfModule;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "/he-thong/tai-khoan")
+@RequestMapping(path = "/sys/tai-khoan")
 public class AccountController extends BaseController {
     @Autowired
     private RoleService roleService;
@@ -98,7 +99,7 @@ public class AccountController extends BaseController {
         accountEntity.setId(accountId);
         accountEntity.setUsername(acc.getUsername());
         accountEntity.setPassword(acc.getPassword());
-        accountEntity.setLastUpdatedBy(accountService.findCurrentAccountUsername());
+        accountEntity.setLastUpdatedBy(FlowieeUtil.getCurrentAccountUsername());
         accountService.update(accountEntity, accountId);
         return "redirect:" + request.getHeader("referer");
     }

@@ -1,22 +1,15 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.service.CategoryService;
+import com.flowiee.app.entity.*;
+import com.flowiee.app.model.role.SystemModule;
+import com.flowiee.app.service.*;
 import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.FlowieeUtil;
-import com.flowiee.app.service.PriceService;
-import com.flowiee.app.service.ProductAttributeService;
-import com.flowiee.app.service.ProductService;
-import com.flowiee.app.service.ProductVariantService;
-import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.utils.PagesUtil;
-import com.flowiee.app.entity.FileStorage;
-import com.flowiee.app.entity.Price;
-import com.flowiee.app.entity.Product;
-import com.flowiee.app.entity.ProductAttribute;
-import com.flowiee.app.entity.ProductVariant;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -24,9 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -46,9 +42,13 @@ public class ProductController extends BaseController {
     @Autowired
     private PriceService priceService;
     @Autowired
+    private VoucherService voucherService;
+    @Autowired
+    private VoucherTicketService voucherTicketService;
+    @Autowired
     private ValidateModuleProduct validateModuleProduct;
 
-    @GetMapping(value = "")
+    @GetMapping
     public ModelAndView viewAllProducts() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.SYS_LOGIN);
@@ -56,12 +56,27 @@ public class ProductController extends BaseController {
         if (!validateModuleProduct.readProduct()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
+        List<Category> brands = new ArrayList<>();
+        List<Category> productTypes = new ArrayList<>();
+        List<Category> units = new ArrayList<>();
+        categoryService.findSubCategory(Arrays.asList(AppConstants.BRAND, AppConstants.SIZE, AppConstants.COLOR)).forEach(category -> {
+            if (AppConstants.BRAND.equals(category.getType())) {
+                brands.add(category);
+            }
+            if (AppConstants.PRODUCTTYPE.equals(category.getType())) {
+                productTypes.add(category);
+            }
+            if (AppConstants.UNIT.equals(category.getType())) {
+                units.add(category);
+            }
+        });
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
         modelAndView.addObject("listSanPham", productsService.findAll());
-        modelAndView.addObject("listProductType", categoryService.findSubCategory(AppConstants.PRODUCTTYPE));
-        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
-        modelAndView.addObject("listBrand", categoryService.findSubCategory(AppConstants.BRAND));
+        modelAndView.addObject("listVoucherInfo", voucherService.findAll());
+        modelAndView.addObject("listProductType", productTypes);
+        modelAndView.addObject("listDonViTinh", units);
+        modelAndView.addObject("listBrand", brands);
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
         if (validateModuleProduct.insertProduct()) {
             modelAndView.addObject("action_create", "enable");
@@ -86,26 +101,47 @@ public class ProductController extends BaseController {
         if (productId <= 0 || productsService.findById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
+        List<Category> productTypes = new ArrayList<>();
+        List<Category> fabricTypes = new ArrayList<>();
+        List<Category> brands = new ArrayList<>();
+        List<Category> colors = new ArrayList<>();
+        List<Category> sizes = new ArrayList<>();
+        List<Category> units = new ArrayList<>();
+        categoryService.findSubCategory(Arrays.asList(AppConstants.BRAND, AppConstants.PRODUCTTYPE, AppConstants.COLOR,
+                                                      AppConstants.SIZE, AppConstants.FABRICTYPE, AppConstants.UNIT)).forEach(category -> {
+            if (AppConstants.PRODUCTTYPE.equals(category.getType())) {
+                productTypes.add(category);
+            }
+            if (AppConstants.FABRICTYPE.equals(category.getType())) {
+                fabricTypes.add(category);
+            }
+            if (AppConstants.BRAND.equals(category.getType())) {
+                brands.add(category);
+            }
+            if (AppConstants.COLOR.equals(category.getType())) {
+                colors.add(category);
+            }
+            if (AppConstants.SIZE.equals(category.getType())) {
+                sizes.add(category);
+            }
+            if (AppConstants.UNIT.equals(category.getType())) {
+                units.add(category);
+            }
+        });
+
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT_INFO);
         modelAndView.addObject("sanPham", new Product());
         modelAndView.addObject("bienTheSanPham", new ProductVariant());
         modelAndView.addObject("giaSanPham", new Price());
         modelAndView.addObject("idSanPham", productId);
-        // Load chi tiết thông tin sản phẩm
         modelAndView.addObject("detailProducts", productsService.findById(productId));
-        // Danh sách loại sản phẩm
-        modelAndView.addObject("listTypeProducts", categoryService.findSubCategory(AppConstants.PRODUCTTYPE));
-        // Danh sách màu sắc
-        modelAndView.addObject("listDmMauSacSanPham", categoryService.findSubCategory(AppConstants.COLOR));
-        // Danh sách kích cỡ
-        modelAndView.addObject("listDmKichCoSanPham", categoryService.findSubCategory(AppConstants.SIZE));
-        // Load danh sách biến thể sản phẩm
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAllProductVariantOfProduct(productId));
-        // Danh sách đơn vị tính
-        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
-        // Danh sách chất liệu vải
-        modelAndView.addObject("listDmChatLieuVai", categoryService.findSubCategory(AppConstants.FABRICTYPE));
-        modelAndView.addObject("listBrand", categoryService.findSubCategory(AppConstants.FABRICTYPE));
+        modelAndView.addObject("listTypeProducts", productTypes);
+        modelAndView.addObject("listDmChatLieuVai", fabricTypes);
+        modelAndView.addObject("listBrand", brands);
+        modelAndView.addObject("listDmMauSacSanPham", colors);
+        modelAndView.addObject("listDmKichCoSanPham", sizes);
+        modelAndView.addObject("listDonViTinh", units);
         //List image
         modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(productId));
         //Image active
@@ -115,8 +151,7 @@ public class ProductController extends BaseController {
     }
 
     @GetMapping(value = "/variant/{id}")
-    public ModelAndView viewDetailProduct(@PathVariable("id") Integer bienTheSanPhamId) {
-        // Show trang chi tiết của biến thể
+    public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
@@ -127,12 +162,12 @@ public class ProductController extends BaseController {
         modelAndView.addObject("bienTheSanPham", new ProductVariant());
         modelAndView.addObject("thuocTinhSanPham", new ProductAttribute());
         modelAndView.addObject("giaBanSanPham", new Price());
-        modelAndView.addObject("listThuocTinh", productAttributeService.getAllAttributes(bienTheSanPhamId));
-        modelAndView.addObject("bienTheSanPhamId", bienTheSanPhamId);
-        modelAndView.addObject("bienTheSanPham", productVariantService.findById(bienTheSanPhamId));
-        modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(bienTheSanPhamId));
-        modelAndView.addObject("listPrices", priceService.findPricesByProductVariant(bienTheSanPhamId));
-        FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(bienTheSanPhamId);
+        modelAndView.addObject("listThuocTinh", productAttributeService.getAllAttributes(variantId));
+        modelAndView.addObject("bienTheSanPhamId", variantId);
+        modelAndView.addObject("bienTheSanPham", productVariantService.findById(variantId));
+        modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(variantId));
+        modelAndView.addObject("listPrices", priceService.findPricesByProductVariant(variantId));
+        FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(variantId);
         if (imageActive == null) {
             imageActive = new FileStorage();
         }
@@ -180,41 +215,41 @@ public class ProductController extends BaseController {
         return "redirect:" + request.getHeader("referer");
     }
 
-    @Transactional
     @PostMapping(value = "/update/{id}")
-    public String updateProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product, @PathVariable("id") Integer id) {
+    public String updateProductOriginal(HttpServletRequest request,
+                                        @ModelAttribute("sanPham") Product product,
+                                        @PathVariable("id") Integer productId) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleProduct.updateProduct()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (product == null|| id <= 0 || productsService.findById(id) == null) {
+        if (product == null|| productId <= 0 || productsService.findById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
-        productsService.update(product, id);
+        productsService.update(product, productId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping(value = "/variant/update/{id}")
-    public String updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer id) {
+    public String updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer variantId) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleProduct.updateProduct()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (productVariantService.findById(id) == null) {
+        if (productVariantService.findById(variantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
-        productVariantService.delete(id);
+        productVariantService.delete(variantId);
         return "redirect:" + request.getHeader("referer");
     }
 
-    @Transactional
     @PostMapping(value = "/attribute/update/{id}")
     public String updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
-                                        @PathVariable("id") Integer id,
+                                        @PathVariable("id") Integer attributeId,
                                         HttpServletRequest request) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
@@ -222,26 +257,26 @@ public class ProductController extends BaseController {
         if (!validateModuleProduct.updateProduct()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (id <= 0 || productAttributeService.findById(id) == null) {
+        if (attributeId <= 0 || productAttributeService.findById(attributeId) == null) {
             throw new NotFoundException("Product attribute not found!");
         }
-        attribute.setId(id);
-        productAttributeService.update(attribute, id);
+        attribute.setId(attributeId);
+        productAttributeService.update(attribute, attributeId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping(value = "/delete/{id}")
-    public String deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer id) {
+    public String deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer productId) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
         if (!validateModuleProduct.deleteProduct()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (productsService.findById(id) == null) {
+        if (productsService.findById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
-        productsService.delete(id);
+        productsService.delete(productId);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -279,7 +314,7 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/active-image/{sanPhamId}")
     public String activeImageOfProductOriginal(HttpServletRequest request,
-                                               @PathVariable("sanPhamId") Integer sanPhamId,
+                                               @PathVariable("sanPhamId") Integer productId,
                                                @RequestParam("imageId") Integer imageId) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
@@ -287,16 +322,16 @@ public class ProductController extends BaseController {
         if (!validateModuleProduct.updateImage()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (sanPhamId == null || sanPhamId <= 0 || imageId == null || imageId <= 0) {
+        if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
             throw new NotFoundException("Product or image not found!");
         }
-        fileStorageService.setImageActiveOfSanPham(sanPhamId, imageId);
+        fileStorageService.setImageActiveOfSanPham(productId, imageId);
         return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
     public String activeImageOfProductVariant(HttpServletRequest request,
-                                              @PathVariable("sanPhamBienTheId") Integer sanPhamBienTheId,
+                                              @PathVariable("sanPhamBienTheId") Integer productVariantId,
                                               @RequestParam("imageId") Integer imageId) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
@@ -304,10 +339,10 @@ public class ProductController extends BaseController {
         if (!validateModuleProduct.updateImage()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (sanPhamBienTheId == null || sanPhamBienTheId <= 0 || imageId == null || imageId <= 0) {
+        if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
             throw new NotFoundException("Product variant or image not found!");
         }
-        fileStorageService.setImageActiveOfBienTheSanPham(sanPhamBienTheId, imageId);
+        fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
         return "redirect:" + request.getHeader("referer");
     }
 
@@ -343,5 +378,85 @@ public class ProductController extends BaseController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
+    }
+
+    /** ******************** GALLERY ******************** **/
+
+    @GetMapping("/gallery")
+    public ModelAndView getAllFiles() {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
+        }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
+        modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
+        modelAndView.addObject("listSanPham", productsService.findAll());
+        return baseView(modelAndView);
+    }
+
+    /** ******************** VOUCHER ******************** **/
+    
+    @GetMapping("/voucher")
+    public ModelAndView viewVouchers() {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
+        }
+        if (validateModuleProduct.readVoucher()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
+            modelAndView.addObject("listVoucher", voucherService.findAll());
+            modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+            modelAndView.addObject("listVoucherType", FlowieeUtil.getVoucherType());
+            modelAndView.addObject("voucher", new VoucherInfo());
+            modelAndView.addObject("voucherDetail", new VoucherTicket());
+            return baseView(modelAndView);
+        } else {
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/voucher/detail/{id}")
+    public ModelAndView viewVoucherDetail(@PathVariable("id") Integer voucherInfoId) {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
+        }
+        if (validateModuleProduct.readVoucher()) {
+            ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER_DETAIL);
+            modelAndView.addObject("voucherDetail", voucherTicketService.findById(voucherInfoId));
+            modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
+            modelAndView.addObject("voucher", new VoucherInfo());
+            modelAndView.addObject("listVoucherType", FlowieeUtil.getVoucherType());
+            return baseView(modelAndView);
+        } else {
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        }
+    }
+    
+    @PostMapping("/voucher/insert")
+    public ModelAndView insertVoucher(@ModelAttribute("voucher") VoucherInfo voucherInfo,
+                                      HttpServletRequest request) {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
+        }
+        if (!validateModuleProduct.insertVoucher()) {
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            voucherInfo.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
+            voucherInfo.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        List<Integer> listBienTheSP = new ArrayList<>();
+        String[] pbienTheSP = request.getParameterValues("bienTheSanPhamId");
+        if (pbienTheSP != null) {
+            for (String id : pbienTheSP) {
+                listBienTheSP.add(Integer.parseInt(id));
+            }
+        }
+        if (listBienTheSP.size() > 0) {
+            voucherService.save(voucherInfo, listBienTheSP);
+        }
+        return new ModelAndView("redirect:/san-pham/voucher");
     }
 }

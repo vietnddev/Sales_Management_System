@@ -5,6 +5,7 @@ import com.flowiee.app.repository.SystemLogRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.FlowieeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,8 +55,8 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(null);
-        systemLog.setCreatedBy(accountService.findCurrentAccountId());
-        systemLog.setIp(accountService.findCurrentAccountIp());
+        systemLog.setCreatedBy(FlowieeUtil.getCurrentAccountId());
+        systemLog.setIp(FlowieeUtil.getCurrentAccountIp());
         return logRepository.save(systemLog);
     }
 
@@ -66,8 +67,8 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(noiDungCapNhat);
-        systemLog.setCreatedBy(accountService.findCurrentAccountId());
-        systemLog.setIp(accountService.findCurrentAccountIp());
+        systemLog.setCreatedBy(FlowieeUtil.getCurrentAccountId());
+        systemLog.setIp(FlowieeUtil.getCurrentAccountIp());
         return logRepository.save(systemLog);
     }
 }

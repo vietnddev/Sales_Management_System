@@ -138,7 +138,7 @@
                                     <div class="card-body">
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="THONG_TIN_CHUNG">
-                                                <form th:action="@{/he-thong/tai-khoan/update/{id}(id=${accountInfo.id})}"
+                                                <form th:action="@{/sys/tai-khoan/update/{id}(id=${accountInfo.id})}"
                                                       th:object="${accountInfo}" method="post">
                                                     <div class="row">
                                                         <div class="col-6">
@@ -276,7 +276,7 @@
 
                             <!--PHÂN QUYỀN-->
                             <div class="col-sm-6" style="font-size: 16px">
-                                <form th:action="@{/he-thong/tai-khoan/update-permission/{id}(id=${accountInfo.id})}"
+                                <form th:action="@{/sys/tai-khoan/update-permission/{id}(id=${accountInfo.id})}"
                                       method="POST">
                                     <div class="row">
                                         <div class="card w-100">

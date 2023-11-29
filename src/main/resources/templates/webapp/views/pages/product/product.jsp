@@ -63,7 +63,7 @@
                                             <th>Tên sản phẩm</th>
                                             <th>Loại sản phẩm</th>
                                             <th>Đơn vị tính</th>
-                                            <th>Chường trình khuyến mãi</th>
+                                            <th>Chương trình khuyến mãi</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
                                         </tr>
