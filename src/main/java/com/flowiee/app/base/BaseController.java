@@ -2,6 +2,7 @@ package com.flowiee.app.base;
 
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.service.AccountService;
+import com.flowiee.app.utils.FlowieeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,12 +17,12 @@ public class BaseController {
 	private NotificationService notificationService;
 	
 	protected ModelAndView baseView(ModelAndView modelAndView) {
-		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(accountService.findCurrentAccountId()));	
+		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.getCurrentAccountId()));
 		return this.configEndPoint(modelAndView);
 	}
 	
 	protected ModelAndView baseView(ModelAndView modelAndView, boolean flag) {
-		if (flag) modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(accountService.findCurrentAccountId()));		
+		if (flag) modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.getCurrentAccountId()));
 		return this.configEndPoint(modelAndView);
 	}
 	

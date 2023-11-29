@@ -190,7 +190,7 @@ public class DocumentController extends BaseController {
             return PagesUtil.SYS_LOGIN;
         }
         document.setAliasName(FlowieeUtil.generateAliasName(document.getTen()));
-        document.setCreatedBy(accountService.findCurrentAccountId());
+        document.setCreatedBy(FlowieeUtil.getCurrentAccountId());
         if (document.getParentId() == null) {
             document.setParentId(0);
         }

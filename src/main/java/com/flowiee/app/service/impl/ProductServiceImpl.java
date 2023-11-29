@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String save(Product product) {
         try {
-            product.setCreatedBy(accountService.findCurrentAccountId());
+            product.setCreatedBy(FlowieeUtil.getCurrentAccountId());
             productsRepository.save(product);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info(ProductServiceImpl.class.getName() + ": Thêm mới sản phẩm " + product.toString());
@@ -105,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
             });
 
             productToUpdate.setId(productId);
-            productToUpdate.setLastUpdatedBy(accountService.findCurrentAccountUsername());
+            productToUpdate.setLastUpdatedBy(FlowieeUtil.getCurrentAccountUsername());
             productsRepository.save(productToUpdate);
             String noiDungLog = "";
             String noiDungLogUpdate = "";

@@ -4,6 +4,7 @@ import com.flowiee.app.security.author.ValidateModuleSystem;
 import com.flowiee.app.service.NotificationService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.utils.FlowieeUtil;
 import com.flowiee.app.utils.PagesUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class RoleController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(accountService.findCurrentAccountId()));
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.getCurrentAccountId()));
         return baseView(modelAndView);
     }
 }

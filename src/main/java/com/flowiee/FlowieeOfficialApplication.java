@@ -2,8 +2,6 @@ package com.flowiee;
 
 import com.flowiee.app.service.MailService;
 
-import com.flowiee.app.utils.FlowieeUtil;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
