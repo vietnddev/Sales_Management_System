@@ -2,6 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.*;
+import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.service.*;
 import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
@@ -378,7 +379,20 @@ public class ProductController extends BaseController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
     }
-    
+
+    /** ******************** GALLERY ******************** **/
+
+    @GetMapping("/gallery")
+    public ModelAndView viewGallery() {
+        if (!accountService.isLogin()) {
+            return new ModelAndView(PagesUtil.SYS_LOGIN);
+        }
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
+        modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
+        modelAndView.addObject("listSanPham", productsService.findAll());
+        return baseView(modelAndView);
+    }
+
     /** ******************** VOUCHER ******************** **/
     
     @GetMapping("/voucher")
