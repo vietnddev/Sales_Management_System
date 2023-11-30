@@ -14,21 +14,35 @@ import java.util.Date;
 public class OrderDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int orderId;
+    private Integer orderId;
     private String orderCode;
     private Date orderTime;
     private String receiverAddress;
     private String receiverPhone;
     private String receiverName;
-    private Customer orderBy;
-    private double totalAmount;
-    private Category salesChannel;
+    private Customer orderBy; //future remove
+    private Integer customerId;
+    private String customerName;
+    private Double totalAmount;
+    private Category salesChannel; //future remove
+    private Integer salesChannelId;
+    private String salesChannelName;
     private String note;
-    private Category orderStatus;
-    private OrderPay orderPay;
-    private Category payMethod;
-    private Account cashier;
-    private Account createdBy;
+    private Category orderStatus; //future remove
+    private Integer orderStatusId;
+    private Integer orderStatusName;
+    private OrderPay orderPay; //future remove
+    private Integer orderPayId;
+    private Integer orderPayName;
+    private Category payMethod; //future remove
+    private Integer payMethodId;
+    private String payMethodName;
+    private Account cashier; //future remove
+    private Integer cashierId;
+    private String cashierName;
+    private Account createdBy; //future remove
+    private Integer createdById;
+    private String createdByName;
     private Date createdAt;
 
     public static OrderDTO fromOrder(Order order) {
