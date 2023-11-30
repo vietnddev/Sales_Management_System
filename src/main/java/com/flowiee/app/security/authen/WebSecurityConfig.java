@@ -1,5 +1,6 @@
 package com.flowiee.app.security.authen;
 
+import com.flowiee.app.utils.EndPointUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,24 +54,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		httpSecurity
 				.authorizeRequests()
-				.antMatchers("/he-thong/config", "/he-thong/tai-khoan", "/he-thong/nhat-ky").hasRole("ADMIN")
+				.antMatchers(EndPointUtil.SYS_CONFIG_VIEW, EndPointUtil.SYS_ACCOUNT_VIEW, EndPointUtil.SYS_LOG_VIEW).hasRole("ADMIN")
 				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**")
 				.permitAll()
 				.anyRequest().authenticated()
 				.and()
 				//Page login
-				.formLogin().loginPage("/login").permitAll()
+				.formLogin().loginPage(EndPointUtil.SYS_LOGIN).permitAll()
 				//Login OK thì redirect vào page danh sách sản phẩm
 				.defaultSuccessUrl("/")
-				.failureUrl("/login?success=fail")
+				.failureUrl(EndPointUtil.SYS_LOGIN + "?success=fail")
 				.loginProcessingUrl("/j_spring_security_check")
 				.authenticationDetailsSource(authenticationDetailsSource())
 				.and()
 				.httpBasic()
 				.and()
 				.logout()
-				.logoutUrl("/logout") // Endpoint cho đăng xuất
-				.logoutSuccessUrl("/login") // Đường dẫn sau khi đăng xuất thành công
+				.logoutUrl(EndPointUtil.SYS_LOGOUT) // Endpoint cho đăng xuất
+				.logoutSuccessUrl(EndPointUtil.SYS_LOGIN) // Đường dẫn sau khi đăng xuất thành công
 				.deleteCookies("JSESSIONID") // Xóa cookies sau khi đăng xuất
 				.invalidateHttpSession(true) // Hủy phiên làm việc
 				.and()

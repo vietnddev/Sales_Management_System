@@ -14,7 +14,7 @@ public class BaseController {
 	@Autowired
 	protected AccountService accountService;
 	@Autowired
-	private NotificationService notificationService;
+	protected NotificationService notificationService;
 	
 	protected ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.getCurrentAccountId()));
@@ -35,10 +35,10 @@ public class BaseController {
 		modelAndView.addObject("URL_STORAGE_DASHBOARD", EndPointUtil.STORAGE_DASHBOARD);
 		modelAndView.addObject("URL_STORAGE_DOCUMENT", EndPointUtil.STORAGE_DOCUMENT_VIEW);
 		modelAndView.addObject("URL_STORAGE_MATERIAL", EndPointUtil.STORAGE_MATERIAL_VIEW);
-		modelAndView.addObject("URL_SYSTEM_CONFIG", EndPointUtil.SYSTEM_CONFIG_VIEW);
-		modelAndView.addObject("URL_SYSTEM_ROLE", EndPointUtil.SYSTEM_ROLE_VIEW);
-		modelAndView.addObject("URL_SYSTEM_LOG", EndPointUtil.SYSTEM_LOG_VIEW);
-		modelAndView.addObject("URL_SYSTEM_ACCOUNT", EndPointUtil.SYSTEM_ACCOUNT_VIEW);
+		modelAndView.addObject("URL_SYSTEM_CONFIG", EndPointUtil.SYS_CONFIG_VIEW);
+		modelAndView.addObject("URL_SYSTEM_ROLE", EndPointUtil.SYS_ROLE_VIEW);
+		modelAndView.addObject("URL_SYSTEM_LOG", EndPointUtil.SYS_LOG_VIEW);
+		modelAndView.addObject("URL_SYSTEM_ACCOUNT", EndPointUtil.SYS_ACCOUNT_VIEW);
 		return modelAndView;
 	}
 }
