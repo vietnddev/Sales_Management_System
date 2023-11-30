@@ -80,7 +80,7 @@
                                                 <th:block th:each="spApplied, index : ${list.listSanPhamApDung}">
                                                     <span th:text="${index.index + 1} + ' '"></span>
                                                     <a th:href="@{/san-pham/variant/{id}(id=${spApplied.id})}">
-                                                        <span th:text="${spApplied.tenBienThe}"></span>
+                                                        <span th:text="${spApplied.tenSanPham}"></span>
                                                     </a>
                                                     <br>
                                                 </th:block>
@@ -193,10 +193,10 @@
                                                         <select class="form-control select2" multiple="multiple"
                                                                 data-placeholder="Sản phẩm áp dụng"
                                                                 style="width: 100%;"
-                                                                name="bienTheSanPhamId" required>
-                                                            <option th:each="option : ${listBienTheSanPham}"
+                                                                name="productToApply" required>
+                                                            <option th:each="option : ${listProduct}"
                                                                     th:value="${option.id}"
-                                                                    th:text="${option.product.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
+                                                                    th:text="${option.tenSanPham}">
                                                             </option>
                                                         </select>
                                                     </div>

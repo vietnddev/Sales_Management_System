@@ -1,5 +1,6 @@
 package com.flowiee.app.dto;
 
+import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import lombok.Data;
@@ -7,8 +8,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
-import com.flowiee.app.entity.ProductVariant;
 
 @Data
 public class VoucherInfoDTO implements Serializable {
@@ -27,7 +26,7 @@ public class VoucherInfoDTO implements Serializable {
     private String endTime;
     private boolean status;
     private List<VoucherTicket> listVoucherTicket;
-    private List<ProductVariant> listSanPhamApDung;
+    private List<Product> listSanPhamApDung;
 
     public static VoucherInfoDTO fromVoucherInfo(VoucherInfo voucherInfo) {
         VoucherInfoDTO voucherInfoDTO = new VoucherInfoDTO();

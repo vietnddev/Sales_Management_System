@@ -381,7 +381,6 @@ public class ProductController extends BaseController {
     }
 
     /** ******************** GALLERY ******************** **/
-
     @GetMapping("/gallery")
     public ModelAndView viewGallery() {
         if (!accountService.isLogin()) {
@@ -394,7 +393,6 @@ public class ProductController extends BaseController {
     }
 
     /** ******************** VOUCHER ******************** **/
-    
     @GetMapping("/voucher")
     public ModelAndView viewVouchers() {
         if (!accountService.isLogin()) {
@@ -403,7 +401,7 @@ public class ProductController extends BaseController {
         if (validateModuleProduct.readVoucher()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
             modelAndView.addObject("listVoucher", voucherService.findAll());
-            modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+            modelAndView.addObject("listProduct", productsService.findAll());
             modelAndView.addObject("listVoucherType", FlowieeUtil.getVoucherType());
             modelAndView.addObject("voucher", new VoucherInfo());
             modelAndView.addObject("voucherDetail", new VoucherTicket());
@@ -420,7 +418,7 @@ public class ProductController extends BaseController {
         }
         if (validateModuleProduct.readVoucher()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER_DETAIL);
-            modelAndView.addObject("voucherDetail", voucherTicketService.findById(voucherInfoId));
+            modelAndView.addObject("voucherDetail", voucherService.findById(voucherInfoId));
             modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
             modelAndView.addObject("voucher", new VoucherInfo());
             modelAndView.addObject("listVoucherType", FlowieeUtil.getVoucherType());
@@ -447,15 +445,15 @@ public class ProductController extends BaseController {
             e.printStackTrace();
         }
 
-        List<Integer> listBienTheSP = new ArrayList<>();
-        String[] pbienTheSP = request.getParameterValues("bienTheSanPhamId");
+        List<Integer> listProductToApply = new ArrayList<>();
+        String[] pbienTheSP = request.getParameterValues("productToApply");
         if (pbienTheSP != null) {
             for (String id : pbienTheSP) {
-                listBienTheSP.add(Integer.parseInt(id));
+                listProductToApply.add(Integer.parseInt(id));
             }
         }
-        if (listBienTheSP.size() > 0) {
-            voucherService.save(voucherInfo, listBienTheSP);
+        if (listProductToApply.size() > 0) {
+            voucherService.save(voucherInfo, listProductToApply);
         }
         return new ModelAndView("redirect:/san-pham/voucher");
     }
