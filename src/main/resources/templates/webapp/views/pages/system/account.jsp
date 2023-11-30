@@ -82,7 +82,7 @@
                                                             th:data-target="'#role-' + ${list.id}">
                                                         <i class="fa-solid fa-share"></i>
                                                     </button>
-                                                    <a th:href="@{/he-thong/tai-khoan/{id}(id=${list.id})}" class="btn btn-sm btn-primary">
+                                                    <a th:href="@{/sys/tai-khoan/{id}(id=${list.id})}" class="btn btn-sm btn-primary">
                                                         <i class="fas fa-user"></i> View Profile
                                                     </a>
                                                 </div>
@@ -184,7 +184,7 @@
                                         <div class="modal fade" th:id="'delete-' + ${list.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form th:action="@{/he-thong/tai-khoan/delete/{id}(id=${list.id})}"
+                                                    <form th:action="@{/sys/tai-khoan/delete/{id}(id=${list.id})}"
                                                           th:object="${account}"
                                                           method="post">
                                                         <div class="modal-header">
@@ -225,7 +225,7 @@
                                         <div class="modal fade" th:id="'update-' + ${list.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form th:action="@{/he-thong/tai-khoan/update/{id}(id=${list.id})}"
+                                                    <form th:action="@{/sys/tai-khoan/update/{id}(id=${list.id})}"
                                                           th:object="${account}" method="post">
                                                         <div class="modal-header">
                                                             <strong class="modal-title">Cập nhật thông tin tài
@@ -333,7 +333,7 @@
                             <div class="modal fade" id="insert">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form th:action="@{/he-thong/tai-khoan/insert}" th:object="${account}"
+                                        <form th:action="@{/sys/tai-khoan/insert}" th:object="${account}"
                                               method="post">
                                             <div class="modal-header">
                                                 <strong class="modal-title">Thêm mới tài khoản</strong>

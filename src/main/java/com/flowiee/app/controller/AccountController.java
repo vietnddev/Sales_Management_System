@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "/he-thong/tai-khoan")
+@RequestMapping(path = "/sys/tai-khoan")
 public class AccountController extends BaseController {
     @Autowired
     private RoleService roleService;
     @Autowired
     private ValidateModuleSystem validateModuleSystem;
 
-    @GetMapping(value = "")
+    @GetMapping
     public ModelAndView findAllAccount() {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.SYS_LOGIN);
@@ -79,7 +79,7 @@ public class AccountController extends BaseController {
         String password = account.getPassword();
         account.setPassword(bCrypt.encode(password));
         accountService.save(account);
-        return "redirect:/he-thong/tai-khoan";
+        return "redirect:/sys/tai-khoan";
     }
 
     @PostMapping(value = "/update/{id}")
@@ -105,7 +105,7 @@ public class AccountController extends BaseController {
     }
 
     @PostMapping(value = "/delete/{id}")
-    public String deleteAccount(@PathVariable Integer accountId) {
+    public String deleteAccount(@PathVariable("id") Integer accountId) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
@@ -118,7 +118,7 @@ public class AccountController extends BaseController {
         Account account = accountService.findById(accountId);
         account.setTrangThai(false);
         accountService.save(account);
-        return "redirect:/he-thong/tai-khoan";
+        return "redirect:/sys/tai-khoan";
     }
 
     @PostMapping("/update-permission/{id}")
@@ -144,6 +144,6 @@ public class AccountController extends BaseController {
                 }
             }
         }
-        return "redirect:/he-thong/tai-khoan/" + accountId;
+        return "redirect:/sys/tai-khoan/" + accountId;
     }
 }
