@@ -79,7 +79,7 @@
                                             <td>
                                                 <th:block th:each="spApplied, index : ${list.listSanPhamApDung}">
                                                     <span th:text="${index.index + 1} + ' '"></span>
-                                                    <a th:href="@{/san-pham/variant/{id}(id=${spApplied.id})}">
+                                                    <a th:href="@{/san-pham/{id}(id=${spApplied.id})}">
                                                         <span th:text="${spApplied.tenSanPham}"></span>
                                                     </a>
                                                     <br>

@@ -68,7 +68,7 @@
                     <div class="col-sm-12">
                         <h3 class="text-center">
                             <b style="text-transform: uppercase;"
-                               th:text="${bienTheSanPham.tenBienThe}"></b>
+                               th:text="${bienTheSanPham != null} ? ${bienTheSanPham.tenBienThe} : ''"></b>
                         </h3>
                     </div>
                     <!--./ END TÊN SẢN PHẨM-->
