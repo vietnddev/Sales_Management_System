@@ -82,7 +82,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/logout}">
+          <a class="nav-link" th:href="@{/sys/logout}">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </li>

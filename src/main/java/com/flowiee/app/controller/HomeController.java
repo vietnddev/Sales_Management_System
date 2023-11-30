@@ -7,15 +7,13 @@ import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("")
 public class HomeController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping(value = "/login")
+    @GetMapping(value = "/sys/login")
     public String showLoginPage() {
         if (accountService.findByUsername("admin") == null) {
             Account account = new Account();
