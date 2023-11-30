@@ -3608,3 +3608,4 @@ target/classes/static/plugins/pdf-js/test/pdfs/bug878026.pdf
 target/classes/static/plugins/pdf-js/test/pdfs/bug850854.pdf
 target/classes/static/plugins/pdf-js/test/pdfs/bug847420.pdf
 target/classes/static/plugins/pdf-js/test/pdfs/asciihexdecode.pdf
+*.jpg

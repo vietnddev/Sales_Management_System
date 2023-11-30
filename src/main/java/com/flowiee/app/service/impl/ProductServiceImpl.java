@@ -62,16 +62,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(Integer id) {
-        Product product = new Product();
-        if (id > 0) {
-            product = productsRepository.findById(id).orElse(null);
+        Product product = productsRepository.findById(id).orElse(null);
+        if (product == null) {
+            logger.warn("Find product by id " + id + " not found!");
         }
-        if (product != null) {
-            return product;
-        } else {
-            logger.error("Lỗi khi findById sản phẩm!");
-            return new Product();
-        }
+        return product;
     }
 
     @Override
