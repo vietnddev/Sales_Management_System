@@ -32,6 +32,7 @@ public class BaseController {
 		modelAndView.addObject("URL_PRODUCT_ORDER", EndPointUtil.PRODUCT_ORDER_VIEW);
 		modelAndView.addObject("URL_PRODUCT_CUSTOMER", EndPointUtil.PRODUCT_CUSTOMER_VIEW);
 		modelAndView.addObject("URL_PRODUCT_SUPPLIER", EndPointUtil.PRODUCT_SUPPLIER_VIEW);
+		modelAndView.addObject("URL_PRODUCT_GALLERY", EndPointUtil.PRO_GALLERY);
 		modelAndView.addObject("URL_STORAGE_DASHBOARD", EndPointUtil.STORAGE_DASHBOARD);
 		modelAndView.addObject("URL_STORAGE_DOCUMENT", EndPointUtil.STORAGE_DOCUMENT_VIEW);
 		modelAndView.addObject("URL_STORAGE_MATERIAL", EndPointUtil.STORAGE_MATERIAL_VIEW);

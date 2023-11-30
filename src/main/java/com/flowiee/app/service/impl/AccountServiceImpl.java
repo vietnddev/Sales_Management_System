@@ -88,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "", null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
+    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -102,7 +102,7 @@ public class AccountServiceImpl implements AccountService {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "", null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
+    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -112,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElse(null);
         if (account != null) {
             accountRepository.delete(account);
-            SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "", null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
+            SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
         }
         return AppConstants.SERVICE_RESPONSE_SUCCESS;

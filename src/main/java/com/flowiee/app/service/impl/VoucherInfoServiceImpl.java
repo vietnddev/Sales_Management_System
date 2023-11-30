@@ -1,15 +1,9 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.entity.ProductVariant;
-import com.flowiee.app.entity.VoucherInfo;
-import com.flowiee.app.entity.VoucherTicket;
-import com.flowiee.app.entity.VoucherApply;
+import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.VoucherInfoDTO;
 import com.flowiee.app.repository.VoucherInfoRepository;
-import com.flowiee.app.service.ProductVariantService;
-import com.flowiee.app.service.VoucherTicketService;
-import com.flowiee.app.service.VoucherApplyService;
-import com.flowiee.app.service.VoucherService;
+import com.flowiee.app.service.*;
 
 import com.flowiee.app.utils.AppConstants;
 import org.slf4j.Logger;
@@ -33,6 +27,8 @@ public class VoucherInfoServiceImpl implements VoucherService {
     private VoucherApplyService voucherApplyService;
     @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
+    private ProductService productService;
 
     @Override
     public List<VoucherInfoDTO> findAll() {
@@ -43,11 +39,11 @@ public class VoucherInfoServiceImpl implements VoucherService {
             voucherInfoDTO.setListVoucherTicket(null);
 
             List<VoucherApply> listVoucherApply = voucherApplyService.findByVoucherId(voucherInfo.getId());
-            List<ProductVariant> listSanPhamApDung = new ArrayList<>();
+            List<Product> listSanPhamApDung = new ArrayList<>();
             for (VoucherApply vSanPham : listVoucherApply) {
-                 ProductVariant sanPhamApDung = productVariantService.findById(vSanPham.getSanPhamId());
-                 if (sanPhamApDung != null) {
-                     listSanPhamApDung.add(sanPhamApDung);
+                 Product productApplied = productService.findById(vSanPham.getSanPhamId());
+                 if (productApplied != null) {
+                     listSanPhamApDung.add(productApplied);
                  }
             }
             voucherInfoDTO.setListSanPhamApDung(listSanPhamApDung);
@@ -63,12 +59,12 @@ public class VoucherInfoServiceImpl implements VoucherService {
     }
 
     @Override
-    public String save(VoucherInfo voucherInfo, List<Integer> listSanPhamApDung) {
+    public String save(VoucherInfo voucherInfo, List<Integer> listProductToApply) {
         try {
             if (voucherInfo != null) {
                 voucherInfo = voucherInfoRepository.save(voucherInfo);
                 //
-                for (int sanPhamId : listSanPhamApDung) {
+                for (int sanPhamId : listProductToApply) {
                     VoucherApply voucherApply = new VoucherApply();
                     voucherApply.setVoucherId(voucherInfo.getId());
                     voucherApply.setSanPhamId(sanPhamId);
@@ -122,13 +118,13 @@ public class VoucherInfoServiceImpl implements VoucherService {
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {
         String characters = "";
-        if (AppConstants.VOUCHER_TYPE.NUMBER.equals(voucherType)) {
+        if (AppConstants.VOUCHER_TYPE.NUMBER.name().equals(voucherType)) {
             characters = "0123456789";
         }
-        if (AppConstants.VOUCHER_TYPE.TEXT.equals(voucherType)) {
+        if (AppConstants.VOUCHER_TYPE.TEXT.name().equals(voucherType)) {
             characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         }
-        if (AppConstants.VOUCHER_TYPE.BOTH.equals(voucherType)) {
+        if (AppConstants.VOUCHER_TYPE.BOTH.name().equals(voucherType)) {
             characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         }
 

@@ -44,7 +44,7 @@ public class Audit {
 
     @PreUpdate
     @PrePersist
-    public void updateTimeStamps() {
+    public void updateAudit() {
         lastUpdatedAt = new Date();
         if (createdAt == null) {
             createdAt = new Date();

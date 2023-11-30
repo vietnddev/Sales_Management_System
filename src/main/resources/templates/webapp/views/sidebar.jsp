@@ -69,7 +69,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/san-pham/thu-vien-hinh-anh}" class="nav-link">
+              <a th:href="@{${URL_PRODUCT_GALLERY}}" class="nav-link">
                 <i class="fa-solid fa-image nav-icon"></i>
                 <p>
                   Thư viện
