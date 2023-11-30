@@ -44,6 +44,8 @@ public class ProductController extends BaseController {
     @Autowired
     private VoucherService voucherService;
     @Autowired
+    private VoucherApplyService voucherApplyService;
+    @Autowired
     private VoucherTicketService voucherTicketService;
     @Autowired
     private ValidateModuleProduct validateModuleProduct;
