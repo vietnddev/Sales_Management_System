@@ -1,9 +1,13 @@
 package com.flowiee.app.model.request;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 public class TicketImportGoodsRequest {
     private Integer id;
     private String title;
