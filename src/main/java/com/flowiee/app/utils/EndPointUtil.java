@@ -1,19 +1,21 @@
 package com.flowiee.app.utils;
 
 public class EndPointUtil {
-    public static String NOTIFICATION_VIEW = "/he-thong/notification";
-    public static String SYSTEM_CONFIG_VIEW = "/he-thong/config";
+    public static String SYS_LOGIN = "/sys/login";
+    public static String SYS_LOGOUT = "/sys/logout";
+    public static String SYS_NOTIFICATION_VIEW = "/sys/notification";
+    public static String SYS_CONFIG_VIEW = "/sys/config";
 
-    public static String LOG_EXPORT = "/he-thong/nhat-ky/export";
-    public static String SYSTEM_LOG_VIEW = "/he-thong/nhat-ky";
+    public static String LOG_EXPORT = "/sys/log/export";
+    public static String SYS_LOG_VIEW = "/sys/log";
 
-    public static String SYSTEM_ROLE_VIEW = "/he-thong/nhom-quyen";
+    public static String SYS_ROLE_VIEW = "/sys/role";
 
-    public static String ACCOUNT_TEMPLATE = "/he-thong/tai-khoan/template";
-    public static String ACCOUNT_IMPORT = "/he-thong/tai-khoan/import";
-    public static String ACCOUNT_EXPORT = "/he-thong/tai-khoan/export";
-    public static String SYSTEM_ACCOUNT_VIEW = "/he-thong/tai-khoan";
-    public static String ACCOUNT_INSERT = "/he-thong/tai-khoan/insert";
+    public static String SYS_ACCOUNT_TEMPLATE = "/sys/tai-khoan/template";
+    public static String SYS_ACCOUNT_IMPORT = "/sys/tai-khoan/import";
+    public static String SYS_ACCOUNT_EXPORT = "/sys/tai-khoan/export";
+    public static String SYS_ACCOUNT_VIEW = "/sys/tai-khoan";
+    public static String SYS_ACCOUNT_INSERT = "/sys/tai-khoan/insert";
 
     public static String PRODUCT_TEMPLATE = "/san-pham/template";
     public static String PRODUCT_IMPORT = "/san-pham/import";
