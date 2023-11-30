@@ -1,27 +1,32 @@
 <configuration>
-    <!-- Appender để ghi log ra file -->
+    <!-- Config write log in file -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/flowiee-%d{yyyy-MM-dd}.log</fileNamePattern> <!-- Mẫu tên file log theo ngày -->
-            <maxHistory>30</maxHistory> <!-- Số lượng file log cũ để giữ lại -->
+            <!--File name-->
+            <fileNamePattern>logs/flowiee-%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <!-- Number of file -->
+            <maxHistory>365</maxHistory>
+            <!-- Max file size -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
-<!--            <Pattern>%d %p %C{1.} [%t]: %m%n</Pattern>-->
-            <Pattern>%d %highlight(%-5level) %C{1.} [%t]: %m%n</Pattern>
+            <!--Pattern message log-->
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %p %C{1.} [%t]: %m%n</Pattern>
         </encoder>
     </appender>
 
-    <!-- Appender để ghi log ra console -->
+    <!-- Config write log in console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-<!--            <Pattern>%d %p %C{1.} [%t]: %m%n</Pattern>-->
-            <Pattern>%d %highlight(%-5level) %C{1.} [%t]: %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%p) %C{1.} [%t]: %m%n</Pattern>
         </encoder>
     </appender>
 
-    <!-- Root logger -->
+    <!-- Write log -->
     <root level="info">
-        <appender-ref ref="FILE"/> <!-- Sử dụng appender FILE để ghi log -->
-        <appender-ref ref="CONSOLE"/> <!-- Sử dụng appender CONSOLE để in log ra console -->
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>
