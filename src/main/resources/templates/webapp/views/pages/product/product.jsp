@@ -76,30 +76,30 @@
                                                      style="width: 100px; height: 100px; border-radius: 5px">
                                             </td>
                                             <td>
-                                                <a th:href="@{/san-pham/{id}(id=${list.id})}"
-                                                   th:text="${list.tenSanPham}"></a>
+                                                <a th:href="@{/san-pham/{id}(id=${list.productId})}"
+                                                   th:text="${list.productName}"></a>
                                             </td>
-                                            <td th:text="${list.productType.name}"></td>
-                                            <td th:text="${list.unit.name}"></td>
+                                            <td th:text="${list.productTypeName}"></td>
+                                            <td th:text="${list.unitName}"></td>
                                             <td></td>
-                                            <td th:text="${list.status}"></td>
+                                            <td th:text="${list.productStatus}"></td>
                                             <td>
                                                 <button class="btn btn-outline-info btn-sm">
-                                                    <a th:href="@{/san-pham/{id}(id=${list.id})}">
+                                                    <a th:href="@{/san-pham/{id}(id=${list.productId})}">
                                                         <i class="fa-solid fa-eye"></i>
                                                     </a></button>
                                                 <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
-                                                        th:data-target="'#update-' + ${list.id}">
+                                                        th:data-target="'#update-' + ${list.productId}">
                                                     <i class="fa-solid fa-pencil"></i>
                                                 </button>
                                                 <button class="btn btn-outline-danger btn-sm" data-toggle="modal"
-                                                        th:data-target="'#delete-' + ${list.id}">
+                                                        th:data-target="'#delete-' + ${list.productId}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
-                                                <div class="modal fade" th:id="'delete-' + ${list.id}">
+                                                <div class="modal fade" th:id="'delete-' + ${list.productId}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/san-pham/delete/{id}(id=${list.id})}"
+                                                            <form th:action="@{/san-pham/delete/{id}(id=${list.productId})}"
                                                                   th:object="${sanPham}" method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Xác nhận xóa sản
@@ -112,7 +112,7 @@
                                                                 <div class="modal-body">
                                                                     <div class="card-body">
                                                                         Sản phẩm <strong class="badge text-bg-info"
-                                                                                         th:text="${list.tenSanPham}"
+                                                                                         th:text="${list.productName}"
                                                                                          style="font-size: 16px;"></strong>
                                                                         sẽ bị xóa vĩnh viễn!
                                                                     </div>
@@ -133,10 +133,10 @@
                                             </td>
                                             <!-- Update -->
                                             <!-- Modal update -->
-                                            <div class="modal fade" th:id="'update-' + ${list.id}">
+                                            <div class="modal fade" th:id="'update-' + ${list.productId}">
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
-                                                        <form th:action="@{/san-pham/update/{id}(id=${list.id})}"
+                                                        <form th:action="@{/san-pham/update/{id}(id=${list.productId})}"
                                                               th:object="${sanPham}" method="post">
                                                             <div class="modal-header">
                                                                 <strong class="modal-title">Cập nhật sản
@@ -154,7 +154,7 @@
                                                                             <input type="text" class="form-control"
                                                                                    placeholder="Tên sản phẩm"
                                                                                    name="tenSanPham"
-                                                                                   th:value="${list.tenSanPham}"/>
+                                                                                   th:value="${list.productName}"/>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label>Loại sản phẩm</label>
@@ -164,8 +164,8 @@
                                                                                         th:value="${lstype.id}"
                                                                                         th:text="${lstype.name}">
                                                                                 </option>
-                                                                                <option th:text="${list.productType.name}"
-                                                                                        th:value="${list.productType.id}"
+                                                                                <option th:text="${list.productTypeName}"
+                                                                                        th:value="${list.productTypeId}"
                                                                                         selected></option>
                                                                             </select>
                                                                         </div>
@@ -177,8 +177,8 @@
                                                                                         th:value="${lsDvt.id}"
                                                                                         th:text="${lsDvt.name}">
                                                                                 </option>
-                                                                                <option th:text="${list.unit.name}"
-                                                                                        th:value="${list.unit.id}"
+                                                                                <option th:text="${list.unitName}"
+                                                                                        th:value="${list.unitId}"
                                                                                         selected></option>
                                                                             </select>
                                                                         </div>
@@ -190,8 +190,8 @@
                                                                                         th:value="${lsBrand.id}"
                                                                                         th:text="${lsBrand.name}">
                                                                                 </option>
-                                                                                <option th:text="${list.brand.name}"
-                                                                                        th:value="${list.brand.id}"
+                                                                                <option th:text="${list.brandName}"
+                                                                                        th:value="${list.brandId}"
                                                                                         selected></option>
                                                                             </select>
                                                                         </div>
@@ -200,10 +200,9 @@
                                                                             <textarea class="form-control" rows="5"
                                                                                       placeholder="Mô tả sản phẩm"
                                                                                       name="moTaSanPham"
-                                                                                      th:text="${list.moTaSanPham}"></textarea>
+                                                                                      th:text="${list.productDes}"></textarea>
                                                                         </div>
-                                                                        <div class="form-group"
-                                                                             th:if="${list.status}">
+                                                                        <div class="form-group">
                                                                             <label>Trạng thái</label>
                                                                             <select class="custom-select"
                                                                                     name="status">
@@ -211,17 +210,6 @@
                                                                                     doanh
                                                                                 </option>
                                                                                 <option value="false">Ngừng kinh doanh
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="form-group"
-                                                                             th:if="not ${list.status}">
-                                                                            <label>Trạng thái</label>
-                                                                            <select class="custom-select"
-                                                                                    name="status">
-                                                                                <option value="true">Kinh doanh</option>
-                                                                                <option value="false" selected>Ngừng
-                                                                                    kinh doanh
                                                                                 </option>
                                                                             </select>
                                                                         </div>

@@ -48,7 +48,7 @@
 
                 <div class="row" style="background-color: #fff; border-radius: 15px; padding: 15px;">
                     <div class="col-sm-12 mb-1">
-                        <h3 class="text-center"><b th:text="${detailProducts.tenSanPham}"
+                        <h3 class="text-center"><b th:text="${detailProducts.productName}"
                                                    style="text-transform: uppercase;"></b></h3>
                     </div>
                     <hr>
@@ -237,7 +237,7 @@
                                 <div class="modal fade" th:id="'modalActiveImage_' + ${list.id}">
                                     <div class="modal-dialog">
                                         <div class="modal-content text-left">
-                                            <form th:action="@{/san-pham/active-image/{sanPhamId}(sanPhamId=${detailProducts.id})}" method="post">
+                                            <form th:action="@{/san-pham/active-image/{sanPhamId}(sanPhamId=${detailProducts.productId})}" method="post">
                                                 <div class="modal-header">
                                                     <strong class="modal-title">Đặt ảnh hiển thị default</strong>
                                                     <button type="button" class="close" data-dismiss="modal"
@@ -443,14 +443,14 @@
                         </div>
 
                         <!--THÔNG TIN SẢN PHẨM GỐC-->
-                        <form class="col-sm-3" th:action="@{/san-pham/update/{id}(id=${detailProducts.id})}"
+                        <form class="col-sm-3" th:action="@{/san-pham/update/{id}(id=${detailProducts.productId})}"
                               th:object="${sanPham}" method="post"
                               style="background-color: #fff; border-radius: 15px; padding: 15px;">
                             <div class="form-group">
                                 <label>Tên sản phẩm</label>
                                 <textarea class="form-control" placeholder="Tên sản phẩm"
                                           name="tenSanPham" required rows="2"
-                                          th:text="${detailProducts.tenSanPham}"></textarea>
+                                          th:text="${detailProducts.productName}"></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Nhãn hiệu</label>
@@ -459,8 +459,8 @@
                                             th:each="lsBrand, iterStat : ${listBrand}"
                                             th:value="${lsBrand.id}"
                                             th:text="${lsBrand.name}"></option>
-                                    <option th:value="${detailProducts.productType.id}"
-                                            th:text="${detailProducts.productType.name}" selected></option>
+                                    <option th:value="${detailProducts.productTypeId}"
+                                            th:text="${detailProducts.productTypeName}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -470,8 +470,8 @@
                                             th:each="lstype, iterStat : ${listTypeProducts}"
                                             th:value="${lstype.id}"
                                             th:text="${lstype.name}"></option>
-                                    <option th:value="${detailProducts.productType.id}"
-                                            th:text="${detailProducts.productType.name}" selected></option>
+                                    <option th:value="${detailProducts.productTypeId}"
+                                            th:text="${detailProducts.productTypeName}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -481,19 +481,19 @@
                                             th:each="lsDvt, iterStat : ${listDonViTinh}"
                                             th:value="${lsDvt.id}"
                                             th:text="${lsDvt.name}"></option>
-                                    <option th:value="${detailProducts.unit.id}"
-                                            th:text="${detailProducts.unit.name}" selected></option>
+                                    <option th:value="${detailProducts.unitId}"
+                                            th:text="${detailProducts.unitName}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Trạng thái</label>
                                 <select class="custom-select" name="status"
-                                        th:if="${detailProducts.status}">
+                                        th:if="${detailProducts.productStatus}">
                                     <option value="true" selected>Kinh doanh</option>
                                     <option value="false">Ngừng kinh doanh</option>
                                 </select>
                                 <select class="custom-select" name="status"
-                                        th:if="not ${detailProducts.status}">
+                                        th:if="not ${detailProducts.productStatus}">
                                     <option value="true">Kinh doanh</option>
                                     <option value="false" selected>Ngừng kinh doanh</option>
                                 </select>
@@ -517,9 +517,9 @@
                                 </div>
                             </div>
                             <input type="hidden" name="id"
-                                   th:value="${detailProducts.id}"/>
+                                   th:value="${detailProducts.productId}"/>
                             <input type="hidden" name="moTaSanPham" id="describes_virtual"
-                                   th:value="${detailProducts.moTaSanPham}"/>
+                                   th:value="${detailProducts.productDes}"/>
                         </form>
                         <!--./ END THÔNG TIN SẢN PHẨM GỐC-->
 
@@ -540,12 +540,12 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <input type="hidden" name="product"
-                                                           th:value="${detailProducts.id}"/>
+                                                           th:value="${detailProducts.productId}"/>
                                                     <input type="hidden" name="maSanPham" value=""/>
                                                     <div class="form-group">
                                                         <label>Tên biến thể</label>
                                                         <input class="form-control" type="text" name="tenBienThe"
-                                                               th:placeholder="${detailProducts.tenSanPham}">
+                                                               th:placeholder="${detailProducts.productName}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Chọn chất liệu vải</label>
@@ -611,7 +611,7 @@
                         <div class="tab-content w-100 mt-3" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="product-desc" role="tabpanel"
                                  aria-labelledby="product-desc-tab">
-                                <textarea id="summernote" th:text="${detailProducts.moTaSanPham}"></textarea>
+                                <textarea id="summernote" th:text="${detailProducts.productDes}"></textarea>
                             </div>
                             <div class="tab-pane fade" id="product-comments" role="tabpanel"
                                  aria-labelledby="product-comments-tab">
@@ -682,7 +682,7 @@ var previewTemplate = previewNode.parentNode.innerHTML
 previewNode.parentNode.removeChild(previewNode)
 
 var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/uploads/san-pham/[[${detailProducts.id}]]", // Gọi tới API trong spring để xử lý file
+    url: "/uploads/san-pham/[[${detailProducts.productId}]]", // Gọi tới API trong spring để xử lý file
     thumbnailWidth: 80,
     thumbnailHeight: 80,
     parallelUploads: 20,
