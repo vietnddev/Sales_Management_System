@@ -1,14 +1,12 @@
 package com.flowiee.app.base;
 
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -50,10 +48,10 @@ public class Audit {
             createdAt = new Date();
         }
         if (createdBy == null) {
-            createdBy = FlowieeUtil.getCurrentAccountId();
+            createdBy = CommonUtil.getCurrentAccountId();
         }
         if (lastUpdatedBy == null) {
-            lastUpdatedBy = FlowieeUtil.getCurrentAccountUsername();
+            lastUpdatedBy = CommonUtil.getCurrentAccountUsername();
         }
     }
 }

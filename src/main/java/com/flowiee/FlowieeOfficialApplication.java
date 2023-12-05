@@ -1,5 +1,6 @@
 package com.flowiee;
 
+import com.flowiee.app.base.StartUp;
 import com.flowiee.app.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ public class FlowieeOfficialApplication {
 //    private MailService mailService;
 
     public static void main(String[] args) {
-		SpringApplication.run(FlowieeOfficialApplication.class, args);
+        SpringApplication.run(FlowieeOfficialApplication.class, args);
+        new StartUp();
     }
 
     //Auto gửi email báo cáo doanh thu hàng ngày

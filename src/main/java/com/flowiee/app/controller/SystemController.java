@@ -8,7 +8,7 @@ import com.flowiee.app.security.author.ValidateModuleSystem;
 import com.flowiee.app.service.ConfigService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -90,7 +90,7 @@ public class SystemController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(FlowieeUtil.getCurrentAccountId()));
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtil.getCurrentAccountId()));
         return baseView(modelAndView);
     }
 }

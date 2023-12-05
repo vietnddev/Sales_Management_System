@@ -4,7 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.security.author.ValidateModuleCategory;
 import com.flowiee.app.exception.NotFoundException;
@@ -54,10 +54,10 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.readCategory()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
-        if (FlowieeUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        List<Category> listCategory = categoryService.findSubCategory(FlowieeUtil.getCategoryType(categoryType));
+        List<Category> listCategory = categoryService.findSubCategory(CommonUtil.getCategoryType(categoryType));
         ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listCategory", listCategory);
@@ -79,10 +79,10 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.insertCategory()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (FlowieeUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        category.setType(FlowieeUtil.getCategoryType(categoryType));
+        category.setType(CommonUtil.getCategoryType(categoryType));
         categoryService.save(category);
         return "redirect:" + request.getHeader("referer");
     }
@@ -124,7 +124,7 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.importCategory()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
-        if (FlowieeUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         byte[] dataExport = categoryService.exportTemplate(categoryType);
@@ -142,7 +142,7 @@ public class CategoryController extends BaseController {
         if (!validateModuleCategory.importCategory()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        if (FlowieeUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         categoryService.importData(file, categoryType);

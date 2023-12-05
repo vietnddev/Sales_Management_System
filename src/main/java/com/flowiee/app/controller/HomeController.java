@@ -25,6 +25,7 @@ public class HomeController {
             account.setGioiTinh(true);
             account.setTrangThai(true);
             account.setCreatedBy(0);
+            account.setRole("ADMIN");
             accountService.save(account);
         }
         return "login";

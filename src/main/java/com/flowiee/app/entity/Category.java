@@ -3,7 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -117,7 +117,7 @@ public class Category extends BaseEntity implements java.io.Serializable {
 			map.put("Note", this.getNote() + "#" + categoryToCompare.getNote());
 		}
 		if ("N".equals(this.getIsDefault()) && "Y".equals(categoryToCompare.getIsDefault())) {
-			map.put("Use default","#" + FlowieeUtil.now("HH:mm:ss dd/MM/yyyy"));
+			map.put("Use default","#" + CommonUtil.now("HH:mm:ss dd/MM/yyyy"));
 		}
 		return map;
 	}

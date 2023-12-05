@@ -9,7 +9,7 @@ import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        customer.setCreatedBy(FlowieeUtil.getCurrentAccountId());
+        customer.setCreatedBy(CommonUtil.getCurrentAccountId());
         customerRepository.save(customer);
         systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_CREATE.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Thêm mới khách hàng " + customer.toString());

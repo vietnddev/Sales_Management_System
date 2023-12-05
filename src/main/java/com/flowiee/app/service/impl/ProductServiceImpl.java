@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
@@ -8,7 +9,7 @@ import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -40,8 +41,6 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private FileStorageService fileService;
     @Autowired
-    private AccountService accountService;
-    @Autowired
     private EntityManager entityManager;
     @Autowired
     private ProductHistoryService productHistoryService;
@@ -61,6 +60,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDTO> findAllProductCore() {
+//        List<Product> listProduct = productsRepository.findAll();
+//        for (int i = 0; i < listProduct.size(); i++) {
+//            FileStorage imageActive = fileService.findImageActiveOfSanPham(listProduct.get(i).getId());
+//            if (imageActive != null) {
+//                listProduct.get(i).setImageActive(imageActive);
+//            } else {
+//                listProduct.get(i).setImageActive(new FileStorage());
+//            }
+//        }
+//        return listProduct;
+        return null;
+    }
+
+    @Override
     public Product findById(Integer id) {
         Product product = productsRepository.findById(id).orElse(null);
         if (product == null) {
@@ -72,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String save(Product product) {
         try {
-            product.setCreatedBy(FlowieeUtil.getCurrentAccountId());
+            product.setCreatedBy(CommonUtil.getCurrentAccountId());
             productsRepository.save(product);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info(ProductServiceImpl.class.getName() + ": Thêm mới sản phẩm " + product.toString());
@@ -100,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
             });
 
             productToUpdate.setId(productId);
-            productToUpdate.setLastUpdatedBy(FlowieeUtil.getCurrentAccountUsername());
+            productToUpdate.setLastUpdatedBy(CommonUtil.getCurrentAccountUsername());
             productsRepository.save(productToUpdate);
             String noiDungLog = "";
             String noiDungLogUpdate = "";
@@ -162,8 +176,8 @@ public class ProductServiceImpl implements ProductService {
 		List<Object[]> listData = result.getResultList();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
-        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
+        String filePathTemp = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
@@ -188,12 +202,12 @@ public class ProductServiceImpl implements ProductService {
                 row.createCell(3).setCellValue(tenSanPham);
                 row.createCell(4).setCellValue(kichCo);
                 row.createCell(5).setCellValue(mauSac);
-                row.createCell(6).setCellValue(FlowieeUtil.formatToVND(giaBan));
+                row.createCell(6).setCellValue(CommonUtil.formatToVND(giaBan));
                 row.createCell(7).setCellValue(soLuong);
                 row.createCell(8).setCellValue(daBan);
 
                 for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(FlowieeUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(CommonUtil.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

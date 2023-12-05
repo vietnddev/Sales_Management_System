@@ -16,7 +16,7 @@ import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.base.BaseController;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,7 +81,7 @@ public class DocumentController extends BaseController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
             for (int i = 0; i < listRootDocument.size(); i++) {
-                listRootDocument.get(i).setCreatedAt(FlowieeUtil.formatDate(listRootDocument.get(i).getCreatedAt(),"dd/MM/yyyy"));
+                listRootDocument.get(i).setCreatedAt(CommonUtil.formatDate(listRootDocument.get(i).getCreatedAt(),"dd/MM/yyyy"));
             }
             modelAndView.addObject("listDocument", listRootDocument);
             modelAndView.addObject("document", new Document());
@@ -117,8 +117,8 @@ public class DocumentController extends BaseController {
         if (!accountService.isLogin()) {
             return new ModelAndView(PagesUtil.SYS_LOGIN);
         }
-        String aliasName = FlowieeUtil.getAliasNameFromAliasPath(aliasPath);
-        int documentId = FlowieeUtil.getIdFromAliasPath(aliasPath);
+        String aliasName = CommonUtil.getAliasNameFromAliasPath(aliasPath);
+        int documentId = CommonUtil.getIdFromAliasPath(aliasPath);
         Document document = documentService.findById(documentId);
         if (!(aliasName + "-" + documentId).equals(document.getAliasName() + "-" + document.getId())) {
             throw new NotFoundException("Document not found!");
@@ -189,8 +189,8 @@ public class DocumentController extends BaseController {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
-        document.setAliasName(FlowieeUtil.generateAliasName(document.getTen()));
-        document.setCreatedBy(FlowieeUtil.getCurrentAccountId());
+        document.setAliasName(CommonUtil.generateAliasName(document.getTen()));
+        document.setCreatedBy(CommonUtil.getCurrentAccountId());
         if (document.getParentId() == null) {
             document.setParentId(0);
         }

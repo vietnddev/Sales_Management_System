@@ -11,7 +11,7 @@ import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Category;
@@ -58,7 +58,7 @@ public class TicketImportGoodsController extends BaseController {
         }
         if (validateModuleStorage.importGoods()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_TICKET_IMPORT);
-            TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(FlowieeUtil.getCurrentAccountId());
+            TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtil.getCurrentAccountId());
             if (ticketImportGoodsPresent == null) {
                 ticketImportGoodsPresent = ticketImportGoodsService.createDraftImport();
             }
@@ -111,10 +111,10 @@ public class TicketImportGoodsController extends BaseController {
             Map<String, String> listTrangThaiThanhToan = new HashMap<>();
             if (ticketImportGoodsPresent.getPaidStatus() == null || ticketImportGoodsPresent.getPaidStatus().isEmpty()) {
                 listTrangThaiThanhToan.put(null, "Chọn trạng thái thanh toán");
-                listTrangThaiThanhToan.putAll(FlowieeUtil.getPaymentStatusCategory());
+                listTrangThaiThanhToan.putAll(CommonUtil.getPaymentStatusCategory());
             } else {
-                listTrangThaiThanhToan.put(ticketImportGoodsPresent.getPaidStatus(), FlowieeUtil.getPaymentStatusCategory().get(ticketImportGoodsPresent.getPaidStatus()));
-                Map<String, String> listTrangThaiThanhToanTemp = FlowieeUtil.getPaymentStatusCategory();
+                listTrangThaiThanhToan.put(ticketImportGoodsPresent.getPaidStatus(), CommonUtil.getPaymentStatusCategory().get(ticketImportGoodsPresent.getPaidStatus()));
+                Map<String, String> listTrangThaiThanhToanTemp = CommonUtil.getPaymentStatusCategory();
                 listTrangThaiThanhToanTemp.remove(ticketImportGoodsPresent.getPaidStatus());
                 listTrangThaiThanhToan.putAll(listTrangThaiThanhToanTemp);
             }
@@ -182,8 +182,8 @@ public class TicketImportGoodsController extends BaseController {
             return PagesUtil.SYS_LOGIN;
         }
         if (validateModuleStorage.importGoods()) {
-            ticketImportGoodsRequest.setOrderTime(FlowieeUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
-            ticketImportGoodsRequest.setReceivedTime(FlowieeUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
+            ticketImportGoodsRequest.setOrderTime(CommonUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
+            ticketImportGoodsRequest.setReceivedTime(CommonUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
             ticketImportGoodsService.saveDraft(ticketImportGoodsRequest);
             return "redirect:" + request.getHeader("referer");
         } else {

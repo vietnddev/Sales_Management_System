@@ -1,7 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.model.role.Role;
@@ -82,13 +82,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String save(Account account) {
-        if (account.getRole() != null && account.getRole().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
             account.setRole("ADMIN");
         } else {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
+    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -96,13 +96,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public String update(Account account, Integer entityId) {
         account.setId(entityId);
-        if (account.getRole() != null && account.getRole().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
             account.setRole("ADMIN");
         } else {
             account.setRole("USER");
         }
         accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
+    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
         systemLogService.writeLog(systemLog);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -112,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElse(null);
         if (account != null) {
             accountRepository.delete(account);
-            SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, FlowieeUtil.getCurrentAccountId(), FlowieeUtil.getCurrentAccountIp());
+            SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
         }
         return AppConstants.SERVICE_RESPONSE_SUCCESS;

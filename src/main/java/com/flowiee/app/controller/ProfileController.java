@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.OrderService;
@@ -35,7 +35,7 @@ public class ProfileController extends BaseController {
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", accountService.findCurrentAccount());
-		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(FlowieeUtil.getCurrentAccountId()));
+		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(CommonUtil.getCurrentAccountId()));
 		return baseView(modelAndView);
 	}
 

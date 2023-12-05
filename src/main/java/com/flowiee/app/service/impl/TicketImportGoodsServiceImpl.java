@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
@@ -165,8 +165,8 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
             ticketImportGoods.setPaidStatus(String.valueOf(o[4]));
             ticketImportGoods.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
             ticketImportGoods.setStatus(String.valueOf(o[6]));
-            ticketImportGoods.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(o[10])));
-            ticketImportGoods.setReceivedTime(FlowieeUtil.convertStringToDate(String.valueOf(o[11])));
+            ticketImportGoods.setOrderTime(CommonUtil.convertStringToDate(String.valueOf(o[10])));
+            ticketImportGoods.setReceivedTime(CommonUtil.convertStringToDate(String.valueOf(o[11])));
             listData.add(ticketImportGoods);
         }
         entityManager.close();
@@ -203,7 +203,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     @Override
     public List<TicketImportGoods> findByPaidStatus(String paidStatus) {
         List<TicketImportGoods> listData = new ArrayList<>();
-        if (paidStatus != null && FlowieeUtil.getPaymentStatusCategory().containsKey(paidStatus)) {
+        if (paidStatus != null && CommonUtil.getPaymentStatusCategory().containsKey(paidStatus)) {
             listData = goodsImportRepository.findByPaidStatus(paidStatus);
         }
         return listData;
@@ -228,7 +228,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         TicketImportGoods ticketImportGoods = new TicketImportGoods();
         ticketImportGoods.setTitle("Title");
         ticketImportGoods.setStatus(STATUS_DRAFT);
-        ticketImportGoods.setCreatedBy(FlowieeUtil.getCurrentAccountId());
+        ticketImportGoods.setCreatedBy(CommonUtil.getCurrentAccountId());
         ticketImportGoods.setOrderTime(new Date());
         ticketImportGoods.setReceivedTime(new Date());
         ticketImportGoods = goodsImportRepository.save(ticketImportGoods);

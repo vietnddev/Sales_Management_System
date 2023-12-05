@@ -5,7 +5,7 @@ import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.*;
 import com.flowiee.app.service.DashboardService;
 
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +27,20 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     @SuppressWarnings("unchecked")
     public DashboardModel loadDashboard() {
-        logger.info("Start loadDashboard(): " + FlowieeUtil.now("YYYY/MM/dd HH:mm:ss"));
+        logger.info("Start loadDashboard(): " + CommonUtil.now("YYYY/MM/dd HH:mm:ss"));
 
         //Revenue today
         String revenueTodaySQL = "SELECT NVL(SUM(d.tong_tien_don_hang), 0) FROM PRO_DON_HANG d WHERE TRUNC(d.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
         logger.info("[getRevenueToday() - SQL findData]: " + revenueTodaySQL);
         Query revenueTodayQuery = entityManager.createNativeQuery(revenueTodaySQL);
-        String revenueToday = FlowieeUtil.formatToVND(Float.parseFloat(String.valueOf(revenueTodayQuery.getSingleResult())));
+        String revenueToday = CommonUtil.formatToVND(Float.parseFloat(String.valueOf(revenueTodayQuery.getSingleResult())));
         entityManager.close();
 
         //Revenue this month
         String revenueThisMonthSQL = "SELECT NVL(SUM(d.TONG_TIEN_DON_HANG), 0) FROM PRO_DON_HANG d WHERE EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(MONTH FROM SYSDATE)";
         logger.info("[getRevenueThisMonth() - SQL findData]: " + revenueThisMonthSQL);
         Query revenueThisMonthSQLQuery = entityManager.createNativeQuery(revenueThisMonthSQL);
-        String revenueThisMonth = FlowieeUtil.formatToVND(Float.parseFloat(String.valueOf(revenueThisMonthSQLQuery.getSingleResult())));
+        String revenueThisMonth = CommonUtil.formatToVND(Float.parseFloat(String.valueOf(revenueThisMonthSQLQuery.getSingleResult())));
         entityManager.close();
 
         //Customers new
@@ -146,7 +146,7 @@ public class DashboardServiceImpl implements DashboardService {
         dashboard.setRevenueSalesChannel(revenueSalesChannel);
         dashboard.setProductsTopSell(productsTopSell);
 
-        logger.info("Finished loadDashboard(): " + FlowieeUtil.now("YYYY/MM/dd HH:mm:ss"));
+        logger.info("Finished loadDashboard(): " + CommonUtil.now("YYYY/MM/dd HH:mm:ss"));
         return dashboard;
     }
 }
