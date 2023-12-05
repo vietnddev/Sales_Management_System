@@ -1,6 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.service.*;
@@ -74,7 +75,7 @@ public class ProductController extends BaseController {
         });
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
-        modelAndView.addObject("listSanPham", productsService.findAll());
+        modelAndView.addObject("listSanPham", ProductDTO.fromProducts(productsService.findAll()));
         modelAndView.addObject("listVoucherInfo", voucherService.findAll());
         modelAndView.addObject("listProductType", productTypes);
         modelAndView.addObject("listDonViTinh", units);
@@ -136,7 +137,7 @@ public class ProductController extends BaseController {
         modelAndView.addObject("bienTheSanPham", new ProductVariant());
         modelAndView.addObject("giaSanPham", new Price());
         modelAndView.addObject("idSanPham", productId);
-        modelAndView.addObject("detailProducts", productsService.findById(productId));
+        modelAndView.addObject("detailProducts", ProductDTO.fromProduct(productsService.findById(productId)));
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAllProductVariantOfProduct(productId));
         modelAndView.addObject("listTypeProducts", productTypes);
         modelAndView.addObject("listDmChatLieuVai", fabricTypes);

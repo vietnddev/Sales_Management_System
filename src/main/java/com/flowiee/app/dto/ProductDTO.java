@@ -1,11 +1,14 @@
 package com.flowiee.app.dto;
 
+import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,9 +23,10 @@ public class ProductDTO implements Serializable {
     private String productName;
     private Integer unitId;
     private String unitName;
-    private String productDescription;
+    private String productDes;
     private String productStatus;
     private Integer imageActiveId;
+    private FileStorage imageActive;
     private Integer voucherApplyId;
     private String voucherApplyTitle;
     private Integer discountPercent;
@@ -43,18 +47,27 @@ public class ProductDTO implements Serializable {
         dto.setProductName(product.getTenSanPham());
         dto.setUnitId(product.getUnit().getId());
         dto.setUnitName(product.getUnit().getName());
-        dto.setProductDescription(product.getMoTaSanPham());
+        dto.setProductDes(product.getMoTaSanPham());
         dto.setProductStatus(product.getStatus());
-        dto.setImageActiveId(product.getImageActive().getId());
-        dto.setVoucherApplyId();
-        dto.setVoucherApplyTitle();
-        dto.setDiscountPercent();
-        dto.setDiscountMaxPrice();
-        dto.setProductVariantQty();
-        dto.setSoldQty();
-        dto.setCreatedAt();
-        dto.setCreatedById();
-        dto.setCreatedByName();
+        dto.setImageActiveId(product.getImageActive() != null ? product.getImageActive().getId() : null);
+        dto.setImageActive(product.getImageActive());
+        dto.setVoucherApplyId(null);
+        dto.setVoucherApplyTitle(null);
+        dto.setDiscountPercent(null);
+        dto.setDiscountMaxPrice(null);
+        dto.setProductVariantQty(product.getListBienThe().size());
+        dto.setSoldQty(null);
+        dto.setCreatedAt(product.getCreatedAt());
+        dto.setCreatedById(product.getCreatedBy());
+        dto.setCreatedByName(null);
         return dto;
+    }
+
+    public static List<ProductDTO> fromProducts(List<Product> listProduct) {
+        List<ProductDTO> dataResponse = new ArrayList<>();
+        for (Product p : listProduct) {
+            dataResponse.add(ProductDTO.fromProduct(p));
+        }
+        return dataResponse;
     }
 }
