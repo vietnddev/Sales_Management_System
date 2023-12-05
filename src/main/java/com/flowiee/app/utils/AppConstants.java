@@ -1,8 +1,6 @@
 package com.flowiee.app.utils;
 
 public class AppConstants {
-    public static String rootPath = "src/main/resources/static/";
-
     public static String TICKETIMPORT = "TICKETIMPORT";
     public static String TICKETEXPORT = "TICKETEXPORT";
     public static String PRODUCT = "PRODUCT";

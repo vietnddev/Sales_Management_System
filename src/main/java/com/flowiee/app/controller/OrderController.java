@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
@@ -131,10 +131,10 @@ public class OrderController extends BaseController {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_SELL);
-        List<OrderCart> orderCartCurrent = cartService.findByAccountId(FlowieeUtil.getCurrentAccountId());
+        List<OrderCart> orderCartCurrent = cartService.findByAccountId(CommonUtil.getCurrentAccountId());
         if (orderCartCurrent.isEmpty()) {
             OrderCart orderCart = new OrderCart();
-            orderCart.setCreatedBy(FlowieeUtil.getCurrentAccountId());
+            orderCart.setCreatedBy(CommonUtil.getCurrentAccountId());
             cartService.save(orderCart);
         }
         modelAndView.addObject("listDonHang", orderService.findAll());
@@ -145,7 +145,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.ORDERSTATUS));
 
-        List<OrderCart> listOrderCart = cartService.findByAccountId(FlowieeUtil.getCurrentAccountId());
+        List<OrderCart> listOrderCart = cartService.findByAccountId(CommonUtil.getCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);
 
         modelAndView.addObject("donHangRequest", new OrderRequest());
@@ -225,7 +225,7 @@ public class OrderController extends BaseController {
         }
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
         if (thoiGianDatHangString != null) {
-            orderRequest.setThoiGianDatHang(FlowieeUtil.convertStringToDate(thoiGianDatHangString));
+            orderRequest.setThoiGianDatHang(CommonUtil.convertStringToDate(thoiGianDatHangString));
         } else {
             orderRequest.setThoiGianDatHang(new Date());
         }
@@ -277,7 +277,7 @@ public class OrderController extends BaseController {
         if (!validateModuleProduct.updateOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
-        orderPay.setMaPhieu("PTT" + donHangId + FlowieeUtil.now("yyMMddHHmmss"));
+        orderPay.setMaPhieu("PTT" + donHangId + CommonUtil.now("yyMMddHHmmss"));
         orderPay.setOrder(orderService.findById(donHangId));
         orderPay.setPaymentStatus(true);
         orderPayService.save(orderPay);

@@ -1,6 +1,6 @@
 package com.flowiee.app.security.author;
 
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.model.role.SystemAction.CategoryAction;
@@ -18,11 +18,11 @@ public class ValidateModuleCategory {
     private final String module = SystemModule.CATEGORY.name();
 
     public boolean readCategory() {
-        if (FlowieeUtil.getCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = CategoryAction.CTG_READ.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.getCurrentAccountUsername());
+        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -30,11 +30,11 @@ public class ValidateModuleCategory {
     }
 
     public boolean insertCategory() {
-        if (FlowieeUtil.getCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = CategoryAction.CTG_CREATE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.getCurrentAccountUsername());
+        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -42,11 +42,11 @@ public class ValidateModuleCategory {
     }
 
     public boolean updateCategory() {
-        if (FlowieeUtil.getCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = CategoryAction.CTG_UPDATE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.getCurrentAccountUsername());
+        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -54,11 +54,11 @@ public class ValidateModuleCategory {
     }
 
     public boolean deleteCategory() {
-        if (FlowieeUtil.getCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = CategoryAction.CTG_DELETE.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.getCurrentAccountUsername());
+        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }
@@ -66,11 +66,11 @@ public class ValidateModuleCategory {
     }
 
     public boolean importCategory() {
-        if (FlowieeUtil.getCurrentAccountUsername().equals(FlowieeUtil.ADMINISTRATOR)) {
+        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
             return true;
         }
         final String action = CategoryAction.CTG_IMPORT.name();
-        int accountId = accountService.findIdByUsername(FlowieeUtil.getCurrentAccountUsername());
+        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
         if (roleService.isAuthorized(accountId, module, action)) {
             return true;
         }

@@ -7,7 +7,7 @@ import com.flowiee.app.service.*;
 import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,7 +198,7 @@ public class ProductController extends BaseController {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.A.name());
-        productVariant.setMaSanPham(FlowieeUtil.now("yyyyMMddHHmmss"));
+        productVariant.setMaSanPham(CommonUtil.now("yyyyMMddHHmmss"));
         productVariantService.save(productVariant);
         //Khởi tạo giá default của giá bán
         priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.A.name()).build());
@@ -404,7 +404,7 @@ public class ProductController extends BaseController {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
             modelAndView.addObject("listVoucher", voucherService.findAll());
             modelAndView.addObject("listProduct", productsService.findAll());
-            modelAndView.addObject("listVoucherType", FlowieeUtil.getVoucherType());
+            modelAndView.addObject("listVoucherType", CommonUtil.getVoucherType());
             modelAndView.addObject("voucher", new VoucherInfo());
             modelAndView.addObject("voucherDetail", new VoucherTicket());
             return baseView(modelAndView);
@@ -423,7 +423,7 @@ public class ProductController extends BaseController {
             modelAndView.addObject("voucherDetail", voucherService.findById(voucherInfoId));
             modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
             modelAndView.addObject("voucher", new VoucherInfo());
-            modelAndView.addObject("listVoucherType", FlowieeUtil.getVoucherType());
+            modelAndView.addObject("listVoucherType", CommonUtil.getVoucherType());
             return baseView(modelAndView);
         } else {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);

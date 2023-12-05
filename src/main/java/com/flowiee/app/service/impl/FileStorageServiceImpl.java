@@ -14,7 +14,7 @@ import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.service.AccountService;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,15 +153,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
-        fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
+        fileInfo.setExtension(CommonUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).substring(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
+        fileInfo.setDirectoryPath(CommonUtil.getPathDirectoty(SystemModule.PRODUCT).substring(CommonUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
         fileInfo.setProduct(new Product(sanPhamId));
-        fileInfo.setAccount(new Account(accountService.findIdByUsername(FlowieeUtil.getCurrentAccountUsername())));
+        fileInfo.setAccount(new Account(accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername())));
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(CommonUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -176,18 +176,18 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
-        fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
+        fileInfo.setExtension(CommonUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).substring(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
+        fileInfo.setDirectoryPath(CommonUtil.getPathDirectoty(SystemModule.PRODUCT).substring(CommonUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
         //
         ProductVariant productVariant = productVariantService.findById(bienTheId);
         fileInfo.setProductVariant(productVariant);
         fileInfo.setProduct(productVariant.getProduct());
-        fileInfo.setAccount(new Account(FlowieeUtil.getCurrentAccountId()));
+        fileInfo.setAccount(new Account(CommonUtil.getCurrentAccountId()));
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(CommonUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -201,15 +201,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
-        fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
+        fileInfo.setExtension(CommonUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).substring(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).indexOf("uploads")));
+        fileInfo.setDirectoryPath(CommonUtil.getPathDirectoty(SystemModule.STORAGE).substring(CommonUtil.getPathDirectoty(SystemModule.STORAGE).indexOf("uploads")));
         fileInfo.setDocument(new Document(documentId));
         fileInfo.setAccount(accountService.findCurrentAccount());
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(CommonUtil.getPathDirectoty(SystemModule.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -219,7 +219,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String saveFileOfImport(MultipartFile fileImport, FileStorage fileInfo) throws IOException {
         fileRepository.save(fileInfo);
         fileInfo.setTenFileKhiLuu("I_" + fileInfo.getTenFileKhiLuu());
-        fileImport.transferTo(Paths.get(FlowieeUtil.getPathDirectoty(fileInfo.getModule()) + "/" + fileInfo.getTenFileKhiLuu()));
+        fileImport.transferTo(Paths.get(CommonUtil.getPathDirectoty(fileInfo.getModule()) + "/" + fileInfo.getTenFileKhiLuu()));
         return "OK";
     }
 
@@ -239,15 +239,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
-        fileInfo.setExtension(FlowieeUtil.getExtension(fileUpload.getOriginalFilename()));
+        fileInfo.setExtension(CommonUtil.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
-        fileInfo.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).substring(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE).indexOf("uploads")));
+        fileInfo.setDirectoryPath(CommonUtil.getPathDirectoty(SystemModule.STORAGE).substring(CommonUtil.getPathDirectoty(SystemModule.STORAGE).indexOf("uploads")));
         fileInfo.setDocument(new Document(documentId));
         fileInfo.setAccount(accountService.findCurrentAccount());
         fileInfo.setActive(true);
         fileRepository.save(fileInfo);
 
-        Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        Path path = Paths.get(CommonUtil.getPathDirectoty(SystemModule.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return "OK";
@@ -259,7 +259,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileToChange = this.findById(fileId);
         //Delete file vật lý cũ
         try {
-            File file = new File(AppConstants.rootPath + fileToChange.getDirectoryPath() + "/" + fileToChange.getTenFileKhiLuu());
+            File file = new File(CommonUtil.rootPath + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getTenFileKhiLuu());
             if (file.exists()) {
                 file.delete();
             }
@@ -270,15 +270,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileToChange.setTenFileGoc(fileAttached.getOriginalFilename());
         fileToChange.setTenFileKhiLuu(currentTime + "_" + fileAttached.getOriginalFilename());
         fileToChange.setKichThuocFile(fileAttached.getSize());
-        fileToChange.setExtension(FlowieeUtil.getExtension(fileAttached.getOriginalFilename()));
+        fileToChange.setExtension(CommonUtil.getExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
-        fileToChange.setDirectoryPath(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).substring(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
-        fileToChange.setAccount(new Account(FlowieeUtil.getCurrentAccountId()));
+        fileToChange.setDirectoryPath(CommonUtil.getPathDirectoty(SystemModule.PRODUCT).substring(CommonUtil.getPathDirectoty(SystemModule.PRODUCT).indexOf("uploads")));
+        fileToChange.setAccount(new Account(CommonUtil.getCurrentAccountId()));
         fileRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload
         try {
-            Path path = Paths.get(FlowieeUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileAttached.getOriginalFilename());
+            Path path = Paths.get(CommonUtil.getPathDirectoty(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileAttached.getOriginalFilename());
             fileAttached.transferTo(path);
         } catch (Exception e) {
             logger.error("Lưu file change vào thư mục chứa file upload thất bại!", e.getCause().getMessage());
@@ -292,7 +292,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileStorage = fileRepository.findById(fileId).orElse(null);
         fileRepository.deleteById(fileId);
         //Xóa file trên ổ cứng
-        File file = new File(AppConstants.rootPath + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
+        File file = new File(CommonUtil.rootPath + "/" + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
         System.out.println("Path of file in dic" + file.getPath());
         if (file.exists()) {
             if (file.delete()) {

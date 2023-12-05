@@ -3,7 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -93,9 +93,9 @@ public class FileStorage extends BaseEntity implements Serializable {
             this.tenFileGoc = file.getOriginalFilename();
             this.tenFileKhiLuu = Instant.now(Clock.systemUTC()).toEpochMilli() + "_" + file.getOriginalFilename();
             this.kichThuocFile = file.getSize();
-            this.extension = FlowieeUtil.getExtension(file.getOriginalFilename());
+            this.extension = CommonUtil.getExtension(file.getOriginalFilename());
             this.contentType = file.getContentType();
-            this.directoryPath = FlowieeUtil.getPathDirectoty(pModule).substring(FlowieeUtil.getPathDirectoty(pModule).indexOf("uploads"));
+            this.directoryPath = CommonUtil.getPathDirectoty(pModule).substring(CommonUtil.getPathDirectoty(pModule).indexOf("uploads"));
             this.isActive = false;
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.FlowieeUtil;
+import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.model.request.OrderRequest;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
@@ -109,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
     public String save(OrderRequest request) {
         try {
             Order order = new Order();
-            order.setMaDonHang(FlowieeUtil.getMaDonHang());
+            order.setMaDonHang(CommonUtil.getMaDonHang());
             order.setCustomer(new Customer(request.getKhachHang()));
             order.setKenhBanHang(new Category(request.getKenhBanHang(), null));
             order.setNhanVienBanHang(new Account(request.getNhanVienBanHang()));
@@ -199,7 +199,7 @@ public class OrderServiceImpl implements OrderService {
                 row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getDiaChi()
                 row.createCell(8).setCellValue(listData.get(i).getGhiChu());
                 for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(FlowieeUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(CommonUtil.setBorder(workbook.createCellStyle()));
                 }
             }
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -248,7 +248,7 @@ public class OrderServiceImpl implements OrderService {
             OrderDTO order = new OrderDTO();
             order.setOrderId(Integer.parseInt(String.valueOf(data[0])));
             order.setOrderCode(String.valueOf(data[1]));
-            order.setOrderTime(FlowieeUtil.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            order.setOrderTime(CommonUtil.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
             order.setReceiverAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
             order.setReceiverPhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
             order.setReceiverName(String.valueOf(data[5]));
@@ -261,7 +261,7 @@ public class OrderServiceImpl implements OrderService {
             order.setPayMethod(new Category(Integer.parseInt(String.valueOf(data[16])), String.valueOf(data[17])));
             order.setCashier(new Account(Integer.parseInt(String.valueOf(data[18])), null, String.valueOf(data[19])));
             order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[20]))));
-            order.setCreatedAt(FlowieeUtil.convertStringToDate(String.valueOf(data[21])));
+            order.setCreatedAt(CommonUtil.convertStringToDate(String.valueOf(data[21])));
             dataResponse.add(order);
         }
         return dataResponse;

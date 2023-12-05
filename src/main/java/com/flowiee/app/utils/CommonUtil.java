@@ -24,12 +24,25 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class FlowieeUtil {
-    public static final Integer SYS_NOTI_ID = 0;
-    public static final String ADMINISTRATOR = "admin";
-    public static final String PATH_TEMPLATE_EXCEL = "src/main/resources/static/templates/excel";
+public class CommonUtil {
+    public static String rootPath = "src/main/resources/static";
+    public static String fileUploadPath = rootPath + "/uploads/";
 
-    public static final String CATEGORY = "";
+    public static Integer SYS_NOTI_ID = 0;
+    public static String ADMINISTRATOR = "admin";
+    public static String PATH_TEMPLATE_EXCEL = rootPath + "/templates/excel";
+
+    public static String CATEGORY = "";
+    public static Date START_APP_TIME = null;
+    public static String EMAIL_HOST = null;
+    public static int EMAIL_PORT = 0;
+    public static String EMAIL_USERNAME = null;
+    public static String EMAIL_PASSWORD = null;
+    public static int TIMEOUT = 0;
+    public static String PATH_UPLOAD = null;
+    public static String MAX_SIZE_UPLOAD = null;
+    public static String EXTENSION_ALLOWED_UPLOAD = null;
+    public static boolean SEND_MAIL_REPORT_DAILY = false;
 
     public static Date convertStringToDate(String dateString) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -72,7 +85,7 @@ public class FlowieeUtil {
     }
 
     public static String getMaDonHang() {
-        return "F" + FlowieeUtil.now("yyMMddHHmmss");
+        return "F" + CommonUtil.now("yyMMddHHmmss");
     }
 
     public static String getMaDanhMuc(String categoryName) {
@@ -164,9 +177,9 @@ public class FlowieeUtil {
                 	path.append("/system");
                 	break;
             }
-            path.append("/" + FlowieeUtil.getNamHienTai());
-            path.append("/" + FlowieeUtil.getThangHienTai());
-            path.append("/" + FlowieeUtil.getNgayHienTai());
+            path.append("/" + CommonUtil.getNamHienTai());
+            path.append("/" + CommonUtil.getThangHienTai());
+            path.append("/" + CommonUtil.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -190,9 +203,9 @@ public class FlowieeUtil {
             } else if (SystemModule.CATEGORY.name().equals(systemModule)) {
                 path.append("/category");
             }
-            path.append("/" + FlowieeUtil.getNamHienTai());
-            path.append("/" + FlowieeUtil.getThangHienTai());
-            path.append("/" + FlowieeUtil.getNgayHienTai());
+            path.append("/" + CommonUtil.getNamHienTai());
+            path.append("/" + CommonUtil.getThangHienTai());
+            path.append("/" + CommonUtil.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -210,9 +223,9 @@ public class FlowieeUtil {
         try {
             StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
             path.append("/import");
-            path.append("/" + FlowieeUtil.getNamHienTai());
-            path.append("/" + FlowieeUtil.getThangHienTai());
-            path.append("/" + FlowieeUtil.getNgayHienTai());
+            path.append("/" + CommonUtil.getNamHienTai());
+            path.append("/" + CommonUtil.getThangHienTai());
+            path.append("/" + CommonUtil.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -255,8 +268,8 @@ public class FlowieeUtil {
 
     public static byte[] exportTemplate(String templateName) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + ".xlsx";
-        String filePathTemp = FlowieeUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + ".xlsx";
+        String filePathTemp = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = null;
         try {
             fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
