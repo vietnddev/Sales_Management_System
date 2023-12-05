@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
@@ -40,8 +41,6 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private FileStorageService fileService;
     @Autowired
-    private AccountService accountService;
-    @Autowired
     private EntityManager entityManager;
     @Autowired
     private ProductHistoryService productHistoryService;
@@ -58,6 +57,21 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return listProduct;
+    }
+
+    @Override
+    public List<ProductDTO> findAllProductCore() {
+//        List<Product> listProduct = productsRepository.findAll();
+//        for (int i = 0; i < listProduct.size(); i++) {
+//            FileStorage imageActive = fileService.findImageActiveOfSanPham(listProduct.get(i).getId());
+//            if (imageActive != null) {
+//                listProduct.get(i).setImageActive(imageActive);
+//            } else {
+//                listProduct.get(i).setImageActive(new FileStorage());
+//            }
+//        }
+//        return listProduct;
+        return null;
     }
 
     @Override

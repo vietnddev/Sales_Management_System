@@ -36,7 +36,25 @@ public class ProductDTO implements Serializable {
     public static ProductDTO fromProduct(Product product) {
         ProductDTO dto = new ProductDTO();
         dto.setProductId(product.getId());
-
+        dto.setProductTypeId(product.getProductType().getId());
+        dto.setProductTypeName(product.getProductType().getName());
+        dto.setBrandId(product.getBrand().getId());
+        dto.setBrandName(product.getBrand().getName());
+        dto.setProductName(product.getTenSanPham());
+        dto.setUnitId(product.getUnit().getId());
+        dto.setUnitName(product.getUnit().getName());
+        dto.setProductDescription(product.getMoTaSanPham());
+        dto.setProductStatus(product.getStatus());
+        dto.setImageActiveId(product.getImageActive().getId());
+        dto.setVoucherApplyId();
+        dto.setVoucherApplyTitle();
+        dto.setDiscountPercent();
+        dto.setDiscountMaxPrice();
+        dto.setProductVariantQty();
+        dto.setSoldQty();
+        dto.setCreatedAt();
+        dto.setCreatedById();
+        dto.setCreatedByName();
         return dto;
     }
 }
