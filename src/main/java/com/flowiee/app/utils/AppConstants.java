@@ -97,4 +97,18 @@ public class AppConstants {
             return label;
         }
     }
+
+    public enum VOUCHER_STATUS {
+        ACTIVE("Đang áp dụng"),
+        INACTIVE("Hết hạn sử dụng");
+        private final String label;
+
+        VOUCHER_STATUS(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
 }
