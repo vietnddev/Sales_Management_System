@@ -3,10 +3,12 @@ package com.flowiee.app.dto;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
+import com.flowiee.app.utils.AppConstants;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -24,7 +26,7 @@ public class VoucherInfoDTO implements Serializable {
     private Float maxPriceDiscount;
     private String startTime;
     private String endTime;
-    private boolean status;
+    private String status;
     private List<VoucherTicket> listVoucherTicket;
     private List<Product> listSanPhamApDung;
 
@@ -39,7 +41,13 @@ public class VoucherInfoDTO implements Serializable {
         voucherInfoDTO.setLengthOfKey(voucherInfo.getLengthOfKey());
         voucherInfoDTO.setDiscount(voucherInfo.getDiscount());
         voucherInfoDTO.setMaxPriceDiscount(voucherInfo.getMaxPriceDiscount());
-        voucherInfoDTO.setStatus(voucherInfo.isStatus());
+
+        Date currentDate = new Date();
+        if (voucherInfo.getStartTime().before(currentDate) && voucherInfo.getEndTime().after(currentDate)) {
+            voucherInfoDTO.setStatus(AppConstants.VOUCHER_STATUS.ACTIVE.getLabel());
+        } else {
+            voucherInfoDTO.setStatus(AppConstants.VOUCHER_STATUS.INACTIVE.getLabel());
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         voucherInfoDTO.setStartTime(dateFormat.format(voucherInfo.getStartTime()));

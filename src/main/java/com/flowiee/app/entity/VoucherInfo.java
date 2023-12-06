@@ -50,9 +50,6 @@ public class VoucherInfo extends BaseEntity implements Serializable {
     @Column(name = "end_time", nullable = false)
     private Date endTime;
 
-    @Column(name = "status", nullable = false)
-    private boolean status;
-
     @OneToMany(mappedBy = "voucherInfo", fetch = FetchType.LAZY)
     private List<VoucherTicket> listVoucherTicket;
 }
