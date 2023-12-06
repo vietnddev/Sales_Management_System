@@ -20,6 +20,7 @@
       </footer>
     </div>
     <!-- ./wrapper -->
+  </div>
 </body>
 
 </html>
