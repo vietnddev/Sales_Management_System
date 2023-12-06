@@ -30,10 +30,10 @@ public class OrderDTO implements Serializable {
     private String note;
     private Category orderStatus; //future remove
     private Integer orderStatusId;
-    private Integer orderStatusName;
+    private String orderStatusName;
     private OrderPay orderPay; //future remove
     private Integer orderPayId;
-    private Integer orderPayName;
+    private String orderPayName;
     private Category payMethod; //future remove
     private Integer payMethodId;
     private String payMethodName;
@@ -46,9 +46,37 @@ public class OrderDTO implements Serializable {
     private Date createdAt;
 
     public static OrderDTO fromOrder(Order order) {
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(orderDTO.orderId);
-
-        return orderDTO;
+        OrderDTO dto = new OrderDTO();
+        dto.setOrderId(order.getId());
+        dto.setOrderCode(order.getMaDonHang());
+        dto.setOrderTime(order.getThoiGianDatHang());
+        dto.setReceiverAddress(order.getReceiverAddress());
+        dto.setReceiverPhone(order.getReceiverPhone());
+        dto.setReceiverName(order.getReceiverName());
+        //dto.setOrderBy(order.getCustomer());
+        dto.setCustomerId(order.getCustomer().getId());
+        dto.setCustomerName(order.getCustomer().getTenKhachHang());
+        dto.setTotalAmount(order.getTongTienDonHang());
+        //dto.setSalesChannel(order.getKenhBanHang());
+        dto.setSalesChannelId(order.getKenhBanHang().getId());
+        dto.setSalesChannelName(order.getKenhBanHang().getName());
+        dto.setNote(order.getGhiChu());
+        //dto.setOrderStatus(order.getTrangThaiDonHang());
+        dto.setOrderStatusId(order.getTrangThaiDonHang().getId());
+        dto.setOrderStatusName(order.getTrangThaiDonHang().getName());
+        //dto.setOrderBy(null);
+        dto.setOrderPayId(null);
+        dto.setOrderPayName(null);
+        //dto.setPayMethod(null);
+        dto.setPayMethodId(null);
+        dto.setPayMethodName(null);
+        //dto.setCashier(order.getNhanVienBanHang());
+        dto.setCashierId(order.getNhanVienBanHang().getId());
+        dto.setCashierName(order.getNhanVienBanHang().getHoTen());
+        dto.setCreatedBy(null);
+        dto.setCreatedById(order.getCreatedBy());
+        dto.setCreatedByName(null);
+        dto.setCreatedAt(order.getCreatedAt());
+        return dto;
     }
 }
