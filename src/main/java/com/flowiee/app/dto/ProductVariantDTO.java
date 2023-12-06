@@ -48,7 +48,7 @@ public class ProductVariantDTO implements Serializable {
     private Float priceMaxDiscount;
     private Float priceAfterDiscount;
     private String unitCurrency;
-    private List<Price> prices;
+    private List<Price> listPrices;
 
     public static ProductVariantDTO fromProductVariant(ProductVariant input) {
         ProductVariantDTO dto = new ProductVariantDTO();
@@ -88,7 +88,7 @@ public class ProductVariantDTO implements Serializable {
         dto.setPriceMaxDiscount(null);
         dto.setPriceAfterDiscount(null);
         dto.setUnitCurrency(null);
-        dto.setPrices(null);
+        dto.setListPrices(null);
         return dto;
     }
 }

@@ -50,7 +50,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         List<ProductVariantDTO> listReturn = new ArrayList<>();
         for (ProductVariant productVariant : this.findData(AppConstants.PRODUCT, String.valueOf(productId))) {
             ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
-            dataModel.setPrices(priceService.findPricesByProductVariant(dataModel.getId()));
+            dataModel.setListPrices(priceService.findPricesByProductVariant(dataModel.getProductVariantId()));
             listReturn.add(dataModel);
         }
         return listReturn;

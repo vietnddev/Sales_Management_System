@@ -62,7 +62,7 @@ public class ProductController extends BaseController {
         List<Category> brands = new ArrayList<>();
         List<Category> productTypes = new ArrayList<>();
         List<Category> units = new ArrayList<>();
-        categoryService.findSubCategory(Arrays.asList(AppConstants.BRAND, AppConstants.SIZE, AppConstants.COLOR)).forEach(category -> {
+        categoryService.findSubCategory(Arrays.asList(AppConstants.BRAND, AppConstants.PRODUCTTYPE, AppConstants.UNIT)).forEach(category -> {
             if (AppConstants.BRAND.equals(category.getType())) {
                 brands.add(category);
             }
