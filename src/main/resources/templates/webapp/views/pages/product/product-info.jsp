@@ -317,19 +317,19 @@
                                 <tr th:each="var, index : ${listBienTheSanPham}">
                                     <td th:text="${index.index + 1}"></td>
                                     <td>
-                                        <a th:href="@{/san-pham/variant/{id}(id=${var.id})}"
+                                        <a th:href="@{/san-pham/variant/{id}(id=${var.productVariantId})}"
                                            th:text="${var.name}">
                                         </a>
                                     </td>
-                                    <td th:text="${var.color.name}"></td>
-                                    <td th:text="${var.size.name}"></td>
-                                    <td th:text="${var.quantity}"></td>
-                                    <td th:text="${var.sell}"></td>
+                                    <td th:text="${var.colorName}"></td>
+                                    <td th:text="${var.sizeName}"></td>
+                                    <td th:text="${var.storageQty}"></td>
+                                    <td th:text="${var.soldQty}"></td>
                                     <td>
-                                                <span th:text="${var.prices.get(0).giaBan}"
+                                                <span th:text="${var.listPrices.get(0).giaBan}"
                                                       style="color: #007bff; cursor: pointer"
                                                       data-toggle="modal"
-                                                      th:data-target="'#modalLichSuGiaBan_' + ${var.id}"></span>
+                                                      th:data-target="'#modalLichSuGiaBan_' + ${var.productVariantId}"></span>
                                     </td>
                                     <td th:text="${var.status}"></td>
                                     <td>
@@ -340,7 +340,7 @@
                                         <button class="btn btn-sm btn-primary"
                                                 type="button" data-toggle="modal"
                                                 title="Cập nhật giá sản phẩm"
-                                                th:data-target="'#modalUpdateGiaBan_' + ${var.id}">
+                                                th:data-target="'#modalUpdateGiaBan_' + ${var.productVariantId}">
                                             <i class="fa-solid fa-dollar-sign"></i>
                                         </button>
                                         <!--./ Button xóa biến thể sản phẩm-->
@@ -352,10 +352,10 @@
 
                                         <!--MODAL UPDATE GIÁ BÁN-->
                                         <div class="modal fade"
-                                             th:id="'modalUpdateGiaBan_' + ${var.id}">
+                                             th:id="'modalUpdateGiaBan_' + ${var.productVariantId}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form th:action="@{/san-pham/variant/gia-ban/update/{id}(id=${var.id})}"
+                                                    <form th:action="@{/san-pham/variant/gia-ban/update/{id}(id=${var.productVariantId})}"
                                                           th:object="${price}" method="post">
                                                         <div class="modal-header">
                                                             <strong class="modal-title">Cập nhật giá bán</strong>
@@ -368,7 +368,7 @@
                                                             <div class="form-group row">
                                                                 <label class="col-sm-4">Giá hiện tại</label>
                                                                 <input class="col-sm-8 form-control" type="text"
-                                                                       th:value="${var.prices.get(0).giaBan}" readonly>
+                                                                       th:value="${var.listPrices.get(0).giaBan}" readonly>
                                                             </div>
                                                             <div class="form-group row">
                                                                 <label class="col-sm-4">Giá điều chỉnh</label>
@@ -378,7 +378,7 @@
                                                         </div>
                                                         <div class="modal-footer justify-content-end">
                                                             <input type="hidden" name="idGiaBan"
-                                                                   th:value="${var.prices.get(0).id}">
+                                                                   th:value="${var.listPrices.get(0).id}">
                                                             <button type="button" class="btn btn-sm btn-default"
                                                                     data-dismiss="modal">Hủy
                                                             </button>
@@ -399,12 +399,12 @@
                             <!--LỊCH SỬ ĐIỀU CHỈNH GIÁ BÁN-->
                             <div class="modal fade"
                                  th:each="var, index : ${listBienTheSanPham}"
-                                 th:id="'modalLichSuGiaBan_' + ${var.id}">
+                                 th:id="'modalLichSuGiaBan_' + ${var.productVariantId}">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <strong class="modal-title"
-                                                    th:text="'Lịch sử giá bán của [' + ${var.tenBienThe} + ']'">
+                                                    th:text="'Lịch sử giá bán của [' + ${var.name} + ']'">
                                             </strong>
                                             <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
@@ -422,7 +422,7 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr th:each="p, index : ${var.listGiaBan}">
+                                                <tr th:each="p, index : ${var.listPrices}">
                                                     <td th:text="${index.index + 1}"></td>
                                                     <td th:text="${p.giaBan}"></td>
                                                     <td th:text="${p.createdAt}"></td>
