@@ -8,7 +8,9 @@ import java.util.List;
 public interface VoucherService {
     List<VoucherInfoDTO> findAll();
 
-    VoucherInfo findById(Integer voucherId);
+    VoucherInfoDTO findById(Integer voucherId);
+
+    List<VoucherInfoDTO> findByIds(List<Integer> voucherIds, String status);
 
     String save(VoucherInfo voucherInfo, List<Integer> listSanPhamApDung);
 

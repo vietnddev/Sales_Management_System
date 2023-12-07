@@ -16,6 +16,6 @@ public class VoucherApplyDTO implements Serializable {
     private String voucherInfoTitle;
     private Integer productId;
     private String productName;
-    private Date appliedAt;
+    private String appliedAt;
     private Integer appliedBy;
 }

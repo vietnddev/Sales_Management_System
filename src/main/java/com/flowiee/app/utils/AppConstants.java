@@ -42,8 +42,8 @@ public class AppConstants {
     public static final String SERVICE_RESPONSE_FAIL = "NOK";
 
     public enum PRODUCT_STATUS {
-        A("Active"),
-        I("Inactive");
+        A("Đang áp dụng"),
+        I("Đang không áp dụng");
         private final String label;
 
         PRODUCT_STATUS(String label) {
@@ -56,8 +56,8 @@ public class AppConstants {
     }
 
     public enum PRICE_STATUS {
-        A("Active"),
-        I("Inactive");
+        A("Đang áp dụng"),
+        I("Đang không áp dụng");
         private final String label;
 
         PRICE_STATUS(String label) {
@@ -100,7 +100,7 @@ public class AppConstants {
 
     public enum VOUCHER_STATUS {
         ACTIVE("Đang áp dụng"),
-        INACTIVE("Hết hạn sử dụng");
+        INACTIVE("Đang không áp dụng");
         private final String label;
 
         VOUCHER_STATUS(String label) {

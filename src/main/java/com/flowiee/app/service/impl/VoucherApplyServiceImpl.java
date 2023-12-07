@@ -39,7 +39,7 @@ public class VoucherApplyServiceImpl implements VoucherApplyService {
             voucherApplyDTO.setVoucherInfoTitle(String.valueOf(data[2]));
             voucherApplyDTO.setProductId(Integer.parseInt(String.valueOf(data[3])));
             voucherApplyDTO.setProductName(String.valueOf(data[4]));
-            voucherApplyDTO.setAppliedAt(Date.valueOf(String.valueOf(data[5])));
+            voucherApplyDTO.setAppliedAt((String.valueOf(data[5])).substring(0, 10));
             voucherApplyDTO.setAppliedBy(Integer.parseInt(String.valueOf(data[6])));
             listResponse.add(voucherApplyDTO);
         }
@@ -64,7 +64,7 @@ public class VoucherApplyServiceImpl implements VoucherApplyService {
             voucherApplyDTO.setVoucherInfoTitle(String.valueOf(data[2]));
             voucherApplyDTO.setProductId(Integer.parseInt(String.valueOf(data[3])));
             voucherApplyDTO.setProductName(String.valueOf(data[4]));
-            voucherApplyDTO.setAppliedAt(Date.valueOf(String.valueOf(data[5])));
+            voucherApplyDTO.setAppliedAt(String.valueOf(data[5]).substring(0, 10));
             voucherApplyDTO.setAppliedBy(Integer.parseInt(String.valueOf(data[6])));
             listResponse.add(voucherApplyDTO);
         }
@@ -88,7 +88,7 @@ public class VoucherApplyServiceImpl implements VoucherApplyService {
             dataResponse.setVoucherInfoTitle(String.valueOf(data[2]));
             dataResponse.setProductId(Integer.parseInt(String.valueOf(data[3])));
             dataResponse.setProductName(String.valueOf(data[4]));
-            dataResponse.setAppliedAt(Date.valueOf(String.valueOf(data[5])));
+            dataResponse.setAppliedAt((String.valueOf(data[5])).substring(0, 10));
             dataResponse.setAppliedBy(Integer.parseInt(String.valueOf(data[6])));
         }
         return dataResponse;

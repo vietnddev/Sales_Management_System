@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
@@ -26,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,6 +45,10 @@ public class ProductServiceImpl implements ProductService {
     private EntityManager entityManager;
     @Autowired
     private ProductHistoryService productHistoryService;
+    @Autowired
+    private VoucherService voucherInfoService;
+    @Autowired
+    private VoucherApplyService voucherApplyService;
 
     @Override
     public List<Product> findAll() {
@@ -56,6 +62,27 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return listProduct;
+    }
+
+    @Override
+    public List<ProductDTO> findAll(Integer productTypeId, String status) {
+        List<ProductDTO> dataResponse = ProductDTO.fromProducts(productsRepository.findAll());
+        for (ProductDTO productDTO : dataResponse) {
+            FileStorage imageActive = fileService.findImageActiveOfSanPham(productDTO.getProductId());
+            if (imageActive != null) {
+                productDTO.setImageActive(imageActive);
+            } else {
+                productDTO.setImageActive(new FileStorage());
+            }
+            List<Integer> listVoucherApplyId = new ArrayList<>();
+            voucherApplyService.findByProductId(productDTO.getProductId()).forEach(voucherApplyDTO -> {
+                listVoucherApplyId.add(voucherApplyDTO.getVoucherInfoId());
+            });
+            if (!listVoucherApplyId.isEmpty()) {
+                productDTO.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherApplyId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
+            }
+        }
+        return dataResponse;
     }
 
     @Override

@@ -7,6 +7,8 @@ import com.flowiee.app.entity.Product;
 import java.util.List;
 
 public interface ProductService extends BaseService<Product> {
+    List<ProductDTO> findAll(Integer productTypeId, String status);
+
     byte[] exportData(List<Integer> listSanPhamId);
 
     List<Product> findByProductType(Integer productTypeId);

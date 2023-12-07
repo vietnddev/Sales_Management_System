@@ -27,15 +27,16 @@ public class ProductDTO implements Serializable {
     private String productStatus;
     private Integer imageActiveId;
     private FileStorage imageActive;
-    private Integer voucherApplyId;
-    private String voucherApplyTitle;
-    private Integer discountPercent;
-    private Float discountMaxPrice;
+//    private Integer voucherApplyId;
+//    private String voucherApplyTitle;
+//    private Integer discountPercent;
+//    private Float discountMaxPrice;
     private Integer productVariantQty;
     private Integer soldQty;
     private Date createdAt;
     private Integer createdById;
     private String createdByName;
+    private List<VoucherInfoDTO> listVoucherInfoApply;
 
     public static ProductDTO fromProduct(Product product) {
         ProductDTO dto = new ProductDTO();
@@ -51,15 +52,16 @@ public class ProductDTO implements Serializable {
         dto.setProductStatus(product.getStatus());
         dto.setImageActiveId(product.getImageActive() != null ? product.getImageActive().getId() : null);
         dto.setImageActive(product.getImageActive());
-        dto.setVoucherApplyId(null);
-        dto.setVoucherApplyTitle(null);
-        dto.setDiscountPercent(null);
-        dto.setDiscountMaxPrice(null);
+//      dto.setVoucherApplyId(null);
+//      dto.setVoucherApplyTitle(null);
+//      dto.setDiscountPercent(null);
+//      dto.setDiscountMaxPrice(null);
         dto.setProductVariantQty(product.getListBienThe().size());
         dto.setSoldQty(null);
         dto.setCreatedAt(product.getCreatedAt());
         dto.setCreatedById(product.getCreatedBy());
         dto.setCreatedByName(null);
+        dto.setListVoucherInfoApply(null);
         return dto;
     }
 
