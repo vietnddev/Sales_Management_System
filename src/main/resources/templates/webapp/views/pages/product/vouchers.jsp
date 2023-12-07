@@ -97,13 +97,7 @@
                                                 <br>
                                                 <span th:text="'Ngày kết thúc: ' + ${list.endTime}"></span>
                                             </td>
-                                            <td>
-                                                <th:block th:if="${list.status}">
-                                                    Đang áp dụng
-                                                </th:block>
-                                                <th:block th:if="!${list.status}">
-                                                    Ngừng áp dụng
-                                                </th:block>
+                                            <td th:text="${list.status}">
                                             </td>
                                             <td>
                                                 <button class="btn btn-info btn-sm" data-toggle="modal"

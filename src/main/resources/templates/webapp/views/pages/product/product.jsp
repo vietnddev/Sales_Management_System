@@ -63,7 +63,7 @@
                                             <th>Tên sản phẩm</th>
                                             <th>Loại sản phẩm</th>
                                             <th>Đơn vị tính</th>
-                                            <th>Chường trình khuyến mãi</th>
+                                            <th>Khuyến mãi đang áp dụng</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
                                         </tr>
@@ -81,7 +81,15 @@
                                             </td>
                                             <td th:text="${list.productTypeName}"></td>
                                             <td th:text="${list.unitName}"></td>
-                                            <td></td>
+                                            <td>
+                                                <th:block th:each="voucherInfo, index : ${list.listVoucherInfoApply}">
+                                                    <span th:text="${index.index + 1} + ' '"></span>
+                                                    <a th:href="@{/san-pham/voucher/detail/{id}(id=${voucherInfo.id})}">
+                                                        <span th:text="${voucherInfo.title}"></span>
+                                                    </a>
+                                                    <br>
+                                                </th:block>
+                                            </td>
                                             <td th:text="${list.productStatus}"></td>
                                             <td>
                                                 <button class="btn btn-outline-info btn-sm">
@@ -242,7 +250,7 @@
                                             <th>Tên sản phẩm</th>
                                             <th>Loại sản phẩm</th>
                                             <th>Đơn vị tính</th>
-                                            <th>Chương trình khuyến mãi</th>
+                                            <th>Khuyến mãi đang áp dụng</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
                                         </tr>
