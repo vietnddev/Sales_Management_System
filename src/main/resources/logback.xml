@@ -13,14 +13,14 @@
         </rollingPolicy>
         <encoder>
             <!--Pattern message log-->
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %p %C{1.} [%t]: %m%n</Pattern>
+            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%p] %C{1.} [%t]: %m%n</Pattern>
         </encoder>
     </appender>
 
     <!-- Config write log in console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %highlight(%p) %C{1.} [%t]: %m%n</Pattern>
+            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%highlight(%p)] %C{1.} [%t]: %m%n</Pattern>
         </encoder>
     </appender>
 

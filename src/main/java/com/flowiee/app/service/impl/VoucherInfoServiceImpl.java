@@ -133,10 +133,11 @@ public class VoucherInfoServiceImpl implements VoucherService {
     private List<VoucherInfoDTO> findData(Integer voucherId, List<Integer> voucherIds, String status) {
         List<VoucherInfoDTO> listVoucherInfoDTO = new ArrayList<>();
         try {
+            String _VOUCHER_STATUS = "(CASE WHEN ((TRUNC(START_TIME) <= TRUNC(CURRENT_DATE)) AND (TRUNC(END_TIME) >= TRUNC(CURRENT_DATE))) THEN '" + AppConstants.VOUCHER_STATUS.ACTIVE.name() + "' ELSE '" + AppConstants.VOUCHER_STATUS.INACTIVE.name() + "' END) ";
             String strSQL = "SELECT v.ID as ID_0, v.TITLE as TITLE_1, v.DESCRIPTION as DESCRIPTION_2, v.DOI_TUONG_AP_DUNG as DOI_TUONG_AP_DUNG_3, " +
                     "v.DISCOUNT as DISCOUNT_PERCENT_4, v.MAX_PRICE_DISCOUNT as DISCOUNT_MAX_PRICE_5, v.SO_LUONG as QUANTITY_6, " +
                     "v.TYPE as CODE_TYPE_7, v.LENGTH_OF_KEY as CODE_LENGTH_8, v.START_TIME as START_TIME_9, v.END_TIME as END_TIME_10, " +
-                    "CASE WHEN ((TRUNC(START_TIME) <= TRUNC(CURRENT_DATE)) AND (TRUNC(END_TIME) >= TRUNC(CURRENT_DATE))) THEN '" + AppConstants.VOUCHER_STATUS.ACTIVE.name() + "' ELSE '" + AppConstants.VOUCHER_STATUS.INACTIVE.name() + "' END AS STATUS_11, " +
+                    _VOUCHER_STATUS + " AS STATUS_11, " +
                     "v.CREATED_AT as CREATED_AT_12, v.CREATED_BY as CREATED_BY_13 " +
                     "FROM PRO_VOUCHER_INFO v " +
                     "WHERE 1=1 ";
@@ -154,8 +155,9 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 strSQL += "AND v.ID IN (" + ids + ") ";
             }
             if (status != null) {
-                strSQL += "AND (CASE WHEN ((TRUNC(START_TIME) <= TRUNC(CURRENT_DATE)) AND (TRUNC(END_TIME) >= TRUNC(CURRENT_DATE))) THEN 'ACTIVE' ELSE 'INACTIVE' END) = '" + status + "' ";
+                strSQL += "AND " + _VOUCHER_STATUS + " = '" + status + "' ";
             }
+            logger.info("[SQL findData]: " + strSQL);
             Query query = entityManager.createNativeQuery(strSQL);
             List<Object[]> rawData = query.getResultList();
             for (Object[] data : rawData) {
@@ -193,6 +195,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 listVoucherInfoDTO.add(dto);
             }
         } catch (Exception e) {
+            logger.error("Load voucher fail!", e);
             e.printStackTrace();
         }
         return listVoucherInfoDTO;
