@@ -9,8 +9,8 @@ import com.flowiee.app.entity.ProductVariant;
 import java.util.List;
 
 public interface PriceRepository extends JpaRepository<Price, Integer> {
-    @Query("from Price p where p.productVariant=:productVariantId order by p.status desc, p.createdAt desc")
-    List<Price> findPricesByProductVariant(ProductVariant productVariantId);
+    @Query("from Price p where p.productVariant.id=:productVariantId order by p.status desc, p.createdAt desc")
+    List<Price> findPriceByProductVariant(Integer productVariantId);
 
     @Query("select g.giaBan from Price g where g.productVariant=:productVariantId and g.status=:status")
     Double findGiaBanHienTai(ProductVariant productVariantId, String status);

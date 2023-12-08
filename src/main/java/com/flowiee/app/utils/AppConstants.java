@@ -56,8 +56,8 @@ public class AppConstants {
     }
 
     public enum PRICE_STATUS {
-        A("Đang áp dụng"),
-        I("Đang không áp dụng");
+        ACTIVE("Đang áp dụng"),
+        INACTIVE("Đang không áp dụng");
         private final String label;
 
         PRICE_STATUS(String label) {

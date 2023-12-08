@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,6 +52,7 @@ public class ProductController extends BaseController {
     @Autowired
     private ValidateModuleProduct validateModuleProduct;
 
+    //@PreAuthorize("@validateModuleProduct.readProduct()")
     @GetMapping
     public ModelAndView viewAllProducts() {
         if (!accountService.isLogin()) {
@@ -191,7 +193,9 @@ public class ProductController extends BaseController {
     }
 
     @PostMapping(value = "/variant/insert")
-    public String insertProductVariant(HttpServletRequest request, @ModelAttribute("bienTheSanPham") ProductVariant productVariant) {
+    public String insertProductVariant(HttpServletRequest request,
+                                       @ModelAttribute("bienTheSanPham") ProductVariant productVariant,
+                                       @RequestBody Float price) {
         if (!accountService.isLogin()) {
             return PagesUtil.SYS_LOGIN;
         }
@@ -202,7 +206,7 @@ public class ProductController extends BaseController {
         productVariant.setMaSanPham(CommonUtil.now("yyyyMMddHHmmss"));
         productVariantService.save(productVariant);
         //Khởi tạo giá default của giá bán
-        priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.A.name()).build());
+        priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
         return "redirect:" + request.getHeader("referer");
     }
 

@@ -157,7 +157,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         strSQL.append("LEFT JOIN PRO_PRODUCT p ON p.ID = v.PRODUCT_ID ");
         strSQL.append("LEFT JOIN PRO_GARMENT_FACTORY g ON g.ID = v.GARMENT_FACTORY_ID ");
         strSQL.append("LEFT JOIN PRO_SUPPLIER sp ON sp.ID = v.SUPPLIER_ID ");
-        strSQL.append("LEFT JOIN PRO_PRICE pr ON pr.PRODUCT_VARIANT_ID = v.ID AND pr.STATUS = '" + AppConstants.PRICE_STATUS.A.name() + "' ");
+        strSQL.append("LEFT JOIN PRO_PRICE pr ON pr.PRODUCT_VARIANT_ID = v.ID AND pr.STATUS = '" + AppConstants.PRICE_STATUS.ACTIVE.name() + "' ");
         strSQL.append("LEFT JOIN STG_TICKET_IMPORT_GOODS ti ON ti.ID = v.TICKET_IMPORT_ID ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'COLOR') c ON c.ID = v.COLOR_ID ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'SIZE') s ON s.ID = v.SIZE_ID ");

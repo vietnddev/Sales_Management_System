@@ -48,7 +48,7 @@ public class ProductVariantDTO implements Serializable {
     private Float priceMaxDiscount;
     private Float priceAfterDiscount;
     private String unitCurrency;
-    private List<Price> listPrices;
+    private List<PriceDTO> listPrices;
 
     public static ProductVariantDTO fromProductVariant(ProductVariant input) {
         ProductVariantDTO dto = new ProductVariantDTO();

@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.dto.PriceDTO;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Price;
@@ -34,18 +35,38 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public List<Price> findPricesByProductVariant(int bienTheSanPhamId) {
-        return priceRepository.findPricesByProductVariant(productVariantService.findById(bienTheSanPhamId));
+    public List<PriceDTO> findPricesByProductVariant(int productVariantId) {
+        List<PriceDTO> listPrice = PriceDTO.fromPrices(priceRepository.findPriceByProductVariant(productVariantId));
+        if (!listPrice.isEmpty()) {
+            for (PriceDTO p : listPrice) {
+                if (AppConstants.PRICE_STATUS.ACTIVE.name().equals(p.getStatus())) {
+                    p.setStatus(AppConstants.PRICE_STATUS.ACTIVE.getLabel());
+                }
+                if (AppConstants.PRICE_STATUS.INACTIVE.name().equals(p.getStatus())) {
+                    p.setStatus(AppConstants.PRICE_STATUS.INACTIVE.getLabel());
+                }
+            }
+        }
+        return listPrice;
     }
 
     @Override
     public Price findById(Integer priceId) {
-        return priceRepository.findById(priceId).orElse(null);
+        Price p = priceRepository.findById(priceId).orElse(null);
+        if (p != null) {
+            if (AppConstants.PRICE_STATUS.ACTIVE.name().equals(p.getStatus())) {
+                p.setStatus(AppConstants.PRICE_STATUS.ACTIVE.getLabel());
+            }
+            if (AppConstants.PRICE_STATUS.INACTIVE.name().equals(p.getStatus())) {
+                p.setStatus(AppConstants.PRICE_STATUS.INACTIVE.getLabel());
+            }
+        }
+        return p;
     }
 
     @Override
     public Double findGiaHienTai(int bienTheSanPhamId) {
-        return priceRepository.findGiaBanHienTai(productVariantService.findById(bienTheSanPhamId), AppConstants.PRICE_STATUS.A.name());
+        return priceRepository.findGiaBanHienTai(productVariantService.findById(bienTheSanPhamId), AppConstants.PRICE_STATUS.ACTIVE.name());
     }
 
     @Override
@@ -74,12 +95,12 @@ public class PriceServiceImpl implements PriceService {
         try {
             //Chuyển trạng thái giá hiện tại về false
             Price disableGiaCu = this.findById(priceId);
-            disableGiaCu.setStatus(AppConstants.PRICE_STATUS.I.name());
+            disableGiaCu.setStatus(AppConstants.PRICE_STATUS.INACTIVE.name());
             priceRepository.save(disableGiaCu);
             //Thêm giá mới
             price.setId(0);
             price.setProductVariant(productVariantService.findById(bienTheSanPhamId));
-            price.setStatus(AppConstants.PRICE_STATUS.A.name());
+            price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
             priceRepository.save(price);
             //Lưu log
             String noiDung = "Giá cũ:  " + disableGiaCu.getGiaBan();
