@@ -71,6 +71,11 @@
 
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item">
+          <a class="nav-link">
+            <span class="badge badge-warning" th:text="${USERNAME_LOGIN}"></span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" data-toggle="modal" data-target="#notification">
             <i class="far fa-bell" style="cursor: pointer"></i>
             <span class="badge badge-warning navbar-badge" style="cursor: pointer">15</span>

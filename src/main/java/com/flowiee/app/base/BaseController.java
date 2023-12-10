@@ -9,6 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.flowiee.app.service.NotificationService;
 
+import java.util.Objects;
+
 @Component
 public class BaseController {
 	@Autowired
@@ -17,16 +19,18 @@ public class BaseController {
 	protected NotificationService notificationService;
 	
 	protected ModelAndView baseView(ModelAndView modelAndView) {
+		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtil.getCurrentAccountUsername()));
 		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtil.getCurrentAccountId()));
-		return this.configEndPoint(modelAndView);
+		return this.setURLSidebar(modelAndView);
 	}
 	
 	protected ModelAndView baseView(ModelAndView modelAndView, boolean flag) {
+		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtil.getCurrentAccountUsername()));
 		if (flag) modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtil.getCurrentAccountId()));
-		return this.configEndPoint(modelAndView);
+		return this.setURLSidebar(modelAndView);
 	}
 	
-	private ModelAndView configEndPoint(ModelAndView modelAndView) {
+	private ModelAndView setURLSidebar(ModelAndView modelAndView) {
 		modelAndView.addObject("URL_CATEGORY", EndPointUtil.CATEGORY_VIEW);
 		modelAndView.addObject("URL_PRODUCT", EndPointUtil.PRODUCT_VIEW);
 		modelAndView.addObject("URL_PRODUCT_ORDER", EndPointUtil.PRODUCT_ORDER_VIEW);
