@@ -1,79 +1,31 @@
 package com.flowiee.app.security.author;
 
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.service.AccountService;
-import com.flowiee.app.service.RoleService;
+import com.flowiee.app.base.BaseAuthorize;
 import com.flowiee.app.model.role.SystemAction.CategoryAction;
 import com.flowiee.app.model.role.SystemModule;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ValidateModuleCategory {
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private AccountService accountService;
-
-    private final String module = SystemModule.CATEGORY.name();
+@Component
+public class ValidateModuleCategory extends BaseAuthorize {
+    String module = SystemModule.CATEGORY.name();
 
     public boolean readCategory() {
-        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = CategoryAction.CTG_READ.name();
-        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
+        return isAuthorized(module, CategoryAction.CTG_READ.name());
     }
 
     public boolean insertCategory() {
-        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = CategoryAction.CTG_CREATE.name();
-        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
+        return isAuthorized(module, CategoryAction.CTG_CREATE.name());
     }
 
     public boolean updateCategory() {
-        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = CategoryAction.CTG_UPDATE.name();
-        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
+        return isAuthorized(module, CategoryAction.CTG_UPDATE.name());
     }
 
     public boolean deleteCategory() {
-        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = CategoryAction.CTG_DELETE.name();
-        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
+        return isAuthorized(module, CategoryAction.CTG_DELETE.name());
     }
 
     public boolean importCategory() {
-        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
-            return true;
-        }
-        final String action = CategoryAction.CTG_IMPORT.name();
-        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
-        if (roleService.isAuthorized(accountId, module, action)) {
-            return true;
-        }
-        return false;
+        return isAuthorized(module, CategoryAction.CTG_IMPORT.name());
     }
 }

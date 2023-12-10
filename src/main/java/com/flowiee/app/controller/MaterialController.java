@@ -31,11 +31,8 @@ public class MaterialController extends BaseController {
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
 
-    @GetMapping("")
+    @GetMapping
     public ModelAndView loadPage() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleStorage.material()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
             modelAndView.addObject("material", new Material());
@@ -53,9 +50,6 @@ public class MaterialController extends BaseController {
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("material") Material material) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         material.setStatus(true);
         materialService.save(material);
         return "redirect:";
@@ -64,9 +58,6 @@ public class MaterialController extends BaseController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("material") Material material,
                          @PathVariable("id") Integer materialId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");
         }
@@ -76,9 +67,6 @@ public class MaterialController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");
         }
@@ -93,9 +81,6 @@ public class MaterialController extends BaseController {
 
     @PostMapping("/import")
     public String importData(@RequestParam("file") MultipartFile file) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
 //            donViTinhService.importData(file);
 //            return "redirect:" + EndPointUtil.DANHMUC_DONVITINH_VIEW;
@@ -107,9 +92,6 @@ public class MaterialController extends BaseController {
 
     @GetMapping("/export")
     public ResponseEntity<?> exportData() {
-        if (!accountService.isLogin()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_LOGIN);
-        }
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
 //            byte[] dataExport = donViTinhService.exportData();
 //            HttpHeaders header = new HttpHeaders();

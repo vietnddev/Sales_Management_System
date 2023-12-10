@@ -29,9 +29,6 @@ public class ProfileController extends BaseController {
 
 	@GetMapping
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
-		if (!accountService.isLogin()) {
-			return new ModelAndView(PagesUtil.SYS_LOGIN);
-		}
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", accountService.findCurrentAccount());
@@ -42,9 +39,6 @@ public class ProfileController extends BaseController {
 	@PostMapping("/update")
 	public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
 			@ModelAttribute("account") Account accountEntity) {
-		if (!accountService.isLogin()) {
-			return PagesUtil.SYS_LOGIN;
-		}
 		String username = userDetails.getUsername();
 		String password = accountService.findByUsername(username).getPassword();
 		int accountID = accountService.findByUsername(username).getId();
@@ -62,9 +56,6 @@ public class ProfileController extends BaseController {
 	public ModelAndView changePassword(HttpServletRequest request,
 									   @ModelAttribute("account") Account accountEntity,
 									   RedirectAttributes redirectAttributes) {
-		if (!accountService.isLogin()) {
-			return new ModelAndView(PagesUtil.SYS_LOGIN);
-		}
 		String password_old = request.getParameter("password_old");
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");

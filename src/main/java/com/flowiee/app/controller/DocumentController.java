@@ -50,9 +50,6 @@ public class DocumentController extends BaseController {
     //Dashboard
     @GetMapping("/dashboard")
     public ModelAndView showDashboardOfSTG() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleStorage.dashboard()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
             //Loại tài liệu
@@ -74,9 +71,6 @@ public class DocumentController extends BaseController {
     //Màn hình root
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleStorage.read()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
@@ -114,9 +108,6 @@ public class DocumentController extends BaseController {
 
     @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         String aliasName = CommonUtil.getAliasNameFromAliasPath(aliasPath);
         int documentId = CommonUtil.getIdFromAliasPath(aliasPath);
         Document document = documentService.findById(documentId);
@@ -186,9 +177,6 @@ public class DocumentController extends BaseController {
     public String insert(HttpServletRequest request,
                          @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         document.setAliasName(CommonUtil.generateAliasName(document.getTen()));
         document.setCreatedBy(CommonUtil.getCurrentAccountId());
         if (document.getParentId() == null) {
@@ -217,9 +205,6 @@ public class DocumentController extends BaseController {
     public String changeFile(@RequestParam("file") MultipartFile file,
                              @PathVariable("id") Integer documentId,
                              HttpServletRequest request) throws IOException {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -230,9 +215,6 @@ public class DocumentController extends BaseController {
     @PostMapping("/document/update/{id}")
     public String update(@ModelAttribute("document") Document document,
                          @PathVariable("id") Integer documentId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -245,9 +227,6 @@ public class DocumentController extends BaseController {
                                  @PathVariable("id") Integer documentId,
                                  @RequestParam("docDataId") Integer[] docDataIds,
                                  @RequestParam("docDataValue") String[] docDataValues) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -257,9 +236,6 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/delete/{id}")
     public String deleteDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -269,9 +245,6 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/move/{id}")
     public String moveDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -280,9 +253,6 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/share/{id}")
     public String share(@PathVariable("id") Integer documentId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -291,9 +261,6 @@ public class DocumentController extends BaseController {
     
     @PostMapping("/docfield/insert")
     public String insertDocfield(DocField docField, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleStorage.update()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -306,9 +273,6 @@ public class DocumentController extends BaseController {
     public String updateDocfield(HttpServletRequest request,
                                  @ModelAttribute("docField") DocField docField,
                                  @PathVariable("id") Integer docFieldId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleStorage.update()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -321,9 +285,6 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/docfield/delete/{id}")
     public String deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleStorage.delete()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }

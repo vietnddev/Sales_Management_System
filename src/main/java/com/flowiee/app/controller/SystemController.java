@@ -29,9 +29,6 @@ public class SystemController extends BaseController {
 
     @GetMapping("/notification")
     public ModelAndView getAllNotification() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_NOTIFICATION);
         modelAndView.addObject("notification", new Notification());
         return baseView(modelAndView);
@@ -39,9 +36,6 @@ public class SystemController extends BaseController {
 
     @GetMapping(value = "/log")
     public ModelAndView getAllLog() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleSystem.readLog()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -52,9 +46,6 @@ public class SystemController extends BaseController {
 
     @GetMapping("/config")
     public ModelAndView showConfig() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleSystem.setupConfig()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -67,9 +58,6 @@ public class SystemController extends BaseController {
     @PostMapping("/config/update/{id}")
     public String update(@ModelAttribute("config") FlowieeConfig config,
                          @PathVariable("id") Integer configId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSystem.setupConfig()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -82,9 +70,6 @@ public class SystemController extends BaseController {
 
     @GetMapping("/role")
     public ModelAndView readRole() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleSystem.readPermission()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }

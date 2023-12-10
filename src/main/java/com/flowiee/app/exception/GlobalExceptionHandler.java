@@ -15,6 +15,15 @@ public class GlobalExceptionHandler extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(VoucherInfoServiceImpl.class);
 
     @ExceptionHandler
+    public ModelAndView exceptionHandler(AuthenticationException ex) {
+        logger.error("AuthenticationException", ex);
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
+        modelAndView.addObject("error", error);
+        return baseView(modelAndView);
+    }
+
+    @ExceptionHandler
     public ModelAndView exceptionHandler(NotFoundException ex) {
         logger.error("NotFoundException", ex);
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());

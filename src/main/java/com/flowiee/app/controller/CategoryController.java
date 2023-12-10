@@ -31,11 +31,8 @@ public class CategoryController extends BaseController {
     @Autowired
     private ValidateModuleCategory validateModuleCategory;
 
-    @GetMapping("")
+    @GetMapping
     public ModelAndView viewRootCategory() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleCategory.readCategory()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
             modelAndView.addObject("category", new Category());
@@ -48,9 +45,6 @@ public class CategoryController extends BaseController {
 
     @GetMapping("/{type}")
     public ModelAndView viewSubCategory(@PathVariable("type") String categoryType) {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleCategory.readCategory()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -73,9 +67,6 @@ public class CategoryController extends BaseController {
     public String insert(@ModelAttribute("category") Category category, 
     					 @PathVariable("type") String categoryType,
     					 HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleCategory.insertCategory()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -91,9 +82,6 @@ public class CategoryController extends BaseController {
     public String update(@ModelAttribute("category") Category category,
                          @PathVariable("id") Integer categoryId, 
                          HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleCategory.updateCategory()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -106,9 +94,6 @@ public class CategoryController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
             throw new NotFoundException("Category not found!");
         }
@@ -118,9 +103,6 @@ public class CategoryController extends BaseController {
     
     @GetMapping("/{type}/template")
     public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
-        if (!accountService.isLogin()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleCategory.importCategory()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -136,9 +118,6 @@ public class CategoryController extends BaseController {
 
     @PostMapping("/{type}/import")
     public String importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleCategory.importCategory()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -151,9 +130,6 @@ public class CategoryController extends BaseController {
 
     @GetMapping("/{type}/export")
     public ResponseEntity<?> exportData(@PathVariable("type") String categoryType) {
-        if (!accountService.isLogin()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleCategory.readCategory()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }

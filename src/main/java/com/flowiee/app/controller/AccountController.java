@@ -32,9 +32,6 @@ public class AccountController extends BaseController {
 
     @GetMapping
     public ModelAndView findAllAccount() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleSystem.readAccount()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -48,9 +45,6 @@ public class AccountController extends BaseController {
 
     @GetMapping(value = "/{id}")
     public ModelAndView findDetailAccountById(@PathVariable("id") Integer accountId) {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleSystem.readAccount()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -66,9 +60,6 @@ public class AccountController extends BaseController {
 
     @PostMapping(value = "/insert")
     public String save(@ModelAttribute("account") Account account) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSystem.insertAccount()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -86,9 +77,6 @@ public class AccountController extends BaseController {
     public String update(@ModelAttribute("account") Account accountEntity,
                          @PathVariable("id") Integer accountId,
                          HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSystem.updateAccount()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -106,9 +94,6 @@ public class AccountController extends BaseController {
 
     @PostMapping(value = "/delete/{id}")
     public String deleteAccount(@PathVariable("id") Integer accountId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSystem.deleteAccount()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -123,9 +108,6 @@ public class AccountController extends BaseController {
 
     @PostMapping("/update-permission/{id}")
     public String updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSystem.updateAccount()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }

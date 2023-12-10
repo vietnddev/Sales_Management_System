@@ -24,9 +24,6 @@ public class DashboardController extends BaseController {
 
     @GetMapping
     public ModelAndView reportDoanhThu() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleProduct.readDashboard()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_DASHBOARD);
 

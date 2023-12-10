@@ -51,11 +51,8 @@ public class TicketImportGoodsController extends BaseController {
     @Autowired
     private ValidateModuleStorage validateModuleStorage;
 
-    @GetMapping("")
+    @GetMapping
     public ModelAndView loadPage() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleStorage.importGoods()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_TICKET_IMPORT);
             TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtil.getCurrentAccountId());
@@ -131,9 +128,6 @@ public class TicketImportGoodsController extends BaseController {
 
     @PostMapping("/draft/add-product/{importId}")
     public String addProductVariantToDraftImport(@PathVariable("importId") Integer importId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import to add product not found!");
         }
@@ -154,9 +148,6 @@ public class TicketImportGoodsController extends BaseController {
 
     @PostMapping("/draft/add-material/{importId}")
     public String addMaterialToDraftImport(@PathVariable("importId") Integer importId, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import to add material not found!");
         }
@@ -178,9 +169,6 @@ public class TicketImportGoodsController extends BaseController {
 
     @PostMapping("/draft/save")
     public String update(@ModelAttribute("goodsImportRequest") TicketImportGoodsRequest ticketImportGoodsRequest, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (validateModuleStorage.importGoods()) {
             ticketImportGoodsRequest.setOrderTime(CommonUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
             ticketImportGoodsRequest.setReceivedTime(CommonUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
@@ -206,9 +194,6 @@ public class TicketImportGoodsController extends BaseController {
     public String update(@ModelAttribute("goodsImport") TicketImportGoods ticketImportGoods,
                             @PathVariable("id") Integer importId,
                             HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleStorage.importGoods()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -221,9 +206,6 @@ public class TicketImportGoodsController extends BaseController {
 
     @GetMapping("/reset/{id}")
     public String clear(@PathVariable("id") Integer draftImportId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (draftImportId <= 0 || ticketImportGoodsService.findById(draftImportId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
@@ -236,9 +218,6 @@ public class TicketImportGoodsController extends BaseController {
 
     @PostMapping("/send-approval/{id}")
     public String sendApproval(@PathVariable("id") Integer importId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
@@ -251,9 +230,6 @@ public class TicketImportGoodsController extends BaseController {
 
     @PostMapping("/approve/{id}")
     public String approve(@PathVariable("id") Integer importId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleStorage.importGoods()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }

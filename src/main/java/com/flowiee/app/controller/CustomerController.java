@@ -28,9 +28,6 @@ public class CustomerController extends BaseController {
 
     @GetMapping
     public ModelAndView findAllCustomer() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleSanPham.readCustomer()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER);
             modelAndView.addObject("listCustomer", customerService.findAll());
@@ -43,9 +40,6 @@ public class CustomerController extends BaseController {
 
     @GetMapping("/{id}")
     public ModelAndView findCustomerDetail(@PathVariable("id") int id) {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleSanPham.readCustomer()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -60,9 +54,6 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/insert")
     public String insertCustomer(@ModelAttribute("customer") Customer customer) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSanPham.insertCustomer()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -76,9 +67,6 @@ public class CustomerController extends BaseController {
     @PostMapping("/update/{id}")
     public String updateCustomer(@ModelAttribute("khachHang") Customer customer,
                                   @PathVariable("id") Integer id) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSanPham.updateCustomer()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -91,9 +79,6 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable("id") Integer id) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSanPham.deleteCustomer()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -108,9 +93,6 @@ public class CustomerController extends BaseController {
     public String setCustomerContactUseDefault(@RequestParam("customerId") Integer customerId,
                                        @RequestParam("contactCode") String contactCode,
                                        @PathVariable("contactId") Integer contactId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSanPham.updateCustomer()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -126,9 +108,6 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/contact/undefault/{contactId}")
     public String setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleSanPham.updateCustomer()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }

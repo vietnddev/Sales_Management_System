@@ -53,9 +53,6 @@ public class OrderController extends BaseController {
 
     @GetMapping
     public ModelAndView viewAllOrders() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleProduct.readOrder()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -74,9 +71,6 @@ public class OrderController extends BaseController {
 
     @PostMapping
     public ModelAndView filterListDonHang(@ModelAttribute("donHangRequest") OrderRequest request) {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleProduct.readOrder()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -102,9 +96,6 @@ public class OrderController extends BaseController {
 
     @GetMapping("/{id}")
     public ModelAndView findDonHangDetail(@PathVariable("id") Integer id) {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (id <= 0 || orderService.findById(id) == null) {
             throw new NotFoundException("Order not found!");
         }
@@ -124,9 +115,6 @@ public class OrderController extends BaseController {
 
     @GetMapping("/ban-hang")
     public ModelAndView showPageBanHang() {
-        if (!accountService.isLogin()) {
-            return new ModelAndView(PagesUtil.SYS_LOGIN);
-        }
         if (!validateModuleProduct.insertOrder()) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
@@ -158,9 +146,6 @@ public class OrderController extends BaseController {
 
     @PostMapping("/ban-hang/cart/{id}/add-items")
     public String addItemsToCart(@PathVariable("id") Integer idCart, HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleProduct.insertOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -181,9 +166,6 @@ public class OrderController extends BaseController {
 
     @PostMapping("/ban-hang/cart/update/{id}")
     public String updateItemsOfCart(@PathVariable("id") Integer id, @ModelAttribute("items") Items items) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleProduct.insertOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -201,9 +183,6 @@ public class OrderController extends BaseController {
 
     @PostMapping("/ban-hang/cart/delete/{id}")
     public String deleteItemsOfCart(@PathVariable("id") Integer id) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleProduct.insertOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -217,9 +196,6 @@ public class OrderController extends BaseController {
     @PostMapping("/insert")
     public String insert(@ModelAttribute("orderRequest") OrderRequest orderRequest,
                          HttpServletRequest request) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleProduct.insertOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -246,9 +222,6 @@ public class OrderController extends BaseController {
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer id) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleProduct.updateOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -258,9 +231,6 @@ public class OrderController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleProduct.deleteOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -271,9 +241,6 @@ public class OrderController extends BaseController {
     @PostMapping("/thanh-toan/{id}")
     public String thanhToan(@PathVariable("id") Integer donHangId,
                             @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
-        if (!accountService.isLogin()) {
-            return PagesUtil.SYS_LOGIN;
-        }
         if (!validateModuleProduct.updateOrder()) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
@@ -286,9 +253,6 @@ public class OrderController extends BaseController {
 
     @GetMapping("/export")
     public ResponseEntity<?> exportDanhSachDonHang() {
-        if (!accountService.isLogin()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_LOGIN);
-        }
         if (validateModuleProduct.readOrder()) {
             return orderService.exportDanhSachDonHang();
         } else {

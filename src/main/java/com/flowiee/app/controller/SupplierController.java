@@ -25,9 +25,6 @@ public class SupplierController extends BaseController {
 
 	@GetMapping
 	public ModelAndView viewAllProducts() {
-		if (!accountService.isLogin()) {
-			return new ModelAndView(PagesUtil.SYS_LOGIN);
-		}
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_SUPPLIER);
 		modelAndView.addObject("supplier", new Supplier());
 		modelAndView.addObject("listSuplier", supplierService.findAll());		
@@ -36,9 +33,6 @@ public class SupplierController extends BaseController {
 
 	@PostMapping("/insert")
 	public String insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
-		if (!accountService.isLogin()) {
-			return PagesUtil.SYS_LOGIN;
-		}
 		if (!validateModuleProduct.insertSupplier()) {
 			return PagesUtil.SYS_UNAUTHORIZED;
 		}
