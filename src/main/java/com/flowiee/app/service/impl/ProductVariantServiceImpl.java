@@ -4,6 +4,7 @@ import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
+import com.flowiee.app.dto.PriceDTO;
 import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.repository.ProductVariantRepository;
 import com.flowiee.app.service.PriceService;
@@ -50,7 +51,13 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         List<ProductVariantDTO> listReturn = new ArrayList<>();
         for (ProductVariant productVariant : this.findData(AppConstants.PRODUCT, String.valueOf(productId))) {
             ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
-            dataModel.setListPrices(priceService.findPricesByProductVariant(dataModel.getProductVariantId()));
+            List<PriceDTO> listPriceOfProductVariant = priceService.findPricesByProductVariant(dataModel.getProductVariantId());
+            dataModel.setListPrices(listPriceOfProductVariant);
+            dataModel.setPriceSellId(null);
+            dataModel.setPriceSellValue(null);
+            dataModel.setDiscountPercent(null);
+            dataModel.setPriceMaxDiscount(null);
+            dataModel.setPriceAfterDiscount(null);
             listReturn.add(dataModel);
         }
         return listReturn;

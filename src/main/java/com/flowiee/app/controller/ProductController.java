@@ -3,6 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.*;
@@ -73,7 +74,7 @@ public class ProductController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
         modelAndView.addObject("listSanPham", productsService.findAll(null, null));
-        modelAndView.addObject("listVoucherInfo", voucherService.findAll());
+        modelAndView.addObject("listVoucherInfo", voucherService.findAll(null, null, null, null));
         modelAndView.addObject("listProductType", productTypes);
         modelAndView.addObject("listDonViTinh", units);
         modelAndView.addObject("listBrand", brands);
@@ -351,7 +352,7 @@ public class ProductController extends BaseController {
     public ModelAndView viewVouchers() {
         if (validateModuleProduct.readVoucher()) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
-            modelAndView.addObject("listVoucher", voucherService.findAll());
+            modelAndView.addObject("listVoucher", voucherService.findAll(null, null, null, null));
             modelAndView.addObject("listProduct", productsService.findAll());
             modelAndView.addObject("listVoucherType", CommonUtil.getVoucherType());
             modelAndView.addObject("voucher", new VoucherInfo());
@@ -397,9 +398,42 @@ public class ProductController extends BaseController {
                 listProductToApply.add(Integer.parseInt(id));
             }
         }
-        if (listProductToApply.size() > 0) {
+        if (!listProductToApply.isEmpty()) {
             voucherService.save(voucherInfo, listProductToApply);
         }
         return new ModelAndView("redirect:/san-pham/voucher");
+    }
+
+    @PostMapping("/voucher/update/{id}")
+    public ModelAndView deleteVoucher(@ModelAttribute("voucherInfo") VoucherInfo voucherInfo, @PathVariable("id") Integer voucherInfoId) {
+        if (!validateModuleProduct.updateVoucher()) {
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        }
+        if (voucherInfo == null) {
+            throw new BadRequestException("Voucher to update not null!");
+        }
+        if (voucherInfoId <= 0 || voucherService.findById(voucherInfoId) == null) {
+            throw new NotFoundException("VoucherId invalid!");
+        }
+        voucherService.update(voucherInfo ,voucherInfoId);
+        return new ModelAndView("redirect:/san-pham/voucher");
+    }
+
+    @PostMapping("/voucher/delete/{id}")
+    public ModelAndView deleteVoucher(@PathVariable("id") Integer voucherInfoId) {
+        if (!validateModuleProduct.deleteVoucher()) {
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        }
+        voucherService.detele(voucherInfoId);
+        return new ModelAndView("redirect:/san-pham/voucher");
+    }
+
+    @PostMapping("/voucher/check/{code}")
+    public ModelAndView checkToUse(@PathVariable("code") String code) {
+        if (!validateModuleProduct.readVoucher()) {
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        }
+        //To do something
+        return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 }

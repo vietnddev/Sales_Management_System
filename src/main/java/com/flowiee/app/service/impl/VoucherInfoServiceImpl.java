@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -36,18 +37,18 @@ public class VoucherInfoServiceImpl implements VoucherService {
     private EntityManager entityManager;
 
     @Override
-    public List<VoucherInfoDTO> findAll() {
-        return this.findData(null, null, null);
+    public List<VoucherInfoDTO> findAll(String status, Date startTime, Date endTime, String title) {
+        return this.findData(null, null, status, startTime, endTime, title);
     }
 
     @Override
     public VoucherInfoDTO findById(Integer voucherId) {
-        return this.findData(voucherId, null, null).get(0);
+        return this.findData(voucherId, null, null, null, null, null).get(0);
     }
 
     @Override
     public List<VoucherInfoDTO> findByIds(List<Integer> voucherIds, String status) {
-        return this.findData(null, voucherIds, status);
+        return this.findData(null, voucherIds, status, null, null, null);
     }
 
     @Override
@@ -130,7 +131,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
         return keyVoucher.toString();
     }
 
-    private List<VoucherInfoDTO> findData(Integer voucherId, List<Integer> voucherIds, String status) {
+    private List<VoucherInfoDTO> findData(Integer voucherId, List<Integer> voucherIds, String status, Date startTime, Date endTime, String title) {
         List<VoucherInfoDTO> listVoucherInfoDTO = new ArrayList<>();
         try {
             String _VOUCHER_STATUS = "(CASE WHEN ((TRUNC(START_TIME) <= TRUNC(CURRENT_DATE)) AND (TRUNC(END_TIME) >= TRUNC(CURRENT_DATE))) THEN '" + AppConstants.VOUCHER_STATUS.ACTIVE.name() + "' ELSE '" + AppConstants.VOUCHER_STATUS.INACTIVE.name() + "' END) ";
@@ -145,17 +146,22 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 strSQL += "AND v.ID = " + voucherId + " ";
             }
             if (voucherIds != null) {
-                String ids = "";
+                String inId = "";
                 for (int id : voucherIds) {
-                    ids += id + ",";
+                    inId += id + ",";
                 }
-                if (!ids.isEmpty()) {
-                    ids = ids.substring(0, ids.length() - 1);
+                if (!inId.isEmpty()) {
+                    inId = inId.substring(0, inId.length() - 1);
                 }
-                strSQL += "AND v.ID IN (" + ids + ") ";
+                strSQL += "AND v.ID IN (" + inId + ") ";
             }
-            if (status != null) {
-                strSQL += "AND " + _VOUCHER_STATUS + " = '" + status + "' ";
+            if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(status)) {
+                strSQL += "AND " + _VOUCHER_STATUS + " = '" + AppConstants.VOUCHER_STATUS.ACTIVE.name() + "' ";
+            } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(status)) {
+                strSQL += "AND " + _VOUCHER_STATUS + " = '" + AppConstants.VOUCHER_STATUS.INACTIVE.name() + "' ";
+            }
+            if (title != null) {
+                strSQL += "AND v.TITLE LIKE '%" + title + "%' ";
             }
             logger.info("[SQL findData]: " + strSQL);
             Query query = entityManager.createNativeQuery(strSQL);

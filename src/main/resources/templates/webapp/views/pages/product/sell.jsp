@@ -195,6 +195,18 @@
                                                 </tbody>
                                             </table>
                                         </div>
+                                        <div class="row border" style="height: 403px;">
+                                            <form class="col-6 row" action="" method="POST">
+                                                <div class="form-group col-10">
+                                                    <label>Mã voucher</label>
+                                                    <input type="text" class="form-control" placeholder="code" required>
+                                                </div>
+                                                <div class="form-group col-2">
+                                                    <label></label>
+                                                    <button class="form-control btn btn-sm btn-info">Check</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                     <div class="col-sm-4 border">
                                         <div class="row mt-3">
@@ -352,6 +364,11 @@
                                         <hr>
                                         <div class="form-group row">
                                             <label class="col-sm-6">Phí vận chuyển</label>
+                                            <span class="col-sm-6 text-right">0</span>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group row">
+                                            <label class="col-sm-6">Khuyến mãi</label>
                                             <span class="col-sm-6 text-right">0</span>
                                         </div>
                                         <hr>

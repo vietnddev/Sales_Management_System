@@ -3,10 +3,11 @@ package com.flowiee.app.service;
 import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.dto.VoucherInfoDTO;
 
+import java.util.Date;
 import java.util.List;
 
 public interface VoucherService {
-    List<VoucherInfoDTO> findAll();
+    List<VoucherInfoDTO> findAll(String status, Date startTime, Date endTime, String title);
 
     VoucherInfoDTO findById(Integer voucherId);
 

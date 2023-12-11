@@ -48,7 +48,7 @@
               <a th:href="@{/don-hang/ban-hang}" class="nav-link">
                 <i class="fa-solid fa-file-invoice-dollar"></i> 
                 <p>
-                  Sell goods
+                  Bán hàng
                 </p>
               </a>
             </li>
