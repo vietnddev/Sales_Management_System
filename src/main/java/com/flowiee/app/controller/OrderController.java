@@ -6,7 +6,6 @@ import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.security.author.ValidateModuleProduct;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.*;
 import com.flowiee.app.entity.Customer;
@@ -15,6 +14,8 @@ import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.OrderCart;
 import com.flowiee.app.entity.OrderPay;
 import com.flowiee.app.model.request.OrderRequest;
+import com.flowiee.app.security.ValidateModuleProduct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

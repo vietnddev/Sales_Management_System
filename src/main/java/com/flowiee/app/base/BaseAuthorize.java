@@ -1,7 +1,6 @@
 package com.flowiee.app.base;
 
 import com.flowiee.app.exception.AuthenticationException;
-import com.flowiee.app.exception.ForbiddenException;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.utils.CommonUtil;
 import lombok.SneakyThrows;

@@ -1,4 +1,4 @@
-package com.flowiee.app.security.authen;
+package com.flowiee.app.security;
 
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;

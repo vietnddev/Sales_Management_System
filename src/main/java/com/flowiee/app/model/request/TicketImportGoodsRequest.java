@@ -1,6 +1,5 @@
 package com.flowiee.app.model.request;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

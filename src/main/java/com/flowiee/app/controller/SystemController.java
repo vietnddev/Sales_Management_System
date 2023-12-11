@@ -4,7 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.entity.Notification;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.security.author.ValidateModuleSystem;
+import com.flowiee.app.security.ValidateModuleSystem;
 import com.flowiee.app.service.ConfigService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;

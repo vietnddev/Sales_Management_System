@@ -1,4 +1,4 @@
-package com.flowiee.app.security.author;
+package com.flowiee.app.security;
 
 import com.flowiee.app.base.BaseAuthorize;
 import com.flowiee.app.model.role.*;

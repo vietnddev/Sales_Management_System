@@ -1,4 +1,4 @@
-package com.flowiee.app.security.authen;
+package com.flowiee.app.security;
 
 import com.flowiee.app.utils.EndPointUtil;
 import org.springframework.beans.factory.annotation.Autowired;
