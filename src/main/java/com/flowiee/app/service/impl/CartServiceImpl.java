@@ -5,7 +5,6 @@ import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.OrderCartRepository;
 import com.flowiee.app.service.CartService;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
@@ -21,8 +20,6 @@ public class CartServiceImpl implements CartService {
     private OrderCartRepository orderCartRepository;
     @Autowired
     private SystemLogService systemLogService;
-    @Autowired
-    private AccountService accountService;
 
     @Override
     public List<OrderCart> findAll() {

@@ -21,7 +21,7 @@ public class BaseAuthorize {
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
-            throw new AuthenticationException("Please login!");
+            throw new AuthenticationException();
         }
         return authentication.isAuthenticated();
     }

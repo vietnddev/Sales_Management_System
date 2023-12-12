@@ -9,7 +9,7 @@ import java.util.List;
 
 @Builder
 @Entity
-@Table(name = "pro_don_hang_chi_tiet")
+@Table(name = "pro_order_detail")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

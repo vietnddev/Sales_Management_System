@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -116,7 +116,8 @@ public class OrderServiceImpl implements OrderService {
             order.setGhiChu(request.getGhiChu());
             order.setThoiGianDatHang(request.getThoiGianDatHang());
             order.setTrangThaiDonHang(new Category(request.getTrangThaiDonHang(), null));
-            order.setTongTienDonHang(0D);
+            order.setTotalAmount(0D);
+            order.setTotalAmountAfterDiscount(null);
             orderRepository.save(order);
 
             Order orderSaved = orderRepository.findDonHangMoiNhat().get(0);
@@ -135,7 +136,8 @@ public class OrderServiceImpl implements OrderService {
                 //Update lại số lượng trong kho của sản phẩm
                 //productVariantService.updateSoLuong(soLuongSanPhamInCart, idBienTheSP);
             }
-            orderSaved.setTongTienDonHang(totalMoneyOfDonHang);
+            orderSaved.setTotalAmount(totalMoneyOfDonHang);
+            orderSaved.setTotalAmountAfterDiscount(null);
             orderRepository.save(orderSaved);
 
             systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
@@ -193,7 +195,7 @@ public class OrderServiceImpl implements OrderService {
                 row.createCell(1).setCellValue(listData.get(i).getMaDonHang());
                 row.createCell(2).setCellValue(listData.get(i).getThoiGianDatHang());
                 row.createCell(3).setCellValue(listData.get(i).getKenhBanHang().getName());
-                row.createCell(4).setCellValue(listData.get(i).getTongTienDonHang());
+                row.createCell(4).setCellValue(listData.get(i).getTotalAmountAfterDiscount());
                 row.createCell(5).setCellValue("");
                 row.createCell(6).setCellValue(listData.get(i).getCustomer().getTenKhachHang());
                 row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getDiaChi()
@@ -230,13 +232,13 @@ public class OrderServiceImpl implements OrderService {
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("o.ID as ORDER_ID_0, o.MA_DON_HANG as MA_DON_HANG_1, o.THOI_GIAN_DAT_HANG as ORDER_TIME_2, o.RECEIVER_ADDRESS as RECEIVER_ADDRESS_3,");
         strSQL.append("o.RECEIVER_PHONE as RECEIVER_PHONE_4,o.RECEIVER_NAME as RECEIVER_NAME_5, NVL(c.ID,0) as ORDERBY_ID_6, c.TEN_KHACH_HANG as ORDER_BY_NAME_7,");
-        strSQL.append("NVL(o.TONG_TIEN_DON_HANG,0) as TOTAL_AMOUNT_8, NVL(sc.ID,0) as SALES_CHANNEL_ID_9, sc.NAME as SALES_CHANNEL_NAME_10, o.GHI_CHU as NOTE_11, ");
+        strSQL.append("NVL(o.TOTAL_AMOUNT_AFTER_DISCOUNT,0) as TOTAL_AMOUNT_8, NVL(sc.ID,0) as SALES_CHANNEL_ID_9, sc.NAME as SALES_CHANNEL_NAME_10, o.GHI_CHU as NOTE_11, ");
         strSQL.append("NVL(os.ID,0) as ORDER_STATUS_ID_12, os.NAME as ORDER_STATUS_NAME_13, NVL(op.ID,0) as ORDER_PAY_ID_14, op.PAYMENT_STATUS as ORDER_PAY_STATUS_15, ");
         strSQL.append("NVL(pm.ID,0) as PAYMENT_METHOD_ID_16, pm.NAME as PAYMENT_METHOD_NAME_17, NVL(acc.ID,0) as CASHIER_ID_18, acc.HO_TEN as CASHIER_NAME_19, ");
         strSQL.append("NVL(o.CREATED_BY,0) as CREATED_BY_ID_20, o.CREATED_AT as CREATED_AT_21 ");
-        strSQL.append("FROM PRO_DON_HANG o ");
+        strSQL.append("FROM PRO_ORDER o ");
         strSQL.append("LEFT JOIN PRO_CUSTOMER c ON c.ID = o.CUSTOMER_ID ");
-        strSQL.append("LEFT JOIN PRO_DON_HANG_THANH_TOAN op ON op.DON_HANG_ID = o.ID ");
+        strSQL.append("LEFT JOIN PRO_ORDER_PAY op ON op.DON_HANG_ID = o.ID ");
         strSQL.append("LEFT JOIN SYS_ACCOUNT acc ON acc.ID = op.CASHIER ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'SALESCHANNEL') sc ON sc.ID = o.KENH_BAN_HANG ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'ORDERSTATUS') os ON os.ID = o.TRANG_THAI_DON_HANG ");

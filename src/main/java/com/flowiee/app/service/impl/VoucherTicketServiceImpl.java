@@ -1,7 +1,6 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.VoucherInfoDTO;
-import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.repository.VoucherTicketlRepository;
 import com.flowiee.app.service.VoucherService;

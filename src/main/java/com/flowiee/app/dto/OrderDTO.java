@@ -24,6 +24,8 @@ public class OrderDTO implements Serializable {
     private Integer customerId;
     private String customerName;
     private Double totalAmount;
+    private Double amountDiscount;
+    private Double totalAmountAfterDiscount;
     private Category salesChannel; //future remove
     private Integer salesChannelId;
     private String salesChannelName;
@@ -56,7 +58,9 @@ public class OrderDTO implements Serializable {
         //dto.setOrderBy(order.getCustomer());
         dto.setCustomerId(order.getCustomer().getId());
         dto.setCustomerName(order.getCustomer().getTenKhachHang());
-        dto.setTotalAmount(order.getTongTienDonHang());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setAmountDiscount(order.getAmountDiscount());
+        dto.setTotalAmountAfterDiscount(order.getTotalAmountAfterDiscount());
         //dto.setSalesChannel(order.getKenhBanHang());
         dto.setSalesChannelId(order.getKenhBanHang().getId());
         dto.setSalesChannelName(order.getKenhBanHang().getName());

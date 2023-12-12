@@ -16,11 +16,8 @@ public class GlobalExceptionHandler extends BaseController {
 
     @ExceptionHandler
     public ModelAndView exceptionHandler(AuthenticationException ex) {
-        logger.error("AuthenticationException", ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
-        modelAndView.addObject("error", error);
-        return baseView(modelAndView);
+        logger.error("AuthenticationException", ex);        
+        return new ModelAndView(PagesUtil.SYS_LOGIN);
     }
 
     @ExceptionHandler

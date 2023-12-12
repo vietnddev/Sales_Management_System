@@ -4,7 +4,6 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.AccountRole;
 import com.flowiee.app.model.role.*;
 import com.flowiee.app.model.role.SystemAction.CategoryAction;
-import com.flowiee.app.model.role.SystemAction.DashboardAction;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemAction.StorageAction;
 import com.flowiee.app.model.role.SystemAction.SysAction;

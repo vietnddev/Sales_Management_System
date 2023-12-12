@@ -2,7 +2,6 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.repository.SystemLogRepository;
-import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.CommonUtil;
@@ -18,8 +17,6 @@ import java.util.List;
 public class SystemLogServiceImpl implements SystemLogService {
     @Autowired
     private SystemLogRepository logRepository;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private EntityManager entityManager;
 
