@@ -23,4 +23,9 @@ public class VoucherApply extends BaseEntity implements Serializable {
 
     @Column(name = "voucher_id", nullable = false)
     private Integer voucherId;
+
+	@Override
+	public String toString() {
+		return "VoucherApply [id=" + super.id + ", sanPhamId=" + sanPhamId + ", voucherId=" + voucherId + "]";
+	}
 }

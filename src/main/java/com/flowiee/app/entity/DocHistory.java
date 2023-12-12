@@ -45,4 +45,10 @@ public class DocHistory extends BaseEntity implements Serializable {
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
     private String newValue;
+
+	@Override
+	public String toString() {
+		return "DocHistory [id=" + super.id + ", document=" + document + ", docData=" + docData + ", fileStorage=" + fileStorage + ", title="
+				+ title + ", fieldName=" + fieldName + ", oldValue=" + oldValue + ", newValue=" + newValue + "]";
+	}        
 }

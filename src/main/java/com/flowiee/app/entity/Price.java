@@ -52,13 +52,9 @@ public class Price extends BaseEntity implements Serializable {
         this.giaBan = priceSell;
     }
 
-    @Override
-    public String toString() {
-        return "GiaSanPham{" +
-                "id=" + id +
-                ", bienTheSanPham=" + productVariant +
-                ", giaBan=" + giaBan +
-                ", trangThai=" + status +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Price [id=" + super.id + ", productVariant=" + productVariant + ", material=" + material + ", giaMua=" + giaMua
+				+ ", unitBuy=" + unitBuy + ", giaBan=" + giaBan + ", unitSell=" + unitSell + ", status=" + status + "]";
+	}
 }

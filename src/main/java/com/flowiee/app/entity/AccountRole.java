@@ -31,4 +31,9 @@ public class AccountRole extends BaseEntity implements java.io.Serializable {
 	@Column(name = "account_id", nullable = false)
 	@NotNull
 	private Integer accountId;
+
+	@Override
+	public String toString() {
+		return "AccountRole [module=" + module + ", action=" + action + ", accountId=" + accountId + "]";
+	}
 }

@@ -91,4 +91,19 @@ public class ProductVariantDTO implements Serializable {
         dto.setListPrices(null);
         return dto;
     }
+
+	@Override
+	public String toString() {
+		return "ProductVariantDTO [productVariantId=" + productVariantId + ", productId=" + productId + ", code=" + code
+				+ ", name=" + name + ", storageQty=" + storageQty + ", soldQty=" + soldQty + ", description="
+				+ description + ", status=" + status + ", colorId=" + colorId + ", colorName=" + colorName + ", sizeId="
+				+ sizeId + ", sizeName=" + sizeName + ", fabricTypeId=" + fabricTypeId + ", fabricTypeName="
+				+ fabricTypeName + ", garmentFactoryId=" + garmentFactoryId + ", garmentFactoryName="
+				+ garmentFactoryName + ", supplierId=" + supplierId + ", supplierName=" + supplierName
+				+ ", ticketImportGoodsId=" + ticketImportGoodsId + ", ticketImportGoodsTitle=" + ticketImportGoodsTitle
+				+ ", discountPercent=" + discountPercent + ", priceBuyId=" + priceBuyId + ", priceBuyValue="
+				+ priceBuyValue + ", priceSellId=" + priceSellId + ", priceSellValue=" + priceSellValue
+				+ ", priceMaxDiscount=" + priceMaxDiscount + ", priceAfterDiscount=" + priceAfterDiscount
+				+ ", unitCurrency=" + unitCurrency + "]";
+	}        
 }

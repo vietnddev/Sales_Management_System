@@ -72,4 +72,47 @@ public class ProductDTO implements Serializable {
         }
         return dataResponse;
     }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ProductDTO [productId=");
+		builder.append(productId);
+		builder.append(", productTypeId=");
+		builder.append(productTypeId);
+		builder.append(", productTypeName=");
+		builder.append(productTypeName);
+		builder.append(", brandId=");
+		builder.append(brandId);
+		builder.append(", brandName=");
+		builder.append(brandName);
+		builder.append(", productName=");
+		builder.append(productName);
+		builder.append(", unitId=");
+		builder.append(unitId);
+		builder.append(", unitName=");
+		builder.append(unitName);
+		builder.append(", productDes=");
+		builder.append(productDes);
+		builder.append(", productStatus=");
+		builder.append(productStatus);
+		builder.append(", imageActiveId=");
+		builder.append(imageActiveId);
+		builder.append(", imageActive=");
+		builder.append(imageActive);
+		builder.append(", productVariantQty=");
+		builder.append(productVariantQty);
+		builder.append(", soldQty=");
+		builder.append(soldQty);
+		builder.append(", createdAt=");
+		builder.append(createdAt);
+		builder.append(", createdById=");
+		builder.append(createdById);
+		builder.append(", createdByName=");
+		builder.append(createdByName);
+		builder.append(", listVoucherInfoApply=");
+		builder.append(listVoucherInfoApply);
+		builder.append("]");
+		return builder.toString();
+	}        
 }

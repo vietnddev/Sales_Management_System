@@ -33,4 +33,10 @@ public class MaterialHistory extends BaseEntity implements Serializable {
 
     @Column(name = "note")
     private String note;
+
+	@Override
+	public String toString() {
+		return "MaterialHistory [id=" + super.id + ", material=" + material + ", action=" + action + ", oldValue=" + oldValue + ", newValue="
+				+ newValue + ", note=" + note + "]";
+	}
 }

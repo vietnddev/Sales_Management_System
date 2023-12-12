@@ -62,19 +62,6 @@ public class Document extends BaseEntity implements Serializable {
     	this.ten = name;
     }
     
-    @Override
-    public String toString() {
-        return "Document{" +
-            "id=" + id +
-            ", parentId=" + parentId +
-            ", loai='" + loai + '\'' +
-            ", ten='" + ten + '\'' +
-            ", aliasName='" + aliasName + '\'' +
-            ", moTa='" + moTa + '\'' +
-            ", loaiTaiLieu=" + loaiTaiLieu +
-            '}';
-    }
-
     public Map<String, String> compareTo(Document documentToCompare) {
         Map<String, String> map = new HashMap<>();
         if (!this.getParentId().equals(documentToCompare.getParentId())) {
@@ -93,4 +80,10 @@ public class Document extends BaseEntity implements Serializable {
         }
         return map;
     }
+
+	@Override
+	public String toString() {
+		return "Document [id=" + super.id + ", parentId=" + parentId + ", loai=" + loai + ", ten=" + ten + ", aliasName=" + aliasName
+				+ ", moTa=" + moTa + ", loaiTaiLieu=" + loaiTaiLieu + "]";
+	}        
 }

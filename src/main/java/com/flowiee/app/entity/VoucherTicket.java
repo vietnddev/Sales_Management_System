@@ -35,4 +35,10 @@ public class VoucherTicket extends BaseEntity implements Serializable {
 
     @Column(name = "status", nullable = false)
     private boolean status;
+
+	@Override
+	public String toString() {
+		return "VoucherTicket [id=" + super.id + ", voucherInfo=" + voucherInfo + ", code=" + code + ", activeTime=" + activeTime
+				+ ", customer=" + customer + ", status=" + status + "]";
+	}
 }

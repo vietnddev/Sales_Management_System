@@ -26,4 +26,9 @@ public class DocShare extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+
+	@Override
+	public String toString() {
+		return "DocShare [id=" + super.id + ", document=" + document + ", account=" + account + "]";
+	}        
 }

@@ -19,10 +19,9 @@ public class OrderCart extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "orderCart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Items> listItems;
 
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "listItems=" +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "OrderCart [id=" + id + ", getCreatedAt()=" + getCreatedAt() + ", getCreatedBy()=" + getCreatedBy()
+				+ ", getLastUpdatedAt()=" + getLastUpdatedAt() + ", getLastUpdatedBy()=" + getLastUpdatedBy() + "]";
+	}
 }

@@ -108,17 +108,12 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
         return productVariantTemp;
     }
 
-    @Override
-    public String toString() {
-        return "BienTheSanPhamTemp{" +
-                "sanPham=" + product +
-                ", maSanPham='" + maSanPham + '\'' +
-                ", tenBienThe='" + tenBienThe + '\'' +
-                ", soLuongKho=" + soLuongKho +
-                ", trangThai='" + trangThai + '\'' +
-                ", loaiMauSac=" + loaiMauSac +
-                ", loaiKichCo=" + loaiKichCo +
-                ", giaSanPham=" + price +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "ProductVariantTemp [id=" + super.id + ", producVariantId=" + producVariantId + ", product=" + product + ", maSanPham="
+				+ maSanPham + ", tenBienThe=" + tenBienThe + ", soLuongKho=" + soLuongKho + ", soLuongDaBan="
+				+ soLuongDaBan + ", trangThai=" + trangThai + ", loaiMauSac=" + loaiMauSac + ", loaiKichCo="
+				+ loaiKichCo + ", fabricType=" + fabricType + ", garmentFactory=" + garmentFactory + ", supplier="
+				+ supplier + ", ticketImportGoods=" + ticketImportGoods + ", price=" + price + "]";
+	}  
 }

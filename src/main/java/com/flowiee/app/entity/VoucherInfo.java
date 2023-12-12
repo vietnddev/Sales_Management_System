@@ -52,4 +52,12 @@ public class VoucherInfo extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "voucherInfo", fetch = FetchType.LAZY)
     private List<VoucherTicket> listVoucherTicket;
+
+	@Override
+	public String toString() {
+		return "VoucherInfo [id=" + super.id + ", title=" + title + ", description=" + description + ", doiTuongApDung=" + doiTuongApDung
+				+ ", voucherType=" + voucherType + ", quantity=" + quantity + ", lengthOfKey=" + lengthOfKey
+				+ ", discount=" + discount + ", maxPriceDiscount=" + maxPriceDiscount + ", startTime=" + startTime
+				+ ", endTime=" + endTime + "]";
+	}
 }

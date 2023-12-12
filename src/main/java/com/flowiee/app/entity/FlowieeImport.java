@@ -51,4 +51,11 @@ public class FlowieeImport extends BaseEntity implements Serializable {
 
     @Column(name = "file_id")
     private Integer fileId;
+
+	@Override
+	public String toString() {
+		return "FlowieeImport [id=" + super.id + ", module=" + module + ", entity=" + entity + ", account=" + account + ", startTime="
+				+ startTime + ", endTime=" + endTime + ", result=" + result + ", detail=" + detail + ", successRecord="
+				+ successRecord + ", totalRecord=" + totalRecord + ", fileId=" + fileId + "]";
+	}
 }

@@ -39,4 +39,10 @@ public class CategoryHistory extends BaseEntity implements Serializable {
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
     private String newValue;
+
+	@Override
+	public String toString() {
+		return "CategoryHistory [id=" + super.id + ", category=" + category + ", title=" + title + ", fieldName=" + fieldName + ", oldValue="
+				+ oldValue + ", newValue=" + newValue + "]";
+	}
 }

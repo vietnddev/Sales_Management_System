@@ -51,4 +51,11 @@ public class ProductHistory extends BaseEntity implements Serializable {
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
     private String newValue;
+
+	@Override
+	public String toString() {
+		return "ProductHistory [id=" + super.id + ", product=" + product + ", productVariant=" + productVariant + ", productAttribute="
+				+ productAttribute + ", productPrice=" + productPrice + ", title=" + title + ", fieldName=" + fieldName
+				+ ", oldValue=" + oldValue + ", newValue=" + newValue + "]";
+	}        
 }

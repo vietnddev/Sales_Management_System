@@ -57,21 +57,12 @@ public class DocField extends BaseEntity implements Serializable {
     public DocField(Integer id) {
     	super.id = id;
     }
-    
-    @Override
-    public String toString() {
-        return "DocField{" +
-                "id=" + id +
-                ", loaiField='" + loaiField + '\'' +
-                ", tenField='" + tenField + '\'' +
-                ", minLength=" + minLength +
-                ", maxLength=" + maxLength +
-                ", minNumber=" + minNumber +
-                ", maxNumber=" + maxNumber +
-                ", batBuocNhap=" + batBuocNhap +
-                ", sapXep=" + sapXep +
-                ", trangThai=" + trangThai +
-                ", loaiTaiLieu=" + loaiTaiLieu +
-                '}';
-    }
+
+	@Override
+	public String toString() {
+		return "DocField [id=" + super.id + ", loaiField=" + loaiField + ", tenField=" + tenField + ", minLength=" + minLength
+				+ ", maxLength=" + maxLength + ", minNumber=" + minNumber + ", maxNumber=" + maxNumber
+				+ ", batBuocNhap=" + batBuocNhap + ", sapXep=" + sapXep + ", trangThai=" + trangThai + ", loaiTaiLieu="
+				+ loaiTaiLieu + "]";
+	}  
 }

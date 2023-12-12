@@ -49,4 +49,11 @@ public class OrderPay extends BaseEntity implements Serializable {
         super.id = id;
         this.paymentStatus = paymentStatus;
     }
+
+	@Override
+	public String toString() {
+		return "OrderPay [id=" + super.id + ", order=" + order + ", maPhieu=" + maPhieu + ", thoiGianThanhToan=" + thoiGianThanhToan
+				+ ", hinhThucThanhToan=" + hinhThucThanhToan + ", thuNgan=" + thuNgan + ", ghiChu=" + ghiChu
+				+ ", paymentStatus=" + paymentStatus + "]";
+	}        
 }

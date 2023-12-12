@@ -67,15 +67,6 @@ public class Product extends BaseEntity implements Serializable {
         this.tenSanPham = name;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder("Product {");
-        builder.append("id=").append(id).append(", ");
-        builder.append("name=").append(tenSanPham);
-        builder.append("}");
-        return builder.toString();
-    }
-
     public Map<String, String> compareTo(Product productToCompare) {
         Map<String, String> map = new HashMap<>();
         if (!this.productType.getName().equals(productToCompare.getProductType().getName())) {
@@ -106,4 +97,10 @@ public class Product extends BaseEntity implements Serializable {
         }
         return map;
     }
+
+	@Override
+	public String toString() {
+		return "Product [id=" + super.id + ", productType=" + productType + ", brand=" + brand + ", tenSanPham=" + tenSanPham + ", unit="
+				+ unit + ", moTaSanPham=" + moTaSanPham + ", status=" + status + ", imageActive=" + imageActive + "]";
+	}
 }

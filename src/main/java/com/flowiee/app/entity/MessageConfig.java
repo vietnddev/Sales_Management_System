@@ -24,4 +24,9 @@ public class MessageConfig extends BaseEntity implements Serializable {
 
     @Column(name = "message_name", nullable = false)
     private String messageName;
+
+	@Override
+	public String toString() {
+		return "MessageConfig [id=" + super.id + ", messageKey=" + messageKey + ", messageName=" + messageName + "]";
+	}       
 }

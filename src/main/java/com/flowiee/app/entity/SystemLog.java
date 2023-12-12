@@ -42,16 +42,10 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 		super.createdBy = createdBy;
 		this.ip = ip;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "SystemLog{" +
-				"id=" + id +
-				", module='" + module + '\'' +
-				", action='" + action + '\'' +
-				", noiDung='" + noiDung + '\'' +
-				", noiDungCapNhat='" + noiDungCapNhat + '\'' +
-				", ip='" + ip + '\'' +
-				'}';
+		return "SystemLog [id=" + super.id + ", module=" + module + ", action=" + action + ", noiDung=" + noiDung + ", noiDungCapNhat="
+				+ noiDungCapNhat + ", ip=" + ip + ", username=" + username + "]";
 	}
 }

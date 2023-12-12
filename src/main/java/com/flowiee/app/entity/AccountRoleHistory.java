@@ -27,4 +27,9 @@ public class AccountRoleHistory extends BaseEntity implements Serializable {
 
     @Column(name = "new_role", length = 500)
     private String newRole;
+
+	@Override
+	public String toString() {
+		return "AccountRoleHistory [id=" + super.id + ", oldRole=" + oldRole + ", newRole=" + newRole + "]";
+	}        
 }

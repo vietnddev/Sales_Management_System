@@ -121,4 +121,10 @@ public class Category extends BaseEntity implements java.io.Serializable {
 		}
 		return map;
 	}
+
+	@Override
+	public String toString() {
+		return "Category [id= " + super.id + ", type=" + type + ", code=" + code + ", name=" + name + ", sort=" + sort + ", color=" + color
+				+ ", note=" + note + ", endpoint=" + endpoint + ", isDefault=" + isDefault + ", status=" + status + "]";
+	}
 }

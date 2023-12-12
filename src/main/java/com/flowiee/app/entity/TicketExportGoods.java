@@ -34,4 +34,10 @@ public class TicketExportGoods extends BaseEntity implements Serializable {
 
     @Column(name = "note", length = 500)
     private String note;
+
+	@Override
+	public String toString() {
+		return "TicketExportGoods [id=" + super.id + ", title=" + title + ", exporter=" + exporter + ", exportTime=" + exportTime
+				+ ", orderId=" + orderId + ", note=" + note + "]";
+	}
 }

@@ -16,6 +16,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 
 @Builder
@@ -101,4 +102,14 @@ public class FileStorage extends BaseEntity implements Serializable {
             e.printStackTrace();
         }
     }
+
+	@Override
+	public String toString() {
+		return "FileStorage [id=" + super.id + ", tenFileCustomize=" + tenFileCustomize + ", tenFileKhiLuu=" + tenFileKhiLuu
+				+ ", tenFileGoc=" + tenFileGoc + ", ghiChu=" + ghiChu + ", extension=" + extension + ", contentType="
+				+ contentType + ", kichThuocFile=" + kichThuocFile + ", noiDung=" + Arrays.toString(noiDung)
+				+ ", directoryPath=" + directoryPath + ", sort=" + sort + ", status=" + status + ", module=" + module
+				+ ", product=" + product + ", productVariant=" + productVariant + ", document=" + document
+				+ ", account=" + account + ", isActive=" + isActive + "]";
+	}        
 }

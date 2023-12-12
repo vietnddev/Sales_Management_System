@@ -40,17 +40,6 @@ public class ProductAttribute extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "productAttribute", fetch = FetchType.LAZY)
     private List<ProductHistory> listProductHistory;
 
-    @Override
-    public String toString() {
-        return "ThuocTinhSanPham{" +
-                "bienTheSanPham=" + productVariant +
-                ", tenThuocTinh='" + tenThuocTinh + '\'' +
-                ", giaTriThuocTinh='" + giaTriThuocTinh + '\'' +
-                ", sort=" + sort +
-                ", trangThai=" + trangThai +
-                '}';
-    }
-
     public Map<String, String> compareTo(ProductAttribute entityToCompare) {
         Map<String, String> map = new HashMap<>();
         if (!this.getTenThuocTinh().equals(entityToCompare.getTenThuocTinh())) {
@@ -61,4 +50,10 @@ public class ProductAttribute extends BaseEntity implements Serializable {
         }
         return map;
     }
+
+	@Override
+	public String toString() {
+		return "ProductAttribute [id=" + super.id + ", productVariant=" + productVariant + ", tenThuocTinh=" + tenThuocTinh
+				+ ", giaTriThuocTinh=" + giaTriThuocTinh + ", sort=" + sort + ", trangThai=" + trangThai + "]";
+	}    
 }

@@ -56,9 +56,8 @@ public class Customer extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "KhachHang{" +
-				"id=" + id +
-				", tenKhachHang='" + tenKhachHang + '\'' +
-				'}';
+		return "Customer [id=" + super.id + ", tenKhachHang=" + tenKhachHang + ", birthday=" + birthday + ", gioiTinh=" + gioiTinh
+				+ ", phoneDefault=" + phoneDefault + ", emailDefault=" + emailDefault + ", addressDefault="
+				+ addressDefault + "]";
 	}
 }

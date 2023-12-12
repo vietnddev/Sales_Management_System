@@ -5,12 +5,16 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.OrderPay;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class OrderDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -83,4 +87,75 @@ public class OrderDTO implements Serializable {
         dto.setCreatedAt(order.getCreatedAt());
         return dto;
     }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("OrderDTO [orderId=");
+		builder.append(orderId);
+		builder.append(", orderCode=");
+		builder.append(orderCode);
+		builder.append(", orderTime=");
+		builder.append(orderTime);
+		builder.append(", receiverAddress=");
+		builder.append(receiverAddress);
+		builder.append(", receiverPhone=");
+		builder.append(receiverPhone);
+		builder.append(", receiverName=");
+		builder.append(receiverName);
+		builder.append(", orderBy=");
+		builder.append(orderBy);
+		builder.append(", customerId=");
+		builder.append(customerId);
+		builder.append(", customerName=");
+		builder.append(customerName);
+		builder.append(", totalAmount=");
+		builder.append(totalAmount);
+		builder.append(", amountDiscount=");
+		builder.append(amountDiscount);
+		builder.append(", totalAmountAfterDiscount=");
+		builder.append(totalAmountAfterDiscount);
+		builder.append(", salesChannel=");
+		builder.append(salesChannel);
+		builder.append(", salesChannelId=");
+		builder.append(salesChannelId);
+		builder.append(", salesChannelName=");
+		builder.append(salesChannelName);
+		builder.append(", note=");
+		builder.append(note);
+		builder.append(", orderStatus=");
+		builder.append(orderStatus);
+		builder.append(", orderStatusId=");
+		builder.append(orderStatusId);
+		builder.append(", orderStatusName=");
+		builder.append(orderStatusName);
+		builder.append(", orderPay=");
+		builder.append(orderPay);
+		builder.append(", orderPayId=");
+		builder.append(orderPayId);
+		builder.append(", orderPayName=");
+		builder.append(orderPayName);
+		builder.append(", payMethod=");
+		builder.append(payMethod);
+		builder.append(", payMethodId=");
+		builder.append(payMethodId);
+		builder.append(", payMethodName=");
+		builder.append(payMethodName);
+		builder.append(", cashier=");
+		builder.append(cashier);
+		builder.append(", cashierId=");
+		builder.append(cashierId);
+		builder.append(", cashierName=");
+		builder.append(cashierName);
+		builder.append(", createdBy=");
+		builder.append(createdBy);
+		builder.append(", createdById=");
+		builder.append(createdById);
+		builder.append(", createdByName=");
+		builder.append(createdByName);
+		builder.append(", createdAt=");
+		builder.append(createdAt);
+		builder.append("]");
+		return builder.toString();
+	}
 }

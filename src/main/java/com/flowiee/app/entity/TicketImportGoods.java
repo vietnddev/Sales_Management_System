@@ -76,4 +76,12 @@ public class TicketImportGoods extends BaseEntity implements Serializable {
         super.id = id;
         this.title = title;
     }
+
+	@Override
+	public String toString() {
+		return "TicketImportGoods [id=" + super.id + ", title=" + title + ", supplier=" + supplier + ", discount=" + discount
+				+ ", paymentMethod=" + paymentMethod + ", paidAmount=" + paidAmount + ", paidStatus=" + paidStatus
+				+ ", orderTime=" + orderTime + ", receivedTime=" + receivedTime + ", receivedBy=" + receivedBy
+				+ ", note=" + note + ", status=" + status + "]";
+	}
 }

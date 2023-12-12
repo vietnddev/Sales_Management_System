@@ -35,6 +35,14 @@ public class FlowieeConfig extends BaseEntity implements Serializable {
 	private Integer sort;
 	
 	public FlowieeConfig(Integer id, String key, String name, String value, Integer sort) {
-		
+		super.id = id;
+		this.code = key;
+		this.value = value;
+		this.sort = sort;
+	}
+
+	@Override
+	public String toString() {
+		return "FlowieeConfig [id=" + super.id + ", code=" + code + ", name=" + name + ", value=" + value + ", sort=" + sort + "]";
 	}
 }

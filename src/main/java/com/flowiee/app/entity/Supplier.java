@@ -53,4 +53,10 @@ public class Supplier extends BaseEntity implements Serializable {
         super.id = id;
         this.name = name;
     }
+
+	@Override
+	public String toString() {
+		return "Supplier [id=" + super.id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", address=" + address
+				+ ", productProvided=" + productProvided + ", note=" + note + ", status=" + status + "]";
+	}
 }

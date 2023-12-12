@@ -17,4 +17,11 @@ public class VoucherApplyDTO implements Serializable {
     private String productName;
     private String appliedAt;
     private Integer appliedBy;
+    
+	@Override
+	public String toString() {
+		return "VoucherApplyDTO [voucherApplyId=" + voucherApplyId + ", voucherInfoId=" + voucherInfoId
+				+ ", voucherInfoTitle=" + voucherInfoTitle + ", productId=" + productId + ", productName=" + productName
+				+ ", appliedAt=" + appliedAt + ", appliedBy=" + appliedBy + "]";
+	}    
 }

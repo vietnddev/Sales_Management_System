@@ -5,14 +5,18 @@ import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class VoucherInfoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -64,4 +68,13 @@ public class VoucherInfoDTO implements Serializable {
             throw new RuntimeException(e);
         }
     }
+
+	@Override
+	public String toString() {
+		return "VoucherInfoDTO [id=" + id + ", title=" + title + ", description=" + description + ", doiTuongApDung="
+				+ doiTuongApDung + ", voucherType=" + voucherType + ", quantity=" + quantity + ", lengthOfKey="
+				+ lengthOfKey + ", discount=" + discount + ", maxPriceDiscount=" + maxPriceDiscount + ", startTime="
+				+ startTime + ", endTime=" + endTime + ", status=" + status + ", createdAt=" + createdAt
+				+ ", createdBy=" + createdBy + "]";
+	}   
 }

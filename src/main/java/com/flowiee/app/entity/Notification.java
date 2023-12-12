@@ -40,4 +40,10 @@ public class Notification extends BaseEntity implements Serializable {
 
     @Column(name = "import_id")
     private Integer importId;
+
+	@Override
+	public String toString() {
+		return "Notification [id=" + super.id + ", send=" + send + ", receive=" + receive + ", type=" + type + ", title=" + title
+				+ ", content=" + content + ", readed=" + readed + ", importId=" + importId + "]";
+	}        
 }

@@ -79,23 +79,7 @@ public class Account extends BaseEntity implements Serializable{
     private List<Role> listRole;
 
     @Transient
-    private String ip;
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", hoTen='" + hoTen + '\'' +
-                ", gioiTinh=" + gioiTinh +
-                ", soDienThoai='" + soDienThoai + '\'' +
-                ", email='" + email + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", ghiChu='" + ghiChu + '\'' +
-                ", trangThai=" + trangThai +
-                '}';
-    }
+    private String ip;   
 
     public Account(Integer id) {
         super.id = id;
@@ -106,4 +90,35 @@ public class Account extends BaseEntity implements Serializable{
         this.username = username;
         this.hoTen = hoTen;
     }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Account [username=");
+		builder.append(username);
+		builder.append(", password=");
+		builder.append(password);
+		builder.append(", hoTen=");
+		builder.append(hoTen);
+		builder.append(", gioiTinh=");
+		builder.append(gioiTinh);
+		builder.append(", soDienThoai=");
+		builder.append(soDienThoai);
+		builder.append(", email=");
+		builder.append(email);
+		builder.append(", diaChi=");
+		builder.append(diaChi);
+		builder.append(", avatar=");
+		builder.append(avatar);
+		builder.append(", ghiChu=");
+		builder.append(ghiChu);
+		builder.append(", role=");
+		builder.append(role);
+		builder.append(", trangThai=");
+		builder.append(trangThai);
+		builder.append(", ip=");
+		builder.append(ip);
+		builder.append("]");
+		return builder.toString();
+	}
 }

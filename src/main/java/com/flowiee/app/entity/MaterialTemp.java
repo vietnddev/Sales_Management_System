@@ -77,4 +77,11 @@ public class MaterialTemp extends BaseEntity implements Serializable {
         materialTemp.setListPrice(material.getListPrice());
         return materialTemp;
     }
+
+	@Override
+	public String toString() {
+		return "MaterialTemp [id=" + super.id + ", materialId=" + materialId + ", ticketImportGoods=" + ticketImportGoods + ", supplier="
+				+ supplier + ", code=" + code + ", name=" + name + ", quantity=" + quantity + ", unit=" + unit
+				+ ", location=" + location + ", note=" + note + ", status=" + status + "]";
+	}        
 }

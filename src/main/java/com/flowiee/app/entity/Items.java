@@ -31,14 +31,9 @@ public class Items extends BaseEntity implements Serializable {
     @JoinColumn(name = "cart_id", nullable = false)
     private OrderCart orderCart;
 
-    @Override
-    public String toString() {
-        return "Items{" +
-                "id=" + id +
-                ", bienTheSanPham=" + productVariant +
-                ", soLuong=" + soLuong +
-                ", GhiChu='" + ghiChu + '\'' +
-                ", cart=" + orderCart +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Items [id=" + super.id + ", productVariant=" + productVariant + ", soLuong=" + soLuong + ", ghiChu=" + ghiChu
+				+ ", orderCart=" + orderCart + "]";
+	}
 }

@@ -43,4 +43,10 @@ public class GarmentFactory extends BaseEntity implements Serializable {
         super.id = id;
         this.name = name;
     }
+
+	@Override
+	public String toString() {
+		return "GarmentFactory [id=" + super.id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", address=" + address
+				+ ", note=" + note + ", status=" + status + "]";
+	}        
 }

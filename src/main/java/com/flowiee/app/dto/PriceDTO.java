@@ -49,4 +49,31 @@ public class PriceDTO implements Serializable {
         }
         return dto;
     }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PriceDTO [id=");
+		builder.append(id);
+		builder.append(", productVariant=");
+		builder.append(productVariant);
+		builder.append(", material=");
+		builder.append(material);
+		builder.append(", giaMua=");
+		builder.append(giaMua);
+		builder.append(", unitBuy=");
+		builder.append(unitBuy);
+		builder.append(", giaBan=");
+		builder.append(giaBan);
+		builder.append(", unitSell=");
+		builder.append(unitSell);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", createdAt=");
+		builder.append(createdAt);
+		builder.append(", createdBy=");
+		builder.append(createdBy);
+		builder.append("]");
+		return builder.toString();
+	}
 }

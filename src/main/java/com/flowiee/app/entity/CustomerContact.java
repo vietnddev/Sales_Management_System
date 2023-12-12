@@ -35,4 +35,10 @@ public class CustomerContact extends BaseEntity implements Serializable {
 
     @Column(name = "status", nullable = false)
     private boolean status;
+
+	@Override
+	public String toString() {
+		return "CustomerContact [id=" + super.id + ", customer=" + customer + ", code=" + code + ", value=" + value + ", note=" + note
+				+ ", isDefault=" + isDefault + ", status=" + status + "]";
+	}    
 }

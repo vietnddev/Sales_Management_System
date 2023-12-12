@@ -80,16 +80,11 @@ public class Order extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DonHang{" +
-				"maDonHang='" + maDonHang + '\'' +
-				", khachHang=" + customer +
-				", ghiChu='" + ghiChu + '\'' +
-				", thoiGianDatHang=" + thoiGianDatHang +
-				", totalAmount=" + totalAmount +
-				", totalAmountAfterDiscount=" + totalAmountAfterDiscount +
-				", nhanVienBanHang=" + nhanVienBanHang +
-				", kenhBanHang=" + kenhBanHang +
-				", trangThaiDonHang=" + trangThaiDonHang +
-				'}';
+		return "Order [id=" + super.id + ", maDonHang=" + maDonHang + ", receiverName=" + receiverName + ", receiverPhone=" + receiverPhone
+				+ ", receiverEmail=" + receiverEmail + ", receiverAddress=" + receiverAddress + ", customer=" + customer
+				+ ", ghiChu=" + ghiChu + ", thoiGianDatHang=" + thoiGianDatHang + ", totalAmount=" + totalAmount
+				+ ", voucherUsedCode=" + voucherUsedCode + ", amountDiscount=" + amountDiscount
+				+ ", totalAmountAfterDiscount=" + totalAmountAfterDiscount + ", nhanVienBanHang=" + nhanVienBanHang
+				+ ", kenhBanHang=" + kenhBanHang + ", trangThaiDonHang=" + trangThaiDonHang + "]";
 	}
 }

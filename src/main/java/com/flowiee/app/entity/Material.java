@@ -54,4 +54,11 @@ public class Material extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
     private List<Price> listPrice;
+
+	@Override
+	public String toString() {
+		return "Material [id=" + super.id + ", ticketImportGoods=" + ticketImportGoods + ", supplier=" + supplier + ", code=" + code
+				+ ", name=" + name + ", quantity=" + quantity + ", unit=" + unit + ", location=" + location + ", note="
+				+ note + ", status=" + status + "]";
+	}        
 }

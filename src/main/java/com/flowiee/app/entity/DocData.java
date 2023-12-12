@@ -39,16 +39,6 @@ public class DocData extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "docData", fetch = FetchType.LAZY)
     private List<DocHistory> listDocHistory;
 
-    @Override
-    public String toString() {
-        return "DocData{" +
-            "id=" + id +
-            ", noiDung='" + noiDung + '\'' +
-            ", docField=" + docField +
-            ", document=" + document +
-            '}';
-    }
-
     public Map<String, String> compareTo(DocData entityToCompare) {
         Map<String, String> map = new HashMap<>();
         if (!this.getNoiDung().equals(entityToCompare.getNoiDung())) {
@@ -56,4 +46,9 @@ public class DocData extends BaseEntity implements Serializable {
         }
         return map;
     }
+
+	@Override
+	public String toString() {
+		return "DocData [id=" + super.id + ", noiDung=" + noiDung + ", docField=" + docField + ", document=" + document + "]";
+	}        
 }

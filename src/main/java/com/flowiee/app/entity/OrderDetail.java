@@ -45,12 +45,8 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "DonHangChiTiet{" +
-				"donHang=" + order +
-				", bienTheSanPham=" + productVariant +
-				", soLuong=" + soLuong +
-				", ghiChu='" + ghiChu + '\'' +
-				", trangThai=" + trangThai +
-				'}';
+		return "OrderDetail [id=" + super.id + ", order=" + order + ", productVariant=" + productVariant + ", soLuong=" + soLuong
+				+ ", voucherCode=" + voucherCode + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai
+				+ ", listOrderHistory=" + listOrderHistory + "]";
 	}
 }
