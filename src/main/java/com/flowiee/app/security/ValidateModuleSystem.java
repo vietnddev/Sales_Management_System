@@ -11,31 +11,31 @@ import org.springframework.stereotype.Component;
 public class ValidateModuleSystem extends BaseAuthorize {
     String module = SystemModule.SYSTEM.name();
 
-    public boolean readPermission() {
-        return isAuthorized(module, RoleAction.READ_ROLE.name());
+    public boolean readPermission(boolean throwException) {
+        return isAuthorized(module, RoleAction.READ_ROLE.name(), throwException);
     }
 
-    public boolean readAccount() {
-        return isAuthorized(module, SysAction.SYS_ACCOUNT_READ.name());
+    public boolean readAccount(boolean throwException) {
+        return isAuthorized(module, SysAction.SYS_ACCOUNT_READ.name(), throwException);
     }
 
-    public boolean insertAccount() {
-        return isAuthorized(module, SysAction.SYS_ACCOUNT_CREATE.name());
+    public boolean insertAccount(boolean throwException) {
+        return isAuthorized(module, SysAction.SYS_ACCOUNT_CREATE.name(), throwException);
     }
 
-    public boolean updateAccount() {
-        return isAuthorized(module, SysAction.SYS_ACCOUNT_UPDATE.name());
+    public boolean updateAccount(boolean throwException) {
+        return isAuthorized(module, SysAction.SYS_ACCOUNT_UPDATE.name(), throwException);
     }
 
-    public boolean deleteAccount() {
-        return isAuthorized(module, SysAction.SYS_ACCOUNT_DELETE.name());
+    public boolean deleteAccount(boolean throwException) {
+        return isAuthorized(module, SysAction.SYS_ACCOUNT_DELETE.name(), throwException);
     }
 
-    public boolean readLog() {
-        return isAuthorized(module, LogAction.READ_LOG.name());
+    public boolean readLog(boolean throwException) {
+        return isAuthorized(module, LogAction.READ_LOG.name(), throwException);
     }
 
-    public boolean setupConfig() {
-        return isAuthorized(module, "CONFIG");
+    public boolean setupConfig(boolean throwException) {
+        return isAuthorized(module, "CONFIG", throwException);
     }
 }

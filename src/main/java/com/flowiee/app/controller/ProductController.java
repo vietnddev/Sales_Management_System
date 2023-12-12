@@ -46,15 +46,13 @@ public class ProductController extends BaseController {
     @Autowired
     private VoucherService voucherService;
     @Autowired
-    private VoucherApplyService voucherApplyService;
-    @Autowired
     private VoucherTicketService voucherTicketService;
     @Autowired
     private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping
     public ModelAndView viewAllProducts() {
-        if (!validateModuleProduct.readProduct()) {
+        if (!validateModuleProduct.readProduct(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         List<Category> brands = new ArrayList<>();
@@ -79,13 +77,13 @@ public class ProductController extends BaseController {
         modelAndView.addObject("listDonViTinh", units);
         modelAndView.addObject("listBrand", brands);
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
-        if (validateModuleProduct.insertProduct()) {
+        if (validateModuleProduct.insertProduct(false)) {
             modelAndView.addObject("action_create", "enable");
         }
-        if (validateModuleProduct.updateProduct()) {
+        if (validateModuleProduct.updateProduct(false)) {
             modelAndView.addObject("action_update", "enable");
         }
-        if (validateModuleProduct.deleteProduct()) {
+        if (validateModuleProduct.deleteProduct(false)) {
             modelAndView.addObject("action_delete", "enable");
         }
         return baseView(modelAndView);
@@ -93,7 +91,7 @@ public class ProductController extends BaseController {
 
     @GetMapping(value = "/{id}")
     public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
-        if (!validateModuleProduct.readProduct()) {
+        if (!validateModuleProduct.readProduct(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (productId <= 0 || productsService.findById(productId) == null) {
@@ -150,7 +148,7 @@ public class ProductController extends BaseController {
 
     @GetMapping(value = "/variant/{id}")
     public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
-        if (!validateModuleProduct.readProduct()) {
+        if (!validateModuleProduct.readProduct(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT_VARIANT);
@@ -172,7 +170,7 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/insert")
     public String insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
-        if (!validateModuleProduct.insertProduct()) {
+        if (!validateModuleProduct.insertProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         productsService.save(product);
@@ -183,7 +181,7 @@ public class ProductController extends BaseController {
     public String insertProductVariant(HttpServletRequest request,
                                        @ModelAttribute("bienTheSanPham") ProductVariant productVariant,
                                        @RequestBody Float price) {
-        if (!validateModuleProduct.updateProduct()) {
+        if (!validateModuleProduct.updateProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.A.name());
@@ -196,7 +194,7 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/attribute/insert")
     public String insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
-        if (!validateModuleProduct.updateProduct()) {
+        if (!validateModuleProduct.updateProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         productAttributeService.save(productAttribute);
@@ -207,7 +205,7 @@ public class ProductController extends BaseController {
     public String updateProductOriginal(HttpServletRequest request,
                                         @ModelAttribute("sanPham") Product product,
                                         @PathVariable("id") Integer productId) {
-        if (!validateModuleProduct.updateProduct()) {
+        if (!validateModuleProduct.updateProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (product == null|| productId <= 0 || productsService.findById(productId) == null) {
@@ -219,7 +217,7 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/variant/update/{id}")
     public String updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer variantId) {
-        if (!validateModuleProduct.updateProduct()) {
+        if (!validateModuleProduct.updateProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (productVariantService.findById(variantId) == null) {
@@ -233,7 +231,7 @@ public class ProductController extends BaseController {
     public String updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
                                         @PathVariable("id") Integer attributeId,
                                         HttpServletRequest request) {
-        if (!validateModuleProduct.updateProduct()) {
+        if (!validateModuleProduct.updateProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (attributeId <= 0 || productAttributeService.findById(attributeId) == null) {
@@ -246,7 +244,7 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/delete/{id}")
     public String deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer productId) {
-        if (!validateModuleProduct.deleteProduct()) {
+        if (!validateModuleProduct.deleteProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (productsService.findById(productId) == null) {
@@ -258,7 +256,7 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/variant/delete/{id}")
     public String deleteProductVariant(HttpServletRequest request, @PathVariable("id") Integer productVariantId) {
-        if (!validateModuleProduct.updateProduct()) {
+        if (!validateModuleProduct.updateProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (productVariantService.findById(productVariantId) == null) {
@@ -272,7 +270,7 @@ public class ProductController extends BaseController {
     public String deleteAttribute(@ModelAttribute("attribute") ProductAttribute attribute,
                                   @PathVariable("id") Integer attributeId,
                                   HttpServletRequest request) {
-        if (!validateModuleProduct.updateProduct()) {
+        if (!validateModuleProduct.updateProduct(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (productAttributeService.findById(attributeId) == null) {
@@ -286,7 +284,7 @@ public class ProductController extends BaseController {
     public String activeImageOfProductOriginal(HttpServletRequest request,
                                                @PathVariable("sanPhamId") Integer productId,
                                                @RequestParam("imageId") Integer imageId) {
-        if (!validateModuleProduct.updateImage()) {
+        if (!validateModuleProduct.updateImage(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
@@ -300,7 +298,7 @@ public class ProductController extends BaseController {
     public String activeImageOfProductVariant(HttpServletRequest request,
                                               @PathVariable("sanPhamBienTheId") Integer productVariantId,
                                               @RequestParam("imageId") Integer imageId) {
-        if (!validateModuleProduct.updateImage()) {
+        if (!validateModuleProduct.updateImage(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
@@ -314,7 +312,7 @@ public class ProductController extends BaseController {
     public String updateProductPrice(HttpServletRequest request,
                                      @ModelAttribute("price") Price price,
                                      @PathVariable("id") Integer productVariantId) {
-        if (!validateModuleProduct.priceManagement()) {
+        if (!validateModuleProduct.priceManagement(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (price == null || productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
@@ -327,7 +325,7 @@ public class ProductController extends BaseController {
 
     @GetMapping("/export")
     public ResponseEntity<?> exportData() {
-        if (validateModuleProduct.readProduct()) {
+        if (validateModuleProduct.readProduct(true)) {
             byte[] dataExport = productsService.exportData(null);
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
@@ -350,7 +348,7 @@ public class ProductController extends BaseController {
     /** ******************** VOUCHER ******************** **/
     @GetMapping("/voucher")
     public ModelAndView viewVouchers() {
-        if (validateModuleProduct.readVoucher()) {
+        if (validateModuleProduct.readVoucher(true)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
             modelAndView.addObject("listVoucher", voucherService.findAll(null, null, null, null));
             modelAndView.addObject("listProduct", productsService.findAll());
@@ -365,7 +363,7 @@ public class ProductController extends BaseController {
 
     @GetMapping("/voucher/detail/{id}")
     public ModelAndView viewVoucherDetail(@PathVariable("id") Integer voucherInfoId) {
-        if (validateModuleProduct.readVoucher()) {
+        if (validateModuleProduct.readVoucher(true)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER_DETAIL);
             modelAndView.addObject("voucherDetail", voucherService.findById(voucherInfoId));
             modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
@@ -380,7 +378,7 @@ public class ProductController extends BaseController {
     @PostMapping("/voucher/insert")
     public ModelAndView insertVoucher(@ModelAttribute("voucher") VoucherInfo voucherInfo,
                                       HttpServletRequest request) {
-        if (!validateModuleProduct.insertVoucher()) {
+        if (!validateModuleProduct.insertVoucher(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -406,7 +404,7 @@ public class ProductController extends BaseController {
 
     @PostMapping("/voucher/update/{id}")
     public ModelAndView deleteVoucher(@ModelAttribute("voucherInfo") VoucherInfo voucherInfo, @PathVariable("id") Integer voucherInfoId) {
-        if (!validateModuleProduct.updateVoucher()) {
+        if (!validateModuleProduct.updateVoucher(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (voucherInfo == null) {
@@ -421,19 +419,10 @@ public class ProductController extends BaseController {
 
     @PostMapping("/voucher/delete/{id}")
     public ModelAndView deleteVoucher(@PathVariable("id") Integer voucherInfoId) {
-        if (!validateModuleProduct.deleteVoucher()) {
+        if (!validateModuleProduct.deleteVoucher(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         voucherService.detele(voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");
-    }
-
-    @PostMapping("/voucher/check/{code}")
-    public ModelAndView checkToUse(@PathVariable("code") String code) {
-        if (!validateModuleProduct.readVoucher()) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
-        //To do something
-        return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 }

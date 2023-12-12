@@ -33,7 +33,7 @@ public class CategoryController extends BaseController {
 
     @GetMapping
     public ModelAndView viewRootCategory() {
-        if (validateModuleCategory.readCategory()) {
+        if (validateModuleCategory.readCategory(true)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
             modelAndView.addObject("category", new Category());
             modelAndView.addObject("listCategory", categoryService.findRootCategory());            
@@ -45,7 +45,7 @@ public class CategoryController extends BaseController {
 
     @GetMapping("/{type}")
     public ModelAndView viewSubCategory(@PathVariable("type") String categoryType) {
-        if (!validateModuleCategory.readCategory()) {
+        if (!validateModuleCategory.readCategory(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (CommonUtil.getCategoryType(categoryType) == null) {
@@ -67,7 +67,7 @@ public class CategoryController extends BaseController {
     public String insert(@ModelAttribute("category") Category category, 
     					 @PathVariable("type") String categoryType,
     					 HttpServletRequest request) {
-        if (!validateModuleCategory.insertCategory()) {
+        if (!validateModuleCategory.insertCategory(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (CommonUtil.getCategoryType(categoryType) == null) {
@@ -82,7 +82,7 @@ public class CategoryController extends BaseController {
     public String update(@ModelAttribute("category") Category category,
                          @PathVariable("id") Integer categoryId, 
                          HttpServletRequest request) {
-        if (!validateModuleCategory.updateCategory()) {
+        if (!validateModuleCategory.updateCategory(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
@@ -103,7 +103,7 @@ public class CategoryController extends BaseController {
     
     @GetMapping("/{type}/template")
     public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
-        if (!validateModuleCategory.importCategory()) {
+        if (!validateModuleCategory.importCategory(true)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (CommonUtil.getCategoryType(categoryType) == null) {
@@ -118,7 +118,7 @@ public class CategoryController extends BaseController {
 
     @PostMapping("/{type}/import")
     public String importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
-        if (!validateModuleCategory.importCategory()) {
+        if (!validateModuleCategory.importCategory(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (CommonUtil.getCategoryType(categoryType) == null) {
@@ -130,7 +130,7 @@ public class CategoryController extends BaseController {
 
     @GetMapping("/{type}/export")
     public ResponseEntity<?> exportData(@PathVariable("type") String categoryType) {
-        if (!validateModuleCategory.readCategory()) {
+        if (!validateModuleCategory.readCategory(true)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
         }
         byte[] dataExport = categoryService.exportData(categoryType);

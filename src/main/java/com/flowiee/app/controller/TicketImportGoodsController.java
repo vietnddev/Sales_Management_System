@@ -53,7 +53,7 @@ public class TicketImportGoodsController extends BaseController {
 
     @GetMapping
     public ModelAndView loadPage() {
-        if (validateModuleStorage.importGoods()) {
+        if (validateModuleStorage.importGoods(true)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_TICKET_IMPORT);
             TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtil.getCurrentAccountId());
             if (ticketImportGoodsPresent == null) {
@@ -169,7 +169,7 @@ public class TicketImportGoodsController extends BaseController {
 
     @PostMapping("/draft/save")
     public String update(@ModelAttribute("goodsImportRequest") TicketImportGoodsRequest ticketImportGoodsRequest, HttpServletRequest request) {
-        if (validateModuleStorage.importGoods()) {
+        if (validateModuleStorage.importGoods(true)) {
             ticketImportGoodsRequest.setOrderTime(CommonUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
             ticketImportGoodsRequest.setReceivedTime(CommonUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
             ticketImportGoodsService.saveDraft(ticketImportGoodsRequest);
@@ -194,7 +194,7 @@ public class TicketImportGoodsController extends BaseController {
     public String update(@ModelAttribute("goodsImport") TicketImportGoods ticketImportGoods,
                             @PathVariable("id") Integer importId,
                             HttpServletRequest request) {
-        if (!validateModuleStorage.importGoods()) {
+        if (!validateModuleStorage.importGoods(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
@@ -209,7 +209,7 @@ public class TicketImportGoodsController extends BaseController {
         if (draftImportId <= 0 || ticketImportGoodsService.findById(draftImportId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        if (!validateModuleStorage.importGoods()) {
+        if (!validateModuleStorage.importGoods(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         ticketImportGoodsService.delete(draftImportId);
@@ -221,7 +221,7 @@ public class TicketImportGoodsController extends BaseController {
         if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        if (!validateModuleStorage.importGoods()) {
+        if (!validateModuleStorage.importGoods(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         ticketImportGoodsService.updateStatus(importId, "");
@@ -230,7 +230,7 @@ public class TicketImportGoodsController extends BaseController {
 
     @PostMapping("/approve/{id}")
     public String approve(@PathVariable("id") Integer importId) {
-        if (!validateModuleStorage.importGoods()) {
+        if (!validateModuleStorage.importGoods(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {

@@ -9,103 +9,103 @@ import org.springframework.stereotype.Component;
 public class ValidateModuleProduct extends BaseAuthorize {
     String module = SystemModule.PRODUCT.name();
     
-    public boolean readDashboard() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_DASHBOARD.name());
+    public boolean readDashboard(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_DASHBOARD.name(), throwException);
     }
 
-    public boolean readProduct() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_READ.name());
+    public boolean readProduct(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_READ.name(), throwException);
     }
 
-    public boolean insertProduct() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_CREATE.name());
+    public boolean insertProduct(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_CREATE.name(), throwException);
     }
 
-    public boolean updateProduct() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_UPDATE.name());
+    public boolean updateProduct(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_UPDATE.name(), throwException);
     }
 
-    public boolean deleteProduct() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_DELETE.name());
+    public boolean deleteProduct(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_DELETE.name(), throwException);
     }
 
-    public boolean importProduct() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_IMPORT.name());
+    public boolean importProduct(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_IMPORT.name(), throwException);
     }
 
-    public boolean updateImage() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_UPDATE.name());
+    public boolean updateImage(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_UPDATE.name(), throwException);
     }
 
-    public boolean priceManagement() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_PRICE.name());
+    public boolean priceManagement(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_PRICE.name(), throwException);
     }
 
-    public boolean report() {
-        return isAuthorized(module, ProductAction.PRO_PRODUCT_REPORT.name());
+    public boolean report(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_PRODUCT_REPORT.name(), throwException);
     }
 
-    public boolean readOrder() {
-        return isAuthorized(module, ProductAction.PRO_ORDERS_READ.name());
+    public boolean readOrder(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_ORDERS_READ.name(), throwException);
     }
 
-    public boolean insertOrder() {
-        return isAuthorized(module, ProductAction.PRO_ORDERS_CREATE.name());
+    public boolean insertOrder(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_ORDERS_CREATE.name(), throwException);
     }
 
-    public boolean updateOrder() {
-        return isAuthorized(module, ProductAction.PRO_ORDERS_UPDATE.name());
+    public boolean updateOrder(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_ORDERS_UPDATE.name(), throwException);
     }
 
-    public boolean deleteOrder() {
-        return isAuthorized(module, ProductAction.PRO_ORDERS_DELETE.name());
+    public boolean deleteOrder(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_ORDERS_DELETE.name(), throwException);
     }
 
-    public boolean readCustomer() {
-        return isAuthorized(module, ProductAction.PRO_CUSTOMER_READ.name());
+    public boolean readCustomer(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_CUSTOMER_READ.name(), throwException);
     }
 
-    public boolean insertCustomer() {
-        return isAuthorized(module, ProductAction.PRO_CUSTOMER_CREATE.name());
+    public boolean insertCustomer(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_CUSTOMER_CREATE.name(), throwException);
     }
 
-    public boolean updateCustomer() {
-        return isAuthorized(module, ProductAction.PRO_CUSTOMER_UPDATE.name());
+    public boolean updateCustomer(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_CUSTOMER_UPDATE.name(), throwException);
     }
 
-    public boolean deleteCustomer() {
-        return isAuthorized(module, ProductAction.PRO_CUSTOMER_DELETE.name());
+    public boolean deleteCustomer(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_CUSTOMER_DELETE.name(), throwException);
     }
 
-    public boolean readVoucher() {
-        return isAuthorized(module, ProductAction.PRO_VOUCHER_READ.name());
+    public boolean readVoucher(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_VOUCHER_READ.name(), throwException);
     }
 
-    public boolean insertVoucher() {
-        return isAuthorized(module, ProductAction.PRO_VOUCHER_CREATE.name());
+    public boolean insertVoucher(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_VOUCHER_CREATE.name(), throwException);
     }
 
-    public boolean updateVoucher() {
-        return isAuthorized(module, ProductAction.PRO_VOUCHER_UPDATE.name());
+    public boolean updateVoucher(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_VOUCHER_UPDATE.name(), throwException);
     }
 
-    public boolean deleteVoucher() {
-        return isAuthorized(module, ProductAction.PRO_VOUCHER_DELETE.name());
+    public boolean deleteVoucher(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_VOUCHER_DELETE.name(), throwException);
     }
 
-    public boolean readSupplier() {
-        return isAuthorized(module, ProductAction.PRO_SUPPLIER_READ.name());
+    public boolean readSupplier(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_SUPPLIER_READ.name(), throwException);
     }
 
-    public boolean insertSupplier() {
-        return isAuthorized(module, ProductAction.PRO_SUPPLIER_CREATE.name());
+    public boolean insertSupplier(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_SUPPLIER_CREATE.name(), throwException);
     }
 
-    public boolean updateSupplier() {
-        return isAuthorized(module, ProductAction.PRO_SUPPLIER_UPDATE.name());
+    public boolean updateSupplier(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_SUPPLIER_UPDATE.name(), throwException);
     }
 
-    public boolean deleteSupplier() {
-        return isAuthorized(module, ProductAction.PRO_SUPPLIER_DELETE.name());
+    public boolean deleteSupplier(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_SUPPLIER_DELETE.name(), throwException);
     }
 }

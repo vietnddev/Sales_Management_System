@@ -34,7 +34,7 @@ public class SupplierController extends BaseController {
 
 	@PostMapping("/insert")
 	public String insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
-		if (!validateModuleProduct.insertSupplier()) {
+		if (!validateModuleProduct.insertSupplier(true)) {
 			return PagesUtil.SYS_UNAUTHORIZED;
 		}
 		if (supplier == null) {

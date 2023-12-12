@@ -50,7 +50,7 @@ public class DocumentController extends BaseController {
     //Dashboard
     @GetMapping("/dashboard")
     public ModelAndView showDashboardOfSTG() {
-        if (validateModuleStorage.dashboard()) {
+        if (validateModuleStorage.dashboard(true)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
             //Loại tài liệu
             List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.DOCUMENTTYPE);
@@ -71,7 +71,7 @@ public class DocumentController extends BaseController {
     //Màn hình root
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
-        if (validateModuleStorage.read()) {
+        if (validateModuleStorage.read(true)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
             List<Document> listRootDocument = documentService.findRootDocument();
             for (int i = 0; i < listRootDocument.size(); i++) {
@@ -91,13 +91,13 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
             modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");            
-            if (validateModuleStorage.insert()) {
+            if (validateModuleStorage.insert(false)) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (validateModuleStorage.update()) {
+            if (validateModuleStorage.update(false)) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (validateModuleStorage.delete()) {
+            if (validateModuleStorage.delete(false)) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return baseView(modelAndView);
@@ -115,7 +115,7 @@ public class DocumentController extends BaseController {
             throw new NotFoundException("Document not found!");
         }
         //Kiểm tra quyền xem document
-        if (!validateModuleStorage.read() || !docShareService.isShared(documentId)) {
+        if (!validateModuleStorage.read(true) || !docShareService.isShared(documentId)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FI.name())) {
@@ -131,10 +131,10 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));            
             //Cây thư mục
             //modelAndView.addObject("folders", list);
-            if (validateModuleStorage.update()) {
+            if (validateModuleStorage.update(false)) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (validateModuleStorage.delete()) {
+            if (validateModuleStorage.delete(false)) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return baseView(modelAndView);
@@ -156,13 +156,13 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
             modelAndView.addObject("documentParentName", document.getTen().toUpperCase());            
-            if (validateModuleStorage.insert()) {
+            if (validateModuleStorage.insert(false)) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (validateModuleStorage.update()) {
+            if (validateModuleStorage.update(false)) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (validateModuleStorage.delete()) {
+            if (validateModuleStorage.delete(false)) {
                 modelAndView.addObject("action_delete", "enable");
             }
 
@@ -261,7 +261,7 @@ public class DocumentController extends BaseController {
     
     @PostMapping("/docfield/insert")
     public String insertDocfield(DocField docField, HttpServletRequest request) {
-        if (!validateModuleStorage.update()) {
+        if (!validateModuleStorage.update(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         docField.setTrangThai(false);
@@ -273,7 +273,7 @@ public class DocumentController extends BaseController {
     public String updateDocfield(HttpServletRequest request,
                                  @ModelAttribute("docField") DocField docField,
                                  @PathVariable("id") Integer docFieldId) {
-        if (!validateModuleStorage.update()) {
+        if (!validateModuleStorage.update(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (docFieldId <= 0 || documentService.findById(docFieldId) == null) {
@@ -285,7 +285,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/docfield/delete/{id}")
     public String deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
-        if (!validateModuleStorage.delete()) {
+        if (!validateModuleStorage.delete(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (docFieldService.findById(docfiledId) == null){

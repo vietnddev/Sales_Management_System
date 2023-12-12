@@ -1,6 +1,7 @@
 package com.flowiee.app.base;
 
 import com.flowiee.app.exception.AuthenticationException;
+import com.flowiee.app.exception.ForbiddenException;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.utils.CommonUtil;
 import lombok.SneakyThrows;
@@ -24,8 +25,8 @@ public class BaseAuthorize {
         }
         return authentication.isAuthenticated();
     }
-
-    protected boolean isAuthorized(String module, String action) {
+    
+    protected boolean isAuthorized(String module, String action, boolean throwException) {
         if (isAuthenticated()) {
             if (CommonUtil.ADMINISTRATOR.equals(CommonUtil.getCurrentAccountUsername())) {
                 return true;
@@ -33,7 +34,9 @@ public class BaseAuthorize {
             if (roleService.isAuthorized(Objects.requireNonNull(CommonUtil.getCurrentAccountId()), module, action)) {
                 return true;
             } else {
-                //throw new ForbiddenException("403!");
+            	if (throwException) {
+            		throw new ForbiddenException("You are not authorized to use this dunction!");	
+            	}               
             }
         }
         return false;

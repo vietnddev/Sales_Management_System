@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -50,11 +49,13 @@ public class OrderController extends BaseController {
     @Autowired
     private ItemsService itemsService;
     @Autowired
+    private VoucherTicketService voucherTicketService;
+    @Autowired
     private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping
     public ModelAndView viewAllOrders() {
-        if (!validateModuleProduct.readOrder()) {
+        if (!validateModuleProduct.readOrder(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
@@ -72,7 +73,7 @@ public class OrderController extends BaseController {
 
     @PostMapping
     public ModelAndView filterListDonHang(@ModelAttribute("donHangRequest") OrderRequest request) {
-        if (!validateModuleProduct.readOrder()) {
+        if (!validateModuleProduct.readOrder(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
@@ -100,7 +101,7 @@ public class OrderController extends BaseController {
         if (id <= 0 || orderService.findById(id) == null) {
             throw new NotFoundException("Order not found!");
         }
-        if (!validateModuleProduct.readOrder()) {
+        if (!validateModuleProduct.readOrder(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_DETAIL);
@@ -116,7 +117,7 @@ public class OrderController extends BaseController {
 
     @GetMapping("/ban-hang")
     public ModelAndView showPageBanHang() {
-        if (!validateModuleProduct.insertOrder()) {
+        if (!validateModuleProduct.insertOrder(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_SELL);
@@ -147,7 +148,7 @@ public class OrderController extends BaseController {
 
     @PostMapping("/ban-hang/cart/{id}/add-items")
     public String addItemsToCart(@PathVariable("id") Integer idCart, HttpServletRequest request) {
-        if (!validateModuleProduct.insertOrder()) {
+        if (!validateModuleProduct.insertOrder(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (idCart <= 0 || cartService.findById(idCart) == null) {
@@ -167,7 +168,7 @@ public class OrderController extends BaseController {
 
     @PostMapping("/ban-hang/cart/update/{id}")
     public String updateItemsOfCart(@PathVariable("id") Integer id, @ModelAttribute("items") Items items) {
-        if (!validateModuleProduct.insertOrder()) {
+        if (!validateModuleProduct.insertOrder(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (id <= 0 || cartService.findById(id) == null) {
@@ -184,7 +185,7 @@ public class OrderController extends BaseController {
 
     @PostMapping("/ban-hang/cart/delete/{id}")
     public String deleteItemsOfCart(@PathVariable("id") Integer id) {
-        if (!validateModuleProduct.insertOrder()) {
+        if (!validateModuleProduct.insertOrder(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         itemsService.findByCartId(id).forEach(items -> {
@@ -192,12 +193,23 @@ public class OrderController extends BaseController {
         });
         return "redirect:/don-hang/ban-hang";
     }
+    
+    @PostMapping("/ban-hang/cart/add-voucher/{code}")
+    public ModelAndView checkToUse(@PathVariable("code") String code) {
+        if (!validateModuleProduct.readVoucher(true)) {
+            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        }
+        ModelAndView modelAndView = new ModelAndView("redirect:/don-hang/ban-hang");
+        modelAndView.addObject("ticket_code", code);
+        modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
+        modelAndView.addObject("ticket_info", voucherTicketService.findByCode(code));
+        return modelAndView;
+    }
 
-    @Transactional
     @PostMapping("/insert")
     public String insert(@ModelAttribute("orderRequest") OrderRequest orderRequest,
                          HttpServletRequest request) {
-        if (!validateModuleProduct.insertOrder()) {
+        if (!validateModuleProduct.insertOrder(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
@@ -223,7 +235,7 @@ public class OrderController extends BaseController {
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer id) {
-        if (!validateModuleProduct.updateOrder()) {
+        if (!validateModuleProduct.updateOrder(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         orderService.update(order, id);
@@ -232,7 +244,7 @@ public class OrderController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
-        if (!validateModuleProduct.deleteOrder()) {
+        if (!validateModuleProduct.deleteOrder(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         orderService.delete(id);
@@ -242,7 +254,7 @@ public class OrderController extends BaseController {
     @PostMapping("/thanh-toan/{id}")
     public String thanhToan(@PathVariable("id") Integer donHangId,
                             @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
-        if (!validateModuleProduct.updateOrder()) {
+        if (!validateModuleProduct.updateOrder(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         orderPay.setMaPhieu("PTT" + donHangId + CommonUtil.now("yyMMddHHmmss"));
@@ -254,7 +266,7 @@ public class OrderController extends BaseController {
 
     @GetMapping("/export")
     public ResponseEntity<?> exportDanhSachDonHang() {
-        if (validateModuleProduct.readOrder()) {
+        if (validateModuleProduct.readOrder(true)) {
             return orderService.exportDanhSachDonHang();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);

@@ -36,7 +36,7 @@ public class SystemController extends BaseController {
 
     @GetMapping(value = "/log")
     public ModelAndView getAllLog() {
-        if (!validateModuleSystem.readLog()) {
+        if (!validateModuleSystem.readLog(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_LOG);
@@ -46,7 +46,7 @@ public class SystemController extends BaseController {
 
     @GetMapping("/config")
     public ModelAndView showConfig() {
-        if (!validateModuleSystem.setupConfig()) {
+        if (!validateModuleSystem.setupConfig(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_CONFIG);
@@ -58,7 +58,7 @@ public class SystemController extends BaseController {
     @PostMapping("/config/update/{id}")
     public String update(@ModelAttribute("config") FlowieeConfig config,
                          @PathVariable("id") Integer configId) {
-        if (!validateModuleSystem.setupConfig()) {
+        if (!validateModuleSystem.setupConfig(true)) {
             return PagesUtil.SYS_UNAUTHORIZED;
         }
         if (configId <= 0 || configService.findById(configId) == null) {
@@ -70,7 +70,7 @@ public class SystemController extends BaseController {
 
     @GetMapping("/role")
     public ModelAndView readRole() {
-        if (!validateModuleSystem.readPermission()) {
+        if (!validateModuleSystem.readPermission(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);

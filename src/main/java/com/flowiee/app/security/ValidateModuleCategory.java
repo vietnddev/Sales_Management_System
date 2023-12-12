@@ -9,23 +9,23 @@ import org.springframework.stereotype.Component;
 public class ValidateModuleCategory extends BaseAuthorize {
     String module = SystemModule.CATEGORY.name();
 
-    public boolean readCategory() {
-        return isAuthorized(module, CategoryAction.CTG_READ.name());
+    public boolean readCategory(boolean throwException) {
+        return isAuthorized(module, CategoryAction.CTG_READ.name(), throwException);
     }
 
-    public boolean insertCategory() {
-        return isAuthorized(module, CategoryAction.CTG_CREATE.name());
+    public boolean insertCategory(boolean throwException) {
+        return isAuthorized(module, CategoryAction.CTG_CREATE.name(), throwException);
     }
 
-    public boolean updateCategory() {
-        return isAuthorized(module, CategoryAction.CTG_UPDATE.name());
+    public boolean updateCategory(boolean throwException) {
+        return isAuthorized(module, CategoryAction.CTG_UPDATE.name(), throwException);
     }
 
-    public boolean deleteCategory() {
-        return isAuthorized(module, CategoryAction.CTG_DELETE.name());
+    public boolean deleteCategory(boolean throwException) {
+        return isAuthorized(module, CategoryAction.CTG_DELETE.name(), throwException);
     }
 
-    public boolean importCategory() {
-        return isAuthorized(module, CategoryAction.CTG_IMPORT.name());
+    public boolean importCategory(boolean throwException) {
+        return isAuthorized(module, CategoryAction.CTG_IMPORT.name(), throwException);
     }
 }

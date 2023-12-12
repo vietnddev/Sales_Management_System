@@ -20,7 +20,7 @@ public class TicketExportGoodsController extends BaseController {
 
     @GetMapping("/ticket-export")
     public ModelAndView showDashboardOfSTG() {
-        if (!validateModuleStorage.exportGoods()) {
+        if (!validateModuleStorage.exportGoods(true)) {
             return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_TICKET_EXPORT);

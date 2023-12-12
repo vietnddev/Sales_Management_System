@@ -32,7 +32,7 @@ public class MaterialController extends BaseController {
 
     @GetMapping
     public ModelAndView loadPage() {
-        if (validateModuleStorage.material()) {
+        if (validateModuleStorage.material(true)) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
             modelAndView.addObject("material", new Material());
             modelAndView.addObject("listMaterial", materialService.findAll());

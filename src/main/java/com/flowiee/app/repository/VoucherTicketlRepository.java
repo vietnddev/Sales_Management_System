@@ -11,4 +11,7 @@ import java.util.List;
 public interface VoucherTicketlRepository extends JpaRepository<VoucherTicket, Integer> {
     @Query("from VoucherTicket v where v.voucherInfo.id=:voucherId")
     List<VoucherTicket> findByVoucherId(Integer voucherId);
+    
+    @Query("from VoucherTicket v where v.code=:code")
+    VoucherTicket findByCode(String code);
 }
