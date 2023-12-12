@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface VoucherTicketService extends BaseService<VoucherTicket> {
     List<VoucherTicket> findByVoucherInfoId(Integer voucherId);
+    
+    VoucherTicket findByCode(String code);
+    
+    String checkTicketToUse(String code);
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "pro_don_hang")
+@Table(name = "pro_order")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -45,8 +45,17 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "thoi_gian_dat_hang", nullable = false)
 	private Date thoiGianDatHang;
 
-	@Column(name = "tong_tien_don_hang")
-	private Double tongTienDonHang;
+	@Column(name = "total_amount")
+	private Double totalAmount;
+	
+	@Column(name = "voucher_used_code")
+	private String voucherUsedCode;
+	
+	@Column(name = "amount_discount")
+	private Double amountDiscount;
+	
+	@Column(name = "total_amount_after_discount")
+	private Double totalAmountAfterDiscount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nhan_vien_ban_hang")
@@ -76,7 +85,8 @@ public class Order extends BaseEntity implements Serializable {
 				", khachHang=" + customer +
 				", ghiChu='" + ghiChu + '\'' +
 				", thoiGianDatHang=" + thoiGianDatHang +
-				", tongTienDonHang=" + tongTienDonHang +
+				", totalAmount=" + totalAmount +
+				", totalAmountAfterDiscount=" + totalAmountAfterDiscount +
 				", nhanVienBanHang=" + nhanVienBanHang +
 				", kenhBanHang=" + kenhBanHang +
 				", trangThaiDonHang=" + trangThaiDonHang +

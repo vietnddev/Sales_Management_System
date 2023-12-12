@@ -1,7 +1,10 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.dto.VoucherInfoDTO;
+import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.repository.VoucherTicketlRepository;
+import com.flowiee.app.service.VoucherService;
 import com.flowiee.app.service.VoucherTicketService;
 
 import com.flowiee.app.utils.AppConstants;
@@ -14,6 +17,8 @@ import java.util.List;
 public class VoucherTicketServiceImpl implements VoucherTicketService {
     @Autowired
     private VoucherTicketlRepository voucherTicketlRepository;
+    @Autowired
+    private VoucherService voucherInfoService;
 
     @Override
     public List<VoucherTicket> findAll() {
@@ -35,8 +40,12 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
         if (voucherTicket == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        voucherTicketlRepository.save(voucherTicket);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        if (this.findByCode(voucherTicket.getCode()) == null) {
+        	voucherTicketlRepository.save(voucherTicket);
+        	return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        } else {
+        	return AppConstants.SERVICE_RESPONSE_FAIL;	
+        }
     }
 
     @Override
@@ -60,4 +69,26 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
         voucherTicketlRepository.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
+
+	@Override
+	public VoucherTicket findByCode(String code) {
+		return voucherTicketlRepository.findByCode(code);
+	}
+
+	@Override
+	public String checkTicketToUse(String code) {
+		String statusTicket = "";
+		VoucherTicket ticket = this.findByCode(code);
+		if (ticket != null) {
+			VoucherInfoDTO voucherInfo = voucherInfoService.findById(ticket.getId());
+			if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(voucherInfo.getStatus())) {
+				statusTicket = AppConstants.VOUCHER_STATUS.ACTIVE.getLabel();
+			} else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(voucherInfo.getStatus())) {
+				statusTicket = AppConstants.VOUCHER_STATUS.INACTIVE.getLabel();
+			}
+		} else {
+			statusTicket = "Code invalid!";
+		}
+		return statusTicket;
+	}
 }

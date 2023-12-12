@@ -67,14 +67,14 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 List<String> listKeyVoucher = new ArrayList<>();
                 while (listKeyVoucher.size() < voucherInfo.getQuantity()) {
                     String randomKey = generateRandomKeyVoucher(voucherInfo.getLengthOfKey(), voucherInfo.getVoucherType());
-                    if (!listKeyVoucher.contains(randomKey)) {
-                        listKeyVoucher.add(randomKey);
-                        //Lưu ticket vào DB
+                    if (!listKeyVoucher.contains(randomKey)) {             
                         VoucherTicket voucherTicket = new VoucherTicket();
                         voucherTicket.setCode(randomKey);
                         voucherTicket.setVoucherInfo(voucherInfo);
                         voucherTicket.setStatus(false);
-                        voucherTicketService.save(voucherTicket);
+                        if (AppConstants.SERVICE_RESPONSE_SUCCESS.equals(voucherTicketService.save(voucherTicket))) {
+                        	listKeyVoucher.add(randomKey);
+                        }
                     }
                 }
                 return AppConstants.SERVICE_RESPONSE_SUCCESS;
