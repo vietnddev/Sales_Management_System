@@ -9,6 +9,4 @@ public interface AccountService extends BaseService<Account> {
     int findIdByUsername(String username);
 
     Account findCurrentAccount();
-
-    boolean isLogin();
 }
