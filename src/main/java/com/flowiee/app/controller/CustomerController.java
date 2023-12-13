@@ -59,7 +59,7 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/update/{id}")
     public String updateCustomer(@ModelAttribute("khachHang") Customer customer,
-                                  @PathVariable("id") Integer id) {
+                                 @PathVariable("id") Integer id) {
         validateModuleSanPham.updateCustomer(true);
         if (customer == null || id <= 0 || customerService.findById(id) == null) {
             throw new NotFoundException("Customer not found!");
@@ -80,8 +80,8 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/contact/use-default/{contactId}")
     public String setCustomerContactUseDefault(@RequestParam("customerId") Integer customerId,
-                                       @RequestParam("contactCode") String contactCode,
-                                       @PathVariable("contactId") Integer contactId) {
+                                               @RequestParam("contactCode") String contactCode,
+                                               @PathVariable("contactId") Integer contactId) {
         validateModuleSanPham.updateCustomer(true);
         if (customerId <= 0 || customerService.findById(customerId) == null) {
             throw new NotFoundException("Customer not found!");

@@ -19,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@CrossOrigin
 @Controller
 @RequestMapping("/storage/material")
 public class MaterialController extends BaseController {
@@ -54,7 +53,8 @@ public class MaterialController extends BaseController {
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("material") Material material,
-                         @PathVariable("id") Integer materialId, HttpServletRequest request) {
+                         @PathVariable("id") Integer materialId,
+                         HttpServletRequest request) {
         validateModuleStorage.updateMaterial(true);
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");

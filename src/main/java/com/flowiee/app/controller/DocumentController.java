@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
-@CrossOrigin
 @Controller
 @RequestMapping("/storage")
 public class DocumentController extends BaseController {
