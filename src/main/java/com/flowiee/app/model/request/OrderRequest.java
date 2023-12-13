@@ -27,4 +27,6 @@ public class OrderRequest implements Serializable {
     private String thoiGianDatHangSearch;
     private String searchTxt;
     private Integer cartId;
+    private String voucherUsedCode;
+    private Double amountDiscount;
 }

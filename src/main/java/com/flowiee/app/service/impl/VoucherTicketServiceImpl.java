@@ -86,7 +86,7 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
 				statusTicket = AppConstants.VOUCHER_STATUS.INACTIVE.getLabel();
 			}
 		} else {
-			statusTicket = "Code invalid!";
+			statusTicket = "Invalid!";
 		}
 		return statusTicket;
 	}

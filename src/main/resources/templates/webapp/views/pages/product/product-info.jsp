@@ -541,12 +541,7 @@
                                                 <div class="col-12">
                                                     <input type="hidden" name="product"
                                                            th:value="${detailProducts.productId}"/>
-                                                    <input type="hidden" name="maSanPham" value=""/>
-                                                    <div class="form-group">
-                                                        <label>Tên biến thể</label>
-                                                        <input class="form-control" type="text" name="tenBienThe"
-                                                               th:placeholder="${detailProducts.productName}">
-                                                    </div>
+                                                    <input type="hidden" name="maSanPham" value=""/>                                            
                                                     <div class="form-group">
                                                         <label>Chọn chất liệu vải</label>
                                                         <select class="custom-select" name="fabricType">

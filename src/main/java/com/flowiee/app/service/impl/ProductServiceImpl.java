@@ -86,12 +86,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findById(Integer id) {
-        Product product = productsRepository.findById(id).orElse(null);
-        if (product == null) {
-            logger.warn("Find product by id " + id + " not found!");
-        }
-        return product;
+    public Product findById(Integer id) {        
+        return productsRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -100,11 +96,10 @@ public class ProductServiceImpl implements ProductService {
             product.setCreatedBy(CommonUtil.getCurrentAccountId());
             productsRepository.save(product);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
-            logger.info(ProductServiceImpl.class.getName() + ": Thêm mới sản phẩm " + product.toString());
+            logger.info("Insert product success! " + product.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(ProductServiceImpl.class.getName() + ": Lỗi khi thêm mới sản phẩm", e.getCause());
+            logger.error("Insert product fail!", e);
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
@@ -112,8 +107,9 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public String update(Product productToUpdate, Integer productId) {
+    	Product productBefore = null;
         try {
-            Product productBefore = this.findById(productId);
+            productBefore = this.findById(productId);
             productBefore.compareTo(productToUpdate).forEach((key, value) -> {
                 ProductHistory productHistory = new ProductHistory();
                 productHistory.setTitle("Update product");
@@ -140,11 +136,10 @@ public class ProductServiceImpl implements ProductService {
                 noiDungLogUpdate = productToUpdate.toString();
             }
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
-            logger.info(ProductServiceImpl.class.getName() + ": Cập nhật sản phẩm " + productBefore.toString());
+            logger.info("Update product success! productId=" + productId);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(ProductServiceImpl.class.getName() + ": Lỗi khi cập nhật sản phẩm!", e.getCause());
+            logger.error("Update product fail! productId=" + productId, e);
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
@@ -154,13 +149,12 @@ public class ProductServiceImpl implements ProductService {
     public String delete(Integer id) {
         Product productToDelete = this.findById(id);
         try {
-            productsRepository.deleteById(id);
-            logger.info(ProductServiceImpl.class.getName() + ": Xóa sản phẩm " + productToDelete.toString());
+            productsRepository.deleteById(id);            
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
+            logger.info("Delete product success! productId=" + id);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(ProductServiceImpl.class.getName() + ": Lỗi khi xóa sản phẩm", e.getCause());
+            logger.error("Delete product fail! productId=" + id, e);
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }

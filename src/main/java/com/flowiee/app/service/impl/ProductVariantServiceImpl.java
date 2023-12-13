@@ -71,18 +71,19 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public String save(ProductVariant productVariant) {
         try {
-            String tenBienTheSanPham = "";
-            if (productVariant.getTenBienThe().isEmpty()) {
-                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
-            } else {
-                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
-            }
+            String tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
+//            if (productVariant.getTenBienThe().isEmpty()) {
+//                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
+//            } else {
+//                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
+//            }
             productVariant.setTenBienThe(tenBienTheSanPham);
             productVariantRepository.save(productVariant);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant.toString());
-            logger.info(ProductVariantServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + productVariant.toString());
+            logger.info("Insert productVariant success! " + productVariant.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
+        	logger.error("Insert productVariant fail! " + productVariant.toString(), e);
             e.printStackTrace();
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
@@ -94,9 +95,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         try {
             productVariantRepository.deleteById(entityId);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
-            logger.info(ProductVariantServiceImpl.class.getName() + ": Xóa biến thể sản phẩm " + productVariantToDelete.toString());
+            logger.info("Delete productVariant success! " + productVariantToDelete.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
+        	logger.error("Delete productVariant fail! " + productVariantToDelete.toString(), e);
             e.printStackTrace();
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
@@ -109,10 +111,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             productVariant.setId(id);
             productVariantRepository.save(productVariant);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
-            logger.info(ProductVariantServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + productVariantBefore.toString());
+            logger.info("Update productVariant success! " + productVariant.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.info("Update productVariant fail! " + productVariant.toString(), e);
+            e.printStackTrace();            
         }
         return AppConstants.SERVICE_RESPONSE_FAIL;
     }
@@ -126,7 +129,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
-            logger.error("Lỗi khi cập nhật số lượng sản phẩm!", productVariant);
+            logger.error("Lỗi khi cập nhật số lượng sản phẩm!");
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }

@@ -56,6 +56,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CustomerContactService customerContactService;
     @Autowired
+    private VoucherTicketService voucherTicketService;
+    @Autowired
     private EntityManager entityManager;
 
     @Override
@@ -138,14 +140,26 @@ public class OrderServiceImpl implements OrderService {
             }
             orderSaved.setTotalAmount(totalMoneyOfDonHang);
             orderSaved.setTotalAmountAfterDiscount(null);
+            
+            VoucherTicket voucherTicket = voucherTicketService.findByCode(request.getVoucherUsedCode());
+            if (voucherTicket != null) {
+            	String statusCode = voucherTicketService.checkTicketToUse(request.getVoucherUsedCode());
+            	if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(statusCode)) {
+            		orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
+            		orderSaved.setAmountDiscount(request.getAmountDiscount());
+            		orderSaved.setTotalAmountAfterDiscount(totalMoneyOfDonHang - request.getAmountDiscount());
+            	}
+            }
             orderRepository.save(orderSaved);
-
+            
+            voucherTicket.setStatus(true);
+            voucherTicketService.update(voucherTicket, voucherTicket.getId());
+            
             systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
-            logger.info(OrderServiceImpl.class.getName() + ": Thêm mới đơn hàng " + order.toString());
-
+            logger.info("Insert new order success! insertBy=" + CommonUtil.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Insert new order fail! order=" + request, e);
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }

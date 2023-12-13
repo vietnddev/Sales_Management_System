@@ -11,6 +11,9 @@ import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
 import com.flowiee.app.model.role.SystemModule;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,8 +23,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 @Service
 public class AccountServiceImpl implements AccountService {
+	private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
+	
     @Autowired
     AccountRepository accountRepository;
     @Autowired
@@ -82,45 +89,61 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String save(Account account) {
-        if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
-            account.setRole("ADMIN");
-        } else {
-            account.setRole("USER");
-        }
-        accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
-        systemLogService.writeLog(systemLog);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    	try {
+            if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
+                account.setRole("ADMIN");
+            } else {
+                account.setRole("USER");
+            }
+            accountRepository.save(account);
+        	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
+            systemLogService.writeLog(systemLog);
+            logger.info("Insert account success! username=" + account.getUsername());
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+		} catch (Exception e) {
+			logger.error("Insert account fail! username=" + account.getUsername(), e);
+			return AppConstants.SERVICE_RESPONSE_FAIL;
+		}
     }
 
+    @Transactional
     @Override
     public String update(Account account, Integer entityId) {
-        account.setId(entityId);
-        if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
-            account.setRole("ADMIN");
-        } else {
-            account.setRole("USER");
-        }
-        accountRepository.save(account);
-    	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
-        systemLogService.writeLog(systemLog);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    	try {
+            account.setId(entityId);
+            if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
+                account.setRole("ADMIN");
+            } else {
+                account.setRole("USER");
+            }
+            accountRepository.save(account);
+        	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
+            systemLogService.writeLog(systemLog);
+            logger.info("Update account success! username=" + account.getUsername());
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+		} catch (Exception e) {
+			logger.error("Update account fail! username=" + account.getUsername(), e);
+			return AppConstants.SERVICE_RESPONSE_FAIL;
+		}
+
     }
 
+    @Transactional
     @Override
     public String delete(Integer accountId) {
-        Account account = accountRepository.findById(accountId).orElse(null);
-        if (account != null) {
-            accountRepository.delete(account);
-            SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
-            systemLogService.writeLog(systemLog);
-        }
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
-    }
-
-    @Override
-    public boolean isLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName() != null;
+    	Account account = null;
+    	try {
+            account = accountRepository.findById(accountId).orElse(null);
+            if (account != null) {
+                accountRepository.delete(account);
+                SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
+                systemLogService.writeLog(systemLog);
+            }
+            logger.info("Delete account success! username=" + account.getUsername());
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+		} catch (Exception e) {
+			logger.error("Delete account fail! username=" + account.getUsername(), e);
+			return AppConstants.SERVICE_RESPONSE_FAIL;
+		}
     }
 }

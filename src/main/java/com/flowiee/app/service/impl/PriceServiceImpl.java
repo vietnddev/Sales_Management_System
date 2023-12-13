@@ -10,6 +10,8 @@ import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.CommonUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +79,10 @@ public class PriceServiceImpl implements PriceService {
         try {
             priceRepository.save(price);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Thêm mới giá sản phẩm: " + price.toString());
-            logger.info(PriceServiceImpl.class.getName() + ": Thêm mới giá sản phẩm " + price.toString());
+            logger.info("Insert price success! insertBy=" + CommonUtil.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
+        	logger.error("Insert price fail! price=" + price.toString());
             e.printStackTrace();
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
@@ -106,9 +109,10 @@ public class PriceServiceImpl implements PriceService {
             String noiDung = "Giá cũ:  " + disableGiaCu.getGiaBan();
             String noiDungCapNhat = "Giá mới: " + price.getGiaBan();
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + noiDung.toString(), "Giá sau khi cập nhật: " + noiDungCapNhat.toString());
-            logger.info(PriceServiceImpl.class.getName() + ": Cập nhật giá sản phẩm " + price.toString());
+            logger.info("Update price success! updateBy=" + CommonUtil.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
+        	logger.error("Update price fail! priceId=" + priceId, e);
             e.printStackTrace();
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
@@ -116,10 +120,15 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public String delete(Integer priceId) {
-        Price price = this.findById(priceId);
-        priceRepository.deleteById(priceId);
-        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
-        logger.info(PriceServiceImpl.class.getName() + ": Xóa giá sản phẩm " + price.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    	try {
+            Price price = this.findById(priceId);
+            priceRepository.deleteById(priceId);
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
+            logger.info("Delete price success! deleteBy=" + CommonUtil.getCurrentAccountUsername());
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+		} catch (Exception e) {
+			logger.error("Delete price fail! priceId=" + priceId, e);
+			return AppConstants.SERVICE_RESPONSE_FAIL;
+		}
     }
 }
