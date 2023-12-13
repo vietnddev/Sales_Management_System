@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -69,22 +71,26 @@ public class ProductVariant extends BaseEntity implements Serializable {
     @Transient
     private Price price;
 
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductAttribute> listThuocTinh;
 
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> listGiaBan;
 
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
     private List<OrderDetail> listOrderDetail;
 
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FileStorage> listFileStorage;
 
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Items> listItems;
 
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductHistory> listProductHistory;
 
     public Map<String, String> compareTo(ProductVariant entityToCompare) {

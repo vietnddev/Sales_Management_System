@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(VoucherInfoServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler
     public ModelAndView exceptionHandler(AuthenticationException ex) {
@@ -51,6 +51,15 @@ public class GlobalExceptionHandler extends BaseController {
     public ModelAndView exceptionHandler(ForbiddenException ex) {
         logger.error("ForbiddenException", ex);
         ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
+        modelAndView.addObject("error", error);
+        return baseView(modelAndView);
+    }
+
+    @ExceptionHandler
+    public ModelAndView exceptionHandler(DataInUseException ex) {
+        logger.error("DataInUseException", ex);
+        ErrorResponse error = new ErrorResponse(HttpStatus.LOCKED.value(), ex.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ERROR);
         modelAndView.addObject("error", error);
         return baseView(modelAndView);

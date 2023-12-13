@@ -16,4 +16,6 @@ public interface ProductService extends BaseService<Product> {
     List<Product> findByUnit(Integer unitId);
 
     List<Product> findByBrand(Integer brandId);
+
+    boolean productInUse(Integer productId);
 }

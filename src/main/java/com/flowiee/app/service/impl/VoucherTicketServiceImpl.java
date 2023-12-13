@@ -9,6 +9,7 @@ import com.flowiee.app.service.VoucherTicketService;
 import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
         }
     }
 
+    @Transactional
     @Override
     public String update(VoucherTicket voucherTicket, Integer voucherDetailId) {
         if (voucherTicket == null || voucherDetailId == null || voucherDetailId <= 0) {
@@ -62,7 +64,7 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         VoucherTicket voucherTicket = this.findById(entityId);
-        if (voucherTicket == null) {
+        if (voucherTicket == null || voucherTicket.isStatus()) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         voucherTicketlRepository.deleteById(entityId);

@@ -22,8 +22,11 @@ public class MaterialHistory extends BaseEntity implements Serializable {
     @JoinColumn(name = "material_id", nullable = false)
     private Material material;
 
-    @Column(name = "action")
-    private String action;
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name = "field_name", nullable = false)
+    private String fieldName;
 
     @Column(name = "old_value")
     private String oldValue;
@@ -31,12 +34,8 @@ public class MaterialHistory extends BaseEntity implements Serializable {
     @Column(name = "newValue")
     private String newValue;
 
-    @Column(name = "note")
-    private String note;
-
-	@Override
-	public String toString() {
-		return "MaterialHistory [id=" + super.id + ", material=" + material + ", action=" + action + ", oldValue=" + oldValue + ", newValue="
-				+ newValue + ", note=" + note + "]";
-	}
+    @Override
+    public String toString() {
+        return "MaterialHistory [id=" + super.getId() + ", material=" + material + ", title=" + title + ", fieldName=" + fieldName + ", oldValue=" + oldValue + ", newValue=" + newValue + "]";
+    }
 }

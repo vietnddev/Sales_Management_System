@@ -4,6 +4,7 @@ import com.flowiee.app.entity.DocData;
 import com.flowiee.app.repository.DocDataRepository;
 import com.flowiee.app.service.DocDataService;
 
+import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +19,29 @@ public class DocDataServiceImpl implements DocDataService {
         return docDataRepository.findAll();
     }
 
-    public DocData findById(int id) {
+    public DocData findById(Integer id) {
         return docDataRepository.findById(id).orElse(null);
     }
 
-    public DocData save(DocData docData) {
-        return docDataRepository.save(docData);
+    public String save(DocData docData) {
+        docDataRepository.save(docData);
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
-    public DocData delete(int id) {
-        DocData docDataToDelete = findById(id);
+    @Override
+    public String update(DocData entity, Integer entityId) {
+        entity.setId(entityId);
+        docDataRepository.save(entity);
+        return null;
+    }
+
+    public String delete(Integer id) {
         docDataRepository.deleteById(id);
-        return docDataToDelete;
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public List<DocData> findByDocField(Integer docFieldId) {
+        return docDataRepository.findByDocField(docFieldId);
     }
 }

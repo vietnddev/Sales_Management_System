@@ -1,7 +1,11 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.entity.Category;
+import com.flowiee.app.entity.CategoryHistory;
 import com.flowiee.app.entity.Material;
+import com.flowiee.app.entity.MaterialHistory;
 import com.flowiee.app.repository.MaterialRepository;
+import com.flowiee.app.service.MaterialHistoryService;
 import com.flowiee.app.service.MaterialService;
 
 import com.flowiee.app.utils.AppConstants;
@@ -15,6 +19,8 @@ import java.util.List;
 public class MaterialServiceImpl implements MaterialService {
     @Autowired
     private MaterialRepository materialRepository;
+    @Autowired
+    private MaterialHistoryService materialHistoryService;
 
     @Override
     public List<Material> findAll() {
@@ -37,6 +43,16 @@ public class MaterialServiceImpl implements MaterialService {
         if (entity == null || entityId == null || entityId <= 0) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
+        Material materialBefore = this.findById(entityId);
+        materialBefore.compareTo(entity).forEach((key, value) -> {
+            MaterialHistory categoryHistory = new MaterialHistory();
+            categoryHistory.setTitle("Update material");
+            categoryHistory.setMaterial(new Material(entityId));
+            categoryHistory.setFieldName(key);
+            categoryHistory.setOldValue(value.substring(0, value.indexOf("#")));
+            categoryHistory.setNewValue(value.substring(value.indexOf("#") + 1));
+            materialHistoryService.save(categoryHistory);
+        });
         entity.setId(entityId);
         materialRepository.save(entity);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -63,5 +79,10 @@ public class MaterialServiceImpl implements MaterialService {
             listData = materialRepository.findByImportId(importId);
         }
         return listData;
+    }
+
+    @Override
+    public List<Material> findByUnit(Integer unitId) {
+        return materialRepository.findByUnit(unitId);
     }
 }

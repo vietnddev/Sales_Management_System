@@ -1,15 +1,17 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.CustomerRepository;
 import com.flowiee.app.service.CustomerService;
-import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.MessagesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
-    private AccountService accountService;
+    private OrderService orderService;
 
     @Override
     public List<Customer> findAll() {
@@ -68,6 +70,9 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = this.findById(id);
         if (id <= 0 || customer == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+        if (!orderService.findByCustomer(id).isEmpty()) {
+            throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
         }
         customerRepository.deleteById(id);
         systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());

@@ -43,4 +43,5 @@ public class MessagesUtil {
 
     public static final String ERROR_FORBIDDEN = "You are not authorized to use this function!";
     public static final String ERROR_NOTFOUND = "The resource you are accessing dose not found!";
+    public static final String ERROR_LOCKED = "The resource is currently in use and cannot be deleted at this time!";
 }

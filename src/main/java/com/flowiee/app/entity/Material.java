@@ -7,7 +7,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "pro_material")
@@ -54,6 +56,42 @@ public class Material extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
     private List<Price> listPrice;
+
+    public Material(int id) {
+        super.id = id;
+    }
+
+    public Map<String, String> compareTo(Material materialToCompare) {
+        Map<String, String> map = new HashMap<>();
+        if (!this.getSupplier().getName().equals(materialToCompare.getSupplier().getName())) {
+            map.put("Supplier name", this.getSupplier().getName() + "#" + materialToCompare.getSupplier().getName());
+        }
+        if (!this.getCode().equals(materialToCompare.getCode())) {
+            map.put("Code", this.getCode() + "#" + materialToCompare.getCode());
+        }
+        if (!this.getName().equals(materialToCompare.getName())) {
+            map.put("Name", this.getName() + "#" + materialToCompare.getName());
+        }
+        if (!this.getQuantity().equals(materialToCompare.getQuantity())) {
+            map.put("Quantity", this.getQuantity() + "#" + materialToCompare.getQuantity());
+        }
+        if (!this.getUnit().getName().equals(materialToCompare.getUnit().getName())) {
+            map.put("Unit", this.getUnit().getName() + "#" + materialToCompare.getUnit().getName());
+        }
+        if (!this.getLocation().equals(materialToCompare.getLocation())) {
+            map.put("Location", this.getLocation() + "#" + materialToCompare.getLocation());
+        }
+        if (!this.getNote().equals(materialToCompare.getNote())) {
+            map.put("Description", this.getNote() + "#" + materialToCompare.getNote());
+        }
+        if (!this.isStatus() && materialToCompare.isStatus()) {
+            map.put("Status", "Disable#Enable");
+        }
+        if (this.isStatus() && !materialToCompare.isStatus()) {
+            map.put("Status", "Enable#Disable");
+        }
+        return map;
+    }
 
 	@Override
 	public String toString() {

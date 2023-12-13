@@ -3,6 +3,8 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -42,7 +44,8 @@ public class Customer extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
 	private List<Order> listOrder;
 
-	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<CustomerContact> listCustomerContact;
 
 	public Customer(int id) {

@@ -2,13 +2,14 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "pro_order")
@@ -77,6 +78,41 @@ public class Order extends BaseEntity implements Serializable {
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderHistory> listOrderHistory;
+
+	public Map<String, String> compareTo(Order compare) {
+		Map<String, String> map = new HashMap<>();
+		if (!this.getReceiverName().equals(compare.getReceiverName())) {
+			map.put("Receiver name", this.getReceiverName() + "#" + compare.getReceiverName());
+		}
+		if (!this.getReceiverPhone().equals(compare.getReceiverPhone())) {
+			map.put("Receiver phone", this.getReceiverPhone() + "#" + compare.getReceiverPhone());
+		}
+		if (!this.getReceiverAddress().equals(compare.getReceiverAddress())) {
+			map.put("Receiver address", this.getReceiverAddress() + "#" + compare.getReceiverAddress());
+		}
+		if (!this.getReceiverEmail().equals(compare.getReceiverEmail())) {
+			map.put("Receiver email", this.getReceiverEmail() + "#" + compare.getReceiverEmail());
+		}
+		if (!this.getCustomer().getTenKhachHang().equals(compare.getCustomer().getTenKhachHang())) {
+			map.put("Customer", this.getCustomer().getTenKhachHang() + "#" + compare.getCustomer().getTenKhachHang());
+		}
+		if (!this.getGhiChu().equals(compare.getGhiChu())) {
+			map.put("Note", this.getGhiChu() + "#" + compare.getGhiChu());
+		}
+		if (this.getThoiGianDatHang().compareTo(compare.getThoiGianDatHang()) != 0) {
+			map.put("Order time", this.getThoiGianDatHang() + "#" + compare.getThoiGianDatHang());
+		}
+		if (!this.getVoucherUsedCode().equals(compare.getVoucherUsedCode())) {
+			map.put("Voucher", this.getVoucherUsedCode() + "#" + compare.getVoucherUsedCode());
+		}
+		if (!this.getKenhBanHang().getName().equals(compare.getKenhBanHang().getName())) {
+			map.put("Sales channel", this.getKenhBanHang().getName() + "#" + compare.getKenhBanHang().getName());
+		}
+		if (!this.getTrangThaiDonHang().getName().equals(compare.getTrangThaiDonHang().getName())) {
+			map.put("Order status", this.getTrangThaiDonHang().getName() + "#" + compare.getTrangThaiDonHang().getName());
+		}
+		return map;
+	}
 
 	@Override
 	public String toString() {

@@ -77,7 +77,7 @@ public class CategoryController extends BaseController {
                          HttpServletRequest request) {
         validateModuleCategory.updateCategory(true);
         if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
-            throw new NotFoundException("Category not found!");
+            throw new NotFoundException("Category not found! categoryId=" + categoryId);
         }
         categoryService.update(category, categoryId);
         return "redirect:" + request.getHeader("referer");
@@ -87,7 +87,7 @@ public class CategoryController extends BaseController {
     public String delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
         validateModuleCategory.deleteCategory(true);
         if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
-            throw new NotFoundException("Category not found!");
+            throw new NotFoundException("Category not found! categoryId=" + categoryId);
         }
         categoryService.delete(categoryId);
         return "redirect:" + request.getHeader("referer");

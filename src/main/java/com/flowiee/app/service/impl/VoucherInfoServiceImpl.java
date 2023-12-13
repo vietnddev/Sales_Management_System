@@ -2,11 +2,13 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.VoucherInfoDTO;
+import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.repository.VoucherInfoRepository;
 import com.flowiee.app.service.*;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.MessagesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +106,9 @@ public class VoucherInfoServiceImpl implements VoucherService {
         VoucherInfoDTO voucherInfo = this.findById(voucherId);
         if (voucherInfo == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+        if (!voucherApplyService.findByVoucherId(voucherId).isEmpty()) {
+            throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
         }
         voucherInfoRepository.deleteById(voucherId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;

@@ -3,6 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
+import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.ProductHistory;
@@ -10,6 +11,7 @@ import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.MessagesUtil;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -45,6 +47,8 @@ public class ProductServiceImpl implements ProductService {
     private EntityManager entityManager;
     @Autowired
     private ProductHistoryService productHistoryService;
+    @Autowired
+    private ProductVariantService productVariantService;
     @Autowired
     private VoucherService voucherInfoService;
     @Autowired
@@ -147,8 +151,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public String delete(Integer id) {
-        Product productToDelete = this.findById(id);
         try {
+            Product productToDelete = this.findById(id);
+            if (productInUse(id)) {
+                throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+            }
             productsRepository.deleteById(id);            
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
             logger.info("Delete product success! productId=" + id);
@@ -240,5 +247,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findByBrand(Integer brandId) {
         return productsRepository.findByBrand(brandId);
+    }
+
+    @Override
+    public boolean productInUse(Integer productId) {
+        return (!productVariantService.findAllProductVariantOfProduct(productId).isEmpty());
     }
 }

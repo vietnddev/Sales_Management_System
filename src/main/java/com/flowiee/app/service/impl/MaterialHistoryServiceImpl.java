@@ -59,7 +59,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public List<MaterialHistory> findByAction(String action) {
-        return materialHistoryRepository.findByAction(action);
+    public List<MaterialHistory> findByFieldName(String fieldName) {
+        return materialHistoryRepository.findByFieldName(fieldName);
     }
 }

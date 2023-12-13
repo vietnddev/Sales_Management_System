@@ -9,4 +9,6 @@ public interface MaterialService extends BaseService<Material> {
     List<Material> findByCode(String code);
 
     List<Material> findByImportId(Integer importId);
+
+    List<Material> findByUnit(Integer unitId);
 }

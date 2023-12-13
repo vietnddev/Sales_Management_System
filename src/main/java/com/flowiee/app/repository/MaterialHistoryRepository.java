@@ -13,6 +13,6 @@ public interface MaterialHistoryRepository extends JpaRepository<MaterialHistory
     @Query("from MaterialHistory m where m.material.id=:materialId")
     List<MaterialHistory> findByMaterialId(Integer materialId);
 
-    @Query("from MaterialHistory m where m.action=:action")
-    List<MaterialHistory> findByAction(String action);
+    @Query("from MaterialHistory m where m.fieldName=:fieldName")
+    List<MaterialHistory> findByFieldName(String fieldName);
 }

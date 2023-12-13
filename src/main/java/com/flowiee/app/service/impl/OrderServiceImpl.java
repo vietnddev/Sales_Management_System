@@ -2,6 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.model.request.OrderRequest;
@@ -12,6 +13,7 @@ import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.MessagesUtil;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -36,6 +38,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -149,11 +152,13 @@ public class OrderServiceImpl implements OrderService {
             		orderSaved.setAmountDiscount(request.getAmountDiscount());
             		orderSaved.setTotalAmountAfterDiscount(totalMoneyOfDonHang - request.getAmountDiscount());
             	}
+
+                voucherTicket.setCustomer(orderSaved.getCustomer());
+                voucherTicket.setActiveTime(new Date());
+                voucherTicket.setStatus(true);
+                voucherTicketService.update(voucherTicket, voucherTicket.getId());
             }
             orderRepository.save(orderSaved);
-            
-            voucherTicket.setStatus(true);
-            voucherTicketService.update(voucherTicket, voucherTicket.getId());
             
             systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
             logger.info("Insert new order success! insertBy=" + CommonUtil.getCurrentAccountUsername());
@@ -175,6 +180,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findByCustomer(Integer customerId) {
+        return orderRepository.findByCustomer(customerId);
+    }
+
+    @Override
     public String update(Order order, Integer id) {
         order.setId(id);
         orderRepository.save(order);
@@ -186,6 +196,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String delete(Integer id) {
         Order order = this.findById(id);
+        order.getListOrderPay().forEach(orderPay -> {
+            if (orderPay.getPaymentStatus()) {
+                throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+            }
+        });
+        if ("DE".equals(order.getTrangThaiDonHang().getCode()) || "DO".equals(order.getTrangThaiDonHang().getCode())) {
+            throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+        }
         orderRepository.deleteById(id);
         systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());

@@ -25,4 +25,6 @@ public interface OrderService extends BaseService<Order> {
     List<Order> findBySalesChannel(Integer salesChannelId);
 
     List<Order> findByOrderStatus(Integer orderStatusId);
+
+    List<Order> findByCustomer(Integer customerId);
 }

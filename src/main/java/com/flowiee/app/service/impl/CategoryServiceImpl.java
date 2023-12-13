@@ -1,13 +1,11 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.entity.Category;
+import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.CategoryRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.*;
-import com.flowiee.app.entity.FileStorage;
-import com.flowiee.app.entity.FlowieeImport;
-import com.flowiee.app.entity.Notification;
 import com.flowiee.app.repository.FileStorageRepository;
 import com.flowiee.app.repository.FlowieeImportRepository;
 
@@ -38,6 +36,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
+    private CategoryHistoryService categoryHistoryService;
+    @Autowired
     private ProductService productService;
     @Autowired
     private ProductVariantService productVariantService;
@@ -59,6 +59,8 @@ public class CategoryServiceImpl implements CategoryService {
     private FileStorageRepository fileStorageRepository;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private MaterialService materialService;
 
     @Override
     public List<Category> findAll() {
@@ -85,6 +87,16 @@ public class CategoryServiceImpl implements CategoryService {
         if (entity == null || entityId == null || entityId <= 0) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
+        Category categoryBefore = this.findById(entityId);
+        categoryBefore.compareTo(entity).forEach((key, value) -> {
+            CategoryHistory categoryHistory = new CategoryHistory();
+            categoryHistory.setTitle("Update category");
+            categoryHistory.setCategory(new Category(entityId, null));
+            categoryHistory.setFieldName(key);
+            categoryHistory.setOldValue(value.substring(0, value.indexOf("#")));
+            categoryHistory.setNewValue(value.substring(value.indexOf("#") + 1));
+            categoryHistoryService.save(categoryHistory);
+        });
         entity.setId(entityId);
         categoryRepository.save(entity);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -96,7 +108,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (entityId == null || entityId <= 0 || this.findById(entityId) == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        categoryRepository.deleteById(entityId);
+        if (categoryInUse(entityId)) {
+            throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+        } else {
+            categoryRepository.deleteById(entityId);
+        }
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
@@ -128,46 +144,54 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Boolean categoryInUse(Integer categoryId) {
         Category category = this.findById(categoryId);
-        if (category.getType().equals(AppConstants.UNIT)) {
-            if (!productService.findByProductType(categoryId).isEmpty()) {
-                return true;
-            } else if (!productService.findByUnit(categoryId).isEmpty()) {
-                return true;
-            } else if (!productService.findByBrand(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.FABRICTYPE)) {
-            if (!productVariantService.findByFabricType(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.PAYMETHOD)) {
-            if (!orderPayService.findByPayMethod(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.SALESCHANNEL)) {
-            if (!orderService.findBySalesChannel(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.SIZE)) {
-            if (!productVariantService.findBySize(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.COLOR)) {
-            if (!productVariantService.findByColor(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.PRODUCTTYPE)) {
-            if (!productService.findByProductType(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.DOCUMENTTYPE)) {
-            if (!documentService.findByDoctype(categoryId).isEmpty()) {
-                return true;
-            }
-        } else if (category.getType().equals(AppConstants.ORDERSTATUS)) {
-            if (!orderService.findByOrderStatus(categoryId).isEmpty()) {
-                return true;
-            }
+        switch (category.getType()) {
+            case "UNIT":
+                if (!productService.findByProductType(categoryId).isEmpty() || !materialService.findByUnit(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "FABRICTYPE":
+                if (!productVariantService.findByFabricType(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "PAYMETHOD":
+                if (!orderPayService.findByPayMethod(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "SALESCHANNEL":
+                if (!orderService.findBySalesChannel(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "SIZE":
+                if (!productVariantService.findBySize(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "COLOR":
+                if (!productVariantService.findByColor(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "PRODUCTTYPE":
+                if (!productService.findByProductType(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "DOCUMENTTYPE":
+                if (!documentService.findByDoctype(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            case "ORDERSTATUS":
+                if (!orderService.findByOrderStatus(categoryId).isEmpty()) {
+                    return true;
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + category.getType());
         }
         return false;
     }

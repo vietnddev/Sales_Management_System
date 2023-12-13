@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.StorageAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.DocData;
@@ -10,6 +11,7 @@ import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocFieldService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.MessagesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,9 +78,13 @@ public class DocFieldServiceImpl implements DocFieldService {
         return "OK";
     }
 
+    @Transactional
     @Override
     public DocField delete(Integer id) {
         DocField docFieldToDelete = findById(id);
+        if (!docDataService.findByDocField(id).isEmpty()) {
+            throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+        }
         docFieldRepository.deleteById(id);
         systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field: " + docFieldToDelete.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Xóa doc_field " + docFieldToDelete.toString());
