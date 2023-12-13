@@ -25,7 +25,8 @@ public class SupplierController extends BaseController {
 	private ValidateModuleProduct validateModuleProduct;
 
 	@GetMapping
-	public ModelAndView viewAllProducts() {
+	public ModelAndView viewAllSupplier() {
+		validateModuleProduct.readSupplier(true);
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_SUPPLIER);
 		modelAndView.addObject("supplier", new Supplier());
 		modelAndView.addObject("listSuplier", supplierService.findAll());		
@@ -34,9 +35,7 @@ public class SupplierController extends BaseController {
 
 	@PostMapping("/insert")
 	public String insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
-		if (!validateModuleProduct.insertSupplier(true)) {
-			return PagesUtil.SYS_UNAUTHORIZED;
-		}
+		validateModuleProduct.insertSupplier(true);
 		if (supplier == null) {
 			throw new NotFoundException("Customer not found!");
 		}

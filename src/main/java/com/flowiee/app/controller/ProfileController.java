@@ -1,6 +1,8 @@
 package com.flowiee.app.controller;
 
+import com.flowiee.app.base.BaseAuthorize;
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.security.ValidateModuleSystem;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
@@ -20,25 +22,30 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(path = "/profile")
 public class ProfileController extends BaseController {
 	@Autowired
-	private OrderService orderService;	
+	private OrderService orderService;
+	@Autowired
+	private BaseAuthorize baseAuthorize;
 
 	@GetMapping
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
+		baseAuthorize.isAuthenticated();
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", accountService.findCurrentAccount());
-		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(CommonUtil.getCurrentAccountId()));
+		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(Objects.requireNonNull(CommonUtil.getCurrentAccountId())));
 		return baseView(modelAndView);
 	}
 
 	@PostMapping("/update")
 	public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
 			@ModelAttribute("account") Account accountEntity) {
+		baseAuthorize.isAuthenticated();
 		String username = userDetails.getUsername();
 		String password = accountService.findByUsername(username).getPassword();
 		int accountID = accountService.findByUsername(username).getId();
@@ -56,6 +63,7 @@ public class ProfileController extends BaseController {
 	public ModelAndView changePassword(HttpServletRequest request,
 									   @ModelAttribute("account") Account accountEntity,
 									   RedirectAttributes redirectAttributes) {
+		baseAuthorize.isAuthenticated();
 		String password_old = request.getParameter("password_old");
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");

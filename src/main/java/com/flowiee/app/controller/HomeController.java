@@ -35,6 +35,7 @@ public class HomeController {
     public String showPageChangePassword() {
         return PagesUtil.SYS_UNAUTHORIZED;
     }
+
     @GetMapping(value = "/change-password", params = "submit")
     public void submitChangePassword(){
         //

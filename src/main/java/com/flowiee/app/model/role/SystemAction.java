@@ -101,7 +101,10 @@ public class SystemAction {
 		STG_DOC_DOWNLOAD("Download tài liệu"),
 		STG_DOC_SHARE("Chia sẽ tài liệu"),
 		STG_DOC_DOCTYPE_CONFIG("Cấu hình loại tài liệu"),
-		STG_MATERIAL("Quản lý nguyên vật liệu"),
+		STG_MATERIAL_READ("Xem danh sách nguyên vật liệu"),
+		STG_MATERIAL_CREATE("Thêm mới nguyên vật liệu"),
+		STG_MATERIAL_UPDATE("Cập nhật nguyên vật liệu"),
+		STG_MATERIAL_DELETE("Xóa nguyên vật liệu"),
 		STG_TICKET_IMPORT_GOODS("Nhập hàng"),
 		STG_TICKET_EXPORT_GOODS("Xuất hàng");
 

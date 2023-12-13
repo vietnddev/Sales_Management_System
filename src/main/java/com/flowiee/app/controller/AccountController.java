@@ -32,9 +32,7 @@ public class AccountController extends BaseController {
 
     @GetMapping
     public ModelAndView findAllAccount() {
-        if (!validateModuleSystem.readAccount(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleSystem.readAccount(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ACCOUNT);
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
@@ -45,9 +43,7 @@ public class AccountController extends BaseController {
 
     @GetMapping(value = "/{id}")
     public ModelAndView findDetailAccountById(@PathVariable("id") Integer accountId) {
-        if (!validateModuleSystem.readAccount(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleSystem.readAccount(true);
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }
@@ -60,9 +56,7 @@ public class AccountController extends BaseController {
 
     @PostMapping(value = "/insert")
     public String save(@ModelAttribute("account") Account account) {
-        if (!validateModuleSystem.insertAccount(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSystem.insertAccount(true);
         if (accountService.findByUsername(account.getUsername()) != null) {
             throw new DataExistsException("Username exists!");
         }
@@ -77,9 +71,7 @@ public class AccountController extends BaseController {
     public String update(@ModelAttribute("account") Account accountEntity,
                          @PathVariable("id") Integer accountId,
                          HttpServletRequest request) {
-        if (!validateModuleSystem.updateAccount(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSystem.updateAccount(true);
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }
@@ -94,9 +86,7 @@ public class AccountController extends BaseController {
 
     @PostMapping(value = "/delete/{id}")
     public String deleteAccount(@PathVariable("id") Integer accountId) {
-        if (!validateModuleSystem.deleteAccount(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSystem.deleteAccount(true);
         if (accountId <= 0 ||accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }
@@ -108,9 +98,7 @@ public class AccountController extends BaseController {
 
     @PostMapping("/update-permission/{id}")
     public String updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
-        if (!validateModuleSystem.updateAccount(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSystem.updateAccount(true);
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }

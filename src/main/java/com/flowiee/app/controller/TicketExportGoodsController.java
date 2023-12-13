@@ -24,36 +24,28 @@ public class TicketExportGoodsController extends BaseController {
 
     @GetMapping
     public ModelAndView viewAllTicket() {
-        if (!validateModuleStorage.exportGoods(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleStorage.exportGoods(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_TICKET_EXPORT);
         return baseView(modelAndView);
     }
     
     @PostMapping("/insert")
     public String insertNewTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport) {
-    	if (!validateModuleStorage.exportGoods(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+    	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.save(ticketExport);
     	return "redirect:/storage/ticket-export";
     }
     
     @PostMapping("/update/{id}")
     public String updateTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport, @PathVariable("id") Integer ticketExportId) {
-    	if (!validateModuleStorage.exportGoods(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+    	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.update(ticketExport, ticketExportId);
     	return "redirect:/storage/ticket-export";
     }
     
     @PostMapping("/delete/{id}")
     public String deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
-    	if (!validateModuleStorage.exportGoods(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+    	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.delete(ticketExportId);
     	return "redirect:/storage/ticket-export";
     }

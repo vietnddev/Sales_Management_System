@@ -2,6 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.FileStorageService;
@@ -21,10 +22,13 @@ public class FileStorageController extends BaseController {
     private ProductService productService;
     @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
+    private ValidateModuleProduct validateModuleProduct;
 
     @PostMapping("/uploads/san-pham/{id}")
     public String uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                        @PathVariable("id") Integer productId) throws Exception {
+        validateModuleProduct.updateImage(true);
         if (productId <= 0 || productService.findById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
@@ -38,6 +42,7 @@ public class FileStorageController extends BaseController {
     @PostMapping("/uploads/bien-the-san-pham/{id}")
     public String uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                               @PathVariable("id") Integer productVariantId) throws Exception {
+        validateModuleProduct.updateImage(true);
         if (productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
@@ -52,6 +57,7 @@ public class FileStorageController extends BaseController {
     public String changeFile(@RequestParam("file") MultipartFile file,
                              @PathVariable("id") Integer fileId,
                              HttpServletRequest request) {
+        validateModuleProduct.updateImage(true);
         if (fileId <= 0 || fileService.findById(fileId) == null) {
             throw new NotFoundException("Image not found");
         }
@@ -64,6 +70,7 @@ public class FileStorageController extends BaseController {
 
     @PostMapping("/file/delete/{id}")
     public String delete(HttpServletRequest request, @PathVariable("id") Integer fileId) {
+        validateModuleProduct.updateImage(true);
         if (fileId <= 0 || fileService.findById(fileId) == null) {
             throw new NotFoundException("Image not found!");
         }

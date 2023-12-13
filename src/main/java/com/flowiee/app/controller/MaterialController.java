@@ -32,23 +32,21 @@ public class MaterialController extends BaseController {
 
     @GetMapping
     public ModelAndView loadPage() {
-        if (validateModuleStorage.material(true)) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
-            modelAndView.addObject("material", new Material());
-            modelAndView.addObject("listMaterial", materialService.findAll());
-            modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
-            modelAndView.addObject("templateImportName", "Name");
-            modelAndView.addObject("url_template", EndPointUtil.STORAGE_MATERIAL_TEMPLATE);
-            modelAndView.addObject("url_import", EndPointUtil.STORAGE_MATERIAL_IMPORT);
-            modelAndView.addObject("url_export", EndPointUtil.STORAGE_MATERIAL_EXPORT);
-            return baseView(modelAndView);
-        } else {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleStorage.readMaterial(true);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
+        modelAndView.addObject("material", new Material());
+        modelAndView.addObject("listMaterial", materialService.findAll());
+        modelAndView.addObject("listDonViTinh", categoryService.findSubCategory(AppConstants.UNIT));
+        modelAndView.addObject("templateImportName", "Name");
+        modelAndView.addObject("url_template", EndPointUtil.STORAGE_MATERIAL_TEMPLATE);
+        modelAndView.addObject("url_import", EndPointUtil.STORAGE_MATERIAL_IMPORT);
+        modelAndView.addObject("url_export", EndPointUtil.STORAGE_MATERIAL_EXPORT);
+        return baseView(modelAndView);
     }
 
     @PostMapping("/insert")
     public String insert(@ModelAttribute("material") Material material) {
+        validateModuleStorage.insertMaterial(true);
         material.setStatus(true);
         materialService.save(material);
         return "redirect:";
@@ -57,6 +55,7 @@ public class MaterialController extends BaseController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute("material") Material material,
                          @PathVariable("id") Integer materialId, HttpServletRequest request) {
+        validateModuleStorage.updateMaterial(true);
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");
         }
@@ -66,6 +65,7 @@ public class MaterialController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
+        validateModuleStorage.deleteMaterial(true);
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");
         }
@@ -75,11 +75,13 @@ public class MaterialController extends BaseController {
 
     @GetMapping("/template")
     public ResponseEntity<?> exportTemplate() {
+        validateModuleStorage.readMaterial(true);
         return null;
     }
 
     @PostMapping("/import")
     public String importData(@RequestParam("file") MultipartFile file) {
+        validateModuleStorage.insertMaterial(true);
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
 //            donViTinhService.importData(file);
 //            return "redirect:" + EndPointUtil.DANHMUC_DONVITINH_VIEW;
@@ -91,6 +93,7 @@ public class MaterialController extends BaseController {
 
     @GetMapping("/export")
     public ResponseEntity<?> exportData() {
+        validateModuleStorage.readMaterial(true);
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
 //            byte[] dataExport = donViTinhService.exportData();
 //            HttpHeaders header = new HttpHeaders();

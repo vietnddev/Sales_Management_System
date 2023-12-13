@@ -28,21 +28,16 @@ public class CustomerController extends BaseController {
 
     @GetMapping
     public ModelAndView findAllCustomer() {
-        if (validateModuleSanPham.readCustomer(true)) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER);
-            modelAndView.addObject("listCustomer", customerService.findAll());
-            modelAndView.addObject("customer", new Customer());
-            return baseView(modelAndView);
-        } else {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleSanPham.readCustomer(true);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER);
+        modelAndView.addObject("listCustomer", customerService.findAll());
+        modelAndView.addObject("customer", new Customer());
+        return baseView(modelAndView);
     }
 
     @GetMapping("/{id}")
     public ModelAndView findCustomerDetail(@PathVariable("id") int id) {
-        if (!validateModuleSanPham.readCustomer(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleSanPham.readCustomer(true);
         if (customerService.findById(id) == null) {
             throw new NotFoundException("Customer not found!");
         }
@@ -54,9 +49,7 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/insert")
     public String insertCustomer(@ModelAttribute("customer") Customer customer) {
-        if (!validateModuleSanPham.insertCustomer(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSanPham.insertCustomer(true);
         if (customer == null) {
             throw new NotFoundException("Customer not found!");
         }
@@ -67,9 +60,7 @@ public class CustomerController extends BaseController {
     @PostMapping("/update/{id}")
     public String updateCustomer(@ModelAttribute("khachHang") Customer customer,
                                   @PathVariable("id") Integer id) {
-        if (!validateModuleSanPham.updateCustomer(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSanPham.updateCustomer(true);
         if (customer == null || id <= 0 || customerService.findById(id) == null) {
             throw new NotFoundException("Customer not found!");
         }
@@ -79,9 +70,7 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable("id") Integer id) {
-        if (!validateModuleSanPham.deleteCustomer(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSanPham.deleteCustomer(true);
         if (id <= 0 || customerService.findById(id) == null) {
             throw new NotFoundException("Customer not found!");
         }
@@ -93,9 +82,7 @@ public class CustomerController extends BaseController {
     public String setCustomerContactUseDefault(@RequestParam("customerId") Integer customerId,
                                        @RequestParam("contactCode") String contactCode,
                                        @PathVariable("contactId") Integer contactId) {
-        if (!validateModuleSanPham.updateCustomer(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSanPham.updateCustomer(true);
         if (customerId <= 0 || customerService.findById(customerId) == null) {
             throw new NotFoundException("Customer not found!");
         }
@@ -108,9 +95,7 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/contact/undefault/{contactId}")
     public String setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
-        if (!validateModuleSanPham.updateCustomer(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSanPham.updateCustomer(true);
         if (contactId <= 0 || customerContactService.findById(contactId) == null) {
             throw new NotFoundException("Customer contact not found!");
         }

@@ -1,6 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.entity.Category;
+import com.flowiee.app.exception.ForbiddenException;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
@@ -17,6 +18,7 @@ import com.flowiee.app.base.BaseController;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.MessagesUtil;
 import com.flowiee.app.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,73 +52,67 @@ public class DocumentController extends BaseController {
     //Dashboard
     @GetMapping("/dashboard")
     public ModelAndView showDashboardOfSTG() {
-        if (validateModuleStorage.dashboard(true)) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
-            //Loại tài liệu
-            List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.DOCUMENTTYPE);
-            List<String> listTenOfDocType = new ArrayList<>();
-            List<Integer> listSoLuongOfDocType = new ArrayList<>();
-            for (Category docType : listLoaiTaiLieu) {
-                listTenOfDocType.add(docType.getName());
-                listSoLuongOfDocType.add(docType.getListDocument() != null ? docType.getListDocument().size() : 0);
-            }
-            modelAndView.addObject("reportOfDocType_listTen", listTenOfDocType);
-            modelAndView.addObject("reportOfDocType_listSoLuong", listSoLuongOfDocType);            
-            return baseView(modelAndView);
-        } else {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        validateModuleStorage.dashboard(true);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
+        //Loại tài liệu
+        List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.DOCUMENTTYPE);
+        List<String> listTenOfDocType = new ArrayList<>();
+        List<Integer> listSoLuongOfDocType = new ArrayList<>();
+        for (Category docType : listLoaiTaiLieu) {
+            listTenOfDocType.add(docType.getName());
+            listSoLuongOfDocType.add(docType.getListDocument() != null ? docType.getListDocument().size() : 0);
         }
+        modelAndView.addObject("reportOfDocType_listTen", listTenOfDocType);
+        modelAndView.addObject("reportOfDocType_listSoLuong", listSoLuongOfDocType);
+        return baseView(modelAndView);
     }
 
     //Màn hình root
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
-        if (validateModuleStorage.read(true)) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
-            List<Document> listRootDocument = documentService.findRootDocument();
-            for (int i = 0; i < listRootDocument.size(); i++) {
-                listRootDocument.get(i).setCreatedAt(CommonUtil.formatDate(listRootDocument.get(i).getCreatedAt(),"dd/MM/yyyy"));
-            }
-            modelAndView.addObject("listDocument", listRootDocument);
-            modelAndView.addObject("document", new Document());
-            //select-option danh sách loại tài liệu
-            List<Category> listLoaiTaiLieu = new ArrayList<>();
-            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.DOCUMENTTYPE));
-            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.DOCUMENTTYPE));
-            modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
-            //select-option danh sách thư mục
-            List<Document> listFolder = new ArrayList<>();
-            listFolder.add(new Document(0, "--Chọn thư mục--"));
-            listFolder.addAll(documentService.findAllFolder());
-            modelAndView.addObject("listFolder", listFolder);
-            //Parent name
-            modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");            
-            if (validateModuleStorage.insert(false)) {
-                modelAndView.addObject("action_create", "enable");
-            }
-            if (validateModuleStorage.update(false)) {
-                modelAndView.addObject("action_update", "enable");
-            }
-            if (validateModuleStorage.delete(false)) {
-                modelAndView.addObject("action_delete", "enable");
-            }
-            return baseView(modelAndView);
-        } else {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        validateModuleStorage.readDoc(true);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
+        List<Document> listRootDocument = documentService.findRootDocument();
+        for (int i = 0; i < listRootDocument.size(); i++) {
+            listRootDocument.get(i).setCreatedAt(CommonUtil.formatDate(listRootDocument.get(i).getCreatedAt(), "dd/MM/yyyy"));
         }
+        modelAndView.addObject("listDocument", listRootDocument);
+        modelAndView.addObject("document", new Document());
+        //select-option danh sách loại tài liệu
+        List<Category> listLoaiTaiLieu = new ArrayList<>();
+        listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.DOCUMENTTYPE));
+        listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.DOCUMENTTYPE));
+        modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
+        //select-option danh sách thư mục
+        List<Document> listFolder = new ArrayList<>();
+        listFolder.add(new Document(0, "--Chọn thư mục--"));
+        listFolder.addAll(documentService.findAllFolder());
+        modelAndView.addObject("listFolder", listFolder);
+        //Parent name
+        modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
+        if (validateModuleStorage.insertDoc(false)) {
+            modelAndView.addObject("action_create", "enable");
+        }
+        if (validateModuleStorage.updateDoc(false)) {
+            modelAndView.addObject("action_update", "enable");
+        }
+        if (validateModuleStorage.deleteDoc(false)) {
+            modelAndView.addObject("action_delete", "enable");
+        }
+        return baseView(modelAndView);
     }
 
     @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
+        validateModuleStorage.readDoc(true);
         String aliasName = CommonUtil.getAliasNameFromAliasPath(aliasPath);
         int documentId = CommonUtil.getIdFromAliasPath(aliasPath);
         Document document = documentService.findById(documentId);
         if (!(aliasName + "-" + documentId).equals(document.getAliasName() + "-" + document.getId())) {
             throw new NotFoundException("Document not found!");
         }
-        //Kiểm tra quyền xem document
-        if (!validateModuleStorage.read(true) || !docShareService.isShared(documentId)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        if (!docShareService.isShared(documentId)) {
+            throw new ForbiddenException(MessagesUtil.ERROR_FORBIDDEN);
         }
         if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FI.name())) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT_DETAIL);
@@ -128,13 +124,13 @@ public class DocumentController extends BaseController {
             //Load file active
             modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
             //Load các version khác của document
-            modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));            
+            modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
             //Cây thư mục
             //modelAndView.addObject("folders", list);
-            if (validateModuleStorage.update(false)) {
+            if (validateModuleStorage.updateDoc(false)) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (validateModuleStorage.delete(false)) {
+            if (validateModuleStorage.deleteDoc(false)) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return baseView(modelAndView);
@@ -155,14 +151,14 @@ public class DocumentController extends BaseController {
             listFolder.addAll(documentService.findAllFolder());
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
-            modelAndView.addObject("documentParentName", document.getTen().toUpperCase());            
-            if (validateModuleStorage.insert(false)) {
+            modelAndView.addObject("documentParentName", document.getTen().toUpperCase());
+            if (validateModuleStorage.insertDoc(false)) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (validateModuleStorage.update(false)) {
+            if (validateModuleStorage.updateDoc(false)) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (validateModuleStorage.delete(false)) {
+            if (validateModuleStorage.deleteDoc(false)) {
                 modelAndView.addObject("action_delete", "enable");
             }
 
@@ -177,6 +173,7 @@ public class DocumentController extends BaseController {
     public String insert(HttpServletRequest request,
                          @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
+        validateModuleStorage.insertDoc(true);
         document.setAliasName(CommonUtil.generateAliasName(document.getTen()));
         document.setCreatedBy(CommonUtil.getCurrentAccountId());
         if (document.getParentId() == null) {
@@ -205,6 +202,7 @@ public class DocumentController extends BaseController {
     public String changeFile(@RequestParam("file") MultipartFile file,
                              @PathVariable("id") Integer documentId,
                              HttpServletRequest request) throws IOException {
+        validateModuleStorage.updateDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -215,6 +213,7 @@ public class DocumentController extends BaseController {
     @PostMapping("/document/update/{id}")
     public String update(@ModelAttribute("document") Document document,
                          @PathVariable("id") Integer documentId, HttpServletRequest request) {
+        validateModuleStorage.updateDoc(true);
         if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -227,6 +226,7 @@ public class DocumentController extends BaseController {
                                  @PathVariable("id") Integer documentId,
                                  @RequestParam("docDataId") Integer[] docDataIds,
                                  @RequestParam("docDataValue") String[] docDataValues) {
+        validateModuleStorage.updateDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -236,6 +236,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/delete/{id}")
     public String deleteDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+        validateModuleStorage.deleteDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -245,6 +246,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/move/{id}")
     public String moveDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+        validateModuleStorage.moveDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -253,29 +255,26 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/share/{id}")
     public String share(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+        validateModuleStorage.shareDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
         return "redirect:" + request.getHeader("referer");
     }
-    
+
     @PostMapping("/docfield/insert")
     public String insertDocfield(DocField docField, HttpServletRequest request) {
-        if (!validateModuleStorage.update(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleStorage.updateDoc(true);
         docField.setTrangThai(false);
         docFieldService.save(docField);
         return "redirect:" + request.getHeader("referer");
     }
-    
+
     @PostMapping(value = "/docfield/update/{id}", params = "update")
     public String updateDocfield(HttpServletRequest request,
                                  @ModelAttribute("docField") DocField docField,
                                  @PathVariable("id") Integer docFieldId) {
-        if (!validateModuleStorage.update(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleStorage.updateDoc(true);
         if (docFieldId <= 0 || documentService.findById(docFieldId) == null) {
             throw new NotFoundException("Docfield not found!");
         }
@@ -285,10 +284,8 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/docfield/delete/{id}")
     public String deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
-        if (!validateModuleStorage.delete(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
-        if (docFieldService.findById(docfiledId) == null){
+        validateModuleStorage.deleteDoc(true);
+        if (docFieldService.findById(docfiledId) == null) {
             throw new NotFoundException("Docfield not found!");
         }
         docFieldService.delete(docfiledId);

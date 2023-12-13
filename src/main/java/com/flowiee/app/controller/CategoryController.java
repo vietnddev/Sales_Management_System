@@ -33,21 +33,16 @@ public class CategoryController extends BaseController {
 
     @GetMapping
     public ModelAndView viewRootCategory() {
-        if (validateModuleCategory.readCategory(true)) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
-            modelAndView.addObject("category", new Category());
-            modelAndView.addObject("listCategory", categoryService.findRootCategory());            
-            return baseView(modelAndView);
-        } else {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleCategory.readCategory(true);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
+        modelAndView.addObject("category", new Category());
+        modelAndView.addObject("listCategory", categoryService.findRootCategory());
+        return baseView(modelAndView);
     }
 
     @GetMapping("/{type}")
     public ModelAndView viewSubCategory(@PathVariable("type") String categoryType) {
-        if (!validateModuleCategory.readCategory(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleCategory.readCategory(true);
         if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
@@ -67,9 +62,7 @@ public class CategoryController extends BaseController {
     public String insert(@ModelAttribute("category") Category category, 
     					 @PathVariable("type") String categoryType,
     					 HttpServletRequest request) {
-        if (!validateModuleCategory.insertCategory(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleCategory.insertCategory(true);
         if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
@@ -82,9 +75,7 @@ public class CategoryController extends BaseController {
     public String update(@ModelAttribute("category") Category category,
                          @PathVariable("id") Integer categoryId, 
                          HttpServletRequest request) {
-        if (!validateModuleCategory.updateCategory(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleCategory.updateCategory(true);
         if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
             throw new NotFoundException("Category not found!");
         }
@@ -94,6 +85,7 @@ public class CategoryController extends BaseController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
+        validateModuleCategory.deleteCategory(true);
         if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
             throw new NotFoundException("Category not found!");
         }
@@ -103,9 +95,7 @@ public class CategoryController extends BaseController {
     
     @GetMapping("/{type}/template")
     public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
-        if (!validateModuleCategory.importCategory(true)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleCategory.importCategory(true);
         if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
@@ -118,9 +108,7 @@ public class CategoryController extends BaseController {
 
     @PostMapping("/{type}/import")
     public String importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
-        if (!validateModuleCategory.importCategory(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleCategory.importCategory(true);
         if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
@@ -130,9 +118,7 @@ public class CategoryController extends BaseController {
 
     @GetMapping("/{type}/export")
     public ResponseEntity<?> exportData(@PathVariable("type") String categoryType) {
-        if (!validateModuleCategory.readCategory(true)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleCategory.readCategory(true);
         byte[] dataExport = categoryService.exportData(categoryType);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));

@@ -108,4 +108,8 @@ public class ValidateModuleProduct extends BaseAuthorize {
     public boolean deleteSupplier(boolean throwException) {
         return isAuthorized(module, ProductAction.PRO_SUPPLIER_DELETE.name(), throwException);
     }
+
+    public boolean readGallery(boolean throwException) {
+        return isAuthorized(module, ProductAction.PRO_GALLERY_READ.name(), throwException);
+    }
 }

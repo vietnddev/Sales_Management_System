@@ -18,7 +18,7 @@ public class BaseAuthorize {
     private RoleService roleService;
 
     @SneakyThrows
-    private boolean isAuthenticated() {
+    public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
             throw new AuthenticationException();

@@ -36,9 +36,7 @@ public class SystemController extends BaseController {
 
     @GetMapping(value = "/log")
     public ModelAndView getAllLog() {
-        if (!validateModuleSystem.readLog(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleSystem.readLog(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_LOG);
         modelAndView.addObject("listLog", systemLogService.getAll());
         return baseView(modelAndView);
@@ -46,9 +44,7 @@ public class SystemController extends BaseController {
 
     @GetMapping("/config")
     public ModelAndView showConfig() {
-        if (!validateModuleSystem.setupConfig(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleSystem.setupConfig(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_CONFIG);
         modelAndView.addObject("config", new FlowieeConfig());
         modelAndView.addObject("listConfig", configService.findAll());
@@ -58,9 +54,7 @@ public class SystemController extends BaseController {
     @PostMapping("/config/update/{id}")
     public String update(@ModelAttribute("config") FlowieeConfig config,
                          @PathVariable("id") Integer configId) {
-        if (!validateModuleSystem.setupConfig(true)) {
-            return PagesUtil.SYS_UNAUTHORIZED;
-        }
+        validateModuleSystem.setupConfig(true);
         if (configId <= 0 || configService.findById(configId) == null) {
             throw new NotFoundException("Config not found!");
         }
@@ -70,9 +64,7 @@ public class SystemController extends BaseController {
 
     @GetMapping("/role")
     public ModelAndView readRole() {
-        if (!validateModuleSystem.readPermission(true)) {
-            return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
-        }
+        validateModuleSystem.readPermission(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
         modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtil.getCurrentAccountId()));
