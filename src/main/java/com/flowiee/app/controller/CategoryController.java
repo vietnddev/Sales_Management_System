@@ -15,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/system/category")
 public class CategoryController extends BaseController {
     @Autowired
@@ -59,7 +58,7 @@ public class CategoryController extends BaseController {
     }
 
     @PostMapping("/{type}/insert")
-    public String insert(@ModelAttribute("category") Category category, 
+    public ModelAndView insert(@ModelAttribute("category") Category category, 
     					 @PathVariable("type") String categoryType,
     					 HttpServletRequest request) {
         validateModuleCategory.insertCategory(true);
@@ -68,11 +67,11 @@ public class CategoryController extends BaseController {
         }
         category.setType(CommonUtil.getCategoryType(categoryType));
         categoryService.save(category);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute("category") Category category,
+    public ModelAndView update(@ModelAttribute("category") Category category,
                          @PathVariable("id") Integer categoryId, 
                          HttpServletRequest request) {
         validateModuleCategory.updateCategory(true);
@@ -80,17 +79,17 @@ public class CategoryController extends BaseController {
             throw new NotFoundException("Category not found! categoryId=" + categoryId);
         }
         categoryService.update(category, categoryId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
+    public ModelAndView delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
         validateModuleCategory.deleteCategory(true);
         if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
             throw new NotFoundException("Category not found! categoryId=" + categoryId);
         }
         categoryService.delete(categoryId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
     
     @GetMapping("/{type}/template")
@@ -107,13 +106,13 @@ public class CategoryController extends BaseController {
     }
 
     @PostMapping("/{type}/import")
-    public String importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
+    public ModelAndView importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
         validateModuleCategory.importCategory(true);
         if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         categoryService.importData(file, categoryType);
-        return "redirect:/{type}";
+        return new ModelAndView("redirect:/{type}");
     }
 
     @GetMapping("/{type}/export")

@@ -14,7 +14,6 @@ import com.flowiee.app.service.RoleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(path = "/sys/tai-khoan")
 public class AccountController extends BaseController {
     @Autowired
@@ -55,7 +54,7 @@ public class AccountController extends BaseController {
     }
 
     @PostMapping(value = "/insert")
-    public String save(@ModelAttribute("account") Account account) {
+    public ModelAndView save(@ModelAttribute("account") Account account) {
         validateModuleSystem.insertAccount(true);
         if (accountService.findByUsername(account.getUsername()) != null) {
             throw new DataExistsException("Username exists!");
@@ -64,11 +63,11 @@ public class AccountController extends BaseController {
         String password = account.getPassword();
         account.setPassword(bCrypt.encode(password));
         accountService.save(account);
-        return "redirect:/sys/tai-khoan";
+        return new ModelAndView("redirect:/sys/tai-khoan");
     }
 
     @PostMapping(value = "/update/{id}")
-    public String update(@ModelAttribute("account") Account accountEntity,
+    public ModelAndView update(@ModelAttribute("account") Account accountEntity,
                          @PathVariable("id") Integer accountId,
                          HttpServletRequest request) {
         validateModuleSystem.updateAccount(true);
@@ -81,11 +80,11 @@ public class AccountController extends BaseController {
         accountEntity.setPassword(acc.getPassword());
         accountEntity.setLastUpdatedBy(CommonUtil.getCurrentAccountUsername());
         accountService.update(accountEntity, accountId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/delete/{id}")
-    public String deleteAccount(@PathVariable("id") Integer accountId) {
+    public ModelAndView deleteAccount(@PathVariable("id") Integer accountId) {
         validateModuleSystem.deleteAccount(true);
         if (accountId <= 0 ||accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
@@ -93,11 +92,11 @@ public class AccountController extends BaseController {
         Account account = accountService.findById(accountId);
         account.setTrangThai(false);
         accountService.save(account);
-        return "redirect:/sys/tai-khoan";
+        return new ModelAndView("redirect:/sys/tai-khoan");
     }
 
     @PostMapping("/update-permission/{id}")
-    public String updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
+    public ModelAndView updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
         validateModuleSystem.updateAccount(true);
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
@@ -114,6 +113,6 @@ public class AccountController extends BaseController {
                 }
             }
         }
-        return "redirect:/sys/tai-khoan/" + accountId;
+        return new ModelAndView("redirect:/sys/tai-khoan/" + accountId);
     }
 }

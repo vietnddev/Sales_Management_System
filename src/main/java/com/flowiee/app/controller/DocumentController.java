@@ -21,7 +21,6 @@ import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.MessagesUtil;
 import com.flowiee.app.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
-@Controller
+@RestController
 @RequestMapping("/storage")
 public class DocumentController extends BaseController {
     @Autowired
@@ -169,7 +168,7 @@ public class DocumentController extends BaseController {
 
     //Insert FILE và FOLDER
     @PostMapping("/document/insert")
-    public String insert(HttpServletRequest request,
+    public ModelAndView insert(HttpServletRequest request,
                          @ModelAttribute("document") Document document,
                          @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
         validateModuleStorage.insertDoc(true);
@@ -194,11 +193,11 @@ public class DocumentController extends BaseController {
                 docDataService.save(docData);
             }
         }
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/document/change-file/{id}")
-    public String changeFile(@RequestParam("file") MultipartFile file,
+    public ModelAndView changeFile(@RequestParam("file") MultipartFile file,
                              @PathVariable("id") Integer documentId,
                              HttpServletRequest request) throws IOException {
         validateModuleStorage.updateDoc(true);
@@ -206,22 +205,22 @@ public class DocumentController extends BaseController {
             throw new NotFoundException("Document not found!");
         }
         fileStorageService.changFileOfDocument(file, documentId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/document/update/{id}")
-    public String update(@ModelAttribute("document") Document document,
+    public ModelAndView update(@ModelAttribute("document") Document document,
                          @PathVariable("id") Integer documentId, HttpServletRequest request) {
         validateModuleStorage.updateDoc(true);
         if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
         documentService.update(document, documentId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @GetMapping("/document/update-metadata/{id}")
-    public String updateMetadata(HttpServletRequest request,
+    public ModelAndView updateMetadata(HttpServletRequest request,
                                  @PathVariable("id") Integer documentId,
                                  @RequestParam("docDataId") Integer[] docDataIds,
                                  @RequestParam("docDataValue") String[] docDataValues) {
@@ -230,47 +229,47 @@ public class DocumentController extends BaseController {
             throw new NotFoundException("Document not found!");
         }
         documentService.updateMetadata(docDataIds, docDataValues, documentId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/document/delete/{id}")
-    public String deleteDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+    public ModelAndView deleteDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
         validateModuleStorage.deleteDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
         documentService.delete(documentId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/document/move/{id}")
-    public String moveDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+    public ModelAndView moveDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
         validateModuleStorage.moveDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/document/share/{id}")
-    public String share(@PathVariable("id") Integer documentId, HttpServletRequest request) {
+    public ModelAndView share(@PathVariable("id") Integer documentId, HttpServletRequest request) {
         validateModuleStorage.shareDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/docfield/insert")
-    public String insertDocfield(DocField docField, HttpServletRequest request) {
+    public ModelAndView insertDocfield(DocField docField, HttpServletRequest request) {
         validateModuleStorage.updateDoc(true);
         docField.setTrangThai(false);
         docFieldService.save(docField);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/docfield/update/{id}", params = "update")
-    public String updateDocfield(HttpServletRequest request,
+    public ModelAndView updateDocfield(HttpServletRequest request,
                                  @ModelAttribute("docField") DocField docField,
                                  @PathVariable("id") Integer docFieldId) {
         validateModuleStorage.updateDoc(true);
@@ -278,16 +277,16 @@ public class DocumentController extends BaseController {
             throw new NotFoundException("Docfield not found!");
         }
         docFieldService.update(docField, docFieldId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/docfield/delete/{id}")
-    public String deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
+    public ModelAndView deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
         validateModuleStorage.deleteDoc(true);
         if (docFieldService.findById(docfiledId) == null) {
             throw new NotFoundException("Docfield not found!");
         }
         docFieldService.delete(docfiledId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 }

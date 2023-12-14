@@ -52,14 +52,14 @@ public class SystemController extends BaseController {
     }
 
     @PostMapping("/config/update/{id}")
-    public String update(@ModelAttribute("config") FlowieeConfig config,
+    public ModelAndView update(@ModelAttribute("config") FlowieeConfig config,
                          @PathVariable("id") Integer configId) {
         validateModuleSystem.setupConfig(true);
         if (configId <= 0 || configService.findById(configId) == null) {
             throw new NotFoundException("Config not found!");
         }
         configService.update(config, configId);
-        return "redirect:/he-thong/config";
+        return new ModelAndView("redirect:/he-thong/config");
     }
 
     @GetMapping("/role")

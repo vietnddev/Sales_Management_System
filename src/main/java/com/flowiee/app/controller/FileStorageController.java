@@ -8,13 +8,13 @@ import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.FileStorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 public class FileStorageController extends BaseController {
     @Autowired
     private FileStorageService fileService;
@@ -26,7 +26,7 @@ public class FileStorageController extends BaseController {
     private ValidateModuleProduct validateModuleProduct;
 
     @PostMapping("/uploads/san-pham/{id}")
-    public String uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request,
+    public ModelAndView uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                        @PathVariable("id") Integer productId) throws Exception {
         validateModuleProduct.updateImage(true);
         if (productId <= 0 || productService.findById(productId) == null) {
@@ -36,11 +36,11 @@ public class FileStorageController extends BaseController {
             throw new NotFoundException("File attach not found!");
         }
         fileService.saveImageSanPham(file, productId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/uploads/bien-the-san-pham/{id}")
-    public String uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request,
+    public ModelAndView uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                               @PathVariable("id") Integer productVariantId) throws Exception {
         validateModuleProduct.updateImage(true);
         if (productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
@@ -50,11 +50,11 @@ public class FileStorageController extends BaseController {
             throw new NotFoundException("File attach not found!");
         }
         fileService.saveImageBienTheSanPham(file, productVariantId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/file/change-image-sanpham/{id}")
-    public String changeFile(@RequestParam("file") MultipartFile file,
+    public ModelAndView changeFile(@RequestParam("file") MultipartFile file,
                              @PathVariable("id") Integer fileId,
                              HttpServletRequest request) {
         validateModuleProduct.updateImage(true);
@@ -65,16 +65,16 @@ public class FileStorageController extends BaseController {
             throw new NotFoundException("File attach not found!");
         }
         fileService.changeImageSanPham(file, fileId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/file/delete/{id}")
-    public String delete(HttpServletRequest request, @PathVariable("id") Integer fileId) {
+    public ModelAndView delete(HttpServletRequest request, @PathVariable("id") Integer fileId) {
         validateModuleProduct.updateImage(true);
         if (fileId <= 0 || fileService.findById(fileId) == null) {
             throw new NotFoundException("Image not found!");
         }
         fileService.delete(fileId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 }

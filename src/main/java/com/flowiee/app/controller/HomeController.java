@@ -5,16 +5,17 @@ import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+@RestController
 public class HomeController {
     @Autowired
     private AccountService accountService;
 
     @GetMapping(value = "/sys/login")
-    public String showLoginPage() {
+    public ModelAndView showLoginPage() {
         if (accountService.findByUsername("admin") == null) {
             Account account = new Account();
             account.setUsername("admin");
@@ -28,12 +29,12 @@ public class HomeController {
             account.setRole("ADMIN");
             accountService.save(account);
         }
-        return "login";
+        return new ModelAndView("login");
     }
 
     @GetMapping(value = "/change-password")
-    public String showPageChangePassword() {
-        return PagesUtil.SYS_UNAUTHORIZED;
+    public ModelAndView showPageChangePassword() {
+        return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
     }
 
     @GetMapping(value = "/change-password", params = "submit")

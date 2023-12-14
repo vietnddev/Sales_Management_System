@@ -30,23 +30,23 @@ public class TicketExportGoodsController extends BaseController {
     }
     
     @PostMapping("/insert")
-    public String insertNewTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport) {
+    public ModelAndView insertNewTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport) {
     	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.save(ticketExport);
-    	return "redirect:/storage/ticket-export";
+    	return new ModelAndView("redirect:/storage/ticket-export");
     }
     
     @PostMapping("/update/{id}")
-    public String updateTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport, @PathVariable("id") Integer ticketExportId) {
+    public ModelAndView updateTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport, @PathVariable("id") Integer ticketExportId) {
     	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.update(ticketExport, ticketExportId);
-    	return "redirect:/storage/ticket-export";
+    	return new ModelAndView("redirect:/storage/ticket-export");
     }
     
     @PostMapping("/delete/{id}")
-    public String deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
+    public ModelAndView deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
     	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.delete(ticketExportId);
-    	return "redirect:/storage/ticket-export";
+    	return new ModelAndView("redirect:/storage/ticket-export");
     }
 }

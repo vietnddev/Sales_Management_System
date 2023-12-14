@@ -17,9 +17,7 @@ import com.flowiee.app.model.request.OrderRequest;
 import com.flowiee.app.security.ValidateModuleProduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,7 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/don-hang")
 public class OrderController extends BaseController {
     @Autowired
@@ -139,7 +137,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/ban-hang/cart/{id}/add-items")
-    public String addItemsToCart(@PathVariable("id") Integer idCart, HttpServletRequest request) {
+    public ModelAndView addItemsToCart(@PathVariable("id") Integer idCart, HttpServletRequest request) {
         validateModuleProduct.insertOrder(true);
         if (idCart <= 0 || cartService.findById(idCart) == null) {
             throw new NotFoundException("Cart not found!");
@@ -153,11 +151,11 @@ public class OrderController extends BaseController {
             items.setGhiChu("");
             itemsService.save(items);
         }
-        return "redirect:/don-hang/ban-hang";
+        return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/update/{id}")
-    public String updateItemsOfCart(@PathVariable("id") Integer id, @ModelAttribute("items") Items items) {
+    public ModelAndView updateItemsOfCart(@PathVariable("id") Integer id, @ModelAttribute("items") Items items) {
         validateModuleProduct.insertOrder(true);
         if (id <= 0 || cartService.findById(id) == null) {
             throw new NotFoundException("Cart not found!");
@@ -168,16 +166,16 @@ public class OrderController extends BaseController {
         } else {
             itemsService.delete(items.getId());
         }
-        return "redirect:/don-hang/ban-hang";
+        return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/delete/{id}")
-    public String deleteItemsOfCart(@PathVariable("id") Integer id) {
+    public ModelAndView deleteItemsOfCart(@PathVariable("id") Integer id) {
         validateModuleProduct.insertOrder(true);
         itemsService.findByCartId(id).forEach(items -> {
             itemsService.delete(items.getId());
         });
-        return "redirect:/don-hang/ban-hang";
+        return new ModelAndView("redirect:/don-hang/ban-hang");
     }
     
     @PostMapping("/ban-hang/cart/add-voucher/{code}")
@@ -191,7 +189,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/insert")
-    public String insert(@ModelAttribute("orderRequest") OrderRequest orderRequest,
+    public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest,
                          HttpServletRequest request) {
         validateModuleProduct.insertOrder(true);
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
@@ -212,32 +210,32 @@ public class OrderController extends BaseController {
         itemsService.findByCartId(orderRequest.getCartId()).forEach(items -> {
             itemsService.delete(items.getId());
         });
-        return "redirect:/don-hang";
+        return new ModelAndView("redirect:/don-hang");
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer id) {
+    public ModelAndView update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer id) {
         validateModuleProduct.updateOrder(true);
         orderService.update(order, id);
-        return "redirect:/don-hang";
+        return new ModelAndView("redirect:/don-hang");
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Integer id) {
+    public ModelAndView delete(@PathVariable("id") Integer id) {
         validateModuleProduct.deleteOrder(true);
         orderService.delete(id);
-        return "redirect:/don-hang";
+        return new ModelAndView("redirect:/don-hang");
     }
 
     @PostMapping("/thanh-toan/{id}")
-    public String thanhToan(@PathVariable("id") Integer donHangId,
+    public ModelAndView thanhToan(@PathVariable("id") Integer donHangId,
                             @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
         validateModuleProduct.updateOrder(true);
         orderPay.setMaPhieu("PTT" + donHangId + CommonUtil.now("yyMMddHHmmss"));
         orderPay.setOrder(orderService.findById(donHangId));
         orderPay.setPaymentStatus(true);
         orderPayService.save(orderPay);
-        return "redirect:/don-hang/" + donHangId;
+        return new ModelAndView("redirect:/don-hang/" + donHangId);
     }
 
     @GetMapping("/export")

@@ -18,7 +18,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -28,7 +27,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 @RequestMapping(path = "/san-pham")
 public class ProductController extends BaseController {
     @Autowired
@@ -163,14 +162,14 @@ public class ProductController extends BaseController {
     }
 
     @PostMapping(value = "/insert")
-    public String insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
+    public ModelAndView insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
         validateModuleProduct.insertProduct(true);
         productsService.save(product);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/variant/insert")
-    public String insertProductVariant(HttpServletRequest request,
+    public ModelAndView insertProductVariant(HttpServletRequest request,
                                        @ModelAttribute("bienTheSanPham") ProductVariant productVariant,
                                        @RequestBody Float price) {
         validateModuleProduct.updateProduct(true);
@@ -179,18 +178,18 @@ public class ProductController extends BaseController {
         productVariantService.save(productVariant);
         //Khởi tạo giá default của giá bán
         priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/attribute/insert")
-    public String insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
+    public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
         validateModuleProduct.updateProduct(true);
         productAttributeService.save(productAttribute);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/update/{id}")
-    public String updateProductOriginal(HttpServletRequest request,
+    public ModelAndView updateProductOriginal(HttpServletRequest request,
                                         @ModelAttribute("sanPham") Product product,
                                         @PathVariable("id") Integer productId) {
         validateModuleProduct.updateProduct(true);
@@ -198,21 +197,21 @@ public class ProductController extends BaseController {
             throw new NotFoundException("Product not found!");
         }
         productsService.update(product, productId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/variant/update/{id}")
-    public String updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer variantId) {
+    public ModelAndView updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer variantId) {
         validateModuleProduct.updateProduct(true);
         if (productVariantService.findById(variantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
         productVariantService.delete(variantId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/attribute/update/{id}")
-    public String updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
+    public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
                                         @PathVariable("id") Integer attributeId,
                                         HttpServletRequest request) {
         validateModuleProduct.updateProduct(true);
@@ -221,31 +220,31 @@ public class ProductController extends BaseController {
         }
         attribute.setId(attributeId);
         productAttributeService.update(attribute, attributeId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/delete/{id}")
-    public String deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer productId) {
+    public ModelAndView deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer productId) {
         validateModuleProduct.deleteProduct(true);
         if (productsService.findById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
         productsService.delete(productId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/variant/delete/{id}")
-    public String deleteProductVariant(HttpServletRequest request, @PathVariable("id") Integer productVariantId) {
+    public ModelAndView deleteProductVariant(HttpServletRequest request, @PathVariable("id") Integer productVariantId) {
         validateModuleProduct.updateProduct(true);
         if (productVariantService.findById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
         productVariantService.delete(productVariantId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/attribute/delete/{id}")
-    public String deleteAttribute(@ModelAttribute("attribute") ProductAttribute attribute,
+    public ModelAndView deleteAttribute(@ModelAttribute("attribute") ProductAttribute attribute,
                                   @PathVariable("id") Integer attributeId,
                                   HttpServletRequest request) {
         validateModuleProduct.updateProduct(true);
@@ -253,11 +252,11 @@ public class ProductController extends BaseController {
             throw new NotFoundException("Product attribute not found!");
         }
         productAttributeService.delete(attributeId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/active-image/{sanPhamId}")
-    public String activeImageOfProductOriginal(HttpServletRequest request,
+    public ModelAndView activeImageOfProductOriginal(HttpServletRequest request,
                                                @PathVariable("sanPhamId") Integer productId,
                                                @RequestParam("imageId") Integer imageId) {
         validateModuleProduct.updateImage(true);
@@ -265,11 +264,11 @@ public class ProductController extends BaseController {
             throw new NotFoundException("Product or image not found!");
         }
         fileStorageService.setImageActiveOfSanPham(productId, imageId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
-    public String activeImageOfProductVariant(HttpServletRequest request,
+    public ModelAndView activeImageOfProductVariant(HttpServletRequest request,
                                               @PathVariable("sanPhamBienTheId") Integer productVariantId,
                                               @RequestParam("imageId") Integer imageId) {
         validateModuleProduct.updateImage(true);
@@ -277,11 +276,11 @@ public class ProductController extends BaseController {
             throw new NotFoundException("Product variant or image not found!");
         }
         fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/variant/gia-ban/update/{id}")
-    public String updateProductPrice(HttpServletRequest request,
+    public ModelAndView updateProductPrice(HttpServletRequest request,
                                      @ModelAttribute("price") Price price,
                                      @PathVariable("id") Integer productVariantId) {
         validateModuleProduct.priceManagement(true);
@@ -290,7 +289,7 @@ public class ProductController extends BaseController {
         }
         int idGiaBanHienTai = Integer.parseInt(request.getParameter("idGiaBan"));
         priceService.update(price, productVariantId, idGiaBanHienTai);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @GetMapping("/export")

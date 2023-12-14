@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -23,7 +23,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
-@Controller
+@RestController
 @RequestMapping(path = "/profile")
 public class ProfileController extends BaseController {
 	@Autowired
@@ -42,7 +42,7 @@ public class ProfileController extends BaseController {
 	}
 
 	@PostMapping("/update")
-	public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
+	public ModelAndView updateProfile(@AuthenticationPrincipal UserDetails userDetails,
 			@ModelAttribute("account") Account accountEntity) {
 		baseAuthorize.isAuthenticated();
 		String username = userDetails.getUsername();
@@ -55,7 +55,7 @@ public class ProfileController extends BaseController {
 		accountEntity.setTrangThai(true);
 		accountService.save(accountEntity);
 
-		return "redirect:/profile";
+		return new ModelAndView("redirect:/profile");
 	}
 
 	@PostMapping("/change-password")

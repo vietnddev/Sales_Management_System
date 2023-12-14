@@ -10,11 +10,10 @@ import com.flowiee.app.service.OrderService;
 import com.flowiee.app.entity.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+@RestController
 @RequestMapping("/customer")
 public class CustomerController extends BaseController {
     @Autowired
@@ -48,38 +47,38 @@ public class CustomerController extends BaseController {
     }
 
     @PostMapping("/insert")
-    public String insertCustomer(@ModelAttribute("customer") Customer customer) {
+    public ModelAndView insertCustomer(@ModelAttribute("customer") Customer customer) {
         validateModuleSanPham.insertCustomer(true);
         if (customer == null) {
             throw new NotFoundException("Customer not found!");
         }
         customerService.save(customer);
-        return "redirect:/customer";
+        return new ModelAndView("redirect:/customer");
     }
 
     @PostMapping("/update/{id}")
-    public String updateCustomer(@ModelAttribute("khachHang") Customer customer,
+    public ModelAndView updateCustomer(@ModelAttribute("khachHang") Customer customer,
                                  @PathVariable("id") Integer id) {
         validateModuleSanPham.updateCustomer(true);
         if (customer == null || id <= 0 || customerService.findById(id) == null) {
             throw new NotFoundException("Customer not found!");
         }
         customerService.update(customer, id);
-        return "redirect:/customer";
+        return new ModelAndView("redirect:/customer");
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteCustomer(@PathVariable("id") Integer id) {
+    public ModelAndView deleteCustomer(@PathVariable("id") Integer id) {
         validateModuleSanPham.deleteCustomer(true);
         if (id <= 0 || customerService.findById(id) == null) {
             throw new NotFoundException("Customer not found!");
         }
         customerService.delete(id);
-        return "redirect:/customer";
+        return new ModelAndView("redirect:/customer");
     }
 
     @PostMapping("/contact/use-default/{contactId}")
-    public String setCustomerContactUseDefault(@RequestParam("customerId") Integer customerId,
+    public ModelAndView setCustomerContactUseDefault(@RequestParam("customerId") Integer customerId,
                                                @RequestParam("contactCode") String contactCode,
                                                @PathVariable("contactId") Integer contactId) {
         validateModuleSanPham.updateCustomer(true);
@@ -90,16 +89,16 @@ public class CustomerController extends BaseController {
             throw new NotFoundException("Customer contact not found!");
         }
         customerContactService.setContactUseDefault(customerId, contactCode, contactId);
-        return "redirect:/customer";
+        return new ModelAndView("redirect:/customer");
     }
 
     @PostMapping("/contact/undefault/{contactId}")
-    public String setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
+    public ModelAndView setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
         validateModuleSanPham.updateCustomer(true);
         if (contactId <= 0 || customerContactService.findById(contactId) == null) {
             throw new NotFoundException("Customer contact not found!");
         }
         customerContactService.setContactUnUseDefault(contactId);
-        return "redirect:/customer";
+        return new ModelAndView("redirect:/customer");
     }
 }

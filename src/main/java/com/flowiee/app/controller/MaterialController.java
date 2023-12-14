@@ -12,14 +12,13 @@ import com.flowiee.app.service.MaterialService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 @RequestMapping("/storage/material")
 public class MaterialController extends BaseController {
     @Autowired
@@ -44,15 +43,15 @@ public class MaterialController extends BaseController {
     }
 
     @PostMapping("/insert")
-    public String insert(@ModelAttribute("material") Material material) {
+    public ModelAndView insert(@ModelAttribute("material") Material material) {
         validateModuleStorage.insertMaterial(true);
         material.setStatus(true);
         materialService.save(material);
-        return "redirect:";
+        return new ModelAndView("redirect:");
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute("material") Material material,
+    public ModelAndView update(@ModelAttribute("material") Material material,
                          @PathVariable("id") Integer materialId,
                          HttpServletRequest request) {
         validateModuleStorage.updateMaterial(true);
@@ -60,17 +59,17 @@ public class MaterialController extends BaseController {
             throw new NotFoundException("Material not found!");
         }
         materialService.update(material, materialId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
+    public ModelAndView delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
         validateModuleStorage.deleteMaterial(true);
         if (materialId <= 0 || materialService.findById(materialId) == null) {
             throw new NotFoundException("Material not found!");
         }
         materialService.delete(materialId);
-        return "redirect:" + request.getHeader("referer");
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @GetMapping("/template")
@@ -80,7 +79,7 @@ public class MaterialController extends BaseController {
     }
 
     @PostMapping("/import")
-    public String importData(@RequestParam("file") MultipartFile file) {
+    public ModelAndView importData(@RequestParam("file") MultipartFile file) {
         validateModuleStorage.insertMaterial(true);
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
 //            donViTinhService.importData(file);

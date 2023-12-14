@@ -34,12 +34,12 @@ public class SupplierController extends BaseController {
 	}
 
 	@PostMapping("/insert")
-	public String insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
+	public ModelAndView insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
 		validateModuleProduct.insertSupplier(true);
 		if (supplier == null) {
 			throw new NotFoundException("Customer not found!");
 		}
 		supplierService.save(supplier);
-		return "redirect:/product/supplier";
+		return new ModelAndView("redirect:/product/supplier");
 	}
 }
