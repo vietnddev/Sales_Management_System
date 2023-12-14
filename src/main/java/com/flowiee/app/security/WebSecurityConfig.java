@@ -55,8 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity
 				.authorizeRequests()
 				.antMatchers(EndPointUtil.SYS_CONFIG_VIEW, EndPointUtil.SYS_ACCOUNT_VIEW, EndPointUtil.SYS_LOG_VIEW).hasRole("ADMIN")
-				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**")
-				.permitAll()
+				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				//Page login
