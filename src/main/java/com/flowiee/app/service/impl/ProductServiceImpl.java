@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAll() {
-        List<Product> listProduct = productsRepository.findAll();
+        List<Product> listProduct = productsRepository.findAll(null, null, null);
         for (int i = 0; i < listProduct.size(); i++) {
             FileStorage imageActive = fileService.findImageActiveOfSanPham(listProduct.get(i).getId());
             if (imageActive != null) {
@@ -69,8 +69,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> findAll(Integer productTypeId, String status) {
-        List<ProductDTO> dataResponse = ProductDTO.fromProducts(productsRepository.findAll());
+    public List<ProductDTO> findAll(Integer productTypeId, Integer brandId, String status) {
+        List<ProductDTO> dataResponse = ProductDTO.fromProducts(productsRepository.findAll(null ,null, null));
         for (ProductDTO productDTO : dataResponse) {
             FileStorage imageActive = fileService.findImageActiveOfSanPham(productDTO.getProductId());
             if (imageActive != null) {

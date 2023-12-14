@@ -68,7 +68,7 @@ public class ProductController extends BaseController {
         });
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
-        modelAndView.addObject("listSanPham", productsService.findAll(null, null));
+        modelAndView.addObject("listSanPham", productsService.findAll(null, null, null));
         modelAndView.addObject("listVoucherInfo", voucherService.findAll(null, null, null, null));
         modelAndView.addObject("listProductType", productTypes);
         modelAndView.addObject("listDonViTinh", units);
