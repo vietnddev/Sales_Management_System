@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/system/category")
 public class CategoryController extends BaseController {
@@ -106,7 +107,7 @@ public class CategoryController extends BaseController {
     }
 
     @PostMapping("/{type}/import")
-    public ModelAndView importData(@PathVariable("type") String categoryType, @RequestParam("file")MultipartFile file) {
+    public ModelAndView importData(@PathVariable("type") String categoryType, @RequestParam("file") MultipartFile file) {
         validateModuleCategory.importCategory(true);
         if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");

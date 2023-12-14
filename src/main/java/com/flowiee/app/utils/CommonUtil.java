@@ -27,22 +27,10 @@ import java.util.regex.Pattern;
 public class CommonUtil {
     public static String rootPath = "src/main/resources/static";
     public static String fileUploadPath = rootPath + "/uploads/";
-
     public static Integer SYS_NOTI_ID = 0;
     public static String ADMINISTRATOR = "admin";
     public static String PATH_TEMPLATE_EXCEL = rootPath + "/templates/excel";
-
-    public static String CATEGORY = "";
     public static Date START_APP_TIME = null;
-    public static String EMAIL_HOST = null;
-    public static int EMAIL_PORT = 0;
-    public static String EMAIL_USERNAME = null;
-    public static String EMAIL_PASSWORD = null;
-    public static int TIMEOUT = 0;
-    public static String PATH_UPLOAD = null;
-    public static String MAX_SIZE_UPLOAD = null;
-    public static String EXTENSION_ALLOWED_UPLOAD = null;
-    public static boolean SEND_MAIL_REPORT_DAILY = false;
 
     public static Date convertStringToDate(String dateString) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
