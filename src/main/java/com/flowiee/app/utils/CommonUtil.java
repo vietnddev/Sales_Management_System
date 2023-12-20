@@ -150,19 +150,19 @@ public class CommonUtil {
 
     public static String getPathDirectoty(SystemModule systemModule) {
         try {
-            StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
+            StringBuilder path = new StringBuilder(fileUploadPath);
             switch (systemModule) {
                 case STORAGE:
-                    path.append("/storage");
+                    path.append("storage");
                     break;
                 case PRODUCT:
-                    path.append("/product");
+                    path.append("product");
                     break;
                 case CATEGORY:
-                    path.append("/category");
+                    path.append("category");
                     break;
                 default:
-                	path.append("/system");
+                	path.append("system");
                 	break;
             }
             path.append("/" + CommonUtil.getNamHienTai());
@@ -183,13 +183,13 @@ public class CommonUtil {
 
     public static String getPathDirectoty(String systemModule) {
         try {
-            StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
+            StringBuilder path = new StringBuilder(fileUploadPath);
             if (SystemModule.STORAGE.name().equals(systemModule)) {
-                path.append("/storage");
+                path.append("storage");
             } else if (SystemModule.PRODUCT.name().equals(systemModule)) {
-                path.append("/product");
+                path.append("product");
             } else if (SystemModule.CATEGORY.name().equals(systemModule)) {
-                path.append("/category");
+                path.append("category");
             }
             path.append("/" + CommonUtil.getNamHienTai());
             path.append("/" + CommonUtil.getThangHienTai());

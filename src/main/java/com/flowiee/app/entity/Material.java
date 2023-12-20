@@ -2,6 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.model.request.MaterialRequest;
 
 import lombok.*;
 
@@ -36,7 +37,7 @@ public class Material extends BaseEntity implements Serializable {
     private String name;
 
     @Column(name = "quantity", nullable = false)
-    private String quantity;
+    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit", nullable = false)
@@ -93,10 +94,49 @@ public class Material extends BaseEntity implements Serializable {
         return map;
     }
 
+    public Material fromMaterialRequest(MaterialRequest request) {
+    	Material mat = new Material();
+    	mat.setId(request.getId());
+    	mat.setTicketImportGoods(new TicketImportGoods(request.getTicketImportId()));
+    	mat.setSupplier(new Supplier(request.getSupplierId(), null));
+    	mat.setQuantity(request.getQuantity());
+    	mat.setUnit(new Category(request.getUnitId(), null));
+    	mat.setCode(request.getCode());
+    	mat.setName(request.getName());
+    	mat.setLocation(request.getLocation());
+    	mat.setNote(request.getNote());
+    	mat.setStatus(request.getStatus());
+    	return mat;
+    }
+
 	@Override
 	public String toString() {
-		return "Material [id=" + super.id + ", ticketImportGoods=" + ticketImportGoods + ", supplier=" + supplier + ", code=" + code
-				+ ", name=" + name + ", quantity=" + quantity + ", unit=" + unit + ", location=" + location + ", note="
-				+ note + ", status=" + status + "]";
-	}        
+		StringBuilder builder = new StringBuilder();
+		builder.append("Material [id=");
+		builder.append(super.id);
+		builder.append(", ticketImportGoods=");
+		builder.append(ticketImportGoods);
+		builder.append(", supplier=");
+		builder.append(supplier);
+		builder.append(", code=");
+		builder.append(code);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", quantity=");
+		builder.append(quantity);
+		builder.append(", unit=");
+		builder.append(unit);
+		builder.append(", location=");
+		builder.append(location);
+		builder.append(", note=");
+		builder.append(note);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", listMaterialHistory=");
+		builder.append(listMaterialHistory);
+		builder.append(", listPrice=");
+		builder.append(listPrice);
+		builder.append("]");
+		return builder.toString();
+	}   
 }

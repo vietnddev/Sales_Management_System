@@ -2,6 +2,8 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.model.request.CustomerRequest;
+
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -55,6 +57,15 @@ public class Customer extends BaseEntity implements Serializable {
 	public Customer(int id, String customerName) {
 		super.id = id;
 		this.tenKhachHang = customerName;
+	}
+	
+	public Customer fromCustomerRequest(CustomerRequest request) {
+		Customer cus = new Customer();
+		cus.setId(request.getId());
+		cus.setTenKhachHang(request.getName());
+		cus.setBirthday(request.getBirthday());
+		cus.setGioiTinh(request.getGender());
+		return cus;
 	}
 
 	@Override

@@ -44,6 +44,7 @@ public class ConfigServiceImpl implements ConfigService {
     public String update(FlowieeConfig flowieeConfig, Integer id) {
         flowieeConfig.setId(id);
         flowieeConfigRepository.save(flowieeConfig);
+        logger.info("Update config success! " + flowieeConfig.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 

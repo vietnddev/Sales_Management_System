@@ -15,5 +15,5 @@ public class MaterialRequest {
     private String name;
     private String location;
     private String note;
-    private boolean status;
+    private Boolean status;
 }

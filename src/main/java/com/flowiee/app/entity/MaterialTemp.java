@@ -40,7 +40,7 @@ public class MaterialTemp extends BaseEntity implements Serializable {
     private String name;
 
     @Column(name = "quantity", nullable = false)
-    private String quantity;
+    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit", nullable = false)

@@ -2,6 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.model.request.AccountRequest;
 import com.flowiee.app.model.role.Role;
 
 import lombok.*;
@@ -89,6 +90,23 @@ public class Account extends BaseEntity implements Serializable{
         super.id = id;
         this.username = username;
         this.hoTen = hoTen;
+    }
+    
+    public Account fromAccountRequest(AccountRequest request) {
+    	Account acc = new Account();
+    	acc.setId(request.getId());
+    	acc.setUsername(request.getUsername());
+    	acc.setPassword(request.getPassword());
+    	acc.setHoTen(request.getName());
+    	acc.setGioiTinh(request.getSex());
+    	acc.setSoDienThoai(request.getPhone());
+    	acc.setEmail(request.getEmail());
+    	acc.setDiaChi(request.getAddress());
+    	acc.setAvatar(request.getAvatar());
+    	acc.setGhiChu(request.getNote());
+    	acc.setRole(request.getRole());
+    	acc.setTrangThai(request.getStatus());
+    	return acc; 
     }
 
 	@Override

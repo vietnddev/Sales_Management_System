@@ -2,7 +2,7 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-
+import com.flowiee.app.model.request.CategoryRequest;
 import com.flowiee.app.utils.CommonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -120,6 +120,18 @@ public class Category extends BaseEntity implements java.io.Serializable {
 			map.put("Use default","#" + CommonUtil.now("HH:mm:ss dd/MM/yyyy"));
 		}
 		return map;
+	}
+	
+	public Category fromCategoryRequest(CategoryRequest request) {
+		Category category = new Category();
+		category.setId(request.getId());
+		category.setType(request.getType());
+		category.setCode(request.getCode());
+		category.setName(request.getName());
+		category.setSort(request.getSort());
+		category.setIsDefault(request.getIsDefault());
+		category.setStatus(request.getStatus());
+		return category;
 	}
 
 	@Override
