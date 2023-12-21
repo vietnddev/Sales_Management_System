@@ -307,6 +307,7 @@
                                     <th>Tên biến thể</th>
                                     <th>Màu sắc</th>
                                     <th>Kích cỡ</th>
+                                    <th>Chất liệu</th>
                                     <th>Số lượng</th>
                                     <th>Đã bán</th>
                                     <th>Giá bán</th>
@@ -323,10 +324,11 @@
                                     </td>
                                     <td th:text="${var.colorName}"></td>
                                     <td th:text="${var.sizeName}"></td>
+                                    <td th:text="${var.fabricTypeName}"></td>
                                     <td th:text="${var.storageQty}"></td>
                                     <td th:text="${var.soldQty}"></td>
                                     <td>
-                                                <span th:text="${var.listPrices.get(0).giaBan}"
+                                                <span th:text="${var.priceSellValue != null} ? ${var.priceSellValue} : '-'"
                                                       style="color: #007bff; cursor: pointer"
                                                       data-toggle="modal"
                                                       th:data-target="'#modalLichSuGiaBan_' + ${var.productVariantId}"></span>
@@ -368,7 +370,7 @@
                                                             <div class="form-group row">
                                                                 <label class="col-sm-4">Giá hiện tại</label>
                                                                 <input class="col-sm-8 form-control" type="text"
-                                                                       th:value="${var.listPrices.get(0).giaBan}" readonly>
+                                                                       th:value="${var.priceSellValue != null} ? ${var.priceSellValue} : '-'" readonly>
                                                             </div>
                                                             <div class="form-group row">
                                                                 <label class="col-sm-4">Giá điều chỉnh</label>
@@ -378,7 +380,7 @@
                                                         </div>
                                                         <div class="modal-footer justify-content-end">
                                                             <input type="hidden" name="idGiaBan"
-                                                                   th:value="${var.listPrices.get(0).id}">
+                                                                   th:value="${var.priceSellValue != null} ? ${var.priceSellValue}">
                                                             <button type="button" class="btn btn-sm btn-default"
                                                                     data-dismiss="modal">Hủy
                                                             </button>

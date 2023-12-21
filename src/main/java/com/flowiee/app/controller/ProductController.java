@@ -170,14 +170,14 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/variant/insert")
     public ModelAndView insertProductVariant(HttpServletRequest request,
-                                       @ModelAttribute("bienTheSanPham") ProductVariant productVariant,
-                                       @RequestBody Float price) {
+                                       @ModelAttribute("bienTheSanPham") ProductVariant productVariant
+                                       ) {
         validateModuleProduct.updateProduct(true);
         productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.A.name());
         productVariant.setMaSanPham(CommonUtil.now("yyyyMMddHHmmss"));
         productVariantService.save(productVariant);
         //Khởi tạo giá default của giá bán
-        priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
+        //priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 

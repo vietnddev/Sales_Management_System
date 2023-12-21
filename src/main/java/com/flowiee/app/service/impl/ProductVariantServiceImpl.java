@@ -207,7 +207,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             productVariant.setGarmentFactory(new GarmentFactory(Integer.parseInt(String.valueOf(data[13])), String.valueOf(data[14])));
             productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15])), String.valueOf(data[16])));
             productVariant.setTicketImportGoods(new TicketImportGoods(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
-            productVariant.setPrice(new Price(Integer.parseInt(String.valueOf(data[19])), Double.parseDouble(String.valueOf(data[20]))));
+            Integer priceId = data[19] != null ? Integer.parseInt(String.valueOf(data[19])) : null;
+            Double priceSellValue = data[20] != null ? Double.parseDouble(String.valueOf(data[20])) : null;
+            productVariant.setPrice(new Price(priceId, priceSellValue));
             productVariant.setTrangThai(String.valueOf(data[21]));
             dataResponse.add(productVariant);
         }

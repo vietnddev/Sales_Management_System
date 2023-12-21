@@ -51,11 +51,11 @@ public class Product extends BaseEntity implements Serializable {
     private List<ProductVariant> listBienThe;
 
     @JsonIgnoreProperties("product")
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FileStorage> listFileStorage;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductHistory> listProductHistory;
 
@@ -85,6 +85,7 @@ public class Product extends BaseEntity implements Serializable {
         if (!this.tenSanPham.equals(productToCompare.getTenSanPham())) {
             map.put("Product name", this.tenSanPham + "#" + productToCompare.getTenSanPham());
         }
+        if (this.getMoTaSanPham() == null) this.setMoTaSanPham("-");      
         if (!this.moTaSanPham.equals(productToCompare.getMoTaSanPham())) {
             String descriptionOld = this.moTaSanPham.length() > 9999 ? this.moTaSanPham.substring(0, 9999) : this.moTaSanPham;
             String descriptionNew = productToCompare.getMoTaSanPham().length() > 9999 ? productToCompare.getMoTaSanPham().substring(0, 9999) : productToCompare.getMoTaSanPham();
