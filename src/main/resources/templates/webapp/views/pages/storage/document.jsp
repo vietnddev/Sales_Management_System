@@ -247,7 +247,7 @@
                                                                         name="loaiTaiLieu">
                                                                     <option th:each="list : ${listLoaiTaiLieu}"
                                                                             th:value="${list.id}"
-                                                                            th:text="${list.name}">
+                                                                            th:text="${list.name }">
                                                                     </option>
                                                                 </select>
                                                             </div>

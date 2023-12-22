@@ -5,6 +5,7 @@ import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleCategory;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/system/category")
+@RequestMapping(EndPointUtil.CATEGORY)
 public class CategoryController extends BaseController {
     @Autowired
     private CategoryService categoryService;

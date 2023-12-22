@@ -115,9 +115,9 @@
                                                                    th:text="${donHang.maDonHang}"></a>
                                                             </td>
                                                             <td th:text="${donHang.thoiGianDatHang}"></td>
-                                                            <td th:text="${donHang.khachHang.diaChi}"></td>
-                                                            <td th:text="${donHang.tongTienDonHang}"></td>
-                                                            <td th:text="${donHang.kenhBanHang.tenLoai}"></td>
+                                                            <td th:text="${donHang.receiverAddress}"></td>
+                                                            <td th:text="${donHang.totalAmountAfterDiscount}"></td>
+                                                            <td th:text="${donHang.kenhBanHang.name}"></td>
                                                             <td></td>
                                                         </tr>
                                                     </tbody>

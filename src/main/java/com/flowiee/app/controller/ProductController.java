@@ -10,6 +10,7 @@ import com.flowiee.app.service.*;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(path = "/san-pham")
+@RequestMapping(EndPointUtil.PRO_PRODUCT)
 public class ProductController extends BaseController {
     @Autowired
     private ProductService productsService;
@@ -161,14 +162,14 @@ public class ProductController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping(value = "/insert")
+    @PostMapping(EndPointUtil.PRO_PRODUCT_INSERT)
     public ModelAndView insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
         validateModuleProduct.insertProduct(true);
         productsService.save(product);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping(value = "/variant/insert")
+    @PostMapping(EndPointUtil.PRO_PRODUCT_VARIANT_INSERT)
     public ModelAndView insertProductVariant(HttpServletRequest request,
                                        @ModelAttribute("bienTheSanPham") ProductVariant productVariant
                                        ) {
@@ -181,7 +182,7 @@ public class ProductController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping(value = "/attribute/insert")
+    @PostMapping(EndPointUtil.PRO_PRODUCT_ATTRIBUTE)
     public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
         validateModuleProduct.updateProduct(true);
         productAttributeService.save(productAttribute);
@@ -292,7 +293,7 @@ public class ProductController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @GetMapping("/export")
+    @GetMapping(EndPointUtil.PRO_PRODUCT_EXPORT)
     public ResponseEntity<?> exportData() {
         validateModuleProduct.readProduct(true);
         byte[] dataExport = productsService.exportData(null);
@@ -303,7 +304,7 @@ public class ProductController extends BaseController {
     }
 
     /** ******************** GALLERY ******************** **/
-    @GetMapping("/gallery")
+    @GetMapping(EndPointUtil.PRO_GALLERY)
     public ModelAndView viewGallery() {
         validateModuleProduct.readGallery(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
@@ -313,7 +314,7 @@ public class ProductController extends BaseController {
     }
 
     /** ******************** VOUCHER ******************** **/
-    @GetMapping("/voucher")
+    @GetMapping(EndPointUtil.PRO_VOUCHER)
     public ModelAndView viewVouchers() {
         validateModuleProduct.readVoucher(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
@@ -336,7 +337,7 @@ public class ProductController extends BaseController {
         return baseView(modelAndView);
     }
     
-    @PostMapping("/voucher/insert")
+    @PostMapping(EndPointUtil.PRO_VOUCHER_INSERT)
     public ModelAndView insertVoucher(@ModelAttribute("voucher") VoucherInfo voucherInfo,
                                       HttpServletRequest request) throws ParseException {
         validateModuleProduct.insertVoucher(true);

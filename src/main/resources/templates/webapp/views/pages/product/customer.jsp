@@ -112,7 +112,7 @@
                                         <tr th:each="list, index : ${listCustomer}">
                                             <td th:text="${index.index + 1}" class="vertical-center"></td>
                                             <td class="vertical-center">
-                                                <a th:href="@{/khach-hang/{id}(id=${list.id})}" th:text="${list.tenKhachHang}"></a>
+                                                <a th:href="@{/customer/{id}(id=${list.id})}" th:text="${list.tenKhachHang}"></a>
                                             </td>
                                             <td th:if="${list.gioiTinh}" class="vertical-center">Nam</td>
                                             <td th:if="!${list.gioiTinh}" class="vertical-center">Nữ</td>
@@ -123,7 +123,7 @@
                                             </td>
                                             <td class="vertical-center">
                                                 <button class="btn btn-outline-info btn-sm">
-                                                    <a th:href="@{/khach-hang/{id}(id=${list.id})}">
+                                                    <a th:href="@{/customer/{id}(id=${list.id})}">
                                                         <i class="fa-solid fa-eye"></i>
                                                     </a>
                                                 </button>

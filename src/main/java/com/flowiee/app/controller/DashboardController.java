@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("")
+@RequestMapping()
 public class DashboardController extends BaseController {
     @Autowired
     private ValidateModuleProduct validateModuleProduct;

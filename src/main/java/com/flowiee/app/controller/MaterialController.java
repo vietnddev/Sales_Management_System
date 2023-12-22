@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/storage/material")
+@RequestMapping(EndPointUtil.STORAGE_MATERIAL)
 public class MaterialController extends BaseController {
     @Autowired
     private MaterialService materialService;
@@ -42,7 +42,7 @@ public class MaterialController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping("/insert")
+    @PostMapping(EndPointUtil.STORAGE_MATERIAL_INSERT)
     public ModelAndView insert(@ModelAttribute("material") Material material) {
         validateModuleStorage.insertMaterial(true);
         material.setStatus(true);
@@ -72,13 +72,13 @@ public class MaterialController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @GetMapping("/template")
+    @GetMapping(EndPointUtil.STORAGE_MATERIAL_TEMPLATE)
     public ResponseEntity<?> exportTemplate() {
         validateModuleStorage.readMaterial(true);
         return null;
     }
 
-    @PostMapping("/import")
+    @PostMapping(EndPointUtil.STORAGE_MATERIAL_IMPORT)
     public ModelAndView importData(@RequestParam("file") MultipartFile file) {
         validateModuleStorage.insertMaterial(true);
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
@@ -90,7 +90,7 @@ public class MaterialController extends BaseController {
         return null;
     }
 
-    @GetMapping("/export")
+    @GetMapping(EndPointUtil.STORAGE_MATERIAL_EXPORT)
     public ResponseEntity<?> exportData() {
         validateModuleStorage.readMaterial(true);
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {

@@ -16,10 +16,7 @@ import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleStorage;
 import com.flowiee.app.base.BaseController;
 
-import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.utils.MessagesUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +27,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@RequestMapping("/storage")
+@RequestMapping(EndPointUtil.STORAGE)
 public class DocumentController extends BaseController {
     @Autowired
     private DocumentService documentService;
@@ -66,7 +63,7 @@ public class DocumentController extends BaseController {
     }
 
     //Màn hình root
-    @GetMapping("/document")
+    @GetMapping(EndPointUtil.STORAGE_DOCUMENT)
     public ModelAndView getRootDocument() {
         validateModuleStorage.readDoc(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
@@ -167,10 +164,10 @@ public class DocumentController extends BaseController {
     }
 
     //Insert FILE và FOLDER
-    @PostMapping("/document/insert")
+    @PostMapping(EndPointUtil.STORAGE_DOCUMENT_INSERT)
     public ModelAndView insert(HttpServletRequest request,
-                         @ModelAttribute("document") Document document,
-                         @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
+                               @ModelAttribute("document") Document document,
+                               @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
         validateModuleStorage.insertDoc(true);
         document.setAliasName(CommonUtil.generateAliasName(document.getTen()));
         document.setCreatedBy(CommonUtil.getCurrentAccountId());
@@ -198,8 +195,8 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/change-file/{id}")
     public ModelAndView changeFile(@RequestParam("file") MultipartFile file,
-                             @PathVariable("id") Integer documentId,
-                             HttpServletRequest request) throws IOException {
+                                   @PathVariable("id") Integer documentId,
+                                   HttpServletRequest request) throws IOException {
         validateModuleStorage.updateDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -210,7 +207,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/update/{id}")
     public ModelAndView update(@ModelAttribute("document") Document document,
-                         @PathVariable("id") Integer documentId, HttpServletRequest request) {
+                               @PathVariable("id") Integer documentId, HttpServletRequest request) {
         validateModuleStorage.updateDoc(true);
         if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -221,9 +218,9 @@ public class DocumentController extends BaseController {
 
     @GetMapping("/document/update-metadata/{id}")
     public ModelAndView updateMetadata(HttpServletRequest request,
-                                 @PathVariable("id") Integer documentId,
-                                 @RequestParam("docDataId") Integer[] docDataIds,
-                                 @RequestParam("docDataValue") String[] docDataValues) {
+                                       @PathVariable("id") Integer documentId,
+                                       @RequestParam("docDataId") Integer[] docDataIds,
+                                       @RequestParam("docDataValue") String[] docDataValues) {
         validateModuleStorage.updateDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
@@ -270,8 +267,8 @@ public class DocumentController extends BaseController {
 
     @PostMapping(value = "/docfield/update/{id}", params = "update")
     public ModelAndView updateDocfield(HttpServletRequest request,
-                                 @ModelAttribute("docField") DocField docField,
-                                 @PathVariable("id") Integer docFieldId) {
+                                       @ModelAttribute("docField") DocField docField,
+                                       @PathVariable("id") Integer docFieldId) {
         validateModuleStorage.updateDoc(true);
         if (docFieldId <= 0 || documentService.findById(docFieldId) == null) {
             throw new NotFoundException("Docfield not found!");
@@ -281,7 +278,7 @@ public class DocumentController extends BaseController {
     }
 
     @PostMapping("/docfield/delete/{id}")
-    public ModelAndView deleteDocfield(@PathVariable("id") int docfiledId, HttpServletRequest request) {
+    public ModelAndView deleteDocfield(@PathVariable("id") Integer docfiledId, HttpServletRequest request) {
         validateModuleStorage.deleteDoc(true);
         if (docFieldService.findById(docfiledId) == null) {
             throw new NotFoundException("Docfield not found!");

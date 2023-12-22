@@ -1,6 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping(EndPointUtil.PRO_CUSTOMER)
 public class CustomerController extends BaseController {
     @Autowired
     private CustomerService customerService;
@@ -46,7 +47,7 @@ public class CustomerController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping("/insert")
+    @PostMapping(EndPointUtil.PRO_CUSTOMER_INSERT)
     public ModelAndView insertCustomer(@ModelAttribute("customer") Customer customer) {
         validateModuleSanPham.insertCustomer(true);
         if (customer == null) {

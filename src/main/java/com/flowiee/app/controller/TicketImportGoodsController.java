@@ -12,6 +12,7 @@ import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.security.ValidateModuleStorage;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Category;
@@ -32,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
-@RequestMapping("/storage/goods")
+@RequestMapping(EndPointUtil.STORAGE_TICKET_IMPORT)
 public class TicketImportGoodsController extends BaseController {
     @Autowired
     private TicketImportGoodsService ticketImportGoodsService;

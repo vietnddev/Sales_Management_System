@@ -1,5 +1,6 @@
 package com.flowiee.app.controller;
 
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.AccountService;
@@ -14,7 +15,7 @@ public class HomeController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping(value = "/sys/login")
+    @GetMapping(EndPointUtil.SYS_LOGIN)
     public ModelAndView showLoginPage() {
         if (accountService.findByUsername("admin") == null) {
             Account account = new Account();

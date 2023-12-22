@@ -3,6 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseAuthorize;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.OrderService;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(path = "/profile")
+@RequestMapping(EndPointUtil.SYS_PROFILE)
 public class ProfileController extends BaseController {
 	@Autowired
 	private OrderService orderService;
@@ -41,7 +42,7 @@ public class ProfileController extends BaseController {
 		return baseView(modelAndView);
 	}
 
-	@PostMapping("/update")
+	@PostMapping(EndPointUtil.SYS_PROFILE_UPDATE)
 	public ModelAndView updateProfile(@AuthenticationPrincipal UserDetails userDetails,
 			@ModelAttribute("account") Account accountEntity) {
 		baseAuthorize.isAuthenticated();
@@ -58,7 +59,7 @@ public class ProfileController extends BaseController {
 		return new ModelAndView("redirect:/profile");
 	}
 
-	@PostMapping("/change-password")
+	@PostMapping(EndPointUtil.SYS_PROFILE_CHANGEPASSWORD)
 	public ModelAndView changePassword(HttpServletRequest request,
 									   @ModelAttribute("account") Account accountEntity,
 									   RedirectAttributes redirectAttributes) {

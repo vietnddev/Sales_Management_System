@@ -3,6 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
 
+import com.flowiee.app.utils.EndPointUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.service.SupplierService;
 
 @Controller
-@RequestMapping(path = "/product/supplier")
+@RequestMapping(EndPointUtil.PRO_SUPPLIER)
 public class SupplierController extends BaseController {
 	@Autowired
 	private SupplierService supplierService;
@@ -33,7 +34,7 @@ public class SupplierController extends BaseController {
 		return baseView(modelAndView);
 	}
 
-	@PostMapping("/insert")
+	@PostMapping(EndPointUtil.PRO_SUPPLIER_INSERT)
 	public ModelAndView insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
 		validateModuleProduct.insertSupplier(true);
 		if (supplier == null) {

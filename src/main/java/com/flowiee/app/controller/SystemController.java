@@ -9,6 +9,7 @@ import com.flowiee.app.service.ConfigService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(value = "/sys")
+@RequestMapping
 public class SystemController extends BaseController {
     @Autowired
     private ConfigService configService;
@@ -27,14 +28,14 @@ public class SystemController extends BaseController {
     @Autowired
     private ValidateModuleSystem validateModuleSystem;
 
-    @GetMapping("/notification")
+    @GetMapping(EndPointUtil.SYS_NOTIFICATION)
     public ModelAndView getAllNotification() {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_NOTIFICATION);
         modelAndView.addObject("notification", new Notification());
         return baseView(modelAndView);
     }
 
-    @GetMapping(value = "/log")
+    @GetMapping(EndPointUtil.SYS_LOG)
     public ModelAndView getAllLog() {
         validateModuleSystem.readLog(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_LOG);
@@ -42,7 +43,7 @@ public class SystemController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @GetMapping("/config")
+    @GetMapping(EndPointUtil.SYS_CONFIG)
     public ModelAndView showConfig() {
         validateModuleSystem.setupConfig(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_CONFIG);
@@ -62,7 +63,7 @@ public class SystemController extends BaseController {
         return new ModelAndView("redirect:/he-thong/config");
     }
 
-    @GetMapping("/role")
+    @GetMapping(EndPointUtil.SYS_ROLE)
     public ModelAndView readRole() {
         validateModuleSystem.readPermission(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);

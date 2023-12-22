@@ -3,6 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.TicketExportGoods;
 import com.flowiee.app.security.ValidateModuleStorage;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.service.TicketExportGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/storage/ticket-export")
+@RequestMapping(EndPointUtil.STORAGE_TICKET_EXPORT)
 public class TicketExportGoodsController extends BaseController {
     @Autowired
     private TicketExportGoodsService ticketExportGoodsService;
@@ -29,7 +30,7 @@ public class TicketExportGoodsController extends BaseController {
         return baseView(modelAndView);
     }
     
-    @PostMapping("/insert")
+    @PostMapping(EndPointUtil.STORAGE_TICKET_EXPORT_INSERT)
     public ModelAndView insertNewTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport) {
     	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.save(ticketExport);

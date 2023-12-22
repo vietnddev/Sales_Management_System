@@ -4,6 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.exception.DataExistsException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.model.role.ActionOfModule;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/sys/tai-khoan")
+@RequestMapping(EndPointUtil.SYS_ACCOUNT)
 public class AccountController extends BaseController {
     @Autowired
     private RoleService roleService;
@@ -53,7 +54,7 @@ public class AccountController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping(value = "/insert")
+    @PostMapping(value = EndPointUtil.SYS_ACCOUNT_INSERT)
     public ModelAndView save(@ModelAttribute("account") Account account) {
         validateModuleSystem.insertAccount(true);
         if (accountService.findByUsername(account.getUsername()) != null) {

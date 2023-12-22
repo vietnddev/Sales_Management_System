@@ -3,6 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
@@ -28,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/don-hang")
+@RequestMapping(EndPointUtil.PRO_ORDER)
 public class OrderController extends BaseController {
     @Autowired
     private OrderService orderService;
@@ -188,9 +189,8 @@ public class OrderController extends BaseController {
         return modelAndView;
     }
 
-    @PostMapping("/insert")
-    public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest,
-                         HttpServletRequest request) {
+    @PostMapping(EndPointUtil.PRO_ORDER_INSERT)
+    public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest, HttpServletRequest request) {
         validateModuleProduct.insertOrder(true);
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
         if (thoiGianDatHangString != null) {
@@ -228,8 +228,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/thanh-toan/{id}")
-    public ModelAndView thanhToan(@PathVariable("id") Integer donHangId,
-                            @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
+    public ModelAndView thanhToan(@PathVariable("id") Integer donHangId, @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
         validateModuleProduct.updateOrder(true);
         orderPay.setMaPhieu("PTT" + donHangId + CommonUtil.now("yyMMddHHmmss"));
         orderPay.setOrder(orderService.findById(donHangId));
@@ -238,7 +237,7 @@ public class OrderController extends BaseController {
         return new ModelAndView("redirect:/don-hang/" + donHangId);
     }
 
-    @GetMapping("/export")
+    @GetMapping(EndPointUtil.PRO_ORDER_EXPORT)
     public ResponseEntity<?> exportDanhSachDonHang() {
         validateModuleProduct.readOrder(true);
         return orderService.exportDanhSachDonHang();

@@ -31,19 +31,19 @@ public class BaseController {
 	}
 	
 	private ModelAndView setURLSidebar(ModelAndView modelAndView) {
-		modelAndView.addObject("URL_CATEGORY", EndPointUtil.CATEGORY_VIEW);
-		modelAndView.addObject("URL_PRODUCT", EndPointUtil.PRODUCT_VIEW);
-		modelAndView.addObject("URL_PRODUCT_ORDER", EndPointUtil.PRODUCT_ORDER_VIEW);
-		modelAndView.addObject("URL_PRODUCT_CUSTOMER", EndPointUtil.PRODUCT_CUSTOMER_VIEW);
-		modelAndView.addObject("URL_PRODUCT_SUPPLIER", EndPointUtil.PRODUCT_SUPPLIER_VIEW);
+		modelAndView.addObject("URL_CATEGORY", EndPointUtil.CATEGORY);
+		modelAndView.addObject("URL_PRODUCT", EndPointUtil.PRO_PRODUCT);
+		modelAndView.addObject("URL_PRODUCT_ORDER", EndPointUtil.PRO_ORDER);
+		modelAndView.addObject("URL_PRODUCT_CUSTOMER", EndPointUtil.PRO_CUSTOMER);
+		modelAndView.addObject("URL_PRODUCT_SUPPLIER", EndPointUtil.PRO_SUPPLIER);
 		modelAndView.addObject("URL_PRODUCT_GALLERY", EndPointUtil.PRO_GALLERY);
-		modelAndView.addObject("URL_STORAGE_DASHBOARD", EndPointUtil.STORAGE_DASHBOARD);
-		modelAndView.addObject("URL_STORAGE_DOCUMENT", EndPointUtil.STORAGE_DOCUMENT_VIEW);
-		modelAndView.addObject("URL_STORAGE_MATERIAL", EndPointUtil.STORAGE_MATERIAL_VIEW);
-		modelAndView.addObject("URL_SYSTEM_CONFIG", EndPointUtil.SYS_CONFIG_VIEW);
-		modelAndView.addObject("URL_SYSTEM_ROLE", EndPointUtil.SYS_ROLE_VIEW);
-		modelAndView.addObject("URL_SYSTEM_LOG", EndPointUtil.SYS_LOG_VIEW);
-		modelAndView.addObject("URL_SYSTEM_ACCOUNT", EndPointUtil.SYS_ACCOUNT_VIEW);
+		modelAndView.addObject("URL_STORAGE_DASHBOARD", EndPointUtil.STORAGE);
+		modelAndView.addObject("URL_STORAGE_DOCUMENT", EndPointUtil.STORAGE_DOCUMENT);
+		modelAndView.addObject("URL_STORAGE_MATERIAL", EndPointUtil.STORAGE_MATERIAL);
+		modelAndView.addObject("URL_SYSTEM_CONFIG", EndPointUtil.SYS_CONFIG);
+		modelAndView.addObject("URL_SYSTEM_ROLE", EndPointUtil.SYS_ROLE);
+		modelAndView.addObject("URL_SYSTEM_LOG", EndPointUtil.SYS_LOG);
+		modelAndView.addObject("URL_SYSTEM_ACCOUNT", EndPointUtil.SYS_ACCOUNT);
 		return modelAndView;
 	}
 }

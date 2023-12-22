@@ -82,7 +82,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/profile}">
+          <a class="nav-link" th:href="@{/sys/profile}">
             <i class="fa-regular fa-user"></i>
           </a>
         </li>
