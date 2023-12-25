@@ -31,6 +31,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -73,11 +74,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDTO> dataResponse = ProductDTO.fromProducts(productsRepository.findAll(null ,null, null));
         for (ProductDTO productDTO : dataResponse) {
             FileStorage imageActive = fileService.findImageActiveOfSanPham(productDTO.getProductId());
-            if (imageActive != null) {
-                productDTO.setImageActive(imageActive);
-            } else {
-                productDTO.setImageActive(new FileStorage());
-            }
+            productDTO.setImageActive(Objects.requireNonNullElseGet(imageActive, FileStorage::new));
             List<Integer> listVoucherApplyId = new ArrayList<>();
             voucherApplyService.findByProductId(productDTO.getProductId()).forEach(voucherApplyDTO -> {
                 listVoucherApplyId.add(voucherApplyDTO.getVoucherInfoId());
@@ -98,6 +95,8 @@ public class ProductServiceImpl implements ProductService {
     public String save(Product product) {
         try {
             product.setCreatedBy(CommonUtil.getCurrentAccountId());
+            product.setMoTaSanPham(product.getMoTaSanPham() != null ? product.getMoTaSanPham() : "");
+            product.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.name());
             productsRepository.save(product);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info("Insert product success! " + product.toString());
@@ -113,6 +112,9 @@ public class ProductServiceImpl implements ProductService {
     public String update(Product productToUpdate, Integer productId) {
     	Product productBefore = null;
         try {
+            if (productToUpdate.getMoTaSanPham().isEmpty()) {
+                productToUpdate.setMoTaSanPham("-");;
+            }
             productBefore = this.findById(productId);
             productBefore.compareTo(productToUpdate).forEach((key, value) -> {
                 ProductHistory productHistory = new ProductHistory();

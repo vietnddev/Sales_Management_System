@@ -1,6 +1,7 @@
 package com.flowiee.app.dto;
 
 import com.flowiee.app.entity.*;
+import com.flowiee.app.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,7 +45,7 @@ public class ProductVariantDTO implements Serializable {
     private Integer priceBuyId;
     private Float priceBuyValue;
     private Integer priceSellId;
-    private Float priceSellValue;
+    private Double priceSellValue;
     private Float priceMaxDiscount;
     private Float priceAfterDiscount;
     private String unitCurrency;
@@ -89,6 +90,11 @@ public class ProductVariantDTO implements Serializable {
         dto.setPriceAfterDiscount(null);
         dto.setUnitCurrency(null);
         dto.setListPrices(null);
+        if (AppConstants.PRODUCT_STATUS.ACTIVE.name().equals(input.getTrangThai())) {
+            dto.setStatus(AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
+        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.name().equals(input.getTrangThai())) {
+            dto.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
+        }
         return dto;
     }
 

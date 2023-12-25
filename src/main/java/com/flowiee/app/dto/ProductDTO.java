@@ -2,6 +2,7 @@ package com.flowiee.app.dto;
 
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
+import com.flowiee.app.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -62,6 +63,11 @@ public class ProductDTO implements Serializable {
         dto.setCreatedById(product.getCreatedBy());
         dto.setCreatedByName(null);
         dto.setListVoucherInfoApply(null);
+        if (AppConstants.PRODUCT_STATUS.ACTIVE.name().equals(product.getStatus())) {
+            dto.setProductStatus(AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
+        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.name().equals(product.getStatus())) {
+            dto.setProductStatus(AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
+        }
         return dto;
     }
 

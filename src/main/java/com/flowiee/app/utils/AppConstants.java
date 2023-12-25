@@ -42,8 +42,8 @@ public class AppConstants {
     public static final String SERVICE_RESPONSE_FAIL = "NOK";
 
     public enum PRODUCT_STATUS {
-        A("Đang áp dụng"),
-        I("Đang không áp dụng");
+        ACTIVE("Đang kinh doanh"),
+        INACTIVE("Ngừng kinh doanh");
         private final String label;
 
         PRODUCT_STATUS(String label) {

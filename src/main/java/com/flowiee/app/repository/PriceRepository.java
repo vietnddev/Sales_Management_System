@@ -12,6 +12,6 @@ public interface PriceRepository extends JpaRepository<Price, Integer> {
     @Query("from Price p where p.productVariant.id=:productVariantId order by p.status desc, p.createdAt desc")
     List<Price> findPriceByProductVariant(Integer productVariantId);
 
-    @Query("select g.giaBan from Price g where g.productVariant=:productVariantId and g.status=:status")
-    Double findGiaBanHienTai(ProductVariant productVariantId, String status);
+    @Query("from Price g where g.productVariant=:productVariantId and g.status=:status")
+    Price findGiaBanHienTai(ProductVariant productVariantId, String status);
 }

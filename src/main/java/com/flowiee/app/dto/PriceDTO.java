@@ -28,18 +28,21 @@ public class PriceDTO implements Serializable {
     private Integer createdBy;
 
     public static PriceDTO fromPrice(Price p) {
-        PriceDTO dto = new PriceDTO();
-        dto.setId(p.getId());
-        dto.setProductVariant(p.getProductVariant());
-        dto.setMaterial(p.getMaterial());
-        dto.setGiaMua(String.valueOf(p.getGiaMua()));
-        dto.setUnitBuy(p.getUnitBuy());
-        dto.setGiaBan(String.valueOf(p.getGiaBan()));
-        dto.setUnitSell(p.getUnitSell());
-        dto.setStatus(p.getStatus());
-        dto.setCreatedAt(p.getCreatedAt());
-        dto.setCreatedBy(p.getCreatedBy());
-        return dto;
+        if (p != null) {
+            PriceDTO dto = new PriceDTO();
+            dto.setId(p.getId());
+            dto.setProductVariant(p.getProductVariant());
+            dto.setMaterial(p.getMaterial());
+            dto.setGiaMua(String.valueOf(p.getGiaMua()));
+            dto.setUnitBuy(p.getUnitBuy());
+            dto.setGiaBan(String.valueOf(p.getGiaBan()));
+            dto.setUnitSell(p.getUnitSell());
+            dto.setStatus(p.getStatus());
+            dto.setCreatedAt(p.getCreatedAt());
+            dto.setCreatedBy(p.getCreatedBy());
+            return dto;
+        }
+        return null;
     }
 
     public static List<PriceDTO> fromPrices(List<Price> lp) {

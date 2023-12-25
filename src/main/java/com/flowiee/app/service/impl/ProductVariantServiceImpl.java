@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductVariantServiceImpl implements ProductVariantService {
@@ -52,9 +53,15 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         for (ProductVariant productVariant : this.findData(AppConstants.PRODUCT, String.valueOf(productId))) {
             ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
             List<PriceDTO> listPriceOfProductVariant = priceService.findPricesByProductVariant(dataModel.getProductVariantId());
+            PriceDTO price =  PriceDTO.fromPrice(priceService.findGiaHienTai(dataModel.getProductVariantId()));
+            if (price != null) {
+                dataModel.setPriceSellId(price.getId());
+                dataModel.setPriceSellValue(Double.parseDouble(price.getGiaBan()));
+            } else {
+                dataModel.setPriceSellId(null);
+                dataModel.setPriceSellValue(null);
+            }
             dataModel.setListPrices(listPriceOfProductVariant);
-            dataModel.setPriceSellId(null);
-            dataModel.setPriceSellValue(null);
             dataModel.setDiscountPercent(null);
             dataModel.setPriceMaxDiscount(null);
             dataModel.setPriceAfterDiscount(null);
@@ -65,7 +72,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public Double getGiaBan(int id) {
-        return priceService.findGiaHienTai(id);
+        return priceService.findGiaHienTai(id).getGiaBan();
     }
 
     @Override

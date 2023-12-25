@@ -9,7 +9,7 @@ import com.flowiee.app.entity.Price;
 public interface PriceService extends BaseService<Price> {
     List<PriceDTO> findPricesByProductVariant(int bienTheSanPhamId);
 
-    Double findGiaHienTai(int bienTheSanPhamId);
+    Price findGiaHienTai(int bienTheSanPhamId);
 
     String update(Price price, int bienTheSanPhamId, int giaSanPhamId);
 }

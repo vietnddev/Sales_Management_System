@@ -203,7 +203,7 @@
                                                                                         selected></option>
                                                                             </select>
                                                                         </div>
-                                                                        <div class="form-group">
+                                                                        <!--<div class="form-group">
                                                                             <label>Mô tả sản phẩm</label>
                                                                             <textarea class="form-control" rows="5"
                                                                                       placeholder="Mô tả sản phẩm"
@@ -220,7 +220,7 @@
                                                                                 <option value="false">Ngừng kinh doanh
                                                                                 </option>
                                                                             </select>
-                                                                        </div>
+                                                                        </div>-->
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer justify-content-end"
@@ -351,7 +351,7 @@
                                                                     </option>
                                                                 </select>
                                                             </div>
-                                                            <div class="form-group">
+                                                            <!--<div class="form-group">
                                                                 <label>Mô tả sản phẩm</label>
                                                                 <textarea class="form-control" rows="5"
                                                                           placeholder="Mô tả sản phẩm"
@@ -360,11 +360,12 @@
                                                             <div class="form-group">
                                                                 <label>Trạng thái</label>
                                                                 <select class="custom-select" name="status">
-                                                                    <option value="true" selected>Đang kinh doanh
+                                                                    <option th:each="productStatus, iterStat : ${listProductStatus}"
+                                                                            th:value="${productStatus.key}"
+                                                                            th:text="${productStatus.value}">
                                                                     </option>
-                                                                    <option value="false">Ngừng kinh doanh</option>
                                                                 </select>
-                                                            </div>
+                                                            </div>-->
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer justify-content-end"
