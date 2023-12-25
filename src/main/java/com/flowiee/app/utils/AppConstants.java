@@ -111,4 +111,19 @@ public class AppConstants {
             return label;
         }
     }
+
+    public enum CONTACT_TYPE {
+        P("Số điện thoại"),
+        E("Email"),
+        A("Địa chỉ");
+        private final String label;
+
+        CONTACT_TYPE(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
 }

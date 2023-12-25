@@ -118,21 +118,18 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <div class="card-body">
-                                                                        Sản phẩm <strong class="badge text-bg-info"
-                                                                                         th:text="${list.productName}"
-                                                                                         style="font-size: 16px;"></strong>
-                                                                        sẽ bị xóa vĩnh viễn!
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-end"
-                                                                         style="margin-bottom: -15px;">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-primary">
-                                                                            Đồng ý
-                                                                        </button>
-                                                                    </div>
+                                                                    Sản phẩm <strong class="badge text-bg-info"
+                                                                                     th:text="${list.productName}"
+                                                                                     style="font-size: 16px;"></strong>
+                                                                    sẽ bị xóa vĩnh viễn!
+                                                                </div>
+                                                                <div class="modal-footer justify-content-end">
+                                                                    <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Hủy
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Đồng ý
+                                                                    </button>
                                                                 </div>
                                                             </form>
                                                         </div>

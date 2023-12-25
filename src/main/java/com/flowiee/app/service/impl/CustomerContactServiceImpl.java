@@ -23,7 +23,7 @@ public class CustomerContactServiceImpl implements CustomerContactService {
 
     @Override
     public CustomerContact findById(Integer entityId) {
-        return customerContactRepository.findById(entityId).get();
+        return customerContactRepository.findById(entityId).orElse(null);
     }
 
     @Override
@@ -60,29 +60,39 @@ public class CustomerContactServiceImpl implements CustomerContactService {
 
     @Override
     public List<CustomerContact> findByCustomerId(Integer customerId) {
-        List<CustomerContact> listData = new ArrayList<>();
         if (customerId != null && customerId > 0) {
-            listData = customerContactRepository.findByCustomerId(customerId);
+            List<CustomerContact> listData = customerContactRepository.findByCustomerId(customerId);
+            for (CustomerContact c : listData) {
+                if (AppConstants.CONTACT_TYPE.P.name().equals(c.getCode())) {
+                    c.setCode(AppConstants.CONTACT_TYPE.P.getLabel());
+                }
+                if (AppConstants.CONTACT_TYPE.E.name().equals(c.getCode())) {
+                    c.setCode(AppConstants.CONTACT_TYPE.E.getLabel());
+                }
+                if (AppConstants.CONTACT_TYPE.A.name().equals(c.getCode())) {
+                    c.setCode(AppConstants.CONTACT_TYPE.A.getLabel());
+                }
+            }
+            return listData;
         }
-        return listData;
+        return null;
     }
 
     @Override
     public String setContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
-        CustomerContact customerContactUsingDefault = new CustomerContact();
-        if (contactCode.equals("PHONE")) {
-            customerContactUsingDefault = customerContactRepository.findPhoneUseDefault(customerId);
-        } else if (contactCode.equals("EMAIL")) {
-            customerContactUsingDefault = customerContactRepository.findEmailUseDefault(customerId);
-        } else if (contactCode.equals("ADDRESS")) {
-            customerContactUsingDefault = customerContactRepository.findAddressUseDefault(customerId);
-        }
+        new CustomerContact();
+        CustomerContact customerContactUsingDefault = switch (contactCode) {
+            case "P" -> customerContactRepository.findPhoneUseDefault(customerId);
+            case "E" -> customerContactRepository.findEmailUseDefault(customerId);
+            case "A" -> customerContactRepository.findAddressUseDefault(customerId);
+            default -> throw new IllegalStateException("Unexpected value: " + contactCode);
+        };
         if (customerContactUsingDefault != null) {
-            customerContactUsingDefault.setDefault(false);
+            customerContactUsingDefault.setIsDefault("N");
             customerContactRepository.save(customerContactUsingDefault);
         }
         CustomerContact customerContactToUseDefault = this.findById(contactId);
-        customerContactToUseDefault.setDefault(true);
+        customerContactToUseDefault.setIsDefault("Y");
         this.update(customerContactToUseDefault, customerContactToUseDefault.getId());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -90,23 +100,35 @@ public class CustomerContactServiceImpl implements CustomerContactService {
     @Override
     public String setContactUnUseDefault(Integer contactId) {
         CustomerContact customerContact = this.findById(contactId);
-        customerContact.setDefault(false);
+        customerContact.setIsDefault("N");
         this.update(customerContact, customerContact.getId());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String findPhoneUseDefault(Integer customerId) {
-        return customerContactRepository.findPhoneUseDefault(customerId).getValue();
+        CustomerContact customerContact = customerContactRepository.findPhoneUseDefault(customerId);
+        if (customerContact != null) {
+            return customerContact.getValue();
+        }
+        return null;
     }
 
     @Override
     public String findEmailUseDefault(Integer customerId) {
-        return customerContactRepository.findEmailUseDefault(customerId).getValue();
+        CustomerContact customerContact = customerContactRepository.findEmailUseDefault(customerId);
+        if (customerContact != null) {
+            return customerContact.getValue();
+        }
+        return null;
     }
 
     @Override
     public String findAddressUseDefault(Integer customerId) {
-        return customerContactRepository.findAddressUseDefault(customerId).getValue();
+        CustomerContact customerContact = customerContactRepository.findAddressUseDefault(customerId);
+        if (customerContact != null) {
+            return customerContact.getValue();
+        }
+        return null;
     }
 }
