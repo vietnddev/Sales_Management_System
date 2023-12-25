@@ -58,12 +58,6 @@
             Dashboard
           </a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block border"
-            style="border-radius: 20px; font-weight: bold; background-color: aliceblue">
-          <a th:href="@{/lich-lam-viec}" class="nav-link"><i class="fa-solid fa-calendar-days"></i>
-            Lịch làm việc
-          </a>
-        </li>
       </ul>
 
       <!-- Right navbar links -->
