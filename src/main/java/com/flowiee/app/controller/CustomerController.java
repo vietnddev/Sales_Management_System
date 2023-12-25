@@ -47,7 +47,7 @@ public class CustomerController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping(EndPointUtil.PRO_CUSTOMER_INSERT)
+    @PostMapping("/insert")
     public ModelAndView insertCustomer(@ModelAttribute("customer") Customer customer) {
         validateModuleSanPham.insertCustomer(true);
         if (customer == null) {

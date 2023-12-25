@@ -63,7 +63,7 @@ public class DocumentController extends BaseController {
     }
 
     //Màn hình root
-    @GetMapping(EndPointUtil.STORAGE_DOCUMENT)
+    @GetMapping("/document")
     public ModelAndView getRootDocument() {
         validateModuleStorage.readDoc(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
@@ -164,7 +164,7 @@ public class DocumentController extends BaseController {
     }
 
     //Insert FILE và FOLDER
-    @PostMapping(EndPointUtil.STORAGE_DOCUMENT_INSERT)
+    @PostMapping("/document/insert")
     public ModelAndView insert(HttpServletRequest request,
                                @ModelAttribute("document") Document document,
                                @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {

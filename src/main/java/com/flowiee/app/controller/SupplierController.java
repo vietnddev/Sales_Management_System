@@ -34,7 +34,7 @@ public class SupplierController extends BaseController {
 		return baseView(modelAndView);
 	}
 
-	@PostMapping(EndPointUtil.PRO_SUPPLIER_INSERT)
+	@PostMapping("/insert")
 	public ModelAndView insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
 		validateModuleProduct.insertSupplier(true);
 		if (supplier == null) {

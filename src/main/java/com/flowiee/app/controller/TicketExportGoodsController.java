@@ -30,7 +30,7 @@ public class TicketExportGoodsController extends BaseController {
         return baseView(modelAndView);
     }
     
-    @PostMapping(EndPointUtil.STORAGE_TICKET_EXPORT_INSERT)
+    @PostMapping("/insert")
     public ModelAndView insertNewTicketExport(@ModelAttribute("ticketExport") TicketExportGoods ticketExport) {
     	validateModuleStorage.exportGoods(true);
     	ticketExportGoodsService.save(ticketExport);

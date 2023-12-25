@@ -21,13 +21,19 @@ public class BaseController {
 	protected ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtil.getCurrentAccountUsername()));
 		modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtil.getCurrentAccountId()));
-		return this.setURLSidebar(modelAndView);
+		return setURLSidebar(setURLHeader(modelAndView));
 	}
 	
 	protected ModelAndView baseView(ModelAndView modelAndView, boolean flag) {
 		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtil.getCurrentAccountUsername()));
 		if (flag) modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtil.getCurrentAccountId()));
-		return this.setURLSidebar(modelAndView);
+		return setURLSidebar(setURLHeader(modelAndView));
+	}
+
+	private ModelAndView setURLHeader(ModelAndView modelAndView) {
+		modelAndView.addObject("URL_PROFILE", EndPointUtil.SYS_PROFILE);
+		modelAndView.addObject("URL_LOGOUT", EndPointUtil.SYS_LOGOUT);
+		return modelAndView;
 	}
 	
 	private ModelAndView setURLSidebar(ModelAndView modelAndView) {

@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(EndPointUtil.SYS_PROFILE)
+@RequestMapping
 public class ProfileController extends BaseController {
 	@Autowired
 	private OrderService orderService;
 	@Autowired
 	private BaseAuthorize baseAuthorize;
 
-	@GetMapping
+	@GetMapping(EndPointUtil.SYS_PROFILE)
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
 		baseAuthorize.isAuthenticated();
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_PROFILE);

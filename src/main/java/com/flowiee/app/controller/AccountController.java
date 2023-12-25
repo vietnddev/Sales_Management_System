@@ -54,7 +54,7 @@ public class AccountController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping(value = EndPointUtil.SYS_ACCOUNT_INSERT)
+    @PostMapping(value = "/insert")
     public ModelAndView save(@ModelAttribute("account") Account account) {
         validateModuleSystem.insertAccount(true);
         if (accountService.findByUsername(account.getUsername()) != null) {

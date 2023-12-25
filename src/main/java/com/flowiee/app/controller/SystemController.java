@@ -52,7 +52,7 @@ public class SystemController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping("/config/update/{id}")
+    @PostMapping("/sys/config/update/{id}")
     public ModelAndView update(@ModelAttribute("config") FlowieeConfig config,
                          @PathVariable("id") Integer configId) {
         validateModuleSystem.setupConfig(true);
