@@ -11,15 +11,15 @@ import java.util.List;
 
 @Repository
 public interface CustomerContactRepository extends JpaRepository<CustomerContact, Integer> {
-    @Query("from CustomerContact c where c.customer.id=:customerId")
+    @Query("from CustomerContact c where c.customer.id=:customerId order by c.code, c.isDefault, c.status")
     List<CustomerContact> findByCustomerId(Integer customerId);
 
-    @Query("from CustomerContact c where c.customer.id=:customerId and c.code='PHONE' and c.isDefault=true")
+    @Query("from CustomerContact c where c.customer.id=:customerId and c.code='P' and c.isDefault='Y' and c.status=true")
     CustomerContact findPhoneUseDefault(Integer customerId);
 
-    @Query("from CustomerContact c where c.customer.id=:customerId and c.code='EMAIL' and c.isDefault=true")
+    @Query("from CustomerContact c where c.customer.id=:customerId and c.code='E' and c.isDefault='Y' and c.status=true")
     CustomerContact findEmailUseDefault(Integer customerId);
 
-    @Query("from CustomerContact c where c.customer.id=:customerId and c.code='ADDRESS' and c.isDefault=true")
+    @Query("from CustomerContact c where c.customer.id=:customerId and c.code='A' and c.isDefault='Y'  and c.status=true")
     CustomerContact findAddressUseDefault(Integer customerId);
 }

@@ -58,22 +58,146 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="row mb-2">
-                                                    <span class="col-sm-6">Họ tên</span>
-                                                    <span class="col-sm-6">[[${khachHangDetail.tenKhachHang}]]</span>
+                                                    <span class="col-sm-2"><b>Họ tên: </b></span>
+                                                    <span class="col-sm-4">[[${khachHangDetail.tenKhachHang}]]</span>
                                                 </div>
                                                 <div class="row mb-2">
-                                                    <span class="col-sm-6">Giới tính</span>
-                                                    <span class="col-sm-6">[[${khachHangDetail.gioiTinh}]]</span>
+                                                    <span class="col-sm-2"><b>Giới tính: </b></span>
+                                                    <span class="col-sm-4">[[${khachHangDetail.gioiTinh}]]</span>
                                                 </div>
-                                                <div class="row mb-2" th:each="contact : ${khachHangDetail.listCustomerContact}">
-                                                    <span class="col-sm-6" th:text="${contact.code}"></span>
-                                                    <span class="col-sm-6" th:text="${contact.value}"></span>
+                                                <div class="row mb-2">
+                                                    <span class="col-sm-2"><b>Thông tin liên hệ: </b></span>
+                                                </div>
+                                                <div class="row">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">STT</th>
+                                                                <th scope="col">Loại</th>
+                                                                <th>Nội dung</th>
+                                                                <th>Sử dụng mặc định</th>
+                                                                <th>Trạng thái</th>
+                                                                <th>Ghi chú</th>
+                                                                <th>Thao tác</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr th:each="c, index : ${listCustomerContact}">
+                                                                <td th:text="${index.index + 1}"></td>
+                                                                <td th:text="${c.code}"></td>
+                                                                <td th:text="${c.value}"></td>
+                                                                <td th:text="${c.isDefault}"></td>
+                                                                <td th:text="${c.status}"></td>
+                                                                <td th:text="${c.note}"></td>
+                                                                <td>
+                                                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                                                            th:data-target="'#update-' + ${c.id}">
+                                                                            <i class="fa-solid fa-pencil"></i>
+                                                                    </button>
+                                                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                            th:data-target="'#delete-' + ${c.id}">
+                                                                        <i class="fa-solid fa-trash"></i>
+                                                                    </button>
+                                                                    <div class="modal fade" th:id="'update-' + ${c.id}">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <form th:action="@{/customer/contact/update/{id}(id=${c.id})}"
+                                                                                      th:object="${customerContact}" method="post">
+                                                                                    <div class="modal-header">
+                                                                                        <strong class="modal-title">Cập nhật thông tin liên hệ</strong>
+                                                                                        <button type="button" class="close"
+                                                                                                data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <div class="form-group">
+                                                                                            <label>Loại</label>
+                                                                                            <input type="text" class="form-control"
+                                                                                                   placeholder="Loại"
+                                                                                                   name="code"
+                                                                                                   th:value="${c.code}" readonly/>
+                                                                                        </div>
+                                                                                        <div class="form-group">
+                                                                                            <label>Nội dung</label>
+                                                                                            <input type="text" class="form-control"
+                                                                                                   placeholder="Nội dung"
+                                                                                                   name="value"
+                                                                                                   th:value="${c.value}"/>
+                                                                                        </div>
+                                                                                        <div class="form-group">
+                                                                                            <label>Ghi chú</label>
+                                                                                            <input type="text" class="form-control"
+                                                                                                   placeholder="Ghi chú"
+                                                                                                   name="note"
+                                                                                                   th:value="${c.note}"/>
+                                                                                        </div>
+                                                                                        <div class="form-group text-left">
+                                                                                            <label>Sử dụng mặc định</label>
+                                                                                            <input type="checkbox" class="form-control"
+                                                                                                   name="isDefault"
+                                                                                                   th:value="${c.isDefault}"/>
+                                                                                        </div>
+                                                                                        <div class="form-group">
+                                                                                            <label>Trạng thái</label>
+                                                                                            <input type="text" class="form-control"
+                                                                                                   placeholder="Ghi chú"
+                                                                                                   name="note"
+                                                                                                   th:value="${c.note}"/>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer justify-content-end">
+                                                                                        <input th:type="hidden" name="customer" th:value="${c.customer.id}">
+                                                                                        <button type="button" class="btn btn-default"
+                                                                                                data-dismiss="modal">Hủy
+                                                                                        </button>
+                                                                                        <button type="submit" class="btn btn-primary">
+                                                                                            Đồng ý
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal fade" th:id="'delete-' + ${c.id}">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <form th:action="@{/customer/contact/delete/{id}(id=${c.id})}" method="post">
+                                                                                    <div class="modal-header">
+                                                                                        <strong class="modal-title">Xác nhận xóa thông tin liên hệ</strong>
+                                                                                        <button type="button" class="close"
+                                                                                                data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        Liên hệ <strong class="badge text-bg-info"
+                                                                                                         th:text="${c.value}"
+                                                                                                         style="font-size: 16px;"></strong>
+                                                                                        sẽ bị xóa vĩnh viễn!
+                                                                                    </div>
+                                                                                    <div class="modal-footer justify-content-end">
+                                                                                        <button type="button" class="btn btn-default"
+                                                                                                data-dismiss="modal">Hủy
+                                                                                        </button>
+                                                                                        <button type="submit" class="btn btn-primary">
+                                                                                            Đồng ý
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Lịch sử giao dịch</h4>
+                                                <h4 class="card-title"><b>Lịch sử giao dịch</b></h4>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row mb-2">
@@ -98,13 +222,13 @@
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <td>STT</td>
-                                                            <td>Mã đơn hàng</td>
-                                                            <td>Thời gian đặt hàng</td>
-                                                            <td>Địa chỉ nhận hàng</td>
-                                                            <td>Số tiền</td>
-                                                            <td>Kênh</td>
-                                                            <td>Trạng thái</td>
+                                                            <th>STT</th>
+                                                            <th>Mã đơn hàng</th>
+                                                            <th>Thời gian đặt hàng</th>
+                                                            <th>Địa chỉ nhận hàng</th>
+                                                            <th>Số tiền</th>
+                                                            <th>Kênh</th>
+                                                            <th>Trạng thái</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

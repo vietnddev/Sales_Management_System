@@ -32,6 +32,19 @@ public class CommonUtil {
     public static String PATH_TEMPLATE_EXCEL = rootPath + "/templates/excel";
     public static Date START_APP_TIME = null;
 
+    public static String convertDateToString(String formatInput, String formatOutput, Date timeInput) {
+        String outputTime = null;
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(formatInput);
+            SimpleDateFormat outputFormat = new SimpleDateFormat(formatOutput);
+            Date date = inputFormat.parse(timeInput.toString());
+            outputTime = outputFormat.format(date);
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing date: " + e.getMessage());
+        }
+        return outputTime;
+    }
+
     public static Date convertStringToDate(String dateString) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date date = null;

@@ -1,10 +1,12 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.CustomerRepository;
+import com.flowiee.app.service.CustomerContactService;
 import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.SystemLogService;
@@ -17,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +31,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
+    private CustomerContactService customerContactService;
+    @Autowired
     private SystemLogService systemLogService;
     @Autowired
     private OrderService orderService;
@@ -34,6 +40,19 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> findAll() {
         return customerRepository.findAll();
+    }
+
+    @Override
+    public List<CustomerDTO> findAll(String name, String sex, Date birthday, String phone, String email, String address) {
+        List<CustomerDTO> dataReturn =  new ArrayList<>();
+        customerRepository.findAll(name, sex, birthday, phone, email, address).forEach(customer -> {
+            CustomerDTO dto = CustomerDTO.fromCustomer(customer);
+            dto.setPhoneDefault(customerContactService.findPhoneUseDefault(customer.getId()));
+            dto.setEmailDefault(customerContactService.findEmailUseDefault(customer.getId()));
+            dto.setAddressDefault(customerContactService.findAddressUseDefault(customer.getId()));
+            dataReturn.add(dto);
+        });
+        return dataReturn;
     }
 
     @Override

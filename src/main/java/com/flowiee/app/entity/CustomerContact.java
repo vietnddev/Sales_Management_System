@@ -31,7 +31,7 @@ public class CustomerContact extends BaseEntity implements Serializable {
     private String note;
 
     @Column(name = "is_default")
-    private boolean isDefault;
+    private String isDefault;
 
     @Column(name = "status", nullable = false)
     private boolean status;

@@ -104,7 +104,10 @@
                                             <th>STT</th>
                                             <th>Tên khách hàng</th>
                                             <th>Giới tính</th>
-                                            <th>Liên hệ</th>
+                                            <th>Sinh nhật</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -112,15 +115,13 @@
                                         <tr th:each="list, index : ${listCustomer}">
                                             <td th:text="${index.index + 1}" class="vertical-center"></td>
                                             <td class="vertical-center">
-                                                <a th:href="@{/customer/{id}(id=${list.id})}" th:text="${list.tenKhachHang}"></a>
+                                                <a th:href="@{/customer/{id}(id=${list.id})}" th:text="${list.name}"></a>
                                             </td>
-                                            <td th:if="${list.gioiTinh}" class="vertical-center">Nam</td>
-                                            <td th:if="!${list.gioiTinh}" class="vertical-center">Nữ</td>
-                                            <td>
-                                                <th:block th:each="contact : ${list.listCustomerContact}">
-                                                    <span>[[${contact.code}]] : [[${contact.value}]]</span> <br>
-                                                </th:block>
-                                            </td>
+                                            <td th:text="${list.sex}" class="vertical-center"></td>
+                                            <td th:text="${list.birthday}" class="vertical-center"></td>
+                                            <td th:text="${list.phoneDefault}" class="vertical-center"></td>
+                                            <td th:text="${list.emailDefault}" class="vertical-center"></td>
+                                            <td th:text="${list.addressDefault}" class="vertical-center"></td>
                                             <td class="vertical-center">
                                                 <button class="btn btn-outline-info btn-sm">
                                                     <a th:href="@{/customer/{id}(id=${list.id})}">
@@ -135,7 +136,10 @@
                                             <th>STT</th>
                                             <th>Tên khách hàng</th>
                                             <th>Giới tính</th>
-                                            <th>Liên hệ</th>
+                                            <th>Sinh nhật</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
