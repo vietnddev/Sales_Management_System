@@ -46,6 +46,8 @@ public class BaseController {
 		modelAndView.addObject("URL_STORAGE_DASHBOARD", EndPointUtil.STORAGE);
 		modelAndView.addObject("URL_STORAGE_DOCUMENT", EndPointUtil.STORAGE_DOCUMENT);
 		modelAndView.addObject("URL_STORAGE_MATERIAL", EndPointUtil.STORAGE_MATERIAL);
+		modelAndView.addObject("URL_STORAGE_TICKET_IMPORT", EndPointUtil.STORAGE_TICKET_IMPORT);
+		modelAndView.addObject("URL_STORAGE_TICKET_EXPORT", EndPointUtil.STORAGE_TICKET_EXPORT);
 		modelAndView.addObject("URL_SYSTEM_CONFIG", EndPointUtil.SYS_CONFIG);
 		modelAndView.addObject("URL_SYSTEM_ROLE", EndPointUtil.SYS_ROLE);
 		modelAndView.addObject("URL_SYSTEM_LOG", EndPointUtil.SYS_LOG);

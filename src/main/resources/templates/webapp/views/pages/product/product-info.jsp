@@ -50,6 +50,7 @@
                     <div class="col-sm-12 mb-1">
                         <h3 class="text-center"><b th:text="${detailProducts.productName}"
                                                    style="text-transform: uppercase;"></b></h3>
+                        <hr style="width: 50%">
                     </div>
                     <hr>
                     <div class="col-sm-5">

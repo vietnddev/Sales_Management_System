@@ -42,7 +42,7 @@ public class TicketImportGoodsController extends BaseController {
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired
-    private ProductVariantTempService bienTheSanPhamServiceTemp;
+    private ProductVariantTempService productVariantServiceTemp;
     @Autowired
     private MaterialService materialService;
     @Autowired
@@ -66,7 +66,7 @@ public class TicketImportGoodsController extends BaseController {
         modelAndView.addObject("orderTime", ticketImportGoodsPresent.getOrderTime().toString().substring(0, 10));
         modelAndView.addObject("receivedTime", ticketImportGoodsPresent.getReceivedTime().toString().substring(0, 10));
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-        modelAndView.addObject("listBienTheSanPhamSelected", bienTheSanPhamServiceTemp.findByImportId(ticketImportGoodsPresent.getId()));
+        modelAndView.addObject("listBienTheSanPhamSelected", productVariantServiceTemp.findByImportId(ticketImportGoodsPresent.getId()));
         modelAndView.addObject("listMaterial", materialService.findAll());
         modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(ticketImportGoodsPresent.getId()));
 
@@ -135,11 +135,11 @@ public class TicketImportGoodsController extends BaseController {
             ProductVariant productVariant = productVariantService.findById(Integer.parseInt(productVariantId));
             productVariant.setTicketImportGoods(new TicketImportGoods(importId));
 
-            ProductVariantTemp temp = bienTheSanPhamServiceTemp.findProductVariantInGoodsImport(importId, productVariant.getId());
+            ProductVariantTemp temp = productVariantServiceTemp.findProductVariantInGoodsImport(importId, productVariant.getId());
             if (temp != null) {
-                bienTheSanPhamServiceTemp.updateSoLuong(temp.getSoLuongKho() + 1, temp.getId());
+                productVariantServiceTemp.updateSoLuong(temp.getSoLuongKho() + 1, temp.getId());
             } else {
-                bienTheSanPhamServiceTemp.save(ProductVariantTemp.convertFromProductVariant(productVariant));
+                productVariantServiceTemp.save(ProductVariantTemp.convertFromProductVariant(productVariant));
             }
         }
         return new ModelAndView("redirect:/storage/goods");

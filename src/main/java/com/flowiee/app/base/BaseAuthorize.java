@@ -35,7 +35,7 @@ public class BaseAuthorize {
                 return true;
             } else {
             	if (throwException) {
-            		throw new ForbiddenException("You are not authorized to use this dunction!");	
+            		throw new ForbiddenException("You are not authorized to use this function!");
             	}               
             }
         }
