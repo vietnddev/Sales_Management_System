@@ -22,10 +22,10 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Column(name = "action",nullable = false)
 	private String action;
 
-	@Column(name = "noi_dung", length = 2000, nullable = false)
+	@Column(name = "noi_dung", length = 4000, nullable = false)
 	private String noiDung;
 
-	@Column(name = "noi_dung_cap_nhat", length = 2000)
+	@Column(name = "noi_dung_cap_nhat", length = 4000)
 	private String noiDungCapNhat;
 
 	@Column(name = "ip", length = 20)

@@ -92,10 +92,18 @@
               </a>
             </li>
             <li class="nav-item">
-              <a th:href="@{/storage/goods}" class="nav-link">
+              <a th:href="@{${URL_STORAGE_TICKET_IMPORT}}" class="nav-link">
                 <i class="fa-solid fa-cloud-arrow-up fa-rotate-90"></i>
                 <p>
                   Nhập kho
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a th:href="@{${URL_STORAGE_TICKET_EXPORT}}" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-up fa-rotate-270"></i>
+                <p>
+                  Xuất kho
                 </p>
               </a>
             </li>

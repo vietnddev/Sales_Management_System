@@ -189,7 +189,7 @@ public class OrderController extends BaseController {
         return modelAndView;
     }
 
-    @PostMapping(EndPointUtil.PRO_ORDER_INSERT)
+    @PostMapping("/insert")
     public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest, HttpServletRequest request) {
         validateModuleProduct.insertOrder(true);
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
@@ -199,8 +199,8 @@ public class OrderController extends BaseController {
             orderRequest.setThoiGianDatHang(new Date());
         }
         List<Integer> listProductVariantId = new ArrayList<>();
-        List<String> listBtspIdString = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
-        for (String idString : listBtspIdString) {
+        List<String> listProductVariantIdRequest = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
+        for (String idString : listProductVariantIdRequest) {
             listProductVariantId.add(Integer.parseInt(idString));
         }
         orderRequest.setListBienTheSanPham(listProductVariantId);
@@ -214,16 +214,16 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/update/{id}")
-    public ModelAndView update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer id) {
+    public ModelAndView update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer orderId) {
         validateModuleProduct.updateOrder(true);
-        orderService.update(order, id);
+        orderService.update(order, orderId);
         return new ModelAndView("redirect:/don-hang");
     }
 
     @PostMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Integer id) {
+    public ModelAndView delete(@PathVariable("id") Integer orderId) {
         validateModuleProduct.deleteOrder(true);
-        orderService.delete(id);
+        orderService.delete(orderId);
         return new ModelAndView("redirect:/don-hang");
     }
 

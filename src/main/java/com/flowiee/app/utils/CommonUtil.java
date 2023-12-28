@@ -168,7 +168,7 @@ public class CommonUtil {
         return extension;
     }
 
-    public static String getPathDirectoty(SystemModule systemModule) {
+    public static String getPathDirectory(SystemModule systemModule) {
         try {
             StringBuilder path = new StringBuilder(fileUploadPath);
             switch (systemModule) {
@@ -201,7 +201,7 @@ public class CommonUtil {
         }
     }
 
-    public static String getPathDirectoty(String systemModule) {
+    public static String getPathDirectory(String systemModule) {
         try {
             StringBuilder path = new StringBuilder(fileUploadPath);
             if (SystemModule.STORAGE.name().equals(systemModule)) {
