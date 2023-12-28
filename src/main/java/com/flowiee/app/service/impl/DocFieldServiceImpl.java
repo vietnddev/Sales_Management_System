@@ -11,6 +11,7 @@ import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocFieldService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.ErrorMessages;
 import com.flowiee.app.utils.MessagesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,7 @@ public class DocFieldServiceImpl implements DocFieldService {
     public DocField delete(Integer id) {
         DocField docFieldToDelete = findById(id);
         if (!docDataService.findByDocField(id).isEmpty()) {
-            throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
         }
         docFieldRepository.deleteById(id);
         systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field: " + docFieldToDelete.toString());

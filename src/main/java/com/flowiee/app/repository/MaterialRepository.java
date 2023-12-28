@@ -10,6 +10,16 @@ import java.util.List;
 
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
+    @Query("from Material m " +
+           "where (:ticketImportId is null or m.ticketImportGoods.id=:ticketImportId) " +
+           "and (:supplierId is null or m.supplier.id=:supplierId) " +
+           "and (:unitId is null or m.unit.id=:unitId) " +
+           "and (:code is null or m.code=:code) " +
+           "and (:name is null or m.name like %:name%) " +
+           "and (:location is null or m.location like %:location%) " +
+           "and (:statuc is null or m.status=:status)")
+    List<Material> findAll(Integer ticketImportId, Integer supplierId, Integer unitId, String code, String name, String location, String status);
+
     @Query("from Material m where m.code=:code")
     List<Material> findByCode(String code);
 

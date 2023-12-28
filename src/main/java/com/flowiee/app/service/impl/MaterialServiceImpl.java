@@ -28,8 +28,13 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
+    public List<Material> findAll(Integer ticketImportId, Integer supplierId, Integer unitId, String code, String name, String location, String status) {
+        return materialRepository.findAll(ticketImportId, supplierId, unitId, code, name, location, status);
+    }
+
+    @Override
     public Material findById(Integer entityId) {
-        return materialRepository.findById(entityId).get();
+        return materialRepository.findById(entityId).orElse(null);
     }
 
     @Override

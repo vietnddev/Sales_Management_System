@@ -13,6 +13,7 @@ import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.ErrorMessages;
 import com.flowiee.app.utils.MessagesUtil;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -198,11 +199,11 @@ public class OrderServiceImpl implements OrderService {
         Order order = this.findById(id);
         order.getListOrderPay().forEach(orderPay -> {
             if (orderPay.getPaymentStatus()) {
-                throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+                throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
             }
         });
         if ("DE".equals(order.getTrangThaiDonHang().getCode()) || "DO".equals(order.getTrangThaiDonHang().getCode())) {
-            throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
         }
         orderRepository.deleteById(id);
         systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());

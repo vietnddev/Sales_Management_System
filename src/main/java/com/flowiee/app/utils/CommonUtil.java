@@ -35,10 +35,13 @@ public class CommonUtil {
     public static String convertDateToString(String formatInput, String formatOutput, Date timeInput) {
         String outputTime = null;
         try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat(formatInput);
-            SimpleDateFormat outputFormat = new SimpleDateFormat(formatOutput);
-            Date date = inputFormat.parse(timeInput.toString());
-            outputTime = outputFormat.format(date);
+            if (!formatInput.isEmpty() && !formatOutput.isEmpty() && timeInput != null) {
+                SimpleDateFormat inputFormat = new SimpleDateFormat(formatInput);
+                SimpleDateFormat outputFormat = new SimpleDateFormat(formatOutput);
+                Date date = inputFormat.parse(timeInput.toString());
+                outputTime = outputFormat.format(date);
+                return outputTime;
+            }
         } catch (ParseException e) {
             System.out.println("Error occurred while parsing date: " + e.getMessage());
         }
@@ -49,7 +52,9 @@ public class CommonUtil {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date date = null;
         try {
-            date = dateFormat.parse(dateString);
+            if (!dateString.isEmpty()) {
+                date = dateFormat.parse(dateString);
+            }
         } catch (ParseException e) {
             System.out.println("Error occurred while parsing date: " + e.getMessage());
         }
@@ -60,7 +65,9 @@ public class CommonUtil {
         DateFormat dateFormat = new SimpleDateFormat(pattern);
         Date date = null;
         try {
-            date = dateFormat.parse(dateString);
+            if (dateString != null) {
+                date = dateFormat.parse(dateString);
+            }
         } catch (ParseException e) {
             System.out.println("Error occurred while parsing date: " + e.getMessage());
         }
@@ -340,5 +347,13 @@ public class CommonUtil {
         voucherTypes.put(AppConstants.VOUCHER_TYPE.NUMBER.name(), AppConstants.VOUCHER_TYPE.NUMBER.getLabel());
         voucherTypes.put(AppConstants.VOUCHER_TYPE.TEXT.name(), AppConstants.VOUCHER_TYPE.TEXT.getLabel());
         return voucherTypes;
+    }
+
+    public static Integer getIdFromRequestParam(String param) {
+        return param != null ? Integer.parseInt(param.substring(0, param.indexOf("#"))) : null;
+    }
+
+    public static String getNameFromRequestParam(String param) {
+        return param != null ? param.substring(param.indexOf("#") + 1) : null;
     }
 }

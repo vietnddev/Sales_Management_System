@@ -107,7 +107,7 @@ public class DocumentController extends BaseController {
             throw new NotFoundException("Document not found!");
         }
         if (!docShareService.isShared(documentId)) {
-            throw new ForbiddenException(MessagesUtil.ERROR_FORBIDDEN);
+            throw new ForbiddenException(ErrorMessages.FORBIDDEN);
         }
         if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FI.name())) {
             ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT_DETAIL);

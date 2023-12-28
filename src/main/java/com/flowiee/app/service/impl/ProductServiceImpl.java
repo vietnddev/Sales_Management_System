@@ -11,6 +11,7 @@ import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.ErrorMessages;
 import com.flowiee.app.utils.MessagesUtil;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -156,7 +157,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Product productToDelete = this.findById(id);
             if (productInUse(id)) {
-                throw new DataInUseException(MessagesUtil.ERROR_LOCKED);
+                throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
             }
             productsRepository.deleteById(id);            
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());

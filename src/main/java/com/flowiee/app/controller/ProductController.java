@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -53,7 +54,9 @@ public class ProductController extends BaseController {
     private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping
-    public ModelAndView viewAllProducts() {
+    public ModelAndView viewAllProducts(@Nullable @RequestParam("pProductType") String pProductType,
+                                        @Nullable @RequestParam("pBrand") String pBrand,
+                                        @Nullable @RequestParam("status") String pStatus) {
         validateModuleProduct.readProduct(true);
         List<Category> brands = new ArrayList<>();
         List<Category> productTypes = new ArrayList<>();
@@ -75,13 +78,37 @@ public class ProductController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
-        modelAndView.addObject("listSanPham", productsService.findAll(null, null, null));
+        modelAndView.addObject("listProducts", productsService.findAll(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getIdFromRequestParam(pBrand), pStatus));
         modelAndView.addObject("listVoucherInfo", voucherService.findAll(null, null, null, null));
         modelAndView.addObject("listProductType", productTypes);
         modelAndView.addObject("listDonViTinh", units);
         modelAndView.addObject("listBrand", brands);
         modelAndView.addObject("listProductStatus", listProductStatus);
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
+        if (pProductType != null) {
+            List<Category> productTypeFilter = new ArrayList<>();
+            productTypeFilter.add(new Category(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getNameFromRequestParam(pProductType)));
+            productTypeFilter.addAll(productTypes);
+            modelAndView.addObject("filter_productType", productTypeFilter);
+        } else {
+            modelAndView.addObject("filter_productType", productTypes);
+        }
+        if (pBrand != null) {
+            List<Category> brandFilter = new ArrayList<>();
+            brandFilter.add(new Category(CommonUtil.getIdFromRequestParam(pBrand), CommonUtil.getNameFromRequestParam(pBrand)));
+            brandFilter.addAll(brands);
+            modelAndView.addObject("filter_brand", brandFilter);
+        } else {
+            modelAndView.addObject("filter_brand", brands);
+        }
+        if (pStatus != null) {
+            LinkedHashMap<String, String> statusFilter = new LinkedHashMap<>();
+            statusFilter.put(pStatus.substring(0, pStatus.indexOf("#")), pStatus.substring(pStatus.indexOf("#") + 1));
+            statusFilter.putAll(listProductStatus);
+            modelAndView.addObject("filter_status", statusFilter);
+        } else {
+            modelAndView.addObject("filter_status", listProductStatus);
+        }
         if (validateModuleProduct.insertProduct(false)) {
             modelAndView.addObject("action_create", "enable");
         }

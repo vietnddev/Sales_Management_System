@@ -32,16 +32,18 @@ public class CustomerContactServiceImpl implements CustomerContactService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         customerContactRepository.save(entity);
+        customerContactRepository.flush();
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String update(CustomerContact entity, Integer entityId) {
-        if (entity == null || entityId == null || entityId <= 0 || this.findByCustomerId(entityId) == null) {
+        if (entity == null || entityId == null || entityId <= 0 || this.findById(entityId) == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         entity.setId(entityId);
         customerContactRepository.save(entity);
+        customerContactRepository.flush();
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
@@ -61,19 +63,7 @@ public class CustomerContactServiceImpl implements CustomerContactService {
     @Override
     public List<CustomerContact> findByCustomerId(Integer customerId) {
         if (customerId != null && customerId > 0) {
-            List<CustomerContact> listData = customerContactRepository.findByCustomerId(customerId);
-            for (CustomerContact c : listData) {
-                if (AppConstants.CONTACT_TYPE.P.name().equals(c.getCode())) {
-                    c.setCode(AppConstants.CONTACT_TYPE.P.getLabel());
-                }
-                if (AppConstants.CONTACT_TYPE.E.name().equals(c.getCode())) {
-                    c.setCode(AppConstants.CONTACT_TYPE.E.getLabel());
-                }
-                if (AppConstants.CONTACT_TYPE.A.name().equals(c.getCode())) {
-                    c.setCode(AppConstants.CONTACT_TYPE.A.getLabel());
-                }
-            }
-            return listData;
+            return customerContactRepository.findByCustomerId(customerId);
         }
         return null;
     }
@@ -106,29 +96,17 @@ public class CustomerContactServiceImpl implements CustomerContactService {
     }
 
     @Override
-    public String findPhoneUseDefault(Integer customerId) {
-        CustomerContact customerContact = customerContactRepository.findPhoneUseDefault(customerId);
-        if (customerContact != null) {
-            return customerContact.getValue();
-        }
-        return null;
+    public CustomerContact findPhoneUseDefault(Integer customerId) {
+        return customerContactRepository.findPhoneUseDefault(customerId);
     }
 
     @Override
-    public String findEmailUseDefault(Integer customerId) {
-        CustomerContact customerContact = customerContactRepository.findEmailUseDefault(customerId);
-        if (customerContact != null) {
-            return customerContact.getValue();
-        }
-        return null;
+    public CustomerContact findEmailUseDefault(Integer customerId) {
+        return customerContactRepository.findEmailUseDefault(customerId);
     }
 
     @Override
-    public String findAddressUseDefault(Integer customerId) {
-        CustomerContact customerContact = customerContactRepository.findAddressUseDefault(customerId);
-        if (customerContact != null) {
-            return customerContact.getValue();
-        }
-        return null;
+    public CustomerContact findAddressUseDefault(Integer customerId) {
+        return customerContactRepository.findAddressUseDefault(customerId);
     }
 }

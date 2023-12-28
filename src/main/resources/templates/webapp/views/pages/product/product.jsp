@@ -69,7 +69,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="list, index : ${listSanPham}">
+                                        <tr th:each="list, index : ${listProducts}">
                                             <td th:text="${index.index + 1}"></td>
                                             <td class="text-center">
                                                 <img th:src="@{'/' + ${list.imageActive.directoryPath} + '/' + ${list.imageActive.tenFileKhiLuu}}"

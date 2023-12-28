@@ -12,9 +12,9 @@ public interface CustomerContactService extends BaseService<CustomerContact> {
 
     String setContactUnUseDefault(Integer contactId);
 
-    String findPhoneUseDefault(Integer customerId);
+    CustomerContact findPhoneUseDefault(Integer customerId);
 
-    String findEmailUseDefault(Integer customerId);
+    CustomerContact findEmailUseDefault(Integer customerId);
 
-    String findAddressUseDefault(Integer customerId);
+    CustomerContact findAddressUseDefault(Integer customerId);
 }

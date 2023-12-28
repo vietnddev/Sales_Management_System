@@ -2,8 +2,10 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.model.request.CustomerRequest;
 
+import com.flowiee.app.utils.CommonUtil;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -46,7 +48,7 @@ public class Customer extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
 	private List<Order> listOrder;
 
-	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<CustomerContact> listCustomerContact;
 
@@ -59,13 +61,27 @@ public class Customer extends BaseEntity implements Serializable {
 		this.tenKhachHang = customerName;
 	}
 	
-	public Customer fromCustomerRequest(CustomerRequest request) {
+	public static Customer fromCustomerRequest(CustomerRequest request) {
 		Customer cus = new Customer();
 		cus.setId(request.getId());
 		cus.setTenKhachHang(request.getName());
 		cus.setBirthday(request.getBirthday());
 		cus.setGioiTinh(request.getGender());
 		return cus;
+	}
+
+	public static Customer fromCustomerDTO(CustomerDTO dto) {
+		Customer customer = new Customer();
+		customer.setId(dto.getId());
+		customer.setTenKhachHang(dto.getName());
+		customer.setBirthday(CommonUtil.convertStringToDate(dto.getBirthday(), "YYYY-MM-dd"));
+		if (dto.getSex() != null) {
+			customer.setGioiTinh("M".equals(dto.getSex()));
+		}
+		customer.setPhoneDefault(dto.getPhoneDefault());
+		customer.setEmailDefault(dto.getEmailDefault());
+		customer.setAddressDefault(dto.getAddressDefault());
+		return customer;
 	}
 
 	@Override

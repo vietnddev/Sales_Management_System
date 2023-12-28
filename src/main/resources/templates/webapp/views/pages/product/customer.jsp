@@ -62,22 +62,29 @@
                                                                     <div class="form-group">
                                                                         <label>Tên khách hàng</label>
                                                                         <input type="text" class="form-control" required
-                                                                               name="tenKhachHang"/>
+                                                                               name="name"/>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Giới tính</label>
+                                                                        <select class="custom-select col-sm" name="sex" data-placeholder="Chọn giới tính">
+                                                                            <option selected value="M">Nam</option>
+                                                                            <option selected value="F">Nữ</option>
+                                                                        </select>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Số điện thoại</label>
                                                                         <input type="text" class="form-control" required
-                                                                               name="soDienThoai"/>
+                                                                               name="phoneDefault"/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Email</label>
                                                                         <input type="email" class="form-control"
-                                                                               name="email"/>
+                                                                               name="emailDefault"/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Địa chỉ</label>
                                                                         <input type="text" class="form-control" required
-                                                                               name="diaChi"/>
+                                                                               name="addressDefault"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -128,6 +135,72 @@
                                                         <i class="fa-solid fa-eye"></i>
                                                     </a>
                                                 </button>
+                                                <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
+                                                        th:data-target="'#update-' + ${list.id}">
+                                                    <i class="fa-solid fa-pencil"></i>
+                                                </button>
+                                                <div class="modal fade" th:id="'update-' + ${list.id}">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <form th:action="@{/customer/update/{id}(id=${list.id})}"
+                                                                  th:object="${customer}" method="post">
+                                                                <div class="modal-header">
+                                                                    <strong class="modal-title">Cập nhật thông tin khách hàng</strong>
+                                                                    <button type="button" class="close"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="form-group">
+                                                                                <label>Tên khách hàng</label>
+                                                                                <input type="text" class="form-control" required
+                                                                                       name="name" th:value="${list.name}"/>
+                                                                            </div>
+                                                                            <div class="form-group" th:if="${list.sex} == 'Nam'">
+                                                                                <label>Giới tính</label>
+                                                                                <select class="custom-select" name="sex">
+                                                                                    <option value="M" selected>Nam</option>
+                                                                                    <option value="F">Nữ</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group" th:if="${list.sex} == 'Nữ'">
+                                                                                <label>Giới tính</label>
+                                                                                <select class="custom-select" name="sex">
+                                                                                    <option value="M">Nam</option>
+                                                                                    <option value="F" selected>Nữ</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label>Số điện thoại</label>
+                                                                                <input type="text" class="form-control" required
+                                                                                       name="phoneDefault" th:value="${list.phoneDefault}"/>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label>Email</label>
+                                                                                <input type="email" class="form-control"
+                                                                                       name="emailDefault" th:value="${list.emailDefault}"/>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label>Địa chỉ</label>
+                                                                                <input type="text" class="form-control" required
+                                                                                       name="addressDefault" th:value="${list.addressDefault}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer justify-content-end">
+                                                                        <button type="button" class="btn btn-default"
+                                                                                data-dismiss="modal">Hủy
+                                                                        </button>
+                                                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>

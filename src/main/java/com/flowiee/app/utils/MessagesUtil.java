@@ -40,8 +40,4 @@ public class MessagesUtil {
     public static final String UPDATE_DATA_FAIL = "Cập nhật dữ liệu THẤT BẠI!";
     public static final String DELETE_DATA_SUCCESS = "Xóa dữ liệu THÀNH CÔNG!";
     public static final String DELETE_DATA_FAIL = "Xóa dữ liệu THẤT BẠI!";
-
-    public static final String ERROR_FORBIDDEN = "You are not authorized to use this function!";
-    public static final String ERROR_NOTFOUND = "The resource you are accessing dose not found!";
-    public static final String ERROR_LOCKED = "The resource is currently in use and cannot be deleted at this time!";
 }
