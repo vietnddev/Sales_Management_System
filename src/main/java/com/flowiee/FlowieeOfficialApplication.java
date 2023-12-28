@@ -3,12 +3,24 @@ package com.flowiee;
 import com.flowiee.app.base.StartUp;
 import com.flowiee.app.service.MailService;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.EAN13Writer;
+import com.google.zxing.oned.UPCEANWriter;
+import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,9 +32,18 @@ public class FlowieeOfficialApplication {
 //    @Autowired
 //    private MailService mailService;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws WriterException, IOException {
         SpringApplication.run(FlowieeOfficialApplication.class, args);
         new StartUp();
+
+        String data = "https://viblo.asia/p/tao-ma-qr-code-trong-java-voi-zxing-4P856grLKY3";
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 200, 200);
+
+        // Write to file image
+        String outputFile = "D://image.png";
+        Path path = FileSystems.getDefault().getPath(outputFile);
+        MatrixToImageWriter.writeToPath(matrix, "PNG", path);
     }
 
     //Auto gửi email báo cáo doanh thu hàng ngày
