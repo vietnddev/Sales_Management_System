@@ -3,6 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.exception.DataInUseException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.model.request.OrderRequest;
@@ -35,6 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
@@ -54,6 +56,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailService orderDetailService;
     @Autowired
+    private OrderPayService orderPayService;
+    @Autowired
     private SystemLogService systemLogService;
     @Autowired
     private ItemsService itemsService;
@@ -62,23 +66,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private VoucherTicketService voucherTicketService;
     @Autowired
+    private FileStorageService fileStorageService;
+    @Autowired
     private EntityManager entityManager;
 
     @Override
-    public List<Order> findAll() {
-        List<Order> listOrder = new ArrayList<>();
-//        for (Order order : orderRepository.findAll()) {
-//            order.getCustomer().setPhoneDefault(customerContactService.findPhoneUseDefault(order.getCustomer().getId()));
-//            order.getCustomer().setEmailDefault(customerContactService.findEmailUseDefault(order.getCustomer().getId()));
-//            order.getCustomer().setAddressDefault(customerContactService.findAddressUseDefault(order.getCustomer().getId()));
-//            listOrder.add(order);
-//        }
-        return listOrder;
-    }
-
-    @Override
-    public List<OrderDTO> findAll(OrderDTO orderDTO) {
-        return this.findData(orderDTO);
+    public List<OrderDTO> findAll() {
+        return this.findData(null);
     }
 
     @Override
@@ -97,8 +91,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findById(Integer id) {
-        return orderRepository.findById(id).orElse(null);
+    public OrderDTO findById(Integer orderId) {
+        List<OrderDTO> orders = findData(orderId);
+        if (orders.isEmpty()) {
+            throw new NotFoundException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "order " + orderId));
+        }
+        return orders.get(0);
     }
 
     @Override
@@ -124,9 +122,7 @@ public class OrderServiceImpl implements OrderService {
             order.setTrangThaiDonHang(new Category(request.getTrangThaiDonHang(), null));
             order.setTotalAmount(0D);
             order.setTotalAmountAfterDiscount(null);
-            orderRepository.save(order);
-
-            Order orderSaved = orderRepository.findDonHangMoiNhat().get(0);
+            Order orderSaved = orderRepository.save(order);
 
             Double totalMoneyOfDonHang = 0D;
             for (int idBienTheSP : request.getListBienTheSanPham()) {
@@ -138,7 +134,9 @@ public class OrderServiceImpl implements OrderService {
                 orderDetail.setSoLuong(soLuongSanPhamInCart);
                 orderDetail.setTrangThai(true);
                 orderDetailService.save(orderDetail);
-                totalMoneyOfDonHang += productVariantService.getGiaBan(idBienTheSP);
+                if (productVariantService.getGiaBan(idBienTheSP) != null) {
+                    totalMoneyOfDonHang += productVariantService.getGiaBan(idBienTheSP);
+                }
                 //Update lại số lượng trong kho của sản phẩm
                 //productVariantService.updateSoLuong(soLuongSanPhamInCart, idBienTheSP);
             }
@@ -160,7 +158,10 @@ public class OrderServiceImpl implements OrderService {
                 voucherTicketService.update(voucherTicket, voucherTicket.getId());
             }
             orderRepository.save(orderSaved);
-            
+
+            //Create QRCode
+            fileStorageService.saveQRCodeOfOrder(orderSaved.getId());
+
             systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
             logger.info("Insert new order success! insertBy=" + CommonUtil.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -196,13 +197,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String delete(Integer id) {
-        Order order = this.findById(id);
-        order.getListOrderPay().forEach(orderPay -> {
+        OrderDTO order = this.findById(id);
+        orderPayService.findByOrder(id).forEach(orderPay -> {
             if (orderPay.getPaymentStatus()) {
                 throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
             }
         });
-        if ("DE".equals(order.getTrangThaiDonHang().getCode()) || "DO".equals(order.getTrangThaiDonHang().getCode())) {
+        if ("DE".equals(order.getOrderStatus().getCode()) || "DO".equals(order.getOrderStatus().getCode())) {
             throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
         }
         orderRepository.deleteById(id);
@@ -221,18 +222,18 @@ public class OrderServiceImpl implements OrderService {
                                                                 Path.of(filePathTemp),
                                                                 StandardCopyOption.REPLACE_EXISTING).toFile());
             XSSFSheet sheet = workbook.getSheetAt(0);
-            List<Order> listData = this.findAll();
+            List<OrderDTO> listData = this.findAll();
             for (int i = 0; i < listData.size(); i++) {
                 XSSFRow row = sheet.createRow(i + 4);
                 row.createCell(0).setCellValue(i + 1);
-                row.createCell(1).setCellValue(listData.get(i).getMaDonHang());
-                row.createCell(2).setCellValue(listData.get(i).getThoiGianDatHang());
-                row.createCell(3).setCellValue(listData.get(i).getKenhBanHang().getName());
+                row.createCell(1).setCellValue(listData.get(i).getOrderCode());
+                row.createCell(2).setCellValue(listData.get(i).getOrderTime());
+                row.createCell(3).setCellValue(listData.get(i).getSalesChannelName());
                 row.createCell(4).setCellValue(listData.get(i).getTotalAmountAfterDiscount());
                 row.createCell(5).setCellValue("");
-                row.createCell(6).setCellValue(listData.get(i).getCustomer().getTenKhachHang());
+                row.createCell(6).setCellValue(listData.get(i).getCustomerName());
                 row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getDiaChi()
-                row.createCell(8).setCellValue(listData.get(i).getGhiChu());
+                row.createCell(8).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 8; j++) {
                     row.getCell(j).setCellStyle(CommonUtil.setBorder(workbook.createCellStyle()));
                 }
@@ -260,7 +261,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @SuppressWarnings("unchecked")
-	private List<OrderDTO> findData(OrderDTO orderDTO) {
+	private List<OrderDTO> findData(Integer orderId) {
         List<OrderDTO> dataResponse = new ArrayList<>();
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("o.ID as ORDER_ID_0, o.MA_DON_HANG as MA_DON_HANG_1, o.THOI_GIAN_DAT_HANG as ORDER_TIME_2, o.RECEIVER_ADDRESS as RECEIVER_ADDRESS_3,");
@@ -268,14 +269,20 @@ public class OrderServiceImpl implements OrderService {
         strSQL.append("NVL(o.TOTAL_AMOUNT_AFTER_DISCOUNT,0) as TOTAL_AMOUNT_8, NVL(sc.ID,0) as SALES_CHANNEL_ID_9, sc.NAME as SALES_CHANNEL_NAME_10, o.GHI_CHU as NOTE_11, ");
         strSQL.append("NVL(os.ID,0) as ORDER_STATUS_ID_12, os.NAME as ORDER_STATUS_NAME_13, NVL(op.ID,0) as ORDER_PAY_ID_14, op.PAYMENT_STATUS as ORDER_PAY_STATUS_15, ");
         strSQL.append("NVL(pm.ID,0) as PAYMENT_METHOD_ID_16, pm.NAME as PAYMENT_METHOD_NAME_17, NVL(acc.ID,0) as CASHIER_ID_18, acc.HO_TEN as CASHIER_NAME_19, ");
-        strSQL.append("NVL(o.CREATED_BY,0) as CREATED_BY_ID_20, o.CREATED_AT as CREATED_AT_21 ");
+        strSQL.append("NVL(o.CREATED_BY,0) as CREATED_BY_ID_20, o.CREATED_AT as CREATED_AT_21, ");
+        strSQL.append("CASE WHEN F.ORDER_ID IS NOT NULL THEN CONCAT(CONCAT(f.DIRECTORY_PATH, '/'), f.SAVED_NAME) ELSE '' END as QRCODE_FILE_NAME_22 ");
         strSQL.append("FROM PRO_ORDER o ");
         strSQL.append("LEFT JOIN PRO_CUSTOMER c ON c.ID = o.CUSTOMER_ID ");
         strSQL.append("LEFT JOIN PRO_ORDER_PAY op ON op.DON_HANG_ID = o.ID ");
         strSQL.append("LEFT JOIN SYS_ACCOUNT acc ON acc.ID = op.CASHIER ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'SALESCHANNEL') sc ON sc.ID = o.KENH_BAN_HANG ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'ORDERSTATUS') os ON os.ID = o.TRANG_THAI_DON_HANG ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'PAYMETHOD') pm ON pm.ID = op.HINH_THUC_THANH_TOAN");
+        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'PAYMETHOD') pm ON pm.ID = op.HINH_THUC_THANH_TOAN ");
+        strSQL.append("LEFT JOIN STG_FILE_STORAGE f ON f.ORDER_ID = o.ID ");
+        if (orderId != null) {
+            strSQL.append("WHERE o.ID = ").append(orderId);
+        }
+        logger.info("Start load danh sách đơn hàng! loadBy=" + CommonUtil.getCurrentAccountUsername());
         logger.info("[SQL findData]: " + strSQL.toString());
         Query query = entityManager.createNativeQuery(strSQL.toString());
         List<Object[]> listData = query.getResultList();
@@ -297,6 +304,7 @@ public class OrderServiceImpl implements OrderService {
             order.setCashier(new Account(Integer.parseInt(String.valueOf(data[18])), null, String.valueOf(data[19])));
             order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[20]))));
             order.setCreatedAt(CommonUtil.convertStringToDate(String.valueOf(data[21])));
+            order.setQrCode(String.valueOf(data[22]));
             dataResponse.add(order);
         }
         return dataResponse;

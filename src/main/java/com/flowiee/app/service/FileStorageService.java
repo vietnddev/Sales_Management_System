@@ -1,6 +1,7 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.base.BaseService;
+import com.google.zxing.WriterException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.flowiee.app.entity.FileStorage;
@@ -39,4 +40,8 @@ public interface FileStorageService extends BaseService<FileStorage> {
     String setImageActiveOfSanPham(Integer sanPhamId, Integer imageId);
 
     String setImageActiveOfBienTheSanPham(Integer bienTheSanPhamId, Integer imageId);
+
+    String saveQRCodeOfOrder(int orderId) throws IOException, WriterException;
+
+    FileStorage findQRCodeOfOrder(int orderId);
 }

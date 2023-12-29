@@ -65,22 +65,22 @@
                                         <div class="row">
                                             <div class="card-body table-responsive col-sm-12 p-0 mb-3"
                                                  style="height: 250px;">
-                                                <table class="table table-head-fixed text-nowrap">
+                                                <table class="table table-bordered table-head-fixed text-nowrap">
                                                     <thead>
                                                     <tr>
-                                                        <td>STT</td>
-                                                        <td>Tên sản phẩm</td>
-                                                        <td>Đơn vị tính</td>
-                                                        <td>Số lượng</td>
-                                                        <td>Giá bán/SP</td>
-                                                        <td>Giảm giá</td>
-                                                        <td>Phụ thu</td>
-                                                        <td>Thành tiền</td>
+                                                        <th>STT</th>
+                                                        <th>Tên sản phẩm</th>
+                                                        <th>Đơn vị tính</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Giá bán/SP</th>
+                                                        <th>Giảm giá</th>
+                                                        <th>Phụ thu</th>
+                                                        <th>Thành tiền</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="list, index : ${listDonHangDetail}">
-                                                        <td th:text="${index.index + 1}"></td>
+                                                    <tr th:each="list, index : ${listOrderDetail}">
+                                                        <td th:text="${index.index + 1}" style="font-weight: bold"></td>
                                                         <td th:text="${list.productVariant.tenBienThe}"></td>
                                                         <td th:text="${list.productVariant.product.unit.name}"></td>
                                                         <td th:text="${list.soLuong}"></td>
@@ -92,55 +92,65 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-2">
+                                                <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                                                    <div class="card-body p-0">
+                                                        <div class="text-center">
+                                                            <img th:src="@{'/' + ${orderDetail.qrCode}}" class="img-fluid" alt="Qr code"
+                                                                 style="width: 100%; border-radius: 5px; margin: auto">
+                                                        </div>
+                                                        <p class="text-muted text-center">QR Code</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-header col-sm-7 pt-0 pr-3 pb-0 pl-3" style="border-bottom: 0">
                                                 <table class="table">
                                                     <tbody>
-                                                    <tr>
-                                                        <td>Khách hàng</td>
-                                                        <td>Nguyễn Đức Việt</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Số điện thoại</td>
-                                                        <td>07 0682 0684</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Email</td>
-                                                        <td>nguyenducviet0684@gmail.com</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Địa chỉ nhận hàng</td>
-                                                        <td>Quận 8, Thành phố Hồ Chí Minh</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Kênh mua hàng</td>
-                                                        <td>Facebook</td>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>Khách hàng</th>
+                                                            <td>Nguyễn Đức Việt</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Số điện thoại</th>
+                                                            <td>07 0682 0684</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Email</th>
+                                                            <td>nguyenducviet0684@gmail.com</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Địa chỉ nhận hàng</th>
+                                                            <td>Quận 8, Thành phố Hồ Chí Minh - Quận 8, Thành phố Hồ Chí Minh</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Kênh mua hàng</th>
+                                                            <td>Facebook</td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="col-sm-2"></div>
-                                            <div class="card-footer col-sm-4">
+                                            <div class="card-footer col-sm-3 p-0">
                                                 <table class="table">
                                                     <tbody>
                                                     <tr>
-                                                        <td>Tổng số lượng</td>
-                                                        <td>2</td>
+                                                        <th>Số lượng sản phẩm</th>
+                                                        <td th:text="${orderDetail.totalProduct}"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Giảm giá</td>
-                                                        <td>0</td>
+                                                        <th>Giảm giá</th>
+                                                        <td>null</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Phụ thu</td>
-                                                        <td>0</td>
+                                                        <th>Phụ thu</th>
+                                                        <td>null</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Phí ship</td>
-                                                        <td>0</td>
+                                                        <th>Phí ship</th>
+                                                        <td>null</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Tổng tiền hàng</td>
-                                                        <td>500.000đ</td>
+                                                        <th>Tổng tiền hàng</th>
+                                                        <td>null</td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -215,20 +225,20 @@
                                                         data-toggle="modal"
                                                         data-target="#modalThanhToan"
                                                         disabled
-                                                        th:if="${donHangDetail.listOrderPay.size() > 0}">
+                                                        th:if="${listThanhToan.size() > 0}">
                                                         Đã thanh toán
                                                 </button>
                                                 <button type="button" class="btn btn-success"
                                                         data-toggle="modal"
                                                         data-target="#modalThanhToan"
-                                                        th:if="${donHangDetail.listOrderPay.size() == 0}">
+                                                        th:if="${listThanhToan.size() == 0}">
                                                         Thanh toán
                                                 </button>
                                                 <!--POPUP THANH TOÁN-->
                                                 <div class="modal fade" id="modalThanhToan">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/don-hang/thanh-toan/{id}(id=${donHangDetail.id})}"
+                                                            <form th:action="@{/don-hang/thanh-toan/{id}(id=${orderDetail.orderId})}"
                                                                   th:object="${donHangThanhToan}" method="POST">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Thanh toán đơn hàng</strong>

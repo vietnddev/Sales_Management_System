@@ -9,8 +9,16 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface OrderService extends BaseService<Order> {
-    public List<OrderDTO> findAll(OrderDTO orderDTO);
+public interface OrderService {
+    List<OrderDTO> findAll();
+
+    OrderDTO findById(Integer orderId);
+
+    String save(Order order);
+
+    String update(Order order, Integer orderId);
+
+    String delete(Integer orderId);
 
     List<Order> findByTrangThai(int trangThaiDonHangId);
 

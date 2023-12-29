@@ -21,9 +21,7 @@ import java.util.List;
 public class OrderDetailServiceImpl implements OrderDetailService {
     private static final Logger logger = LoggerFactory.getLogger(OrderDetailServiceImpl.class);
     private static final String module = SystemModule.PRODUCT.name();
-
-    @Autowired
-    private OrderService orderService;
+    
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
@@ -40,8 +38,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public List<OrderDetail> findByDonHangId(Integer donHangId) {
-        return orderDetailRepository.findByDonHangId(orderService.findById(donHangId));
+    public List<OrderDetail> findByDonHangId(Integer orderId) {
+        return orderDetailRepository.findByOrderId(orderId);
     }
 
     @Override
