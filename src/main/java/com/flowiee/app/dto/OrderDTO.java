@@ -50,6 +50,8 @@ public class OrderDTO implements Serializable {
     private Integer createdById;
     private String createdByName;
     private Date createdAt;
+    private String qrCode;
+    private int totalProduct;
 
     public static OrderDTO fromOrder(Order order) {
         OrderDTO dto = new OrderDTO();

@@ -81,7 +81,9 @@ public class Order extends BaseEntity implements Serializable {
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<FileStorage> listImageQR;
-
+	public Order(int id) {
+		super.id = id;
+	}
 	public Map<String, String> compareTo(Order compare) {
 		Map<String, String> map = new HashMap<>();
 		if (!this.getReceiverName().equals(compare.getReceiverName())) {

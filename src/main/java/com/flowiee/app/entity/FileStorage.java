@@ -100,7 +100,7 @@ public class FileStorage extends BaseEntity implements Serializable {
             this.kichThuocFile = file.getSize();
             this.extension = CommonUtil.getExtension(file.getOriginalFilename());
             this.contentType = file.getContentType();
-            this.directoryPath = CommonUtil.getPathDirectoty(pModule).substring(CommonUtil.getPathDirectoty(pModule).indexOf("uploads"));
+            this.directoryPath = CommonUtil.getPathDirectory(pModule).substring(CommonUtil.getPathDirectory(pModule).indexOf("uploads"));
             this.isActive = false;
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.entity.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.EndPointUtil;
@@ -9,11 +10,6 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.*;
-import com.flowiee.app.entity.Customer;
-import com.flowiee.app.entity.Items;
-import com.flowiee.app.entity.Order;
-import com.flowiee.app.entity.OrderCart;
-import com.flowiee.app.entity.OrderPay;
 import com.flowiee.app.model.request.OrderRequest;
 import com.flowiee.app.security.ValidateModuleProduct;
 
@@ -34,7 +30,7 @@ public class OrderController extends BaseController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private OrderDetailService donHangChiTietService;
+    private OrderDetailService orderDetailService;
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired
@@ -56,7 +52,7 @@ public class OrderController extends BaseController {
     public ModelAndView viewAllOrders() {
         validateModuleProduct.readOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
-        modelAndView.addObject("listOrder", orderService.findAll(new OrderDTO()));
+        modelAndView.addObject("listOrder", orderService.findAll());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.SALESCHANNEL));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.PAYMETHOD));
@@ -72,7 +68,7 @@ public class OrderController extends BaseController {
     public ModelAndView filterListDonHang(@ModelAttribute("donHangRequest") OrderRequest request) {
         validateModuleProduct.readOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
-        modelAndView.addObject("listDonHang", orderService.findAll(new OrderDTO()));
+        modelAndView.addObject("listDonHang", orderService.findAll());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKhachHang", customerService.findAll());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
@@ -97,9 +93,16 @@ public class OrderController extends BaseController {
         if (id <= 0 || orderService.findById(id) == null) {
             throw new NotFoundException("Order not found!");
         }
+        OrderDTO orderDetail = orderService.findById(id);
+        List<OrderDetail> listOrderDetail = orderDetailService.findByDonHangId(id);
+        int totalProduct = 0;
+        for (OrderDetail od : listOrderDetail) {
+            totalProduct += od.getSoLuong();
+        }
+        orderDetail.setTotalProduct(totalProduct);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_DETAIL);
-        modelAndView.addObject("donHangDetail", orderService.findById(id));
-        modelAndView.addObject("listDonHangDetail", donHangChiTietService.findByDonHangId(id));
+        modelAndView.addObject("orderDetail", orderDetail);
+        modelAndView.addObject("listOrderDetail", listOrderDetail);
         modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.PAYMETHOD));
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
@@ -143,11 +146,11 @@ public class OrderController extends BaseController {
         if (idCart <= 0 || cartService.findById(idCart) == null) {
             throw new NotFoundException("Cart not found!");
         }
-        List<String> listBienTheSanPham = Arrays.stream(request.getParameterValues("bienTheSanPhamId")).toList();
-        for (String bTSanPhamId : listBienTheSanPham) {
+        List<String> listProductVariantId = Arrays.stream(request.getParameterValues("bienTheSanPhamId")).toList();
+        for (String productVariantId : listProductVariantId) {
             Items items = new Items();
             items.setOrderCart(cartService.findById(idCart));
-            items.setProductVariant(productVariantService.findById(Integer.parseInt(bTSanPhamId)));
+            items.setProductVariant(productVariantService.findById(Integer.parseInt(productVariantId)));
             items.setSoLuong(1);
             items.setGhiChu("");
             itemsService.save(items);
@@ -189,7 +192,7 @@ public class OrderController extends BaseController {
         return modelAndView;
     }
 
-    @PostMapping(EndPointUtil.PRO_ORDER_INSERT)
+    @PostMapping("/insert")
     public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest, HttpServletRequest request) {
         validateModuleProduct.insertOrder(true);
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
@@ -199,8 +202,8 @@ public class OrderController extends BaseController {
             orderRequest.setThoiGianDatHang(new Date());
         }
         List<Integer> listProductVariantId = new ArrayList<>();
-        List<String> listBtspIdString = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
-        for (String idString : listBtspIdString) {
+        List<String> listProductVariantIdRequest = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
+        for (String idString : listProductVariantIdRequest) {
             listProductVariantId.add(Integer.parseInt(idString));
         }
         orderRequest.setListBienTheSanPham(listProductVariantId);
@@ -214,16 +217,16 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/update/{id}")
-    public ModelAndView update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer id) {
+    public ModelAndView update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer orderId) {
         validateModuleProduct.updateOrder(true);
-        orderService.update(order, id);
+        orderService.update(order, orderId);
         return new ModelAndView("redirect:/don-hang");
     }
 
     @PostMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Integer id) {
+    public ModelAndView delete(@PathVariable("id") Integer orderId) {
         validateModuleProduct.deleteOrder(true);
-        orderService.delete(id);
+        orderService.delete(orderId);
         return new ModelAndView("redirect:/don-hang");
     }
 
@@ -231,7 +234,7 @@ public class OrderController extends BaseController {
     public ModelAndView thanhToan(@PathVariable("id") Integer donHangId, @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
         validateModuleProduct.updateOrder(true);
         orderPay.setMaPhieu("PTT" + donHangId + CommonUtil.now("yyMMddHHmmss"));
-        orderPay.setOrder(orderService.findById(donHangId));
+        orderPay.setOrder(new Order(orderService.findById(donHangId).getOrderId()));
         orderPay.setPaymentStatus(true);
         orderPayService.save(orderPay);
         return new ModelAndView("redirect:/don-hang/" + donHangId);

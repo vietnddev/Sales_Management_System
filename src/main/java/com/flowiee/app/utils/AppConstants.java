@@ -1,5 +1,7 @@
 package com.flowiee.app.utils;
 
+import lombok.Getter;
+
 public class AppConstants {
     public static String TICKETIMPORT = "TICKETIMPORT";
     public static String TICKETEXPORT = "TICKETEXPORT";
@@ -41,6 +43,7 @@ public class AppConstants {
     public static final String SERVICE_RESPONSE_SUCCESS = "OK";
     public static final String SERVICE_RESPONSE_FAIL = "NOK";
 
+    @Getter
     public enum PRODUCT_STATUS {
         ACTIVE("Đang kinh doanh"),
         INACTIVE("Ngừng kinh doanh");
@@ -49,12 +52,9 @@ public class AppConstants {
         PRODUCT_STATUS(String label) {
             this.label = label;
         }
-
-        public String getLabel() {
-            return label;
-        }
     }
 
+    @Getter
     public enum PRICE_STATUS {
         ACTIVE("Đang áp dụng"),
         INACTIVE("Đang không áp dụng");
@@ -63,12 +63,9 @@ public class AppConstants {
         PRICE_STATUS(String label) {
             this.label = label;
         }
-
-        public String getLabel() {
-            return label;
-        }
     }
 
+    @Getter
     public enum DOCUMENT_TYPE {
         FI("File"),
         FO("Folder");
@@ -77,12 +74,9 @@ public class AppConstants {
         DOCUMENT_TYPE(String label) {
             this.label = label;
         }
-
-        public String getLabel() {
-            return label;
-        }
     }
 
+    @Getter
     public enum VOUCHER_TYPE {
         TEXT("Chữ"),
         NUMBER("Số"),
@@ -92,12 +86,9 @@ public class AppConstants {
         VOUCHER_TYPE(String label) {
             this.label = label;
         }
-
-        public String getLabel() {
-            return label;
-        }
     }
 
+    @Getter
     public enum VOUCHER_STATUS {
         ACTIVE("Đang áp dụng"),
         INACTIVE("Đang không áp dụng");
@@ -106,12 +97,9 @@ public class AppConstants {
         VOUCHER_STATUS(String label) {
             this.label = label;
         }
-
-        public String getLabel() {
-            return label;
-        }
     }
 
+    @Getter
     public enum CONTACT_TYPE {
         P("Số điện thoại"),
         E("Email"),
@@ -121,9 +109,25 @@ public class AppConstants {
         CONTACT_TYPE(String label) {
             this.label = label;
         }
+    }
 
-        public String getLabel() {
-            return label;
+    @Getter
+    public enum FILE_EXTENSION {
+        PNG("png"),
+        JPG("jpg"),
+        JPEG("jpeg"),
+        PDF("pdf"),
+        XLS("xls"),
+        XLSX("xlsx"),
+        PPT("ppt"),
+        PPTX("pptx"),
+        DOC("doc"),
+        DOCX("docx");
+
+        private final String label;
+
+        FILE_EXTENSION(String label) {
+            this.label = label;
         }
     }
 }

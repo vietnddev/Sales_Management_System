@@ -36,4 +36,7 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Intege
 
     @Query("from FileStorage f where f.createdAt=:createdTime")
     FileStorage findByCreatedTime(Date createdTime);
+
+    @Query("from FileStorage f where f.order.id=:orderId")
+    FileStorage findQRCodeOfOrder(int orderId);
 }

@@ -72,7 +72,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public Double getGiaBan(int id) {
-        return priceService.findGiaHienTai(id).getGiaBan();
+        if (priceService.findGiaHienTai(id) != null) {
+            return priceService.findGiaHienTai(id).getGiaBan();
+        }
+        return null;
     }
 
     @Override
