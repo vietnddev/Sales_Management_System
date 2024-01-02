@@ -1,6 +1,9 @@
 package com.flowiee.app.utils;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Arrays;
 
 public class AppConstants {
     public static String TICKETIMPORT = "TICKETIMPORT";
@@ -127,6 +130,34 @@ public class AppConstants {
         private final String label;
 
         FILE_EXTENSION(String label) {
+            this.label = label;
+        }
+    }
+
+    @Getter
+    public enum CATEGORY {
+        UNIT("unit", "UNIT", "Đơn vị tính"),
+        PAYMETHOD("pay-method", "PAYMETHOD", "Hình thức thanh toán"),
+        FABRICTYPE("fabric-type", "FABRICTYPE", "Chất liệu vải"),
+        SALESCHANNEL("sales-channel", "SALESCHANNEL", "Kênh bán hàng"),
+        SIZE("size", "SIZE", "Kích cỡ"),
+        COLOR("color", "COLOR", "Màu sắc"),
+        PRODUCTTYPE("product-type", "PRODUCTTYPE", "Loại sản phẩm"),
+        DOCUMENTTYPE("document-type", "DOCUMENTTYPE", "Loại tài liệu"),
+        ORDERSTATUS("order-status", "ORDERSTATUS", "Trạng thái đơn hàng"),
+        PAYMENTSTATUS("payment-status", "PAYMENTSTATUS", "Trạng thái thanh toán"),
+        BRAND("brand", "BRAND", "Thương hiệu");
+        private final String key;
+        private final String name;
+        private String label;
+
+        CATEGORY(String key, String name, String label) {
+            this.key = key;
+            this.name = name;
+            this.label = label;
+        }
+
+        public void setLabel(String label) {
             this.label = label;
         }
     }

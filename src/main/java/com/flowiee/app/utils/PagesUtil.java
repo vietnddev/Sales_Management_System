@@ -2,6 +2,7 @@ package com.flowiee.app.utils;
 
 public class PagesUtil {
     public static final String CTG_CATEGORY = "/pages/system/category";
+    public static final String CTG_CATEGORY_DETAIL = "/pages/system/category-detail";
 
 
     public static final String SYS_LOGIN = "/login";

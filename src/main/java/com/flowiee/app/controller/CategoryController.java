@@ -12,6 +12,7 @@ import com.flowiee.app.security.ValidateModuleCategory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,8 +50,8 @@ public class CategoryController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY_DETAIL);
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listSubCategory", listCategory);
-        modelAndView.addObject("ctgRootType", categoryType);
-        modelAndView.addObject("ctgRootName", categoryType);
+        modelAndView.addObject("ctgRootType", CommonUtil.getCategoryType(categoryType));
+        modelAndView.addObject("ctgRootName", AppConstants.CATEGORY.valueOf(CommonUtil.getCategoryType(categoryType)).getLabel());
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH);
         modelAndView.addObject("url_template", "");
         modelAndView.addObject("url_import", "");
@@ -73,11 +74,20 @@ public class CategoryController extends BaseController {
 
     @PostMapping("/update/{id}")
     public ModelAndView update(@ModelAttribute("category") Category category,
-                         @PathVariable("id") Integer categoryId, 
-                         HttpServletRequest request) {
+                               @PathVariable("id") Integer categoryId,
+                               HttpServletRequest request) {
         validateModuleCategory.updateCategory(true);
         if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
             throw new NotFoundException("Category not found! categoryId=" + categoryId);
+        }
+        if (category.getCode() == null) {
+            category.setCode("");
+        }
+        if (category.getColor() == null) {
+            category.setColor("");
+        }
+        if (category.getNote() == null) {
+            category.setNote("");
         }
         categoryService.update(category, categoryId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));

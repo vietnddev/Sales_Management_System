@@ -28,7 +28,7 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@Column(name = "type", length = 20, nullable = false)
 	private String type;
 
-	@Column(name = "code", length = 20)
+	@Column(name = "code", length = 20, columnDefinition = "VARCHAR2(20) DEFAULT ''")
 	private String code;
 
 	@Column(name = "name", length = 50, nullable = false)
@@ -36,6 +36,9 @@ public class Category extends BaseEntity implements java.io.Serializable {
 
 	@Column(name = "sort")
 	private Integer sort;
+
+	@Column(name = "icon")
+	private String icon;
 
 	@Column(name = "color")
 	private String color;
@@ -103,18 +106,27 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	}
 
 	public Map<String, String> compareTo(Category categoryToCompare) {
+		if (this.getCode() == null) {
+			this.setCode("");
+		}
+		if (this.getColor() == null) {
+			this.setColor("");
+		}
+		if (this.getNote() == null) {
+			this.setNote("");
+		}
 		Map<String, String> map = new HashMap<>();
 		if (!this.getCode().equals(categoryToCompare.getCode())) {
-			map.put("Code", this.getCode() + "#" + categoryToCompare.getCode());
+			map.put("Code", !this.getCode().isEmpty() ? this.getCode() : "-" + "#" + categoryToCompare.getCode());
 		}
 		if (!this.getName().equals(categoryToCompare.getName())) {
 			map.put("Name", this.getName() + "#" + categoryToCompare.getName());
 		}
 		if (!this.getColor().equals(categoryToCompare.getColor())) {
-			map.put("Color label", this.getColor() + "#" + categoryToCompare.getColor());
+			map.put("Color label", !this.getColor().isEmpty() ? this.getColor() : "-" + "#" + categoryToCompare.getColor());
 		}
 		if (!this.getNote().equals(categoryToCompare.getNote())) {
-			map.put("Note", this.getNote() + "#" + categoryToCompare.getNote());
+			map.put("Note", !this.getNote().isEmpty() ? this.getNote() : "-" + "#" + categoryToCompare.getNote());
 		}
 		if ("N".equals(this.getIsDefault()) && "Y".equals(categoryToCompare.getIsDefault())) {
 			map.put("Use default","#" + CommonUtil.now("HH:mm:ss dd/MM/yyyy"));

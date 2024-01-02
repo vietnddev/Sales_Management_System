@@ -29,7 +29,43 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title"><strong>NHẬT KÝ HỆ THỐNG</strong></h3>
+                                <div class="row justify-content-between">
+                                    <div class="col-4" style="display: flex; align-items: center">
+                                        <h3 class="card-title"><strong>CẤU HÌNH HỆ THỐNG</strong></h3>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                                data-target="#refreshApp">Refresh app
+                                        </button>
+                                    </div>
+                                    <div class="modal fade" id="refreshApp">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form th:action="@{/sys/refresh}" method="post">
+                                                    <div class="modal-header">
+                                                        <strong class="modal-title">Refresh app</strong>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        1. Refresh category label <br>
+                                                        2. ...
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Hủy
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">

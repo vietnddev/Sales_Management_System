@@ -143,20 +143,12 @@ public class CommonUtil {
         return dateTimeFormatter.format(now);
     }
 
-    public static String getCategoryType(String input) {
+    public static String getCategoryType(String key) {
         Map<String, String> map = new HashMap<>();
-        map.put("unit", AppConstants.UNIT);
-        map.put("pay-method", AppConstants.PAYMETHOD);
-        map.put("fabric-type", AppConstants.FABRICTYPE);
-        map.put("sales-channel", AppConstants.SALESCHANNEL);
-        map.put("size", AppConstants.SIZE);
-        map.put("color", AppConstants.COLOR);
-        map.put("product-type", AppConstants.PRODUCTTYPE);
-        map.put("document-type", AppConstants.DOCUMENTTYPE);
-        map.put("order-status", AppConstants.ORDERSTATUS);
-        map.put("payment-status", AppConstants.PAYMENTSTATUS);
-        map.put("brand", AppConstants.BRAND);
-        return map.get(input);
+        for (AppConstants.CATEGORY c : AppConstants.CATEGORY.values()) {
+            map.put(c.getKey(), c.getName());
+        }
+        return map.get(key);
     }
 
     public static String getExtension(String fileName) {
