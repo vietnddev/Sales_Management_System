@@ -21,7 +21,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ProductVariantServiceImpl implements ProductVariantService {
@@ -151,17 +150,17 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public List<ProductVariant> findByFabricType(Integer fabricTypeId) {
-        return findData(AppConstants.FABRICTYPE, String.valueOf(fabricTypeId));
+        return findData(AppConstants.CATEGORY.FABRIC_TYPE.getName(), String.valueOf(fabricTypeId));
     }
 
     @Override
     public List<ProductVariant> findBySize(Integer sizeId) {
-        return findData(AppConstants.SIZE, String.valueOf(sizeId));
+        return findData(AppConstants.CATEGORY.SIZE.getName(), String.valueOf(sizeId));
     }
 
     @Override
     public List<ProductVariant> findByColor(Integer colorId) {
-        return findData(AppConstants.COLOR, String.valueOf(colorId));
+        return findData(AppConstants.CATEGORY.COLOR.getName(), String.valueOf(colorId));
     }
 
     @SuppressWarnings("unchecked")
@@ -185,13 +184,13 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         if (AppConstants.PRODUCT.equals(where)) {
             strSQL.append("WHERE v.PRODUCT_ID = ?");
         }
-        if (AppConstants.COLOR.equals(where)) {
+        if (AppConstants.CATEGORY.COLOR.getName().equals(where)) {
             strSQL.append("WHERE v.COLOR_ID = ?");
         }
-        if (AppConstants.SIZE.equals(where)) {
+        if (AppConstants.CATEGORY.SIZE.getName().equals(where)) {
             strSQL.append("WHERE v.SIZE_ID = ?");
         }
-        if (AppConstants.FABRICTYPE.equals(where)) {
+        if (AppConstants.CATEGORY.FABRIC_TYPE.getName().equals(where)) {
             strSQL.append("WHERE v.FABRIC_ID = ?");
         }
         if (AppConstants.TICKETIMPORT.equals(where)) {

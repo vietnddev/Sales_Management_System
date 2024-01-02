@@ -44,11 +44,11 @@ public class OrderController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
         modelAndView.addObject("listOrder", orderService.findAll());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.SALESCHANNEL));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.PAYMETHOD));
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAY_METHOD.getName()));
         modelAndView.addObject("listKhachHang", customerService.findAll());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.ORDERSTATUS));
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
         modelAndView.addObject("donHangRequest", new OrderRequest());
         modelAndView.addObject("donHang", new Order());
         return baseView(modelAndView);
@@ -64,13 +64,13 @@ public class OrderController extends BaseController {
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
 
         modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : categoryService.findById(request.getKenhBanHang()));
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.SALESCHANNEL));
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
 
         modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : categoryService.findById(request.getHinhThucThanhToan()));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.PAYMETHOD));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAY_METHOD.getName()));
 
         modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : categoryService.findById(request.getTrangThaiDonHang()));
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.ORDERSTATUS));
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
 
         modelAndView.addObject("donHangRequest", new OrderRequest());
         modelAndView.addObject("donHang", new Order());
@@ -94,7 +94,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("orderDetail", orderDetail);
         modelAndView.addObject("listOrderDetail", listOrderDetail);
         modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.PAYMETHOD));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAY_METHOD.getName()));
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("donHang", new Order());
         modelAndView.addObject("donHangThanhToan", new OrderPay());
@@ -113,11 +113,11 @@ public class OrderController extends BaseController {
         }
         modelAndView.addObject("listDonHang", orderService.findAll());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.SALESCHANNEL));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.PAYMETHOD));
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAY_METHOD.getName()));
         modelAndView.addObject("listKhachHang", customerService.findAll());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.ORDERSTATUS));
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
 
         List<OrderCart> listOrderCart = cartService.findByAccountId(CommonUtil.getCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);

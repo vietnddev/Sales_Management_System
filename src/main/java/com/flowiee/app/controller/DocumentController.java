@@ -50,7 +50,7 @@ public class DocumentController extends BaseController {
         validateModuleStorage.dashboard(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
         //Loại tài liệu
-        List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.DOCUMENTTYPE);
+        List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.CATEGORY.DOCUMENT_TYPE.getName());
         List<String> listTenOfDocType = new ArrayList<>();
         List<Integer> listSoLuongOfDocType = new ArrayList<>();
         for (Category docType : listLoaiTaiLieu) {
@@ -75,8 +75,8 @@ public class DocumentController extends BaseController {
         modelAndView.addObject("document", new Document());
         //select-option danh sách loại tài liệu
         List<Category> listLoaiTaiLieu = new ArrayList<>();
-        listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.DOCUMENTTYPE));
-        listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.DOCUMENTTYPE));
+        listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
+        listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
         modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
         //select-option danh sách thư mục
         List<Document> listFolder = new ArrayList<>();
@@ -137,8 +137,8 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
             //select-option danh loại tài liệu
             List<Category> listLoaiTaiLieu = new ArrayList<>();
-            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.DOCUMENTTYPE));
-            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.DOCUMENTTYPE));
+            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
+            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
             modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
             //select-option danh sách thư mục
             List<Document> listFolder = new ArrayList<>();

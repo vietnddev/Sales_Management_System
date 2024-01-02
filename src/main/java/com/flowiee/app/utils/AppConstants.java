@@ -3,23 +3,8 @@ package com.flowiee.app.utils;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
-
 public class AppConstants {
     public static String TICKETIMPORT = "TICKETIMPORT";
-    public static String TICKETEXPORT = "TICKETEXPORT";
-    public static String PRODUCT = "PRODUCT";
-    public static String UNIT = "UNIT";
-    public static String PAYMETHOD = "PAYMETHOD";
-    public static String FABRICTYPE = "FABRICTYPE";
-    public static String SALESCHANNEL = "SALESCHANNEL";
-    public static String SIZE = "SIZE";
-    public static String COLOR = "COLOR";
-    public static String PRODUCTTYPE = "PRODUCTTYPE";
-    public static String DOCUMENTTYPE = "DOCUMENTTYPE";
-    public static String ORDERSTATUS = "ORDERSTATUS";
-    public static String PAYMENTSTATUS = "PAYMENTSTATUS";
-    public static String BRAND = "BRAND";
 
     public static String TEMPLATE_IE_DM_CATEGORY = "Template_IE_DM_Category";
     public static String TEMPLATE_IE_DM_LOAIKICHCO = "Template_IE_DM_LoaiKichCo";
@@ -137,18 +122,19 @@ public class AppConstants {
     @Getter
     public enum CATEGORY {
         UNIT("unit", "UNIT", "Đơn vị tính"),
-        PAYMETHOD("pay-method", "PAYMETHOD", "Hình thức thanh toán"),
-        FABRICTYPE("fabric-type", "FABRICTYPE", "Chất liệu vải"),
-        SALESCHANNEL("sales-channel", "SALESCHANNEL", "Kênh bán hàng"),
+        PAY_METHOD("pay-method", "PAYMETHOD", "Hình thức thanh toán"),
+        FABRIC_TYPE("fabric-type", "FABRICTYPE", "Chất liệu vải"),
+        SALES_CHANNEL("sales-channel", "SALESCHANNEL", "Kênh bán hàng"),
         SIZE("size", "SIZE", "Kích cỡ"),
         COLOR("color", "COLOR", "Màu sắc"),
-        PRODUCTTYPE("product-type", "PRODUCTTYPE", "Loại sản phẩm"),
-        DOCUMENTTYPE("document-type", "DOCUMENTTYPE", "Loại tài liệu"),
-        ORDERSTATUS("order-status", "ORDERSTATUS", "Trạng thái đơn hàng"),
-        PAYMENTSTATUS("payment-status", "PAYMENTSTATUS", "Trạng thái thanh toán"),
+        PRODUCT_TYPE("product-type", "PRODUCTTYPE", "Loại sản phẩm"),
+        DOCUMENT_TYPE("document-type", "DOCUMENTTYPE", "Loại tài liệu"),
+        ORDER_STATUS("order-status", "ORDERSTATUS", "Trạng thái đơn hàng"),
+        PAYMENT_STATUS("payment-status", "PAYMENTSTATUS", "Trạng thái thanh toán"),
         BRAND("brand", "BRAND", "Thương hiệu");
         private final String key;
         private final String name;
+        @Setter
         private String label;
 
         CATEGORY(String key, String name, String label) {
@@ -157,8 +143,5 @@ public class AppConstants {
             this.label = label;
         }
 
-        public void setLabel(String label) {
-            this.label = label;
-        }
     }
 }

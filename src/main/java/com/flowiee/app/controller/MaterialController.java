@@ -47,7 +47,7 @@ public class MaterialController extends BaseController {
         validateModuleStorage.readMaterial(true);
         List<TicketImportGoods> listTicketImport = ticketImportService.findAll();
         List<Supplier> listSupplier = supplierService.findAll();
-        List<Category> listUnit = categoryService.findSubCategory(AppConstants.UNIT);
+        List<Category> listUnit = categoryService.findSubCategory(AppConstants.CATEGORY.UNIT.getName());
         ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
         modelAndView.addObject("material", new Material());
         modelAndView.addObject("listMaterial", materialService.findAll());

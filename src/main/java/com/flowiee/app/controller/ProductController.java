@@ -51,14 +51,15 @@ public class ProductController extends BaseController {
         List<Category> brands = new ArrayList<>();
         List<Category> productTypes = new ArrayList<>();
         List<Category> units = new ArrayList<>();
-        categoryService.findSubCategory(Arrays.asList(AppConstants.BRAND, AppConstants.PRODUCTTYPE, AppConstants.UNIT)).forEach(category -> {
-            if (AppConstants.BRAND.equals(category.getType())) {
+        categoryService.findSubCategory(Arrays.asList(AppConstants.CATEGORY.BRAND.getName(), AppConstants.CATEGORY.PRODUCT_TYPE.getName(),
+                                                      AppConstants.CATEGORY.UNIT.getName())).forEach(category -> {
+            if (AppConstants.CATEGORY.BRAND.getName().equals(category.getType())) {
                 brands.add(category);
             }
-            if (AppConstants.PRODUCTTYPE.equals(category.getType())) {
+            if (AppConstants.CATEGORY.PRODUCT_TYPE.getName().equals(category.getType())) {
                 productTypes.add(category);
             }
-            if (AppConstants.UNIT.equals(category.getType())) {
+            if (AppConstants.CATEGORY.UNIT.getName().equals(category.getType())) {
                 units.add(category);
             }
         });
@@ -123,24 +124,25 @@ public class ProductController extends BaseController {
         List<Category> colors = new ArrayList<>();
         List<Category> sizes = new ArrayList<>();
         List<Category> units = new ArrayList<>();
-        categoryService.findSubCategory(Arrays.asList(AppConstants.BRAND, AppConstants.PRODUCTTYPE, AppConstants.COLOR,
-                                                      AppConstants.SIZE, AppConstants.FABRICTYPE, AppConstants.UNIT)).forEach(category -> {
-            if (AppConstants.PRODUCTTYPE.equals(category.getType())) {
+        categoryService.findSubCategory(Arrays.asList(AppConstants.CATEGORY.BRAND.getName(), AppConstants.CATEGORY.PRODUCT_TYPE.getName(),
+                                                      AppConstants.CATEGORY.COLOR.getName(), AppConstants.CATEGORY.SIZE.getName(),
+                                                      AppConstants.CATEGORY.FABRIC_TYPE.getName(), AppConstants.CATEGORY.UNIT.getName())).forEach(category -> {
+            if (AppConstants.CATEGORY.PRODUCT_TYPE.getName().equals(category.getType())) {
                 productTypes.add(category);
             }
-            if (AppConstants.FABRICTYPE.equals(category.getType())) {
+            if (AppConstants.CATEGORY.FABRIC_TYPE.getName().equals(category.getType())) {
                 fabricTypes.add(category);
             }
-            if (AppConstants.BRAND.equals(category.getType())) {
+            if (AppConstants.CATEGORY.BRAND.getName().equals(category.getType())) {
                 brands.add(category);
             }
-            if (AppConstants.COLOR.equals(category.getType())) {
+            if (AppConstants.CATEGORY.COLOR.getName().equals(category.getType())) {
                 colors.add(category);
             }
-            if (AppConstants.SIZE.equals(category.getType())) {
+            if (AppConstants.CATEGORY.SIZE.getName().equals(category.getType())) {
                 sizes.add(category);
             }
-            if (AppConstants.UNIT.equals(category.getType())) {
+            if (AppConstants.CATEGORY.UNIT.getName().equals(category.getType())) {
                 units.add(category);
             }
         });
