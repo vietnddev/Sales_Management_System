@@ -35,22 +35,14 @@ import java.util.*;
 @Controller
 @RequestMapping(EndPointUtil.STORAGE_TICKET_IMPORT)
 public class TicketImportGoodsController extends BaseController {
-    @Autowired
-    private TicketImportGoodsService ticketImportGoodsService;
-    @Autowired
-    private SupplierService productService;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private ProductVariantTempService productVariantServiceTemp;
-    @Autowired
-    private MaterialService materialService;
-    @Autowired
-    private MaterialTempService materialServiceTemp;
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private ValidateModuleStorage validateModuleStorage;
+    @Autowired private TicketImportGoodsService ticketImportGoodsService;
+    @Autowired private SupplierService productService;
+    @Autowired private ProductVariantService productVariantService;
+    @Autowired private ProductVariantTempService productVariantServiceTemp;
+    @Autowired private MaterialService materialService;
+    @Autowired private MaterialTempService materialServiceTemp;
+    @Autowired private CategoryService categoryService;
+    @Autowired private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping
     public ModelAndView loadPage() {

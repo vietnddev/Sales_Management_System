@@ -30,16 +30,11 @@ import java.util.List;
 @RestController
 @RequestMapping(EndPointUtil.STORAGE_MATERIAL)
 public class MaterialController extends BaseController {
-    @Autowired
-    private MaterialService materialService;
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private TicketImportGoodsService ticketImportService;
-    @Autowired
-    private SupplierService supplierService;
-    @Autowired
-    private ValidateModuleStorage validateModuleStorage;
+    @Autowired private MaterialService materialService;
+    @Autowired private CategoryService categoryService;
+    @Autowired private TicketImportGoodsService ticketImportService;
+    @Autowired private SupplierService supplierService;
+    @Autowired private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping
     public ModelAndView getAll(@Nullable @RequestParam("ticketImport") String pTicketImport,

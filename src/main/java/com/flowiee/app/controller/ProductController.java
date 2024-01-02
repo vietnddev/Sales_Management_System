@@ -32,26 +32,16 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
 public class ProductController extends BaseController {
-    @Autowired
-    private ProductService productsService;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private ProductAttributeService productAttributeService;
-    @Autowired
-    private ProductHistoryService productHistoryService;
-    @Autowired
-    private FileStorageService fileStorageService;
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private PriceService priceService;
-    @Autowired
-    private VoucherService voucherService;
-    @Autowired
-    private VoucherTicketService voucherTicketService;
-    @Autowired
-    private ValidateModuleProduct validateModuleProduct;
+    @Autowired private ProductService productsService;
+    @Autowired private ProductVariantService productVariantService;
+    @Autowired private ProductAttributeService productAttributeService;
+    @Autowired private ProductHistoryService productHistoryService;
+    @Autowired private FileStorageService fileStorageService;
+    @Autowired private CategoryService categoryService;
+    @Autowired private PriceService priceService;
+    @Autowired private VoucherService voucherService;
+    @Autowired private VoucherTicketService voucherTicketService;
+    @Autowired private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping
     public ModelAndView viewAllProducts(@Nullable @RequestParam("pProductType") String pProductType,

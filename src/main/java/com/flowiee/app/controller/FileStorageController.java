@@ -16,14 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class FileStorageController extends BaseController {
-    @Autowired
-    private FileStorageService fileService;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private ValidateModuleProduct validateModuleProduct;
+    @Autowired private FileStorageService fileService;
+    @Autowired private ProductService productService;
+    @Autowired private ProductVariantService productVariantService;
+    @Autowired private ValidateModuleProduct validateModuleProduct;
 
     @PostMapping("/uploads/san-pham/{id}")
     public ModelAndView uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request,

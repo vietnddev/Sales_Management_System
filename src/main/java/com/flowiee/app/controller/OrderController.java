@@ -27,26 +27,16 @@ import java.util.List;
 @RestController
 @RequestMapping(EndPointUtil.PRO_ORDER)
 public class OrderController extends BaseController {
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private OrderDetailService orderDetailService;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private OrderPayService orderPayService;
-    @Autowired
-    private CartService cartService;
-    @Autowired
-    private ItemsService itemsService;
-    @Autowired
-    private VoucherTicketService voucherTicketService;
-    @Autowired
-    private ValidateModuleProduct validateModuleProduct;
+    @Autowired private OrderService orderService;
+    @Autowired private OrderDetailService orderDetailService;
+    @Autowired private ProductVariantService productVariantService;
+    @Autowired private CategoryService categoryService;
+    @Autowired private CustomerService customerService;
+    @Autowired private OrderPayService orderPayService;
+    @Autowired private CartService cartService;
+    @Autowired private ItemsService itemsService;
+    @Autowired private VoucherTicketService voucherTicketService;
+    @Autowired private ValidateModuleProduct validateModuleProduct;
 
     @GetMapping
     public ModelAndView viewAllOrders() {

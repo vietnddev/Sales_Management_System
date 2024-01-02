@@ -20,10 +20,8 @@ import com.flowiee.app.service.SupplierService;
 @Controller
 @RequestMapping(EndPointUtil.PRO_SUPPLIER)
 public class SupplierController extends BaseController {
-	@Autowired
-	private SupplierService supplierService;
-	@Autowired
-	private ValidateModuleProduct validateModuleProduct;
+	@Autowired private SupplierService supplierService;
+	@Autowired private ValidateModuleProduct validateModuleProduct;
 
 	@GetMapping
 	public ModelAndView viewAllSupplier() {

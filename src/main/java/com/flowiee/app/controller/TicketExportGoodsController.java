@@ -18,10 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(EndPointUtil.STORAGE_TICKET_EXPORT)
 public class TicketExportGoodsController extends BaseController {
-    @Autowired
-    private TicketExportGoodsService ticketExportGoodsService;
-    @Autowired
-    private ValidateModuleStorage validateModuleStorage;
+    @Autowired private TicketExportGoodsService ticketExportGoodsService;
+    @Autowired private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping
     public ModelAndView viewAllTicket() {

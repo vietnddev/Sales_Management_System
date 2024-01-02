@@ -27,10 +27,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping
 public class ProfileController extends BaseController {
-	@Autowired
-	private OrderService orderService;
-	@Autowired
-	private BaseAuthorize baseAuthorize;
+	@Autowired private OrderService orderService;
+	@Autowired private BaseAuthorize baseAuthorize;
 
 	@GetMapping(EndPointUtil.SYS_PROFILE)
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {

@@ -27,10 +27,8 @@ import java.util.List;
 @RestController
 @RequestMapping(EndPointUtil.CATEGORY)
 public class CategoryController extends BaseController {
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private ValidateModuleCategory validateModuleCategory;
+    @Autowired private CategoryService categoryService;
+    @Autowired private ValidateModuleCategory validateModuleCategory;
 
     @GetMapping
     public ModelAndView viewRootCategory() {
@@ -48,10 +46,11 @@ public class CategoryController extends BaseController {
             throw new NotFoundException("Category not found!");
         }
         List<Category> listCategory = categoryService.findSubCategory(CommonUtil.getCategoryType(categoryType));
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
+        ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY_DETAIL);
         modelAndView.addObject("category", new Category());
-        modelAndView.addObject("listCategory", listCategory);
-        modelAndView.addObject("categoryType", categoryType);
+        modelAndView.addObject("listSubCategory", listCategory);
+        modelAndView.addObject("ctgRootType", categoryType);
+        modelAndView.addObject("ctgRootName", categoryType);
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH);
         modelAndView.addObject("url_template", "");
         modelAndView.addObject("url_import", "");

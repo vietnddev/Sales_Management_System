@@ -12,8 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class HomeController {
-    @Autowired
-    private AccountService accountService;
+    @Autowired private AccountService accountService;
 
     @GetMapping(EndPointUtil.SYS_LOGIN)
     public ModelAndView showLoginPage() {

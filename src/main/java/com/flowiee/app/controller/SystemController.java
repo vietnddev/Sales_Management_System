@@ -19,14 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping
 public class SystemController extends BaseController {
-    @Autowired
-    private ConfigService configService;
-    @Autowired
-    private SystemLogService systemLogService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private ValidateModuleSystem validateModuleSystem;
+    @Autowired private ConfigService configService;
+    @Autowired private SystemLogService systemLogService;
+    @Autowired private RoleService roleService;
+    @Autowired private ValidateModuleSystem validateModuleSystem;
 
     @GetMapping(EndPointUtil.SYS_NOTIFICATION)
     public ModelAndView getAllNotification() {
