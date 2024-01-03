@@ -2,6 +2,7 @@ package com.flowiee.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.flowiee.app.entity.Customer;
@@ -19,5 +20,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
            "and (:phone is null or (cc.code = 'P' and cc.isDefault = 'Y' and cc.status = true and cc.value=:phone)) " +
            "and (:email is null or (cc.code = 'E' and cc.isDefault = 'Y' and cc.status = true and cc.value=:email)) " +
            "and (:address is null or (cc.code = 'A' and cc.isDefault = 'Y' and cc.status = true and cc.value=:address))")
-    List<Customer> findAll(String name, String sex, Date birthday, String phone, String email, String address);
+    List<Customer> findAll(@Param("name") String name, @Param("sex") String sex, @Param("birthday") Date birthday,
+                           @Param("phone") String phone, @Param("email") String email, @Param("address") String address);
 }

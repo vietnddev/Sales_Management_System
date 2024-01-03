@@ -21,10 +21,10 @@ public interface RoleRepository extends JpaRepository<AccountRole, Integer> {
     List<Integer> findIdsByAccountId(@Param("accountId") Integer accountId);
 
     @Query("from AccountRole where accountId=:accountId and module=:module and action=:action")
-    AccountRole isAuthorized(int accountId, String module, String action);
+    AccountRole isAuthorized(@Param("accountId") Integer accountId, @Param("module") String module, @Param("action") String action);
 
     @Query("from AccountRole where action=:action and accountId=:accountId")
-    AccountRole findByActionAndAccountId(String action, int accountId);
+    AccountRole findByActionAndAccountId(@Param("action") String action, @Param("accountId") Integer accountId);
 
     void deleteByAccountId(Integer accountId);
 }

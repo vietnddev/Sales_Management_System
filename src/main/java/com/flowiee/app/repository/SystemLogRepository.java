@@ -7,5 +7,4 @@ import com.flowiee.app.entity.SystemLog;
 
 @Repository
 public interface SystemLogRepository extends JpaRepository<SystemLog, Integer> {
-
 }

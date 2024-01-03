@@ -31,7 +31,7 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     public List<ProductAttribute> getAllAttributes(int productVariantID){
         ProductVariant productVariant = new ProductVariant();
         productVariant.setId(productVariantID);
-        return productAttributeRepository.findByBienTheSanPham(productVariant);
+        return productAttributeRepository.findByProductVariantId(productVariant);
     }
 
     @Override

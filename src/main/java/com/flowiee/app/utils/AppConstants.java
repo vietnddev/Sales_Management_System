@@ -4,8 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class AppConstants {
+    public static String PRODUCT = "PRODUCT";
     public static String TICKETIMPORT = "TICKETIMPORT";
-
+    public static String TICKETEXPORT = "TICKETEXPORT";
     public static String TEMPLATE_IE_DM_CATEGORY = "Template_IE_DM_Category";
     public static String TEMPLATE_IE_DM_LOAIKICHCO = "Template_IE_DM_LoaiKichCo";
     public static String TEMPLATE_IE_DM_LOAIMAUSAC = "Template_IE_DM_LoaiMauSac";
@@ -121,17 +122,17 @@ public class AppConstants {
 
     @Getter
     public enum CATEGORY {
-        UNIT("unit", "UNIT", "Đơn vị tính"),
-        PAY_METHOD("pay-method", "PAYMETHOD", "Hình thức thanh toán"),
-        FABRIC_TYPE("fabric-type", "FABRICTYPE", "Chất liệu vải"),
-        SALES_CHANNEL("sales-channel", "SALESCHANNEL", "Kênh bán hàng"),
         SIZE("size", "SIZE", "Kích cỡ"),
         COLOR("color", "COLOR", "Màu sắc"),
-        PRODUCT_TYPE("product-type", "PRODUCTTYPE", "Loại sản phẩm"),
-        DOCUMENT_TYPE("document-type", "DOCUMENTTYPE", "Loại tài liệu"),
-        ORDER_STATUS("order-status", "ORDERSTATUS", "Trạng thái đơn hàng"),
-        PAYMENT_STATUS("payment-status", "PAYMENTSTATUS", "Trạng thái thanh toán"),
-        BRAND("brand", "BRAND", "Thương hiệu");
+        UNIT("unit", "UNIT", "Đơn vị tính"),
+        BRAND("brand", "BRAND", "Thương hiệu"),
+        FABRIC_TYPE("fabric-type", "FABRIC_TYPE", "Chất liệu vải"),
+        PRODUCT_TYPE("product-type", "PRODUCT_TYPE", "Loại sản phẩm"),
+        DOCUMENT_TYPE("document-type", "DOCUMENT_TYPE", "Loại tài liệu"),
+        SALES_CHANNEL("sales-channel", "SALES_CHANNEL", "Kênh bán hàng"),
+        ORDER_STATUS("order-status", "ORDER_STATUS", "Trạng thái đơn hàng"),
+        PAYMENT_METHOD("pay-method", "PAYMENT_METHOD", "Hình thức thanh toán"),
+        PAYMENT_STATUS("payment-status", "PAYMENT_STATUS", "Trạng thái thanh toán");
         private final String key;
         private final String name;
         @Setter

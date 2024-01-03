@@ -67,11 +67,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public int findIdByUsername(String username) {
-        return accountRepository.findIdByUsername(username);
-    }
-
-    @Override
     public Account findCurrentAccount() {
         Account account = null;
         WebAuthenticationDetails details = null;

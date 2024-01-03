@@ -3,6 +3,7 @@ package com.flowiee.app.service;
 import com.flowiee.app.base.BaseService;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 

@@ -77,10 +77,10 @@ public class TicketImportGoodsController extends BaseController {
         List<Category> listHinhThucThanhToan = new ArrayList<>();
         if (ticketImportGoodsPresent.getPaymentMethod() == null) {
             listHinhThucThanhToan.add(new Category(null, "Chọn hình thức thanh toán"));
-            listHinhThucThanhToan.addAll(categoryService.findSubCategory(AppConstants.CATEGORY.PAY_METHOD.getName()));
+            listHinhThucThanhToan.addAll(categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
         } else {
             listHinhThucThanhToan.add(ticketImportGoodsPresent.getPaymentMethod());
-            List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(AppConstants.CATEGORY.PAY_METHOD.getName());
+            List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName());
             listHinhThucThanhToanTemp.remove(ticketImportGoodsPresent.getPaymentMethod());
             listHinhThucThanhToan.addAll(listHinhThucThanhToanTemp);
         }

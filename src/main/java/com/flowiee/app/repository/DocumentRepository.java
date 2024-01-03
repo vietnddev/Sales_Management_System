@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.flowiee.app.entity.Document;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,17 +19,17 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     List<Document> findRootFile();
 
     @Query("from Document d where d.parentId =:parentId order by d.loai desc")
-    List<Document> findListDocumentByParentId(int parentId);
+    List<Document> findListDocumentByParentId(@Param("parentId") Integer parentId);
 
     @Query("from Document d where d.parentId =:parentId and d.loai = 'FOLDER' order by d.loai desc")
-    List<Document> findListFolderByParentId(int parentId);
+    List<Document> findListFolderByParentId(@Param("parentId") Integer parentId);
 
     @Query("from Document d where d.parentId =:parentId and d.loai = 'FILE' order by d.loai desc")
-    List<Document> findListFileByParentId(int parentId);
+    List<Document> findListFileByParentId(@Param("parentId") Integer parentId);
 
     @Query("from Document d where d.loai=:isThuMuc")
-    List<Document> findAllFolder(String isThuMuc);
+    List<Document> findAllFolder(@Param("isThuMuc") String isThuMuc);
 
     @Query("from Document d where d.loaiTaiLieu.id=:docTypeId")
-    List<Document> findDocumentByDocTypeId(Integer docTypeId);
+    List<Document> findDocumentByDocTypeId(@Param("docTypeId") Integer docTypeId);
 }

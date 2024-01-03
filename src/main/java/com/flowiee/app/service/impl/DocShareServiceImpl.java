@@ -31,13 +31,9 @@ public class DocShareServiceImpl implements DocShareService {
 
     @Override
     public boolean isShared(int documentId) {
-        if (CommonUtil.getCurrentAccountUsername().equals(CommonUtil.ADMINISTRATOR)) {
+        if (CommonUtil.ADMINISTRATOR.equals(CommonUtil.getCurrentAccountUsername())) {
             return true;
         }
-        int accountId = accountService.findIdByUsername(CommonUtil.getCurrentAccountUsername());
-        if (docShareRepository.findByDocmentAndTaiKhoan(documentId, accountId) != null) {
-            return true;
-        }
-        return false;
+        return docShareRepository.findByDocmentAndTaiKhoan(documentId, CommonUtil.getCurrentAccountId()) != null;
     }
 }
