@@ -34,7 +34,7 @@
                     </span>
                     <input class="col-5 form-control" id="title" th:value="${draftGoodsImport.title}" required/>
                     <form class="col-6 row justify-content-end" method="POST"
-                          th:action="@{/storage/goods/draft/save}"
+                          th:action="@{/storage/ticket-import/draft/save}"
                           th:object="${goodsImportRequest}">
                         <input type="hidden" name="id" th:value="${draftGoodsImport.id}">
                         <input type="hidden" name="title" id="titleSubmit">
@@ -53,7 +53,7 @@
                                 <i class="fa-solid fa-check mr-1"></i> Lưu nháp
                         </button>
                         <button type="button" class="btn btn-sm btn-info" style="margin-right: -15px">
-                            <i class="fa-solid fa-paper-plane mr-1"></i> Gửi duyệt
+                            <i class="fa-solid fa-paper-plane mr-1"></i> Lưu
                         </button>
                     </form>
                 </div>
@@ -62,11 +62,11 @@
         <!-- End section title -->
 
         <div class="row" style="padding-left: 7px; padding-right: 7px">
-            <div class="col-8" style="padding-right: 0">
+            <div class="col-9" style="padding-right: 0">
                 <!-- Section sản phẩm -->
                 <section class="col-12" style="min-height: 350px">
-                    <div class="card p-3" style="height: 350px">
-                        <form class="row" th:action="@{/storage/goods/draft/add-product/{importId}(importId=${draftGoodsImport.id})}" method="POST">
+                    <div class="card p-3" style="max-height: 350px; overflow: auto">
+                        <form class="row" th:action="@{/storage/ticket-import/draft/add-product/{importId}(importId=${draftGoodsImport.id})}" method="POST">
                             <div class="col-sm-10 form-group">
                                 <select class="form-control select2" multiple="multiple"
                                         data-placeholder="Chọn sản phẩm"
@@ -80,49 +80,49 @@
                             </div>
                             <div class="col-sm-2 form-group">
                                 <button type="submit" class="btn btn-sm btn-primary w-100"
-                                        style="height: 38px">
+                                        style="height: 38px; font-weight: bold">
                                     Thêm
                                 </button>
                             </div>
                         </form>
                         <div class="row">
-                            <table class="table table-head-fixed text-nowrap text-center align-items-center"
+                            <table class="table text-nowrap text-center align-items-center"
                                    id="itemsTable">
                                 <thead>
-                                <tr>
-                                    <td>#</td>
-                                    <td class="text-left"><b>Tên sản phẩm</b></td>
-                                    <td>Đơn giá</td>
-                                    <td>Số lượng</td>
-                                    <td>Thành tiền</td>
-                                    <td></td>
-                                </tr>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="text-left">Tên sản phẩm</th>
+                                        <th>Đơn giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Thành tiền</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="item, itemIndex : ${listBienTheSanPhamSelected}">
-                                    <td th:text="${itemIndex.index + 1}"></td>
-                                    <td class="text-left text-wrap" style="max-width: 200px">
-                                        <input type="hidden" id="bienTheSanPhamId" th:value="${item.Id}"/>
-                                        <a th:text="${item.tenBienThe}"
-                                           th:href="@{/san-pham/variant/{id}(id=${item.id})}"></a>
-                                    </td>
-                                    <td></td>
-                                    <td th:text="${item.soLuongKho}"></td>
-                                    <td></td>
-                                    <td>
-                                        <!--UPDATE ITEMS-->
-                                        <button type="button" class="btn btn-sm btn-primary"
-                                                data-toggle="modal"
-                                                th:data-target="'#modalUpdateItems_' + ${item.id}">
-                                            Cập nhật
-                                        </button>
-                                        <!--DELETE ITEMS-->
-                                        <button type="button" class="btn btn-sm btn-danger"
-                                                data-toggle="modal"
-                                                th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa
-                                        </button>
-                                    </td>
-                                </tr>
+                                    <tr th:each="item, itemIndex : ${listBienTheSanPhamSelected}">
+                                        <td th:text="${itemIndex.index + 1}"></td>
+                                        <td class="text-left text-wrap" style="max-width: 200px">
+                                            <input type="hidden" id="bienTheSanPhamId" th:value="${item.Id}"/>
+                                            <a th:text="${item.tenBienThe}"
+                                               th:href="@{/san-pham/variant/{id}(id=${item.id})}"></a>
+                                        </td>
+                                        <td></td>
+                                        <td th:text="${item.soLuongKho}"></td>
+                                        <td></td>
+                                        <td>
+                                            <!--UPDATE ITEMS-->
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    data-toggle="modal"
+                                                    th:data-target="'#modalUpdateItems_' + ${item.id}">
+                                                Cập nhật
+                                            </button>
+                                            <!--DELETE ITEMS-->
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                    data-toggle="modal"
+                                                    th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa
+                                            </button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -132,8 +132,8 @@
 
                 <!-- Section nguyên vật liệu -->
                 <section class="col-12" style="height: 350px">
-                    <div class="card p-3" style="height: 350px">
-                        <form class="row" th:action="@{/storage/goods/draft/add-material/{importId}(importId=${draftGoodsImport.id})}" method="POST">
+                    <div class="card p-3" style="max-height: 350px; overflow: auto">
+                        <form class="row" th:action="@{/storage/ticket-import/draft/add-material/{importId}(importId=${draftGoodsImport.id})}" method="POST">
                             <div class="col-sm-10 form-group">
                                 <select class="form-control select2" multiple="multiple"
                                         data-placeholder="Chọn nguyên vật liệu"
@@ -147,49 +147,49 @@
                             </div>
                             <div class="col-sm-2 form-group">
                                 <button type="submit" class="btn btn-sm btn-primary w-100"
-                                        style="height: 38px">
+                                        style="height: 38px; font-weight: bold">
                                     Thêm
                                 </button>
                             </div>
                         </form>
                         <div class="row">
-                            <table class="table table-head-fixed text-nowrap text-center align-items-center"
+                            <table class="table text-nowrap text-center align-items-center"
                                    id="itemsTable">
                                 <thead>
                                 <tr>
-                                    <td>#</td>
-                                    <td class="text-left">Tên nguyên vật liệu</td>
-                                    <td>Đơn giá</td>
-                                    <td>Số lượng</td>
-                                    <td>Thành tiền</td>
-                                    <td></td>
+                                    <th>#</th>
+                                    <th class="text-left">Tên nguyên vật liệu</th>
+                                    <th>Đơn giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="item, itemIndex : ${listMaterialSelected}">
-                                    <td th:text="${itemIndex.index + 1}"></td>
-                                    <td class="text-left">
-                                        <input type="hidden" id="bienTheSanPhamId" th:value="${item.Id}"/>
-                                        <a th:text="${item.name}"
-                                           th:href="@{/san-pham/variant/{id}(id=${item.id})}"></a>
-                                    </td>
-                                    <td></td>
-                                    <td th:text="${item.quantity}"></td>
-                                    <td></td>
-                                    <td>
-                                        <!--UPDATE ITEMS-->
-                                        <button type="button" class="btn btn-sm btn-primary"
-                                                data-toggle="modal"
-                                                th:data-target="'#modalUpdateItems_' + ${item.id}">
-                                            Cập nhật
-                                        </button>
-                                        <!--DELETE ITEMS-->
-                                        <button type="button" class="btn btn-sm btn-danger"
-                                                data-toggle="modal"
-                                                th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa
-                                        </button>
-                                    </td>
-                                </tr>
+                                    <tr th:each="item, itemIndex : ${listMaterialSelected}">
+                                        <td th:text="${itemIndex.index + 1}"></td>
+                                        <td class="text-left">
+                                            <input type="hidden" id="bienTheSanPhamId" th:value="${item.Id}"/>
+                                            <a th:text="${item.name}"
+                                               th:href="@{/san-pham/variant/{id}(id=${item.id})}"></a>
+                                        </td>
+                                        <td></td>
+                                        <td th:text="${item.quantity}"></td>
+                                        <td></td>
+                                        <td>
+                                            <!--UPDATE ITEMS-->
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    data-toggle="modal"
+                                                    th:data-target="'#modalUpdateItems_' + ${item.id}">
+                                                Cập nhật
+                                            </button>
+                                            <!--DELETE ITEMS-->
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                    data-toggle="modal"
+                                                    th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa
+                                            </button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -199,7 +199,7 @@
             </div>
 
             <!-- Section form thông tin -->
-            <div class="col-4" style="padding-left: 0">
+            <div class="col-3" style="padding-left: 0">
                 <section class="col-12 card p-3" style="height: 716px">
                     <div class="form-group row" style="padding-right: 8px">
                     <span class="col-5" style="display: flex; align-items: center; font-weight: bold">

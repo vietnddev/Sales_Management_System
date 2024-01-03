@@ -134,7 +134,7 @@ public class TicketImportGoodsController extends BaseController {
                 productVariantServiceTemp.save(ProductVariantTemp.convertFromProductVariant(productVariant));
             }
         }
-        return new ModelAndView("redirect:/storage/goods");
+        return new ModelAndView("redirect:/storage/ticket-import");
     }
 
     @PostMapping("/draft/add-material/{importId}")
@@ -156,7 +156,7 @@ public class TicketImportGoodsController extends BaseController {
                 materialServiceTemp.save(MaterialTemp.convertFromMaterial(material));
             }
         }
-        return "redirect:/storage/goods";
+        return "redirect:/storage/ticket-import";
     }
 
     @PostMapping("/draft/save")

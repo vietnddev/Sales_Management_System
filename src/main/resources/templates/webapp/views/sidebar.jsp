@@ -95,7 +95,7 @@
               <a th:href="@{${URL_STORAGE_TICKET_IMPORT}}" class="nav-link">
                 <i class="fa-solid fa-cloud-arrow-up fa-rotate-90"></i>
                 <p>
-                  Nhập kho
+                  Phiếu nhập
                 </p>
               </a>
             </li>
@@ -103,7 +103,7 @@
               <a th:href="@{${URL_STORAGE_TICKET_EXPORT}}" class="nav-link">
                 <i class="fa-solid fa-cloud-arrow-up fa-rotate-270"></i>
                 <p>
-                  Xuất kho
+                  Phiếu xuất
                 </p>
               </a>
             </li>

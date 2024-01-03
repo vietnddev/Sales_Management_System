@@ -50,9 +50,8 @@
                     <div class="col-sm-12 mb-1">
                         <h3 class="text-center"><b th:text="${detailProducts.productName}"
                                                    style="text-transform: uppercase;"></b></h3>
-                        <hr style="width: 50%">
+                        <hr class="w-50 bg-info">
                     </div>
-                    <hr>
                     <div class="col-sm-5">
                         <!--Start Image chính-->
                         <div class="row">
@@ -298,9 +297,12 @@
                     </div>
                     <!--./ End Sub-Image-->
 
+                    <div class="row col-sm-12">
+                        <hr class="w-50 bg-info">
+                    </div>
+
                     <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
-                    <div class="row col-sm-12 border pt-3 mt-3">
-                        <hr>
+                    <div class="row col-sm-12 border pt-3">
                         <div class="col-sm-10" style="max-height: 470px; overflow: scroll">
                             <table class="table table-bordered">
                                 <thead>

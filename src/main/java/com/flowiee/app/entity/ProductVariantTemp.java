@@ -21,7 +21,7 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name = "product_variant_id", nullable = false)
-	private Integer producVariantId;
+	private Integer productVariantId;
 	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "san_pham_id", nullable = false)
@@ -69,25 +69,26 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
     @Transient
     private Price price;
 
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-    private List<ProductAttribute> listThuocTinh;
-
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-    private List<Price> listGiaBan;
-
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-    private List<OrderDetail> listOrderDetail;
-
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-    private List<FileStorage> listFileStorage;
-
-    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-    private List<Items> listItems;
+//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+//    private List<ProductAttribute> listThuocTinh;
+//
+//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+//    private List<Price> listGiaBan;
+//
+//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+//    private List<OrderDetail> listOrderDetail;
+//
+//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+//    private List<FileStorage> listFileStorage;
+//
+//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+//    private List<Items> listItems;
 
     public static ProductVariantTemp convertFromProductVariant(ProductVariant productVariant) {
         ProductVariantTemp productVariantTemp = new ProductVariantTemp();
-        productVariantTemp.setId(productVariant.getId());
+        //productVariantTemp.setId(productVariant.getId());
         productVariantTemp.setProduct(productVariant.getProduct());
+        productVariantTemp.setProductVariantId(productVariant.getId());
         productVariantTemp.setMaSanPham(productVariant.getMaSanPham());
         productVariantTemp.setTenBienThe(productVariant.getTenBienThe());
         productVariantTemp.setSoLuongKho(productVariant.getSoLuongKho());
@@ -100,17 +101,17 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
         productVariantTemp.setSupplier(productVariant.getSupplier());
         productVariantTemp.setTicketImportGoods(productVariant.getTicketImportGoods());
         productVariantTemp.setPrice(productVariant.getPrice());
-        productVariantTemp.setListThuocTinh(productVariant.getListThuocTinh());
-        productVariantTemp.setListGiaBan(productVariant.getListGiaBan());
-        productVariantTemp.setListOrderDetail(productVariant.getListOrderDetail());
-        productVariantTemp.setListFileStorage(productVariant.getListFileStorage());
-        productVariantTemp.setListItems(productVariant.getListItems());
+//        productVariantTemp.setListThuocTinh(productVariant.getListThuocTinh());
+//        productVariantTemp.setListGiaBan(productVariant.getListGiaBan());
+//        productVariantTemp.setListOrderDetail(productVariant.getListOrderDetail());
+//        productVariantTemp.setListFileStorage(productVariant.getListFileStorage());
+//        productVariantTemp.setListItems(productVariant.getListItems());
         return productVariantTemp;
     }
 
 	@Override
 	public String toString() {
-		return "ProductVariantTemp [id=" + super.id + ", producVariantId=" + producVariantId + ", product=" + product + ", maSanPham="
+		return "ProductVariantTemp [id=" + super.id + ", producVariantId=" + productVariantId + ", product=" + product + ", maSanPham="
 				+ maSanPham + ", tenBienThe=" + tenBienThe + ", soLuongKho=" + soLuongKho + ", soLuongDaBan="
 				+ soLuongDaBan + ", trangThai=" + trangThai + ", loaiMauSac=" + loaiMauSac + ", loaiKichCo="
 				+ loaiKichCo + ", fabricType=" + fabricType + ", garmentFactory=" + garmentFactory + ", supplier="

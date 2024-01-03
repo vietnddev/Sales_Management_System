@@ -55,15 +55,16 @@ public class MaterialTemp extends BaseEntity implements Serializable {
     @Column(name = "status", nullable = false)
     private boolean status;
 
-    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
-    private List<MaterialHistory> listMaterialHistory;
-
-    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
-    private List<Price> listPrice;
+//    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
+//    private List<MaterialHistory> listMaterialHistory;
+//
+//    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
+//    private List<Price> listPrice;
 
     public static MaterialTemp convertFromMaterial(Material material) {
         MaterialTemp materialTemp = new MaterialTemp();
-        materialTemp.setId(material.getId());
+        //materialTemp.setId(material.getId());
+        materialTemp.setMaterialId(material.getId());
         materialTemp.setTicketImportGoods(material.getTicketImportGoods());
         materialTemp.setSupplier(material.getSupplier());
         materialTemp.setCode(material.getCode());
@@ -73,8 +74,8 @@ public class MaterialTemp extends BaseEntity implements Serializable {
         materialTemp.setLocation(material.getLocation());
         materialTemp.setNote(material.getNote());
         materialTemp.setStatus(material.isStatus());
-        materialTemp.setListMaterialHistory(material.getListMaterialHistory());
-        materialTemp.setListPrice(material.getListPrice());
+//        materialTemp.setListMaterialHistory(material.getListMaterialHistory());
+//        materialTemp.setListPrice(material.getListPrice());
         return materialTemp;
     }
 

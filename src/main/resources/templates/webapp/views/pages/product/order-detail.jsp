@@ -63,7 +63,7 @@
                                     <div class="tab-pane fade show active" id="THONG_TIN" role="tabpanel"
                                          aria-labelledby="custom-tabs-one-home-tab">
                                         <div class="row">
-                                            <div class="card-body table-responsive col-sm-12 p-0 mb-3"
+                                            <div class="card-body table-responsive col-sm-12 p-0"
                                                  style="height: 250px;">
                                                 <table class="table table-bordered table-head-fixed text-nowrap">
                                                     <thead>
@@ -91,6 +91,9 @@
                                                     </tr>
                                                     </tbody>
                                                 </table>
+                                            </div>
+                                            <div class="col-12">
+                                                <hr class="w-50 bg-info">
                                             </div>
                                             <div class="col-sm-2">
                                                 <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center;">
