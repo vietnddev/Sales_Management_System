@@ -15,6 +15,7 @@ import com.flowiee.app.utils.PagesUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,22 +32,36 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
-public class ProductController extends BaseController {
-    @Autowired private ProductService productsService;
-    @Autowired private ProductVariantService productVariantService;
-    @Autowired private ProductAttributeService productAttributeService;
-    @Autowired private ProductHistoryService productHistoryService;
-    @Autowired private FileStorageService fileStorageService;
-    @Autowired private CategoryService categoryService;
-    @Autowired private PriceService priceService;
-    @Autowired private VoucherService voucherService;
-    @Autowired private VoucherTicketService voucherTicketService;
-    @Autowired private ValidateModuleProduct validateModuleProduct;
+public class ProductController extends BaseController<ProductDTO> {
+    private final ProductService          productsService;
+    private final ProductVariantService   productVariantService;
+    private final ProductAttributeService productAttributeService;
+    private final ProductHistoryService   productHistoryService;
+    private final FileStorageService      fileStorageService;
+    private final PriceService            priceService;
+    private final CategoryService         categoryService;
+    private final VoucherService          voucherService;
+    private final VoucherTicketService    voucherTicketService;
+    private final ValidateModuleProduct   validateModuleProduct;
+
+    @Autowired
+    public ProductController(ProductService productsService, ProductVariantService productVariantService, ProductAttributeService productAttributeService, ProductHistoryService productHistoryService, FileStorageService fileStorageService, CategoryService categoryService, PriceService priceService, VoucherService voucherService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
+        this.productsService = productsService;
+        this.productVariantService = productVariantService;
+        this.productAttributeService = productAttributeService;
+        this.productHistoryService = productHistoryService;
+        this.fileStorageService = fileStorageService;
+        this.categoryService = categoryService;
+        this.priceService = priceService;
+        this.voucherService = voucherService;
+        this.voucherTicketService = voucherTicketService;
+        this.validateModuleProduct = validateModuleProduct;
+    }
 
     @GetMapping
-    public ModelAndView viewAllProducts(@Nullable @RequestParam("pProductType") String pProductType,
-                                        @Nullable @RequestParam("pBrand") String pBrand,
-                                        @Nullable @RequestParam("status") String pStatus) {
+    public ModelAndView getAllProducts(@Nullable @RequestParam("pProductType") String pProductType,
+                                       @Nullable @RequestParam("pBrand") String pBrand,
+                                       @Nullable @RequestParam("status") String pStatus) {
         validateModuleProduct.readProduct(true);
         List<Category> brands = new ArrayList<>();
         List<Category> productTypes = new ArrayList<>();
@@ -67,9 +82,11 @@ public class ProductController extends BaseController {
         for (AppConstants.PRODUCT_STATUS productStatus : AppConstants.PRODUCT_STATUS.values()) {
             listProductStatus.put(productStatus.name(), productStatus.getLabel());
         }
+        Page<Product> products = productsService.findAll(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getIdFromRequestParam(pBrand), pStatus);
+        List<ProductDTO> productsReturn = productsService.setInfoVariant(ProductDTO.fromProducts(products.getContent()));
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
-        modelAndView.addObject("listProducts", productsService.findAll(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getIdFromRequestParam(pBrand), pStatus));
+        modelAndView.addObject("listProducts", productsReturn);
         modelAndView.addObject("listVoucherInfo", voucherService.findAll(null, null, null, null));
         modelAndView.addObject("listProductType", productTypes);
         modelAndView.addObject("listDonViTinh", units);
@@ -348,7 +365,7 @@ public class ProductController extends BaseController {
         validateModuleProduct.readGallery(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
         modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
-        modelAndView.addObject("listSanPham", productsService.findAll());
+        modelAndView.addObject("listSanPham", productsService.findAll().getContent());
         return baseView(modelAndView);
     }
 

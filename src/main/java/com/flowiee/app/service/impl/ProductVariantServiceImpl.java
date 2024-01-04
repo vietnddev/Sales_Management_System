@@ -163,6 +163,16 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         return findData(AppConstants.CATEGORY.COLOR.getName(), String.valueOf(colorId));
     }
 
+    @Override
+    public Integer findQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId) {
+        return productVariantRepository.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
+    }
+
+    @Override
+    public Integer findTotalQtySell(Integer productId) {
+        return productVariantRepository.findTotalQtySell(productId);
+    }
+
     @SuppressWarnings("unchecked")
 	private List<ProductVariant> findData(String where, String valueWhere) {
         List<ProductVariant> dataResponse = new ArrayList<>();
@@ -176,26 +186,28 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         strSQL.append("LEFT JOIN PRO_PRODUCT p ON p.ID = v.PRODUCT_ID ");
         strSQL.append("LEFT JOIN PRO_GARMENT_FACTORY g ON g.ID = v.GARMENT_FACTORY_ID ");
         strSQL.append("LEFT JOIN PRO_SUPPLIER sp ON sp.ID = v.SUPPLIER_ID ");
-        strSQL.append("LEFT JOIN PRO_PRICE pr ON pr.PRODUCT_VARIANT_ID = v.ID AND pr.STATUS = '" + AppConstants.PRICE_STATUS.ACTIVE.name() + "' ");
+        strSQL.append("LEFT JOIN PRO_PRICE pr ON pr.PRODUCT_VARIANT_ID = v.ID AND pr.STATUS = '").append(AppConstants.PRICE_STATUS.ACTIVE.name()).append("' ");
         strSQL.append("LEFT JOIN STG_TICKET_IMPORT_GOODS ti ON ti.ID = v.TICKET_IMPORT_ID ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'COLOR') c ON c.ID = v.COLOR_ID ");
         strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'SIZE') s ON s.ID = v.SIZE_ID ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'FABRICTYPE') f ON f.ID = v.FABRIC_ID ");
+        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'FABRIC_TYPE') f ON f.ID = v.FABRIC_ID ");
+        strSQL.append("WHERE 1=1 ");
         if (AppConstants.PRODUCT.equals(where)) {
-            strSQL.append("WHERE v.PRODUCT_ID = ?");
+            strSQL.append("AND v.PRODUCT_ID = ? ");
         }
         if (AppConstants.CATEGORY.COLOR.getName().equals(where)) {
-            strSQL.append("WHERE v.COLOR_ID = ?");
+            strSQL.append("AND v.COLOR_ID = ? ");
         }
         if (AppConstants.CATEGORY.SIZE.getName().equals(where)) {
-            strSQL.append("WHERE v.SIZE_ID = ?");
+            strSQL.append("AND v.SIZE_ID = ? ");
         }
         if (AppConstants.CATEGORY.FABRIC_TYPE.getName().equals(where)) {
-            strSQL.append("WHERE v.FABRIC_ID = ?");
+            strSQL.append("AND v.FABRIC_ID = ? ");
         }
         if (AppConstants.TICKETIMPORT.equals(where)) {
-            strSQL.append("WHERE v.TICKET_IMPORT_ID = ?");
+            strSQL.append("AND v.TICKET_IMPORT_ID = ? ");
         }
+        strSQL.append("ORDER BY c.NAME");
         logger.info("[SQL findData]: " + strSQL.toString());
         Query query = entityManager.createNativeQuery(strSQL.toString());
         if (where != null) {

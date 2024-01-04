@@ -23,6 +23,7 @@ public class OrderDTO implements Serializable {
     private Date orderTime;
     private String receiverAddress;
     private String receiverPhone;
+	private String receiverEmail;
     private String receiverName;
     private Customer orderBy; //future remove
     private Integer customerId;
@@ -61,6 +62,8 @@ public class OrderDTO implements Serializable {
         dto.setReceiverAddress(order.getReceiverAddress());
         dto.setReceiverPhone(order.getReceiverPhone());
         dto.setReceiverName(order.getReceiverName());
+		dto.setReceiverEmail(order.getReceiverEmail());
+		dto.setReceiverAddress(order.getReceiverAddress());
         //dto.setOrderBy(order.getCustomer());
         dto.setCustomerId(order.getCustomer().getId());
         dto.setCustomerName(order.getCustomer().getTenKhachHang());

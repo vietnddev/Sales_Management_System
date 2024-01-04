@@ -1,5 +1,7 @@
 package com.flowiee.app.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 			+ "where (:productTypeId is null or p.productType.id=:productTypeId) "
 			+ "and (:brandId is null or p.brand.id=:brandId) "
 			+ "and (:status is null or p.status=:status)")
-    List<Product> findAll(@Param("productTypeId") Integer productTypeId, @Param("brandId") Integer brandId, @Param("status") String status);
+    Page<Product> findAll(@Param("productTypeId") Integer productTypeId, @Param("brandId") Integer brandId, @Param("status") String status, Pageable pageable);
 	
     @Query("from Product p where p.productType.id=:productTypeId")
     List<Product> findByProductType(@Param("productTypeId") Integer productTypeId);

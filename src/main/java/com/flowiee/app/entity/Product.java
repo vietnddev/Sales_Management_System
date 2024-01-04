@@ -3,6 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
+import com.flowiee.app.dto.VoucherInfoDTO;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -61,6 +62,9 @@ public class Product extends BaseEntity implements Serializable {
 
     @Transient
     private FileStorage imageActive;
+
+    @Transient
+    private List<VoucherInfoDTO> listVoucherInfoApply;
 
     public Product(int id) {
         super.id = id;

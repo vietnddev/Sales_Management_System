@@ -111,23 +111,27 @@
                                                     <tbody>
                                                         <tr>
                                                             <th>Khách hàng</th>
-                                                            <td>Nguyễn Đức Việt</td>
+                                                            <td th:text="${orderDetail.receiverName}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Số điện thoại</th>
-                                                            <td>07 0682 0684</td>
+                                                            <td th:text="${orderDetail.receiverPhone}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Email</th>
-                                                            <td>nguyenducviet0684@gmail.com</td>
+                                                            <td th:text="${orderDetail.receiverEmail}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Địa chỉ nhận hàng</th>
-                                                            <td>Quận 8, Thành phố Hồ Chí Minh - Quận 8, Thành phố Hồ Chí Minh</td>
+                                                            <td th:text="${orderDetail.receiverAddress}"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Thời gian đặt hàng</th>
+                                                            <td th:text="${orderDetail.orderTime}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Kênh mua hàng</th>
-                                                            <td>Facebook</td>
+                                                            <td th:text="${orderDetail.salesChannelName}"></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -138,6 +142,10 @@
                                                     <tr>
                                                         <th>Số lượng sản phẩm</th>
                                                         <td th:text="${orderDetail.totalProduct}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Voucher</th>
+                                                        <td>null</td>
                                                     </tr>
                                                     <tr>
                                                         <th>Giảm giá</th>

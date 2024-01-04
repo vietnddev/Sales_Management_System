@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Getter
@@ -32,12 +33,15 @@ public class ProductDTO implements Serializable {
 //    private String voucherApplyTitle;
 //    private Integer discountPercent;
 //    private Float discountMaxPrice;
+    private Integer totalQtySell;
+    private Integer totalQtyStorage;
     private Integer productVariantQty;
     private Integer soldQty;
     private Date createdAt;
     private Integer createdById;
     private String createdByName;
     private List<VoucherInfoDTO> listVoucherInfoApply;
+    private LinkedHashMap<String, String> productVariantInfo;
 
     public static ProductDTO fromProduct(Product product) {
         ProductDTO dto = new ProductDTO();
@@ -62,7 +66,7 @@ public class ProductDTO implements Serializable {
         dto.setCreatedAt(product.getCreatedAt());
         dto.setCreatedById(product.getCreatedBy());
         dto.setCreatedByName(null);
-        dto.setListVoucherInfoApply(null);
+        dto.setListVoucherInfoApply(product.getListVoucherInfoApply());
         if (AppConstants.PRODUCT_STATUS.ACTIVE.name().equals(product.getStatus())) {
             dto.setProductStatus(AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
         } else if (AppConstants.PRODUCT_STATUS.INACTIVE.name().equals(product.getStatus())) {

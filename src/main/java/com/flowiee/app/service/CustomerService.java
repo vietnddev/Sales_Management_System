@@ -8,5 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface CustomerService extends BaseService<Customer> {
+    List<Customer> findAll();
+
     List<CustomerDTO> findAll(String name, String sex, Date birthday, String phone, String email, String address);
 }

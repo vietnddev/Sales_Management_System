@@ -24,4 +24,10 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     @Query("from Category c where c.type=:type and (c.code is null or c.code <> 'ROOT') and c.isDefault = 'Y'")
     Category findSubCategoryDefault(@Param("type") String type);
+
+    @Query("from Category c where c.id in (select p.color.id from ProductVariant p where p.product.id=:productId)")
+    List<Category> findColorOfProduct(Integer productId);
+
+    @Query("from Category c where c.id in (select p.size.id from ProductVariant p where p.product.id=:productId and p.color.id=:colorId)")
+    List<Category> findSizeOfColorOfProduct(Integer productId, Integer colorId);
 }

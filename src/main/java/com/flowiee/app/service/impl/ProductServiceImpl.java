@@ -1,12 +1,14 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.ProductDTO;
+import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.ProductHistory;
+import com.flowiee.app.repository.CategoryRepository;
 import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
@@ -19,6 +21,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
@@ -31,6 +37,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,36 +62,26 @@ public class ProductServiceImpl implements ProductService {
     private VoucherService voucherInfoService;
     @Autowired
     private VoucherApplyService voucherApplyService;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
-    public List<Product> findAll() {
-        List<Product> listProduct = productsRepository.findAll(null, null, null);
-        for (int i = 0; i < listProduct.size(); i++) {
-            FileStorage imageActive = fileService.findImageActiveOfSanPham(listProduct.get(i).getId());
-            if (imageActive != null) {
-                listProduct.get(i).setImageActive(imageActive);
-            } else {
-                listProduct.get(i).setImageActive(new FileStorage());
-            }
-        }
-        return listProduct;
+    public Page<Product> findAll() {
+        Page<Product> products = productsRepository.findAll(null, null, null, Pageable.unpaged());
+        return this.setImageActiveAndLoadVoucherApply(products);
     }
 
     @Override
-    public List<ProductDTO> findAll(Integer productTypeId, Integer brandId, String status) {
-        List<ProductDTO> dataResponse = ProductDTO.fromProducts(productsRepository.findAll(null ,null, null));
-        for (ProductDTO productDTO : dataResponse) {
-            FileStorage imageActive = fileService.findImageActiveOfSanPham(productDTO.getProductId());
-            productDTO.setImageActive(Objects.requireNonNullElseGet(imageActive, FileStorage::new));
-            List<Integer> listVoucherApplyId = new ArrayList<>();
-            voucherApplyService.findByProductId(productDTO.getProductId()).forEach(voucherApplyDTO -> {
-                listVoucherApplyId.add(voucherApplyDTO.getVoucherInfoId());
-            });
-            if (!listVoucherApplyId.isEmpty()) {
-                productDTO.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherApplyId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
-            }
-        }
-        return dataResponse;
+    public Page<Product> findAll(Integer productTypeId, Integer brandId, String status) {
+        Page<Product> products = productsRepository.findAll(productTypeId, brandId, status, Pageable.unpaged());
+        return this.setImageActiveAndLoadVoucherApply(products);
+    }
+
+    @Override
+    public Page<Product> findAll(int size, int page, Integer productTypeId, Integer brandId, String status) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt"));
+        Page<Product> products = productsRepository.findAll(productTypeId, brandId, status, pageable);
+        return this.setImageActiveAndLoadVoucherApply(products);
     }
 
     @Override
@@ -255,5 +252,48 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean productInUse(Integer productId) {
         return (!productVariantService.findAllProductVariantOfProduct(productId).isEmpty());
+    }
+
+    @Override
+    public List<ProductDTO> setInfoVariant(List<ProductDTO> productDTOs) {
+        for (ProductDTO p : productDTOs) {
+            LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
+            int totalQtyStorage = 0;
+            for (Category color : categoryRepository.findColorOfProduct(p.getProductId())) {
+                StringBuilder sizeName = new StringBuilder();
+                List<Category> listSize = categoryRepository.findSizeOfColorOfProduct(p.getProductId(), color.getId());
+                for (int i = 0; i < listSize.size(); i++) {
+                    int qtyStorage = productVariantService.findQuantityBySizeOfEachColor(p.getProductId(), color.getId(), listSize.get(i).getId());
+                    if (i == listSize.size() - 1) {
+                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")");
+                    } else {
+                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")").append(", ");
+                    }
+                    totalQtyStorage += qtyStorage;
+                }
+                variantInfo.put(color.getName(), sizeName.toString());
+            }
+            p.setProductVariantInfo(variantInfo);
+
+            p.setTotalQtyStorage(totalQtyStorage);
+            p.setTotalQtySell(productVariantService.findTotalQtySell(p.getProductId()));
+        }
+        return productDTOs;
+    }
+
+    private Page<Product> setImageActiveAndLoadVoucherApply(Page<Product> products) {
+        for (Product p : products) {
+            FileStorage imageActive = fileService.findImageActiveOfSanPham(p.getId());
+            p.setImageActive(Objects.requireNonNullElseGet(imageActive, FileStorage::new));
+
+            List<Integer> listVoucherApplyId = new ArrayList<>();
+            voucherApplyService.findByProductId(p.getId()).forEach(voucherApplyDTO -> {
+                listVoucherApplyId.add(voucherApplyDTO.getVoucherInfoId());
+            });
+            if (!listVoucherApplyId.isEmpty()) {
+                p.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherApplyId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
+            }
+        }
+        return products;
     }
 }

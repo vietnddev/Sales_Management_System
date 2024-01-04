@@ -62,6 +62,8 @@
                                             <th></th>
                                             <th>Tên sản phẩm</th>
                                             <th>Loại sản phẩm</th>
+                                            <th>Màu sắc</th>
+                                            <th>Số lượng</th>
                                             <th>Đơn vị tính</th>
                                             <th>Khuyến mãi đang áp dụng</th>
                                             <th>Trạng thái</th>
@@ -80,6 +82,15 @@
                                                    th:text="${list.productName}"></a>
                                             </td>
                                             <td th:text="${list.productTypeName}"></td>
+                                            <td>
+                                                <th:block th:each="i : ${list.productVariantInfo}">
+                                                    <div class="span" th:text="${i.key} + ': ' + ${i.value}"></div>
+                                                </th:block>
+                                            </td>
+                                            <td>
+                                                <div class="span" th:text="'Hiện có: ' + ${list.totalQtyStorage}"></div>
+                                                <div class="span" th:text="'Đã bán:  ' + ${list.totalQtySell}"></div>
+                                            </td>
                                             <td th:text="${list.unitName}"></td>
                                             <td>
                                                 <th:block th:each="voucherInfo, index : ${list.listVoucherInfoApply}">
@@ -246,6 +257,8 @@
                                             <th></th>
                                             <th>Tên sản phẩm</th>
                                             <th>Loại sản phẩm</th>
+                                            <th>Màu sắc</th>
+                                            <th>Số lượng</th>
                                             <th>Đơn vị tính</th>
                                             <th>Khuyến mãi đang áp dụng</th>
                                             <th>Trạng thái</th>

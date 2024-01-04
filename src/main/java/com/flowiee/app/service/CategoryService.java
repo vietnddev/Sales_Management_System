@@ -8,6 +8,8 @@ import com.flowiee.app.entity.Category;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CategoryService extends BaseService<Category> {
+    List<Category> findAll();
+
     List<Category> findRootCategory();
 
     List<Category> findSubCategory(String categoryType);

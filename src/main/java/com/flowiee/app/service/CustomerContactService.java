@@ -6,6 +6,8 @@ import com.flowiee.app.entity.CustomerContact;
 import java.util.List;
 
 public interface CustomerContactService extends BaseService<CustomerContact> {
+    List<CustomerContact> findAll();
+
     List<CustomerContact> findByCustomerId(Integer customerId);
 
     String setContactUseDefault(Integer customerId, String contactCode, Integer contactId);

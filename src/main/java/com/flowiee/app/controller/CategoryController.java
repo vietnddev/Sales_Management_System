@@ -1,6 +1,8 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.entity.Product;
+import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.utils.AppConstants;
@@ -61,8 +63,8 @@ public class CategoryController extends BaseController {
 
     @PostMapping("/{type}/insert")
     public ModelAndView insert(@ModelAttribute("category") Category category, 
-    					 @PathVariable("type") String categoryType,
-    					 HttpServletRequest request) {
+                               @PathVariable("type") String categoryType,
+                               HttpServletRequest request) {
         validateModuleCategory.insertCategory(true);
         if (CommonUtil.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");

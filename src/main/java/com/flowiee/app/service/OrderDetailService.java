@@ -6,5 +6,7 @@ import com.flowiee.app.entity.OrderDetail;
 import java.util.List;
 
 public interface OrderDetailService extends BaseService<OrderDetail> {
+    List<OrderDetail> findAll();
+
     List<OrderDetail> findByDonHangId(Integer donHangId);
 }

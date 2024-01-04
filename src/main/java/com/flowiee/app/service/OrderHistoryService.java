@@ -6,6 +6,8 @@ import com.flowiee.app.entity.OrderHistory;
 import java.util.List;
 
 public interface OrderHistoryService extends BaseService<OrderHistory> {
+    List<OrderHistory> findAll();
+
     List<OrderHistory> findByOrderId(Integer orderId);
 
     List<OrderHistory> findByOrderDetailId(Integer orderDetailId);

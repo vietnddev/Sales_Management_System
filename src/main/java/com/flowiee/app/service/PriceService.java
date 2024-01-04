@@ -7,6 +7,8 @@ import com.flowiee.app.dto.PriceDTO;
 import com.flowiee.app.entity.Price;
 
 public interface PriceService extends BaseService<Price> {
+    List<Price> findAll();
+
     List<PriceDTO> findPricesByProductVariant(int bienTheSanPhamId);
 
     Price findGiaHienTai(int bienTheSanPhamId);

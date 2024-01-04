@@ -25,4 +25,10 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
 
     @Query("from ProductVariant p where p.size.id=:sizeId")
     List<ProductVariant> findBySize(@Param("sizeId") Integer sizeId);
+
+    @Query("select nvl(p.soLuongKho, 0) from ProductVariant p where p.product.id=:productId and p.color.id=:colorId and p.size.id=:sizeId")
+    Integer findQuantityBySizeOfEachColor(@Param("productId") Integer productId, @Param("colorId") Integer colorId, @Param("sizeId") Integer sizeId);
+
+    @Query("select SUM(nvl(p.soLuongDaBan, 0)) as totalQtySell from ProductVariant p where p.product.id=:productId")
+    Integer findTotalQtySell(@Param("productId") Integer productId);
 }

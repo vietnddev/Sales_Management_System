@@ -50,11 +50,6 @@ public class FileStorageServiceImpl implements FileStorageService {
     private FileStorageService fileService;
 
     @Override
-    public List<FileStorage> findAll() {
-        return null;
-    }
-
-    @Override
     public FileStorage findById(Integer fileId) {
         return fileRepository.findById(fileId).orElse(null);
     }

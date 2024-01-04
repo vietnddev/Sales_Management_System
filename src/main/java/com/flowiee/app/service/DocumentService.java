@@ -7,6 +7,8 @@ import com.flowiee.app.dto.DocMetaDTO;
 import java.util.List;
 
 public interface DocumentService extends BaseService<Document> {
+    List<Document> findAll();
+
     Document saveReturnEntity(Document document);
 
     List<Document> findRootDocument();

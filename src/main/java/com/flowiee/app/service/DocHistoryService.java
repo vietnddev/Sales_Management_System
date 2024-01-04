@@ -6,6 +6,8 @@ import com.flowiee.app.entity.DocHistory;
 import java.util.List;
 
 public interface DocHistoryService extends BaseService<DocHistory> {
+    List<DocHistory> findAll();
+
     List<DocHistory> findByDocument(Integer documentId);
 
     List<DocHistory> findByDocData(Integer docDataId);

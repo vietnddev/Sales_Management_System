@@ -6,6 +6,8 @@ import com.flowiee.app.entity.ProductVariantTemp;
 import java.util.List;
 
 public interface ProductVariantTempService extends BaseService<ProductVariantTemp> {
+    List<ProductVariantTemp> findAll();
+
     String updateSoLuong(Integer soLuong, Integer id);
 
     List<ProductVariantTemp> findByImportId(Integer importId);
