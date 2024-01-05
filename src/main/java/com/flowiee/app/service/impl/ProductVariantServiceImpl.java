@@ -17,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +31,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     private PriceService priceService;
     @Autowired
     private SystemLogService systemLogService;
-    @Autowired
-    private EntityManager entityManager;
 
     @Override
     public List<ProductVariant> findAll() {
-        return this.findData(null, null);
+        return this.extractDataQuery(productVariantRepository.findAll(null, null, null, null, null));
     }
 
     @Override
@@ -49,7 +45,8 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public List<ProductVariantDTO> findAllProductVariantOfProduct(Integer productId) {
         List<ProductVariantDTO> listReturn = new ArrayList<>();
-        for (ProductVariant productVariant : this.findData(AppConstants.PRODUCT, String.valueOf(productId))) {
+        List<ProductVariant> data = this.extractDataQuery(productVariantRepository.findAll(productId, null, null, null, null));
+        for (ProductVariant productVariant : data) {
             ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
             List<PriceDTO> listPriceOfProductVariant = priceService.findPricesByProductVariant(dataModel.getProductVariantId());
             PriceDTO price =  PriceDTO.fromPrice(priceService.findGiaHienTai(dataModel.getProductVariantId()));
@@ -145,22 +142,22 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public List<ProductVariant> findByImportId(Integer ticketImportId) {
-        return findData(AppConstants.TICKETIMPORT, String.valueOf(ticketImportId));
+        return this.extractDataQuery(productVariantRepository.findAll(null, ticketImportId, null, null, null));
     }
 
     @Override
     public List<ProductVariant> findByFabricType(Integer fabricTypeId) {
-        return findData(AppConstants.CATEGORY.FABRIC_TYPE.getName(), String.valueOf(fabricTypeId));
+        return this.extractDataQuery(productVariantRepository.findAll(null, null, null, null, fabricTypeId));
     }
 
     @Override
     public List<ProductVariant> findBySize(Integer sizeId) {
-        return findData(AppConstants.CATEGORY.SIZE.getName(), String.valueOf(sizeId));
+        return this.extractDataQuery(productVariantRepository.findAll(null, null, null, sizeId, null));
     }
 
     @Override
     public List<ProductVariant> findByColor(Integer colorId) {
-        return findData(AppConstants.CATEGORY.COLOR.getName(), String.valueOf(colorId));
+        return this.extractDataQuery(productVariantRepository.findAll(null, null, colorId, null, null));
     }
 
     @Override
@@ -173,48 +170,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         return productVariantRepository.findTotalQtySell(productId);
     }
 
-    @SuppressWarnings("unchecked")
-	private List<ProductVariant> findData(String where, String valueWhere) {
+    private List<ProductVariant> extractDataQuery(List<Object[]> objects) {
         List<ProductVariant> dataResponse = new ArrayList<>();
-        StringBuilder strSQL = new StringBuilder("SELECT ");
-        strSQL.append("NVL(p.ID,0) as PRODUCT_ID_0, p.TEN_SAN_PHAM as PRODUCT_NAME_1, NVL(v.ID,0) as PRODUCT_VARIANT_ID_2, v.VARIANT_CODE as VARIANT_CODE_3, ");
-        strSQL.append("v.VARIANT_NAME as PRODUCT_VARIANT_NAME_4, NVL(c.ID,0) as COLOR_ID_5, c.NAME as COLOR_NAME_6, NVL(s.ID,0) as SIZE_ID_7, s.NAME as SIZE_NAME_8, ");
-        strSQL.append("NVL(f.ID,0) as FABRIC_ID_9, f.NAME as FABRIC_NAME_10, v.QUANTITY_STG as QUANTITY_STG_11, v.QUANTITY_SELL as QUANTITY_SELL_12, ");
-        strSQL.append("NVL(g.ID,0) as GARMENT_FACTORY_ID_13, g.NAME as GARMENT_FACTORY_NAME_14, NVL(sp.ID,0) as SUPPLIER_ID_15, sp.NAME as SUPPLIER_NAME_16, ");
-        strSQL.append("NVL(ti.ID,0) as TICKET_IMPORT_ID_17, ti.TITLE as TICKET_IMPORT_TITLE_18, NVL(pr.ID,0) as PRICE_ID_19, pr.GIA_BAN as PRICE_SELL_20, v.TRANG_THAI as PRODUCT_VARIANT_STATUS_21 ");
-        strSQL.append("FROM pro_product_variant v ");
-        strSQL.append("LEFT JOIN PRO_PRODUCT p ON p.ID = v.PRODUCT_ID ");
-        strSQL.append("LEFT JOIN PRO_GARMENT_FACTORY g ON g.ID = v.GARMENT_FACTORY_ID ");
-        strSQL.append("LEFT JOIN PRO_SUPPLIER sp ON sp.ID = v.SUPPLIER_ID ");
-        strSQL.append("LEFT JOIN PRO_PRICE pr ON pr.PRODUCT_VARIANT_ID = v.ID AND pr.STATUS = '").append(AppConstants.PRICE_STATUS.ACTIVE.name()).append("' ");
-        strSQL.append("LEFT JOIN STG_TICKET_IMPORT_GOODS ti ON ti.ID = v.TICKET_IMPORT_ID ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'COLOR') c ON c.ID = v.COLOR_ID ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'SIZE') s ON s.ID = v.SIZE_ID ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'FABRIC_TYPE') f ON f.ID = v.FABRIC_ID ");
-        strSQL.append("WHERE 1=1 ");
-        if (AppConstants.PRODUCT.equals(where)) {
-            strSQL.append("AND v.PRODUCT_ID = ? ");
-        }
-        if (AppConstants.CATEGORY.COLOR.getName().equals(where)) {
-            strSQL.append("AND v.COLOR_ID = ? ");
-        }
-        if (AppConstants.CATEGORY.SIZE.getName().equals(where)) {
-            strSQL.append("AND v.SIZE_ID = ? ");
-        }
-        if (AppConstants.CATEGORY.FABRIC_TYPE.getName().equals(where)) {
-            strSQL.append("AND v.FABRIC_ID = ? ");
-        }
-        if (AppConstants.TICKETIMPORT.equals(where)) {
-            strSQL.append("AND v.TICKET_IMPORT_ID = ? ");
-        }
-        strSQL.append("ORDER BY c.NAME");
-        logger.info("[SQL findData]: " + strSQL.toString());
-        Query query = entityManager.createNativeQuery(strSQL.toString());
-        if (where != null) {
-            query.setParameter(1, valueWhere);
-        }
-        List<Object[]> listData = query.getResultList();
-        for (Object[] data : listData) {
+        for (Object[] data : objects) {
             ProductVariant productVariant = new ProductVariant();
             productVariant.setProduct(new Product(Integer.parseInt(String.valueOf(data[0])), String.valueOf(data[1])));
             productVariant.setId(Integer.parseInt(String.valueOf(data[2])));

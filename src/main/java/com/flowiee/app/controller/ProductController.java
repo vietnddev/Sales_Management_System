@@ -375,7 +375,7 @@ public class ProductController extends BaseController<ProductDTO> {
         validateModuleProduct.readVoucher(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
         modelAndView.addObject("listVoucher", voucherService.findAll(null, null, null, null));
-        modelAndView.addObject("listProduct", productsService.findAll());
+        modelAndView.addObject("listProduct", productsService.findProductIdAndProductName());
         modelAndView.addObject("listVoucherType", CommonUtil.getVoucherType());
         modelAndView.addObject("voucher", new VoucherInfo());
         modelAndView.addObject("voucherDetail", new VoucherTicket());

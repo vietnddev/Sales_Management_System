@@ -9,9 +9,11 @@ import java.util.List;
 public interface TicketImportGoodsService extends BaseService<TicketImportGoods> {
     List<TicketImportGoods> findAll();
 
+    List<TicketImportGoods> findAll(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);
+
     String saveDraft(TicketImportGoodsRequest ticketImportGoodsRequest);
 
-    List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);
+    //List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);
 
     List<TicketImportGoods> findByMaterialId(Integer materialId);
 

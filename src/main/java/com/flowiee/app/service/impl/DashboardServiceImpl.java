@@ -3,8 +3,10 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.*;
+import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.DashboardService;
 
+import com.flowiee.app.service.OrderService;
 import com.flowiee.app.utils.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,10 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private CustomerService customerService;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -30,32 +36,32 @@ public class DashboardServiceImpl implements DashboardService {
         logger.info("Start loadDashboard(): " + CommonUtil.now("YYYY/MM/dd HH:mm:ss"));
 
         //Revenue today
-        String revenueTodaySQL = "SELECT NVL(SUM(d.TOTAL_AMOUNT_AFTER_DISCOUNT), 0) FROM PRO_ORDER d WHERE TRUNC(d.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
-        logger.info("[getRevenueToday() - SQL findData]: " + revenueTodaySQL);
-        Query revenueTodayQuery = entityManager.createNativeQuery(revenueTodaySQL);
-        String revenueToday = CommonUtil.formatToVND(Float.parseFloat(String.valueOf(revenueTodayQuery.getSingleResult())));
-        entityManager.close();
+//      String revenueTodaySQL = "SELECT NVL(SUM(d.TOTAL_AMOUNT_AFTER_DISCOUNT), 0) FROM PRO_ORDER d WHERE TRUNC(d.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
+//      logger.info("[getRevenueToday() - SQL findData]: " + revenueTodaySQL);
+//      Query revenueTodayQuery = entityManager.createNativeQuery(revenueTodaySQL);
+//      String revenueToday = CommonUtil.formatToVND(Float.parseFloat(String.valueOf(revenueTodayQuery.getSingleResult())));
+//      entityManager.close();
 
         //Revenue this month
-        String revenueThisMonthSQL = "SELECT NVL(SUM(d.TOTAL_AMOUNT_AFTER_DISCOUNT), 0) FROM PRO_ORDER d WHERE EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(MONTH FROM SYSDATE)";
-        logger.info("[getRevenueThisMonth() - SQL findData]: " + revenueThisMonthSQL);
-        Query revenueThisMonthSQLQuery = entityManager.createNativeQuery(revenueThisMonthSQL);
-        String revenueThisMonth = CommonUtil.formatToVND(Float.parseFloat(String.valueOf(revenueThisMonthSQLQuery.getSingleResult())));
-        entityManager.close();
+//      String revenueThisMonthSQL = "SELECT NVL(SUM(d.TOTAL_AMOUNT_AFTER_DISCOUNT), 0) FROM PRO_ORDER d WHERE EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(MONTH FROM SYSDATE)";
+//      logger.info("[getRevenueThisMonth() - SQL findData]: " + revenueThisMonthSQL);
+//      Query revenueThisMonthSQLQuery = entityManager.createNativeQuery(revenueThisMonthSQL);
+//      String revenueThisMonth = CommonUtil.formatToVND(Float.parseFloat(String.valueOf(revenueThisMonthSQLQuery.getSingleResult())));
+//      entityManager.close();
 
         //Customers new
-        String customersNewSQL = "SELECT * FROM PRO_CUSTOMER c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
-        logger.info("[getCustomersNew() - SQL findData]: " + customersNewSQL);
-        Query customersNewQuery = entityManager.createNativeQuery(customersNewSQL);
-        List<Customer> customersNew = customersNewQuery.getResultList();
-        entityManager.close();
+//      String customersNewSQL = "SELECT * FROM PRO_CUSTOMER c WHERE EXTRACT(MONTH FROM c.CREATED_AT) = EXTRACT(MONTH FROM SYSDATE)";
+//      logger.info("[getCustomersNew() - SQL findData]: " + customersNewSQL);
+//      Query customersNewQuery = entityManager.createNativeQuery(customersNewSQL);
+//      List<Customer> customersNew = customersNewQuery.getResultList();
+//      entityManager.close();
 
         //Orders today
-        String ordersTodaySQL = "SELECT * FROM PRO_ORDER D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
-        logger.info("[getOrdersToday() - SQL findData]: " + ordersTodaySQL);
-        Query ordersTodayQuery = entityManager.createNativeQuery(ordersTodaySQL);
-        List<Order> ordersToday = ordersTodayQuery.getResultList();
-        entityManager.close();
+//      String ordersTodaySQL = "SELECT * FROM PRO_ORDER D WHERE TRUNC(D.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
+//      logger.info("[getOrdersToday() - SQL findData]: " + ordersTodaySQL);
+//      Query ordersTodayQuery = entityManager.createNativeQuery(ordersTodaySQL);
+//      List<Order> ordersToday = ordersTodayQuery.getResultList();
+//      entityManager.close();
 
         //Products top sell
         String productsTopSellSQL = "SELECT * FROM " +
@@ -122,7 +128,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         //Revenue by sales channel
         String revenueBySalesChannelSQL = "SELECT c.NAME, c.COLOR, NVL(SUM(d.TOTAL_AMOUNT_AFTER_DISCOUNT),0) AS TOTAL " +
-                                          "FROM (SELECT * FROM CATEGORY WHERE TYPE = 'SALESCHANNEL') c " +
+                                          "FROM (SELECT * FROM CATEGORY WHERE TYPE = 'SALES_CHANNEL') c " +
                                           "LEFT JOIN PRO_ORDER d ON c.ID = d.KENH_BAN_HANG " +
                                           "GROUP BY c.NAME, c.COLOR";
         logger.info("[getRevenueBySalesChannel() - SQL findData]: " + revenueBySalesChannelSQL);
@@ -133,6 +139,11 @@ public class DashboardServiceImpl implements DashboardService {
             revenueSalesChannel.put(String.valueOf(data[0]), Float.parseFloat(String.valueOf(data[2])));
         }
         entityManager.close();
+
+        String revenueToday = CommonUtil.formatToVND(orderService.findRevenueToday());
+        String revenueThisMonth = CommonUtil.formatToVND(orderService.findRevenueThisMonth());
+        List<Customer> customersNew = customerService.findCustomerNewInMonth();
+        List<Order> ordersToday = orderService.findOrdersToday();
 
         DashboardModel dashboard = new DashboardModel();
         dashboard.setRevenueToday(revenueToday);

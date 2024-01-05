@@ -7,15 +7,12 @@ import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
-import com.flowiee.app.repository.GoodsImportRepository;
+import com.flowiee.app.repository.TicketImportRepository;
 import com.flowiee.app.service.TicketImportGoodsService;
 
-import com.flowiee.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +20,7 @@ import java.util.List;
 @Service
 public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     @Autowired
-    private GoodsImportRepository goodsImportRepository;
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private EntityManager entityManager;
+    private TicketImportRepository ticketImportRepository;
 
     private static String STATUS_DRAFT = "DRAFT";
 //    private static String STATUS_APPROVING = "APPROVING";
@@ -36,12 +29,17 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
 
     @Override
     public List<TicketImportGoods> findAll() {
-        return goodsImportRepository.findAll();
+        return ticketImportRepository.findAll();
+    }
+
+    @Override
+    public List<TicketImportGoods> findAll(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
+        return ticketImportRepository.findAll(text, supplierId, paymentMethod, payStatus, importStatus);
     }
 
     @Override
     public TicketImportGoods findById(Integer entityId) {
-        return goodsImportRepository.findById(entityId).get();
+        return ticketImportRepository.findById(entityId).orElse(null);
     }
 
     @Override
@@ -49,7 +47,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         if (entity == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        goodsImportRepository.save(entity);
+        ticketImportRepository.save(entity);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
@@ -62,7 +60,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         entity.setId(entityId);
-        goodsImportRepository.save(entity);
+        ticketImportRepository.save(entity);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
@@ -75,7 +73,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         if (ticketImportGoods == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        goodsImportRepository.deleteById(entityId);
+        ticketImportRepository.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 ;
@@ -111,67 +109,67 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         }
         ticketImportGoods.setNote(request.getNote());
         ticketImportGoods.setStatus(STATUS_DRAFT);
-        goodsImportRepository.save(ticketImportGoods);
+        ticketImportRepository.save(ticketImportGoods);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
-    @Override
-    public List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
-        List<TicketImportGoods> listData = new ArrayList<>();
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT i.ID, i.TITLE, s.NAME as SUPPLIER_NAME, pm.TEN_LOAI as PAYMENT_METHOD_NAME, i.PAY_STATUS, a.HO_TEN as RECEIVED_NAME, i.STATUS, ");
-        sql.append("       s.ID as SUPPLIER_ID, pm.ID as PAYMENT_METHOD_ID, a.ID as RECEIVED_ID, ");
-        sql.append("       i.ORDER_TIME, i.RECEIVED_TIME ");
-        sql.append("FROM goods_import i ");
-        sql.append("LEFT JOIN supplier s ON s.ID = i.SUPPLIER_ID ");
-        sql.append("LEFT JOIN dm_hinh_thuc_thanh_toan pm ON pm.ID = i.PAYMENT_METHOD ");
-        sql.append("LEFT JOIN account a ON a.ID = i.RECEIVED_BY ");
-        sql.append("WHERE i.TITLE LIKE '%").append(text != null ? text : "").append("%' ");
-        if (supplierId != null) {
-            sql.append("AND s.ID = ? ");
-        }
-        if (paymentMethod != null) {
-            sql.append("AND pm.ID = ? ");
-        }
-        if (payStatus != null) {
-            sql.append("i.PAY_STATUS = ? ");
-        }
-        if (importStatus != null) {
-            sql.append("i.STATUS = ?");
-        }
-        System.out.println(sql.toString());
-        Query query = entityManager.createNativeQuery(sql.toString());
-        int i = 1;
-        if (supplierId != null) {
-            query.setParameter(i++, supplierId);
-        }
-        if (paymentMethod != null) {
-            query.setParameter(i++, paymentMethod);
-        }
-        if (payStatus != null) {
-            query.setParameter(i++, payStatus);
-        }
-        if (importStatus != null) {
-            query.setParameter(i++, importStatus);
-        }
-        @SuppressWarnings("unchecked")
-		List<Object[]> data = query.getResultList();
-        for (Object[] o : data) {
-            TicketImportGoods ticketImportGoods = new TicketImportGoods();
-            ticketImportGoods.setId(Integer.parseInt(o[0].toString()));
-            ticketImportGoods.setTitle(String.valueOf(o[1]));
-            ticketImportGoods.setSupplier(new Supplier(Integer.parseInt(String.valueOf(o[7])), String.valueOf(o[2])));
-            ticketImportGoods.setPaymentMethod(new Category(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
-            ticketImportGoods.setPaidStatus(String.valueOf(o[4]));
-            ticketImportGoods.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
-            ticketImportGoods.setStatus(String.valueOf(o[6]));
-            ticketImportGoods.setOrderTime(CommonUtil.convertStringToDate(String.valueOf(o[10])));
-            ticketImportGoods.setReceivedTime(CommonUtil.convertStringToDate(String.valueOf(o[11])));
-            listData.add(ticketImportGoods);
-        }
-        entityManager.close();
-        return listData;
-    }
+//    @Override
+//    public List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
+//        List<TicketImportGoods> listData = new ArrayList<>();
+//        StringBuilder sql = new StringBuilder();
+//        sql.append("SELECT i.ID, i.TITLE, s.NAME as SUPPLIER_NAME, pm.TEN_LOAI as PAYMENT_METHOD_NAME, i.PAY_STATUS, a.HO_TEN as RECEIVED_NAME, i.STATUS, ");
+//        sql.append("       s.ID as SUPPLIER_ID, pm.ID as PAYMENT_METHOD_ID, a.ID as RECEIVED_ID, ");
+//        sql.append("       i.ORDER_TIME, i.RECEIVED_TIME ");
+//        sql.append("FROM goods_import i ");
+//        sql.append("LEFT JOIN supplier s ON s.ID = i.SUPPLIER_ID ");
+//        sql.append("LEFT JOIN dm_hinh_thuc_thanh_toan pm ON pm.ID = i.PAYMENT_METHOD ");
+//        sql.append("LEFT JOIN account a ON a.ID = i.RECEIVED_BY ");
+//        sql.append("WHERE i.TITLE LIKE '%").append(text != null ? text : "").append("%' ");
+//        if (supplierId != null) {
+//            sql.append("AND s.ID = ? ");
+//        }
+//        if (paymentMethod != null) {
+//            sql.append("AND pm.ID = ? ");
+//        }
+//        if (payStatus != null) {
+//            sql.append("i.PAY_STATUS = ? ");
+//        }
+//        if (importStatus != null) {
+//            sql.append("i.STATUS = ?");
+//        }
+//        System.out.println(sql.toString());
+//        Query query = entityManager.createNativeQuery(sql.toString());
+//        int i = 1;
+//        if (supplierId != null) {
+//            query.setParameter(i++, supplierId);
+//        }
+//        if (paymentMethod != null) {
+//            query.setParameter(i++, paymentMethod);
+//        }
+//        if (payStatus != null) {
+//            query.setParameter(i++, payStatus);
+//        }
+//        if (importStatus != null) {
+//            query.setParameter(i++, importStatus);
+//        }
+//        @SuppressWarnings("unchecked")
+//		List<Object[]> data = query.getResultList();
+//        for (Object[] o : data) {
+//            TicketImportGoods ticketImportGoods = new TicketImportGoods();
+//            ticketImportGoods.setId(Integer.parseInt(o[0].toString()));
+//            ticketImportGoods.setTitle(String.valueOf(o[1]));
+//            ticketImportGoods.setSupplier(new Supplier(Integer.parseInt(String.valueOf(o[7])), String.valueOf(o[2])));
+//            ticketImportGoods.setPaymentMethod(new Category(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
+//            ticketImportGoods.setPaidStatus(String.valueOf(o[4]));
+//            ticketImportGoods.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
+//            ticketImportGoods.setStatus(String.valueOf(o[6]));
+//            ticketImportGoods.setOrderTime(CommonUtil.convertStringToDate(String.valueOf(o[10])));
+//            ticketImportGoods.setReceivedTime(CommonUtil.convertStringToDate(String.valueOf(o[11])));
+//            listData.add(ticketImportGoods);
+//        }
+//        entityManager.close();
+//        return listData;
+//    }
 
     @Override
     public List<TicketImportGoods> findByMaterialId(Integer materialId) {
@@ -186,7 +184,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     public List<TicketImportGoods> findBySupplierId(Integer supplierId) {
         List<TicketImportGoods> listData = new ArrayList<>();
         if (supplierId != null && supplierId >= 0) {
-            listData = goodsImportRepository.findBySupplierId(supplierId);
+            listData = ticketImportRepository.findBySupplierId(supplierId);
         }
         return listData;
     }
@@ -195,7 +193,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     public List<TicketImportGoods> findByPaymentMethod(String paymentMethod) {
         List<TicketImportGoods> listData = new ArrayList<>();
         if (paymentMethod != null) {
-            listData = goodsImportRepository.findByPaymentMethod(paymentMethod);
+            listData = ticketImportRepository.findByPaymentMethod(paymentMethod);
         }
         return listData;
     }
@@ -204,7 +202,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     public List<TicketImportGoods> findByPaidStatus(String paidStatus) {
         List<TicketImportGoods> listData = new ArrayList<>();
         if (paidStatus != null && CommonUtil.getPaymentStatusCategory().containsKey(paidStatus)) {
-            listData = goodsImportRepository.findByPaidStatus(paidStatus);
+            listData = ticketImportRepository.findByPaidStatus(paidStatus);
         }
         return listData;
     }
@@ -213,14 +211,14 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     public List<TicketImportGoods> findByAccountId(Integer accountId) {
         List<TicketImportGoods> listData = new ArrayList<>();
         if (accountId != null && accountId > 0) {
-            listData = goodsImportRepository.findByReceiveBy(accountId);
+            listData = ticketImportRepository.findByReceiveBy(accountId);
         }
         return listData;
     }
 
     @Override
     public TicketImportGoods findDraftImportPresent(Integer createdBy) {
-        return goodsImportRepository.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
+        return ticketImportRepository.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
     }
 
     @Override
@@ -231,7 +229,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         ticketImportGoods.setCreatedBy(CommonUtil.getCurrentAccountId());
         ticketImportGoods.setOrderTime(new Date());
         ticketImportGoods.setReceivedTime(new Date());
-        ticketImportGoods = goodsImportRepository.save(ticketImportGoods);
+        ticketImportGoods = ticketImportRepository.save(ticketImportGoods);
         return ticketImportGoods;
     }
 
@@ -245,7 +243,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         ticketImportGoods.setStatus(status);
-        goodsImportRepository.save(ticketImportGoods);
+        ticketImportRepository.save(ticketImportGoods);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

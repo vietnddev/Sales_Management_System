@@ -85,6 +85,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findProductIdAndProductName() {
+        List<Product> products = new ArrayList<>();
+        productsRepository.findIdAndName(AppConstants.PRODUCT_STATUS.ACTIVE.name()).forEach(objects -> {
+            Product p = new Product();
+            p.setId(Integer.parseInt(String.valueOf(objects[0])));
+            p.setTenSanPham(String.valueOf(objects[1]));
+            products.add(p);
+        });
+        return products;
+    }
+
+
+    @Override
     public Product findById(Integer id) {        
         return productsRepository.findById(id).orElse(null);
     }

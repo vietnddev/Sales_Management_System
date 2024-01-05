@@ -12,6 +12,8 @@ import java.util.List;
 public interface OrderService {
     List<OrderDTO> findAll();
 
+    List<OrderDTO> findAll(Integer orderId);
+
     OrderDTO findById(Integer orderId);
 
     String save(Order order);
@@ -35,4 +37,10 @@ public interface OrderService {
     List<Order> findByOrderStatus(Integer orderStatusId);
 
     List<Order> findByCustomer(Integer customerId);
+
+    Double findRevenueToday();
+
+    Double findRevenueThisMonth();
+
+    List<Order> findOrdersToday();
 }

@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -78,8 +80,8 @@ public class OrderDTO implements Serializable {
         dto.setOrderStatusId(order.getTrangThaiDonHang().getId());
         dto.setOrderStatusName(order.getTrangThaiDonHang().getName());
         //dto.setOrderBy(null);
-        dto.setOrderPayId(null);
-        dto.setOrderPayName(null);
+        dto.setOrderPayId(order.getCustomer().getId());
+        dto.setOrderPayName(order.getCustomer().getTenKhachHang());
         //dto.setPayMethod(null);
         dto.setPayMethodId(null);
         dto.setPayMethodName(null);
@@ -92,6 +94,14 @@ public class OrderDTO implements Serializable {
         dto.setCreatedAt(order.getCreatedAt());
         return dto;
     }
+
+	public static List<OrderDTO> fromOrders(List<Order> orders) {
+		List<OrderDTO> list = new ArrayList<>();
+		for (Order order : orders){
+			list.add(fromOrder(order));
+		}
+		return list;
+	}
 
 	@Override
 	public String toString() {

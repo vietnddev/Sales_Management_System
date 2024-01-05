@@ -22,4 +22,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
            "and (:address is null or (cc.code = 'A' and cc.isDefault = 'Y' and cc.status = true and cc.value=:address))")
     List<Customer> findAll(@Param("name") String name, @Param("sex") String sex, @Param("birthday") Date birthday,
                            @Param("phone") String phone, @Param("email") String email, @Param("address") String address);
+    @Query("from Customer c where extract(month from c.createdAt) = extract(month from current_date)")
+    List<Customer> findCustomerNewInMonth();
 }

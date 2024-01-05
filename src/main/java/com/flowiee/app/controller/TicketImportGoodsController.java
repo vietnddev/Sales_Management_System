@@ -172,7 +172,7 @@ public class TicketImportGoodsController extends BaseController {
     @GetMapping("/search")
     public void search() {
         validateModuleStorage.importGoods(true);
-        List<TicketImportGoods> data = ticketImportGoodsService.search(null, 1, null, null, null);
+        List<TicketImportGoods> data = ticketImportGoodsService.findAll(null, 1, null, null, null);
         if (data != null) {
             for (TicketImportGoods o : data) {
                 System.out.println(o.toString());

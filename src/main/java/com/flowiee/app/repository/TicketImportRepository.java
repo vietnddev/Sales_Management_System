@@ -10,7 +10,17 @@ import com.flowiee.app.entity.TicketImportGoods;
 import java.util.List;
 
 @Repository
-public interface GoodsImportRepository extends JpaRepository<TicketImportGoods, Integer> {
+public interface TicketImportRepository extends JpaRepository<TicketImportGoods, Integer> {
+    @Query("from TicketImportGoods i " +
+           "where (:text is null or i.title like %:text%) " +
+           "and (:supplierId is null or i.supplier.id=:supplierId) " +
+           "and (:paymentMethod is null or i.paymentMethod.id=:paymentMethod) " +
+           "and (:payStatus is null or i.paidStatus=:payStatus) " +
+           "and (:importStatus is null or i.status=:importStatus) ")
+    List<TicketImportGoods> findAll(@Param("text") String text, @Param("supplierId") Integer supplierId,
+                                    @Param("paymentMethod") Integer paymentMethod, @Param("payStatus") String payStatus,
+                                    @Param("importStatus") String importStatus);
+
 //    @Query("from GoodsImport i where i.material.id=:materialId")
 //    List<GoodsImport> findByMaterialId(Integer materialId);
 

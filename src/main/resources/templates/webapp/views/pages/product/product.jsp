@@ -31,7 +31,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row justify-content-between">
-                                    <div class="col-4">
+                                    <div class="col-4" style="display: flex; align-items: center">
                                         <h3 class="card-title"><strong>DANH SÁCH SẢN PHẨM</strong></h3>
                                     </div>
                                     <div class="col-6 text-right">

@@ -110,6 +110,6 @@ public class Product extends BaseEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Product [id=" + super.id + ", productType=" + productType + ", brand=" + brand + ", tenSanPham=" + tenSanPham + ", unit="
-				+ unit + ", moTaSanPham=" + moTaSanPham + ", status=" + status + ", imageActive=" + imageActive + "]";
+				+ unit + ", moTaSanPham=" + moTaSanPham + ", status=" + status + "]";
 	}
 }

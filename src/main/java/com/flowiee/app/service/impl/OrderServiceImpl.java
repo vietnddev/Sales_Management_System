@@ -15,7 +15,7 @@ import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.ErrorMessages;
-import com.flowiee.app.utils.MessagesUtil;
+
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -29,14 +29,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
@@ -62,37 +59,38 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ItemsService itemsService;
     @Autowired
-    private CustomerContactService customerContactService;
-    @Autowired
     private VoucherTicketService voucherTicketService;
     @Autowired
     private FileStorageService fileStorageService;
-    @Autowired
-    private EntityManager entityManager;
 
     @Override
     public List<OrderDTO> findAll() {
-        return this.findData(null);
+        return this.extractDataQuery(orderRepository.findAll((Integer) null));
     }
 
     @Override
-    public List<Order> findByTrangThai(int trangThaiDonHangId) {
-        return orderRepository.findByTrangThaiDonHang(trangThaiDonHangId);
+    public List<OrderDTO> findAll(Integer orderId) {
+        return this.extractDataQuery(orderRepository.findAll(orderId));
     }
 
     @Override
-    public List<Order> findByKhachHangId(int khachHangId) {
-        return orderRepository.findByKhachHangId(khachHangId);
+    public List<Order> findByTrangThai(int orderStatusId) {
+        return orderRepository.findByTrangThaiDonHang(orderStatusId);
     }
 
     @Override
-    public List<Order> findByNhanVienId(int nhanVienId) {
-        return orderRepository.findByNhanvienId(nhanVienId);
+    public List<Order> findByKhachHangId(int customerId) {
+        return orderRepository.findByKhachHangId(customerId);
+    }
+
+    @Override
+    public List<Order> findByNhanVienId(int customerId) {
+        return orderRepository.findByNhanvienId(customerId);
     }
 
     @Override
     public OrderDTO findById(Integer orderId) {
-        List<OrderDTO> orders = findData(orderId);
+        List<OrderDTO> orders = findAll(orderId);
         if (orders.isEmpty()) {
             throw new NotFoundException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "order " + orderId));
         }
@@ -187,6 +185,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Double findRevenueToday() {
+        return orderRepository.findRevenueToday();
+    }
+
+    @Override
+    public Double findRevenueThisMonth() {
+        return orderRepository.findRevenueThisMonth();
+    }
+
+    @Override
+    public List<Order> findOrdersToday() {
+        return orderRepository.findOrdersToday();
+    }
+
+    @Override
     public String update(Order order, Integer id) {
         order.setId(id);
         orderRepository.save(order);
@@ -260,34 +273,9 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    @SuppressWarnings("unchecked")
-	private List<OrderDTO> findData(Integer orderId) {
+    private List<OrderDTO> extractDataQuery(List<Object[]> objects) {
         List<OrderDTO> dataResponse = new ArrayList<>();
-        StringBuilder strSQL = new StringBuilder("SELECT ");
-        strSQL.append("o.ID as ORDER_ID_0, o.MA_DON_HANG as MA_DON_HANG_1, o.THOI_GIAN_DAT_HANG as ORDER_TIME_2, o.RECEIVER_ADDRESS as RECEIVER_ADDRESS_3,");
-        strSQL.append("o.RECEIVER_PHONE as RECEIVER_PHONE_4, o.RECEIVER_NAME as RECEIVER_NAME_5, NVL(c.ID,0) as ORDERBY_ID_6, c.TEN_KHACH_HANG as ORDER_BY_NAME_7,");
-        strSQL.append("NVL(o.TOTAL_AMOUNT_AFTER_DISCOUNT,0) as TOTAL_AMOUNT_8, NVL(sc.ID,0) as SALES_CHANNEL_ID_9, sc.NAME as SALES_CHANNEL_NAME_10, o.GHI_CHU as NOTE_11, ");
-        strSQL.append("NVL(os.ID,0) as ORDER_STATUS_ID_12, os.NAME as ORDER_STATUS_NAME_13, NVL(op.ID,0) as ORDER_PAY_ID_14, op.PAYMENT_STATUS as ORDER_PAY_STATUS_15, ");
-        strSQL.append("NVL(pm.ID,0) as PAYMENT_METHOD_ID_16, pm.NAME as PAYMENT_METHOD_NAME_17, NVL(acc.ID,0) as CASHIER_ID_18, acc.HO_TEN as CASHIER_NAME_19, ");
-        strSQL.append("NVL(o.CREATED_BY,0) as CREATED_BY_ID_20, o.CREATED_AT as CREATED_AT_21, ");
-        strSQL.append("CASE WHEN F.ORDER_ID IS NOT NULL THEN CONCAT(CONCAT(f.DIRECTORY_PATH, '/'), f.SAVED_NAME) ELSE '' END as QRCODE_FILE_NAME_22, ");
-        strSQL.append("o.RECEIVER_EMAIL as RECEIVER_EMAIL_23 ");
-        strSQL.append("FROM PRO_ORDER o ");
-        strSQL.append("LEFT JOIN PRO_CUSTOMER c ON c.ID = o.CUSTOMER_ID ");
-        strSQL.append("LEFT JOIN PRO_ORDER_PAY op ON op.DON_HANG_ID = o.ID ");
-        strSQL.append("LEFT JOIN SYS_ACCOUNT acc ON acc.ID = op.CASHIER ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'SALES_CHANNEL') sc ON sc.ID = o.KENH_BAN_HANG ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'ORDER_STATUS') os ON os.ID = o.TRANG_THAI_DON_HANG ");
-        strSQL.append("LEFT JOIN (SELECT * FROM CATEGORY WHERE TYPE = 'PAYMENT_METHOD') pm ON pm.ID = op.HINH_THUC_THANH_TOAN ");
-        strSQL.append("LEFT JOIN STG_FILE_STORAGE f ON f.ORDER_ID = o.ID ");
-        if (orderId != null) {
-            strSQL.append("WHERE o.ID = ").append(orderId);
-        }
-        logger.info("Start load danh sách đơn hàng! loadBy=" + CommonUtil.getCurrentAccountUsername());
-        logger.info("[SQL findData]: " + strSQL.toString());
-        Query query = entityManager.createNativeQuery(strSQL.toString());
-        List<Object[]> listData = query.getResultList();
-        for (Object[] data : listData) {
+        for (Object[] data : objects) {
             OrderDTO order = new OrderDTO();
             order.setOrderId(Integer.parseInt(String.valueOf(data[0])));
             order.setOrderCode(String.valueOf(data[1]));

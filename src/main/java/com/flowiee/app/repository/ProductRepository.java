@@ -13,10 +13,10 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-	@Query("from Product p "
-			+ "where (:productTypeId is null or p.productType.id=:productTypeId) "
-			+ "and (:brandId is null or p.brand.id=:brandId) "
-			+ "and (:status is null or p.status=:status)")
+	@Query("from Product p " +
+           "where (:productTypeId is null or p.productType.id=:productTypeId) " +
+           "and (:brandId is null or p.brand.id=:brandId) " +
+           "and (:status is null or p.status=:status)")
     Page<Product> findAll(@Param("productTypeId") Integer productTypeId, @Param("brandId") Integer brandId, @Param("status") String status, Pageable pageable);
 	
     @Query("from Product p where p.productType.id=:productTypeId")
@@ -27,4 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("from Product p where p.brand.id=:brandId")
     List<Product> findByBrand(@Param("brandId") Integer brandId);
+
+    @Query("select p.id, p.tenSanPham from Product p where p.status=:status")
+    List<Object[]> findIdAndName(@Param("status") String status);
 }

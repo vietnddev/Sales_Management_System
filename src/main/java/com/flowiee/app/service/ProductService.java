@@ -15,6 +15,8 @@ public interface ProductService extends BaseService<Product> {
 
     Page<Product> findAll(int size, int page, Integer productTypeId, Integer brandId, String status);
 
+    List<Product> findProductIdAndProductName();
+
     byte[] exportData(List<Integer> listSanPhamId);
 
     List<Product> findByProductType(Integer productTypeId);
