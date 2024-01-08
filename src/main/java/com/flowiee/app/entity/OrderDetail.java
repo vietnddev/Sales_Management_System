@@ -20,24 +20,21 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "don_hang_id", nullable = false)
+	@JoinColumn(name = "order_id", nullable = false)
 	private Order order;
 
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bien_the_san_pham_id", nullable = false)
+	@JoinColumn(name = "product_variant_id", nullable = false)
 	private ProductVariant productVariant;
 
-	@Column(name = "so_luong", nullable = false)
+	@Column(name = "quantity", nullable = false)
 	private int soLuong;
 
-	@Column(name = "voucher_code", length = 50)
-	private String voucherCode;
-
-	@Column(name = "ghi_chu", length = 500)
+	@Column(name = "note", length = 500)
 	private String ghiChu;
 
-	@Column(name = "trang_thai", nullable = false)
+	@Column(name = "status", nullable = false)
 	private boolean trangThai;
 
 	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY)
@@ -46,7 +43,6 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "OrderDetail [id=" + super.id + ", order=" + order + ", productVariant=" + productVariant + ", soLuong=" + soLuong
-				+ ", voucherCode=" + voucherCode + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai
-				+ ", listOrderHistory=" + listOrderHistory + "]";
+				+ ", ghiChu=" + ghiChu + ", trangThai=" + trangThai + ", listOrderHistory=" + listOrderHistory + "]";
 	}
 }

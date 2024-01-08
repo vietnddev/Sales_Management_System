@@ -98,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Product findById(Integer id) {        
+    public Product findById(Integer id) {
         return productsRepository.findById(id).orElse(null);
     }
 
@@ -299,12 +299,12 @@ public class ProductServiceImpl implements ProductService {
             FileStorage imageActive = fileService.findImageActiveOfSanPham(p.getId());
             p.setImageActive(Objects.requireNonNullElseGet(imageActive, FileStorage::new));
 
-            List<Integer> listVoucherApplyId = new ArrayList<>();
+            List<Integer> listVoucherInfoId = new ArrayList<>();
             voucherApplyService.findByProductId(p.getId()).forEach(voucherApplyDTO -> {
-                listVoucherApplyId.add(voucherApplyDTO.getVoucherInfoId());
+                listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
             });
-            if (!listVoucherApplyId.isEmpty()) {
-                p.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherApplyId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
+            if (!listVoucherInfoId.isEmpty()) {
+                p.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherInfoId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
             }
         }
         return products;

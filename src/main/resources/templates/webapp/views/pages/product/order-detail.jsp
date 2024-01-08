@@ -206,7 +206,7 @@
                                                             <td th:text="${thanhToan.maPhieu}"></td>
                                                             <td th:text="${thanhToan.thoiGianThanhToan}"></td>
                                                             <td th:text="${thanhToan.hinhThucThanhToan.name}"></td>
-                                                            <td th:text="${thanhToan.order.totalAmountAfterDiscount}"></td>
+                                                            <td th:text="${thanhToan.order.totalAmountDiscount}"></td>
                                                             <td th:text="${thanhToan.thuNgan.hoTen}"></td>
                                                             <td th:text="${thanhToan.ghiChu}"></td>
                                                             <td>

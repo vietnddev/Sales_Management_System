@@ -2,7 +2,6 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.TicketExportGoods;
 import com.flowiee.app.repository.TicketExportGoodsRepository;
-import com.flowiee.app.service.OrderDetailService;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.TicketExportGoodsService;
@@ -18,8 +17,6 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
     private TicketExportGoodsRepository ticketExportGoodsRepository;
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private OrderDetailService orderDetailService;
     @Autowired
     private ProductVariantService productVariantService;
 
@@ -42,7 +39,7 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
         //DE -> Delivering
         //DO -> Done
         //Update lại số lượng của sản phẩm còn trong kho
-        orderDetailService.findByDonHangId(ticket.getOrderId()).forEach(d -> {
+        orderService.findOrderDetailsByOrderId(ticket.getOrderId()).forEach(d -> {
             productVariantService.updateSoLuong(productVariantService.findById(d.getProductVariant().getId()).getSoLuongKho() - d.getSoLuong(), d.getProductVariant().getId());
         });
         return AppConstants.SERVICE_RESPONSE_SUCCESS;

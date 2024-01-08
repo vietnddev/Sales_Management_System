@@ -28,7 +28,6 @@ import java.util.List;
 @RequestMapping(EndPointUtil.PRO_ORDER)
 public class OrderController extends BaseController {
     @Autowired private OrderService orderService;
-    @Autowired private OrderDetailService orderDetailService;
     @Autowired private ProductVariantService productVariantService;
     @Autowired private CategoryService categoryService;
     @Autowired private CustomerService customerService;
@@ -42,11 +41,11 @@ public class OrderController extends BaseController {
     public ModelAndView viewAllOrders() {
         validateModuleProduct.readOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
-        modelAndView.addObject("listOrder", orderService.findAll());
+        modelAndView.addObject("listOrder", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
-        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
         modelAndView.addObject("donHangRequest", new OrderRequest());
@@ -58,9 +57,9 @@ public class OrderController extends BaseController {
     public ModelAndView filterListDonHang(@ModelAttribute("donHangRequest") OrderRequest request) {
         validateModuleProduct.readOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
-        modelAndView.addObject("listDonHang", orderService.findAll());
+        modelAndView.addObject("listDonHang", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
 
         modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : categoryService.findById(request.getKenhBanHang()));
@@ -80,11 +79,11 @@ public class OrderController extends BaseController {
     @GetMapping("/{id}")
     public ModelAndView findDonHangDetail(@PathVariable("id") Integer id) {
         validateModuleProduct.readOrder(true);
-        if (id <= 0 || orderService.findById(id) == null) {
+        if (id <= 0 || orderService.findOrderById(id) == null) {
             throw new NotFoundException("Order not found!");
         }
-        OrderDTO orderDetail = orderService.findById(id);
-        List<OrderDetail> listOrderDetail = orderDetailService.findByDonHangId(id);
+        OrderDTO orderDetail = orderService.findOrderById(id);
+        List<OrderDetail> listOrderDetail = orderService.findOrderDetailsByOrderId(id);
         int totalProduct = 0;
         for (OrderDetail od : listOrderDetail) {
             totalProduct += od.getSoLuong();
@@ -111,11 +110,11 @@ public class OrderController extends BaseController {
             orderCart.setCreatedBy(CommonUtil.getCurrentAccountId());
             cartService.save(orderCart);
         }
-        modelAndView.addObject("listDonHang", orderService.findAll());
+        modelAndView.addObject("listDonHang", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
-        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
 
@@ -198,7 +197,7 @@ public class OrderController extends BaseController {
         }
         orderRequest.setListBienTheSanPham(listProductVariantId);
         orderRequest.setTrangThaiThanhToan(false);
-        orderService.save(orderRequest);
+        orderService.saveOrder(orderRequest);
         //Sau khi đã lưu đơn hàng thì xóa all items
         itemsService.findByCartId(orderRequest.getCartId()).forEach(items -> {
             itemsService.delete(items.getId());
@@ -209,14 +208,14 @@ public class OrderController extends BaseController {
     @PostMapping("/update/{id}")
     public ModelAndView update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer orderId) {
         validateModuleProduct.updateOrder(true);
-        orderService.update(order, orderId);
+        orderService.updateOrder(order, orderId);
         return new ModelAndView("redirect:/don-hang");
     }
 
     @PostMapping("/delete/{id}")
     public ModelAndView delete(@PathVariable("id") Integer orderId) {
         validateModuleProduct.deleteOrder(true);
-        orderService.delete(orderId);
+        orderService.deleteOrder(orderId);
         return new ModelAndView("redirect:/don-hang");
     }
 
@@ -224,7 +223,7 @@ public class OrderController extends BaseController {
     public ModelAndView thanhToan(@PathVariable("id") Integer donHangId, @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
         validateModuleProduct.updateOrder(true);
         orderPay.setMaPhieu("PTT" + donHangId + CommonUtil.now("yyMMddHHmmss"));
-        orderPay.setOrder(new Order(orderService.findById(donHangId).getOrderId()));
+        orderPay.setOrder(new Order(orderService.findOrderById(donHangId).getOrderId()));
         orderPay.setPaymentStatus(true);
         orderPayService.save(orderPay);
         return new ModelAndView("redirect:/don-hang/" + donHangId);

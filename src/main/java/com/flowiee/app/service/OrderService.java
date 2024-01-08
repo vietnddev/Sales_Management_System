@@ -1,8 +1,8 @@
 package com.flowiee.app.service;
 
-import com.flowiee.app.base.BaseService;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.Order;
+import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.model.request.OrderRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -10,37 +10,43 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface OrderService {
-    List<OrderDTO> findAll();
+    List<OrderDTO> findAllOrder();
 
-    List<OrderDTO> findAll(Integer orderId);
+    List<OrderDTO> findAllOrder(Integer orderId);
 
-    OrderDTO findById(Integer orderId);
+    List<Order> findByStaffId(Integer accountId);
 
-    String save(Order order);
+    List<Order> findOrdersBySalesChannelId(Integer salesChannelId);
 
-    String update(Order order, Integer orderId);
+    List<Order> findOrdersByStatus(Integer orderStatusId);
 
-    String delete(Integer orderId);
+    List<Order> findOrdersByCustomerId(Integer customerId);
 
-    List<Order> findByTrangThai(int trangThaiDonHangId);
+    List<Order> findOrdersToday();
 
-    List<Order> findByKhachHangId(int id);
+    OrderDTO findOrderById(Integer orderId);
 
-    List<Order> findByNhanVienId(int accountId);
+    OrderDetail findOrderDetailById(Integer orderDetailId);
+
+    String saveOrder(Order order);
+
+    String saveOrder(OrderRequest orderRequest);
+
+    String saveOrderDetail(OrderDetail orderDetail);
+
+    String updateOrder(Order order, Integer orderId);
+
+    String updateOrderDetail(OrderDetail orderDetail, Integer orderDetailId);
+
+    String deleteOrder(Integer orderId);
+
+    String deleteOrderDetail(Integer orderDetailId);
 
     ResponseEntity<?> exportDanhSachDonHang();
-
-    String save(OrderRequest orderRequest);
-
-    List<Order> findBySalesChannel(Integer salesChannelId);
-
-    List<Order> findByOrderStatus(Integer orderStatusId);
-
-    List<Order> findByCustomer(Integer customerId);
 
     Double findRevenueToday();
 
     Double findRevenueThisMonth();
 
-    List<Order> findOrdersToday();
+    List<OrderDetail> findOrderDetailsByOrderId(Integer donHangId);
 }

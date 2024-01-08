@@ -71,7 +71,7 @@ public class OrderDTO implements Serializable {
         dto.setCustomerName(order.getCustomer().getTenKhachHang());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setAmountDiscount(order.getAmountDiscount());
-        dto.setTotalAmountAfterDiscount(order.getTotalAmountAfterDiscount());
+        dto.setTotalAmountAfterDiscount(order.getTotalAmountDiscount());
         //dto.setSalesChannel(order.getKenhBanHang());
         dto.setSalesChannelId(order.getKenhBanHang().getId());
         dto.setSalesChannelName(order.getKenhBanHang().getName());

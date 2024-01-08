@@ -161,7 +161,7 @@ public class CategoryServiceImpl implements CategoryService {
                 }
                 break;
             case "SALESCHANNEL":
-                if (!orderService.findBySalesChannel(categoryId).isEmpty()) {
+                if (!orderService.findOrdersBySalesChannelId(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
@@ -186,7 +186,7 @@ public class CategoryServiceImpl implements CategoryService {
                 }
                 break;
             case "ORDERSTATUS":
-                if (!orderService.findByOrderStatus(categoryId).isEmpty()) {
+                if (!orderService.findOrdersByStatus(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
