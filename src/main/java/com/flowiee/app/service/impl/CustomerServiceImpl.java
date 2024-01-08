@@ -2,14 +2,12 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
-import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.CustomerContactRepository;
 import com.flowiee.app.repository.CustomerRepository;
-import com.flowiee.app.service.CustomerContactService;
 import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.SystemLogService;
@@ -17,7 +15,6 @@ import com.flowiee.app.service.SystemLogService;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.ErrorMessages;
-import com.flowiee.app.utils.MessagesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +33,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private CustomerContactService customerContactService;
-    @Autowired
     private CustomerContactRepository customerContactRepository;
     @Autowired
     private SystemLogService systemLogService;
@@ -45,18 +40,18 @@ public class CustomerServiceImpl implements CustomerService {
     private OrderService orderService;
 
     @Override
-    public List<Customer> findAll() {
+    public List<Customer> findAllCustomer() {
         return customerRepository.findAll();
     }
 
     @Override
-    public List<CustomerDTO> findAll(String name, String sex, Date birthday, String phone, String email, String address) {
+    public List<CustomerDTO> findAllCustomer(String name, String sex, Date birthday, String phone, String email, String address) {
         List<CustomerDTO> dataReturn =  new ArrayList<>();
         customerRepository.findAll(name, sex, birthday, phone, email, address).forEach(customer -> {
             CustomerDTO dto = CustomerDTO.fromCustomer(customer);
-            CustomerContact phoneDefault = customerContactService.findPhoneUseDefault(customer.getId());
-            CustomerContact emailDefault = customerContactService.findEmailUseDefault(customer.getId());
-            CustomerContact addressDefault = customerContactService.findAddressUseDefault(customer.getId());
+            CustomerContact phoneDefault = this.findContactPhoneUseDefault(customer.getId());
+            CustomerContact emailDefault = this.findContactEmailUseDefault(customer.getId());
+            CustomerContact addressDefault = this.findContactAddressUseDefault(customer.getId());
             dto.setPhoneDefault(phoneDefault != null ? phoneDefault.getValue() : "");
             dto.setEmailDefault(emailDefault != null ? emailDefault.getValue() : "");
             dto.setAddressDefault(addressDefault != null ? addressDefault.getValue() : "");
@@ -71,13 +66,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer findById(Integer id) {
+    public Customer findCustomerById(Integer id) {
         return customerRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
-    public String save(Customer customer) {
+    public String saveCustomer(Customer customer) {
         customer.setCreatedBy(CommonUtil.getCurrentAccountId());
         Customer customerInserted = customerRepository.save(customer);
         if (customer.getPhoneDefault() != null) {
@@ -87,7 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerContact.setValue(customer.getPhoneDefault());
             customerContact.setIsDefault("Y");
             customerContact.setStatus(true);
-            customerContactService.save(customerContact);
+            this.saveContact(customerContact, customerInserted.getId());
         }
         if (customer.getEmailDefault() != null) {
             CustomerContact customerContact = new CustomerContact();
@@ -96,7 +91,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerContact.setValue(customer.getEmailDefault());
             customerContact.setIsDefault("Y");
             customerContact.setStatus(true);
-            customerContactService.save(customerContact);
+            this.saveContact(customerContact, customerInserted.getId());
         }
         if (customer.getAddressDefault() != null) {
             CustomerContact customerContact = new CustomerContact();
@@ -105,17 +100,27 @@ public class CustomerServiceImpl implements CustomerService {
             customerContact.setValue(customer.getAddressDefault());
             customerContact.setIsDefault("Y");
             customerContact.setStatus(true);
-            customerContactService.save(customerContact);
+            this.saveContact(customerContact, customerInserted.getId());
         }
         systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_CREATE.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Thêm mới khách hàng " + customer.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
+    @Override
+    public String saveContact(CustomerContact customerContact, Integer customerId) {
+        if (customerContact == null) {
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+        customerContactRepository.save(customerContact);
+        customerContactRepository.flush();
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
     @Transactional
     @Override
-    public String update(Customer customer, Integer customerId) {
-        if (customer == null || customerId <= 0 || this.findById(customerId) == null) {
+    public String updateCustomer(Customer customer, Integer customerId) {
+        if (customer == null || customerId <= 0 || this.findCustomerById(customerId) == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         customer.setId(customerId);
@@ -125,7 +130,7 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerContact emailDefault = null;
         CustomerContact addressDefault = null;
         if (customer.getPhoneDefault() != null || customer.getEmailDefault() != null || customer.getAddressDefault() != null) {
-            List<CustomerContact> contacts = customerContactService.findByCustomerId(customerId);
+            List<CustomerContact> contacts = this.findContactsByCustomerId(customerId);
             for (CustomerContact contact : contacts) {
                 if ("P".equals(contact.getCode()) && "Y".equals(contact.getIsDefault()) && contact.isStatus()) {
                     phoneDefault = contact;
@@ -149,7 +154,7 @@ public class CustomerServiceImpl implements CustomerService {
                 phoneDefault.setValue(customer.getPhoneDefault());
                 phoneDefault.setIsDefault("Y");
                 phoneDefault.setStatus(true);
-                customerContactService.save(phoneDefault);
+                this.saveContact(phoneDefault, customerId);
             }
 
             if (customer.getEmailDefault() != null && emailDefault != null) {
@@ -163,7 +168,7 @@ public class CustomerServiceImpl implements CustomerService {
                 emailDefault.setValue(customer.getEmailDefault());
                 emailDefault.setIsDefault("Y");
                 emailDefault.setStatus(true);
-                customerContactService.save(emailDefault);
+                this.saveContact(emailDefault, customerId);
             }
 
             if (customer.getAddressDefault() != null && addressDefault != null) {
@@ -177,7 +182,7 @@ public class CustomerServiceImpl implements CustomerService {
                 addressDefault.setValue(customer.getAddressDefault());
                 addressDefault.setIsDefault("Y");
                 addressDefault.setStatus(true);
-                customerContactService.save(addressDefault);
+                this.saveContact(addressDefault, customerId);
             }
         }
         systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_UPDATE.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
@@ -186,8 +191,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String delete(Integer id) {
-        Customer customer = this.findById(id);
+    public String updateContact(CustomerContact customerContact, Integer contactId) {
+        if (customerContact == null || contactId == null || contactId <= 0 || this.findContactById(contactId) == null) {
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+        customerContact.setId(contactId);
+        customerContactRepository.save(customerContact);
+        customerContactRepository.flush();
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String deleteCustomer(Integer id) {
+        Customer customer = this.findCustomerById(id);
         if (id <= 0 || customer == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
@@ -197,6 +213,75 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.deleteById(id);
         systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Xóa khách hàng " + customer.toString());
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String deleteContact(Integer contactId) {
+        if (contactId == null || contactId <= 0) {
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+        CustomerContact customerContact = this.findContactById(contactId);
+        if (customerContact == null) {
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+        customerContactRepository.deleteById(contactId);
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public List<CustomerContact> findContactsByCustomerId(Integer customerId) {
+        List<CustomerContact> contacts = new ArrayList<>();
+        if (customerId != null && customerId > 0) {
+            contacts = customerContactRepository.findByCustomerId(customerId);
+        }
+        return contacts;
+    }
+
+    @Override
+    public CustomerContact findContactById(Integer contactId) {
+        return customerContactRepository.findById(contactId).orElse(null);
+    }
+
+    @Override
+    public CustomerContact findContactPhoneUseDefault(Integer customerId) {
+        return customerContactRepository.findPhoneUseDefault(customerId);
+    }
+
+    @Override
+    public CustomerContact findContactEmailUseDefault(Integer customerId) {
+        return customerContactRepository.findEmailUseDefault(customerId);
+    }
+
+    @Override
+    public CustomerContact findContactAddressUseDefault(Integer customerId) {
+        return customerContactRepository.findAddressUseDefault(customerId);
+    }
+
+    @Override
+    public String setContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
+        new CustomerContact();
+        CustomerContact customerContactUsingDefault = switch (contactCode) {
+            case "P" -> customerContactRepository.findPhoneUseDefault(customerId);
+            case "E" -> customerContactRepository.findEmailUseDefault(customerId);
+            case "A" -> customerContactRepository.findAddressUseDefault(customerId);
+            default -> throw new IllegalStateException("Unexpected value: " + contactCode);
+        };
+        if (customerContactUsingDefault != null) {
+            customerContactUsingDefault.setIsDefault("N");
+            customerContactRepository.save(customerContactUsingDefault);
+        }
+        CustomerContact customerContactToUseDefault = this.findContactById(contactId);
+        customerContactToUseDefault.setIsDefault("Y");
+        this.updateContact(customerContactToUseDefault, customerContactToUseDefault.getId());
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String setContactUnUseDefault(Integer contactId) {
+        CustomerContact customerContact = this.findContactById(contactId);
+        customerContact.setIsDefault("N");
+        this.updateContact(customerContact, customerContact.getId());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

@@ -29,13 +29,13 @@ public interface VoucherInfoRepository extends JpaRepository<VoucherInfo, Intege
            "v.createdBy as created_by_13 " +
            "from VoucherInfo v " +
            "where 1=1 " +
-           "and (:voucherIds is null or v.id in (:voucherIds)) " +
+           "and (:voucherIds is null or v.id in :voucherIds) " +
            "and (:voucherId is null or v.id=:voucherId) " +
            "and (:status is null or (:status = 'INACTIVE' or (case when ((trunc(v.startTime) <= trunc(current_date)) and (trunc(v.endTime) >= trunc(current_date))) then 'ACTIVE' else 'INACTIVE' end) = 'ACTIVE')) " +
            "and (:status is null or (:status = 'ACTIVE' or (case when ((trunc(v.startTime) <= trunc(current_date)) and (trunc(v.endTime) >= trunc(current_date))) then 'ACTIVE' else 'INACTIVE' end) = 'INACTIVE')) " +
            "and (:title is null or v.title like %:title%) " +
            "and ((:startTime is null and :endTime is null) or ((v.startTime >=:startTime) or (v.endTime <=:endTime)))")
-    List<Object[]> findAll(@Param("voucherIds") String voucherIds, @Param("voucherId") Integer voucherId,
+    List<Object[]> findAll(@Param("voucherIds") List<Integer> voucherIds, @Param("voucherId") Integer voucherId,
                            @Param("status") String status,
                            @Param("startTime") Date startTime,
                            @Param("endTime") Date endTime,

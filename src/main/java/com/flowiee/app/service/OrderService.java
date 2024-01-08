@@ -1,6 +1,5 @@
 package com.flowiee.app.service;
 
-import com.flowiee.app.base.BaseService;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.model.request.OrderRequest;
@@ -10,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface OrderService {
-    List<OrderDTO> findAll();
+    List<OrderDTO> findAllOrder();
 
-    List<OrderDTO> findAll(Integer orderId);
+    List<OrderDTO> findAllOrder(Integer orderId);
 
-    OrderDTO findById(Integer orderId);
+    OrderDTO findOrderById(Integer orderId);
 
-    String save(Order order);
+    String saveOrder(Order order);
 
-    String update(Order order, Integer orderId);
+    String updateOrder(Order order, Integer orderId);
 
     String delete(Integer orderId);
 
@@ -30,7 +29,7 @@ public interface OrderService {
 
     ResponseEntity<?> exportDanhSachDonHang();
 
-    String save(OrderRequest orderRequest);
+    String saveOrder(OrderRequest orderRequest);
 
     List<Order> findBySalesChannel(Integer salesChannelId);
 

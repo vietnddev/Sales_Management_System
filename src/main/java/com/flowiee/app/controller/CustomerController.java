@@ -9,7 +9,6 @@ import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtil;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
-import com.flowiee.app.service.CustomerContactService;
 import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.entity.Customer;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -29,11 +27,9 @@ public class CustomerController extends BaseController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private CustomerContactService customerContactService;
-    @Autowired
     private OrderService orderService;
     @Autowired
-    private ValidateModuleProduct validateModuleSanPham;
+    private ValidateModuleProduct validateProductModule;
 
     @GetMapping
     public ModelAndView searchCustomer(@Nullable @RequestParam("name") String name,
@@ -42,9 +38,9 @@ public class CustomerController extends BaseController {
                                        @Nullable @RequestParam("phone") String phone,
                                        @Nullable @RequestParam("email") String email,
                                        @Nullable @RequestParam("address") String address) {
-        validateModuleSanPham.readCustomer(true);
+        validateProductModule.readCustomer(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER);
-        modelAndView.addObject("listCustomer", customerService.findAll(name, sex, birthday != null ? CommonUtil.convertStringToDate(birthday, "YYYY/MM/dd") : null, phone, email, address));
+        modelAndView.addObject("listCustomer", customerService.findAllCustomer(name, sex, birthday != null ? CommonUtil.convertStringToDate(birthday, "YYYY/MM/dd") : null, phone, email, address));
         modelAndView.addObject("customer", new CustomerDTO());
         modelAndView.addObject("filter_name", name);
         modelAndView.addObject("filter_sex", sex);
@@ -57,11 +53,11 @@ public class CustomerController extends BaseController {
 
     @GetMapping("/{id}")
     public ModelAndView findCustomerDetail(@PathVariable("id") Integer customerId) {
-        validateModuleSanPham.readCustomer(true);
-        if (customerId <= 0 || customerService.findById(customerId) == null) {
+        validateProductModule.readCustomer(true);
+        if (customerId <= 0 || customerService.findCustomerById(customerId) == null) {
             throw new NotFoundException("Customer not found!");
         }
-        List<CustomerContact> listContacts = customerContactService.findByCustomerId(customerId);
+        List<CustomerContact> listContacts = customerService.findContactsByCustomerId(customerId);
         for (CustomerContact c : listContacts) {
             if (AppConstants.CONTACT_TYPE.P.name().equals(c.getCode())) {
                 c.setCode(AppConstants.CONTACT_TYPE.P.getLabel());
@@ -74,7 +70,7 @@ public class CustomerController extends BaseController {
             }
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER_DETAIL);
-        modelAndView.addObject("customerDetail", customerService.findById(customerId));
+        modelAndView.addObject("customerDetail", customerService.findCustomerById(customerId));
         modelAndView.addObject("listCustomerContact", listContacts);
         modelAndView.addObject("listDonHang", orderService.findByKhachHangId(customerId));
         return baseView(modelAndView);
@@ -82,41 +78,41 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/insert")
     public ModelAndView insertCustomer(@ModelAttribute("customer") CustomerDTO customer) {
-        validateModuleSanPham.insertCustomer(true);
+        validateProductModule.insertCustomer(true);
         if (customer == null) {
             throw new NotFoundException("Customer not found!");
         }
-        customerService.save(Customer.fromCustomerDTO(customer));
+        customerService.saveCustomer(Customer.fromCustomerDTO(customer));
         return new ModelAndView("redirect:/customer");
     }
 
     @PostMapping("/update/{id}")
     public ModelAndView updateCustomer(@ModelAttribute("customer") CustomerDTO customer, @PathVariable("id") Integer customerId) {
-        validateModuleSanPham.updateCustomer(true);
-        if (customer == null || customerId <= 0 || customerService.findById(customerId) == null) {
+        validateProductModule.updateCustomer(true);
+        if (customer == null || customerId <= 0 || customerService.findCustomerById(customerId) == null) {
             throw new NotFoundException("Customer not found!");
         }
-        customerService.update(Customer.fromCustomerDTO(customer), customerId);
+        customerService.updateCustomer(Customer.fromCustomerDTO(customer), customerId);
         return new ModelAndView("redirect:/customer");
     }
 
     @PostMapping("/delete/{id}")
     public ModelAndView deleteCustomer(@PathVariable("id") Integer id) {
-        validateModuleSanPham.deleteCustomer(true);
-        if (id <= 0 || customerService.findById(id) == null) {
+        validateProductModule.deleteCustomer(true);
+        if (id <= 0 || customerService.findCustomerById(id) == null) {
             throw new NotFoundException("Customer not found!");
         }
-        customerService.delete(id);
+        customerService.deleteCustomer(id);
         return new ModelAndView("redirect:/customer");
     }
 
     @PostMapping("/contact/insert")
     public ModelAndView insertCustomerContact(@ModelAttribute("customerContact") CustomerContact customerContact, HttpServletRequest request) {
-        validateModuleSanPham.updateCustomer(true);
+        validateProductModule.updateCustomer(true);
         if (customerContact == null || customerContact.getCustomer() == null) {
             throw new NotFoundException("Customer not found!");
         }
-        customerContactService.save(customerContact);
+        customerService.saveContact(customerContact, customerContact.getCustomer().getId());
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -124,22 +120,22 @@ public class CustomerController extends BaseController {
     public ModelAndView updateCustomerContact(@ModelAttribute("customerContact") CustomerContact customerContact,
                                               @PathVariable("id") Integer customerContactId,
                                               HttpServletRequest request) {
-        validateModuleSanPham.updateCustomer(true);
+        validateProductModule.updateCustomer(true);
         if (customerContact == null || customerContact.getCustomer() == null) {
             throw new NotFoundException("Customer not found!");
         }
-        customerContactService.update(customerContact, customerContactId);
+        customerService.updateContact(customerContact, customerContactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/contact/delete/{id}")
     public ModelAndView updateCustomerContact(@PathVariable("id") Integer customerContactId,
                                               HttpServletRequest request) {
-        validateModuleSanPham.updateCustomer(true);
-        if (customerContactId == null || customerContactService.findById(customerContactId) == null) {
+        validateProductModule.updateCustomer(true);
+        if (customerContactId == null || customerService.findContactById(customerContactId) == null) {
             throw new NotFoundException("Customer not found!");
         }
-        customerContactService.delete(customerContactId);
+        customerService.deleteContact(customerContactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -148,25 +144,25 @@ public class CustomerController extends BaseController {
                                                      @RequestParam("contactCode") String contactCode,
                                                      @PathVariable("contactId") Integer contactId,
                                                      HttpServletRequest request) {
-        validateModuleSanPham.updateCustomer(true);
-        if (customerId <= 0 || customerService.findById(customerId) == null) {
+        validateProductModule.updateCustomer(true);
+        if (customerId <= 0 || customerService.findCustomerById(customerId) == null) {
             throw new NotFoundException("Customer not found!");
         }
-        if (contactId <= 0 || customerContactService.findById(contactId) == null) {
+        if (contactId <= 0 || customerService.findContactById(contactId) == null) {
             throw new NotFoundException("Customer contact not found!");
         }
-        customerContactService.setContactUseDefault(customerId, contactCode, contactId);
+        customerService.setContactUseDefault(customerId, contactCode, contactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/contact/undefault/{contactId}")
     public ModelAndView setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId,
                                                        HttpServletRequest request) {
-        validateModuleSanPham.updateCustomer(true);
-        if (contactId <= 0 || customerContactService.findById(contactId) == null) {
+        validateProductModule.updateCustomer(true);
+        if (contactId <= 0 || customerService.findContactById(contactId) == null) {
             throw new NotFoundException("Customer contact not found!");
         }
-        customerContactService.setContactUnUseDefault(contactId);
+        customerService.setContactUnUseDefault(contactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 }

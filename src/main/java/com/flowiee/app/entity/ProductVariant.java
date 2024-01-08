@@ -93,6 +93,10 @@ public class ProductVariant extends BaseEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductHistory> listProductHistory;
 
+    public ProductVariant (int id) {
+        super.id = id;
+    }
+
     public Map<String, String> compareTo(ProductVariant entityToCompare) {
         Map<String, String> map = new HashMap<>();
         if (!this.getMaSanPham().equals(entityToCompare.getMaSanPham())) {

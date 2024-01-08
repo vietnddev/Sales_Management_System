@@ -21,7 +21,7 @@ import java.util.Map;
 public class Order extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ma_don_hang", length = 20, nullable = false)
+	@Column(name = "code", length = 20, nullable = false)
 	private String maDonHang;
 
 	@Column(name = "receiver_name")
@@ -40,37 +40,37 @@ public class Order extends BaseEntity implements Serializable {
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
-	@Column(name = "ghi_chu", length = 500)
+	@Column(name = "note", length = 500)
 	private String ghiChu;
 
-	@Column(name = "thoi_gian_dat_hang", nullable = false)
+	@Column(name = "order_time", nullable = false)
 	private Date thoiGianDatHang;
+
+	@Column(name = "voucher_used")
+	private String voucherUsedCode;
+
+	@Column(name = "amount_discount")
+	private Double amountDiscount;
 
 	@Column(name = "total_amount")
 	private Double totalAmount;
 	
-	@Column(name = "voucher_used_code")
-	private String voucherUsedCode;
-	
-	@Column(name = "amount_discount")
-	private Double amountDiscount;
-	
-	@Column(name = "total_amount_after_discount")
-	private Double totalAmountAfterDiscount;
+	@Column(name = "total_amount_discount")
+	private Double totalAmountDiscount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "nhan_vien_ban_hang")
+	@JoinColumn(name = "sales")
 	private Account nhanVienBanHang;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "kenh_ban_hang", nullable = false)
+	@JoinColumn(name = "channel", nullable = false)
 	private Category kenhBanHang;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderPay> listOrderPay;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "trang_thai_don_hang", nullable = false)
+	@JoinColumn(name = "status", nullable = false)
 	private Category trangThaiDonHang;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
@@ -125,7 +125,7 @@ public class Order extends BaseEntity implements Serializable {
 				+ ", receiverEmail=" + receiverEmail + ", receiverAddress=" + receiverAddress + ", customer=" + customer
 				+ ", ghiChu=" + ghiChu + ", thoiGianDatHang=" + thoiGianDatHang + ", totalAmount=" + totalAmount
 				+ ", voucherUsedCode=" + voucherUsedCode + ", amountDiscount=" + amountDiscount
-				+ ", totalAmountAfterDiscount=" + totalAmountAfterDiscount + ", nhanVienBanHang=" + nhanVienBanHang
+				+ ", totalAmountAfterDiscount=" + totalAmountDiscount + ", nhanVienBanHang=" + nhanVienBanHang
 				+ ", kenhBanHang=" + kenhBanHang + ", trangThaiDonHang=" + trangThaiDonHang + "]";
 	}
 }
