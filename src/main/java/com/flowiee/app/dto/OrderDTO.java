@@ -1,10 +1,7 @@
 package com.flowiee.app.dto;
 
-import com.flowiee.app.entity.Category;
-import com.flowiee.app.entity.Account;
-import com.flowiee.app.entity.Customer;
-import com.flowiee.app.entity.Order;
-import com.flowiee.app.entity.OrderPay;
+import com.flowiee.app.entity.*;
+import com.flowiee.app.utils.CommonUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +19,8 @@ public class OrderDTO implements Serializable {
 
     private Integer orderId;
     private String orderCode;
-    private Date orderTime;
+	private Date orderTime;
+    private String orderTimeStr;
     private String receiverAddress;
     private String receiverPhone;
 	private String receiverEmail;
@@ -30,9 +28,9 @@ public class OrderDTO implements Serializable {
     private Customer orderBy; //future remove
     private Integer customerId;
     private String customerName;
+	private Double amountDiscount;
     private Double totalAmount;
-    private Double amountDiscount;
-    private Double totalAmountAfterDiscount;
+    private Double totalAmountDiscount;
     private Category salesChannel; //future remove
     private Integer salesChannelId;
     private String salesChannelName;
@@ -55,53 +53,8 @@ public class OrderDTO implements Serializable {
     private Date createdAt;
     private String qrCode;
     private int totalProduct;
-
-    public static OrderDTO fromOrder(Order order) {
-        OrderDTO dto = new OrderDTO();
-        dto.setOrderId(order.getId());
-        dto.setOrderCode(order.getMaDonHang());
-        dto.setOrderTime(order.getThoiGianDatHang());
-        dto.setReceiverAddress(order.getReceiverAddress());
-        dto.setReceiverPhone(order.getReceiverPhone());
-        dto.setReceiverName(order.getReceiverName());
-		dto.setReceiverEmail(order.getReceiverEmail());
-		dto.setReceiverAddress(order.getReceiverAddress());
-        //dto.setOrderBy(order.getCustomer());
-        dto.setCustomerId(order.getCustomer().getId());
-        dto.setCustomerName(order.getCustomer().getTenKhachHang());
-        dto.setTotalAmount(order.getTotalAmount());
-        dto.setAmountDiscount(order.getAmountDiscount());
-        dto.setTotalAmountAfterDiscount(order.getTotalAmountDiscount());
-        //dto.setSalesChannel(order.getKenhBanHang());
-        dto.setSalesChannelId(order.getKenhBanHang().getId());
-        dto.setSalesChannelName(order.getKenhBanHang().getName());
-        dto.setNote(order.getGhiChu());
-        //dto.setOrderStatus(order.getTrangThaiDonHang());
-        dto.setOrderStatusId(order.getTrangThaiDonHang().getId());
-        dto.setOrderStatusName(order.getTrangThaiDonHang().getName());
-        //dto.setOrderBy(null);
-        dto.setOrderPayId(order.getCustomer().getId());
-        dto.setOrderPayName(order.getCustomer().getTenKhachHang());
-        //dto.setPayMethod(null);
-        dto.setPayMethodId(null);
-        dto.setPayMethodName(null);
-        //dto.setCashier(order.getNhanVienBanHang());
-        dto.setCashierId(order.getNhanVienBanHang().getId());
-        dto.setCashierName(order.getNhanVienBanHang().getHoTen());
-        dto.setCreatedBy(null);
-        dto.setCreatedById(order.getCreatedBy());
-        dto.setCreatedByName(null);
-        dto.setCreatedAt(order.getCreatedAt());
-        return dto;
-    }
-
-	public static List<OrderDTO> fromOrders(List<Order> orders) {
-		List<OrderDTO> list = new ArrayList<>();
-		for (Order order : orders){
-			list.add(fromOrder(order));
-		}
-		return list;
-	}
+	private String voucherUsedCode;
+	private List<OrderDetail> listOrderDetail;
 
 	@Override
 	public String toString() {
@@ -129,7 +82,7 @@ public class OrderDTO implements Serializable {
 		builder.append(", amountDiscount=");
 		builder.append(amountDiscount);
 		builder.append(", totalAmountAfterDiscount=");
-		builder.append(totalAmountAfterDiscount);
+		builder.append(totalAmountDiscount);
 		builder.append(", salesChannel=");
 		builder.append(salesChannel);
 		builder.append(", salesChannelId=");

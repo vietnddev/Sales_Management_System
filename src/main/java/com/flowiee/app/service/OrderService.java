@@ -14,13 +14,23 @@ public interface OrderService {
 
     List<OrderDTO> findAllOrder(Integer orderId);
 
+    List<OrderDetail> findOrderDetailsByOrderId(Integer donHangId);
+
     OrderDTO findOrderById(Integer orderId);
 
     String saveOrder(Order order);
 
     String saveOrder(OrderRequest orderRequest);
 
+    String saveOrderDetail(OrderDetail orderDetail);
+
     String updateOrder(Order order, Integer orderId);
+
+    String updateOrderDetail(OrderDetail orderDetail, Integer orderDetailId);
+
+    String deleteOrder(Integer orderId);
+
+    String deleteOrderDetail(Integer orderDetailId);
 
     List<Order> findByStaffId(Integer accountId);
 
@@ -34,25 +44,9 @@ public interface OrderService {
 
     OrderDetail findOrderDetailById(Integer orderDetailId);
 
-    String saveOrderDetail(OrderDetail orderDetail);
-
-    String updateOrderDetail(OrderDetail orderDetail, Integer orderDetailId);
-
-    String deleteOrder(Integer orderId);
-
-    String deleteOrderDetail(Integer orderDetailId);
-
-    ResponseEntity<?> exportDanhSachDonHang();
-
-    List<Order> findBySalesChannel(Integer salesChannelId);
-
-    List<Order> findByOrderStatus(Integer orderStatusId);
-
-    List<Order> findByCustomer(Integer customerId);
-
     Double findRevenueToday();
 
     Double findRevenueThisMonth();
 
-    List<OrderDetail> findOrderDetailsByOrderId(Integer donHangId);
+    ResponseEntity<?> exportDanhSachDonHang();
 }

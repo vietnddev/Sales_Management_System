@@ -9,6 +9,7 @@ import com.flowiee.app.service.*;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.DateUtils;
 import com.flowiee.app.utils.ErrorMessages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +44,10 @@ public class VoucherInfoServiceImpl implements VoucherService {
     public List<VoucherInfoDTO> findAll(String status, Date startTime, Date endTime, String title) {
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         if (endTime == null) {
-            endTime = CommonUtil.convertStringToDate("2100-12-31", "YYYY-MM-dd");
+            endTime = DateUtils.convertStringToDate("2100-12-31", "YYYY-MM-dd");
         }
         if (startTime == null) {
-            startTime = CommonUtil.convertStringToDate("1900-01-01", "YYYY-MM-dd");
+            startTime = DateUtils.convertStringToDate("1900-01-01", "YYYY-MM-dd");
         }
         //return this.extractDataQuery(voucherInfoRepository.findAll(null, null, status, startTime, endTime, title));
         return this.findData(null, null, status, startTime, endTime, title);
@@ -177,7 +178,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
             } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(String.valueOf(data[11]))) {
                 dto.setStatus(AppConstants.VOUCHER_STATUS.INACTIVE.getLabel());
             }
-            dto.setCreatedAt(CommonUtil.convertStringToDate(String.valueOf(data[12]), "yyyy-MM-dd"));
+            dto.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[12]), "yyyy-MM-dd"));
             dto.setCreatedBy(Integer.parseInt(String.valueOf(data[13])));
             dto.setListVoucherTicket(null);
 
@@ -250,7 +251,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(String.valueOf(data[11]))) {
                     dto.setStatus(AppConstants.VOUCHER_STATUS.INACTIVE.getLabel());
                 }
-                dto.setCreatedAt(CommonUtil.convertStringToDate(String.valueOf(data[12]), "yyyy-MM-dd"));
+                dto.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[12]), "yyyy-MM-dd"));
                 dto.setCreatedBy(Integer.parseInt(String.valueOf(data[13])));
                 dto.setListVoucherTicket(null);
 

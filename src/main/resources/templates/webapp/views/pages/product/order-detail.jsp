@@ -67,28 +67,36 @@
                                                  style="height: 250px;">
                                                 <table class="table table-bordered table-head-fixed text-nowrap">
                                                     <thead>
-                                                    <tr>
-                                                        <th>STT</th>
-                                                        <th>Tên sản phẩm</th>
-                                                        <th>Đơn vị tính</th>
-                                                        <th>Số lượng</th>
-                                                        <th>Giá bán/SP</th>
-                                                        <th>Giảm giá</th>
-                                                        <th>Phụ thu</th>
-                                                        <th>Thành tiền</th>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>STT</th>
+                                                            <th>Tên sản phẩm</th>
+                                                            <th>Đơn vị tính</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Giá áp dụng</th>
+                                                            <th>Giá gốc</th>
+                                                            <th>Thành tiền</th>
+                                                            <th>Ghi chú</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="list, index : ${listOrderDetail}">
-                                                        <td th:text="${index.index + 1}" style="font-weight: bold"></td>
-                                                        <td th:text="${list.productVariant.tenBienThe}"></td>
-                                                        <td th:text="${list.productVariant.product.unit.name}"></td>
-                                                        <td th:text="${list.soLuong}"></td>
-                                                        <td>vnđ</td>
-                                                        <td>0</td>
-                                                        <td>0</td>
-                                                        <td>vnđ</td>
-                                                    </tr>
+                                                        <tr th:each="list, index : ${listOrderDetail}">
+                                                            <td th:text="${index.index + 1}" style="font-weight: bold"></td>
+                                                            <td>
+                                                                <a th:text="${list.productVariant.tenBienThe}"
+                                                                   th:href="@{/san-pham/variant/{id}(id=${list.productVariant.id})}"></a>
+                                                            </td>
+                                                            <td th:text="${list.productVariant.product.unit.name}"></td>
+                                                            <td th:text="${list.soLuong}" class="text-right"></td>
+                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${list.priceOriginal != null} ? ${#numbers.formatDecimal (list.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.soLuong, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${list.ghiChu}"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="6"></td>
+                                                            <td th:text="${orderDetail.totalAmount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right font-weight-bold"></td>
+                                                            <td></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -127,7 +135,7 @@
                                                         </tr>
                                                         <tr>
                                                             <th>Thời gian đặt hàng</th>
-                                                            <td th:text="${orderDetail.orderTime}"></td>
+                                                            <td th:text="${orderDetail.orderTimeStr}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Kênh mua hàng</th>
@@ -145,23 +153,19 @@
                                                     </tr>
                                                     <tr>
                                                         <th>Voucher</th>
-                                                        <td>null</td>
+                                                        <td th:text="${orderDetail.voucherUsedCode}"></td>
                                                     </tr>
                                                     <tr>
                                                         <th>Giảm giá</th>
-                                                        <td>null</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Phụ thu</th>
-                                                        <td>null</td>
+                                                        <td th:text="${orderDetail.amountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.amountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                     </tr>
                                                     <tr>
                                                         <th>Phí ship</th>
-                                                        <td>null</td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Tổng tiền hàng</th>
-                                                        <td>null</td>
+                                                        <th>Tổng phải thu</th>
+                                                        <td th:text="${orderDetail.totalAmountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -190,14 +194,14 @@
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <td>#</td>
-                                                            <td>Mã phiếu</td>
-                                                            <td>Thời gian thanh toán</td>
-                                                            <td>Hình thức thanh toán</td>
-                                                            <td>Số tiền</td>
-                                                            <td>Thu ngân</td>
-                                                            <td>Ghi chú</td>
-                                                            <td>Trạng thái thanh toán</td>
+                                                            <th>#</th>
+                                                            <th>Mã phiếu</th>
+                                                            <th>Thời gian thanh toán</th>
+                                                            <th>Hình thức thanh toán</th>
+                                                            <th>Số tiền</th>
+                                                            <th>Thu ngân</th>
+                                                            <th>Ghi chú</th>
+                                                            <th>Trạng thái thanh toán</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -342,12 +346,12 @@
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <td>#</td>
-                                                            <td>Mã phiếu</td>
-                                                            <td>Thời gian xuất kho</td>
-                                                            <td>Ghi chú</td>
-                                                            <td>Trạng thái</td>
-                                                            <td>Thao tác</td>
+                                                            <th>#</th>
+                                                            <th>Mã phiếu</th>
+                                                            <th>Thời gian xuất kho</th>
+                                                            <th>Ghi chú</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Thao tác</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

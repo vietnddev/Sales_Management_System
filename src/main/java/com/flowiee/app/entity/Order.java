@@ -52,12 +52,6 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "amount_discount")
 	private Double amountDiscount;
 
-	@Column(name = "total_amount")
-	private Double totalAmount;
-	
-	@Column(name = "total_amount_discount")
-	private Double totalAmountDiscount;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sales")
 	private Account nhanVienBanHang;
@@ -65,6 +59,16 @@ public class Order extends BaseEntity implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "channel", nullable = false)
 	private Category kenhBanHang;
+
+	@Column(name = "payment_time")
+	private Date paymentTime;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "payment_method")
+	private Category paymentMethod;
+
+	@Column(name = "payment_status")
+	private Boolean paymentStatus;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderPay> listOrderPay;
@@ -123,9 +127,9 @@ public class Order extends BaseEntity implements Serializable {
 	public String toString() {
 		return "Order [id=" + super.id + ", maDonHang=" + maDonHang + ", receiverName=" + receiverName + ", receiverPhone=" + receiverPhone
 				+ ", receiverEmail=" + receiverEmail + ", receiverAddress=" + receiverAddress + ", customer=" + customer
-				+ ", ghiChu=" + ghiChu + ", thoiGianDatHang=" + thoiGianDatHang + ", totalAmount=" + totalAmount
+				+ ", ghiChu=" + ghiChu + ", thoiGianDatHang=" + thoiGianDatHang
 				+ ", voucherUsedCode=" + voucherUsedCode + ", amountDiscount=" + amountDiscount
-				+ ", totalAmountAfterDiscount=" + totalAmountDiscount + ", nhanVienBanHang=" + nhanVienBanHang
+				+ ", nhanVienBanHang=" + nhanVienBanHang
 				+ ", kenhBanHang=" + kenhBanHang + ", trangThaiDonHang=" + trangThaiDonHang + "]";
 	}
 }

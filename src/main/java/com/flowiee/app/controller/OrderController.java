@@ -2,10 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.*;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
@@ -83,15 +80,9 @@ public class OrderController extends BaseController {
             throw new NotFoundException("Order not found!");
         }
         OrderDTO orderDetail = orderService.findOrderById(id);
-        List<OrderDetail> listOrderDetail = orderService.findOrderDetailsByOrderId(id);
-        int totalProduct = 0;
-        for (OrderDetail od : listOrderDetail) {
-            totalProduct += od.getSoLuong();
-        }
-        orderDetail.setTotalProduct(totalProduct);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_DETAIL);
         modelAndView.addObject("orderDetail", orderDetail);
-        modelAndView.addObject("listOrderDetail", listOrderDetail);
+        modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
         modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
@@ -186,7 +177,7 @@ public class OrderController extends BaseController {
         validateModuleProduct.insertOrder(true);
         String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
         if (thoiGianDatHangString != null) {
-            orderRequest.setThoiGianDatHang(CommonUtil.convertStringToDate(thoiGianDatHangString));
+            orderRequest.setThoiGianDatHang(DateUtils.convertStringToDate(thoiGianDatHangString));
         } else {
             orderRequest.setThoiGianDatHang(new Date());
         }

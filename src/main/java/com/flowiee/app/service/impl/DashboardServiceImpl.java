@@ -67,7 +67,7 @@ public class DashboardServiceImpl implements DashboardService {
         String productsTopSellSQL = "SELECT * FROM " +
                                     "(SELECT s.VARIANT_NAME, NVL(SUM(d.SO_LUONG), 0) AS Total " +
                                     "FROM PRO_PRODUCT_VARIANT s " +
-                                    "LEFT JOIN PRO_ORDER_DETAIL d ON s.id = d.BIEN_THE_SAN_PHAM_ID " +
+                                    "LEFT JOIN PRO_ORDER_DETAIL d ON s.id = d.PRODUCT_VARIANT_ID " +
                                     "GROUP BY s.ID, s.VARIANT_NAME " +
                                     "ORDER BY total DESC) " +
                                     "WHERE ROWNUM <= 10";
@@ -81,18 +81,18 @@ public class DashboardServiceImpl implements DashboardService {
         entityManager.close();
 
         //Revenue month of year
-        String revenueMonthOfYearSQL = "SELECT SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 1 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JAN, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 2 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS FEB, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 3 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS MAR, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 4 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS APRIL, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 5 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS MAY, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 6 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JUN, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 7 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JUL, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 8 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS AUG," +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 9 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS SEP, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 10 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS OCT, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 11 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS NOV, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.THOI_GIAN_DAT_HANG) = 12 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS DEC " +
+        String revenueMonthOfYearSQL = "SELECT SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 1 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JAN, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 2 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS FEB, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 3 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS MAR, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 4 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS APRIL, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 5 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS MAY, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 6 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JUN, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 7 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JUL, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 8 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS AUG," +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 9 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS SEP, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 10 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS OCT, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 11 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS NOV, " +
+                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 12 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS DEC " +
                                        "FROM PRO_ORDER d " +
                                        "WHERE EXTRACT(YEAR FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(YEAR FROM SYSDATE)";
         logger.info("[getRevenueMonthOfYearSQL() - SQL findData]: " + revenueMonthOfYearSQL);
@@ -114,7 +114,7 @@ public class DashboardServiceImpl implements DashboardService {
                                       ") " +
                                       "SELECT all_dates.DAY, NVL(SUM(PRO_ORDER.TOTAL_AMOUNT_AFTER_DISCOUNT), 0) AS REVENUE " +
                                       "FROM all_dates " +
-                                      "LEFT JOIN PRO_ORDER ON TRUNC(PRO_ORDER.THOI_GIAN_DAT_HANG) = all_dates.DAY " +
+                                      "LEFT JOIN PRO_ORDER ON TRUNC(PRO_ORDER.ORDER_TIME) = all_dates.DAY " +
                                       "GROUP BY all_dates.DAY " +
                                       "ORDER BY all_dates.DAY";
         logger.info("[getRevenueDayOfMonth() - SQL findData]: " + revenueDayOfMonthSQL);

@@ -10,10 +10,7 @@ import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.security.ValidateModuleStorage;
-import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.*;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.service.CategoryService;
@@ -162,8 +159,8 @@ public class TicketImportGoodsController extends BaseController {
     @PostMapping("/draft/save")
     public ModelAndView update(@ModelAttribute("goodsImportRequest") TicketImportGoodsRequest ticketImportGoodsRequest, HttpServletRequest request) {
         validateModuleStorage.importGoods(true);
-        ticketImportGoodsRequest.setOrderTime(CommonUtil.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
-        ticketImportGoodsRequest.setReceivedTime(CommonUtil.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
+        ticketImportGoodsRequest.setOrderTime(DateUtils.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
+        ticketImportGoodsRequest.setReceivedTime(DateUtils.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
         ticketImportGoodsService.saveDraft(ticketImportGoodsRequest);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }

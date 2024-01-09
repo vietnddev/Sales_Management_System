@@ -2,6 +2,7 @@ package com.flowiee.app.dto;
 
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,7 +37,7 @@ public class CustomerDTO implements Serializable {
             dto.setSex("Nữ");
         }
         if (customer.getBirthday() != null) {
-            dto.setBirthday(CommonUtil.convertDateToString("yyyy-MM-dd HH:mm:ss.S", "dd/MM/yyyy", customer.getBirthday()));
+            dto.setBirthday(DateUtils.convertDateToString("yyyy-MM-dd HH:mm:ss.S", "dd/MM/yyyy", customer.getBirthday()));
         }
 //      dto.setPhoneDefault(customer.getPhoneDefault());
 //      dto.setEmailDefault(customer.getEmailDefault());

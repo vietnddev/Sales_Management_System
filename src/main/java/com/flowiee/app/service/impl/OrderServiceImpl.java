@@ -15,6 +15,7 @@ import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.DateUtils;
 import com.flowiee.app.utils.ErrorMessages;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -75,18 +76,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findOrdersByStatus(Integer orderStatusId) {
-        return orderRepository.findByTrangThaiDonHang(orderStatusId);
-    }
-
-    @Override
-    public List<Order> findOrdersByCustomerId(Integer customerId) {
-        return orderRepository.findByKhachHangId(customerId);
-    }
-
-    @Override
-    public List<Order> findByStaffId(Integer customerId) {
-        return orderRepository.findByNhanvienId(customerId);
+    public List<OrderDetail> findOrderDetailsByOrderId(Integer orderId) {
+        return orderDetailRepository.findByOrderId(orderId);
     }
 
     @Override
@@ -95,12 +86,19 @@ public class OrderServiceImpl implements OrderService {
         if (orders.isEmpty()) {
             throw new NotFoundException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "order " + orderId));
         }
+        List<OrderDetail> listOrderDetail = this.findOrderDetailsByOrderId(orderId);
+        int totalProduct = 0;
+        double totalAmount = 0;
+        for (OrderDetail d : listOrderDetail) {
+            totalProduct += d.getSoLuong();
+            totalAmount += d.getPrice() * d.getSoLuong();
+        }
+        OrderDTO dto = orders.get(0);
+        dto.setListOrderDetail(listOrderDetail);
+        dto.setTotalProduct(totalProduct);
+        dto.setTotalAmount(totalAmount);
+        dto.setTotalAmountDiscount(dto.getTotalAmount() - dto.getAmountDiscount());
         return orders.get(0);
-    }
-
-    @Override
-    public OrderDetail findOrderDetailById(Integer orderDetailId) {
-        return orderDetailRepository.findById(orderDetailId).orElse(null);
     }
 
     @Override
@@ -124,37 +122,30 @@ public class OrderServiceImpl implements OrderService {
             order.setGhiChu(request.getGhiChu());
             order.setThoiGianDatHang(request.getThoiGianDatHang());
             order.setTrangThaiDonHang(new Category(request.getTrangThaiDonHang(), null));
-            order.setTotalAmount(0D);
-            order.setTotalAmountDiscount(null);
             Order orderSaved = orderRepository.save(order);
 
-            Double totalMoneyOfDonHang = 0D;
             for (int idBienTheSP : request.getListBienTheSanPham()) {
                 int soLuongSanPhamInCart = itemsService.findSoLuongByBienTheSanPhamId(idBienTheSP);
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrder(orderSaved);
                 orderDetail.setProductVariant(productVariantService.findById(idBienTheSP));
-                orderDetail.setGhiChu("");
                 orderDetail.setSoLuong(soLuongSanPhamInCart);
                 orderDetail.setTrangThai(true);
+                orderDetail.setGhiChu("");
+                orderDetail.setPrice(0f);
+                orderDetail.setPriceOriginal(0f);
                 this.saveOrderDetail(orderDetail);
-                if (productVariantService.getGiaBan(idBienTheSP) != null) {
-                    totalMoneyOfDonHang += productVariantService.getGiaBan(idBienTheSP);
-                }
                 //Update lại số lượng trong kho của sản phẩm
                 //productVariantService.updateSoLuong(soLuongSanPhamInCart, idBienTheSP);
             }
-            orderSaved.setTotalAmount(totalMoneyOfDonHang);
-            orderSaved.setTotalAmountDiscount(null);
 
             VoucherTicket voucherTicket = voucherTicketService.findByCode(request.getVoucherUsedCode());
             if (voucherTicket != null) {
-            	String statusCode = voucherTicketService.checkTicketToUse(request.getVoucherUsedCode());
-            	if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(statusCode)) {
-            		orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
-            		orderSaved.setAmountDiscount(request.getAmountDiscount());
-            		orderSaved.setTotalAmountDiscount(totalMoneyOfDonHang - request.getAmountDiscount());
-            	}
+                String statusCode = voucherTicketService.checkTicketToUse(request.getVoucherUsedCode());
+                if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(statusCode)) {
+                    orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
+                    orderSaved.setAmountDiscount(request.getAmountDiscount());
+                }
 
                 voucherTicket.setCustomer(orderSaved.getCustomer());
                 voucherTicket.setActiveTime(new Date());
@@ -170,7 +161,7 @@ public class OrderServiceImpl implements OrderService {
             logger.info("Insert new order success! insertBy=" + CommonUtil.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
-        	logger.error("Insert new order fail! order=" + request, e);
+            logger.error("Insert new order fail! order=" + request, e);
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
     }
@@ -186,31 +177,6 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-    }
-
-    @Override
-    public List<Order> findOrdersBySalesChannelId(Integer salesChannelId) {
-        return orderRepository.findBySalesChannel(salesChannelId);
-    }
-
-    @Override
-    public Double findRevenueToday() {
-        return orderRepository.findRevenueToday();
-    }
-
-    @Override
-    public Double findRevenueThisMonth() {
-        return orderRepository.findRevenueThisMonth();
-    }
-
-    @Override
-    public List<OrderDetail> findOrderDetailsByOrderId(Integer orderId) {
-        return orderDetailRepository.findByOrderId(orderId);
-    }
-
-    @Override
-    public List<Order> findOrdersToday() {
-        return orderRepository.findOrdersToday();
     }
 
     @Override
@@ -268,6 +234,46 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findByStaffId(Integer customerId) {
+        return orderRepository.findByNhanvienId(customerId);
+    }
+
+    @Override
+    public List<Order> findOrdersBySalesChannelId(Integer salesChannelId) {
+        return orderRepository.findBySalesChannel(salesChannelId);
+    }
+
+    @Override
+    public List<Order> findOrdersByStatus(Integer orderStatusId) {
+        return orderRepository.findByOrderStatus(orderStatusId);
+    }
+
+    @Override
+    public List<Order> findOrdersByCustomerId(Integer customerId) {
+        return orderRepository.findByKhachHangId(customerId);
+    }
+
+    @Override
+    public List<Order> findOrdersToday() {
+        return orderRepository.findOrdersToday();
+    }
+
+    @Override
+    public OrderDetail findOrderDetailById(Integer orderDetailId) {
+        return orderDetailRepository.findById(orderDetailId).orElse(null);
+    }
+
+    @Override
+    public Double findRevenueToday() {
+        return orderRepository.findRevenueToday();
+    }
+
+    @Override
+    public Double findRevenueThisMonth() {
+        return 0D;//orderRepository.findRevenueThisMonth();
+    }
+
+    @Override
     public ResponseEntity<?> exportDanhSachDonHang() {
         String rootPath = "src/main/resources/static/templates/excel/";
         String filePathOriginal = rootPath + "Template_Export_DanhSachDonHang.xlsx";
@@ -284,7 +290,7 @@ public class OrderServiceImpl implements OrderService {
                 row.createCell(1).setCellValue(listData.get(i).getOrderCode());
                 row.createCell(2).setCellValue(listData.get(i).getOrderTime());
                 row.createCell(3).setCellValue(listData.get(i).getSalesChannelName());
-                row.createCell(4).setCellValue(listData.get(i).getTotalAmountAfterDiscount());
+                row.createCell(4).setCellValue(listData.get(i).getTotalAmountDiscount());
                 row.createCell(5).setCellValue("");
                 row.createCell(6).setCellValue(listData.get(i).getCustomerName());
                 row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getDiaChi()
@@ -321,13 +327,14 @@ public class OrderServiceImpl implements OrderService {
             OrderDTO order = new OrderDTO();
             order.setOrderId(Integer.parseInt(String.valueOf(data[0])));
             order.setOrderCode(String.valueOf(data[1]));
-            order.setOrderTime(CommonUtil.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            order.setOrderTime(DateUtils.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            order.setOrderTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getOrderTime()));
             order.setReceiverAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
             order.setReceiverPhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
             order.setReceiverName(String.valueOf(data[5]));
             order.setReceiverEmail(String.valueOf(data[23]));
             order.setOrderBy(new Customer(Integer.parseInt(String.valueOf(data[6])), String.valueOf(data[7])));
-            order.setTotalAmount(Double.parseDouble(String.valueOf(data[8])));
+            order.setAmountDiscount(data[8] != null ? Double.parseDouble(String.valueOf(data[8])) : 0);
             order.setSalesChannel(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
             order.setSalesChannelId(Integer.parseInt(String.valueOf(data[9])));
             order.setSalesChannelName(String.valueOf(data[10]));
@@ -337,8 +344,9 @@ public class OrderServiceImpl implements OrderService {
             order.setPayMethod(new Category(Integer.parseInt(String.valueOf(data[16])), String.valueOf(data[17])));
             order.setCashier(new Account(Integer.parseInt(String.valueOf(data[18])), null, String.valueOf(data[19])));
             order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[20]))));
-            order.setCreatedAt(CommonUtil.convertStringToDate(String.valueOf(data[21])));
+            order.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[21])));
             order.setQrCode(String.valueOf(data[22]));
+            order.setVoucherUsedCode(data[24] != null ? String.valueOf(data[24]) : "-");
             dataResponse.add(order);
         }
         return dataResponse;

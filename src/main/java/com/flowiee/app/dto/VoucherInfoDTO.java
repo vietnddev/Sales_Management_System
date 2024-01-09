@@ -5,6 +5,7 @@ import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,9 +54,9 @@ public class VoucherInfoDTO implements Serializable {
             voucherInfoDTO.setEndTime(String.valueOf(voucherInfo.getEndTime()).substring(0, 10));
             //Checking status
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = CommonUtil.convertStringToDate(String.valueOf(voucherInfo.getStartTime()).substring(0, 10), "yyyy-MM-dd");
-            Date endDate = CommonUtil.convertStringToDate(String.valueOf(voucherInfo.getEndTime()).substring(0, 10), "yyyy-MM-dd");
-            Date currentDate = CommonUtil.convertStringToDate(formatter.format(new Date()), "yyyy-MM-dd");
+            Date startDate = DateUtils.convertStringToDate(String.valueOf(voucherInfo.getStartTime()).substring(0, 10), "yyyy-MM-dd");
+            Date endDate = DateUtils.convertStringToDate(String.valueOf(voucherInfo.getEndTime()).substring(0, 10), "yyyy-MM-dd");
+            Date currentDate = DateUtils.convertStringToDate(formatter.format(new Date()), "yyyy-MM-dd");
             if ((startDate.before(currentDate) || startDate.equals(currentDate)) && (endDate.after(currentDate) || endDate.equals(currentDate))) {
                 voucherInfoDTO.setStatus(AppConstants.VOUCHER_STATUS.ACTIVE.getLabel());
             } else {

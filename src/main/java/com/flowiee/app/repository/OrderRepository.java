@@ -20,7 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
            "o.receiverName as receiver_name_5, " +
            "nvl(c.id, 0) as order_by_id_6, " +
            "c.tenKhachHang as order_by_name_7, " +
-           "nvl(o.totalAmountDiscount, 0) as total_amount_8, " +
+           "o.amountDiscount as amount_discount_8, " +
            "nvl(sc.id, 0) as sales_channel_id_9, " +
            "sc.name as sales_channel_name_10, " +
            "o.ghiChu as note_11, " +
@@ -35,7 +35,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
            "nvl(o.createdBy, 0) as created_by_id_20, " +
            "o.createdAt as created_at_21, " +
            "case when f.order.id is not null then concat(concat(f.directoryPath, '/'), f.tenFileKhiLuu) else '' end as qrcode_file_name_22, " +
-           "o.receiverEmail as receiver_email_23 " +
+           "o.receiverEmail as receiver_email_23, " +
+           "o.voucherUsedCode as voucher_used_code_24 " +
            "from Order o " +
            "left join Customer c on c.id = o.customer.id " +
            "left join OrderPay op on op.order.id = o.id " +
@@ -67,29 +68,29 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("from Order o where o.customer.id=:customerId")
     List<Order> findByCustomer(@Param("customerId") Integer customerId);
 
-    @Query("select nvl(sum(o.totalAmountDiscount), 0) from Order o where trunc(o.thoiGianDatHang) = trunc(current_date)")
+    @Query(value = "select sum((select sum(d.price * d.quantity) from pro_order_detail d where d.order_id = o.id) - o.amount_discount) from pro_order o where trunc(o.order_time) = trunc(current_date)", nativeQuery = true)
     Double findRevenueToday();
 
-    @Query("select nvl(sum(o.totalAmountDiscount), 0) from Order o where extract(month from o.thoiGianDatHang) = extract(month from current_date)")
-    Double findRevenueThisMonth();
+//    @Query("select nvl(sum(o.totalAmountDiscount), 0) from Order o where extract(month from o.thoiGianDatHang) = extract(month from current_date)")
+//    Double findRevenueThisMonth();
 
     @Query("from Order o where trunc(o.thoiGianDatHang) = truc(current_date)")
     List<Order> findOrdersToday();
 
-    @Query("select " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 1 then o.totalAmountDiscount else 0 end) as JAN, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 2 then o.totalAmountDiscount else 0 end) as FEB, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 3 then o.totalAmountDiscount else 0 end) as MAR, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 4 then o.totalAmountDiscount else 0 end) as APRIL, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 5 then o.totalAmountDiscount else 0 end) as MAY, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 6 then o.totalAmountDiscount else 0 end) as JUN, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 7 then o.totalAmountDiscount else 0 end) as JUL, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 8 then o.totalAmountDiscount else 0 end) as AUG, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 9 then o.totalAmountDiscount else 0 end) as SEP, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 10 then o.totalAmountDiscount else 0 end) as OCT, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 11 then o.totalAmountDiscount else 0 end) as NOV, " +
-           "sum(case when extract(month from o.thoiGianDatHang) = 12 then o.totalAmountDiscount else 0 end) as DEC " +
-           "from Order o " +
-           "where extract(year from o.thoiGianDatHang) = extract(year from current_date)")
-    List<Object[]> findRevenueEachMonthOfYear();
+//    @Query("select " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 1 then o.totalAmountDiscount else 0 end) as JAN, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 2 then o.totalAmountDiscount else 0 end) as FEB, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 3 then o.totalAmountDiscount else 0 end) as MAR, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 4 then o.totalAmountDiscount else 0 end) as APRIL, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 5 then o.totalAmountDiscount else 0 end) as MAY, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 6 then o.totalAmountDiscount else 0 end) as JUN, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 7 then o.totalAmountDiscount else 0 end) as JUL, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 8 then o.totalAmountDiscount else 0 end) as AUG, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 9 then o.totalAmountDiscount else 0 end) as SEP, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 10 then o.totalAmountDiscount else 0 end) as OCT, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 11 then o.totalAmountDiscount else 0 end) as NOV, " +
+//           "sum(case when extract(month from o.thoiGianDatHang) = 12 then o.totalAmountDiscount else 0 end) as DEC " +
+//           "from Order o " +
+//           "where extract(year from o.thoiGianDatHang) = extract(year from current_date)")
+//    List<Object[]> findRevenueEachMonthOfYear();
 }

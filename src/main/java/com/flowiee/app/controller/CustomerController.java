@@ -3,10 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
-import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.*;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.CustomerService;
@@ -40,7 +37,7 @@ public class CustomerController extends BaseController {
                                        @Nullable @RequestParam("address") String address) {
         validateProductModule.readCustomer(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER);
-        modelAndView.addObject("listCustomer", customerService.findAllCustomer(name, sex, birthday != null ? CommonUtil.convertStringToDate(birthday, "YYYY/MM/dd") : null, phone, email, address));
+        modelAndView.addObject("listCustomer", customerService.findAllCustomer(name, sex, birthday != null ? DateUtils.convertStringToDate(birthday, "YYYY/MM/dd") : null, phone, email, address));
         modelAndView.addObject("customer", new CustomerDTO());
         modelAndView.addObject("filter_name", name);
         modelAndView.addObject("filter_sex", sex);

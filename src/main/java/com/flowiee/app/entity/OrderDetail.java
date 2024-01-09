@@ -31,6 +31,12 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@Column(name = "quantity", nullable = false)
 	private int soLuong;
 
+	@Column(name = "price", nullable = false)
+	private Float price;
+
+	@Column(name = "price_original", nullable = false)
+	private Float priceOriginal;
+
 	@Column(name = "note", length = 500)
 	private String ghiChu;
 

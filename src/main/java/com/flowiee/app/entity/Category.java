@@ -76,8 +76,8 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
 	private List<MaterialTemp> listUnitTemp;
 	
-	@OneToMany(mappedBy = "hinhThucThanhToan", fetch = FetchType.LAZY)
-	private List<OrderPay> listPayMethod;
+	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
+	private List<Order> listOrderPayment;
 
 	@OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
 	private List<Order> listTrangThaiDonHang;

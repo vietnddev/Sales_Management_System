@@ -6,6 +6,7 @@ import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.model.request.CustomerRequest;
 
 import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.DateUtils;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -74,7 +75,7 @@ public class Customer extends BaseEntity implements Serializable {
 		Customer customer = new Customer();
 		customer.setId(dto.getId());
 		customer.setTenKhachHang(dto.getName());
-		customer.setBirthday(CommonUtil.convertStringToDate(dto.getBirthday(), "YYYY-MM-dd"));
+		customer.setBirthday(DateUtils.convertStringToDate(dto.getBirthday(), "YYYY-MM-dd"));
 		if (dto.getSex() != null) {
 			customer.setGioiTinh("M".equals(dto.getSex()));
 		}
