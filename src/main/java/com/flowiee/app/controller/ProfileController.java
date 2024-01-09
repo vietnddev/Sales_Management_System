@@ -36,7 +36,7 @@ public class ProfileController extends BaseController {
 		ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", accountService.findCurrentAccount());
-		modelAndView.addObject("listDonHangDaBan", orderService.findByNhanVienId(Objects.requireNonNull(CommonUtil.getCurrentAccountId())));
+		modelAndView.addObject("listDonHangDaBan", orderService.findByStaffId(Objects.requireNonNull(CommonUtil.getCurrentAccountId())));
 		return baseView(modelAndView);
 	}
 

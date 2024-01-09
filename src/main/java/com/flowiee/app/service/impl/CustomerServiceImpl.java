@@ -207,7 +207,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (id <= 0 || customer == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        if (!orderService.findByCustomer(id).isEmpty()) {
+        if (!orderService.findOrdersByCustomerId(id).isEmpty()) {
             throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
         }
         customerRepository.deleteById(id);

@@ -2,6 +2,7 @@ package com.flowiee.app.service;
 
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.Order;
+import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.model.request.OrderRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -17,19 +18,31 @@ public interface OrderService {
 
     String saveOrder(Order order);
 
+    String saveOrder(OrderRequest orderRequest);
+
     String updateOrder(Order order, Integer orderId);
 
-    String delete(Integer orderId);
+    List<Order> findByStaffId(Integer accountId);
 
-    List<Order> findByTrangThai(int trangThaiDonHangId);
+    List<Order> findOrdersBySalesChannelId(Integer salesChannelId);
 
-    List<Order> findByKhachHangId(int id);
+    List<Order> findOrdersByStatus(Integer orderStatusId);
 
-    List<Order> findByNhanVienId(int accountId);
+    List<Order> findOrdersByCustomerId(Integer customerId);
+
+    List<Order> findOrdersToday();
+
+    OrderDetail findOrderDetailById(Integer orderDetailId);
+
+    String saveOrderDetail(OrderDetail orderDetail);
+
+    String updateOrderDetail(OrderDetail orderDetail, Integer orderDetailId);
+
+    String deleteOrder(Integer orderId);
+
+    String deleteOrderDetail(Integer orderDetailId);
 
     ResponseEntity<?> exportDanhSachDonHang();
-
-    String saveOrder(OrderRequest orderRequest);
 
     List<Order> findBySalesChannel(Integer salesChannelId);
 
@@ -41,5 +54,5 @@ public interface OrderService {
 
     Double findRevenueThisMonth();
 
-    List<Order> findOrdersToday();
+    List<OrderDetail> findOrderDetailsByOrderId(Integer donHangId);
 }

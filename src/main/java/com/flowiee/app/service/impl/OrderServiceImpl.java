@@ -4,6 +4,7 @@ import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.repository.OrderDetailRepository;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.model.request.OrderRequest;
@@ -49,9 +50,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private ProductVariantService productVariantService;
+    private OrderDetailRepository orderDetailRepository;
     @Autowired
-    private OrderDetailService orderDetailService;
+    private ProductVariantService productVariantService;
     @Autowired
     private OrderPayService orderPayService;
     @Autowired
@@ -74,17 +75,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findByTrangThai(int orderStatusId) {
+    public List<Order> findOrdersByStatus(Integer orderStatusId) {
         return orderRepository.findByTrangThaiDonHang(orderStatusId);
     }
 
     @Override
-    public List<Order> findByKhachHangId(int customerId) {
+    public List<Order> findOrdersByCustomerId(Integer customerId) {
         return orderRepository.findByKhachHangId(customerId);
     }
 
     @Override
-    public List<Order> findByNhanVienId(int customerId) {
+    public List<Order> findByStaffId(Integer customerId) {
         return orderRepository.findByNhanvienId(customerId);
     }
 
@@ -95,6 +96,11 @@ public class OrderServiceImpl implements OrderService {
             throw new NotFoundException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "order " + orderId));
         }
         return orders.get(0);
+    }
+
+    @Override
+    public OrderDetail findOrderDetailById(Integer orderDetailId) {
+        return orderDetailRepository.findById(orderDetailId).orElse(null);
     }
 
     @Override
@@ -131,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
                 orderDetail.setGhiChu("");
                 orderDetail.setSoLuong(soLuongSanPhamInCart);
                 orderDetail.setTrangThai(true);
-                orderDetailService.save(orderDetail);
+                this.saveOrderDetail(orderDetail);
                 if (productVariantService.getGiaBan(idBienTheSP) != null) {
                     totalMoneyOfDonHang += productVariantService.getGiaBan(idBienTheSP);
                 }
@@ -140,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
             }
             orderSaved.setTotalAmount(totalMoneyOfDonHang);
             orderSaved.setTotalAmountDiscount(null);
-            
+
             VoucherTicket voucherTicket = voucherTicketService.findByCode(request.getVoucherUsedCode());
             if (voucherTicket != null) {
             	String statusCode = voucherTicketService.checkTicketToUse(request.getVoucherUsedCode());
@@ -170,18 +176,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findBySalesChannel(Integer salesChannelId) {
+    public String saveOrderDetail(OrderDetail orderDetail) {
+        try {
+            orderDetailRepository.save(orderDetail);
+            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
+            logger.info(OrderServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + orderDetail.toString());
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+    }
+
+    @Override
+    public List<Order> findOrdersBySalesChannelId(Integer salesChannelId) {
         return orderRepository.findBySalesChannel(salesChannelId);
-    }
-
-    @Override
-    public List<Order> findByOrderStatus(Integer orderStatusId) {
-        return orderRepository.findByOrderStatus(orderStatusId);
-    }
-
-    @Override
-    public List<Order> findByCustomer(Integer customerId) {
-        return orderRepository.findByCustomer(customerId);
     }
 
     @Override
@@ -192,6 +201,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Double findRevenueThisMonth() {
         return orderRepository.findRevenueThisMonth();
+    }
+
+    @Override
+    public List<OrderDetail> findOrderDetailsByOrderId(Integer orderId) {
+        return orderDetailRepository.findByOrderId(orderId);
     }
 
     @Override
@@ -209,7 +223,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String delete(Integer id) {
+    public String updateOrderDetail(OrderDetail orderDetail, Integer orderDetailId) {
+        try {
+            orderDetail.setId(orderDetailId);
+            orderDetailRepository.save(orderDetail);
+            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
+            logger.info(OrderServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + orderDetail.toString());
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+    }
+
+    @Override
+    public String deleteOrder(Integer id) {
         OrderDTO order = this.findOrderById(id);
         orderPayService.findByOrder(id).forEach(orderPay -> {
             if (orderPay.getPaymentStatus()) {
@@ -223,6 +251,20 @@ public class OrderServiceImpl implements OrderService {
         systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String deleteOrderDetail(Integer orderDetailId) {
+        OrderDetail orderDetail = this.findOrderDetailById(orderDetailId);
+        try {
+            orderDetailRepository.deleteById(orderDetailId);
+            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
+            logger.info(OrderServiceImpl.class.getName() + ": Xóa item of đơn hàng " + orderDetail.toString());
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
     }
 
     @Override

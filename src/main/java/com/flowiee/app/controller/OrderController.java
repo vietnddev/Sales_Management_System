@@ -28,7 +28,6 @@ import java.util.List;
 @RequestMapping(EndPointUtil.PRO_ORDER)
 public class OrderController extends BaseController {
     @Autowired private OrderService orderService;
-    @Autowired private OrderDetailService orderDetailService;
     @Autowired private ProductVariantService productVariantService;
     @Autowired private CategoryService categoryService;
     @Autowired private CustomerService customerService;
@@ -46,7 +45,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
-        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
         modelAndView.addObject("donHangRequest", new OrderRequest());
@@ -60,7 +59,7 @@ public class OrderController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
         modelAndView.addObject("listDonHang", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
-        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
 
         modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : categoryService.findById(request.getKenhBanHang()));
@@ -84,7 +83,7 @@ public class OrderController extends BaseController {
             throw new NotFoundException("Order not found!");
         }
         OrderDTO orderDetail = orderService.findOrderById(id);
-        List<OrderDetail> listOrderDetail = orderDetailService.findByDonHangId(id);
+        List<OrderDetail> listOrderDetail = orderService.findOrderDetailsByOrderId(id);
         int totalProduct = 0;
         for (OrderDetail od : listOrderDetail) {
             totalProduct += od.getSoLuong();
@@ -115,7 +114,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
-        modelAndView.addObject("listKhachHang", customerService.findAll());
+        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
 
@@ -216,7 +215,7 @@ public class OrderController extends BaseController {
     @PostMapping("/delete/{id}")
     public ModelAndView delete(@PathVariable("id") Integer orderId) {
         validateModuleProduct.deleteOrder(true);
-        orderService.delete(orderId);
+        orderService.deleteOrder(orderId);
         return new ModelAndView("redirect:/don-hang");
     }
 

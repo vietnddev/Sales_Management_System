@@ -72,7 +72,7 @@ public class CustomerController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER_DETAIL);
         modelAndView.addObject("customerDetail", customerService.findCustomerById(customerId));
         modelAndView.addObject("listCustomerContact", listContacts);
-        modelAndView.addObject("listDonHang", orderService.findByKhachHangId(customerId));
+        modelAndView.addObject("listDonHang", orderService.findOrdersByCustomerId(customerId));
         return baseView(modelAndView);
     }
 
