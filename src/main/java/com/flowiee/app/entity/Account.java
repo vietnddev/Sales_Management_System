@@ -64,9 +64,6 @@ public class Account extends BaseEntity implements Serializable{
     @OneToMany(mappedBy = "nhanVienBanHang", fetch = FetchType.LAZY)
     private List<Order> listOrder;
 
-    @OneToMany(mappedBy = "thuNgan", fetch = FetchType.LAZY)
-    private List<OrderPay> listOrderPay;
-
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<Customer> listCustomer;
 

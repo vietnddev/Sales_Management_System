@@ -11,6 +11,4 @@ public interface OrderHistoryService extends BaseService<OrderHistory> {
     List<OrderHistory> findByOrderId(Integer orderId);
 
     List<OrderHistory> findByOrderDetailId(Integer orderDetailId);
-
-    List<OrderHistory> findByOrderPayId(Integer orderPayId);
 }

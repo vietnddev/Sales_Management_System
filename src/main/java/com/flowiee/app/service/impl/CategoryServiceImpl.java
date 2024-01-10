@@ -43,8 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
     private ProductVariantService productVariantService;
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private OrderPayService orderPayService;
+//    @Autowired
+//    private OrderPayService orderPayService;
     @Autowired
     private DocumentService documentService;
     @Autowired
@@ -156,7 +156,7 @@ public class CategoryServiceImpl implements CategoryService {
                 }
                 break;
             case "PAYMETHOD":
-                if (!orderPayService.findByPayMethod(categoryId).isEmpty()) {
+                if (!orderService.findOrdersByPaymentMethodId(categoryId).isEmpty()) {
                     return true;
                 }
                 break;

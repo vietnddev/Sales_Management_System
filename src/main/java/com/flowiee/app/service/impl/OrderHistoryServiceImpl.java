@@ -52,9 +52,4 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     public List<OrderHistory> findByOrderDetailId(Integer orderDetailId) {
         return orderHistoryRepository.findByOrderDetailId(orderDetailId);
     }
-
-    @Override
-    public List<OrderHistory> findByOrderPayId(Integer orderPayId) {
-        return orderHistoryRepository.findByOrderPayId(orderPayId);
-    }
 }

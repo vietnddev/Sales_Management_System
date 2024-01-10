@@ -1,13 +1,11 @@
 package com.flowiee.app.dto;
 
 import com.flowiee.app.entity.*;
-import com.flowiee.app.utils.CommonUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class OrderDTO implements Serializable {
     private Category orderStatus; //future remove
     private Integer orderStatusId;
     private String orderStatusName;
-    private OrderPay orderPay; //future remove
+    //private OrderPay orderPay; //future remove
     private Integer orderPayId;
     private String orderPayName;
     private Category payMethod; //future remove
@@ -54,6 +52,9 @@ public class OrderDTO implements Serializable {
     private String qrCode;
     private int totalProduct;
 	private String voucherUsedCode;
+	private boolean paymentStatus;
+	private Date paymentTime;
+	private String paymentTimeStr;
 	private List<OrderDetail> listOrderDetail;
 
 	@Override
@@ -97,8 +98,8 @@ public class OrderDTO implements Serializable {
 		builder.append(orderStatusId);
 		builder.append(", orderStatusName=");
 		builder.append(orderStatusName);
-		builder.append(", orderPay=");
-		builder.append(orderPay);
+		//builder.append(", orderPay=");
+		//builder.append(orderPay);
 		builder.append(", orderPayId=");
 		builder.append(orderPayId);
 		builder.append(", orderPayName=");

@@ -7,6 +7,7 @@ import com.flowiee.app.model.request.OrderRequest;
 
 import org.springframework.http.ResponseEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderService {
@@ -17,8 +18,6 @@ public interface OrderService {
     List<OrderDetail> findOrderDetailsByOrderId(Integer donHangId);
 
     OrderDTO findOrderById(Integer orderId);
-
-    String saveOrder(Order order);
 
     String saveOrder(OrderRequest orderRequest);
 
@@ -32,6 +31,8 @@ public interface OrderService {
 
     String deleteOrderDetail(Integer orderDetailId);
 
+    String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, String note);
+
     List<Order> findByStaffId(Integer accountId);
 
     List<Order> findOrdersBySalesChannelId(Integer salesChannelId);
@@ -39,6 +40,8 @@ public interface OrderService {
     List<Order> findOrdersByStatus(Integer orderStatusId);
 
     List<Order> findOrdersByCustomerId(Integer customerId);
+
+    List<Order> findOrdersByPaymentMethodId(Integer paymentMethodId);
 
     List<Order> findOrdersToday();
 

@@ -194,36 +194,17 @@
                                                 <table class="table table-head-fixed text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <th>#</th>
-                                                            <th>Mã phiếu</th>
                                                             <th>Thời gian thanh toán</th>
                                                             <th>Hình thức thanh toán</th>
-                                                            <th>Số tiền</th>
-                                                            <th>Thu ngân</th>
                                                             <th>Ghi chú</th>
-                                                            <th>Trạng thái thanh toán</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr th:each="thanhToan, index : ${listThanhToan}">
-                                                            <td th:text="${index.index + 1}"></td>
-                                                            <td th:text="${thanhToan.maPhieu}"></td>
-                                                            <td th:text="${thanhToan.thoiGianThanhToan}"></td>
-                                                            <td th:text="${thanhToan.hinhThucThanhToan.name}"></td>
-                                                            <td th:text="${thanhToan.order.totalAmountDiscount}"></td>
-                                                            <td th:text="${thanhToan.thuNgan.hoTen}"></td>
-                                                            <td th:text="${thanhToan.ghiChu}"></td>
-                                                            <td>
-                                                                <span class="badge badge-danger"
-                                                                      th:if="!${thanhToan.paymentStatus}">
-                                                                      Chưa thanh toán
-                                                                </span>
-                                                                <span class="badge badge-primary"
-                                                                      th:if="${thanhToan.paymentStatus}">
-                                                                      Đã thanh toán
-                                                                </span>
-                                                            </td>
-                                                        </tr>
+                                                    <tr>
+                                                        <td th:text="${orderDetail.paymentTime}"></td>
+                                                        <td th:text="${orderDetail.payMethodName}"></td>
+                                                        <td th:text="${orderDetail.note}"></td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -240,13 +221,13 @@
                                                         data-toggle="modal"
                                                         data-target="#modalThanhToan"
                                                         disabled
-                                                        th:if="${listThanhToan.size() > 0}">
+                                                        th:if="${orderDetail.paymentStatus}">
                                                         Đã thanh toán
                                                 </button>
                                                 <button type="button" class="btn btn-success"
                                                         data-toggle="modal"
                                                         data-target="#modalThanhToan"
-                                                        th:if="${listThanhToan.size() == 0}">
+                                                        th:if="${!orderDetail.paymentStatus}">
                                                         Thanh toán
                                                 </button>
                                                 <!--POPUP THANH TOÁN-->
@@ -272,7 +253,7 @@
                                                                              data-target-input="nearest">
                                                                             <input type="text" class="form-control datetimepicker-input"
                                                                                    data-target="#reservationdatetime"
-                                                                                   name="thoiGianThanhToan"
+                                                                                   name="paymentTime"
                                                                                    required/>
                                                                             <div class="input-group-append"
                                                                                  data-target="#reservationdatetime"
@@ -289,7 +270,7 @@
                                                                         </span>
                                                                         <select class="custom-select col-sm-7"
                                                                                 data-placeholder="Chọn hình thức thanh toán"
-                                                                                name="hinhThucThanhToan"
+                                                                                name="paymentMethod"
                                                                                 required>
                                                                             <option th:each="payType : ${listHinhThucThanhToan}"
                                                                                     th:value="${payType.id}"
@@ -300,25 +281,10 @@
                                                                     <div class="form-group row w-100" style="padding-right: 8px">
                                                                         <span class="col-sm-5"
                                                                               style="display: flex; align-items: center">
-                                                                              Thu ngân
-                                                                        </span>
-                                                                        <select class="custom-select col-sm-7"
-                                                                                data-placeholder="Chọn nhân viên bán hàng"
-                                                                                name="thuNgan"
-                                                                                required>
-                                                                            <option th:each="staff : ${listNhanVienBanHang}"
-                                                                                    th:value="${staff.id}"
-                                                                                    th:text="${staff.hoTen}">
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group row w-100" style="padding-right: 8px">
-                                                                        <span class="col-sm-5"
-                                                                              style="display: flex; align-items: center">
                                                                               Ghi chú
                                                                         </span>
                                                                         <textarea class="form-control col-sm-7"
-                                                                                  name="ghiChu" rows="3"></textarea>
+                                                                                  name="note" rows="3"></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer justify-content-end">

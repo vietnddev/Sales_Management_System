@@ -30,8 +30,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
@@ -54,12 +54,16 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private ProductVariantService productVariantService;
-    @Autowired
-    private OrderPayService orderPayService;
+//    @Autowired
+//    private OrderPayService orderPayService;
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
+    private CartService cartService;
+    @Autowired
     private ItemsService itemsService;
+    @Autowired
+    private PriceService priceService;
     @Autowired
     private VoucherTicketService voucherTicketService;
     @Autowired
@@ -102,18 +106,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String saveOrder(Order entity) {
-        if (entity == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
-        orderRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
-    }
-
-    @Override
     @Transactional
     public String saveOrder(OrderRequest request) {
         try {
+            //Insert order
             Order order = new Order();
             order.setMaDonHang(CommonUtil.getMaDonHang());
             order.setCustomer(new Customer(request.getKhachHang()));
@@ -124,25 +120,29 @@ public class OrderServiceImpl implements OrderService {
             order.setTrangThaiDonHang(new Category(request.getTrangThaiDonHang(), null));
             Order orderSaved = orderRepository.save(order);
 
-            for (int idBienTheSP : request.getListBienTheSanPham()) {
-                int soLuongSanPhamInCart = itemsService.findSoLuongByBienTheSanPhamId(idBienTheSP);
+            //QRCode
+            fileStorageService.saveQRCodeOfOrder(orderSaved.getId());
+
+            //Insert items detail
+            for (Items items : cartService.findById(request.getCartId()).getListItems()) {
+                ProductVariant productVariant = productVariantService.findById(items.getProductVariant().getId());
+                Price price = priceService.findGiaHienTai(productVariant.getId());
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrder(orderSaved);
-                orderDetail.setProductVariant(productVariantService.findById(idBienTheSP));
-                orderDetail.setSoLuong(soLuongSanPhamInCart);
+                orderDetail.setProductVariant(productVariant);
+                orderDetail.setSoLuong(itemsService.findSoLuongByBienTheSanPhamId(productVariant.getId()));
                 orderDetail.setTrangThai(true);
-                orderDetail.setGhiChu("");
-                orderDetail.setPrice(0f);
-                orderDetail.setPriceOriginal(0f);
+                orderDetail.setGhiChu(items.getGhiChu());
+                orderDetail.setPrice(price != null ? Float.parseFloat(String.valueOf(price.getGiaBan())) : 0);
+                orderDetail.setPriceOriginal(price != null ? Float.parseFloat(String.valueOf(price.getGiaBan())) : 0);
                 this.saveOrderDetail(orderDetail);
-                //Update lại số lượng trong kho của sản phẩm
-                //productVariantService.updateSoLuong(soLuongSanPhamInCart, idBienTheSP);
             }
 
+            //Update voucher ticket status
             VoucherTicket voucherTicket = voucherTicketService.findByCode(request.getVoucherUsedCode());
             if (voucherTicket != null) {
                 String statusCode = voucherTicketService.checkTicketToUse(request.getVoucherUsedCode());
-                if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(statusCode)) {
+                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(statusCode)) {
                     orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
                     orderSaved.setAmountDiscount(request.getAmountDiscount());
                 }
@@ -154,11 +154,15 @@ public class OrderServiceImpl implements OrderService {
             }
             orderRepository.save(orderSaved);
 
-            //Create QRCode
-            fileStorageService.saveQRCodeOfOrder(orderSaved.getId());
+            //Sau khi đã lưu đơn hàng thì xóa all items
+            itemsService.findByCartId(request.getCartId()).forEach(items -> {
+                itemsService.delete(items.getId());
+            });
 
+            //Log
             systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
             logger.info("Insert new order success! insertBy=" + CommonUtil.getCurrentAccountUsername());
+
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             logger.error("Insert new order fail! order=" + request, e);
@@ -205,11 +209,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String deleteOrder(Integer id) {
         OrderDTO order = this.findOrderById(id);
-        orderPayService.findByOrder(id).forEach(orderPay -> {
-            if (orderPay.getPaymentStatus()) {
-                throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
-            }
-        });
+        if (order.isPaymentStatus()) {
+            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
+        }
         if ("DE".equals(order.getOrderStatus().getCode()) || "DO".equals(order.getOrderStatus().getCode())) {
             throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
         }
@@ -233,6 +235,13 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Transactional
+    @Override
+    public String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, String note) {
+        orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, note);
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
     @Override
     public List<Order> findByStaffId(Integer customerId) {
         return orderRepository.findByNhanvienId(customerId);
@@ -251,6 +260,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findOrdersByCustomerId(Integer customerId) {
         return orderRepository.findByKhachHangId(customerId);
+    }
+
+    @Override
+    public List<Order> findOrdersByPaymentMethodId(Integer paymentMethodId) {
+        return orderRepository.findByPaymentMethodId(paymentMethodId);
     }
 
     @Override
@@ -332,7 +346,7 @@ public class OrderServiceImpl implements OrderService {
             order.setReceiverAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
             order.setReceiverPhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
             order.setReceiverName(String.valueOf(data[5]));
-            order.setReceiverEmail(String.valueOf(data[23]));
+            order.setReceiverEmail(String.valueOf(data[19]));
             order.setOrderBy(new Customer(Integer.parseInt(String.valueOf(data[6])), String.valueOf(data[7])));
             order.setAmountDiscount(data[8] != null ? Double.parseDouble(String.valueOf(data[8])) : 0);
             order.setSalesChannel(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
@@ -340,13 +354,17 @@ public class OrderServiceImpl implements OrderService {
             order.setSalesChannelName(String.valueOf(data[10]));
             order.setNote(String.valueOf(data[11]) != null ? String.valueOf(data[11]) : "-");
             order.setOrderStatus(new Category(Integer.parseInt(String.valueOf(data[12])), String.valueOf(data[13])));
-            order.setOrderPay(new OrderPay(Integer.parseInt(String.valueOf(data[14])), Boolean.parseBoolean(String.valueOf(data[15]))));
-            order.setPayMethod(new Category(Integer.parseInt(String.valueOf(data[16])), String.valueOf(data[17])));
-            order.setCashier(new Account(Integer.parseInt(String.valueOf(data[18])), null, String.valueOf(data[19])));
-            order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[20]))));
-            order.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[21])));
-            order.setQrCode(String.valueOf(data[22]));
-            order.setVoucherUsedCode(data[24] != null ? String.valueOf(data[24]) : "-");
+            //order.setOrderPay(new OrderPay(Integer.parseInt(String.valueOf(data[14])), Boolean.parseBoolean(String.valueOf(data[15]))));
+            //order.setPayMethod(new Category(Integer.parseInt(String.valueOf(data[14])), String.valueOf(data[15])));
+            order.setPayMethodName(String.valueOf(data[15]));
+            order.setPaymentTime(DateUtils.convertStringToDate(String.valueOf(data[22]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            order.setPaymentTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getPaymentTime()));
+            //order.setCashier(new Account(Integer.parseInt(String.valueOf(data[18])), null, String.valueOf(data[19])));
+            order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[16]))));
+            order.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[17])));
+            order.setQrCode(String.valueOf(data[18]));
+            order.setVoucherUsedCode(data[20] != null ? String.valueOf(data[20]) : "-");
+            order.setPaymentStatus(data[21] != null && Boolean.parseBoolean(String.valueOf(data[21])));
             dataResponse.add(order);
         }
         return dataResponse;

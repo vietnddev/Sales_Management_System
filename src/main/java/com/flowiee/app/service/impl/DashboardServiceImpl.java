@@ -35,6 +35,9 @@ public class DashboardServiceImpl implements DashboardService {
     public DashboardModel loadDashboard() {
         logger.info("Start loadDashboard(): " + CommonUtil.now("YYYY/MM/dd HH:mm:ss"));
 
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonth().getValue();
+
         //Revenue today
 //      String revenueTodaySQL = "SELECT NVL(SUM(d.TOTAL_AMOUNT_AFTER_DISCOUNT), 0) FROM PRO_ORDER d WHERE TRUNC(d.THOI_GIAN_DAT_HANG) = TRUNC(SYSDATE)";
 //      logger.info("[getRevenueToday() - SQL findData]: " + revenueTodaySQL);
@@ -65,13 +68,13 @@ public class DashboardServiceImpl implements DashboardService {
 
         //Products top sell
         String productsTopSellSQL = "SELECT * FROM " +
-                                    "(SELECT s.VARIANT_NAME, NVL(SUM(d.SO_LUONG), 0) AS Total " +
+                                    "(SELECT s.VARIANT_NAME, NVL(SUM(d.QUANTITY), 0) AS Total " +
                                     "FROM PRO_PRODUCT_VARIANT s " +
                                     "LEFT JOIN PRO_ORDER_DETAIL d ON s.id = d.PRODUCT_VARIANT_ID " +
                                     "GROUP BY s.ID, s.VARIANT_NAME " +
                                     "ORDER BY total DESC) " +
                                     "WHERE ROWNUM <= 10";
-        logger.info("[getProductsTopSell() - SQL findData]: " + productsTopSellSQL);
+        logger.info("[getProductsTopSell() - SQL findData]: ");
         Query productsTopSellSQLQuery = entityManager.createNativeQuery(productsTopSellSQL);
         List<Object[]> productsTopSellResultList = productsTopSellSQLQuery.getResultList();
         LinkedHashMap<String, Integer> productsTopSell = new LinkedHashMap<>();
@@ -81,44 +84,59 @@ public class DashboardServiceImpl implements DashboardService {
         entityManager.close();
 
         //Revenue month of year
-        String revenueMonthOfYearSQL = "SELECT SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 1 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JAN, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 2 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS FEB, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 3 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS MAR, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 4 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS APRIL, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 5 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS MAY, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 6 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JUN, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 7 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS JUL, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 8 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS AUG," +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 9 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS SEP, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 10 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS OCT, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 11 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS NOV, " +
-                                       "SUM(CASE WHEN EXTRACT(MONTH FROM d.ORDER_TIME) = 12 THEN d.TOTAL_AMOUNT_AFTER_DISCOUNT ELSE 0 END) AS DEC " +
-                                       "FROM PRO_ORDER d " +
-                                       "WHERE EXTRACT(YEAR FROM d.THOI_GIAN_DAT_HANG) = EXTRACT(YEAR FROM SYSDATE)";
-        logger.info("[getRevenueMonthOfYearSQL() - SQL findData]: " + revenueMonthOfYearSQL);
+        String revenueMonthOfYearSQL = "SELECT " +
+                                       "    TO_CHAR(MONTHS.MONTH, 'MM') AS MONTH, " +
+                                       "    NVL(SUM(d.PRICE * d.QUANTITY - NVL(o.AMOUNT_DISCOUNT, 0)), 0) AS REVENUE " +
+                                       "FROM " +
+                                       "    (SELECT TO_DATE('01-' || LEVEL || '-2024', 'DD-MM-YYYY') AS MONTH " +
+                                       "     FROM DUAL " +
+                                       "     CONNECT BY LEVEL <= 12) MONTHS " +
+                                       "LEFT JOIN " +
+                                       "    PRO_ORDER o ON TO_CHAR(o.ORDER_TIME, 'MM') = TO_CHAR(MONTHS.MONTH, 'MM') " +
+                                       "LEFT JOIN " +
+                                       "    PRO_ORDER_DETAIL d ON o.ID = d.ORDER_ID " +
+                                       "WHERE " +
+                                       "    EXTRACT(YEAR FROM MONTHS.MONTH) = ? " +
+                                       "GROUP BY" +
+                                       "    TO_CHAR(MONTHS.MONTH, 'MM') " +
+                                       "ORDER BY " +
+                                       "    TO_CHAR(MONTHS.MONTH, 'MM')";
+        logger.info("[getRevenueMonthOfYearSQL() - SQL findData]: ");
         Query revenueMonthOfYearSQLQuery = entityManager.createNativeQuery(revenueMonthOfYearSQL);
+        revenueMonthOfYearSQLQuery.setParameter(1, currentYear);
         List<Object[]> revenueMonthOfYearSQLResultList = revenueMonthOfYearSQLQuery.getResultList();
         LinkedHashMap<Integer, Float> revenueMonthOfYear = new LinkedHashMap<>();
-        for (int i = 0; i < revenueMonthOfYearSQLResultList.get(0).length; i++) {
-            revenueMonthOfYear.put(i + 1, Float.parseFloat(String.valueOf(revenueMonthOfYearSQLResultList.get(0)[i] != null ? revenueMonthOfYearSQLResultList.get(0)[i] : 0)));
+        for (int i = 0; i < revenueMonthOfYearSQLResultList.size(); i++) {
+            revenueMonthOfYear.put(Integer.parseInt(String.valueOf(revenueMonthOfYearSQLResultList.get(i)[0])), Float.parseFloat(String.valueOf(revenueMonthOfYearSQLResultList.get(i)[1] != null ? revenueMonthOfYearSQLResultList.get(i)[1] : 0)));
         }
         entityManager.close();
 
         //Revenue day of month
-        LocalDate firstDay = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-        LocalDate lastDay = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
-        String revenueDayOfMonthSQL = "WITH all_dates AS " +
-                                      "( " +
-                                      "SELECT TO_DATE('" + firstDay + "', 'YYYY-MM-DD') + LEVEL - 1 AS DAY " +
-                                      "FROM DUAL CONNECT BY LEVEL <= TO_DATE('" + lastDay + "', 'YYYY-MM-DD') - TO_DATE('" + firstDay + "', 'YYYY-MM-DD') + 1" +
-                                      ") " +
-                                      "SELECT all_dates.DAY, NVL(SUM(PRO_ORDER.TOTAL_AMOUNT_AFTER_DISCOUNT), 0) AS REVENUE " +
-                                      "FROM all_dates " +
-                                      "LEFT JOIN PRO_ORDER ON TRUNC(PRO_ORDER.ORDER_TIME) = all_dates.DAY " +
-                                      "GROUP BY all_dates.DAY " +
-                                      "ORDER BY all_dates.DAY";
-        logger.info("[getRevenueDayOfMonth() - SQL findData]: " + revenueDayOfMonthSQL);
-        Query revenueDayOfMonthSQLQuery = entityManager.createNativeQuery(revenueDayOfMonthSQL);
+        String revenueDaysOfMonthSQL = "WITH MONTH_DAYS AS ( " +
+                                       "    SELECT TO_DATE(TO_CHAR(TO_DATE('01-2024', 'MM-YYYY') + LEVEL - 1, 'DD-MM-YYYY'), 'DD-MM-YYYY') AS MONTH_DAY " +
+                                       "    FROM DUAL " +
+                                       "    CONNECT BY LEVEL <= EXTRACT(DAY FROM LAST_DAY(TO_DATE('2024-01-01', 'YYYY-MM-DD'))) " +
+                                       ") " +
+                                       "SELECT " +
+                                       "    TO_CHAR(MD.MONTH_DAY, 'DD') AS DAY, " +
+                                       "    NVL(SUM(d.PRICE * d.QUANTITY - o.AMOUNT_DISCOUNT), 0) AS REVENUE " +
+                                       "FROM " +
+                                       "    MONTH_DAYS MD " +
+                                       "LEFT JOIN " +
+                                       "    PRO_ORDER o ON TRUNC(o.ORDER_TIME) = MD.MONTH_DAY " +
+                                       "LEFT JOIN " +
+                                       "    PRO_ORDER_DETAIL d ON o.ID = d.ORDER_ID " +
+                                       "WHERE " +
+                                       "    EXTRACT(MONTH FROM MD.MONTH_DAY) = ? " + //-- Thay 1 bằng tháng bạn quan tâm
+                                       "    AND EXTRACT(YEAR FROM MD.MONTH_DAY) = ? " + //-- Thay 2024 bằng năm bạn quan tâm
+                                       "GROUP BY " +
+                                       "  TO_CHAR(MD.MONTH_DAY, 'DD') " +
+                                       "ORDER BY " +
+                                       "  TO_CHAR(MD.MONTH_DAY, 'DD')";
+        logger.info("[getRevenueDayOfMonth() - SQL findData]: ");
+        Query revenueDayOfMonthSQLQuery = entityManager.createNativeQuery(revenueDaysOfMonthSQL);
+        revenueDayOfMonthSQLQuery.setParameter(1, currentMonth);
+        revenueDayOfMonthSQLQuery.setParameter(2, currentYear);
         List<Object[]> revenueDayOfMonthSQLResultList = revenueDayOfMonthSQLQuery.getResultList();
         LinkedHashMap<String, Float> revenueDayOfMonth = new LinkedHashMap<>();
         for (int i = 0; i < revenueDayOfMonthSQLResultList.size(); i++) {
@@ -127,11 +145,15 @@ public class DashboardServiceImpl implements DashboardService {
         entityManager.close();
 
         //Revenue by sales channel
-        String revenueBySalesChannelSQL = "SELECT c.NAME, c.COLOR, NVL(SUM(d.TOTAL_AMOUNT_AFTER_DISCOUNT),0) AS TOTAL " +
+        String revenueBySalesChannelSQL = "SELECT " +
+                                          "c.NAME, " +
+                                          "c.COLOR, " +
+                                          "NVL(SUM(d.PRICE * d.QUANTITY - o.AMOUNT_DISCOUNT), 0) AS TOTAL " +
                                           "FROM (SELECT * FROM CATEGORY WHERE TYPE = 'SALES_CHANNEL') c " +
-                                          "LEFT JOIN PRO_ORDER d ON c.ID = d.KENH_BAN_HANG " +
+                                          "LEFT JOIN PRO_ORDER o ON c.ID = o.CHANNEL " +
+                                          "LEFT JOIN PRO_ORDER_DETAIL d ON o.ID = d.ORDER_ID " +
                                           "GROUP BY c.NAME, c.COLOR";
-        logger.info("[getRevenueBySalesChannel() - SQL findData]: " + revenueBySalesChannelSQL);
+        logger.info("[getRevenueBySalesChannel() - SQL findData]: ");
         Query revenueBySalesChannelQuery = entityManager.createNativeQuery(revenueBySalesChannelSQL);
         List<Object[]> revenueBySalesChannelResultList = revenueBySalesChannelQuery.getResultList();
         LinkedHashMap<String, Float> revenueSalesChannel = new LinkedHashMap<>();

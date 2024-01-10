@@ -70,8 +70,8 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "payment_status")
 	private Boolean paymentStatus;
 
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-	private List<OrderPay> listOrderPay;
+//	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+//	private List<OrderPay> listOrderPay;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status", nullable = false)

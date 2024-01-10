@@ -15,7 +15,4 @@ public interface OrderHistoryRepository extends JpaRepository<OrderHistory, Inte
 
     @Query("from OrderHistory o where o.orderDetail.id=:orderDetailId")
     List<OrderHistory> findByOrderDetailId(@Param("orderDetailId") Integer orderDetailId);
-
-    @Query("from OrderHistory o where o.orderPay.id=:orderPayId")
-    List<OrderHistory> findByOrderPayId(@Param("orderPayId") Integer orderPayId);
 }

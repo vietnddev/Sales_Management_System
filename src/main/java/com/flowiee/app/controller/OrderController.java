@@ -2,6 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.utils.*;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
@@ -12,11 +13,11 @@ import com.flowiee.app.security.ValidateModuleProduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ public class OrderController extends BaseController {
     @Autowired private ProductVariantService productVariantService;
     @Autowired private CategoryService categoryService;
     @Autowired private CustomerService customerService;
-    @Autowired private OrderPayService orderPayService;
+    //@Autowired private OrderPayService orderPayService;
     @Autowired private CartService cartService;
     @Autowired private ItemsService itemsService;
     @Autowired private VoucherTicketService voucherTicketService;
@@ -83,11 +84,11 @@ public class OrderController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_DETAIL);
         modelAndView.addObject("orderDetail", orderDetail);
         modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
-        modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
+        //modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("donHang", new Order());
-        modelAndView.addObject("donHangThanhToan", new OrderPay());
+        //modelAndView.addObject("donHangThanhToan", new OrderPay());
         return baseView(modelAndView);
     }
 
@@ -173,26 +174,17 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/insert")
-    public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest, HttpServletRequest request) {
+    public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest,
+                               @RequestParam("thoiGianDatHang") @Nullable String orderTimeStr,
+                               @RequestParam("listBienTheSanPhamId") String productVariantIds) {
         validateModuleProduct.insertOrder(true);
-        String thoiGianDatHangString = request.getParameter("thoiGianDatHang");
-        if (thoiGianDatHangString != null) {
-            orderRequest.setThoiGianDatHang(DateUtils.convertStringToDate(thoiGianDatHangString));
+        if (orderTimeStr != null) {
+            orderRequest.setThoiGianDatHang(DateUtils.convertStringToDate(orderTimeStr));
         } else {
             orderRequest.setThoiGianDatHang(new Date());
         }
-        List<Integer> listProductVariantId = new ArrayList<>();
-        List<String> listProductVariantIdRequest = Arrays.stream(request.getParameter("listBienTheSanPhamId").split(",")).toList();
-        for (String idString : listProductVariantIdRequest) {
-            listProductVariantId.add(Integer.parseInt(idString));
-        }
-        orderRequest.setListBienTheSanPham(listProductVariantId);
         orderRequest.setTrangThaiThanhToan(false);
         orderService.saveOrder(orderRequest);
-        //Sau khi đã lưu đơn hàng thì xóa all items
-        itemsService.findByCartId(orderRequest.getCartId()).forEach(items -> {
-            itemsService.delete(items.getId());
-        });
         return new ModelAndView("redirect:/don-hang");
     }
 
@@ -211,13 +203,22 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/thanh-toan/{id}")
-    public ModelAndView thanhToan(@PathVariable("id") Integer donHangId, @ModelAttribute("donHangThanhToan") OrderPay orderPay) {
+    public ModelAndView doPay(@PathVariable("id") Integer orderId,
+                                  @RequestParam("paymentTime") Date paymentTime,
+                                  @RequestParam("paymentMethod") Integer paymentMethod,
+                                  @RequestParam("note") @Nullable String note) {
         validateModuleProduct.updateOrder(true);
-        orderPay.setMaPhieu("PTT" + donHangId + CommonUtil.now("yyMMddHHmmss"));
-        orderPay.setOrder(new Order(orderService.findOrderById(donHangId).getOrderId()));
-        orderPay.setPaymentStatus(true);
-        orderPayService.save(orderPay);
-        return new ModelAndView("redirect:/don-hang/" + donHangId);
+        if (orderId == null || orderId <= 0 || orderService.findOrderById(orderId) == null) {
+            throw new NotFoundException("Đơn hàng cần thanh toán không tồn tại! orderId=" + orderId);
+        }
+        if (paymentTime == null) {
+            paymentTime = new Date();
+        }
+        if (paymentMethod == null || paymentMethod <= 0) {
+            throw new BadRequestException("Hình thức thanh toán không hợp lệ!");
+        }
+        orderService.doPay(orderId, paymentTime, paymentMethod, note);
+        return new ModelAndView("redirect:/don-hang/" + orderId);
     }
 
     @GetMapping(EndPointUtil.PRO_ORDER_EXPORT)

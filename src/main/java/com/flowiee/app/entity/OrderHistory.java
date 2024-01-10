@@ -28,10 +28,6 @@ public class OrderHistory extends BaseEntity implements Serializable {
     @JoinColumn(name = "order_detail_id")
     private OrderDetail orderDetail;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_pay_id")
-    private OrderPay orderPay;
-
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -48,7 +44,7 @@ public class OrderHistory extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrderHistory [id=" + super.id + ", order=" + order + ", orderDetail=" + orderDetail + ", orderPay=" + orderPay + ", title="
+		return "OrderHistory [id=" + super.id + ", order=" + order + ", orderDetail=" + orderDetail + ", title="
 				+ title + ", fieldName=" + fieldName + ", oldValue=" + oldValue + ", newValue=" + newValue + "]";
 	}       
 }
