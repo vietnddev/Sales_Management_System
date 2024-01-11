@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.TicketExportGoods;
 import com.flowiee.app.repository.TicketExportGoodsRepository;
 import com.flowiee.app.service.OrderService;
-import com.flowiee.app.service.ProductVariantService;
+import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.TicketExportGoodsService;
 import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private ProductVariantService productVariantService;
+    private ProductService productService;
 
     @Override
     public List<TicketExportGoods> findAll() {
@@ -40,7 +40,7 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
         //DO -> Done
         //Update lại số lượng của sản phẩm còn trong kho
         orderService.findOrderDetailsByOrderId(ticket.getOrderId()).forEach(d -> {
-            productVariantService.updateSoLuong(productVariantService.findById(d.getProductVariant().getId()).getSoLuongKho() - d.getSoLuong(), d.getProductVariant().getId());
+            productService.updateProductVariantQuantity(productService.findProductVariantById(d.getProductVariant().getId()).getSoLuongKho() - d.getSoLuong(), d.getProductVariant().getId());
         });
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }

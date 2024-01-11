@@ -10,7 +10,7 @@ import com.flowiee.app.entity.Price;
 import com.flowiee.app.repository.PriceRepository;
 import com.flowiee.app.service.PriceService;
 import com.flowiee.app.service.ProductHistoryService;
-import com.flowiee.app.service.ProductVariantService;
+import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
@@ -31,7 +31,7 @@ public class PriceServiceImpl implements PriceService {
     @Autowired
     private PriceRepository priceRepository;
     @Autowired
-    private ProductVariantService productVariantService;
+    private ProductService productService;
     @Autowired
     private ProductHistoryService productHistoryService;
     @Autowired
@@ -74,7 +74,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Price findGiaHienTai(int bienTheSanPhamId) {
-        return priceRepository.findGiaBanHienTai(productVariantService.findById(bienTheSanPhamId), AppConstants.PRICE_STATUS.ACTIVE.name());
+        return priceRepository.findGiaBanHienTai(productService.findProductVariantById(bienTheSanPhamId), AppConstants.PRICE_STATUS.ACTIVE.name());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class PriceServiceImpl implements PriceService {
                 priceRepository.save(disableGiaCu);
             }
             //Thêm giá mới
-            ProductVariant productVariant = productVariantService.findById(bienTheSanPhamId);
+            ProductVariant productVariant = productService.findProductVariantById(bienTheSanPhamId);
             price.setId(0);
             price.setProductVariant(productVariant);
             price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());

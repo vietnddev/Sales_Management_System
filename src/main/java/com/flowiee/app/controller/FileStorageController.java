@@ -4,7 +4,6 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.ProductService;
-import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.FileStorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 public class FileStorageController extends BaseController {
     @Autowired private FileStorageService fileService;
     @Autowired private ProductService productService;
-    @Autowired private ProductVariantService productVariantService;
     @Autowired private ValidateModuleProduct validateModuleProduct;
 
     @PostMapping("/uploads/san-pham/{id}")
     public ModelAndView uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                        @PathVariable("id") Integer productId) throws Exception {
         validateModuleProduct.updateImage(true);
-        if (productId <= 0 || productService.findById(productId) == null) {
+        if (productId <= 0 || productService.findProductById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
         if (file.isEmpty()) {
@@ -39,7 +37,7 @@ public class FileStorageController extends BaseController {
     public ModelAndView uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request,
                                               @PathVariable("id") Integer productVariantId) throws Exception {
         validateModuleProduct.updateImage(true);
-        if (productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
+        if (productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
         if (file.isEmpty()) {

@@ -4,7 +4,6 @@ import com.flowiee.app.entity.*;
 import com.flowiee.app.repository.FileStorageRepository;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.service.ProductService;
-import com.flowiee.app.service.ProductVariantService;
 import com.flowiee.app.service.DocumentService;
 import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.service.AccountService;
@@ -25,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
@@ -43,11 +41,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Autowired
     private ProductService productService;
     @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
     private DocumentService documentService;
-    @Autowired
-    private FileStorageService fileService;
 
     @Override
     public FileStorage findById(Integer fileId) {
@@ -211,7 +205,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(CommonUtil.getPathDirectory(SystemModule.PRODUCT).substring(CommonUtil.getPathDirectory(SystemModule.PRODUCT).indexOf("uploads")));
         //
-        ProductVariant productVariant = productVariantService.findById(bienTheId);
+        ProductVariant productVariant = productService.findProductVariantById(bienTheId);
         fileInfo.setProductVariant(productVariant);
         fileInfo.setProduct(productVariant.getProduct());
         fileInfo.setAccount(new Account(CommonUtil.getCurrentAccountId()));

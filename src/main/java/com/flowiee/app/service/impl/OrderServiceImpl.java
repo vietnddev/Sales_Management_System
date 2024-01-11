@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
-    private ProductVariantService productVariantService;
+    private ProductService productService;
 //    @Autowired
 //    private OrderPayService orderPayService;
     @Autowired
@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
 
             //Insert items detail
             for (Items items : cartService.findById(request.getCartId()).getListItems()) {
-                ProductVariant productVariant = productVariantService.findById(items.getProductVariant().getId());
+                ProductVariant productVariant = productService.findProductVariantById(items.getProductVariant().getId());
                 Price price = priceService.findGiaHienTai(productVariant.getId());
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrder(orderSaved);

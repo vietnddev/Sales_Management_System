@@ -2,13 +2,11 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.VoucherInfoDTO;
-import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.repository.VoucherInfoRepository;
 import com.flowiee.app.service.*;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.DateUtils;
 import com.flowiee.app.utils.ErrorMessages;
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.security.SecureRandom;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -185,7 +182,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
             List<VoucherApply> listVoucherApply = voucherApplyService.findByVoucherId(dto.getId());
             List<Product> listSanPhamApDung = new ArrayList<>();
             for (VoucherApply vSanPham : listVoucherApply) {
-                Product productApplied = productService.findById(vSanPham.getSanPhamId());
+                Product productApplied = productService.findProductById(vSanPham.getSanPhamId());
                 if (productApplied != null) {
                     listSanPhamApDung.add(productApplied);
                 }
@@ -265,7 +262,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 List<VoucherApply> listVoucherApply = voucherApplyService.findByVoucherId(dto.getId());
                 List<Product> listSanPhamApDung = new ArrayList<>();
                 for (VoucherApply vSanPham : listVoucherApply) {
-                    Product productApplied = productService.findById(vSanPham.getSanPhamId());
+                    Product productApplied = productService.findProductById(vSanPham.getSanPhamId());
                     if (productApplied != null) {
                         listSanPhamApDung.add(productApplied);
                     }

@@ -10,16 +10,10 @@ import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.security.ValidateModuleStorage;
+import com.flowiee.app.service.*;
 import com.flowiee.app.utils.*;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Category;
-import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.service.TicketImportGoodsService;
-import com.flowiee.app.service.MaterialService;
-import com.flowiee.app.service.MaterialTempService;
-import com.flowiee.app.service.ProductVariantService;
-import com.flowiee.app.service.ProductVariantTempService;
-import com.flowiee.app.service.SupplierService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,8 +27,8 @@ import java.util.*;
 @RequestMapping(EndPointUtil.STORAGE_TICKET_IMPORT)
 public class TicketImportGoodsController extends BaseController {
     @Autowired private TicketImportGoodsService ticketImportGoodsService;
-    @Autowired private SupplierService productService;
-    @Autowired private ProductVariantService productVariantService;
+    @Autowired private SupplierService supplierService;
+    @Autowired private ProductService productService;
     @Autowired private ProductVariantTempService productVariantServiceTemp;
     @Autowired private MaterialService materialService;
     @Autowired private MaterialTempService materialServiceTemp;
@@ -54,7 +48,7 @@ public class TicketImportGoodsController extends BaseController {
         modelAndView.addObject("draftGoodsImport", ticketImportGoodsPresent);
         modelAndView.addObject("orderTime", ticketImportGoodsPresent.getOrderTime().toString().substring(0, 10));
         modelAndView.addObject("receivedTime", ticketImportGoodsPresent.getReceivedTime().toString().substring(0, 10));
-        modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
         modelAndView.addObject("listBienTheSanPhamSelected", productVariantServiceTemp.findByImportId(ticketImportGoodsPresent.getId()));
         modelAndView.addObject("listMaterial", materialService.findAll());
         modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(ticketImportGoodsPresent.getId()));
@@ -62,10 +56,10 @@ public class TicketImportGoodsController extends BaseController {
         List<Supplier> listSupplier = new ArrayList<>();
         if (ticketImportGoodsPresent.getSupplier() == null) {
             listSupplier.add(new Supplier(null, "Chọn supplier"));
-            listSupplier.addAll(productService.findAll());
+            listSupplier.addAll(supplierService.findAll());
         } else {
             listSupplier.add(ticketImportGoodsPresent.getSupplier());
-            List<Supplier> listSupplierTemp = productService.findAll();
+            List<Supplier> listSupplierTemp = supplierService.findAll();
             listSupplierTemp.remove(ticketImportGoodsPresent.getSupplier());
             listSupplier.addAll(listSupplierTemp);
         }
@@ -121,7 +115,7 @@ public class TicketImportGoodsController extends BaseController {
         }
         List<String> listProductVariantId = Arrays.stream(request.getParameterValues("productVariantId")).toList();
         for (String productVariantId : listProductVariantId) {
-            ProductVariant productVariant = productVariantService.findById(Integer.parseInt(productVariantId));
+            ProductVariant productVariant =  productService.findProductVariantById(Integer.parseInt(productVariantId));
             productVariant.setTicketImportGoods(new TicketImportGoods(importId));
 
             ProductVariantTemp temp = productVariantServiceTemp.findProductVariantInGoodsImport(importId, productVariant.getId());

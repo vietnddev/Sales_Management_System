@@ -40,8 +40,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private ProductService productService;
     @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
     private OrderService orderService;
 //    @Autowired
 //    private OrderPayService orderPayService;
@@ -146,12 +144,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = this.findById(categoryId);
         switch (category.getType()) {
             case "UNIT":
-                if (!productService.findByProductType(categoryId).isEmpty() || !materialService.findByUnit(categoryId).isEmpty()) {
+                if (!productService.findProductsByType(categoryId).isEmpty() || !materialService.findByUnit(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
             case "FABRICTYPE":
-                if (!productVariantService.findByFabricType(categoryId).isEmpty()) {
+                if (!productService.findProductVariantByFabricType(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
@@ -166,17 +164,17 @@ public class CategoryServiceImpl implements CategoryService {
                 }
                 break;
             case "SIZE":
-                if (!productVariantService.findBySize(categoryId).isEmpty()) {
+                if (!productService.findProductVariantBySize(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
             case "COLOR":
-                if (!productVariantService.findByColor(categoryId).isEmpty()) {
+                if (!productService.findProductVariantByColor(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
             case "PRODUCTTYPE":
-                if (!productService.findByProductType(categoryId).isEmpty()) {
+                if (!productService.findProductsByType(categoryId).isEmpty()) {
                     return true;
                 }
                 break;

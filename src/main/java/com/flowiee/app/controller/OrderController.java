@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping(EndPointUtil.PRO_ORDER)
 public class OrderController extends BaseController {
     @Autowired private OrderService orderService;
-    @Autowired private ProductVariantService productVariantService;
+    @Autowired private ProductService productService;
     @Autowired private CategoryService categoryService;
     @Autowired private CustomerService customerService;
     //@Autowired private OrderPayService orderPayService;
@@ -40,7 +40,7 @@ public class OrderController extends BaseController {
         validateModuleProduct.readOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
         modelAndView.addObject("listOrder", orderService.findAllOrder());
-        modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
         modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
@@ -56,7 +56,7 @@ public class OrderController extends BaseController {
         validateModuleProduct.readOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
         modelAndView.addObject("listDonHang", orderService.findAllOrder());
-        modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
         modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
 
@@ -103,7 +103,7 @@ public class OrderController extends BaseController {
             cartService.save(orderCart);
         }
         modelAndView.addObject("listDonHang", orderService.findAllOrder());
-        modelAndView.addObject("listBienTheSanPham", productVariantService.findAll());
+        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
         modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
@@ -131,7 +131,7 @@ public class OrderController extends BaseController {
         for (String productVariantId : listProductVariantId) {
             Items items = new Items();
             items.setOrderCart(cartService.findById(idCart));
-            items.setProductVariant(productVariantService.findById(Integer.parseInt(productVariantId)));
+            items.setProductVariant(productService.findProductVariantById(Integer.parseInt(productVariantId)));
             items.setSoLuong(1);
             items.setGhiChu("");
             itemsService.save(items);

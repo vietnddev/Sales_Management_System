@@ -1,31 +1,67 @@
 package com.flowiee.app.service;
 
-import com.flowiee.app.base.BaseService;
 import com.flowiee.app.dto.ProductDTO;
+import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.entity.Product;
+import com.flowiee.app.entity.ProductVariant;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ProductService extends BaseService<Product> {
-    Page<Product> findAll();
+public interface ProductService {
+    Page<Product> findAllProducts();
 
-    Page<Product> findAll(Integer productTypeId, Integer brandId, String status);
+    Page<Product> findAllProducts(Integer productTypeId, Integer brandId, String status);
 
-    Page<Product> findAll(int size, int page, Integer productTypeId, Integer brandId, String status);
+    Page<Product> findAllProducts(int size, int page, Integer productTypeId, Integer brandId, String status);
 
-    List<Product> findProductIdAndProductName();
+    List<Product> findProductsIdAndProductName();
+
+    List<Product> findProductsByType(Integer productTypeId);
+
+    List<Product> findProductsByUnit(Integer unitId);
+
+    List<Product> findProductsByBrand(Integer brandId);
+
+    List<ProductDTO> setInfoVariantOfProduct(List<ProductDTO> productDTOs);
+
+    ProductVariant findProductVariantById(Integer productVariantId);
+
+    List<ProductVariant> findAllProductVariants();
+
+    List<ProductVariant> findProductVariantBySize(Integer sizeId);
+
+    List<ProductVariant> findProductVariantByColor(Integer colorId);
+
+    List<ProductVariant> findProductVariantByImport(Integer importId);
+
+    List<ProductVariant> findProductVariantByFabricType(Integer fabricTypeId);
+
+    List<ProductVariantDTO>  findAllProductVariantOfProduct(Integer productId);
+
+    Product findProductById(Integer productId);
+
+    String saveProduct(Product product);
+
+    String updateProduct(Product product, Integer productId);
+
+    String deleteProduct(Integer productId);
+
+    String saveProductVariant(ProductVariant productVariant);
+
+    String updateProductVariant(ProductVariant productVariant, Integer productVariantId);
+
+    String deleteProductVariant(Integer productVariantId);
+
+    String updateProductVariantQuantity(Integer soLuong, Integer id);
+
+    Integer findProductVariantTotalQtySell(Integer productId);
+
+    Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId);
+
+    Double findProductVariantPriceSell(int id);
 
     byte[] exportData(List<Integer> listSanPhamId);
 
-    List<Product> findByProductType(Integer productTypeId);
-
-    List<Product> findByUnit(Integer unitId);
-
-    List<Product> findByBrand(Integer brandId);
-
     boolean productInUse(Integer productId);
-
-    List<ProductDTO> setInfoVariant(List<ProductDTO> productDTOs);
 }

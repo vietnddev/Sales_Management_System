@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
 public class ProductController extends BaseController<ProductDTO> {
     private final ProductService          productsService;
-    private final ProductVariantService   productVariantService;
     private final ProductAttributeService productAttributeService;
     private final ProductHistoryService   productHistoryService;
     private final FileStorageService      fileStorageService;
@@ -45,9 +44,8 @@ public class ProductController extends BaseController<ProductDTO> {
     private final ValidateModuleProduct   validateModuleProduct;
 
     @Autowired
-    public ProductController(ProductService productsService, ProductVariantService productVariantService, ProductAttributeService productAttributeService, ProductHistoryService productHistoryService, FileStorageService fileStorageService, CategoryService categoryService, PriceService priceService, VoucherService voucherService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
+    public ProductController(ProductService productsService, ProductAttributeService productAttributeService, ProductHistoryService productHistoryService, FileStorageService fileStorageService, CategoryService categoryService, PriceService priceService, VoucherService voucherService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
         this.productsService = productsService;
-        this.productVariantService = productVariantService;
         this.productAttributeService = productAttributeService;
         this.productHistoryService = productHistoryService;
         this.fileStorageService = fileStorageService;
@@ -82,8 +80,8 @@ public class ProductController extends BaseController<ProductDTO> {
         for (AppConstants.PRODUCT_STATUS productStatus : AppConstants.PRODUCT_STATUS.values()) {
             listProductStatus.put(productStatus.name(), productStatus.getLabel());
         }
-        Page<Product> products = productsService.findAll(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getIdFromRequestParam(pBrand), pStatus);
-        List<ProductDTO> productsReturn = productsService.setInfoVariant(ProductDTO.fromProducts(products.getContent()));
+        Page<Product> products = productsService.findAllProducts(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getIdFromRequestParam(pBrand), pStatus);
+        List<ProductDTO> productsReturn = productsService.setInfoVariantOfProduct(ProductDTO.fromProducts(products.getContent()));
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
         modelAndView.addObject("listProducts", productsReturn);
@@ -132,7 +130,7 @@ public class ProductController extends BaseController<ProductDTO> {
     @GetMapping(value = "/{id}")
     public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
         validateModuleProduct.readProduct(true);
-        if (productId <= 0 || productsService.findById(productId) == null) {
+        if (productId <= 0 || productsService.findProductById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
         List<Category> productTypes = new ArrayList<>();
@@ -163,7 +161,7 @@ public class ProductController extends BaseController<ProductDTO> {
                 units.add(category);
             }
         });
-        ProductDTO productDetail = ProductDTO.fromProduct(productsService.findById(productId));
+        ProductDTO productDetail = ProductDTO.fromProduct(productsService.findProductById(productId));
         LinkedHashMap<String, String> listProductStatus = new LinkedHashMap<>();
         if (AppConstants.PRODUCT_STATUS.ACTIVE.getLabel().equals(productDetail.getProductStatus())) {
             listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
@@ -178,7 +176,7 @@ public class ProductController extends BaseController<ProductDTO> {
         modelAndView.addObject("giaSanPham", new Price());
         modelAndView.addObject("idSanPham", productId);
         modelAndView.addObject("detailProducts", productDetail);
-        modelAndView.addObject("listBienTheSanPham", productVariantService.findAllProductVariantOfProduct(productId));
+        modelAndView.addObject("listBienTheSanPham", productsService.findAllProductVariantOfProduct(productId));
         modelAndView.addObject("listTypeProducts", productTypes);
         modelAndView.addObject("listDmChatLieuVai", fabricTypes);
         modelAndView.addObject("listBrand", brands);
@@ -204,7 +202,7 @@ public class ProductController extends BaseController<ProductDTO> {
         modelAndView.addObject("giaBanSanPham", new Price());
         modelAndView.addObject("listThuocTinh", productAttributeService.getAllAttributes(variantId));
         modelAndView.addObject("bienTheSanPhamId", variantId);
-        modelAndView.addObject("bienTheSanPham", productVariantService.findById(variantId));
+        modelAndView.addObject("bienTheSanPham", productsService.findProductVariantById(variantId));
         modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(variantId));
         modelAndView.addObject("listPrices", priceService.findPricesByProductVariant(variantId));
         FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(variantId);
@@ -218,7 +216,7 @@ public class ProductController extends BaseController<ProductDTO> {
     @PostMapping("/insert")
     public ModelAndView insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
         validateModuleProduct.insertProduct(true);
-        productsService.save(product);
+        productsService.saveProduct(product);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -227,7 +225,7 @@ public class ProductController extends BaseController<ProductDTO> {
         validateModuleProduct.updateProduct(true);
         productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
         productVariant.setMaSanPham(CommonUtil.now("yyyyMMddHHmmss"));
-        productVariantService.save(productVariant);
+        productsService.saveProductVariant(productVariant);
         //Khởi tạo giá default của giá bán
         //priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -245,20 +243,22 @@ public class ProductController extends BaseController<ProductDTO> {
                                               @ModelAttribute("sanPham") Product product,
                                               @PathVariable("id") Integer productId) {
         validateModuleProduct.updateProduct(true);
-        if (product == null|| productId <= 0 || productsService.findById(productId) == null) {
+        if (product == null|| productId <= 0 || productsService.findProductById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
-        productsService.update(product, productId);
+        productsService.updateProduct(product, productId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/variant/update/{id}")
-    public ModelAndView updateProductVariant(HttpServletRequest request, @PathVariable("id") Integer variantId) {
+    public ModelAndView updateProductVariant(HttpServletRequest request,
+                                             @ModelAttribute("productVariant") ProductVariant productVariant,
+                                             @PathVariable("id") Integer productVariantId) {
         validateModuleProduct.updateProduct(true);
-        if (productVariantService.findById(variantId) == null) {
+        if (productsService.findProductVariantById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
-        productVariantService.delete(variantId);
+        productsService.updateProductVariant(productVariant, productVariantId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -278,20 +278,20 @@ public class ProductController extends BaseController<ProductDTO> {
     @PostMapping(value = "/delete/{id}")
     public ModelAndView deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer productId) {
         validateModuleProduct.deleteProduct(true);
-        if (productsService.findById(productId) == null) {
+        if (productsService.findProductById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
-        productsService.delete(productId);
+        productsService.deleteProduct(productId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping(value = "/variant/delete/{id}")
     public ModelAndView deleteProductVariant(HttpServletRequest request, @PathVariable("id") Integer productVariantId) {
         validateModuleProduct.updateProduct(true);
-        if (productVariantService.findById(productVariantId) == null) {
+        if (productsService.findProductVariantById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
-        productVariantService.delete(productVariantId);
+        productsService.deleteProductVariant(productVariantId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -336,7 +336,7 @@ public class ProductController extends BaseController<ProductDTO> {
                                            @ModelAttribute("price") Price price,
                                            @PathVariable("id") Integer productVariantId) {
         validateModuleProduct.priceManagement(true);
-        if (price == null || productVariantId <= 0 || productVariantService.findById(productVariantId) == null) {
+        if (price == null || productVariantId <= 0 || productsService.findProductVariantById(productVariantId) == null) {
             throw new NotFoundException("Product variant or price not found!");
         }
         String idGiaBanHienTai = "";
@@ -365,7 +365,7 @@ public class ProductController extends BaseController<ProductDTO> {
         validateModuleProduct.readGallery(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
         modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
-        modelAndView.addObject("listSanPham", productsService.findAll().getContent());
+        modelAndView.addObject("listSanPham", productsService.findAllProducts().getContent());
         return baseView(modelAndView);
     }
 
@@ -375,7 +375,7 @@ public class ProductController extends BaseController<ProductDTO> {
         validateModuleProduct.readVoucher(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
         modelAndView.addObject("listVoucher", voucherService.findAll(null, null, null, null));
-        modelAndView.addObject("listProduct", productsService.findProductIdAndProductName());
+        modelAndView.addObject("listProduct", productsService.findProductsIdAndProductName());
         modelAndView.addObject("listVoucherType", CommonUtil.getVoucherType());
         modelAndView.addObject("voucher", new VoucherInfo());
         modelAndView.addObject("voucherDetail", new VoucherTicket());
