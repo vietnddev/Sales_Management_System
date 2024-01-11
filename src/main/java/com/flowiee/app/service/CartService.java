@@ -16,6 +16,8 @@ public interface CartService {
 
     Items findItemById(Integer itemId);
 
+    Items findItemByCartAndProductVariant(Integer cartId, Integer productVariantId);
+
     String saveCart(OrderCart orderCart);
 
     String updateCart(OrderCart orderCart, Integer cartId);
@@ -28,5 +30,9 @@ public interface CartService {
 
     String deleteItem(Integer cartId);
 
-    Integer findSoLuongByBienTheSanPhamId(Integer productVariantId);
+    Integer findSoLuongByBienTheSanPhamId(Integer cartId, Integer productVariantId);
+
+    boolean isItemExistsInCart(Integer cartId, Integer productVariantId);
+
+    void increaseItemQtyInCart(Integer itemId, int quantity);
 }

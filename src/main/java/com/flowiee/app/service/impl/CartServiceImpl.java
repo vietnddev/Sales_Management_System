@@ -14,6 +14,7 @@ import com.flowiee.app.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -48,6 +49,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public Items findItemById(Integer itemId) {
         return itemsRepository.findById(itemId).orElse(null);
+    }
+
+    @Override
+    public Items findItemByCartAndProductVariant(Integer cartId, Integer productVariantId) {
+        return itemsRepository.findByCartAndProductVariant(cartId, productVariantId);
     }
 
     @Override
@@ -112,7 +118,19 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Integer findSoLuongByBienTheSanPhamId(Integer productVariantId) {
-        return itemsRepository.findSoLuongByBienTheSanPhamId(productVariantId);
+    public Integer findSoLuongByBienTheSanPhamId(Integer cartId, Integer productVariantId) {
+        return itemsRepository.findSoLuongByBienTheSanPhamId(cartId, productVariantId);
+    }
+
+    @Override
+    public boolean isItemExistsInCart(Integer cartId, Integer productVariantId) {
+        Items item = itemsRepository.findByCartAndProductVariant(cartId, productVariantId);
+        return item != null;
+    }
+
+    @Transactional
+    @Override
+    public void increaseItemQtyInCart(Integer itemId, int quantity) {
+        itemsRepository.updateItemQty(itemId, quantity);
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -84,12 +83,12 @@ public class OrderController extends BaseController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView findDonHangDetail(@PathVariable("id") Integer id) {
+    public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) {
         validateModuleProduct.readOrder(true);
-        if (id <= 0 || orderService.findOrderById(id) == null) {
+        if (orderId <= 0 || orderService.findOrderById(orderId) == null) {
             throw new NotFoundException("Order not found!");
         }
-        OrderDTO orderDetail = orderService.findOrderById(id);
+        OrderDTO orderDetail = orderService.findOrderById(orderId);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_DETAIL);
         modelAndView.addObject("orderDetail", orderDetail);
         modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
@@ -131,19 +130,24 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/ban-hang/cart/item/add")
-    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, HttpServletRequest request) {
+    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
         validateModuleProduct.insertOrder(true);
         if (cartId <= 0 || cartService.findCartById(cartId) == null) {
             throw new NotFoundException("Cart not found!");
         }
-        List<String> listProductVariantId = Arrays.stream(request.getParameterValues("bienTheSanPhamId")).toList();
+        List<String> listProductVariantId = Arrays.stream(bienTheSanPhamId).toList();
         for (String productVariantId : listProductVariantId) {
-            Items items = new Items();
-            items.setOrderCart(cartService.findCartById(cartId));
-            items.setProductVariant(productService.findProductVariantById(Integer.parseInt(productVariantId)));
-            items.setSoLuong(1);
-            items.setGhiChu("");
-            cartService.saveItem(items);
+            if (cartService.isItemExistsInCart(cartId, Integer.parseInt(productVariantId))) {
+                Items items = cartService.findItemByCartAndProductVariant(cartId, Integer.parseInt(productVariantId));
+                cartService.increaseItemQtyInCart(items.getId(), items.getSoLuong() + 1);
+            } else {
+                Items items = new Items();
+                items.setOrderCart(new OrderCart(cartId));
+                items.setProductVariant(new ProductVariant(Integer.parseInt(productVariantId)));
+                items.setSoLuong(1);
+                items.setGhiChu("");
+                cartService.saveItem(items);
+            }
         }
         return new ModelAndView("redirect:/don-hang/ban-hang");
     }

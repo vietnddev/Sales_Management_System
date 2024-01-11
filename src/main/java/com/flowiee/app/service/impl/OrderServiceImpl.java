@@ -30,8 +30,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
@@ -130,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrder(orderSaved);
                 orderDetail.setProductVariant(productVariant);
-                orderDetail.setSoLuong(cartService.findSoLuongByBienTheSanPhamId(productVariant.getId()));
+                orderDetail.setSoLuong(cartService.findSoLuongByBienTheSanPhamId(items.getOrderCart().getId() , productVariant.getId()));
                 orderDetail.setTrangThai(true);
                 orderDetail.setGhiChu(items.getGhiChu());
                 orderDetail.setPrice(price != null ? Float.parseFloat(String.valueOf(price.getGiaBan())) : 0);
