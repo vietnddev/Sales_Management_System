@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.flowiee.app.service.NotificationService;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ public class BaseController<T> {
 
 	public ResponseModel<T> success(T data) {
 		ResponseModel<T> responseModel = new ResponseModel<>();
-		responseModel.setElements(Arrays.asList(data));
+		responseModel.setElements(Collections.singletonList(data));
 
 		ResponseModel.Status status = new ResponseModel.Status();
 		status.setSuccess(true);

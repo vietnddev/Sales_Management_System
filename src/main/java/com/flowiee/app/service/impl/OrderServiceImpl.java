@@ -155,9 +155,7 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(orderSaved);
 
             //Sau khi đã lưu đơn hàng thì xóa all items
-            cartService.findItemsByCartId(request.getCartId()).forEach(items -> {
-                cartService.deleteItem(items.getId());
-            });
+            cartService.deleteAllItems();
 
             //Log
             systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
@@ -354,14 +352,14 @@ public class OrderServiceImpl implements OrderService {
             order.setSalesChannelName(String.valueOf(data[10]));
             order.setNote(String.valueOf(data[11]) != null ? String.valueOf(data[11]) : "-");
             order.setOrderStatus(new Category(Integer.parseInt(String.valueOf(data[12])), String.valueOf(data[13])));
-            //order.setOrderPay(new OrderPay(Integer.parseInt(String.valueOf(data[14])), Boolean.parseBoolean(String.valueOf(data[15]))));
-            //order.setPayMethod(new Category(Integer.parseInt(String.valueOf(data[14])), String.valueOf(data[15])));
             order.setPayMethodName(String.valueOf(data[15]));
-            order.setPaymentTime(DateUtils.convertStringToDate(String.valueOf(data[22]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            if (data[22] != null) {
+                order.setPaymentTime(DateUtils.convertStringToDate(String.valueOf(data[22]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            }
             order.setPaymentTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getPaymentTime()));
-            //order.setCashier(new Account(Integer.parseInt(String.valueOf(data[18])), null, String.valueOf(data[19])));
             order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[16]))));
-            order.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[17])));
+            order.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[17]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            order.setCreatedAtStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getCreatedAt()));
             order.setQrCode(String.valueOf(data[18]));
             order.setVoucherUsedCode(data[20] != null ? String.valueOf(data[20]) : "-");
             order.setPaymentStatus(data[21] != null && Boolean.parseBoolean(String.valueOf(data[21])));

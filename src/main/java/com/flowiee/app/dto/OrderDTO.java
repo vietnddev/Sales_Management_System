@@ -36,7 +36,6 @@ public class OrderDTO implements Serializable {
     private Category orderStatus; //future remove
     private Integer orderStatusId;
     private String orderStatusName;
-    //private OrderPay orderPay; //future remove
     private Integer orderPayId;
     private String orderPayName;
     private Category payMethod; //future remove
@@ -49,6 +48,7 @@ public class OrderDTO implements Serializable {
     private Integer createdById;
     private String createdByName;
     private Date createdAt;
+	private String createdAtStr;
     private String qrCode;
     private int totalProduct;
 	private String voucherUsedCode;

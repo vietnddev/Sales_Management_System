@@ -78,9 +78,9 @@
                                                         <input class="form-control form-control-sm" name="ghiChu"
                                                                th:value="${item.ghiChu}" readonly>
                                                     </td>
-                                                    <td></td>
+                                                    <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                     <td th:text="${item.soLuong}"></td>
-                                                    <td>200,000 vnđ</td>
+                                                    <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.soLuong, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                     <td>
                                                         <!--UPDATE ITEMS-->
                                                         <button type="button" class="btn btn-sm btn-primary"
@@ -348,7 +348,9 @@
                                                       th:if="${cart.listItems.size() > 0}"
                                                       th:text="${cart.listItems.size()}"></span>
                                             </label>
-                                            <span class="col-sm-6 text-right">0</span>
+
+                                            <span class="col-sm-6 text-right"
+                                                  th:text="${#numbers.formatDecimal (totalAmountWithoutDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></span>
                                         </div>
                                         <hr>
                                         <div class="form-group row">
@@ -358,12 +360,14 @@
                                         <hr>
                                         <div class="form-group row">
                                             <label class="col-sm-6">Khuyến mãi</label>
-                                            <span class="col-sm-6 text-right">0</span>
+                                            <span class="col-sm-6 text-right"
+                                                  th:text="${#numbers.formatDecimal (amountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></span>
                                         </div>
                                         <hr>
                                         <div class="form-group row">
-                                            <label class="col-sm-6">Thành tiền</label>
-                                            <label class="col-sm-6 text-right">200.000đ</label>
+                                            <label class="col-sm-6">Phải thu</label>
+                                            <label class="col-sm-6 text-right"
+                                                   th:text="${#numbers.formatDecimal (totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></label>
                                         </div>
                                         <hr>
                                         <div class="form-group">

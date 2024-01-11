@@ -32,7 +32,11 @@ public interface CartService {
 
     Integer findSoLuongByBienTheSanPhamId(Integer cartId, Integer productVariantId);
 
+    Double calTotalAmountWithoutDiscount(int cartId);
+
     boolean isItemExistsInCart(Integer cartId, Integer productVariantId);
 
     void increaseItemQtyInCart(Integer itemId, int quantity);
+
+    void deleteAllItems();
 }

@@ -33,32 +33,34 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 	private static final String MODULE = SystemModule.CATEGORY.name();
 	
+    private final CategoryRepository      categoryRepository;
+    private final CategoryHistoryService  categoryHistoryService;
+    private final ProductService          productService;
+    private final OrderService            orderService;
+    private final DocumentService         documentService;
+    private final NotificationService     notificationService;
+    private final ImportService           importService;
+    private final FlowieeImportRepository flowieeImportRepository;
+    private final FileStorageService      fileStorageService;
+    private final FileStorageRepository   fileStorageRepository;
+    private final AccountService          accountService;
+    private final MaterialService         materialService;
+
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private CategoryHistoryService categoryHistoryService;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private OrderService orderService;
-//    @Autowired
-//    private OrderPayService orderPayService;
-    @Autowired
-    private DocumentService documentService;
-    @Autowired
-    private NotificationService notificationService;
-    @Autowired
-    private ImportService importService;
-    @Autowired
-    private FlowieeImportRepository flowieeImportRepository;
-    @Autowired
-    private FileStorageService fileStorageService;
-    @Autowired
-    private FileStorageRepository fileStorageRepository;
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private MaterialService materialService;
+    public CategoryServiceImpl(ImportService importService, CategoryRepository categoryRepository, CategoryHistoryService categoryHistoryService, ProductService productService, MaterialService materialService, OrderService orderService, DocumentService documentService, NotificationService notificationService, FlowieeImportRepository flowieeImportRepository, FileStorageService fileStorageService, FileStorageRepository fileStorageRepository, AccountService accountService) {
+        this.importService = importService;
+        this.categoryRepository = categoryRepository;
+        this.categoryHistoryService = categoryHistoryService;
+        this.productService = productService;
+        this.materialService = materialService;
+        this.orderService = orderService;
+        this.documentService = documentService;
+        this.notificationService = notificationService;
+        this.flowieeImportRepository = flowieeImportRepository;
+        this.fileStorageService = fileStorageService;
+        this.fileStorageRepository = fileStorageRepository;
+        this.accountService = accountService;
+    }
 
     @Override
     public List<Category> findAll() {
@@ -148,7 +150,7 @@ public class CategoryServiceImpl implements CategoryService {
                     return true;
                 }
                 break;
-            case "FABRICTYPE":
+            case "FABRIC_TYPE":
                 if (!productService.findProductVariantByFabricType(categoryId).isEmpty()) {
                     return true;
                 }
@@ -158,7 +160,7 @@ public class CategoryServiceImpl implements CategoryService {
                     return true;
                 }
                 break;
-            case "SALESCHANNEL":
+            case "SALES_CHANNEL":
                 if (!orderService.findOrdersBySalesChannelId(categoryId).isEmpty()) {
                     return true;
                 }
@@ -173,17 +175,17 @@ public class CategoryServiceImpl implements CategoryService {
                     return true;
                 }
                 break;
-            case "PRODUCTTYPE":
+            case "PRODUCT_TYPE":
                 if (!productService.findProductsByType(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
-            case "DOCUMENTTYPE":
+            case "DOCUMENT_TYPE":
                 if (!documentService.findByDoctype(categoryId).isEmpty()) {
                     return true;
                 }
                 break;
-            case "ORDERSTATUS":
+            case "ORDER_STATUS":
                 if (!orderService.findOrdersByStatus(categoryId).isEmpty()) {
                     return true;
                 }

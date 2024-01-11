@@ -33,8 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
 public class ProductController extends BaseController<ProductDTO> {
-    private final ProductService        productService;
-    private final ProductHistoryService productHistoryService;
+    private final ProductService          productService;
+    private final ProductHistoryService   productHistoryService;
     private final FileStorageService      fileStorageService;
     private final PriceService            priceService;
     private final CategoryService         categoryService;

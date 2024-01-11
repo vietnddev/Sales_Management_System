@@ -7,6 +7,7 @@ import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.ItemsRepository;
 import com.flowiee.app.repository.OrderCartRepository;
 import com.flowiee.app.service.CartService;
+import com.flowiee.app.service.PriceService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
@@ -25,6 +26,8 @@ public class CartServiceImpl implements CartService {
     private ItemsRepository itemsRepository;
     @Autowired
     private SystemLogService    systemLogService;
+    @Autowired
+    private PriceService priceService;
 
     @Override
     public List<OrderCart> findAllCarts() {
@@ -33,7 +36,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<OrderCart> findCartByAccountId(Integer accountId) {
-        return cartRepository.findByAccountId(accountId);
+        List<OrderCart> listCart = cartRepository.findByAccountId(accountId);
+        for (OrderCart cart : listCart) {
+            for (Items item : cart.getListItems()) {
+                item.setPrice(priceService.findGiaHienTai(item.getProductVariant().getId()).getGiaBan());
+            }
+        }
+        return listCart;
     }
 
     @Override
@@ -123,6 +132,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public Double calTotalAmountWithoutDiscount(int cartId) {
+        return itemsRepository.calTotalAmountWithoutDiscount(cartId);
+    }
+
+    @Override
     public boolean isItemExistsInCart(Integer cartId, Integer productVariantId) {
         Items item = itemsRepository.findByCartAndProductVariant(cartId, productVariantId);
         return item != null;
@@ -132,5 +146,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public void increaseItemQtyInCart(Integer itemId, int quantity) {
         itemsRepository.updateItemQty(itemId, quantity);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllItems() {
+        itemsRepository.deleteAllItems();
     }
 }

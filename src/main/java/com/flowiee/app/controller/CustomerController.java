@@ -3,6 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
+import com.flowiee.app.entity.Order;
 import com.flowiee.app.utils.*;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
@@ -11,6 +12,7 @@ import com.flowiee.app.service.OrderService;
 import com.flowiee.app.entity.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -161,5 +163,10 @@ public class CustomerController extends BaseController {
         }
         customerService.setContactUnUseDefault(contactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
+    }
+
+    @PostMapping("/orders-history")
+    public ResponseEntity<List<CustomerDTO>> getOrderHistory() {
+        return ResponseEntity.ok(customerService.findAllCustomer(null, null, null, null, null, null));
     }
 }

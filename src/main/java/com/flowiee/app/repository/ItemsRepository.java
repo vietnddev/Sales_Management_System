@@ -21,7 +21,14 @@ public interface ItemsRepository extends JpaRepository<Items, Integer> {
     @Query("from Items i where i.orderCart.id=:cartId and i.productVariant.id=:productVariantId")
     Items findByCartAndProductVariant(@Param("cartId") Integer cartId, @Param("productVariantId") Integer productVariantId);
 
+    @Query("select nvl(sum(p.giaBan * i.soLuong), 0) from Items i left join Price p on p.productVariant.id = i.productVariant.id where p.status = 'ACTIVE' and i.orderCart.id=:cartId")
+    Double calTotalAmountWithoutDiscount(@Param("cartId") int cartId);
+
     @Modifying
     @Query("update Items i set i.soLuong=:quantity where i.id=:itemId")
     void updateItemQty(@Param("itemId") Integer itemId, @Param("quantity") Integer quantity);
+
+    @Modifying
+    @Query("delete Items")
+    void deleteAllItems();
 }

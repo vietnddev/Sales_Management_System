@@ -9,7 +9,7 @@
 		<relativePath />
 	</parent>
 	<groupId>com.flowiee</groupId>
-	<artifactId>FlowieeOfficial</artifactId>
+	<artifactId>FlowieeOfficial_Backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>FlowieeOfficial</name>

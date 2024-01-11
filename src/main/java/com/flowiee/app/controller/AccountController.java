@@ -25,10 +25,14 @@ import java.util.List;
 @RestController
 @RequestMapping(EndPointUtil.SYS_ACCOUNT)
 public class AccountController extends BaseController {
+    private final RoleService          roleService;
+    private final ValidateModuleSystem validateModuleSystem;
+
     @Autowired
-    private RoleService roleService;
-    @Autowired
-    private ValidateModuleSystem validateModuleSystem;
+    public AccountController(RoleService roleService, ValidateModuleSystem validateModuleSystem) {
+        this.roleService = roleService;
+        this.validateModuleSystem = validateModuleSystem;
+    }
 
     @GetMapping
     public ModelAndView findAllAccount() {
@@ -69,8 +73,8 @@ public class AccountController extends BaseController {
 
     @PostMapping(value = "/update/{id}")
     public ModelAndView update(@ModelAttribute("account") Account accountEntity,
-                         @PathVariable("id") Integer accountId,
-                         HttpServletRequest request) {
+                               @PathVariable("id") Integer accountId,
+                               HttpServletRequest request) {
         validateModuleSystem.updateAccount(true);
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
@@ -104,11 +108,10 @@ public class AccountController extends BaseController {
         }
         roleService.deleteAllRole(accountId);
         List<ActionOfModule> listAction = roleService.findAllAction();
-        for (int i = 0; i < listAction.size(); i++) {
-            ActionOfModule sysAction = listAction.get(i);
+        for (ActionOfModule sysAction : listAction) {
             String clientActionKey = request.getParameter(sysAction.getActionKey());
             if (clientActionKey != null) {
-                Boolean isAuthorSelected = clientActionKey.equals("on") ? true : false;
+                boolean isAuthorSelected = clientActionKey.equals("on");
                 if (isAuthorSelected) {
                     roleService.updatePermission(sysAction.getModuleKey(), sysAction.getActionKey(), accountId);
                 }

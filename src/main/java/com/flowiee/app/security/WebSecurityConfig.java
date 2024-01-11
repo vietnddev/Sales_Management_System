@@ -2,6 +2,7 @@ package com.flowiee.app.security;
 
 import com.flowiee.app.utils.EndPointUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -14,6 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,12 +54,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable().cors();
+//		httpSecurity.csrf().disable().cors();
 
 		//Cấu hình phần này để có thể nhúng URL vào các thẻ như iframe,..
-		httpSecurity.headers().frameOptions().sameOrigin();
+		//httpSecurity.headers().frameOptions().sameOrigin();
 
 		httpSecurity
+				.cors().and()
+				.csrf().disable()
 				.authorizeRequests()
 				.antMatchers(EndPointUtil.SYS_CONFIG, EndPointUtil.SYS_ACCOUNT, EndPointUtil.SYS_LOG).hasRole("ADMIN")
 				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**").permitAll()
@@ -78,4 +87,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				//Page default if you are not authorized
 				.exceptionHandling().accessDeniedPage("/error/403");
 	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurerAdapter() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**");
+//			}
+//		};
+//	}
+
 }

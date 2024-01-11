@@ -144,7 +144,7 @@
                                         <a th:href="@{/don-hang/{id}(id=${list.orderId})}"
                                            th:text="${list.orderCode}"></a>
                                     </td>
-                                    <td th:text="${list.orderTime}"></td>
+                                    <td th:text="${list.orderTimeStr}"></td>
                                     <td th:text="${list.receiverAddress}"></td>
                                     <td th:text="${list.orderBy.tenKhachHang}"></td>
                                     <td th:text="${list.receiverPhone}"></td>

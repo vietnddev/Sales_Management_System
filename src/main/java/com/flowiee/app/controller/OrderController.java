@@ -121,6 +121,12 @@ public class OrderController extends BaseController {
         List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtil.getCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);
 
+        double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
+        double amountDiscount = 0;
+        double totalAmountDiscount = totalAmountWithoutDiscount - amountDiscount;
+        modelAndView.addObject("totalAmountWithoutDiscount", totalAmountWithoutDiscount);
+        modelAndView.addObject("amountDiscount", amountDiscount);
+        modelAndView.addObject("totalAmountDiscount", totalAmountDiscount);
         modelAndView.addObject("donHangRequest", new OrderRequest());
         modelAndView.addObject("donHang", new Order());
         modelAndView.addObject("khachHang", new Customer());
@@ -242,5 +248,10 @@ public class OrderController extends BaseController {
     public ResponseEntity<?> exportDanhSachDonHang() {
         validateModuleProduct.readOrder(true);
         return orderService.exportDanhSachDonHang();
+    }
+
+    @GetMapping("/abc")
+    public ModelAndView getOrderInfoByScanQRCode() {
+        return null;
     }
 }
