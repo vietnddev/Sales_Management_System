@@ -41,8 +41,8 @@
                                     </div>
                                     <div class="col-4 text-right">
                                         <button type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#modelAddKhachHang">
-                                            Thêm mới
+                                                data-target="#modelAddKhachHang" id="testOK">
+                                                Thêm mới
                                         </button>
                                         <div class="modal fade" id="modelAddKhachHang">
                                             <div class="modal-dialog">
@@ -118,6 +118,9 @@
                                             <th></th>
                                         </tr>
                                     </thead>
+                                    <tbody id="bodyTable">
+
+                                    </tbody>
                                     <tbody>
                                         <tr th:each="list, index : ${listCustomer}">
                                             <td th:text="${index.index + 1}" class="vertical-center"></td>
@@ -222,6 +225,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
         <!-- /.content -->
     </div>
@@ -239,6 +243,56 @@
     <div th:replace="header :: scripts">
         <!-- Nhúng các file JavaScript vào -->
     </div>
+
+    <script>
+        const loadCustomer = document.getElementById('testOK');
+
+        document.getElementById('testOK').addEventListener('click', async () => {
+            try {
+                const apiUrl = 'http://localhost:8085/customer/orders-history';
+                const params = {id: 'OK'};
+                let response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(params)
+                });
+                let data = await response.json();
+                console.log(data);
+                if ('name' in data[0]) {
+                    // In ra giá trị của thuộc tính 'name'
+                    console.log(data[0].name);
+                    document.getElementById('testOK').innerText = data[0].name;
+                } else {
+                    console.error('Không tìm thấy thuộc tính "name" trong đối tượng.');
+                }
+
+                let contentTable =  document.getElementById('bodyTable');
+                //contentTable.innerHTML = '';
+                for (let i = 0; i < data.length; i++) {
+                    console.log('Name ' + data[i].name);
+                    const rowHTML = `<tr>
+                                        <td>${data[i].id}</td>
+                                        <td>${data[i].name}</td>
+                                        <td>${data[i].sex}</td>
+                                        <td>${data[i].birthday}</td>
+                                     </tr>`;
+                    contentTable.innerHTML += rowHTML;
+                }
+            } catch (error) {
+                console.error('Lỗi khi gọi API:', error);
+            }
+        });
+
+        // console.log('Start call api');
+        // fetch('http://localhost:8085/customer/orders-history')
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         console.log(data[0].name);
+        //
+        //     })
+        //     .catch(error => console.error('Lỗi khi gọi API:', error));
+    </script>
+
 </div>
 
 </body>

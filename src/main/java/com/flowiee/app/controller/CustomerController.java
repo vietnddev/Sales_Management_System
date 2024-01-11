@@ -166,7 +166,8 @@ public class CustomerController extends BaseController {
     }
 
     @PostMapping("/orders-history")
-    public ResponseEntity<List<CustomerDTO>> getOrderHistory() {
+    public ResponseEntity<List<CustomerDTO>> getOrderHistory(@RequestBody String id) {
+        System.out.println("test: " + id);
         return ResponseEntity.ok(customerService.findAllCustomer(null, null, null, null, null, null));
     }
 }
