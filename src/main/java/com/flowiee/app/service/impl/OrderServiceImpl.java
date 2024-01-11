@@ -48,26 +48,26 @@ public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private static final String module = SystemModule.PRODUCT.name();
 
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
+    private final ProductService productService;
+    private final SystemLogService systemLogService;
+    private final CartService cartService;
+    private final PriceService priceService;
+    private final VoucherTicketService voucherTicketService;
+    private final FileStorageService fileStorageService;
+
     @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
-    @Autowired
-    private ProductService productService;
-//    @Autowired
-//    private OrderPayService orderPayService;
-    @Autowired
-    private SystemLogService systemLogService;
-    @Autowired
-    private CartService cartService;
-    @Autowired
-    private ItemsService itemsService;
-    @Autowired
-    private PriceService priceService;
-    @Autowired
-    private VoucherTicketService voucherTicketService;
-    @Autowired
-    private FileStorageService fileStorageService;
+    public OrderServiceImpl(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductService productService, SystemLogService systemLogService, CartService cartService, PriceService priceService, VoucherTicketService voucherTicketService, FileStorageService fileStorageService) {
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
+        this.productService = productService;
+        this.systemLogService = systemLogService;
+        this.cartService = cartService;
+        this.priceService = priceService;
+        this.voucherTicketService = voucherTicketService;
+        this.fileStorageService = fileStorageService;
+    }
 
     @Override
     public List<OrderDTO> findAllOrder() {
@@ -124,13 +124,13 @@ public class OrderServiceImpl implements OrderService {
             fileStorageService.saveQRCodeOfOrder(orderSaved.getId());
 
             //Insert items detail
-            for (Items items : cartService.findById(request.getCartId()).getListItems()) {
+            for (Items items : cartService.findCartById(request.getCartId()).getListItems()) {
                 ProductVariant productVariant = productService.findProductVariantById(items.getProductVariant().getId());
                 Price price = priceService.findGiaHienTai(productVariant.getId());
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrder(orderSaved);
                 orderDetail.setProductVariant(productVariant);
-                orderDetail.setSoLuong(itemsService.findSoLuongByBienTheSanPhamId(productVariant.getId()));
+                orderDetail.setSoLuong(cartService.findSoLuongByBienTheSanPhamId(productVariant.getId()));
                 orderDetail.setTrangThai(true);
                 orderDetail.setGhiChu(items.getGhiChu());
                 orderDetail.setPrice(price != null ? Float.parseFloat(String.valueOf(price.getGiaBan())) : 0);
@@ -155,8 +155,8 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(orderSaved);
 
             //Sau khi đã lưu đơn hàng thì xóa all items
-            itemsService.findByCartId(request.getCartId()).forEach(items -> {
-                itemsService.delete(items.getId());
+            cartService.findItemsByCartId(request.getCartId()).forEach(items -> {
+                cartService.deleteItem(items.getId());
             });
 
             //Log

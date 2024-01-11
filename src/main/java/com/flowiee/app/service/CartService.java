@@ -2,16 +2,31 @@ package com.flowiee.app.service;
 
 import java.util.List;
 
+import com.flowiee.app.entity.Items;
 import com.flowiee.app.entity.OrderCart;
 
 public interface CartService {
-    List<OrderCart> findAll();
+    List<OrderCart> findAllCarts();
 
-    List<OrderCart> findByAccountId(Integer accountId);
+    List<OrderCart> findCartByAccountId(Integer accountId);
 
-    OrderCart findById(int id);
+    List<Items> findItemsByCartId(Integer cartId);
 
-    String save(OrderCart orderCart);
+    OrderCart findCartById(Integer cartId);
 
-    String delete(int id);
+    Items findItemById(Integer itemId);
+
+    String saveCart(OrderCart orderCart);
+
+    String updateCart(OrderCart orderCart, Integer cartId);
+
+    String deleteCart(Integer cartId);
+
+    String saveItem(Items items);
+
+    String updateItem(Items items, Integer cartId);
+
+    String deleteItem(Integer cartId);
+
+    Integer findSoLuongByBienTheSanPhamId(Integer productVariantId);
 }

@@ -37,7 +37,7 @@
                                 <div class="row" th:each="cart, cartIndex : ${listCart}">
                                     <div class="col-sm-8 border">
                                         <form class="row mt-3"
-                                              th:action="@{/don-hang/ban-hang/cart/{id}/add-items(id=${cart.id})}"
+                                              th:action="@{/don-hang/ban-hang/cart/item/add}"
                                               method="POST">
                                             <div class="col-sm-10 form-group">
                                                 <select class="form-control select2" multiple="multiple"
@@ -50,11 +50,9 @@
                                                     </option>
                                                 </select>
                                             </div>
+                                            <input type="hidden" name="cartId" th:value="${cart.id}">
                                             <div class="col-sm-2 form-group">
-                                                <button type="submit" class="btn btn-sm btn-primary w-100"
-                                                        style="height: 38px">
-                                                    Thêm
-                                                </button>
+                                                <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px">Thêm</button>
                                             </div>
                                         </form>
                                         <div class="row">
@@ -94,11 +92,10 @@
                                                              th:id="'modalUpdateItems_' + ${item.id}">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
-                                                                    <form th:action="@{/don-hang/ban-hang/cart/update/{id}(id=${cart.id})}"
+                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/update}"
                                                                           th:object="${items}" method="POST">
                                                                         <div class="modal-header">
-                                                                            <strong class="modal-title">Cập nhật giỏ
-                                                                                hàng</strong>
+                                                                            <strong class="modal-title">Cập nhật sản phẩm</strong>
                                                                             <button type="button" class="close"
                                                                                     data-dismiss="modal"
                                                                                     aria-label="Close">
@@ -106,15 +103,14 @@
                                                                             </button>
                                                                         </div>
                                                                         <div class="modal-body">
-                                                                            <input type="hidden" name="id"
-                                                                                   th:value="${item.id}">
+                                                                            <input type="hidden" name="cartId" th:value="${cart.id}">
+                                                                            <input type="hidden" name="id"     th:value="${item.id}">
                                                                             <input type="hidden" name="productVariant"
                                                                                    th:value="${item.productVariant.id}">
                                                                             <div class="form-group row"
                                                                                  style="display: flex; align-items: center;
                                                                                                         margin: 0 0 15px 0">
-                                                                                <label class="col-sm-4 text-left">Số
-                                                                                    lượng</label>
+                                                                                <label class="col-sm-4 text-left">Số lượng</label>
                                                                                 <input class="col-sm-8 form-control"
                                                                                        type="number" name="soLuong"
                                                                                        min="1"
@@ -123,8 +119,7 @@
                                                                             </div>
                                                                             <div class="form-group row"
                                                                                  style="display: flex; align-items: center; margin: 0">
-                                                                                <label class="col-sm-4 text-left">Ghi
-                                                                                    chú</label>
+                                                                                <label class="col-sm-4 text-left">Ghi chú</label>
                                                                                 <textarea class="col-sm-8 form-control"
                                                                                           id="ghiChu"
                                                                                           name="ghiChu"
@@ -137,8 +132,7 @@
                                                                                     data-dismiss="modal">Hủy
                                                                             </button>
                                                                             <button type="submit"
-                                                                                    class="btn btn-sm btn-primary">Đồng
-                                                                                ý
+                                                                                    class="btn btn-sm btn-primary">Đồng ý
                                                                             </button>
                                                                         </div>
                                                                     </form>

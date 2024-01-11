@@ -8,6 +8,7 @@ import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.CategoryRepository;
+import com.flowiee.app.repository.ProductAttributeRepository;
 import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.repository.ProductVariantRepository;
 import com.flowiee.app.service.*;
@@ -49,6 +50,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productsRepository;
     @Autowired
     private ProductVariantRepository productVariantRepository;
+    @Autowired
+    private ProductAttributeRepository productAttributeRepository;
     @Autowired
     private PriceService priceService;
     @Autowired
@@ -98,14 +101,116 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findProductsByType(Integer productTypeId) {
+        return productsRepository.findByProductType(productTypeId);
+    }
+
+    @Override
+    public List<Product> findProductsByUnit(Integer unitId) {
+        return productsRepository.findByUnit(unitId);
+    }
+
+    @Override
+    public List<Product> findProductsByBrand(Integer brandId) {
+        return productsRepository.findByBrand(brandId);
+    }
+
+    @Override
+    public List<ProductDTO> setInfoVariantOfProduct(List<ProductDTO> productDTOs) {
+        for (ProductDTO p : productDTOs) {
+            LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
+            int totalQtyStorage = 0;
+            for (Category color : categoryRepository.findColorOfProduct(p.getProductId())) {
+                StringBuilder sizeName = new StringBuilder();
+                List<Category> listSize = categoryRepository.findSizeOfColorOfProduct(p.getProductId(), color.getId());
+                for (int i = 0; i < listSize.size(); i++) {
+                    int qtyStorage = this.findProductVariantQuantityBySizeOfEachColor(p.getProductId(), color.getId(), listSize.get(i).getId());
+                    if (i == listSize.size() - 1) {
+                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")");
+                    } else {
+                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")").append(", ");
+                    }
+                    totalQtyStorage += qtyStorage;
+                }
+                variantInfo.put(color.getName(), sizeName.toString());
+            }
+            p.setProductVariantInfo(variantInfo);
+
+            p.setTotalQtyStorage(totalQtyStorage);
+            p.setTotalQtySell(this.findProductVariantTotalQtySell(p.getProductId()));
+        }
+        return productDTOs;
+    }
+
+    @Override
     public List<ProductVariant> findAllProductVariants() {
         return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, null, null));
     }
 
+    @Override
+    public List<ProductVariant> findProductVariantBySize(Integer sizeId) {
+        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, sizeId, null));
+    }
+
+    @Override
+    public List<ProductVariant> findProductVariantByColor(Integer colorId) {
+        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, colorId, null, null));
+    }
+
+    @Override
+    public List<ProductVariant> findProductVariantByImport(Integer ticketImportId) {
+        return this.extractProductVariantQuery(productVariantRepository.findAll(null, ticketImportId, null, null, null));
+    }
+
+    @Override
+    public List<ProductVariant> findProductVariantByFabricType(Integer fabricTypeId) {
+        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, null, fabricTypeId));
+    }
+
+    @Override
+    public List<ProductVariantDTO> findAllProductVariantOfProduct(Integer productId) {
+        List<ProductVariantDTO> listReturn = new ArrayList<>();
+        List<ProductVariant> data = this.extractProductVariantQuery(productVariantRepository.findAll(productId, null, null, null, null));
+        for (ProductVariant productVariant : data) {
+            ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
+            List<PriceDTO> listPriceOfProductVariant = priceService.findPricesByProductVariant(dataModel.getProductVariantId());
+            PriceDTO price =  PriceDTO.fromPrice(priceService.findGiaHienTai(dataModel.getProductVariantId()));
+            if (price != null) {
+                dataModel.setPriceSellId(price.getId());
+                dataModel.setPriceSellValue(Double.parseDouble(price.getGiaBan()));
+            } else {
+                dataModel.setPriceSellId(null);
+                dataModel.setPriceSellValue(null);
+            }
+            dataModel.setListPrices(listPriceOfProductVariant);
+            dataModel.setDiscountPercent(null);
+            dataModel.setPriceMaxDiscount(null);
+            dataModel.setPriceAfterDiscount(null);
+            listReturn.add(dataModel);
+        }
+        return listReturn;
+    }
+
+    @Override
+    public List<ProductAttribute> findAllAttributes(Integer productVariantId){
+        ProductVariant productVariant = new ProductVariant();
+        productVariant.setId(productVariantId);
+        return productAttributeRepository.findByProductVariantId(productVariant);
+    }
 
     @Override
     public Product findProductById(Integer id) {
         return productsRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public ProductVariant findProductVariantById(Integer productVariantId) {
+        return productVariantRepository.findById(productVariantId).orElse(null);
+    }
+
+    @Override
+    public ProductAttribute findProductAttributeById(Integer attributeId){
+        return productAttributeRepository.findById(attributeId).orElse(null);
     }
 
     @Override
@@ -127,7 +232,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public String updateProduct(Product productToUpdate, Integer productId) {
-    	Product productBefore = null;
+        Product productBefore = null;
         try {
             if (productToUpdate.getMoTaSanPham().isEmpty()) {
                 productToUpdate.setMoTaSanPham("-");;
@@ -175,7 +280,7 @@ public class ProductServiceImpl implements ProductService {
             if (productInUse(id)) {
                 throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
             }
-            productsRepository.deleteById(id);            
+            productsRepository.deleteById(id);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
             logger.info("Delete product success! productId=" + id);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -238,11 +343,109 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public String saveProductAttribute(ProductAttribute productAttribute){
+        productAttributeRepository.save(productAttribute);
+        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới thuộc tính sản phẩm");
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String updateProductAttribute(ProductAttribute attribute, Integer attributeId) {
+        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật thuộc tính sản phẩm");
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String deleteProductAttribute(Integer attributeId) {
+        productAttributeRepository.deleteById(attributeId);
+        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Xóa thuộc tính sản phẩm");
+        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    }
+
+    @Override
+    public String updateProductVariantQuantity(Integer quantity, Integer id) {
+        ProductVariant productVariant = this.findProductVariantById(id);
+        productVariant.setSoLuongKho(productVariant.getSoLuongKho() - quantity);
+        try {
+            productVariantRepository.save(productVariant);
+            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        } catch (Exception e) {
+            logger.error("Lỗi khi cập nhật số lượng sản phẩm!");
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
+    }
+
+    @Override
+    public Integer findProductVariantTotalQtySell(Integer productId) {
+        return productVariantRepository.findTotalQtySell(productId);
+    }
+
+    @Override
+    public Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId) {
+        return productVariantRepository.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
+    }
+
+    @Override
+    public Double findProductVariantPriceSell(int id) {
+        if (priceService.findGiaHienTai(id) != null) {
+            return priceService.findGiaHienTai(id).getGiaBan();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean productInUse(Integer productId) {
+        return (!this.findAllProductVariantOfProduct(productId).isEmpty());
+    }
+
+    private Page<Product> setImageActiveAndLoadVoucherApply(Page<Product> products) {
+        for (Product p : products) {
+            FileStorage imageActive = fileService.findImageActiveOfSanPham(p.getId());
+            p.setImageActive(Objects.requireNonNullElseGet(imageActive, FileStorage::new));
+
+            List<Integer> listVoucherInfoId = new ArrayList<>();
+            voucherApplyService.findByProductId(p.getId()).forEach(voucherApplyDTO -> {
+                listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
+            });
+            if (!listVoucherInfoId.isEmpty()) {
+                p.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherInfoId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
+            }
+        }
+        return products;
+    }
+
+    private List<ProductVariant> extractProductVariantQuery(List<Object[]> objects) {
+        List<ProductVariant> dataResponse = new ArrayList<>();
+        for (Object[] data : objects) {
+            ProductVariant productVariant = new ProductVariant();
+            productVariant.setProduct(new Product(Integer.parseInt(String.valueOf(data[0])), String.valueOf(data[1])));
+            productVariant.setId(Integer.parseInt(String.valueOf(data[2])));
+            productVariant.setMaSanPham(String.valueOf(data[3]));
+            productVariant.setTenBienThe(String.valueOf(data[4]));
+            productVariant.setColor(new Category(Integer.parseInt(String.valueOf(data[5])), String.valueOf(data[6])));
+            productVariant.setSize(new Category(Integer.parseInt(String.valueOf(data[7])), String.valueOf(data[8])));
+            productVariant.setFabricType( new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
+            productVariant.setSoLuongKho(Integer.parseInt(String.valueOf(data[11])));
+            productVariant.setSoLuongDaBan(Integer.parseInt(String.valueOf(data[12])));
+            productVariant.setGarmentFactory(new GarmentFactory(Integer.parseInt(String.valueOf(data[13])), String.valueOf(data[14])));
+            productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15])), String.valueOf(data[16])));
+            productVariant.setTicketImportGoods(new TicketImportGoods(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
+            Integer priceId = data[19] != null ? Integer.parseInt(String.valueOf(data[19])) : null;
+            Double priceSellValue = data[20] != null ? Double.parseDouble(String.valueOf(data[20])) : null;
+            productVariant.setPrice(new Price(priceId, priceSellValue));
+            productVariant.setTrangThai(String.valueOf(data[21]));
+            dataResponse.add(productVariant);
+        }
+        return dataResponse;
+    }
+
+    @Override
     public byte[] exportData(List<Integer> listSanPhamId) {
         StringBuilder strSQL = new StringBuilder("SELECT ");
         strSQL.append("lsp.TEN_LOAI as LOAI_SAN_PHAM, ").append("spbt.MA_SAN_PHAM, ").append("spbt.TEN_BIEN_THE, ").append("sz.TEN_LOAI as KICH_CO, ").append("cl.TEN_LOAI as MAU_SAC, ")
-              .append("(SELECT spg.GIA_BAN FROM san_pham_gia spg WHERE spg.BIEN_THE_ID = spbt.ID AND spg.TRANG_THAI = 1) as GIA_BAN, ")
-              .append("spbt.SO_LUONG_KHO, ").append("spbt.DA_BAN ");
+                .append("(SELECT spg.GIA_BAN FROM san_pham_gia spg WHERE spg.BIEN_THE_ID = spbt.ID AND spg.TRANG_THAI = 1) as GIA_BAN, ")
+                .append("spbt.SO_LUONG_KHO, ").append("spbt.DA_BAN ");
         strSQL.append("FROM san_pham sp ");
         strSQL.append("LEFT JOIN san_pham_bien_the spbt ").append("on sp.ID = spbt.SAN_PHAM_ID ");
         strSQL.append("LEFT JOIN dm_loai_san_pham lsp ").append("on sp.LOAI_SAN_PHAM = lsp.ID ");
@@ -256,7 +459,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Query result = entityManager.createNativeQuery(strSQL.toString());
         @SuppressWarnings("unchecked")
-		List<Object[]> listData = result.getResultList();
+        List<Object[]> listData = result.getResultList();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String filePathOriginal = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
@@ -264,8 +467,8 @@ public class ProductServiceImpl implements ProductService {
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
-                                                     Path.of(filePathTemp),
-                                                     StandardCopyOption.REPLACE_EXISTING).toFile());
+                    Path.of(filePathTemp),
+                    StandardCopyOption.REPLACE_EXISTING).toFile());
             XSSFSheet sheet = workbook.getSheetAt(0);
             for (int i = 0; i < listData.size(); i++) {
                 XSSFRow row = sheet.createRow(i + 3);
@@ -303,174 +506,5 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return stream.toByteArray();
-    }
-
-    @Override
-    public List<Product> findProductsByType(Integer productTypeId) {
-        return productsRepository.findByProductType(productTypeId);
-    }
-
-    @Override
-    public List<Product> findProductsByUnit(Integer unitId) {
-        return productsRepository.findByUnit(unitId);
-    }
-
-    @Override
-    public List<Product> findProductsByBrand(Integer brandId) {
-        return productsRepository.findByBrand(brandId);
-    }
-
-    @Override
-    public boolean productInUse(Integer productId) {
-        return (!this.findAllProductVariantOfProduct(productId).isEmpty());
-    }
-
-    @Override
-    public List<ProductDTO> setInfoVariantOfProduct(List<ProductDTO> productDTOs) {
-        for (ProductDTO p : productDTOs) {
-            LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
-            int totalQtyStorage = 0;
-            for (Category color : categoryRepository.findColorOfProduct(p.getProductId())) {
-                StringBuilder sizeName = new StringBuilder();
-                List<Category> listSize = categoryRepository.findSizeOfColorOfProduct(p.getProductId(), color.getId());
-                for (int i = 0; i < listSize.size(); i++) {
-                    int qtyStorage = this.findProductVariantQuantityBySizeOfEachColor(p.getProductId(), color.getId(), listSize.get(i).getId());
-                    if (i == listSize.size() - 1) {
-                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")");
-                    } else {
-                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")").append(", ");
-                    }
-                    totalQtyStorage += qtyStorage;
-                }
-                variantInfo.put(color.getName(), sizeName.toString());
-            }
-            p.setProductVariantInfo(variantInfo);
-
-            p.setTotalQtyStorage(totalQtyStorage);
-            p.setTotalQtySell(this.findProductVariantTotalQtySell(p.getProductId()));
-        }
-        return productDTOs;
-    }
-
-    @Override
-    public ProductVariant findProductVariantById(Integer productVariantId) {
-        return productVariantRepository.findById(productVariantId).orElse(null);
-    }
-
-    @Override
-    public List<ProductVariant> findProductVariantBySize(Integer sizeId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, sizeId, null));
-    }
-
-    @Override
-    public List<ProductVariant> findProductVariantByColor(Integer colorId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, colorId, null, null));
-    }
-
-    @Override
-    public List<ProductVariant> findProductVariantByImport(Integer ticketImportId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, ticketImportId, null, null, null));
-    }
-
-    @Override
-    public List<ProductVariant> findProductVariantByFabricType(Integer fabricTypeId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, null, fabricTypeId));
-    }
-
-    @Override
-    public List<ProductVariantDTO> findAllProductVariantOfProduct(Integer productId) {
-        List<ProductVariantDTO> listReturn = new ArrayList<>();
-        List<ProductVariant> data = this.extractProductVariantQuery(productVariantRepository.findAll(productId, null, null, null, null));
-        for (ProductVariant productVariant : data) {
-            ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
-            List<PriceDTO> listPriceOfProductVariant = priceService.findPricesByProductVariant(dataModel.getProductVariantId());
-            PriceDTO price =  PriceDTO.fromPrice(priceService.findGiaHienTai(dataModel.getProductVariantId()));
-            if (price != null) {
-                dataModel.setPriceSellId(price.getId());
-                dataModel.setPriceSellValue(Double.parseDouble(price.getGiaBan()));
-            } else {
-                dataModel.setPriceSellId(null);
-                dataModel.setPriceSellValue(null);
-            }
-            dataModel.setListPrices(listPriceOfProductVariant);
-            dataModel.setDiscountPercent(null);
-            dataModel.setPriceMaxDiscount(null);
-            dataModel.setPriceAfterDiscount(null);
-            listReturn.add(dataModel);
-        }
-        return listReturn;
-    }
-
-    private Page<Product> setImageActiveAndLoadVoucherApply(Page<Product> products) {
-        for (Product p : products) {
-            FileStorage imageActive = fileService.findImageActiveOfSanPham(p.getId());
-            p.setImageActive(Objects.requireNonNullElseGet(imageActive, FileStorage::new));
-
-            List<Integer> listVoucherInfoId = new ArrayList<>();
-            voucherApplyService.findByProductId(p.getId()).forEach(voucherApplyDTO -> {
-                listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
-            });
-            if (!listVoucherInfoId.isEmpty()) {
-                p.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherInfoId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
-            }
-        }
-        return products;
-    }
-
-    @Override
-    public Integer findProductVariantTotalQtySell(Integer productId) {
-        return productVariantRepository.findTotalQtySell(productId);
-    }
-
-    @Override
-    public Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId) {
-        return productVariantRepository.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
-    }
-
-    @Override
-    public String updateProductVariantQuantity(Integer quantity, Integer id) {
-        ProductVariant productVariant = this.findProductVariantById(id);
-        productVariant.setSoLuongKho(productVariant.getSoLuongKho() - quantity);
-        try {
-            productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
-        } catch (Exception e) {
-            logger.error("Lỗi khi cập nhật số lượng sản phẩm!");
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
-    }
-
-    @Override
-    public Double findProductVariantPriceSell(int id) {
-        if (priceService.findGiaHienTai(id) != null) {
-            return priceService.findGiaHienTai(id).getGiaBan();
-        }
-        return null;
-    }
-
-    private List<ProductVariant> extractProductVariantQuery(List<Object[]> objects) {
-        List<ProductVariant> dataResponse = new ArrayList<>();
-        for (Object[] data : objects) {
-            ProductVariant productVariant = new ProductVariant();
-            productVariant.setProduct(new Product(Integer.parseInt(String.valueOf(data[0])), String.valueOf(data[1])));
-            productVariant.setId(Integer.parseInt(String.valueOf(data[2])));
-            productVariant.setMaSanPham(String.valueOf(data[3]));
-            productVariant.setTenBienThe(String.valueOf(data[4]));
-            productVariant.setColor(new Category(Integer.parseInt(String.valueOf(data[5])), String.valueOf(data[6])));
-            productVariant.setSize(new Category(Integer.parseInt(String.valueOf(data[7])), String.valueOf(data[8])));
-            productVariant.setFabricType( new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
-            productVariant.setSoLuongKho(Integer.parseInt(String.valueOf(data[11])));
-            productVariant.setSoLuongDaBan(Integer.parseInt(String.valueOf(data[12])));
-            productVariant.setGarmentFactory(new GarmentFactory(Integer.parseInt(String.valueOf(data[13])), String.valueOf(data[14])));
-            productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15])), String.valueOf(data[16])));
-            productVariant.setTicketImportGoods(new TicketImportGoods(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
-            Integer priceId = data[19] != null ? Integer.parseInt(String.valueOf(data[19])) : null;
-            Double priceSellValue = data[20] != null ? Double.parseDouble(String.valueOf(data[20])) : null;
-            productVariant.setPrice(new Price(priceId, priceSellValue));
-            productVariant.setTrangThai(String.valueOf(data[21]));
-            dataResponse.add(productVariant);
-        }
-        return dataResponse;
     }
 }

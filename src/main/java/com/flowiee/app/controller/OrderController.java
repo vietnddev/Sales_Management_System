@@ -25,15 +25,24 @@ import java.util.List;
 @RestController
 @RequestMapping(EndPointUtil.PRO_ORDER)
 public class OrderController extends BaseController {
-    @Autowired private OrderService orderService;
-    @Autowired private ProductService productService;
-    @Autowired private CategoryService categoryService;
-    @Autowired private CustomerService customerService;
-    //@Autowired private OrderPayService orderPayService;
-    @Autowired private CartService cartService;
-    @Autowired private ItemsService itemsService;
-    @Autowired private VoucherTicketService voucherTicketService;
-    @Autowired private ValidateModuleProduct validateModuleProduct;
+    private final OrderService orderService;
+    private final ProductService productService;
+    private final CategoryService categoryService;
+    private final CustomerService customerService;
+    private final CartService cartService;
+    private final VoucherTicketService voucherTicketService;
+    private final ValidateModuleProduct validateModuleProduct;
+
+    @Autowired
+    public OrderController(OrderService orderService, ProductService productService, CategoryService categoryService, CustomerService customerService, CartService cartService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
+        this.orderService = orderService;
+        this.productService = productService;
+        this.categoryService = categoryService;
+        this.customerService = customerService;
+        this.cartService = cartService;
+        this.voucherTicketService = voucherTicketService;
+        this.validateModuleProduct = validateModuleProduct;
+    }
 
     @GetMapping
     public ModelAndView viewAllOrders() {
@@ -96,11 +105,11 @@ public class OrderController extends BaseController {
     public ModelAndView showPageBanHang() {
         validateModuleProduct.insertOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_SELL);
-        List<OrderCart> orderCartCurrent = cartService.findByAccountId(CommonUtil.getCurrentAccountId());
+        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtil.getCurrentAccountId());
         if (orderCartCurrent.isEmpty()) {
             OrderCart orderCart = new OrderCart();
             orderCart.setCreatedBy(CommonUtil.getCurrentAccountId());
-            cartService.save(orderCart);
+            cartService.saveCart(orderCart);
         }
         modelAndView.addObject("listDonHang", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
@@ -110,7 +119,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
 
-        List<OrderCart> listOrderCart = cartService.findByAccountId(CommonUtil.getCurrentAccountId());
+        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtil.getCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);
 
         modelAndView.addObject("donHangRequest", new OrderRequest());
@@ -121,44 +130,44 @@ public class OrderController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping("/ban-hang/cart/{id}/add-items")
-    public ModelAndView addItemsToCart(@PathVariable("id") Integer idCart, HttpServletRequest request) {
+    @PostMapping("/ban-hang/cart/item/add")
+    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, HttpServletRequest request) {
         validateModuleProduct.insertOrder(true);
-        if (idCart <= 0 || cartService.findById(idCart) == null) {
+        if (cartId <= 0 || cartService.findCartById(cartId) == null) {
             throw new NotFoundException("Cart not found!");
         }
         List<String> listProductVariantId = Arrays.stream(request.getParameterValues("bienTheSanPhamId")).toList();
         for (String productVariantId : listProductVariantId) {
             Items items = new Items();
-            items.setOrderCart(cartService.findById(idCart));
+            items.setOrderCart(cartService.findCartById(cartId));
             items.setProductVariant(productService.findProductVariantById(Integer.parseInt(productVariantId)));
             items.setSoLuong(1);
             items.setGhiChu("");
-            itemsService.save(items);
+            cartService.saveItem(items);
         }
         return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
-    @PostMapping("/ban-hang/cart/update/{id}")
-    public ModelAndView updateItemsOfCart(@PathVariable("id") Integer id, @ModelAttribute("items") Items items) {
+    @PostMapping("/ban-hang/cart/item/update")
+    public ModelAndView updateItemsOfCart(@RequestParam("cartId") Integer cartId, @ModelAttribute("items") Items items) {
         validateModuleProduct.insertOrder(true);
-        if (id <= 0 || cartService.findById(id) == null) {
+        if (cartId <= 0 || cartService.findCartById(cartId) == null) {
             throw new NotFoundException("Cart not found!");
         }
-        items.setOrderCart(cartService.findById(id));
+        items.setOrderCart(cartService.findCartById(cartId));
         if (items.getSoLuong() > 0) {
-            itemsService.save(items);
+            cartService.saveItem(items);
         } else {
-            itemsService.delete(items.getId());
+            cartService.deleteItem(items.getId());
         }
         return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/delete/{id}")
-    public ModelAndView deleteItemsOfCart(@PathVariable("id") Integer id) {
+    public ModelAndView deleteItemsOfCart(@PathVariable("id") Integer cartId) {
         validateModuleProduct.insertOrder(true);
-        itemsService.findByCartId(id).forEach(items -> {
-            itemsService.delete(items.getId());
+        cartService.findItemsByCartId(cartId).forEach(items -> {
+            cartService.deleteItem(items.getId());
         });
         return new ModelAndView("redirect:/don-hang/ban-hang");
     }
@@ -204,9 +213,9 @@ public class OrderController extends BaseController {
 
     @PostMapping("/thanh-toan/{id}")
     public ModelAndView doPay(@PathVariable("id") Integer orderId,
-                                  @RequestParam("paymentTime") Date paymentTime,
-                                  @RequestParam("paymentMethod") Integer paymentMethod,
-                                  @RequestParam("note") @Nullable String note) {
+                              @RequestParam("paymentTime") Date paymentTime,
+                              @RequestParam("paymentMethod") Integer paymentMethod,
+                              @RequestParam("note") @Nullable String note) {
         validateModuleProduct.updateOrder(true);
         if (orderId == null || orderId <= 0 || orderService.findOrderById(orderId) == null) {
             throw new NotFoundException("Đơn hàng cần thanh toán không tồn tại! orderId=" + orderId);

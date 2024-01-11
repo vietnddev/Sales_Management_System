@@ -3,6 +3,7 @@ package com.flowiee.app.service;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.entity.Product;
+import com.flowiee.app.entity.ProductAttribute;
 import com.flowiee.app.entity.ProductVariant;
 import org.springframework.data.domain.Page;
 
@@ -25,8 +26,6 @@ public interface ProductService {
 
     List<ProductDTO> setInfoVariantOfProduct(List<ProductDTO> productDTOs);
 
-    ProductVariant findProductVariantById(Integer productVariantId);
-
     List<ProductVariant> findAllProductVariants();
 
     List<ProductVariant> findProductVariantBySize(Integer sizeId);
@@ -39,7 +38,13 @@ public interface ProductService {
 
     List<ProductVariantDTO>  findAllProductVariantOfProduct(Integer productId);
 
+    List<ProductAttribute> findAllAttributes(Integer productVariantId);
+
     Product findProductById(Integer productId);
+
+    ProductVariant findProductVariantById(Integer productVariantId);
+
+    ProductAttribute findProductAttributeById(Integer productAttributeId);
 
     String saveProduct(Product product);
 
@@ -53,6 +58,12 @@ public interface ProductService {
 
     String deleteProductVariant(Integer productVariantId);
 
+    String saveProductAttribute(ProductAttribute productAttribute);
+
+    String updateProductAttribute(ProductAttribute productAttribute, Integer productAttributeId);
+
+    String deleteProductAttribute(Integer productAttributeId);
+
     String updateProductVariantQuantity(Integer soLuong, Integer id);
 
     Integer findProductVariantTotalQtySell(Integer productId);
@@ -61,7 +72,7 @@ public interface ProductService {
 
     Double findProductVariantPriceSell(int id);
 
-    byte[] exportData(List<Integer> listSanPhamId);
-
     boolean productInUse(Integer productId);
+
+    byte[] exportData(List<Integer> listSanPhamId);
 }
