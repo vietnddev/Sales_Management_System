@@ -148,12 +148,15 @@ public class OrderController extends BaseController {
         return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
-    @PostMapping("/ban-hang/cart/item/update")
-    public ModelAndView updateItemsOfCart(@RequestParam("cartId") Integer cartId, @ModelAttribute("items") Items items) {
+    @PostMapping("/ban-hang/cart/item/update/{itemId}")
+    public ModelAndView updateItemsOfCart(@RequestParam("cartId") Integer cartId,
+                                          @ModelAttribute("items") Items items,
+                                          @PathVariable("itemId") Integer itemId) {
         validateModuleProduct.insertOrder(true);
         if (cartId <= 0 || cartService.findCartById(cartId) == null) {
             throw new NotFoundException("Cart not found!");
         }
+        items.setId(itemId);
         items.setOrderCart(cartService.findCartById(cartId));
         if (items.getSoLuong() > 0) {
             cartService.saveItem(items);
@@ -163,12 +166,13 @@ public class OrderController extends BaseController {
         return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
-    @PostMapping("/ban-hang/cart/delete/{id}")
-    public ModelAndView deleteItemsOfCart(@PathVariable("id") Integer cartId) {
+    @PostMapping("/ban-hang/cart/item/delete/{itemId}")
+    public ModelAndView deleteItemsOfCart(@RequestParam("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
         validateModuleProduct.insertOrder(true);
-        cartService.findItemsByCartId(cartId).forEach(items -> {
-            cartService.deleteItem(items.getId());
-        });
+        if (cartService.findCartById(cartId) == null || cartService.findItemById(itemId) == null) {
+            throw new BadRequestException("Sản phẩm cần xóa trong giỏ hàng không tồn tại! cartId=" + cartId + ", itemId=" + itemId);
+        }
+        cartService.deleteItem(itemId);
         return new ModelAndView("redirect:/don-hang/ban-hang");
     }
     

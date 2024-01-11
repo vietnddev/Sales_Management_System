@@ -92,7 +92,7 @@
                                                              th:id="'modalUpdateItems_' + ${item.id}">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
-                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/update}"
+                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/update/{itemId}(itemId=${item.id})}"
                                                                           th:object="${items}" method="POST">
                                                                         <div class="modal-header">
                                                                             <strong class="modal-title">Cập nhật sản phẩm</strong>
@@ -142,18 +142,16 @@
                                                         <!--DELETE ITEMS-->
                                                         <button type="button" class="btn btn-sm btn-danger"
                                                                 data-toggle="modal"
-                                                                th:data-target="'#modalDeleteItems_' + ${cart.id}">
-                                                            Xóa
+                                                                th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa
                                                         </button>
                                                         <div class="modal fade"
-                                                             th:id="'modalDeleteItems_' + ${cart.id}">
+                                                             th:id="'modalDeleteItems_' + ${item.id}">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
-                                                                    <form th:action="@{/don-hang/ban-hang/cart/update/{id}(id=${cart.id})}"
+                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/delete/{itemId}(itemId=${item.id})}"
                                                                           method="POST">
                                                                         <div class="modal-header">
-                                                                            <strong class="modal-title">Cập nhật giỏ
-                                                                                hàng</strong>
+                                                                            <strong class="modal-title">Cập nhật giỏ hàng</strong>
                                                                             <button type="button" class="close"
                                                                                     data-dismiss="modal"
                                                                                     aria-label="Close">
@@ -161,13 +159,10 @@
                                                                             </button>
                                                                         </div>
                                                                         <div class="modal-body">
-                                                                            <input type="hidden" name="id"
-                                                                                   th:value="${item.id}">
-                                                                            <input type="hidden" name="soLuong"
-                                                                                   value="0"/>
+                                                                            <input type="hidden" name="cartId" th:value="${cart.id}">
+                                                                            <input type="hidden" name="itemId" th:value="${item.id}">
                                                                             Xác nhận xóa sản phẩm
-                                                                            <span class="badge badge-info"
-                                                                                  th:text="${item.productVariant.tenBienThe}"></span>
+                                                                            <span class="badge badge-info" th:text="${item.productVariant.tenBienThe}"></span>
                                                                             khỏi giỏ hàng!
                                                                         </div>
                                                                         <div class="modal-footer justify-content-end">
