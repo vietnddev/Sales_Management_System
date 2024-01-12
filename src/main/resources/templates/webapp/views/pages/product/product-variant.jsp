@@ -283,36 +283,14 @@
                                 <!--End modal Active hình ảnh-->
 
                                 <!--Start modal DELETE hình ảnh-->
-                                <i class="fa-solid fa-trash text-danger col"
+                                <i class="fa-solid fa-trash text-danger col link-delete"
                                    style="cursor: pointer"
                                    data-toggle="modal"
-                                   th:data-target="'#modalDeleteImage_' + ${list.id}">
+                                   th:entityId="${list.id}"
+                                   th:entityName="${list.tenFileGoc}"
+                                   th:entityType="'image'">
                                 </i>
-                                <div class="modal fade" th:id="'modalDeleteImage_' + ${list.id}">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content text-left">
-                                            <form th:action="@{/file/delete/{id}(id=${list.id})}" method="post">
-                                                <div class="modal-header">
-                                                    <strong class="modal-title">Xóa hình ảnh</strong>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Xác nhận xóa this image!
-                                                </div>
-                                                <div class="modal-footer justify-content-end">
-                                                    <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">Hủy
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Lưu</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--eND modal DELETE hình ảnh-->
+                                <!--End modal DELETE hình ảnh-->
                             </div>
                         </div>
                     </div>
@@ -430,41 +408,14 @@
                                                    th:value="${list.productVariant.id}">
                                             <button type="submit" class="btn btn-sm btn-info">Cập nhật
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-danger"
+                                            <button type="button" class="btn btn-sm btn-danger link-delete"
                                                     data-toggle="modal"
-                                                    th:data-target="'#modalDeleteAttribute-' + ${list.id}"> Xóa
+                                                    th:entityId="${list.id}"
+                                                    th:entityName="${list.tenThuocTinh}"
+                                                    th:entityType="'productAttribute'"> Xóa
                                             </button>
                                         </td>
                                     </form>
-                                    <div class="modal fade" th:id="'modalDeleteAttribute-' + ${list.id}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <form th:action="@{/san-pham/attribute/delete/{id}(id=${list.id})}"
-                                                      method="post">
-                                                    <div class="modal-header">
-                                                        <strong class="modal-title">Xác nhận xóa thuộc tính</strong>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Thuộc tính <strong class="badge text-bg-info"
-                                                                           th:text="${list.tenThuocTinh}"
-                                                                           style="font-size: 16px;"></strong>
-                                                        sẽ bị xóa vĩnh viễn!
-                                                    </div>
-                                                    <div class="modal-footer justify-content-end">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">Hủy
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Đồng ý
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </tr>
                                 </tbody>
                             </table>
@@ -477,6 +428,8 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+
+    <div th:replace="modal_fragments :: confirm_modal"></div>
 
     <div th:replace="footer :: footer">
         <!-- Nhúng các file JavaScript vào -->
@@ -500,6 +453,24 @@
             $('.product-image-thumb.active').removeClass('active')
             $(this).addClass('active')
         })
+
+        $(".link-delete").on("click", function(e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this));
+        });
+
+        $('#yesButton').on("click", async function () {
+            let apiURL = hostURL
+            let entityType = $(this).attr("entityType")
+            let entityId = $(this).attr("entityId")
+            if (entityType === 'image') {
+                apiURL += '/file/delete/' + entityId
+            }
+            if (entityType === 'productAttribute') {
+                apiURL += '/san-pham/attribute/delete/' + entityId
+            }
+            await callApiDelete(apiURL);
+        });
     })
 </script>
 

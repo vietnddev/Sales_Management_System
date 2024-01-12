@@ -262,35 +262,12 @@
                                 <!--End modal Active hình ảnh-->
 
                                 <!--Start modal DELETE hình ảnh-->
-                                <i class="fa-solid fa-trash text-danger col"
+                                <i class="fa-solid fa-trash text-danger col link-delete"
                                    style="cursor: pointer"
-                                   data-toggle="modal"
-                                   th:data-target="'#modalDeleteImage_' + ${list.id}">
+                                   th:entityId="${list.id}"
+                                   th:entityName="${list.tenFileGoc}"
+                                   th:entityType="'image'">
                                 </i>
-                                <div class="modal fade" th:id="'modalDeleteImage_' + ${list.id}">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content text-left">
-                                            <form th:action="@{/file/delete/{id}(id=${list.id})}" method="post">
-                                                <div class="modal-header">
-                                                    <strong class="modal-title">Xóa hình ảnh</strong>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Xác nhận xóa this image!
-                                                </div>
-                                                <div class="modal-footer justify-content-end">
-                                                    <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">Hủy
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Lưu</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                                 <!--eND modal DELETE hình ảnh-->
                             </div>
                         </div>
@@ -350,8 +327,11 @@
                                                 <i class="fa-solid fa-dollar-sign"></i>
                                             </button>
                                             <!--./ Button xóa biến thể sản phẩm-->
-                                            <button type="button" class="btn btn-sm btn-danger"
-                                                    title="Xóa biến thể sản phẩm">
+                                            <button type="button" class="btn btn-sm btn-danger link-delete"
+                                                    title="Xóa biến thể sản phẩm"
+                                                    th:entityId="${var.productVariantId}"
+                                                    th:entityName="${var.name}"
+                                                    th:entityType="'productVariant'">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                             <!--./ End button xóa biến thể sản phẩm-->
@@ -519,8 +499,11 @@
                                             title="Cập nhật biến thể sản phẩm">
                                         <i class="fa-solid fa-circle-check"></i>
                                     </button>
-                                    <button class="btn btn-danger" type="submit" name="delete"
-                                            title="Xóa biến thể sản phẩm">
+                                    <button class="btn btn-danger link-delete" type="button" name="delete"
+                                            title="Xóa biến thể sản phẩm"
+                                            th:entityId="${detailProducts.productId}"
+                                            th:entityName="${detailProducts.productName}"
+                                            th:entityType="'product'">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
@@ -681,6 +664,8 @@
     </div>
     <!-- /.content-wrapper -->
 
+    <div th:replace="modal_fragments :: confirm_modal"></div>
+
     <div th:replace="footer :: footer">
         <!-- Nhúng các file JavaScript vào -->
     </div>
@@ -703,13 +688,8 @@
             $('.product-image').prop('src', $image_element.attr('src'))
             $('.product-image-thumb.active').removeClass('active')
             $(this).addClass('active')
-        })
-    })
-</script>
+        });
 
-<!-- Page specific script -->
-<script>
-    $(document).ready(function () {
         $('#summernote').summernote({
             height: 500, // chiều cao của trình soạn thảo
             callbacks: {
@@ -718,6 +698,27 @@
                     $('#describes_virtual').val(contents);
                 }
             }
+        });
+
+        $(".link-delete").on("click", function(e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this));
+        });
+
+        $('#yesButton').on("click", async function () {
+            let apiURL = hostURL
+            let entityType = $(this).attr("entityType")
+            let entityId = $(this).attr("entityId")
+            if (entityType === 'image') {
+                apiURL += '/file/delete/' + entityId
+            }
+            if (entityType === 'product') {
+                apiURL += '/san-pham/delete/' + entityId
+            }
+            if (entityType === 'productVariant') {
+                apiURL += '/san-pham/variant/delete/' + entityId
+            }
+            await callApiDelete(apiURL);
         });
     })
 </script>

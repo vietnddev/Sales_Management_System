@@ -215,6 +215,8 @@
         });
       });
     </script>
+    <!--Js customize-->
+    <script th:src="@{/js/common.js}"></script>
   </div>
 
 </body>

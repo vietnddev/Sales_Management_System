@@ -316,18 +316,10 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String delete(Integer fileId) {
         FileStorage fileStorage = fileRepository.findById(fileId).orElse(null);
         fileRepository.deleteById(fileId);
-        //Xóa file trên ổ cứng
         File file = new File(CommonUtil.rootPath + "/" + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
-        System.out.println("Path of file in dic" + file.getPath());
-        if (file.exists()) {
-            if (file.delete()) {
-                System.out.println("Xóa thành công file in directory!");
-                return "OK";
-            } else {
-                System.out.println("Xóa thất bại file in directory!");
-                return "Xóa file NOK";
-            }
+        if (file.exists() && file.delete()) {
+            return AppConstants.SERVICE_RESPONSE_SUCCESS;
         }
-        return "OK";
+        return AppConstants.SERVICE_RESPONSE_FAIL;
     }
 }

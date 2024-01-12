@@ -60,12 +60,12 @@
                                                    id="itemsTable">
                                                 <thead>
                                                 <tr>
-                                                    <td>#</td>
-                                                    <td class="text-left">Tên sản phẩm</td>
-                                                    <td>Đơn giá</td>
-                                                    <td>Số lượng</td>
-                                                    <td>Thành tiền</td>
-                                                    <td></td>
+                                                    <th>#</th>
+                                                    <th class="text-left">Tên sản phẩm</th>
+                                                    <th>Đơn giá</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Thành tiền</th>
+                                                    <th></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -295,10 +295,10 @@
                                         <hr class="mt-0">
                                         <!--KÊNH BÁN HÀNG-->
                                         <div class="form-group row" style="padding-right: 8px">
-                                                    <span class="col-sm-6"
+                                                    <label class="col-sm-6"
                                                           style="display: flex; align-items: center">
                                                           Kênh bán hàng
-                                                    </span>
+                                                    </label>
                                             <select class="custom-select col-sm-6" id="kenhBanHang"
                                                     data-placeholder="Chọn kênh bán hàng"
                                                     required>
@@ -311,10 +311,10 @@
                                         <!--KÊNH BÁN HÀNG-->
                                         <!--HÌNH THỨC THANH TOÁN-->
                                         <div class="form-group row" style="padding-right: 8px">
-                                                    <span class="col-sm-6"
+                                                    <label class="col-sm-6"
                                                           style="display: flex; align-items: center">
                                                           Hình thức thanh toán
-                                                    </span>
+                                                    </label>
                                             <select class="custom-select col-sm-6" id="hinhThucThanhToan"
                                                     data-placeholder="Chọn hình thức thanh toán"
                                                     required>
@@ -327,10 +327,10 @@
                                         <!--HÌNH THỨC THANH TOÁN-->
                                         <!--TRẠNG THÁI ĐƠN HÀNG-->
                                         <div class="form-group row" style="padding-right: 8px">
-                                                    <span class="col-sm-6"
+                                                    <label class="col-sm-6"
                                                           style="display: flex; align-items: center">
                                                           Trạng thái đơn hàng
-                                                    </span>
+                                                    </label>
                                             <select class="custom-select col-sm-6" id="trangThaiDonHang"
                                                     data-placeholder="Chọn kênh bán hàng"
                                                     required>

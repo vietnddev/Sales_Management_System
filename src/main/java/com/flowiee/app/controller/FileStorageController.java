@@ -7,6 +7,7 @@ import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.FileStorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -62,13 +63,12 @@ public class FileStorageController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping("/file/delete/{id}")
-    public ModelAndView delete(HttpServletRequest request, @PathVariable("id") Integer fileId) {
+    @DeleteMapping("/file/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") Integer fileId) {
         validateModuleProduct.updateImage(true);
         if (fileId <= 0 || fileService.findById(fileId) == null) {
             throw new NotFoundException("Image not found!");
         }
-        fileService.delete(fileId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return ResponseEntity.ok().body(fileService.delete(fileId));
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -136,7 +137,8 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/ban-hang/cart/item/add")
-    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
+    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId,
+                                       @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
         validateModuleProduct.insertOrder(true);
         if (cartId <= 0 || cartService.findCartById(cartId) == null) {
             throw new NotFoundException("Cart not found!");

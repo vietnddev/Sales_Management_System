@@ -273,36 +273,31 @@ public class ProductController extends BaseController<ProductDTO> {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping(value = "/delete/{id}")
-    public ModelAndView deleteProductOriginal(HttpServletRequest request, @PathVariable("id") Integer productId) {
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<String> deleteProductOriginal(@PathVariable("id") Integer productId) throws Exception {
         validateModuleProduct.deleteProduct(true);
         if (productService.findProductById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
-        productService.deleteProduct(productId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return ResponseEntity.ok().body(productService.deleteProduct(productId));
     }
 
-    @PostMapping(value = "/variant/delete/{id}")
-    public ModelAndView deleteProductVariant(HttpServletRequest request, @PathVariable("id") Integer productVariantId) {
+    @DeleteMapping(value = "/variant/delete/{id}")
+    public ResponseEntity<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
         validateModuleProduct.updateProduct(true);
         if (productService.findProductVariantById(productVariantId) == null) {
             throw new NotFoundException("Product variant not found!");
         }
-        productService.deleteProductVariant(productVariantId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return ResponseEntity.ok(productService.deleteProductVariant(productVariantId));
     }
 
-    @PostMapping(value = "/attribute/delete/{id}")
-    public ModelAndView deleteAttribute(@ModelAttribute("attribute") ProductAttribute attribute,
-                                        @PathVariable("id") Integer attributeId,
-                                        HttpServletRequest request) {
+    @DeleteMapping(value = "/attribute/delete/{id}")
+    public ResponseEntity<String> deleteAttribute(@PathVariable("id") Integer attributeId) {
         validateModuleProduct.updateProduct(true);
         if (productService.findProductAttributeById(attributeId) == null) {
             throw new NotFoundException("Product attribute not found!");
         }
-        productService.deleteProductAttribute(attributeId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return ResponseEntity.ok().body(productService.deleteProductAttribute(attributeId));
     }
 
     @PostMapping(value = "/active-image/{sanPhamId}")
