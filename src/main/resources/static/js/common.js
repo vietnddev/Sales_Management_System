@@ -12,13 +12,7 @@ async function callApiDelete(apiURL) {
 	}
 }
 
-function showWarningModal(title, message) {
-	$("#modalTitle").text(title);
-	$("#modalBody").text(message);
-	$("#warningModal").modal();
-}
-
-function showDeleteConfirmModal(link) {
+function showConfirmModal(link, type, title, text) {
 	entityId = link.attr("entityId");//link là 1 đối tượng JQuery -->lấy ra giá trị của thuộc tính entityId
 	entityName = link.attr("entityName");
 	entityType = link.attr("entityType");
@@ -26,7 +20,13 @@ function showDeleteConfirmModal(link) {
 	$("#yesButton").attr("entityId", link.attr("entityId"));
 	$("#yesButton").attr("entityName", link.attr("entityName"));
 	$("#yesButton").attr("entityType", link.attr("entityType"));
-	//$("#yesButton").attr("href", link.attr("href"));//gán giá trị của thuộc tính href vào thuộc tính href của thẻ có id là yesButton
-	$("#confirmText").text("Bạn chắc chắn muốn xóa: " + entityName + "?");//thay đổi nội dung của thẻ có id là confirmText
+	if (type === 'create') {
+		$("#confirmTitle").text(title);
+		$("#confirmText").text(text);
+	}
+	if (type === 'delete') {
+		$("#confirmTitle").text("Xác nhận xóa");
+		$("#confirmText").text("Bạn chắc chắn muốn xóa: " + entityName + "?");
+	}
 	$("#confirmModal").modal();//hiển thị modal
 }

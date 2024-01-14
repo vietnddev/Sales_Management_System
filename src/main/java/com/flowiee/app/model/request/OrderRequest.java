@@ -14,19 +14,12 @@ import java.util.List;
 public class OrderRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private List<Integer> listBienTheSanPham;
-    private Integer khachHang;
-    private Integer kenhBanHang;
-    private Integer hinhThucThanhToan;
-    private String diaChiGiaoHang;
-    private Integer nhanVienBanHang;
-    private Date thoiGianDatHang;
-    private Integer trangThaiDonHang;
-    private Boolean trangThaiThanhToan;
-    private String ghiChu;
-    private String thoiGianDatHangSearch;
-    private String searchTxt;
-    private Integer cartId;
-    private String voucherUsedCode;
-    private Double amountDiscount;
+	private Integer cartId;
+    private Integer cashierId;
+    private Integer customerId;
+    private String note;
+    private Integer orderStatusId;
+    private Date orderTime;
+    private Integer paymentMethodId;
+    private Integer salesChannelId;
 }

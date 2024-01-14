@@ -36,18 +36,14 @@
                             <div class="card-body">
                                 <div class="row" th:each="cart, cartIndex : ${listCart}">
                                     <div class="col-sm-8 border">
-                                        <form class="row mt-3"
-                                              th:action="@{/don-hang/ban-hang/cart/item/add}"
-                                              method="POST">
+                                        <form class="row mt-3" th:action="@{/don-hang/ban-hang/cart/item/add}" method="POST">
                                             <div class="col-sm-10 form-group">
                                                 <select class="form-control select2" multiple="multiple"
                                                         data-placeholder="Chọn sản phẩm"
                                                         style="width: 100%;"
-                                                        name="bienTheSanPhamId" required>
-                                                    <option th:each="option : ${listBienTheSanPham}"
-                                                            th:value="${option.id}"
-                                                            th:text="${option.product.tenSanPham} + ' - ' + ${option.tenBienThe} + ' - ' + ${option.soLuongKho}">
-                                                    </option>
+                                                        name="bienTheSanPhamId"
+                                                        id="productVariantField"
+                                                        required>
                                                 </select>
                                             </div>
                                             <input type="hidden" name="cartId" th:value="${cart.id}">
@@ -56,23 +52,22 @@
                                             </div>
                                         </form>
                                         <div class="row">
-                                            <table class="table table-head-fixed text-nowrap text-center align-items-center"
-                                                   id="itemsTable">
+                                            <table class="table table-head-fixed text-nowrap text-center align-items-center" id="itemsTable">
                                                 <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th class="text-left">Tên sản phẩm</th>
-                                                    <th>Đơn giá</th>
-                                                    <th>Số lượng</th>
-                                                    <th>Thành tiền</th>
-                                                    <th></th>
-                                                </tr>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th class="text-left">Tên sản phẩm</th>
+                                                        <th>Đơn giá</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Thành tiền</th>
+                                                        <th></th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr th:each="item, itemIndex : ${cart.listItems}">
                                                     <td th:text="${itemIndex.index + 1}"></td>
                                                     <td class="text-left">
-                                                        <input type="hidden" id="bienTheSanPhamId" th:value="${item.productVariant.Id}"/>
+                                                        <input type="hidden" id="productVariantIdField" th:value="${item.productVariant.Id}"/>
                                                         <a th:text="${item.productVariant.tenBienThe}"
                                                            th:href="@{/san-pham/variant/{id}(id=${item.productVariant.id})}"></a>
                                                         <input class="form-control form-control-sm" name="ghiChu"
@@ -120,9 +115,7 @@
                                                                             <div class="form-group row"
                                                                                  style="display: flex; align-items: center; margin: 0">
                                                                                 <label class="col-sm-4 text-left">Ghi chú</label>
-                                                                                <textarea class="col-sm-8 form-control"
-                                                                                          id="ghiChu"
-                                                                                          name="ghiChu"
+                                                                                <textarea class="col-sm-8 form-control" id="ghiChu" name="ghiChu"
                                                                                           th:text="${item.ghiChu}"></textarea>
                                                                             </div>
                                                                         </div>
@@ -199,20 +192,14 @@
                                     </div>
                                     <div class="col-sm-4 border">
                                         <div class="row mt-3">
-                                            <div class="form-group col-sm-9 pr-0">
-                                                <select class="custom-select" id="khachHang"
-                                                        data-placeholder="Chọn khách hàng" required>
-                                                    <option th:each="cus : ${listKhachHang}"
-                                                            th:value="${cus.id}"
-                                                            th:text="${cus.tenKhachHang}">
-                                                    </option>
-                                                </select>
+                                            <div class="form-group col-10 pr-0">
+                                                <select class="custom-select" id="customerField" required></select>
                                             </div>
-                                            <div class="col-sm-3 form-group">
-                                                <button type="button" class="btn btn-sm btn-primary w-100"
+                                            <div class="col-sm-2 form-group">
+                                                <button type="button" class="btn btn-sm btn-primary"
                                                         style="height: 38px"
                                                         data-target="#modalCreateKhachHang" data-toggle="modal">
-                                                    Thêm
+                                                     Thêm
                                                 </button>
                                                 <div class="modal fade" id="modalCreateKhachHang">
                                                     <div class="modal-dialog">
@@ -267,21 +254,14 @@
                                         <hr class="mt-0">
                                         <div class="row">
                                             <div class="form-group col-sm-6 pr-0">
-                                                <select class="custom-select" id="nhanVienBanHang"
-                                                        data-placeholder="Chọn nhân viên bán hàng"
-                                                        oninput="saveChanges()" required>
-                                                    <option th:each="staff : ${listNhanVienBanHang}"
-                                                            th:value="${staff.id}"
-                                                            th:text="${staff.hoTen}">
-                                                    </option>
-                                                </select>
+                                                <select class="custom-select" id="accountField" required></select>
                                             </div>
                                             <div class="form-group col-sm-6">
                                                 <div class="input-group date" id="reservationdatetime"
                                                      data-target-input="nearest">
                                                     <input type="text" class="form-control datetimepicker-input"
                                                            data-target="#reservationdatetime"
-                                                           id="thoiGianDatHang"
+                                                           id="orderTimeField"
                                                            required/>
                                                     <div class="input-group-append"
                                                          data-target="#reservationdatetime"
@@ -295,50 +275,21 @@
                                         <hr class="mt-0">
                                         <!--KÊNH BÁN HÀNG-->
                                         <div class="form-group row" style="padding-right: 8px">
-                                                    <label class="col-sm-6"
-                                                          style="display: flex; align-items: center">
-                                                          Kênh bán hàng
-                                                    </label>
-                                            <select class="custom-select col-sm-6" id="kenhBanHang"
-                                                    data-placeholder="Chọn kênh bán hàng"
-                                                    required>
-                                                <option th:each="channel : ${listKenhBanHang}"
-                                                        th:value="${channel.id}"
-                                                        th:text="${channel.name}">
-                                                </option>
-                                            </select>
+                                            <label class="col-sm-6" style="display: flex; align-items: center">Kênh bán hàng</label>
+                                            <select class="custom-select col-sm-6" id="salesChannelField" required></select>
                                         </div>
                                         <!--KÊNH BÁN HÀNG-->
                                         <!--HÌNH THỨC THANH TOÁN-->
                                         <div class="form-group row" style="padding-right: 8px">
-                                                    <label class="col-sm-6"
-                                                          style="display: flex; align-items: center">
-                                                          Hình thức thanh toán
-                                                    </label>
-                                            <select class="custom-select col-sm-6" id="hinhThucThanhToan"
-                                                    data-placeholder="Chọn hình thức thanh toán"
-                                                    required>
-                                                <option th:each="payType : ${listHinhThucThanhToan}"
-                                                        th:value="${payType.id}"
-                                                        th:text="${payType.name}">
-                                                </option>
+                                            <label class="col-sm-6" style="display: flex; align-items: center">Hình thức thanh toán</label>
+                                            <select class="custom-select col-sm-6" id="paymentMethodField" required>
                                             </select>
                                         </div>
                                         <!--HÌNH THỨC THANH TOÁN-->
                                         <!--TRẠNG THÁI ĐƠN HÀNG-->
                                         <div class="form-group row" style="padding-right: 8px">
-                                                    <label class="col-sm-6"
-                                                          style="display: flex; align-items: center">
-                                                          Trạng thái đơn hàng
-                                                    </label>
-                                            <select class="custom-select col-sm-6" id="trangThaiDonHang"
-                                                    data-placeholder="Chọn kênh bán hàng"
-                                                    required>
-                                                <option th:each="status : ${listTrangThaiDonHang}"
-                                                        th:value="${status.id}"
-                                                        th:text="${status.name}">
-                                                </option>
-                                            </select>
+                                            <label class="col-sm-6" style="display: flex; align-items: center">Trạng thái đơn hàng</label>
+                                            <select class="custom-select col-sm-6" id="orderStatusField" required></select>
                                         </div>
                                         <hr class="mt-0">
                                         <div class="form-group row">
@@ -372,71 +323,31 @@
                                         <hr>
                                         <div class="form-group">
                                             <label>Ghi chú</label>
-                                            <textarea class="form-control" name="ghiChuCart"
-                                                      id="ghiChuCart"></textarea>
+                                            <textarea class="form-control" id="noteFieldCart"></textarea>
                                         </div>
                                         <hr class="mt-0">
                                         <div class="form-group row">
-                                            <!--LƯU ĐƠN HÀNG-->
-                                            <div class="col-sm-6">
+                                            <!--LƯU NHÁP-->
+                                            <div class="col-sm-4">
                                                 <button type="button" class="btn btn-info w-100"
-                                                        style="padding-right: 3px"
-                                                        data-toggle="modal"
-                                                        onclick="copyData()"
-                                                        th:data-target="'#modalSaveDonHang_' + ${cart.id}">Lưu đơn
+                                                        style="padding-right: 3px">Lưu nháp
                                                 </button>
                                             </div>
-                                            <div class="modal fade" th:id="'modalSaveDonHang_' + ${cart.id}">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form th:action="@{/don-hang/insert}"
-                                                              th:object="${donHangRequest}" method="POST">
-                                                            <div class="modal-header">
-                                                                <strong class="modal-title">Thông báo xác nhận</strong>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                        aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Xác nhận tạo mới đơn hàng!
-                                                                <!---->
-                                                                <input type="hidden" name="khachHang"
-                                                                       id="khachHangSubmit">
-                                                                <input type="hidden" name="nhanVienBanHang"
-                                                                       id="nhanVienBanHangSubmit">
-                                                                <input type="hidden" name="thoiGianDatHangSubmit"
-                                                                       id="thoiGianDatHangSubmit">
-                                                                <input type="hidden" name="kenhBanHang"
-                                                                       id="kenhBanHangSubmit">
-                                                                <input type="hidden" name="hinhThucThanhToan"
-                                                                       id="hinhThucThanhToanSubmit">
-                                                                <input type="hidden" name="ghiChu" id="ghiChuSubmit">
-                                                                <input type="hidden" name="trangThaiDonHang"
-                                                                       id="trangThaiDonHangSubmit">
-                                                                <input type="hidden" name="listBienTheSanPhamId" id="listBienTheSanPhamId">
-                                                                <input type="hidden" name="cartId" th:value="${cart.id}">
-                                                            </div>
-                                                            <div class="modal-footer justify-content-end">
-                                                                <button type="button" class="btn btn-sm btn-default"
-                                                                        data-dismiss="modal">Hủy
-                                                                </button>
-                                                                <button type="submit" class="btn btn-sm btn-primary"
-                                                                        th:if="${cart.listItems.size() > 0}"> Đồng ý
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                            <!--TẠO ĐƠN HÀNG-->
+                                            <div class="col-sm-4">
+                                                <button type="button" class="btn btn-primary w-100 link-confirm"
+                                                        style="padding-right: 3px" th:cartId="${cart.id}">
+                                                    Tạo đơn
+                                                </button>
                                             </div>
                                             <!--XÓA GIỎ HÀNG-->
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <button type="button" class="btn btn-danger w-100"
                                                         style="padding-left: 3px;"
                                                         data-toggle="modal"
                                                         id="preDeleteDonHang"
                                                         th:data-target="'#modalDeleteCart_' + ${cart.id}">
-                                                    Xóa giỏ hàng
+                                                    Clear all
                                                 </button>
                                             </div>
                                             <div class="modal fade" th:id="'modalDeleteCart_' + ${cart.id}">
@@ -481,6 +392,8 @@
 </div>
 <!-- /.content-wrapper -->
 
+<div th:replace="modal_fragments :: confirm_modal"></div>
+
 <div th:replace="footer :: footer">
     <!-- Nhúng các file JavaScript vào -->
 </div>
@@ -498,47 +411,6 @@
 <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
 <!-- Bootstrap4 Duallistbox -->
 <script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
-
-<script>
-    function copyData() {
-        var khachHang = document.getElementById('khachHang').value;
-        document.getElementById('khachHangSubmit').value = khachHang;
-
-        var nhanVienBanHang = document.getElementById('nhanVienBanHang').value;
-        document.getElementById('nhanVienBanHangSubmit').value = nhanVienBanHang;
-
-        var thoiGianDatHang = document.getElementById('thoiGianDatHang').value;
-        document.getElementById('thoiGianDatHangSubmit').value = thoiGianDatHang;
-
-        var kenhBanHang = document.getElementById('kenhBanHang').value;
-        document.getElementById('kenhBanHangSubmit').value = kenhBanHang;
-
-        var hinhThucThanhToan = document.getElementById('hinhThucThanhToan').value;
-        document.getElementById('hinhThucThanhToanSubmit').value = hinhThucThanhToan;
-
-        var ghiChu = document.getElementById('ghiChuCart').value;
-        document.getElementById('ghiChuSubmit').value = ghiChu;
-
-        var trangThaiDonHang = document.getElementById('trangThaiDonHang').value;
-        document.getElementById('trangThaiDonHangSubmit').value = trangThaiDonHang;
-
-        <!--Lấy danh sách items-->
-        var tableBody = document.getElementById("itemsTable");
-        var rows = tableBody.getElementsByTagName("tr");
-        var listBienTheSanPhamId = [];
-        for (var i = 0; i < rows.length; i++) {
-            var cells = rows[i].getElementsByTagName("td");
-            for (var j = 0; j < cells.length; j++) {
-                var input = cells[j].querySelector("input#bienTheSanPhamId");
-                if (input) {
-                    listBienTheSanPhamId.push(input.value);
-                }
-            }
-        }
-        var listBienTheSanPhamIdx = document.getElementById('listBienTheSanPhamId');
-        listBienTheSanPhamIdx.value = listBienTheSanPhamId;
-    };
-</script>
 
 <script>
     $(function () {
@@ -566,8 +438,150 @@
         //Date range picker
         $('#reservation').daterangepicker()
     })
+
+    $(document).ready(function () {
+        loadCustomers()
+        loadAccounts()
+        loadSalesChannels()
+        loadPaymentMethods()
+        loadOrderStatuses()
+        loadProducts()
+        createOrder()
+    });
+
+    async function loadProducts() {
+        let selectElement = $('#productVariantField');
+        let apiURL = hostURL + '/api/v1/product/variant/all'
+        let response = await fetch(apiURL)
+        if (response.ok) {
+            let data = (await response.json()).data
+            selectElement.append('<option>Chọn sản phẩm</option>');
+            $.each(data, function (index, d) {
+                selectElement.append('<option value=' + d.id + '>' + d.product.tenSanPham + ' - ' + d.tenBienThe + ' - ' + d.soLuongKho + '</option>');
+            });
+        } else {
+            alert('Call API fail!')
+        }
+    }
+
+    async function loadCustomers() {
+        let selectElement = $('#customerField');
+        let apiURL = hostURL + '/api/v1/customer/all'
+        let response = await fetch(apiURL)
+        if (response.ok) {
+            let data = (await response.json()).data
+            selectElement.append('<option>Chọn khách hàng</option>');
+            $.each(data, function (index, d) {
+                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+            });
+        } else {
+            alert('Call API fail!')
+        }
+    }
+
+    async function loadAccounts() {
+        let selectElement = $('#accountField');
+        let apiURL = hostURL + '/api/v1/account/all'
+        let response = await fetch(apiURL)
+        if (response.ok) {
+            let data = (await response.json()).data
+            selectElement.append('<option>Chọn nhân viên bán hàng</option>');
+            $.each(data, function (index, d) {
+                selectElement.append('<option value=' + d.id + '>' + d.hoTen + '</option>');
+            });
+        } else {
+            alert('Call API fail!')
+        }
+    }
+
+    async function loadSalesChannels() {
+        let selectElement = $('#salesChannelField');
+        let apiURL = hostURL + '/api/v1/category/sales-channel'
+        let response = await fetch(apiURL)
+        if (response.ok) {
+            let data = (await response.json()).data
+            selectElement.append('<option>Chọn kênh bán hàng</option>');
+            $.each(data, function (index, d) {
+                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+            });
+        } else {
+            alert('Call API fail!')
+        }
+    }
+
+    async function loadPaymentMethods() {
+        let selectElement = $('#paymentMethodField');
+        let apiURL = hostURL + '/api/v1/category/payment-method'
+        let response = await fetch(apiURL)
+        if (response.ok) {
+            let data = (await response.json()).data
+            selectElement.append('<option>Chọn hình thức thanh toán</option>');
+            $.each(data, function (index, d) {
+                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+            });
+        } else {
+            alert('Call API fail!')
+        }
+    }
+
+    async function loadOrderStatuses() {
+        let selectElement = $('#orderStatusField');
+        let apiURL = hostURL + '/api/v1/category/order-status'
+        let response = await fetch(apiURL)
+        if (response.ok) {
+            let data = (await response.json()).data
+            selectElement.append('<option>Chọn trạng thái đơn hàng</option>');
+            $.each(data, function (index, d) {
+                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+            });
+        } else {
+            alert('Call API fail!')
+        }
+    }
+
+    async function createOrder() {
+        $(".link-confirm").on("click", function(e) {
+            e.preventDefault();
+            let type = 'create'
+            let title = 'Tạo mới đơn hàng'
+            let text = 'Bạn có muốn tạo đơn hàng này?'
+            showConfirmModal($(this), type, title, text);
+        });
+
+        $('#yesButton').on("click", async function () {
+            let customerId = $('#customerField').val()
+            let orderTime = $('#orderTimeField').val()
+            let accountId = $('#accountField').val()
+            let salesChannelId = $('#salesChannelField').val()
+            let paymentMethodId = $('#paymentMethodField').val()
+            let orderStatusId = $('#orderStatusField').val()
+            let note = $('#noteFieldCart').val()
+            let cartId = [[${listCart.get(0).id}]]
+
+            let apiURL = hostURL + '/api/v1/order/insert'
+            let params = {customerId: customerId,
+                          cashierId : accountId,
+                          salesChannelId: salesChannelId,
+                          paymentMethodId: paymentMethodId,
+                          orderStatusId : orderStatusId,
+                          note : note,
+                          orderTimeStr : orderTime,
+                          cartId : cartId}
+
+            let response = await fetch(apiURL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(params)
+            });
+            if (response.ok && ((await response.json()).status === 'OK')) {
+                alert('Create new order success!')
+                window.location =  hostURL + '/don-hang'
+            } else {
+                alert('Create fail!')
+            }
+        });
+    }
 </script>
-</div>
 
 </body>
 

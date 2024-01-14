@@ -19,7 +19,7 @@ public interface OrderService {
 
     OrderDTO findOrderById(Integer orderId);
 
-    String saveOrder(OrderRequest orderRequest);
+    String saveOrder(OrderDTO orderRequest);
 
     String saveOrderDetail(OrderDetail orderDetail);
 

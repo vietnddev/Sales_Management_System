@@ -24,7 +24,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <strong class="modal-title">Xác nhận xóa</strong>
+                        <strong class="modal-title" id="confirmTitle">Xác nhận xóa</strong>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-danger" href="" id="yesButton">Yes</button>
+                        <button type="button" class="btn btn-sm btn-primary" href="" id="yesButton">Yes</button>
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">No</button>
                     </div>
                 </div>

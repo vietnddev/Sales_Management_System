@@ -60,29 +60,6 @@ public class OrderController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping
-    public ModelAndView filterListDonHang(@ModelAttribute("donHangRequest") OrderRequest request) {
-        validateModuleProduct.readOrder(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
-        modelAndView.addObject("listDonHang", orderService.findAllOrder());
-        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
-        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
-        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-
-        modelAndView.addObject("selected_kenhBanHang", request.getKenhBanHang() == 0 ? null : categoryService.findById(request.getKenhBanHang()));
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
-
-        modelAndView.addObject("selected_hinhThucThanhToan", request.getHinhThucThanhToan() == 0 ? null : categoryService.findById(request.getHinhThucThanhToan()));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
-
-        modelAndView.addObject("selected_trangThaiDonHang", request.getTrangThaiDonHang() == 0 ? null : categoryService.findById(request.getTrangThaiDonHang()));
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
-
-        modelAndView.addObject("donHangRequest", new OrderRequest());
-        modelAndView.addObject("donHang", new Order());
-        return baseView(modelAndView);
-    }
-
     @GetMapping("/{id}")
     public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) {
         validateModuleProduct.readOrder(true);
@@ -196,21 +173,6 @@ public class OrderController extends BaseController {
         modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
         modelAndView.addObject("ticket_info", voucherTicketService.findByCode(code));
         return modelAndView;
-    }
-
-    @PostMapping("/insert")
-    public ModelAndView insert(@ModelAttribute("orderRequest") OrderRequest orderRequest,
-                               @RequestParam("thoiGianDatHang") @Nullable String orderTimeStr,
-                               @RequestParam("listBienTheSanPhamId") String productVariantIds) {
-        validateModuleProduct.insertOrder(true);
-        if (orderTimeStr != null) {
-            orderRequest.setThoiGianDatHang(DateUtils.convertStringToDate(orderTimeStr));
-        } else {
-            orderRequest.setThoiGianDatHang(new Date());
-        }
-        orderRequest.setTrangThaiThanhToan(false);
-        orderService.saveOrder(orderRequest);
-        return new ModelAndView("redirect:/don-hang");
     }
 
     @PostMapping("/update/{id}")

@@ -55,6 +55,7 @@ public class OrderDTO implements Serializable {
 	private boolean paymentStatus;
 	private Date paymentTime;
 	private String paymentTimeStr;
+	private int cartId;
 	private List<OrderDetail> listOrderDetail;
 
 	@Override

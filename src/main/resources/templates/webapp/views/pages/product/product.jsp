@@ -389,7 +389,7 @@
             $(document).ready(function() {
                 $(".link-delete").on("click", function(e) {
                     e.preventDefault();
-                    showDeleteConfirmModal($(this));
+                    showConfirmModal($(this), 'delete');
                 });
 
                 $('#yesButton').on("click", async function () {

@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
-public class ProductController extends BaseController<ProductDTO> {
+public class ProductController extends BaseController {
     private final ProductService          productService;
     private final ProductHistoryService   productHistoryService;
     private final FileStorageService      fileStorageService;

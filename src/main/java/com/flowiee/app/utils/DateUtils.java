@@ -22,17 +22,16 @@ public class DateUtils {
         return outputTime;
     }
 
-    public static Date convertStringToDate(String dateString) {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        Date date = null;
+    public static Date convertStringToDate(String formatInput, String formatOutput, String timeInput) {
+        Date outputTime = null;
         try {
-            if (!dateString.isEmpty()) {
-                date = dateFormat.parse(dateString);
-            }
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat(formatInput);
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat(formatOutput);
+            outputTime = inputDateFormat.parse(timeInput);
         } catch (ParseException e) {
             System.out.println("Error occurred while parsing date: " + e.getMessage());
         }
-        return date;
+        return outputTime;
     }
 
     public static Date convertStringToDate(String dateString, String pattern) {

@@ -134,6 +134,7 @@ public class CustomerController extends BaseController {
         if (customerContactId == null || customerService.findContactById(customerContactId) == null) {
             throw new NotFoundException("Customer not found!");
         }
+        //Kiểm tra nếu đã được sử dụng thì không cho xóa
         customerService.deleteContact(customerContactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }

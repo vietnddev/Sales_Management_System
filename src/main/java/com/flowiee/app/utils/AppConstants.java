@@ -131,7 +131,7 @@ public class AppConstants {
         DOCUMENT_TYPE("document-type", "DOCUMENT_TYPE", "Loại tài liệu"),
         SALES_CHANNEL("sales-channel", "SALES_CHANNEL", "Kênh bán hàng"),
         ORDER_STATUS("order-status", "ORDER_STATUS", "Trạng thái đơn hàng"),
-        PAYMENT_METHOD("pay-method", "PAYMENT_METHOD", "Hình thức thanh toán"),
+        PAYMENT_METHOD("payment-method", "PAYMENT_METHOD", "Hình thức thanh toán"),
         PAYMENT_STATUS("payment-status", "PAYMENT_STATUS", "Trạng thái thanh toán");
         private final String key;
         private final String name;

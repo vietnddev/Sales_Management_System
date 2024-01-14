@@ -1,6 +1,5 @@
 package com.flowiee.app.base;
 
-import com.flowiee.app.model.ResponseModel;
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.utils.CommonUtil;
@@ -10,63 +9,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.flowiee.app.service.NotificationService;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 @Component
-public class BaseController<T> {
+public class BaseController {
 	@Autowired
 	protected AccountService accountService;
 	@Autowired
 	protected NotificationService notificationService;
-
-	public ResponseModel<T> success(T data) {
-		ResponseModel<T> responseModel = new ResponseModel<>();
-		responseModel.setElements(Collections.singletonList(data));
-
-		ResponseModel.Status status = new ResponseModel.Status();
-		status.setSuccess(true);
-		status.setCode(200);
-
-		responseModel.setStatus(status);
-
-		return responseModel;
-	}
-
-	public ResponseModel<T> success(List<T> data, Integer pageSize, Integer pageIndex, Integer pageCount, Long total) {
-		ResponseModel<T> responseModel = new ResponseModel<>();
-		responseModel.setElements(data);
-
-		ResponseModel.Status status = new ResponseModel.Status();
-		status.setSuccess(true);
-		status.setCode(200);
-
-		ResponseModel.Metadata metadata = new ResponseModel.Metadata();
-		metadata.setPageSize(pageSize);
-		metadata.setPageIndex(pageIndex);
-		metadata.setPageCount(pageCount);
-		metadata.setTotalEntity(total);
-
-		responseModel.setStatus(status);
-		responseModel.setMetadata(metadata);
-
-		return responseModel;
-	}
-
-	public ResponseModel error(Integer code, String message){
-		ResponseModel responseModel = new ResponseModel<>();
-
-		ResponseModel.Status status = new ResponseModel.Status();
-		status.setSuccess(false);
-		status.setCode(code);
-		status.setErrors(message);
-
-		responseModel.setStatus(status);
-
-		return responseModel;
-	}
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtil.getCurrentAccountUsername()));

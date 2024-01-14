@@ -1,5 +1,6 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.model.request.CategoryRequest;
@@ -54,49 +55,64 @@ public class Category extends BaseEntity implements java.io.Serializable {
 
 	@Column(name = "status", length = 20, nullable = false)
 	private Boolean status;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
 	private List<TicketImportGoods> listPaymentMethod;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "kenhBanHang", fetch = FetchType.LAZY)
 	private List<Order> listKenhBanHang;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "fabricType", fetch = FetchType.LAZY)
 	private List<ProductVariant> listFabricType;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "color", fetch = FetchType.LAZY)
 	private List<ProductVariant> listLoaiMauSac;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
 	private List<ProductVariant> listLoaiKichCo;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
 	private List<Material> listUnit;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
 	private List<MaterialTemp> listUnitTemp;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
 	private List<Order> listOrderPayment;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
 	private List<Order> listTrangThaiDonHang;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
 	private List<Document> listDocument;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
 	private List<DocField> listDocfield;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "productType", fetch = FetchType.LAZY)
 	private List<Product> listProductByProductType;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
 	private List<Product> listProductByBrand;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
 	private List<Product> listProductByUnit;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
 	private List<CategoryHistory> listCategoryHistory;
 

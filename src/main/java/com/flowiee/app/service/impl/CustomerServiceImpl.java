@@ -39,9 +39,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private OrderService orderService;
 
+//    @Override
+//    public List<Customer> findAllCustomer() {
+//        return customerRepository.findAll();
+//    }
+
     @Override
-    public List<Customer> findAllCustomer() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> findAllCustomer() {
+        return this.findAllCustomer(null, null, null, null, null, null);
     }
 
     @Override

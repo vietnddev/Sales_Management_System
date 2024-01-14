@@ -106,18 +106,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
-    public String saveOrder(OrderRequest request) {
+    public String saveOrder(OrderDTO request) {
         try {
             //Insert order
             Order order = new Order();
             order.setMaDonHang(CommonUtil.getMaDonHang());
-            order.setCustomer(new Customer(request.getKhachHang()));
-            order.setKenhBanHang(new Category(request.getKenhBanHang(), null));
-            order.setNhanVienBanHang(new Account(request.getNhanVienBanHang()));
-            order.setGhiChu(request.getGhiChu());
-            order.setThoiGianDatHang(request.getThoiGianDatHang());
-            order.setTrangThaiDonHang(new Category(request.getTrangThaiDonHang(), null));
+            order.setCustomer(new Customer(request.getCustomerId()));
+            order.setKenhBanHang(new Category(request.getSalesChannelId(), null));
+            order.setNhanVienBanHang(new Account(request.getCashierId()));
+            order.setGhiChu(request.getNote());
+            order.setThoiGianDatHang(request.getOrderTime());
+            order.setTrangThaiDonHang(new Category(request.getOrderStatusId(), null));
+
+            if (request.getOrderTimeStr() != null) {
+                Date orderTime = DateUtils.convertStringToDate("dd/MM/yyyy hh:mm a", "dd/MM/yyyy HH:mm:ss", request.getOrderTimeStr());
+                order.setThoiGianDatHang(orderTime);
+            } else {
+                order.setThoiGianDatHang(new Date());
+            }
+            order.setPaymentStatus(false);
+
             Order orderSaved = orderRepository.save(order);
 
             //QRCode

@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 public interface CustomerService {
-    List<Customer> findAllCustomer();
+    //List<Customer> findAllCustomer();
+
+    List<CustomerDTO> findAllCustomer();
 
     List<CustomerDTO> findAllCustomer(String name, String sex, Date birthday, String phone, String email, String address);
 

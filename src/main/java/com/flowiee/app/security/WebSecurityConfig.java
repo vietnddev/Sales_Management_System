@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable()
 				.authorizeRequests()
 				.antMatchers(EndPointUtil.SYS_CONFIG, EndPointUtil.SYS_ACCOUNT, EndPointUtil.SYS_LOG).hasRole("ADMIN")
-				.antMatchers("/build/**", "/dist/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**").permitAll()
+				.antMatchers("/build/**", "/dist/**", "/js/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				//Page login

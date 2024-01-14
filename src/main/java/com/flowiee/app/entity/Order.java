@@ -1,5 +1,6 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import lombok.*;
@@ -83,6 +84,7 @@ public class Order extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderHistory> listOrderHistory;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<FileStorage> listImageQR;
 	public Order(int id) {

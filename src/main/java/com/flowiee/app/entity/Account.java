@@ -1,5 +1,6 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.model.request.AccountRequest;
@@ -55,21 +56,27 @@ public class Account extends BaseEntity implements Serializable{
     @Column(name = "trang_thai")
     private boolean trangThai;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<FileStorage> listFileStorage;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<DocShare> listDocShare;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "nhanVienBanHang", fetch = FetchType.LAZY)
     private List<Order> listOrder;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<Customer> listCustomer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<FlowieeImport> listHistoryImportData;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "receivedBy", fetch = FetchType.LAZY)
     private List<TicketImportGoods> listTicketImportGoods;
 
