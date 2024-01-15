@@ -200,10 +200,10 @@ public class VoucherInfoServiceImpl implements VoucherService {
             String strSQL = "SELECT v.ID as ID_0, " +
                             "v.TITLE as TITLE_1, " +
                             "v.DESCRIPTION as DESCRIPTION_2, " +
-                            "v.DOI_TUONG_AP_DUNG as DOI_TUONG_AP_DUNG_3, " +
+                            "v.APPLICABLE_TO as APPLICABLE_TO_3, " +
                             "v.DISCOUNT as DISCOUNT_PERCENT_4, " +
                             "v.MAX_PRICE_DISCOUNT as DISCOUNT_MAX_PRICE_5, " +
-                            "v.SO_LUONG as QUANTITY_6, " +
+                            "v.QUANTITY as QUANTITY_6, " +
                             "v.TYPE as CODE_TYPE_7, " +
                             "v.LENGTH_OF_KEY as CODE_LENGTH_8, " +
                             "v.START_TIME as START_TIME_9, " +

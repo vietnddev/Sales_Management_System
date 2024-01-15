@@ -5,9 +5,9 @@ import java.util.List;
 public interface BaseService<T> {
     T findById(Integer entityId);
 
-    String save(T entity);
+    T save(T entity);
 
-    String update(T entity, Integer entityId);
+    T update(T entity, Integer entityId);
 
     String delete(Integer entityId);
 }

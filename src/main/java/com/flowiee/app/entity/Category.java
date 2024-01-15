@@ -44,6 +44,9 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@Column(name = "color")
 	private String color;
 
+	@Column(name = "parent_id")
+	private Integer parentId;
+
 	@Column(name = "note", length = 255)
 	private String note;
 

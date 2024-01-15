@@ -26,13 +26,13 @@ public class VoucherInfo extends BaseEntity implements Serializable {
     @Column(name = "description", length = 1000)
     private String description;
 
-    @Column(name = "doi_tuong_ap_dung", nullable = false)
+    @Column(name = "applicable_to", nullable = false)
     private String doiTuongApDung;
 
     @Column(name = "type", length = 1000)
     private String voucherType;
 
-    @Column(name = "so_luong", nullable = false)
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
     @Column(name = "length_of_key", nullable = false)

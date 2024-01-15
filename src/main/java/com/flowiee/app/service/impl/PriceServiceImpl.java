@@ -4,6 +4,8 @@ import com.flowiee.app.dto.PriceDTO;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.entity.ProductVariant;
+import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Price;
@@ -78,24 +80,24 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public String save(Price price) {
+    public Price save(Price price) {
         if (price == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         try {
-            priceRepository.save(price);
+            Price priceSaved = priceRepository.save(price);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Thêm mới giá sản phẩm: " + price.toString());
             logger.info("Insert price success! insertBy=" + CommonUtil.getCurrentAccountUsername());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return priceSaved;
         } catch (Exception e) {
         	logger.error("Insert price fail! price=" + price.toString());
             e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new ApiException();
         }
     }
 
     @Override
-    public String update(Price entity, Integer entityId) {
+    public Price update(Price entity, Integer entityId) {
         return null;
     }
 

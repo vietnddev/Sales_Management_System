@@ -39,7 +39,7 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
     @Column(name = "da_ban", nullable = false)
     private int soLuongDaBan;
 
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "status", nullable = false)
     private String trangThai;
 
     @ManyToOne(fetch = FetchType.LAZY)

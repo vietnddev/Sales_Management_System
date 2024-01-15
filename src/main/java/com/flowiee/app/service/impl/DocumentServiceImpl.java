@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.role.SystemAction.StorageAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.DocData;
@@ -84,11 +85,10 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public String save(Document document) {
+    public Document save(Document document) {
         systemLogService.writeLog(module, StorageAction.STG_DOC_CREATE.name(), "Thêm mới tài liệu: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
-        documentRepository.save(document);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return documentRepository.save(document);
     }
 
     @Override
@@ -99,17 +99,16 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public String update(Document data, Integer documentId) {
+    public Document update(Document data, Integer documentId) {
         Document document = this.findById(documentId);
-        if (document != null) {
-            document.setTen(data.getTen());
-            document.setMoTa(data.getMoTa());
-            documentRepository.save(document);
-            systemLogService.writeLog(module, StorageAction.STG_DOC_UPDATE.name(), "Cập nhật tài liệu: " + document.toString());
-            logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật tài liệu " + document.toString());
-            return "OK";
+        if (document == null) {
+            throw new BadRequestException();
         }
-        return "NOK";
+        document.setTen(data.getTen());
+        document.setMoTa(data.getMoTa());
+        systemLogService.writeLog(module, StorageAction.STG_DOC_UPDATE.name(), "Cập nhật tài liệu: " + document.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật tài liệu " + document.toString());
+        return documentRepository.save(document);
     }
 
     @Override

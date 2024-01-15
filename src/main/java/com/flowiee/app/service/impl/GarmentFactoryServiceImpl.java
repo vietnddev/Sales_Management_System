@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.GarmentFactory;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.GarmentFactoryRepository;
 import com.flowiee.app.service.GarmentFactoryService;
 
@@ -26,22 +27,20 @@ public class GarmentFactoryServiceImpl implements GarmentFactoryService {
     }
 
     @Override
-    public String save(GarmentFactory entity) {
+    public GarmentFactory save(GarmentFactory entity) {
         if (entity == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        garmentFactoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return garmentFactoryRepository.save(entity);
     }
 
     @Override
-    public String update(GarmentFactory entity, Integer entityId) {
+    public GarmentFactory update(GarmentFactory entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        garmentFactoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return garmentFactoryRepository.save(entity);
     }
 
     @Override

@@ -25,16 +25,14 @@ public class CategoryHistoryServiceImpl implements CategoryHistoryService {
     }
 
     @Override
-    public String save(CategoryHistory entity) {
-        categoryHistoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public CategoryHistory save(CategoryHistory entity) {
+        return categoryHistoryRepository.save(entity);
     }
 
     @Override
-    public String update(CategoryHistory entity, Integer entityId) {
+    public CategoryHistory update(CategoryHistory entity, Integer entityId) {
         entity.setId(entityId);
-        categoryHistoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return categoryHistoryRepository.save(entity);
     }
 
     @Override

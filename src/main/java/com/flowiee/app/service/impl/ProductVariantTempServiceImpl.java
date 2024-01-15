@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.ProductVariantTemp;
@@ -37,7 +38,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
     }
 
     @Override
-    public String save(ProductVariantTemp bienTheSanPham) {
+    public ProductVariantTemp save(ProductVariantTemp bienTheSanPham) {
         try {
             String tenBienTheSanPham = "";
             if (bienTheSanPham.getTenBienThe().isEmpty()) {
@@ -46,13 +47,13 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
                 tenBienTheSanPham = bienTheSanPham.getProduct().getTenSanPham() + " - " + bienTheSanPham.getTenBienThe() + " - Size " + bienTheSanPham.getLoaiKichCo().getName() + " - Màu " + bienTheSanPham.getLoaiMauSac().getName();
             }
             bienTheSanPham.setTenBienThe(tenBienTheSanPham);
-            productVariantTempRepository.save(bienTheSanPham);
+            ProductVariantTemp tempSaved =  productVariantTempRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + bienTheSanPham.toString());
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + bienTheSanPham.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return tempSaved;
         } catch (Exception e) {
             e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new ApiException();
         }
     }
 
@@ -71,18 +72,17 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
     }
 
     @Override
-    public String update(ProductVariantTemp bienTheSanPham, Integer id) {
+    public ProductVariantTemp update(ProductVariantTemp bienTheSanPham, Integer id) {
         ProductVariantTemp bienTheSanPhamBefore = this.findById(id);
         try {
             bienTheSanPham.setId(id);
-            productVariantTempRepository.save(bienTheSanPham);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + bienTheSanPhamBefore.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return productVariantTempRepository.save(bienTheSanPham);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new ApiException();
         }
-        return AppConstants.SERVICE_RESPONSE_FAIL;
     }
 
     @Override

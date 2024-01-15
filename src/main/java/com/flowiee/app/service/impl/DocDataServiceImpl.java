@@ -23,16 +23,14 @@ public class DocDataServiceImpl implements DocDataService {
         return docDataRepository.findById(id).orElse(null);
     }
 
-    public String save(DocData docData) {
-        docDataRepository.save(docData);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public DocData save(DocData docData) {
+        return docDataRepository.save(docData);
     }
 
     @Override
-    public String update(DocData entity, Integer entityId) {
+    public DocData update(DocData entity, Integer entityId) {
         entity.setId(entityId);
-        docDataRepository.save(entity);
-        return null;
+        return docDataRepository.save(entity);
     }
 
     public String delete(Integer id) {

@@ -46,7 +46,7 @@ public interface ProductService {
 
     ProductAttribute findProductAttributeById(Integer productAttributeId);
 
-    String saveProduct(Product product);
+    Product saveProduct(Product product);
 
     String updateProduct(Product product, Integer productId);
 

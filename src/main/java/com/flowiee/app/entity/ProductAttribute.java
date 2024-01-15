@@ -22,19 +22,19 @@ public class ProductAttribute extends BaseEntity implements Serializable {
 
 	@JsonIgnoreProperties("listThuocTinh")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bien_the_id", nullable = false)
+    @JoinColumn(name = "product_variant_id", nullable = false)
     private ProductVariant productVariant;
 
-    @Column(name = "ten_thuoc_tinh", nullable = false)
+    @Column(name = "attribute_name", nullable = false)
     private String tenThuocTinh;
 
-    @Column(name = "gia_tri_thuoc_tinh", length = 500)
+    @Column(name = "attribute_value", length = 500)
     private String giaTriThuocTinh;
 
     @Column(name = "sort", nullable = false)
     private int sort;
 
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "status", nullable = false)
     private boolean trangThai;
 
     @OneToMany(mappedBy = "productAttribute", fetch = FetchType.LAZY)

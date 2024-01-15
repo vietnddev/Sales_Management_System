@@ -25,16 +25,14 @@ public class DocHistoryServiceImpl implements DocHistoryService {
     }
 
     @Override
-    public String save(DocHistory docHistory) {
-        docHistoryRepository.save(docHistory);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public DocHistory save(DocHistory docHistory) {
+        return docHistoryRepository.save(docHistory);
     }
 
     @Override
-    public String update(DocHistory docHistory, Integer docHistoryId) {
+    public DocHistory update(DocHistory docHistory, Integer docHistoryId) {
         docHistory.setId(docHistoryId);
-        docHistoryRepository.save(docHistory);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return docHistoryRepository.save(docHistory);
     }
 
     @Override

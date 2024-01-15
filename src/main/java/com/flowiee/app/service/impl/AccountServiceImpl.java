@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.entity.Account;
@@ -83,27 +84,27 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String save(Account account) {
+    public Account save(Account account) {
     	try {
             if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
                 account.setRole("ADMIN");
             } else {
                 account.setRole("USER");
             }
-            accountRepository.save(account);
+            Account accountSaved = accountRepository.save(account);
         	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
             logger.info("Insert account success! username=" + account.getUsername());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return accountSaved;
 		} catch (Exception e) {
 			logger.error("Insert account fail! username=" + account.getUsername(), e);
-			return AppConstants.SERVICE_RESPONSE_FAIL;
+			throw new ApiException();
 		}
     }
 
     @Transactional
     @Override
-    public String update(Account account, Integer entityId) {
+    public Account update(Account account, Integer entityId) {
     	try {
             account.setId(entityId);
             if (account.getRole() != null && account.getRole().equals(CommonUtil.ADMINISTRATOR)) {
@@ -111,16 +112,14 @@ public class AccountServiceImpl implements AccountService {
             } else {
                 account.setRole("USER");
             }
-            accountRepository.save(account);
         	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtil.getCurrentAccountId(), CommonUtil.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
             logger.info("Update account success! username=" + account.getUsername());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return accountRepository.save(account);
 		} catch (Exception e) {
 			logger.error("Update account fail! username=" + account.getUsername(), e);
-			return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new ApiException();
 		}
-
     }
 
     @Transactional

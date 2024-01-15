@@ -6,10 +6,7 @@ import com.flowiee.app.entity.FlowieeConfig;
 import com.flowiee.app.entity.Notification;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleSystem;
-import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.service.ConfigService;
-import com.flowiee.app.service.RoleService;
-import com.flowiee.app.service.SystemLogService;
+import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.EndPointUtil;
@@ -29,6 +26,7 @@ public class SystemController extends BaseController {
     @Autowired private RoleService roleService;
     @Autowired private CategoryService categoryService;
     @Autowired private ValidateModuleSystem validateModuleSystem;
+    @Autowired private NotificationService notificationService;
 
     @GetMapping(EndPointUtil.SYS_NOTIFICATION)
     public ModelAndView getAllNotification() {

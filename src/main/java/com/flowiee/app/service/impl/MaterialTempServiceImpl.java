@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.MaterialTemp;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.MaterialTempRepository;
 import com.flowiee.app.service.MaterialTempService;
 
@@ -27,19 +28,17 @@ public class MaterialTempServiceImpl implements MaterialTempService {
     }
 
     @Override
-    public String save(MaterialTemp entity) {
-        materialTempRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public MaterialTemp save(MaterialTemp entity) {
+        return materialTempRepository.save(entity);
     }
 
     @Override
-    public String update(MaterialTemp entity, Integer entityId) {
+    public MaterialTemp update(MaterialTemp entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        materialTempRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return materialTempRepository.save(entity);
     }
 
     @Override

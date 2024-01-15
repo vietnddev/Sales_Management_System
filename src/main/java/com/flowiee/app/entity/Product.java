@@ -33,7 +33,7 @@ public class Product extends BaseEntity implements Serializable {
     @JoinColumn(name = "brand_id", nullable = false)
     private Category brand;
 
-    @Column(name = "ten_san_pham", nullable = false)
+    @Column(name = "product_name", nullable = false)
     private String tenSanPham;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +41,7 @@ public class Product extends BaseEntity implements Serializable {
     private Category unit;
 
     @Lob
-    @Column(name = "mo_ta_san_pham", length = 30000, columnDefinition = "CLOB")
+    @Column(name = "description", length = 30000, columnDefinition = "CLOB")
     private String moTaSanPham;
 
     @Column(name = "status", nullable = false, length = 10)

@@ -132,7 +132,11 @@ public class AppConstants {
         SALES_CHANNEL("sales-channel", "SALES_CHANNEL", "Kênh bán hàng"),
         ORDER_STATUS("order-status", "ORDER_STATUS", "Trạng thái đơn hàng"),
         PAYMENT_METHOD("payment-method", "PAYMENT_METHOD", "Hình thức thanh toán"),
-        PAYMENT_STATUS("payment-status", "PAYMENT_STATUS", "Trạng thái thanh toán");
+        PAYMENT_STATUS("payment-status", "PAYMENT_STATUS", "Trạng thái thanh toán"),
+        COMMUNE("commune", "COMMUNE", "Xã"),
+        DISTRICT("district", "DISTRICT", "Huyện"),
+        PROVINCE("province", "PROVINCE", "Tỉnh");
+
         private final String key;
         private final String name;
         @Setter

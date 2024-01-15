@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Notification;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.NotificationRepository;
 import com.flowiee.app.service.NotificationService;
 
@@ -40,23 +41,22 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public String save(Notification notification) {
+    public Notification save(Notification notification) {
         if (notification == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        notificationRepository.save(notification);
+        Notification notificationSaved = notificationRepository.save(notification);
         logger.info(NotificationServiceImpl.class.getName() + ": Insert notification " + notification.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return notificationSaved;
     }
 
     @Override
-    public String update(Notification entity, Integer entityId) {
+    public Notification update(Notification entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        notificationRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return notificationRepository.save(entity);
     }
 
     @Override
