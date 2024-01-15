@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.rest;
 
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.exception.ApiException;

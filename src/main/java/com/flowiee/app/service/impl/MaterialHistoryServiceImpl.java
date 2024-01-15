@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.MaterialHistory;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.MaterialHistoryRepository;
 import com.flowiee.app.service.MaterialHistoryService;
 
@@ -26,22 +27,20 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public String save(MaterialHistory entity) {
+    public MaterialHistory save(MaterialHistory entity) {
         if (entity == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        materialHistoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return materialHistoryRepository.save(entity);
     }
 
     @Override
-    public String update(MaterialHistory entity, Integer entityId) {
+    public MaterialHistory update(MaterialHistory entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        materialHistoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return materialHistoryRepository.save(entity);
     }
 
     @Override

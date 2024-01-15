@@ -21,10 +21,10 @@ public class Items extends BaseEntity implements Serializable {
     @JoinColumn(name = "bien_the_san_pham_id", nullable = false)
     private ProductVariant productVariant;
 
-    @Column(name = "so_luong")
+    @Column(name = "quantity")
     private int soLuong;
 
-    @Column(name = "ghi_chu")
+    @Column(name = "note")
     private String ghiChu;
 
     @ManyToOne(fetch = FetchType.LAZY)

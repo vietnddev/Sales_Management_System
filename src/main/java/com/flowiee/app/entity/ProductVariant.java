@@ -41,7 +41,7 @@ public class ProductVariant extends BaseEntity implements Serializable {
     @Column(name = "quantity_sell", nullable = false)
     private int soLuongDaBan;
 
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "status", nullable = false)
     private String trangThai;
 
     @ManyToOne(fetch = FetchType.LAZY)

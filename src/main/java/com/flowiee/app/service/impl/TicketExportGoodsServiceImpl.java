@@ -31,8 +31,8 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
     }
 
     @Override
-    public String save(TicketExportGoods ticket) {
-        ticketExportRepository.save(ticket);
+    public TicketExportGoods save(TicketExportGoods ticket) {
+        TicketExportGoods ticketExportSaved = ticketExportRepository.save(ticket);
         //Code for order status
         //PR -> Preparing
         //WS -> Waiting shipper
@@ -42,14 +42,13 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
         orderService.findOrderDetailsByOrderId(ticket.getOrderId()).forEach(d -> {
             productService.updateProductVariantQuantity(productService.findProductVariantById(d.getProductVariant().getId()).getSoLuongKho() - d.getSoLuong(), d.getProductVariant().getId());
         });
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return ticketExportSaved;
     }
 
     @Override
-    public String update(TicketExportGoods ticket, Integer entityId) {
+    public TicketExportGoods update(TicketExportGoods ticket, Integer entityId) {
         ticket.setId(entityId);
-        ticketExportRepository.save(ticket);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return ticketExportRepository.save(ticket);
     }
 
     @Override

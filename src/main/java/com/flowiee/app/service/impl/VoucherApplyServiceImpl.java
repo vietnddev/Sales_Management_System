@@ -2,6 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.VoucherApplyDTO;
 import com.flowiee.app.entity.VoucherApply;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.VoucherApplyRepository;
 import com.flowiee.app.service.VoucherApplyService;
 
@@ -48,18 +49,17 @@ public class VoucherApplyServiceImpl implements VoucherApplyService {
     }
 
     @Override
-    public String save(VoucherApply voucherApply) {
-        voucherApplyRepository.save(voucherApply);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public VoucherApply save(VoucherApply voucherApply) {
+        return voucherApplyRepository.save(voucherApply);
     }
 
     @Override
-    public String update(VoucherApply voucherApply, Integer id) {
-        if (this.findById(id) != null) {
-            voucherApply.setId(id);
-            voucherApplyRepository.save(voucherApply);
+    public VoucherApply update(VoucherApply voucherApply, Integer id) {
+        if (this.findById(id) == null) {
+            throw new BadRequestException();
         }
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        voucherApply.setId(id);
+        return voucherApplyRepository.save(voucherApply);
     }
 
     @Override

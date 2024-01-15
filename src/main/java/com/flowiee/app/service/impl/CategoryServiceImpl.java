@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.CategoryRepository;
@@ -73,19 +74,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String save(Category entity) {
+    public Category save(Category entity) {
         if (entity == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        categoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return categoryRepository.save(entity);
     }
 
     @Transactional
     @Override
-    public String update(Category entity, Integer entityId) {
+    public Category update(Category entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         Category categoryBefore = this.findById(entityId);
         categoryBefore.compareTo(entity).forEach((key, value) -> {
@@ -98,8 +98,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryHistoryService.save(categoryHistory);
         });
         entity.setId(entityId);
-        categoryRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return categoryRepository.save(entity);
     }
 
     @Transactional

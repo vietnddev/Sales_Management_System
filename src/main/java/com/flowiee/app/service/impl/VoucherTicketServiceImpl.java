@@ -2,6 +2,8 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.VoucherTicket;
+import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.VoucherTicketlRepository;
 import com.flowiee.app.service.VoucherService;
 import com.flowiee.app.service.VoucherTicketService;
@@ -35,27 +37,27 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
         return voucherTicketlRepository.findById(voucherDetailId).orElse(null);
     }
 
+    @Transactional
     @Override
-    public String save(VoucherTicket voucherTicket) {
+    public VoucherTicket save(VoucherTicket voucherTicket) {
         if (voucherTicket == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         if (this.findByCode(voucherTicket.getCode()) == null) {
-        	voucherTicketlRepository.save(voucherTicket);
-        	return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        	return voucherTicketlRepository.save(voucherTicket);
         } else {
-        	return AppConstants.SERVICE_RESPONSE_FAIL;	
+        	throw new ApiException();
         }
     }
 
     @Transactional
     @Override
-    public String update(VoucherTicket voucherTicket, Integer voucherDetailId) {
+    public VoucherTicket update(VoucherTicket voucherTicket, Integer voucherDetailId) {
         if (voucherTicket == null || voucherDetailId == null || voucherDetailId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         voucherTicket.setId(voucherDetailId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return voucherTicketlRepository.save(voucherTicket);
     }
 
     @Override

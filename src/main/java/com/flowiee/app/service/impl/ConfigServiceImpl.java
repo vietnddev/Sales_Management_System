@@ -35,17 +35,15 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public String save(FlowieeConfig flowieeConfig) {
-        flowieeConfigRepository.save(flowieeConfig);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public FlowieeConfig save(FlowieeConfig flowieeConfig) {
+        return flowieeConfigRepository.save(flowieeConfig);
     }
 
     @Override
-    public String update(FlowieeConfig flowieeConfig, Integer id) {
+    public FlowieeConfig update(FlowieeConfig flowieeConfig, Integer id) {
         flowieeConfig.setId(id);
-        flowieeConfigRepository.save(flowieeConfig);
         logger.info("Update config success! " + flowieeConfig.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return flowieeConfigRepository.save(flowieeConfig);
     }
 
     @Override

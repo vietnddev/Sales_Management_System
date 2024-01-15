@@ -25,16 +25,14 @@ public class ProductHistoryServiceImpl implements ProductHistoryService {
     }
 
     @Override
-    public String save(ProductHistory productHistory) {
-        productHistoryRepository.save(productHistory);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public ProductHistory save(ProductHistory productHistory) {
+        return productHistoryRepository.save(productHistory);
     }
 
     @Override
-    public String update(ProductHistory productHistory, Integer productHistoryId) {
+    public ProductHistory update(ProductHistory productHistory, Integer productHistoryId) {
         productHistory.setId(productHistoryId);
-        productHistoryRepository.save(productHistory);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return productHistoryRepository.save(productHistory);
     }
 
     @Override

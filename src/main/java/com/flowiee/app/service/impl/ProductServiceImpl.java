@@ -4,6 +4,7 @@ import com.flowiee.app.dto.PriceDTO;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
@@ -214,18 +215,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String saveProduct(Product product) {
+    public Product saveProduct(Product product) {
         try {
             product.setCreatedBy(CommonUtil.getCurrentAccountId());
             product.setMoTaSanPham(product.getMoTaSanPham() != null ? product.getMoTaSanPham() : "");
             product.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.name());
-            productsRepository.save(product);
+            Product pSaved = productsRepository.save(product);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info("Insert product success! " + product.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return pSaved;
         } catch (Exception e) {
             logger.error("Insert product fail!", e);
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new ApiException();
         }
     }
 

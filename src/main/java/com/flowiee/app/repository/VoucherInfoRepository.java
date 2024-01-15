@@ -16,7 +16,7 @@ public interface VoucherInfoRepository extends JpaRepository<VoucherInfo, Intege
 //           "v.id as id_0, " +
 //           "v.title as title_1, " +
 //           "v.description as description_2, " +
-//           "v.doiTuongApDung as doi_tuong_ap_dung_3, " +
+//           "v.doiTuongApDung as applicable_to_3, " +
 //           "v.discount as discount_percent_4, " +
 //           "v.maxPriceDiscount as discount_max_price_5, " +
 //           "v.quantity as quantity_6, " +

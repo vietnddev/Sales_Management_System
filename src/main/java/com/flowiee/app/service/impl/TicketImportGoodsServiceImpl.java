@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Category;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtil;
@@ -43,25 +44,20 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     }
 
     @Override
-    public String save(TicketImportGoods entity) {
+    public TicketImportGoods save(TicketImportGoods entity) {
         if (entity == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        ticketImportRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return ticketImportRepository.save(entity);
     }
 
     @Override
-    public String update(TicketImportGoods entity, Integer entityId) {
-        if (entity == null || entityId == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
-        if (entityId <= 0 || this.findById(entityId) == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+    public TicketImportGoods update(TicketImportGoods entity, Integer entityId) {
+        if (entity == null || this.findById(entityId) == null) {
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        ticketImportRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return ticketImportRepository.save(entity);
     }
 
     @Override
@@ -117,7 +113,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
 //    public List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
 //        List<TicketImportGoods> listData = new ArrayList<>();
 //        StringBuilder sql = new StringBuilder();
-//        sql.append("SELECT i.ID, i.TITLE, s.NAME as SUPPLIER_NAME, pm.TEN_LOAI as PAYMENT_METHOD_NAME, i.PAY_STATUS, a.HO_TEN as RECEIVED_NAME, i.STATUS, ");
+//        sql.append("SELECT i.ID, i.TITLE, s.NAME as SUPPLIER_NAME, pm.TEN_LOAI as PAYMENT_METHOD_NAME, i.PAY_STATUS, a.FULLNAME as RECEIVED_NAME, i.STATUS, ");
 //        sql.append("       s.ID as SUPPLIER_ID, pm.ID as PAYMENT_METHOD_ID, a.ID as RECEIVED_ID, ");
 //        sql.append("       i.ORDER_TIME, i.RECEIVED_TIME ");
 //        sql.append("FROM goods_import i ");

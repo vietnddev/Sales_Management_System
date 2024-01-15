@@ -49,12 +49,12 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public String save(FileStorage entity) {
+    public FileStorage save(FileStorage entity) {
         return null;
     }
 
     @Override
-    public String update(FileStorage entity, Integer entityId) {
+    public FileStorage update(FileStorage entity, Integer entityId) {
         return null;
     }
 

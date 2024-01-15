@@ -25,16 +25,14 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     }
 
     @Override
-    public String save(OrderHistory orderHistory) {
-        orderHistoryRepository.save(orderHistory);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public OrderHistory save(OrderHistory orderHistory) {
+        return orderHistoryRepository.save(orderHistory);
     }
 
     @Override
-    public String update(OrderHistory orderHistory, Integer orderHistoryId) {
+    public OrderHistory update(OrderHistory orderHistory, Integer orderHistoryId) {
         orderHistory.setId(orderHistoryId);
-        orderHistoryRepository.save(orderHistory);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return orderHistoryRepository.save(orderHistory);
     }
 
     @Override

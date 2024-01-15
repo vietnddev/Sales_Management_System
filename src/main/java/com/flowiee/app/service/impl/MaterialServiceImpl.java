@@ -4,6 +4,7 @@ import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.CategoryHistory;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.entity.MaterialHistory;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.MaterialRepository;
 import com.flowiee.app.service.MaterialHistoryService;
 import com.flowiee.app.service.MaterialService;
@@ -38,15 +39,14 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public String save(Material entity) {
-        materialRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public Material save(Material entity) {
+        return materialRepository.save(entity);
     }
 
     @Override
-    public String update(Material entity, Integer entityId) {
+    public Material update(Material entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         Material materialBefore = this.findById(entityId);
         materialBefore.compareTo(entity).forEach((key, value) -> {
@@ -59,8 +59,7 @@ public class MaterialServiceImpl implements MaterialService {
             materialHistoryService.save(categoryHistory);
         });
         entity.setId(entityId);
-        materialRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return materialRepository.save(entity);
     }
 
     @Override

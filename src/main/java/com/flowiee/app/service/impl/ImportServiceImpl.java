@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.FlowieeImport;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.FlowieeImportRepository;
 import com.flowiee.app.service.ImportService;
 
@@ -31,22 +32,20 @@ public class ImportServiceImpl implements ImportService {
     }
 
     @Override
-    public String save(FlowieeImport flowieeImport) {
+    public FlowieeImport save(FlowieeImport flowieeImport) {
         if (flowieeImport == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        flowieeImportRepository.save(flowieeImport);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return flowieeImportRepository.save(flowieeImport);
     }
 
     @Override
-    public String update(FlowieeImport entity, Integer entityId) {
+    public FlowieeImport update(FlowieeImport entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        flowieeImportRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return flowieeImportRepository.save(entity);
     }
 
     @Override

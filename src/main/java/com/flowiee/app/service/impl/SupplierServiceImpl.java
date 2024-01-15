@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Supplier;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.SupplierRepository;
 import com.flowiee.app.service.SupplierService;
 
@@ -26,19 +27,17 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public String save(Supplier entity) {
-        supplierRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public Supplier save(Supplier entity) {
+        return supplierRepository.save(entity);
     }
 
     @Override
-    public String update(Supplier entity, Integer entityId) {
+    public Supplier update(Supplier entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        supplierRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return supplierRepository.save(entity);
     }
 
     @Override

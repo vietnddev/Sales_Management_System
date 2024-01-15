@@ -29,13 +29,13 @@ public class Price extends BaseEntity implements Serializable {
     @JoinColumn(name = "material_id")
     private Material material;
 
-    @Column(name = "gia_mua")
+    @Column(name = "buy")
     private Double giaMua;
 
     @Column(name = "unit_buy")
     private String unitBuy;
 
-    @Column(name = "gia_ban")
+    @Column(name = "sell")
     private Double giaBan;
 
     @Column(name = "unit_sell")
