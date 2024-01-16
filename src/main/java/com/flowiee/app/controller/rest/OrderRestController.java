@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.rest;
 
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.exception.ApiException;

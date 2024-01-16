@@ -38,6 +38,6 @@ public class MessagesUtil {
     public static final String INSERT_DATA_FAIL = "Thêm mới dữ liệu THẤT BẠI!";
     public static final String UPDATE_DATA_SUCCESS = "Cập nhật dữ liệu THÀNH CÔNG!";
     public static final String UPDATE_DATA_FAIL = "Cập nhật dữ liệu THẤT BẠI!";
-    public static final String DELETE_DATA_SUCCESS = "Xóa dữ liệu THÀNH CÔNG!";
-    public static final String DELETE_DATA_FAIL = "Xóa dữ liệu THẤT BẠI!";
+    public static final String DELETE_SUCCESS = "Deleted successfully!";
+    public static final String DELETE_FAIL = "Xóa dữ liệu THẤT BẠI!";
 }
