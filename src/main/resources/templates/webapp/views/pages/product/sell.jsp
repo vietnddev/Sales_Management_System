@@ -451,7 +451,7 @@
 
     async function loadProducts() {
         let selectElement = $('#productVariantField');
-        let apiURL = hostURL + '/api/v1/product/variant/all'
+        let apiURL = mvHostURL + '/api/v1/product/variant/all'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -466,7 +466,7 @@
 
     async function loadCustomers() {
         let selectElement = $('#customerField');
-        let apiURL = hostURL + '/api/v1/customer/all'
+        let apiURL = mvHostURL + '/api/v1/customer/all'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -481,7 +481,7 @@
 
     async function loadAccounts() {
         let selectElement = $('#accountField');
-        let apiURL = hostURL + '/api/v1/account/all'
+        let apiURL = mvHostURL + '/api/v1/account/all'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -496,7 +496,7 @@
 
     async function loadSalesChannels() {
         let selectElement = $('#salesChannelField');
-        let apiURL = hostURL + '/api/v1/category/sales-channel'
+        let apiURL = mvHostURL + '/api/v1/category/sales-channel'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -511,7 +511,7 @@
 
     async function loadPaymentMethods() {
         let selectElement = $('#paymentMethodField');
-        let apiURL = hostURL + '/api/v1/category/payment-method'
+        let apiURL = mvHostURL + '/api/v1/category/payment-method'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -526,7 +526,7 @@
 
     async function loadOrderStatuses() {
         let selectElement = $('#orderStatusField');
-        let apiURL = hostURL + '/api/v1/category/order-status'
+        let apiURL = mvHostURL + '/api/v1/category/order-status'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -558,7 +558,7 @@
             let note = $('#noteFieldCart').val()
             let cartId = [[${listCart.get(0).id}]]
 
-            let apiURL = hostURL + '/api/v1/order/insert'
+            let apiURL = mvHostURL + '/api/v1/order/insert'
             let params = {customerId: customerId,
                           cashierId : accountId,
                           salesChannelId: salesChannelId,
@@ -575,7 +575,7 @@
             });
             if (response.ok && ((await response.json()).status === 'OK')) {
                 alert('Create new order success!')
-                window.location =  hostURL + '/don-hang'
+                window.location =  mvHostURL + '/don-hang'
             } else {
                 alert('Create fail!')
             }

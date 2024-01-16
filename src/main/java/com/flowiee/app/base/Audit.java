@@ -1,5 +1,8 @@
 package com.flowiee.app.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.flowiee.app.utils.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,25 +21,31 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 public class Audit {
+    @JsonIgnore
     @Column(name = "created_at", updatable = false, columnDefinition = "timestamp default current_timestamp")
     @CreatedDate
     private Date createdAt;
 
+    @JsonIgnore
     @Column(name = "created_by", updatable = false)
     @CreatedBy
     protected Integer createdBy;
 
+    @JsonIgnore
     @Column(name = "last_updated_at", columnDefinition = "timestamp default current_timestamp")
     @LastModifiedDate
     private Date lastUpdatedAt;
 
+    @JsonIgnore
     @Column(name = "last_updated_by")
     @LastModifiedBy
     private String lastUpdatedBy;
 
+    @JsonIgnore
     @Column(name = "deleted_at")
     private Date deletedAt;
 
+    @JsonIgnore
     @Column(name = "deleted_by")
     private String deletedBy;
 

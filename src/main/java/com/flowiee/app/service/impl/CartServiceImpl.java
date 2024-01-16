@@ -12,6 +12,7 @@ import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,7 +124,7 @@ public class CartServiceImpl implements CartService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         itemsRepository.deleteById(itemId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override

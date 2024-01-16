@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +92,9 @@ public class AccountServiceImpl implements AccountService {
             } else {
                 account.setRole("USER");
             }
+            BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
+            String password = account.getPassword();
+            account.setPassword(bCrypt.encode(password));
             Account accountSaved = accountRepository.save(account);
         	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);

@@ -19,9 +19,9 @@ public interface FileStorageService extends BaseService<FileStorage> {
 
     List<FileStorage> getFileOfDocument(int documentId);
 
-    String saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException;
+    FileStorage saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException;
 
-    String saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException;
+    FileStorage saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException;
 
     String saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
 
@@ -29,7 +29,7 @@ public interface FileStorageService extends BaseService<FileStorage> {
 
     String changFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
 
-    String changeImageSanPham(MultipartFile fileToChange, int fileId);
+    FileStorage changeImageSanPham(MultipartFile fileToChange, int fileId);
 
     FileStorage findFileIsActiveOfDocument(int documentId);
 

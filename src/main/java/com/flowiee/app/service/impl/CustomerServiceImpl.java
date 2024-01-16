@@ -2,6 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
@@ -113,13 +114,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String saveContact(CustomerContact customerContact, Integer customerId) {
+    public CustomerContact saveContact(CustomerContact customerContact, Integer customerId) {
         if (customerContact == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        customerContactRepository.save(customerContact);
-        customerContactRepository.flush();
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return customerContactRepository.save(customerContact);
     }
 
     @Transactional
@@ -196,14 +195,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String updateContact(CustomerContact customerContact, Integer contactId) {
+    public CustomerContact updateContact(CustomerContact customerContact, Integer contactId) {
         if (customerContact == null || contactId == null || contactId <= 0 || this.findContactById(contactId) == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         customerContact.setId(contactId);
-        customerContactRepository.save(customerContact);
-        customerContactRepository.flush();
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return customerContactRepository.save(customerContact);
     }
 
     @Override
@@ -218,7 +215,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.deleteById(id);
         systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Xóa khách hàng " + customer.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override
@@ -231,7 +228,7 @@ public class CustomerServiceImpl implements CustomerService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         customerContactRepository.deleteById(contactId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override
@@ -264,7 +261,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String setContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
+    public CustomerContact setContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
         new CustomerContact();
         CustomerContact customerContactUsingDefault = switch (contactCode) {
             case "P" -> customerContactRepository.findPhoneUseDefault(customerId);
@@ -278,15 +275,13 @@ public class CustomerServiceImpl implements CustomerService {
         }
         CustomerContact customerContactToUseDefault = this.findContactById(contactId);
         customerContactToUseDefault.setIsDefault("Y");
-        this.updateContact(customerContactToUseDefault, customerContactToUseDefault.getId());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return this.updateContact(customerContactToUseDefault, customerContactToUseDefault.getId());
     }
 
     @Override
-    public String setContactUnUseDefault(Integer contactId) {
+    public CustomerContact setContactUnUseDefault(Integer contactId) {
         CustomerContact customerContact = this.findContactById(contactId);
         customerContact.setIsDefault("N");
-        this.updateContact(customerContact, customerContact.getId());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return this.updateContact(customerContact, customerContact.getId());
     }
 }

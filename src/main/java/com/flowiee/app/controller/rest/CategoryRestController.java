@@ -21,6 +21,16 @@ public class CategoryRestController {
     @Autowired
     private CategoryService categoryService;
 
+    @Operation(summary = "Find all category")
+    @GetMapping("/all")
+    public ApiResponse<List<Category>> findAll() {
+        try {
+            return ApiResponse.ok(categoryService.findRootCategory());
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
+        }
+    }
+
     @Operation(summary = "Find by type")
     @GetMapping("/{type}")
     public ApiResponse<List<Category>> findByType(@PathVariable("type") String categoryType) {
@@ -36,15 +46,15 @@ public class CategoryRestController {
     @PostMapping("/create")
     public ApiResponse<Category> createCategory(@RequestBody Category category) {
         try {
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(categoryService.save(category));
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "category"));
         }
     }
 
     @Operation(summary = "Update category")
-    @PutMapping("/update/{id}")
-    public ApiResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("id") Integer categoryId) {
+    @PutMapping("/update/{categoryId}")
+    public ApiResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
         try {
             if (categoryService.findById(categoryId) == null) {
                 throw new BadRequestException();
@@ -56,8 +66,8 @@ public class CategoryRestController {
     }
 
     @Operation(summary = "Delete category")
-    @DeleteMapping("/delete/{id}")
-    public ApiResponse<String> deleteCategory(@PathVariable("id") Integer categoryId) {
+    @DeleteMapping("/delete/{categoryId}")
+    public ApiResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
         try {
             if (categoryService.findById(categoryId) == null) {
                 throw new BadRequestException();

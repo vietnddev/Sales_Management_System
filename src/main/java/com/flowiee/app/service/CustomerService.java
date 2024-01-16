@@ -20,11 +20,11 @@ public interface CustomerService {
 
     String saveCustomer(Customer Rcustomer);
 
-    String saveContact(CustomerContact customerContact, Integer customerId);
+    CustomerContact saveContact(CustomerContact customerContact, Integer customerId);
 
     String updateCustomer(Customer customer, Integer customerId);
 
-    String updateContact(CustomerContact customerContact, Integer contactId);
+    CustomerContact updateContact(CustomerContact customerContact, Integer contactId);
 
     String deleteCustomer(Integer customerId);
 
@@ -40,7 +40,7 @@ public interface CustomerService {
 
     CustomerContact findContactAddressUseDefault(Integer customerId);
 
-    String setContactUseDefault(Integer customerId, String type, Integer contactId);
+    CustomerContact setContactUseDefault(Integer customerId, String type, Integer contactId);
 
-    String setContactUnUseDefault(Integer contactId);
+    CustomerContact setContactUnUseDefault(Integer contactId);
 }

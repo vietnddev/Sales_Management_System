@@ -1,8 +1,9 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.Category;
+import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
@@ -17,15 +18,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping(EndPointUtil.CATEGORY)
+@RequestMapping("/system/category")
 public class CategoryController extends BaseController {
     @Autowired private CategoryService categoryService;
     @Autowired private ValidateModuleCategory validateModuleCategory;
@@ -59,7 +62,7 @@ public class CategoryController extends BaseController {
     }
 
     @PostMapping("/{type}/insert")
-    public ModelAndView insert(@ModelAttribute("category") Category category, 
+    public ModelAndView insert(@ModelAttribute("category") Category category,
                                @PathVariable("type") String categoryType,
                                HttpServletRequest request) {
         validateModuleCategory.insertCategory(true);
@@ -101,7 +104,7 @@ public class CategoryController extends BaseController {
         categoryService.delete(categoryId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
-    
+
     @GetMapping("/{type}/template")
     public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
         validateModuleCategory.importCategory(true);

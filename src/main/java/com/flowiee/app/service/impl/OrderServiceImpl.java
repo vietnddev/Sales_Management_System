@@ -244,7 +244,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, String note) {
         orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, note);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return "Thanh toán thành công!";
     }
 
     @Override

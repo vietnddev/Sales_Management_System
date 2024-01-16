@@ -25,14 +25,8 @@ import java.util.List;
 @RestController
 @RequestMapping(EndPointUtil.SYS_ACCOUNT)
 public class AccountController extends BaseController {
-    private final RoleService          roleService;
-    private final ValidateModuleSystem validateModuleSystem;
-
-    @Autowired
-    public AccountController(RoleService roleService, ValidateModuleSystem validateModuleSystem) {
-        this.roleService = roleService;
-        this.validateModuleSystem = validateModuleSystem;
-    }
+    @Autowired private RoleService roleService;
+    @Autowired private ValidateModuleSystem validateModuleSystem;
 
     @GetMapping
     public ModelAndView findAllAccount() {

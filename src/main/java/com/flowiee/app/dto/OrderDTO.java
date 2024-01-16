@@ -58,6 +58,19 @@ public class OrderDTO implements Serializable {
 	private int cartId;
 	private List<OrderDetail> listOrderDetail;
 
+	public static OrderDTO fromOrder(Order order) {
+		OrderDTO dto = new OrderDTO();
+		dto.setOrderId(order.getId());
+		dto.setOrderCode(order.getMaDonHang());
+		dto.setOrderTime(order.getThoiGianDatHang());
+		dto.setReceiverAddress(order.getReceiverAddress());
+		dto.setReceiverName(order.getReceiverName());
+		dto.setReceiverEmail(order.getReceiverEmail());
+		dto.setReceiverPhone(order.getReceiverPhone());
+		dto.setListOrderDetail(order.getListOrderDetail());
+		return dto;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

@@ -1,4 +1,6 @@
-var hostURL= 'http://localhost:8085';
+const mvHostURL = 'http://localhost:8085';
+const mvCurrentAccountId = '';
+const mvCurrentAccountUsername = '';
 
 async function callApiDelete(apiURL) {
 	let response = await fetch(apiURL, {

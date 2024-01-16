@@ -1,5 +1,8 @@
 package com.flowiee.app.base;
 
+import com.flowiee.app.security.ValidateModuleCategory;
+import com.flowiee.app.security.ValidateModuleStorage;
+import com.flowiee.app.security.ValidateModuleSystem;
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.AccountService;
@@ -12,14 +15,15 @@ import java.util.Objects;
 
 @Component
 public class BaseController {
-	@Autowired
-	protected AccountService accountService;
-	@Autowired
-	protected ValidateModuleProduct validateModuleProduct;
+	@Autowired protected AccountService accountService;
+	@Autowired protected ValidateModuleProduct validateModuleProduct;
+	@Autowired protected ValidateModuleSystem validateModuleSystem;
+	@Autowired protected ValidateModuleCategory validateModuleCategory;
+	@Autowired protected ValidateModuleStorage validateModuleStorage;
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtils.getCurrentAccountUsername()));
-		setURLSidebar(modelAndView);
+		setURLHeader(modelAndView);
 		setURLSidebar(modelAndView);
 		return modelAndView;
 	}

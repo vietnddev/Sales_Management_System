@@ -460,7 +460,7 @@
         });
 
         $('#yesButton').on("click", async function () {
-            let apiURL = hostURL
+            let apiURL = mvHostURL
             let entityType = $(this).attr("entityType")
             let entityId = $(this).attr("entityId")
             if (entityType === 'image') {

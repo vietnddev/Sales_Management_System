@@ -393,7 +393,7 @@
                 });
 
                 $('#yesButton').on("click", async function () {
-                    let apiURL = hostURL + '/san-pham/delete/' + $(this).attr("entityId")
+                    let apiURL = mvHostURL + '/san-pham/delete/' + $(this).attr("entityId")
                     await callApiDelete(apiURL)
                 });
             });

@@ -7,6 +7,7 @@ import com.flowiee.app.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.service.FileStorageService;
@@ -18,8 +19,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -223,129 +230,229 @@ public class ProductRestController extends BaseController {
         }
     }
 
+    @Operation(summary = "Upload images of product")
+    @PostMapping(value = "/{productId}/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<FileStorage> uploadImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (productId <= 0 || productService.findProductById(productId) == null) {
+                throw new BadRequestException();
+            }
+            if (file.isEmpty()) {
+                throw new FileNotFoundException();
+            }
+            return ApiResponse.ok(fileStorageService.saveImageSanPham(file, productId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "image"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Operation(summary = "Upload images of product variant")
+    @PostMapping(value = "/{productId}/variant/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productVariantId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
+                throw new BadRequestException();
+            }
+            if (file.isEmpty()) {
+                throw new FileNotFoundException();
+            }
+            return ApiResponse.ok(fileStorageService.saveImageBienTheSanPham(file, productVariantId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "image"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Operation(summary = "Update product image is use default")
-    @PostMapping(value = "/{productId}/active-image/{imageId}")
+    @PutMapping(value = "/{productId}/active-image/{imageId}")
     public ApiResponse<FileStorage> activeImageOfProductOriginal(@PathVariable("productId") Integer productId, @PathVariable("imageId") Integer imageId) {
-        if (!super.validateModuleProduct.updateImage(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
+                throw new BadRequestException();
+            }
+            fileStorageService.setImageActiveOfSanPham(productId, imageId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
         }
-        if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
-            throw new BadRequestException();
-        }
-        fileStorageService.setImageActiveOfSanPham(productId, imageId);
-        return ApiResponse.ok(null);
     }
 
     @Operation(summary = "Update variant image is use default")
-    @PostMapping(value = "/variant/{productVariantId}/active-image/{imageId}")
+    @PutMapping(value = "/variant/{productVariantId}/active-image/{imageId}")
     public ApiResponse<FileStorage> activeImageOfProductVariant(@PathVariable("productVariantId") Integer productVariantId, @PathVariable("imageId") Integer imageId) {
-        if (!super.validateModuleProduct.updateImage(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
+                throw new BadRequestException();
+            }
+            fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
         }
-        if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
-            throw new BadRequestException();
+    }
+
+    @PostMapping(value = "/change-image/{imageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<FileStorage> changeFile(@RequestParam("file") MultipartFile fileUpload, @PathVariable("imageId") Integer imageId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (imageId <= 0 || fileStorageService.findById(imageId) == null) {
+                throw new BadRequestException();
+            }
+            if (fileUpload.isEmpty()) {
+                throw new FileNotFoundException();
+            }
+            return ApiResponse.ok(fileStorageService.changeImageSanPham(fileUpload, imageId));
+        } catch (Exception ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
         }
-        fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
-        return ApiResponse.ok(null);
     }
 
     @Operation(summary = "Create price")
     @PostMapping(value = "/variant/{productVariantId}/price/create")
     public ApiResponse<Price> createPrice(@RequestBody Price price, @PathVariable("productVariantId") Integer productVariantId) {
-        if (!super.validateModuleProduct.priceManagement(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.priceManagement(true)) {
+                return null;
+            }
+            if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(priceService.save(price));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "price"));
         }
-        if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
-            throw new BadRequestException();
-        }
-        return ApiResponse.ok(priceService.save(price));
     }
 
     @Operation(summary = "Update price")
-    @PostMapping(value = "/variant/{productVariantId}/price/update/{priceId}")
+    @PutMapping(value = "/variant/{productVariantId}/price/update/{priceId}")
     public ApiResponse<Price> updatePrice(@RequestBody Price price,
                                           @PathVariable("productVariantId") Integer productVariantId,
                                           @PathVariable("priceId") Integer priceId) {
-        if (!super.validateModuleProduct.priceManagement(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.priceManagement(true)) {
+                return null;
+            }
+            if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
+                throw new BadRequestException();
+            }
+            priceService.update(price, productVariantId, priceId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "price"));
         }
-        if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
-            throw new BadRequestException();
-        }
-        priceService.update(price, productVariantId, priceId);
-        return ApiResponse.ok(null);
     }
 
     @Operation(summary = "Find images of all products")
     @GetMapping("/image/all")
     public ApiResponse<List<FileStorage>> viewGallery() {
-        if (!super.validateModuleProduct.readGallery(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.readGallery(true)) {
+                return null;
+            }
+            return ApiResponse.ok(fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"));
         }
-        return ApiResponse.ok(fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
     }
 
     @Operation(summary = "Find all vouchers")
     @GetMapping("/voucher/all")
     public ApiResponse<List<VoucherInfoDTO>> findAllVouchers() {
-        if (!super.validateModuleProduct.readVoucher(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.readVoucher(true)) {
+                return null;
+            }
+            return ApiResponse.ok(voucherService.findAll(null, null, null, null));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
         }
-        return ApiResponse.ok(voucherService.findAll(null, null, null, null));
     }
 
     @Operation(summary = "Find detail voucher")
     @GetMapping("/voucher/{voucherInfoId}")
     public ApiResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
-        if (!super.validateModuleProduct.readVoucher(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.readVoucher(true)) {
+                return null;
+            }
+            return ApiResponse.ok(voucherService.findById(voucherInfoId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
         }
-        return ApiResponse.ok(voucherService.findById(voucherInfoId));
     }
 
     @Operation(summary = "Create voucher")
     @PostMapping("/voucher/create")
     public ApiResponse<VoucherInfoDTO> createVoucher(@RequestBody VoucherInfo voucherInfo) throws ParseException {
-        if (!super.validateModuleProduct.insertVoucher(true)) {
-            return null;
-        }
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //voucherInfo.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
-        //voucherInfo.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
+        try {
+            if (!super.validateModuleProduct.insertVoucher(true)) {
+                return null;
+            }
+            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            //voucherInfo.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
+            //voucherInfo.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
 
-        //List<Integer> listProductToApply = new ArrayList<>();
-        //String[] pbienTheSP = request.getParameterValues("productToApply");
-        //if (pbienTheSP != null) {
-        //    for (String id : pbienTheSP) {
-        //        listProductToApply.add(Integer.parseInt(id));
-        //    }
-        //}
-        //if (!listProductToApply.isEmpty()) {
-        //    voucherService.save(voucherInfo, listProductToApply);
-        //}
-        return ApiResponse.ok(null);
+            //List<Integer> listProductToApply = new ArrayList<>();
+            //String[] pbienTheSP = request.getParameterValues("productToApply");
+            //if (pbienTheSP != null) {
+            //    for (String id : pbienTheSP) {
+            //        listProductToApply.add(Integer.parseInt(id));
+            //    }
+            //}
+            //if (!listProductToApply.isEmpty()) {
+            //    voucherService.save(voucherInfo, listProductToApply);
+            //}
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "voucher"));
+        }
     }
 
     @Operation(summary = "Update voucher")
-    @PostMapping("/voucher/update/{voucherInfoId}")
+    @PutMapping("/voucher/update/{voucherInfoId}")
     public ApiResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfo voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
-        if (!super.validateModuleProduct.updateVoucher(true)) {
-            return null;
+        try {
+            if (!super.validateModuleProduct.updateVoucher(true)) {
+                return null;
+            }
+            if (voucherInfo == null || voucherService.findById(voucherInfoId) == null) {
+                throw new BadRequestException();
+            }
+            voucherService.update(voucherInfo ,voucherInfoId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "voucher"));
         }
-        if (voucherInfo == null || voucherService.findById(voucherInfoId) == null) {
-            throw new BadRequestException();
-        }
-        voucherService.update(voucherInfo ,voucherInfoId);
-        return ApiResponse.ok(null);
     }
 
     @Operation(summary = "Delete voucher")
     @PostMapping("/voucher/delete/{voucherInfoId}")
     public ApiResponse<VoucherInfoDTO> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
-        if(!super.validateModuleProduct.deleteVoucher(true)) {
-            return null;
+        try {
+            if(!super.validateModuleProduct.deleteVoucher(true)) {
+                return null;
+            }
+            voucherService.detele(voucherInfoId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "voucher"));
         }
-        voucherService.detele(voucherInfoId);
-        return ApiResponse.ok(null);
     }
 }

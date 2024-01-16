@@ -171,7 +171,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     @Transactional
-    public String saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException {
+    public FileStorage saveImageSanPham(MultipartFile fileUpload, int sanPhamId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(SystemModule.PRODUCT.name());
@@ -184,17 +184,17 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setProduct(new Product(sanPhamId));
         fileInfo.setAccount(new Account(CommonUtils.getCurrentAccountId()));
         fileInfo.setActive(false);
-        fileRepository.save(fileInfo);
+        FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
-        return "OK";
+        return imageSaved;
     }
 
     @Override
     @Transactional
-    public String saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException {
+    public FileStorage saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(SystemModule.PRODUCT.name());
@@ -210,12 +210,12 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setProduct(productVariant.getProduct());
         fileInfo.setAccount(new Account(CommonUtils.getCurrentAccountId()));
         fileInfo.setActive(false);
-        fileRepository.save(fileInfo);
+        FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(SystemModule.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
-        return "OK";
+        return imageSaved;
     }
 
     @Override
@@ -279,7 +279,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public String changeImageSanPham(MultipartFile fileAttached, int fileId) {
+    public FileStorage changeImageSanPham(MultipartFile fileAttached, int fileId) {
         Long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileToChange = this.findById(fileId);
         //Delete file vật lý cũ
@@ -299,7 +299,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(CommonUtils.getPathDirectory(SystemModule.PRODUCT).substring(CommonUtils.getPathDirectory(SystemModule.PRODUCT).indexOf("uploads")));
         fileToChange.setAccount(new Account(CommonUtils.getCurrentAccountId()));
-        fileRepository.save(fileToChange);
+        FileStorage imageSaved = fileRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload
         try {
@@ -309,7 +309,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             logger.error("Lưu file change vào thư mục chứa file upload thất bại!", e.getCause().getMessage());
         }
 
-        return "OK";
+        return imageSaved;
     }
 
     @Override

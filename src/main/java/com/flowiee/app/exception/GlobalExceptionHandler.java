@@ -65,6 +65,11 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
+    public ErrorResponse exceptionHandler(ApiException ex) {
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+    }
+
+    @ExceptionHandler
     public ModelAndView exceptionHandler(Exception ex) {
         logger.error("Exception", ex);
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());

@@ -164,10 +164,4 @@ public class CustomerController extends BaseController {
         customerService.setContactUnUseDefault(contactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
-
-    @PostMapping("/orders-history")
-    public ResponseEntity<List<CustomerDTO>> getOrderHistory(@RequestBody String id) {
-        System.out.println("test: " + id);
-        return ResponseEntity.ok(customerService.findAllCustomer(null, null, null, null, null, null));
-    }
 }

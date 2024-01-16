@@ -216,7 +216,15 @@
       });
     </script>
     <!--Js customize-->
-    <script th:src="@{/js/common.js}"></script>
+    <script th:src="@{/js/Common.js}"></script>
+    <script th:src="@{/js/AccountDAO.js}"></script>
+    <script th:src="@{/js/CartDAO.js}"></script>
+    <script th:src="@{/js/CategoryDAO.js}"></script>
+    <script th:src="@{/js/MaterialDAO.js}"></script>
+    <script th:src="@{/js/OrderDAO.js}"></script>
+    <script th:src="@{/js/ProductDAO.js}"></script>
+    <script th:src="@{/js/SupplierDAO.js}"></script>
+    <script th:src="@{/js/VoucherDAO.js}"></script>
   </div>
 
 </body>
