@@ -70,156 +70,8 @@
                                                     <th>Thao tác</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr th:each="list, index : ${listProducts}">
-                                                    <td th:text="${index.index + 1}"></td>
-                                                    <td class="text-center">
-                                                        <img th:src="@{'/' + ${list.imageActive.directoryPath} + '/' + ${list.imageActive.tenFileKhiLuu}}"
-                                                             style="width: 100px; height: 100px; border-radius: 5px">
-                                                    </td>
-                                                    <td>
-                                                        <a th:href="@{/san-pham/{id}(id=${list.productId})}"
-                                                           th:text="${list.productName}"></a>
-                                                    </td>
-                                                    <td th:text="${list.productTypeName}"></td>
-                                                    <td>
-                                                        <th:block th:each="i : ${list.productVariantInfo}">
-                                                            <div class="span" th:text="${i.key} + ': ' + ${i.value}"></div>
-                                                        </th:block>
-                                                    </td>
-                                                    <td>
-                                                        <div class="span" th:text="'Hiện có: ' + ${list.totalQtyStorage}"></div>
-                                                        <div class="span" th:text="'Đã bán:  ' + ${list.totalQtySell}"></div>
-                                                    </td>
-                                                    <td th:text="${list.unitName}"></td>
-                                                    <td>
-                                                        <th:block th:each="voucherInfo, index : ${list.listVoucherInfoApply}">
-                                                            <span th:text="${index.index + 1} + ' '"></span>
-                                                            <a th:href="@{/san-pham/voucher/detail/{id}(id=${voucherInfo.id})}">
-                                                                <span th:text="${voucherInfo.title}"></span>
-                                                            </a>
-                                                            <br>
-                                                        </th:block>
-                                                    </td>
-                                                    <td th:text="${list.productStatus}"></td>
-                                                    <td>
-                                                        <button class="btn btn-outline-info btn-sm">
-                                                            <a th:href="@{/san-pham/{id}(id=${list.productId})}">
-                                                                <i class="fa-solid fa-eye"></i>
-                                                            </a></button>
-                                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
-                                                                th:data-target="'#update-' + ${list.productId}">
-                                                            <i class="fa-solid fa-pencil"></i>
-                                                        </button>
-                                                        <button class="btn btn-outline-danger btn-sm link-delete"
-                                                                th:entityId="${list.productId}"
-                                                                th:entityName="${list.productName}">
-                                                            <i class="fa-solid fa-trash"></i>
-                                                        </button>
-                                                    </td>
-                                                    <!-- Update -->
-                                                    <!-- Modal update -->
-                                                    <div class="modal fade" th:id="'update-' + ${list.productId}">
-                                                        <div class="modal-dialog modal-lg">
-                                                            <div class="modal-content">
-                                                                <form th:action="@{/san-pham/update/{id}(id=${list.productId})}"
-                                                                      th:object="${sanPham}" method="post">
-                                                                    <div class="modal-header">
-                                                                        <strong class="modal-title">Cập nhật sản
-                                                                            phẩm</strong>
-                                                                        <button type="button" class="close"
-                                                                                data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="row">
-                                                                            <div class="col-12">
-                                                                                <div class="form-group">
-                                                                                    <label>Tên sản phẩm</label>
-                                                                                    <input type="text" class="form-control"
-                                                                                           placeholder="Tên sản phẩm"
-                                                                                           name="tenSanPham"
-                                                                                           th:value="${list.productName}"/>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Loại sản phẩm</label>
-                                                                                    <select class="custom-select"
-                                                                                            name="productType">
-                                                                                        <option th:each="lstype, iterStat : ${listproductType}"
-                                                                                                th:value="${lstype.id}"
-                                                                                                th:text="${lstype.name}">
-                                                                                        </option>
-                                                                                        <option th:text="${list.productTypeName}"
-                                                                                                th:value="${list.productTypeId}"
-                                                                                                selected></option>
-                                                                                    </select>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Đơn vị tính</label>
-                                                                                    <select class="custom-select"
-                                                                                            name="unit">
-                                                                                        <option th:each="lsDvt, iterStat : ${listDonViTinh}"
-                                                                                                th:value="${lsDvt.id}"
-                                                                                                th:text="${lsDvt.name}">
-                                                                                        </option>
-                                                                                        <option th:text="${list.unitName}"
-                                                                                                th:value="${list.unitId}"
-                                                                                                selected></option>
-                                                                                    </select>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Nhãn hiệu</label>
-                                                                                    <select class="custom-select"
-                                                                                            name="brand">
-                                                                                        <option th:each="lsBrand, iterStat : ${listBrand}"
-                                                                                                th:value="${lsBrand.id}"
-                                                                                                th:text="${lsBrand.name}">
-                                                                                        </option>
-                                                                                        <option th:text="${list.brandName}"
-                                                                                                th:value="${list.brandId}"
-                                                                                                selected></option>
-                                                                                    </select>
-                                                                                </div>
-                                                                                <!--<div class="form-group">
-                                                                                    <label>Mô tả sản phẩm</label>
-                                                                                    <textarea class="form-control" rows="5"
-                                                                                              placeholder="Mô tả sản phẩm"
-                                                                                              name="moTaSanPham"
-                                                                                              th:text="${list.productDes}"></textarea>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Trạng thái</label>
-                                                                                    <select class="custom-select"
-                                                                                            name="status">
-                                                                                        <option value="true" selected>Kinh
-                                                                                            doanh
-                                                                                        </option>
-                                                                                        <option value="false">Ngừng kinh doanh
-                                                                                        </option>
-                                                                                    </select>
-                                                                                </div>-->
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer justify-content-end"
-                                                                             style="margin-bottom: -15px;">
-                                                                            <button type="button" class="btn btn-default"
-                                                                                    data-dismiss="modal">Hủy
-                                                                            </button>
-                                                                            <button type="submit" class="btn btn-primary">
-                                                                                Lưu
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <!-- /.modal-content -->
-                                                        </div>
-                                                        <!-- /.modal-dialog -->
-                                                    </div>
-                                                    <!-- /.end modal update-->
-                                                    <!-- End update -->
-                                                </tr>
+                                            <tbody id="contentTable">
+
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -238,6 +90,8 @@
                                         </table>
                                     </div>
                                     <!-- /.card-body -->
+
+
 
                                     <!-- modal import -->
                                     <div class="modal fade" id="import">
@@ -385,6 +239,7 @@
                 <!-- Nhúng các file JavaScript vào -->
             </div>
         </div>
+
         <script type="text/javascript">
             $(document).ready(function() {
                 $(".link-delete").on("click", function(e) {
@@ -396,7 +251,50 @@
                     let apiURL = mvHostURL + '/san-pham/delete/' + $(this).attr("entityId")
                     await callApiDelete(apiURL)
                 });
+
+                getProducts()
             });
+
+            async function getProducts() {
+                let apiURL = mvHostURL + '/api/v1/product/all';
+                let response = await fetch(apiURL)
+                if (response.ok) {
+                    let data = (await response.json()).data
+
+                    let contentTable = $('#contentTable');
+                    $.each(data, function (index, p) {
+
+                        let voucherBlock = '';
+                        $.each(p.listVoucherInfoApply, function (voucherIndex, voucherInfo) {
+                            voucherBlock += `<span>${voucherIndex + 1} </span><a href="/san-pham/voucher/detail/${voucherInfo.id}"><span>${voucherInfo.title}</span></a><br>`;
+                        });
+
+                        contentTable.append(
+                            '<tr>' +
+                                '<td>' + (index + 1) + '</td>' +
+                                '<td></td>' +
+                                '<td><a href="/san-pham/' + p.productId + '">' + p.productName + '</a></td>' +
+                                '<td>' + p.productTypeName + '</td>' +
+                                '<td></td>' +
+                                '<td>' +
+                                    '<div className="span">Hiện có: ' + p.totalQtyStorage + '</div>' +
+                                    '<div className="span">Đã bán:  ' + p.totalQtySell + '</div>' +
+                                '</td>' +
+                                '<td>' + p.unitName + '</td>' +
+                                '<td>' + voucherBlock + '</td>' +
+                                '<td>' + p.productStatus + '</td>' +
+                                '<td>' +
+                                    '<button class="btn btn-outline-info btn-sm"><a href="/san-pham/' + p.productId + '"><i class="fa-solid fa-eye"></i></a></button>' +
+                                    '<button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#update-' + p.productId + '"><i class="fa-solid fa-pencil"></i></button>' +
+                                    '<button class="btn btn-outline-danger btn-sm link-delete" entityId="' + p.productId + '" entityName="' + p.productName + '"><i class="fa-solid fa-trash"></i></button>' +
+                                '</td>' +
+                            '</tr>'
+                        );
+                    });
+                } else {
+                    alert('Call API fail!')
+                }
+            }
         </script>
     </body>
 </html>

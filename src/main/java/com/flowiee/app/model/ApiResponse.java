@@ -46,11 +46,11 @@ public class ApiResponse<T> implements Serializable {
         return ok(message, data, HttpStatus.OK);
     }
 
-    public static <T> ApiResponse<T> fail(@NonNull String message, @NonNull Throwable cause) {
-        return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, message, cause.getMessage(), null);
-    }
-
     public static <T> ApiResponse<T> ok(@NonNull String message, @NonNull T data, HttpStatus httpStatus) {
         return new ApiResponse<>(true, httpStatus, message, null, data);
+    }
+
+    public static <T> ApiResponse<T> fail(@NonNull String message, @NonNull Throwable cause) {
+        return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, message, cause.getMessage(), null);
     }
 }

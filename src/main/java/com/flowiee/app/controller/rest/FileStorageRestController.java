@@ -23,8 +23,6 @@ public class FileStorageRestController extends BaseController {
     @Autowired private FileStorageService fileService;
     @Autowired private ValidateModuleProduct validateModuleProduct;
 
-
-
     @Operation(summary = "Xóa file", description = "Xóa theo id")
     @DeleteMapping("/file/delete/{id}")
     public ApiResponse<String> delete(@PathVariable("id") Integer fileId) {

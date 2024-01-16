@@ -455,7 +455,6 @@
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
-            selectElement.append('<option>Chọn sản phẩm</option>');
             $.each(data, function (index, d) {
                 selectElement.append('<option value=' + d.id + '>' + d.product.tenSanPham + ' - ' + d.tenBienThe + ' - ' + d.soLuongKho + '</option>');
             });

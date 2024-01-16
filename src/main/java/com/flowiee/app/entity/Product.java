@@ -1,5 +1,6 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
@@ -47,22 +48,27 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "status", nullable = false, length = 10)
     private String status;
 
+    @JsonIgnore
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductVariant> listBienThe;
 
+    @JsonIgnore
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FileStorage> listFileStorage;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductHistory> listProductHistory;
 
+    @JsonIgnore
     @Transient
     private FileStorage imageActive;
 
+    @JsonIgnore
     @Transient
     private List<VoucherInfoDTO> listVoucherInfoApply;
 

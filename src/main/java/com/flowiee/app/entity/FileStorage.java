@@ -1,5 +1,6 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
@@ -89,6 +90,7 @@ public class FileStorage extends BaseEntity implements Serializable {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "fileStorage", fetch = FetchType.LAZY)
     private List<DocHistory> listDocHistory;
 

@@ -1,5 +1,6 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.flowiee.app.base.BaseEntity;
@@ -71,24 +72,32 @@ public class ProductVariant extends BaseEntity implements Serializable {
     @Transient
     private Price price;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductAttribute> listThuocTinh;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> listGiaBan;
 
+
+    @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
     private List<OrderDetail> listOrderDetail;
 
+
+    @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FileStorage> listFileStorage;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Items> listItems;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductHistory> listProductHistory;
