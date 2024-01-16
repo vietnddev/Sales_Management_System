@@ -1,20 +1,17 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.entity.Product;
-import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleCategory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,7 +33,7 @@ public class CategoryController extends BaseController {
     @GetMapping
     public ModelAndView viewRootCategory() {
         validateModuleCategory.readCategory(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY);
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listCategory", categoryService.findRootCategory());
         return baseView(modelAndView);
@@ -45,15 +42,15 @@ public class CategoryController extends BaseController {
     @GetMapping("/{type}")
     public ModelAndView viewSubCategory(@PathVariable("type") String categoryType) {
         validateModuleCategory.readCategory(true);
-        if (CommonUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        List<Category> listCategory = categoryService.findSubCategory(CommonUtil.getCategoryType(categoryType));
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.CTG_CATEGORY_DETAIL);
+        List<Category> listCategory = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType));
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY_DETAIL);
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listSubCategory", listCategory);
-        modelAndView.addObject("ctgRootType", CommonUtil.getCategoryType(categoryType));
-        modelAndView.addObject("ctgRootName", AppConstants.CATEGORY.valueOf(CommonUtil.getCategoryType(categoryType)).getLabel());
+        modelAndView.addObject("ctgRootType", CommonUtils.getCategoryType(categoryType));
+        modelAndView.addObject("ctgRootName", AppConstants.CATEGORY.valueOf(CommonUtils.getCategoryType(categoryType)).getLabel());
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH);
         modelAndView.addObject("url_template", "");
         modelAndView.addObject("url_import", "");
@@ -66,10 +63,10 @@ public class CategoryController extends BaseController {
                                @PathVariable("type") String categoryType,
                                HttpServletRequest request) {
         validateModuleCategory.insertCategory(true);
-        if (CommonUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        category.setType(CommonUtil.getCategoryType(categoryType));
+        category.setType(CommonUtils.getCategoryType(categoryType));
         categoryService.save(category);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -108,7 +105,7 @@ public class CategoryController extends BaseController {
     @GetMapping("/{type}/template")
     public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
         validateModuleCategory.importCategory(true);
-        if (CommonUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         byte[] dataExport = categoryService.exportTemplate(categoryType);
@@ -121,7 +118,7 @@ public class CategoryController extends BaseController {
     @PostMapping("/{type}/import")
     public ModelAndView importData(@PathVariable("type") String categoryType, @RequestParam("file") MultipartFile file) {
         validateModuleCategory.importCategory(true);
-        if (CommonUtil.getCategoryType(categoryType) == null) {
+        if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
         categoryService.importData(file, categoryType);

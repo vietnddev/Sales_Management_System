@@ -4,7 +4,6 @@ import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

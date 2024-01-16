@@ -1,6 +1,6 @@
 package com.flowiee.app.base;
 
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -48,10 +48,10 @@ public class Audit {
             createdAt = new Date();
         }
         if (createdBy == null) {
-            createdBy = CommonUtil.getCurrentAccountId();
+            createdBy = CommonUtils.getCurrentAccountId();
         }
         if (lastUpdatedBy == null) {
-            lastUpdatedBy = CommonUtil.getCurrentAccountUsername();
+            lastUpdatedBy = CommonUtils.getCurrentAccountUsername();
         }
     }
 }

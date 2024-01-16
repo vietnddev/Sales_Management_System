@@ -4,7 +4,7 @@ import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.CustomerService;
-import com.flowiee.app.utils.ErrorMessages;
+import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CustomerRestController {
             List<CustomerDTO> result = customerService.findAllCustomer();
             return ApiResponse.ok(result);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "customer"));
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
         }
     }
 }

@@ -13,7 +13,7 @@ import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.service.PriceService;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.VoucherService;
-import com.flowiee.app.utils.ErrorMessages;
+import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class ProductRestController extends BaseController {
             List<ProductDTO> productList = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(productPage.getContent()));
             return ApiResponse.ok(productList);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -56,7 +56,7 @@ public class ProductRestController extends BaseController {
         try {
             return ApiResponse.ok(ProductDTO.fromProduct(productService.findProductById(productId)));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -70,7 +70,7 @@ public class ProductRestController extends BaseController {
             List<ProductVariant> result = productService.findAllProductVariants();
             return ApiResponse.ok(result);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "product variant"));
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"));
         }
     }
 
@@ -83,7 +83,7 @@ public class ProductRestController extends BaseController {
         try {
             return ApiResponse.ok(productService.findAllProductVariantOfProduct(productId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "product variant"));
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"));
         }
     }
 
@@ -96,7 +96,7 @@ public class ProductRestController extends BaseController {
         try {
             return ApiResponse.ok(productService.findProductVariantById(productVariantId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -109,7 +109,7 @@ public class ProductRestController extends BaseController {
         try {
             return ApiResponse.ok(productService.saveProduct(product));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.CREATE_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -123,7 +123,7 @@ public class ProductRestController extends BaseController {
             productService.saveProductVariant(productVariant);
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.CREATE_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -137,7 +137,7 @@ public class ProductRestController extends BaseController {
             productService.saveProductAttribute(productAttribute);
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.CREATE_ERROR_OCCURRED, "product attribute"));
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product attribute"));
         }
     }
 
@@ -151,7 +151,7 @@ public class ProductRestController extends BaseController {
             productService.updateProduct(product, productId);
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.UPDATE_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -165,7 +165,7 @@ public class ProductRestController extends BaseController {
             productService.updateProductVariant(productVariant, productVariantId);
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.UPDATE_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -179,7 +179,7 @@ public class ProductRestController extends BaseController {
             productService.updateProductAttribute(productAttribute, productAttributeId);
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.UPDATE_ERROR_OCCURRED, "product attribute"));
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product attribute"));
         }
     }
 
@@ -192,7 +192,7 @@ public class ProductRestController extends BaseController {
         try {
             return ApiResponse.ok(productService.deleteProduct(productId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.DELETE_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -205,7 +205,7 @@ public class ProductRestController extends BaseController {
         try {
             return ApiResponse.ok(productService.deleteProductVariant(productVariantId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.DELETE_ERROR_OCCURRED, "product"));
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"));
         }
     }
 
@@ -219,7 +219,7 @@ public class ProductRestController extends BaseController {
             productService.deleteProductAttribute(productAttributeId);
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.DELETE_ERROR_OCCURRED, "product attribute"));
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product attribute"));
         }
     }
 

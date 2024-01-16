@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class CommonUtil {
+public class CommonUtils {
     public static String rootPath = "src/main/resources/static";
     public static String fileUploadPath = rootPath + "/uploads/";
     public static Integer SYS_NOTI_ID = 0;
@@ -39,7 +39,7 @@ public class CommonUtil {
     }
 
     public static String getMaDonHang() {
-        return "F" + CommonUtil.now("yyMMddHHmmss");
+        return "F" + CommonUtils.now("yyMMddHHmmss");
     }
 
     public static String getMaDanhMuc(String categoryName) {
@@ -123,9 +123,9 @@ public class CommonUtil {
                 	path.append("system");
                 	break;
             }
-            path.append("/" + CommonUtil.getNamHienTai());
-            path.append("/" + CommonUtil.getThangHienTai());
-            path.append("/" + CommonUtil.getNgayHienTai());
+            path.append("/" + CommonUtils.getNamHienTai());
+            path.append("/" + CommonUtils.getThangHienTai());
+            path.append("/" + CommonUtils.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -149,9 +149,9 @@ public class CommonUtil {
             } else if (SystemModule.CATEGORY.name().equals(systemModule)) {
                 path.append("category");
             }
-            path.append("/" + CommonUtil.getNamHienTai());
-            path.append("/" + CommonUtil.getThangHienTai());
-            path.append("/" + CommonUtil.getNgayHienTai());
+            path.append("/" + CommonUtils.getNamHienTai());
+            path.append("/" + CommonUtils.getThangHienTai());
+            path.append("/" + CommonUtils.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -169,9 +169,9 @@ public class CommonUtil {
         try {
             StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
             path.append("/import");
-            path.append("/" + CommonUtil.getNamHienTai());
-            path.append("/" + CommonUtil.getThangHienTai());
-            path.append("/" + CommonUtil.getNgayHienTai());
+            path.append("/" + CommonUtils.getNamHienTai());
+            path.append("/" + CommonUtils.getThangHienTai());
+            path.append("/" + CommonUtils.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -214,8 +214,8 @@ public class CommonUtil {
 
     public static byte[] exportTemplate(String templateName) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + ".xlsx";
-        String filePathTemp = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + templateName + ".xlsx";
+        String filePathTemp = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = null;
         try {
             fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());

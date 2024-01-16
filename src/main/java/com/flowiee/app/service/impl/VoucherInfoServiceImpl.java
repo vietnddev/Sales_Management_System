@@ -8,7 +8,7 @@ import com.flowiee.app.service.*;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.DateUtils;
-import com.flowiee.app.utils.ErrorMessages;
+import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,7 +127,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         if (!voucherApplyService.findByVoucherId(voucherId).isEmpty()) {
-            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         voucherInfoRepository.deleteById(voucherId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;

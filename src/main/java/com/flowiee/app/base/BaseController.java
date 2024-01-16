@@ -3,7 +3,7 @@ package com.flowiee.app.base;
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.AccountService;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,7 +18,7 @@ public class BaseController {
 	protected ValidateModuleProduct validateModuleProduct;
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
-		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtil.getCurrentAccountUsername()));
+		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtils.getCurrentAccountUsername()));
 		setURLSidebar(modelAndView);
 		setURLSidebar(modelAndView);
 		return modelAndView;

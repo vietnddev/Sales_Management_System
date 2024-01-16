@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -47,7 +46,7 @@ public class OrderController extends BaseController {
     @GetMapping
     public ModelAndView viewAllOrders() {
         validateModuleProduct.readOrder(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER);
         modelAndView.addObject("listOrder", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
@@ -67,7 +66,7 @@ public class OrderController extends BaseController {
             throw new NotFoundException("Order not found!");
         }
         OrderDTO orderDetail = orderService.findOrderById(orderId);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_DETAIL);
         modelAndView.addObject("orderDetail", orderDetail);
         modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
         //modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
@@ -81,11 +80,11 @@ public class OrderController extends BaseController {
     @GetMapping("/ban-hang")
     public ModelAndView showPageBanHang() {
         validateModuleProduct.insertOrder(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_ORDER_SELL);
-        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtil.getCurrentAccountId());
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_SELL);
+        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
         if (orderCartCurrent.isEmpty()) {
             OrderCart orderCart = new OrderCart();
-            orderCart.setCreatedBy(CommonUtil.getCurrentAccountId());
+            orderCart.setCreatedBy(CommonUtils.getCurrentAccountId());
             cartService.saveCart(orderCart);
         }
         modelAndView.addObject("listDonHang", orderService.findAllOrder());
@@ -96,7 +95,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
 
-        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtil.getCurrentAccountId());
+        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);
 
         double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());

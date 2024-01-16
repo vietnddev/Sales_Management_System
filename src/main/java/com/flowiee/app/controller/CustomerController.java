@@ -3,7 +3,6 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
-import com.flowiee.app.entity.Order;
 import com.flowiee.app.utils.*;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
@@ -38,7 +37,7 @@ public class CustomerController extends BaseController {
                                        @Nullable @RequestParam("email") String email,
                                        @Nullable @RequestParam("address") String address) {
         validateProductModule.readCustomer(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_CUSTOMER);
         modelAndView.addObject("listCustomer", customerService.findAllCustomer(name, sex, birthday != null ? DateUtils.convertStringToDate(birthday, "YYYY/MM/dd") : null, phone, email, address));
         modelAndView.addObject("customer", new CustomerDTO());
         modelAndView.addObject("filter_name", name);
@@ -68,7 +67,7 @@ public class CustomerController extends BaseController {
                 c.setCode(AppConstants.CONTACT_TYPE.A.getLabel());
             }
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_CUSTOMER_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_CUSTOMER_DETAIL);
         modelAndView.addObject("customerDetail", customerService.findCustomerById(customerId));
         modelAndView.addObject("listCustomerContact", listContacts);
         modelAndView.addObject("listDonHang", orderService.findOrdersByCustomerId(customerId));

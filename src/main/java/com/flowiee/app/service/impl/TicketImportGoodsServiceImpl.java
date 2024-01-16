@@ -4,7 +4,7 @@ import com.flowiee.app.entity.Category;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
@@ -197,7 +197,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     @Override
     public List<TicketImportGoods> findByPaidStatus(String paidStatus) {
         List<TicketImportGoods> listData = new ArrayList<>();
-        if (paidStatus != null && CommonUtil.getPaymentStatusCategory().containsKey(paidStatus)) {
+        if (paidStatus != null && CommonUtils.getPaymentStatusCategory().containsKey(paidStatus)) {
             listData = ticketImportRepository.findByPaidStatus(paidStatus);
         }
         return listData;
@@ -222,7 +222,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         TicketImportGoods ticketImportGoods = new TicketImportGoods();
         ticketImportGoods.setTitle("Title");
         ticketImportGoods.setStatus(STATUS_DRAFT);
-        ticketImportGoods.setCreatedBy(CommonUtil.getCurrentAccountId());
+        ticketImportGoods.setCreatedBy(CommonUtils.getCurrentAccountId());
         ticketImportGoods.setOrderTime(new Date());
         ticketImportGoods.setReceivedTime(new Date());
         ticketImportGoods = ticketImportRepository.save(ticketImportGoods);

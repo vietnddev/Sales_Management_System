@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.service.SupplierService;
 
@@ -26,7 +26,7 @@ public class SupplierController extends BaseController {
 	@GetMapping
 	public ModelAndView viewAllSupplier() {
 		validateModuleProduct.readSupplier(true);
-		ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_SUPPLIER);
+		ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_SUPPLIER);
 		modelAndView.addObject("supplier", new Supplier());
 		modelAndView.addObject("listSuplier", supplierService.findAll());		
 		return baseView(modelAndView);

@@ -38,8 +38,8 @@ public class TicketImportGoodsController extends BaseController {
     @GetMapping
     public ModelAndView loadPage() {
         validateModuleStorage.importGoods(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_TICKET_IMPORT);
-        TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtil.getCurrentAccountId());
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT);
+        TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
         if (ticketImportGoodsPresent == null) {
             ticketImportGoodsPresent = ticketImportGoodsService.createDraftImport();
         }
@@ -92,10 +92,10 @@ public class TicketImportGoodsController extends BaseController {
         Map<String, String> listTrangThaiThanhToan = new HashMap<>();
         if (ticketImportGoodsPresent.getPaidStatus() == null || ticketImportGoodsPresent.getPaidStatus().isEmpty()) {
             listTrangThaiThanhToan.put(null, "Chọn trạng thái thanh toán");
-            listTrangThaiThanhToan.putAll(CommonUtil.getPaymentStatusCategory());
+            listTrangThaiThanhToan.putAll(CommonUtils.getPaymentStatusCategory());
         } else {
-            listTrangThaiThanhToan.put(ticketImportGoodsPresent.getPaidStatus(), CommonUtil.getPaymentStatusCategory().get(ticketImportGoodsPresent.getPaidStatus()));
-            Map<String, String> listTrangThaiThanhToanTemp = CommonUtil.getPaymentStatusCategory();
+            listTrangThaiThanhToan.put(ticketImportGoodsPresent.getPaidStatus(), CommonUtils.getPaymentStatusCategory().get(ticketImportGoodsPresent.getPaidStatus()));
+            Map<String, String> listTrangThaiThanhToanTemp = CommonUtils.getPaymentStatusCategory();
             listTrangThaiThanhToanTemp.remove(ticketImportGoodsPresent.getPaidStatus());
             listTrangThaiThanhToan.putAll(listTrangThaiThanhToanTemp);
         }

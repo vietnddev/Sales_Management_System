@@ -1,14 +1,12 @@
 package com.flowiee.app.dto;
 
 import com.flowiee.app.entity.Customer;
-import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

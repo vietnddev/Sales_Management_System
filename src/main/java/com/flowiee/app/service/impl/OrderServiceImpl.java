@@ -6,8 +6,7 @@ import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.repository.OrderDetailRepository;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.model.request.OrderRequest;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.model.role.SystemAction.ProductAction;
 import com.flowiee.app.model.role.SystemModule;
@@ -16,8 +15,8 @@ import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.DateUtils;
-import com.flowiee.app.utils.ErrorMessages;
 
+import com.flowiee.app.utils.MessageUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -88,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO findOrderById(Integer orderId) {
         List<OrderDTO> orders = findAllOrder(orderId);
         if (orders.isEmpty()) {
-            throw new NotFoundException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "order " + orderId));
+            throw new NotFoundException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order " + orderId));
         }
         List<OrderDetail> listOrderDetail = this.findOrderDetailsByOrderId(orderId);
         int totalProduct = 0;
@@ -110,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             //Insert order
             Order order = new Order();
-            order.setMaDonHang(CommonUtil.getMaDonHang());
+            order.setMaDonHang(CommonUtils.getMaDonHang());
             order.setCustomer(new Customer(request.getCustomerId()));
             order.setKenhBanHang(new Category(request.getSalesChannelId(), null));
             order.setNhanVienBanHang(new Account(request.getCashierId()));
@@ -167,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
 
             //Log
             systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
-            logger.info("Insert new order success! insertBy=" + CommonUtil.getCurrentAccountUsername());
+            logger.info("Insert new order success! insertBy=" + CommonUtils.getCurrentAccountUsername());
 
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -216,10 +215,10 @@ public class OrderServiceImpl implements OrderService {
     public String deleteOrder(Integer id) {
         OrderDTO order = this.findOrderById(id);
         if (order.isPaymentStatus()) {
-            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         if ("DE".equals(order.getOrderStatus().getCode()) || "DO".equals(order.getOrderStatus().getCode())) {
-            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         orderRepository.deleteById(id);
         systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
@@ -316,7 +315,7 @@ public class OrderServiceImpl implements OrderService {
                 row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getDiaChi()
                 row.createCell(8).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(CommonUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(CommonUtils.setBorder(workbook.createCellStyle()));
                 }
             }
             ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -16,7 +16,7 @@ import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +87,7 @@ public class PriceServiceImpl implements PriceService {
         try {
             Price priceSaved = priceRepository.save(price);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Thêm mới giá sản phẩm: " + price.toString());
-            logger.info("Insert price success! insertBy=" + CommonUtil.getCurrentAccountUsername());
+            logger.info("Insert price success! insertBy=" + CommonUtils.getCurrentAccountUsername());
             return priceSaved;
         } catch (Exception e) {
         	logger.error("Insert price fail! price=" + price.toString());
@@ -135,7 +135,7 @@ public class PriceServiceImpl implements PriceService {
             }
             String noiDungCapNhat = "Giá mới: " + price.getGiaBan();
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + noiDung, "Giá sau khi cập nhật: " + noiDungCapNhat);
-            logger.info("Update price success! updateBy=" + CommonUtil.getCurrentAccountUsername());
+            logger.info("Update price success! updateBy=" + CommonUtils.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
         	logger.error("Update price fail! priceId=" + priceId, e);
@@ -150,7 +150,7 @@ public class PriceServiceImpl implements PriceService {
             Price price = this.findById(priceId);
             priceRepository.deleteById(priceId);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
-            logger.info("Delete price success! deleteBy=" + CommonUtil.getCurrentAccountUsername());
+            logger.info("Delete price success! deleteBy=" + CommonUtils.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
 		} catch (Exception e) {
 			logger.error("Delete price fail! priceId=" + priceId, e);

@@ -7,7 +7,7 @@ import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.DashboardService;
 
 import com.flowiee.app.service.OrderService;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @Service
@@ -33,7 +32,7 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     @SuppressWarnings("unchecked")
     public DashboardModel loadDashboard() {
-        logger.info("Start loadDashboard(): " + CommonUtil.now("YYYY/MM/dd HH:mm:ss"));
+        logger.info("Start loadDashboard(): " + CommonUtils.now("YYYY/MM/dd HH:mm:ss"));
 
         int currentYear = LocalDate.now().getYear();
         int currentMonth = LocalDate.now().getMonth().getValue();
@@ -162,8 +161,8 @@ public class DashboardServiceImpl implements DashboardService {
         }
         entityManager.close();
 
-        String revenueToday = CommonUtil.formatToVND(orderService.findRevenueToday());
-        String revenueThisMonth = CommonUtil.formatToVND(orderService.findRevenueThisMonth());
+        String revenueToday = CommonUtils.formatToVND(orderService.findRevenueToday());
+        String revenueThisMonth = CommonUtils.formatToVND(orderService.findRevenueThisMonth());
         List<Customer> customersNew = customerService.findCustomerNewInMonth();
         List<Order> ordersToday = orderService.findOrdersToday();
 
@@ -179,7 +178,7 @@ public class DashboardServiceImpl implements DashboardService {
         dashboard.setRevenueSalesChannel(revenueSalesChannel);
         dashboard.setProductsTopSell(productsTopSell);
 
-        logger.info("Finished loadDashboard(): " + CommonUtil.now("YYYY/MM/dd HH:mm:ss"));
+        logger.info("Finished loadDashboard(): " + CommonUtils.now("YYYY/MM/dd HH:mm:ss"));
         return dashboard;
     }
 }

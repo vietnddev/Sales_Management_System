@@ -7,9 +7,9 @@ import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.service.SupplierService;
 import com.flowiee.app.service.TicketImportGoodsService;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
@@ -48,14 +48,14 @@ public class MaterialController extends BaseController {
         List<TicketImportGoods> listTicketImport = ticketImportService.findAll();
         List<Supplier> listSupplier = supplierService.findAll();
         List<Category> listUnit = categoryService.findSubCategory(AppConstants.CATEGORY.UNIT.getName());
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_MATERIAL);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_MATERIAL);
         modelAndView.addObject("material", new Material());
         modelAndView.addObject("listMaterial", materialService.findAll());
         modelAndView.addObject("listDonViTinh", listUnit);
         modelAndView.addObject("templateImportName", "Name");
         if (pTicketImport != null) {
             List<TicketImportGoods> ticketImportFilter = new ArrayList<>();
-            ticketImportFilter.add(new TicketImportGoods(CommonUtil.getIdFromRequestParam(pTicketImport), CommonUtil.getNameFromRequestParam(pTicketImport)));
+            ticketImportFilter.add(new TicketImportGoods(CommonUtils.getIdFromRequestParam(pTicketImport), CommonUtils.getNameFromRequestParam(pTicketImport)));
             ticketImportFilter.addAll(listTicketImport);
             modelAndView.addObject("filter_ticketImport", ticketImportFilter);
         } else {
@@ -63,7 +63,7 @@ public class MaterialController extends BaseController {
         }
         if (pSupplier != null) {
             List<Supplier> supplierFilter = new ArrayList<>();
-            supplierFilter.add(new Supplier(CommonUtil.getIdFromRequestParam(pSupplier), CommonUtil.getNameFromRequestParam(pSupplier)));
+            supplierFilter.add(new Supplier(CommonUtils.getIdFromRequestParam(pSupplier), CommonUtils.getNameFromRequestParam(pSupplier)));
             supplierFilter.addAll(listSupplier);
             modelAndView.addObject("filter_supplier", supplierFilter);
         } else {
@@ -71,7 +71,7 @@ public class MaterialController extends BaseController {
         }
         if (pUnit != null) {
             List<Category> unitFilter = new ArrayList<>();
-            unitFilter.add(new Category(CommonUtil.getIdFromRequestParam(pUnit), CommonUtil.getNameFromRequestParam(pUnit)));
+            unitFilter.add(new Category(CommonUtils.getIdFromRequestParam(pUnit), CommonUtils.getNameFromRequestParam(pUnit)));
             unitFilter.addAll(listUnit);
             modelAndView.addObject("filter_unit", unitFilter);
         } else {

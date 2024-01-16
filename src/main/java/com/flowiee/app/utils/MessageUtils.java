@@ -1,6 +1,13 @@
 package com.flowiee.app.utils;
 
-public class ErrorMessages {
+public class MessageUtils {
+    public static final String CREATE_SUCCESS = "Created successfully!";
+    public static final String CREATE_FAIL = "Create fail";
+    public static final String UPDATE_SUCCESS = "Updated successfully!";
+    public static final String UPDATE_FAIL = "Update fail!";
+    public static final String DELETE_SUCCESS = "Deleted successfully!";
+    public static final String DELETE_FAIL = "Delete fail!";
+
     public static final String FORBIDDEN = "You are not authorized to use this function!";
     public static final String NOTFOUND = "The resource you are accessing dose not found!";
     public static final String ERROR_LOCKED = "The resource is currently in use and cannot be deleted at this time!";

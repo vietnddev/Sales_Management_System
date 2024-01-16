@@ -3,9 +3,9 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.exception.DataExistsException;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.model.role.ActionOfModule;
 import com.flowiee.app.model.role.FlowieeRole;
@@ -37,7 +37,7 @@ public class AccountController extends BaseController {
     @GetMapping
     public ModelAndView findAllAccount() {
         validateModuleSystem.readAccount(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ACCOUNT);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ACCOUNT);
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
         List<Role> newRole = new ArrayList<>();
@@ -51,7 +51,7 @@ public class AccountController extends BaseController {
         if (accountId <= 0 || accountService.findById(accountId) == null) {
             throw new NotFoundException("Account not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ACCOUNT_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ACCOUNT_DETAIL);
         List<FlowieeRole> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
         modelAndView.addObject("listRole", roleOfAccount);
         modelAndView.addObject("accountInfo", accountService.findById(accountId));
@@ -83,7 +83,7 @@ public class AccountController extends BaseController {
         accountEntity.setId(accountId);
         accountEntity.setUsername(acc.getUsername());
         accountEntity.setPassword(acc.getPassword());
-        accountEntity.setLastUpdatedBy(CommonUtil.getCurrentAccountUsername());
+        accountEntity.setLastUpdatedBy(CommonUtils.getCurrentAccountUsername());
         accountService.update(accountEntity, accountId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }

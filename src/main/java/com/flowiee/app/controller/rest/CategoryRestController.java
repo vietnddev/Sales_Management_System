@@ -5,8 +5,8 @@ import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.utils.ErrorMessages;
+import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ public class CategoryRestController {
     @GetMapping("/{type}")
     public ApiResponse<List<Category>> findByType(@PathVariable("type") String categoryType) {
         try {
-            List<Category> result = categoryService.findSubCategory(CommonUtil.getCategoryType(categoryType));
+            List<Category> result = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType));
             return ApiResponse.ok(result);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.SEARCH_ERROR_OCCURRED, "category"));
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
         }
     }
 
@@ -38,7 +38,7 @@ public class CategoryRestController {
         try {
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.CREATE_ERROR_OCCURRED, "category"));
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "category"));
         }
     }
 
@@ -51,7 +51,7 @@ public class CategoryRestController {
             }
             return ApiResponse.ok(categoryService.update(category, categoryId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.UPDATE_ERROR_OCCURRED, "category"));
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "category"));
         }
     }
 
@@ -62,10 +62,9 @@ public class CategoryRestController {
             if (categoryService.findById(categoryId) == null) {
                 throw new BadRequestException();
             }
-            categoryService.delete(categoryId);
-            return ApiResponse.ok("Category deleted successfully!");
+            return ApiResponse.ok(categoryService.delete(categoryId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(ErrorMessages.DELETE_ERROR_OCCURRED, "category"));
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "category"));
         }
     }
 }

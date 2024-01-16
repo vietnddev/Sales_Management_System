@@ -3,7 +3,7 @@ package com.flowiee.app.controller;
 import com.flowiee.app.model.DashboardModel;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.service.DashboardService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class DashboardController extends BaseController {
     @GetMapping
     public ModelAndView reportDoanhThu() {
         validateModuleProduct.readDashboard(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_DASHBOARD);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_DASHBOARD);
 
         DashboardModel dashboard = dashboardService.loadDashboard();
 

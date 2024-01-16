@@ -108,11 +108,11 @@ public class CategoryServiceImpl implements CategoryService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         if (categoryInUse(entityId)) {
-            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         } else {
             categoryRepository.deleteById(entityId);
         }
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override
@@ -217,15 +217,15 @@ public class CategoryServiceImpl implements CategoryService {
                     if (categoryName == null || categoryName.length() == 0) {
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(CommonUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(CommonUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(CommonUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
                         continue;
                     }
 
                     Category category = new Category();
                     category.setType(categoryType);
-                    category.setCode(!categoryCode.isEmpty() ? categoryCode : CommonUtil.getMaDanhMuc(categoryName));
+                    category.setCode(!categoryCode.isEmpty() ? categoryCode : CommonUtils.getMaDanhMuc(categoryName));
                     category.setName(categoryName);
                     category.setNote(categoryNote);
 
@@ -233,9 +233,9 @@ public class CategoryServiceImpl implements CategoryService {
                         isImportSuccess = false;
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(CommonUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(CommonUtil.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(CommonUtil.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
                     } else {
                         importSuccess++;
                     }
@@ -245,10 +245,10 @@ public class CategoryServiceImpl implements CategoryService {
             workbook.close();
 
             if (isImportSuccess) {
-                resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_SUCCESS;
+                //resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_SUCCESS;
                 detailOfFlowieeImport = importSuccess + " / " + totalRecord;
             } else {
-                resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_FAIL;
+                //resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_FAIL;
                 detailOfFlowieeImport = importSuccess + " / " + totalRecord;
             }
             //Save file attach to storage
@@ -275,9 +275,9 @@ public class CategoryServiceImpl implements CategoryService {
 
             Notification notification = new Notification();
             notification.setTitle(resultOfFlowieeImport);
-            notification.setSend(CommonUtil.SYS_NOTI_ID);
-            notification.setReceive(CommonUtil.getCurrentAccountId());
-            notification.setType(MessagesUtil.NOTI_TYPE_IMPORT);
+            notification.setSend(CommonUtils.SYS_NOTI_ID);
+            notification.setReceive(CommonUtils.getCurrentAccountId());
+            //notification.setType(MessagesUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);
             notification.setImportId(flowieeImportRepository.findByStartTime(flowieeImport.getStartTime()).getId());
@@ -292,14 +292,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public byte[] exportTemplate(String categoryType) {
-		return CommonUtil.exportTemplate(AppConstants.TEMPLATE_IE_DM_CATEGORY);
+		return CommonUtils.exportTemplate(AppConstants.TEMPLATE_IE_DM_CATEGORY);
 	}
 
 	@Override
 	public byte[] exportData(String categoryType) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
-        String filePathTemp = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
+        String filePathTemp = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
@@ -314,7 +314,7 @@ public class CategoryServiceImpl implements CategoryService {
                 row.createCell(2).setCellValue(listData.get(i).getName());
                 row.createCell(3).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 3; j++) {
-                    row.getCell(j).setCellStyle(CommonUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(CommonUtils.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

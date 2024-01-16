@@ -13,8 +13,8 @@ import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.utils.ErrorMessages;
+import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @Override
     public String saveCustomer(Customer customer) {
-        customer.setCreatedBy(CommonUtil.getCurrentAccountId());
+        customer.setCreatedBy(CommonUtils.getCurrentAccountId());
         Customer customerInserted = customerRepository.save(customer);
         if (customer.getPhoneDefault() != null) {
             CustomerContact customerContact = new CustomerContact();
@@ -213,7 +213,7 @@ public class CustomerServiceImpl implements CustomerService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         if (!orderService.findOrdersByCustomerId(id).isEmpty()) {
-            throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         customerRepository.deleteById(id);
         systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());

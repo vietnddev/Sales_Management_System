@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.DocShare;
 import com.flowiee.app.repository.DocShareRepository;
 import com.flowiee.app.service.DocShareService;
@@ -31,9 +31,9 @@ public class DocShareServiceImpl implements DocShareService {
 
     @Override
     public boolean isShared(int documentId) {
-        if (CommonUtil.ADMINISTRATOR.equals(CommonUtil.getCurrentAccountUsername())) {
+        if (CommonUtils.ADMINISTRATOR.equals(CommonUtils.getCurrentAccountUsername())) {
             return true;
         }
-        return docShareRepository.findByDocmentAndTaiKhoan(documentId, CommonUtil.getCurrentAccountId()) != null;
+        return docShareRepository.findByDocmentAndTaiKhoan(documentId, CommonUtils.getCurrentAccountId()) != null;
     }
 }

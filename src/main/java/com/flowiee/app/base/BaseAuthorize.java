@@ -3,7 +3,7 @@ package com.flowiee.app.base;
 import com.flowiee.app.exception.AuthenticationException;
 import com.flowiee.app.exception.ForbiddenException;
 import com.flowiee.app.service.RoleService;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,10 +28,10 @@ public class BaseAuthorize {
     
     protected boolean isAuthorized(String module, String action, boolean throwException) {
         if (isAuthenticated()) {
-            if (CommonUtil.ADMINISTRATOR.equals(CommonUtil.getCurrentAccountUsername())) {
+            if (CommonUtils.ADMINISTRATOR.equals(CommonUtils.getCurrentAccountUsername())) {
                 return true;
             }
-            if (roleService.isAuthorized(Objects.requireNonNull(CommonUtil.getCurrentAccountId()), module, action)) {
+            if (roleService.isAuthorized(Objects.requireNonNull(CommonUtils.getCurrentAccountId()), module, action)) {
                 return true;
             } else {
             	if (throwException) {

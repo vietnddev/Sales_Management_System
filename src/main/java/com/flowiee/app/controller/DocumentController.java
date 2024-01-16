@@ -48,7 +48,7 @@ public class DocumentController extends BaseController {
     @GetMapping("/dashboard")
     public ModelAndView showDashboardOfSTG() {
         validateModuleStorage.dashboard(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DASHBOARD);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DASHBOARD);
         //Loại tài liệu
         List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.CATEGORY.DOCUMENT_TYPE.getName());
         List<String> listTenOfDocType = new ArrayList<>();
@@ -66,7 +66,7 @@ public class DocumentController extends BaseController {
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
         validateModuleStorage.readDoc(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
         List<Document> listRootDocument = documentService.findRootDocument();
         for (int i = 0; i < listRootDocument.size(); i++) {
             listRootDocument.get(i).setCreatedAt(DateUtils.formatDate(listRootDocument.get(i).getCreatedAt(), "dd/MM/yyyy"));
@@ -100,17 +100,17 @@ public class DocumentController extends BaseController {
     @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
         validateModuleStorage.readDoc(true);
-        String aliasName = CommonUtil.getAliasNameFromAliasPath(aliasPath);
-        int documentId = CommonUtil.getIdFromAliasPath(aliasPath);
+        String aliasName = CommonUtils.getAliasNameFromAliasPath(aliasPath);
+        int documentId = CommonUtils.getIdFromAliasPath(aliasPath);
         Document document = documentService.findById(documentId);
         if (!(aliasName + "-" + documentId).equals(document.getAliasName() + "-" + document.getId())) {
             throw new NotFoundException("Document not found!");
         }
         if (!docShareService.isShared(documentId)) {
-            throw new ForbiddenException(ErrorMessages.FORBIDDEN);
+            throw new ForbiddenException(MessageUtils.FORBIDDEN);
         }
         if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FI.name())) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT_DETAIL);
+            ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT_DETAIL);
             modelAndView.addObject("docDetail", document);
             modelAndView.addObject("document", new Document());
             //load metadata
@@ -132,7 +132,7 @@ public class DocumentController extends BaseController {
         }
 
         if (document.getLoai().equals(AppConstants.DOCUMENT_TYPE.FO.name())) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtil.STG_DOCUMENT);
+            ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
             modelAndView.addObject("document", new Document());
             modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
             //select-option danh loại tài liệu
@@ -169,8 +169,8 @@ public class DocumentController extends BaseController {
                                @ModelAttribute("document") Document document,
                                @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
         validateModuleStorage.insertDoc(true);
-        document.setAliasName(CommonUtil.generateAliasName(document.getTen()));
-        document.setCreatedBy(CommonUtil.getCurrentAccountId());
+        document.setAliasName(CommonUtils.generateAliasName(document.getTen()));
+        document.setCreatedBy(CommonUtils.getCurrentAccountId());
         if (document.getParentId() == null) {
             document.setParentId(0);
         }

@@ -4,7 +4,7 @@ import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.repository.SystemLogRepository;
 import com.flowiee.app.service.SystemLogService;
 
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,8 +52,8 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(null);
-        systemLog.setCreatedBy(CommonUtil.getCurrentAccountId());
-        systemLog.setIp(CommonUtil.getCurrentAccountIp());
+        systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
+        systemLog.setIp(CommonUtils.getCurrentAccountIp());
         return logRepository.save(systemLog);
     }
 
@@ -64,8 +64,8 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setAction(action);
         systemLog.setNoiDung(noiDung);
         systemLog.setNoiDungCapNhat(noiDungCapNhat);
-        systemLog.setCreatedBy(CommonUtil.getCurrentAccountId());
-        systemLog.setIp(CommonUtil.getCurrentAccountIp());
+        systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
+        systemLog.setIp(CommonUtils.getCurrentAccountIp());
         return logRepository.save(systemLog);
     }
 }

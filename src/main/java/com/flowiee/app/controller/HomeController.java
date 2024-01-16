@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.AccountService;
 
@@ -34,7 +34,7 @@ public class HomeController {
 
     @GetMapping(value = "/change-password")
     public ModelAndView showPageChangePassword() {
-        return new ModelAndView(PagesUtil.SYS_UNAUTHORIZED);
+        return new ModelAndView(PagesUtils.SYS_UNAUTHORIZED);
     }
 
     @GetMapping(value = "/change-password", params = "submit")

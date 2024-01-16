@@ -14,8 +14,8 @@ import com.flowiee.app.repository.ProductRepository;
 import com.flowiee.app.repository.ProductVariantRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
-import com.flowiee.app.utils.ErrorMessages;
+import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -217,7 +217,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product saveProduct(Product product) {
         try {
-            product.setCreatedBy(CommonUtil.getCurrentAccountId());
+            product.setCreatedBy(CommonUtils.getCurrentAccountId());
             product.setMoTaSanPham(product.getMoTaSanPham() != null ? product.getMoTaSanPham() : "");
             product.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.name());
             Product pSaved = productsRepository.save(product);
@@ -250,7 +250,7 @@ public class ProductServiceImpl implements ProductService {
             });
 
             productToUpdate.setId(productId);
-            productToUpdate.setLastUpdatedBy(CommonUtil.getCurrentAccountUsername());
+            productToUpdate.setLastUpdatedBy(CommonUtils.getCurrentAccountUsername());
             productsRepository.save(productToUpdate);
             String noiDungLog = "";
             String noiDungLogUpdate = "";
@@ -279,7 +279,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Product productToDelete = this.findProductById(id);
             if (productInUse(id)) {
-                throw new DataInUseException(ErrorMessages.ERROR_LOCKED);
+                throw new DataInUseException(MessageUtils.ERROR_LOCKED);
             }
             productsRepository.deleteById(id);
             systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
@@ -463,8 +463,8 @@ public class ProductServiceImpl implements ProductService {
         List<Object[]> listData = result.getResultList();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
-        String filePathTemp = CommonUtil.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
+        String filePathTemp = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
@@ -489,12 +489,12 @@ public class ProductServiceImpl implements ProductService {
                 row.createCell(3).setCellValue(tenSanPham);
                 row.createCell(4).setCellValue(kichCo);
                 row.createCell(5).setCellValue(mauSac);
-                row.createCell(6).setCellValue(CommonUtil.formatToVND(giaBan));
+                row.createCell(6).setCellValue(CommonUtils.formatToVND(giaBan));
                 row.createCell(7).setCellValue(soLuong);
                 row.createCell(8).setCellValue(daBan);
 
                 for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(CommonUtil.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(CommonUtils.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

@@ -2,9 +2,9 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseAuthorize;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.service.OrderService;
 
@@ -33,10 +33,10 @@ public class ProfileController extends BaseController {
 	@GetMapping(EndPointUtil.SYS_PROFILE)
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
 		baseAuthorize.isAuthenticated();
-		ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_PROFILE);
+		ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", accountService.findCurrentAccount());
-		modelAndView.addObject("listDonHangDaBan", orderService.findByStaffId(Objects.requireNonNull(CommonUtil.getCurrentAccountId())));
+		modelAndView.addObject("listDonHangDaBan", orderService.findByStaffId(Objects.requireNonNull(CommonUtils.getCurrentAccountId())));
 		return baseView(modelAndView);
 	}
 

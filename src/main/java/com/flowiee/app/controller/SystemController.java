@@ -8,9 +8,9 @@ import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleSystem;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ public class SystemController extends BaseController {
 
     @GetMapping(EndPointUtil.SYS_NOTIFICATION)
     public ModelAndView getAllNotification() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_NOTIFICATION);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_NOTIFICATION);
         modelAndView.addObject("notification", new Notification());
         return baseView(modelAndView);
     }
@@ -38,7 +38,7 @@ public class SystemController extends BaseController {
     @GetMapping(EndPointUtil.SYS_LOG)
     public ModelAndView getAllLog() {
         validateModuleSystem.readLog(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_LOG);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_LOG);
         modelAndView.addObject("listLog", systemLogService.getAll());
         return baseView(modelAndView);
     }
@@ -46,7 +46,7 @@ public class SystemController extends BaseController {
     @GetMapping(EndPointUtil.SYS_CONFIG)
     public ModelAndView showConfig() {
         validateModuleSystem.setupConfig(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_CONFIG);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_CONFIG);
         modelAndView.addObject("config", new FlowieeConfig());
         modelAndView.addObject("listConfig", configService.findAll());
         return baseView(modelAndView);
@@ -66,9 +66,9 @@ public class SystemController extends BaseController {
     @GetMapping(EndPointUtil.SYS_ROLE)
     public ModelAndView readRole() {
         validateModuleSystem.readPermission(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.SYS_ROLE);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtil.getCurrentAccountId()));
+        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtils.getCurrentAccountId()));
         return baseView(modelAndView);
     }
 

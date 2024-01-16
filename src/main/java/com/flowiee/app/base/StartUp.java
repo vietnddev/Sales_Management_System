@@ -1,6 +1,6 @@
 package com.flowiee.app.base;
 
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ public class StartUp {
     }
 
     private void setDefaultValueForCommonUtil() {
-        CommonUtil.START_APP_TIME = new Date();
+        CommonUtils.START_APP_TIME = new Date();
     }
 
     private void setDefaultValueForMessageUtil() {

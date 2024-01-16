@@ -11,7 +11,7 @@ import com.flowiee.app.service.PriceService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,8 +87,8 @@ public class CartServiceImpl implements CartService {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(SystemModule.PRODUCT.name());
         systemLog.setAction("DELETE_CART");
-        systemLog.setCreatedBy(CommonUtil.getCurrentAccountId());
-        systemLog.setIp(CommonUtil.getCurrentAccountIp());
+        systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
+        systemLog.setIp(CommonUtils.getCurrentAccountIp());
         systemLog.setNoiDung("DELETE CART");
         systemLogService.writeLog(systemLog);
         return "OK";

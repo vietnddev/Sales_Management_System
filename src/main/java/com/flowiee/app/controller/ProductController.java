@@ -9,9 +9,9 @@ import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.*;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtil;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtil;
+import com.flowiee.app.utils.PagesUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -78,9 +78,9 @@ public class ProductController extends BaseController {
         for (AppConstants.PRODUCT_STATUS productStatus : AppConstants.PRODUCT_STATUS.values()) {
             listProductStatus.put(productStatus.name(), productStatus.getLabel());
         }
-        Page<Product> products = productService.findAllProducts(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getIdFromRequestParam(pBrand), pStatus);
+        Page<Product> products = productService.findAllProducts(CommonUtils.getIdFromRequestParam(pProductType), CommonUtils.getIdFromRequestParam(pBrand), pStatus);
         List<ProductDTO> productsReturn = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(products.getContent()));
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT);
         modelAndView.addObject("product", new Product());
         modelAndView.addObject("listProducts", productsReturn);
         modelAndView.addObject("listVoucherInfo", voucherService.findAll(null, null, null, null));
@@ -91,7 +91,7 @@ public class ProductController extends BaseController {
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
         if (pProductType != null) {
             List<Category> productTypeFilter = new ArrayList<>();
-            productTypeFilter.add(new Category(CommonUtil.getIdFromRequestParam(pProductType), CommonUtil.getNameFromRequestParam(pProductType)));
+            productTypeFilter.add(new Category(CommonUtils.getIdFromRequestParam(pProductType), CommonUtils.getNameFromRequestParam(pProductType)));
             productTypeFilter.addAll(productTypes);
             modelAndView.addObject("filter_productType", productTypeFilter);
         } else {
@@ -99,7 +99,7 @@ public class ProductController extends BaseController {
         }
         if (pBrand != null) {
             List<Category> brandFilter = new ArrayList<>();
-            brandFilter.add(new Category(CommonUtil.getIdFromRequestParam(pBrand), CommonUtil.getNameFromRequestParam(pBrand)));
+            brandFilter.add(new Category(CommonUtils.getIdFromRequestParam(pBrand), CommonUtils.getNameFromRequestParam(pBrand)));
             brandFilter.addAll(brands);
             modelAndView.addObject("filter_brand", brandFilter);
         } else {
@@ -168,7 +168,7 @@ public class ProductController extends BaseController {
             listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
             listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT_INFO);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
         modelAndView.addObject("sanPham", new Product());
         modelAndView.addObject("bienTheSanPham", new ProductVariant());
         modelAndView.addObject("giaSanPham", new Price());
@@ -194,7 +194,7 @@ public class ProductController extends BaseController {
     @GetMapping(value = "/variant/{id}")
     public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
         validateModuleProduct.readProduct(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_PRODUCT_VARIANT);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_VARIANT);
         modelAndView.addObject("bienTheSanPham", new ProductVariant());
         modelAndView.addObject("thuocTinhSanPham", new ProductAttribute());
         modelAndView.addObject("giaBanSanPham", new Price());
@@ -222,7 +222,7 @@ public class ProductController extends BaseController {
     public ModelAndView insertProductVariant(HttpServletRequest request, @ModelAttribute("bienTheSanPham") ProductVariant productVariant) {
         validateModuleProduct.updateProduct(true);
         productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
-        productVariant.setMaSanPham(CommonUtil.now("yyyyMMddHHmmss"));
+        productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
         productService.saveProductVariant(productVariant);
         //Khởi tạo giá default của giá bán
         //priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
@@ -356,7 +356,7 @@ public class ProductController extends BaseController {
     @GetMapping("/gallery")
     public ModelAndView viewGallery() {
         validateModuleProduct.readGallery(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_GALLERY);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_GALLERY);
         modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
         modelAndView.addObject("listSanPham", productService.findAllProducts().getContent());
         return baseView(modelAndView);
@@ -366,10 +366,10 @@ public class ProductController extends BaseController {
     @GetMapping("/voucher")
     public ModelAndView viewVouchers() {
         validateModuleProduct.readVoucher(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER);
         modelAndView.addObject("listVoucher", voucherService.findAll(null, null, null, null));
         modelAndView.addObject("listProduct", productService.findProductsIdAndProductName());
-        modelAndView.addObject("listVoucherType", CommonUtil.getVoucherType());
+        modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
         modelAndView.addObject("voucher", new VoucherInfo());
         modelAndView.addObject("voucherDetail", new VoucherTicket());
         return baseView(modelAndView);
@@ -378,11 +378,11 @@ public class ProductController extends BaseController {
     @GetMapping("/voucher/detail/{id}")
     public ModelAndView viewVoucherDetail(@PathVariable("id") Integer voucherInfoId) {
         validateModuleProduct.readVoucher(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtil.PRO_VOUCHER_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER_DETAIL);
         modelAndView.addObject("voucherDetail", voucherService.findById(voucherInfoId));
         modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
         modelAndView.addObject("voucher", new VoucherInfo());
-        modelAndView.addObject("listVoucherType", CommonUtil.getVoucherType());
+        modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
         return baseView(modelAndView);
     }
     

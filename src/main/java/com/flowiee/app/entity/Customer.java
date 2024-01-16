@@ -5,7 +5,6 @@ import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.model.request.CustomerRequest;
 
-import com.flowiee.app.utils.CommonUtil;
 import com.flowiee.app.utils.DateUtils;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
