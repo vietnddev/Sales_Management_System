@@ -18,13 +18,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("${app.api.prefix}/file")
 @Tag(name = "File API", description = "Quản lý file đính kèm và hình ảnh sản phẩm")
 public class FileStorageRestController extends BaseController {
     @Autowired private FileStorageService fileService;
     @Autowired private ValidateModuleProduct validateModuleProduct;
 
     @Operation(summary = "Xóa file", description = "Xóa theo id")
-    @DeleteMapping("/file/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<String> delete(@PathVariable("id") Integer fileId) {
         try {
             validateModuleProduct.updateImage(true);

@@ -83,9 +83,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> findAllProducts(int size, int page, Integer productTypeId, Integer brandId, String status) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt"));
-        Page<Product> products = productsRepository.findAll(productTypeId, brandId, status, pageable);
+    public Page<Product> findAllProducts(int size, int page) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Product> products = productsRepository.findAll(null, null, null, pageable);
         return this.setImageActiveAndLoadVoucherApply(products);
     }
 

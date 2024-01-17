@@ -55,7 +55,7 @@
                                     </div>
                                     <!-- /.card-header -->
                                     <div class="card-body align-items-center">
-                                        <table id="example1" class="table table-bordered table-striped align-items-center">
+                                        <table class="table table-bordered table-striped align-items-center">
                                             <thead class="align-self-center">
                                                 <tr class="align-self-center">
                                                     <th>STT</th>
@@ -90,7 +90,9 @@
                                         </table>
                                     </div>
                                     <!-- /.card-body -->
-
+                                    <div class="card-footer">
+                                        <div th:replace="fragments :: pagination('/products', 'products')"></div>
+                                    </div>
 
 
                                     <!-- modal import -->
@@ -244,56 +246,81 @@
             $(document).ready(function() {
                 $(".link-delete").on("click", function(e) {
                     e.preventDefault();
-                    showConfirmModal($(this), 'delete');
+                    showConfirmModal($(this));
                 });
 
                 $('#yesButton').on("click", async function () {
-                    let apiURL = mvHostURL + '/san-pham/delete/' + $(this).attr("entityId")
+                    let apiURL = mvHostURLCallApi + '/san-pham/delete/' + $(this).attr("entityId")
                     await callApiDelete(apiURL)
                 });
 
-                getProducts()
+                let pageSizeBefore = $('#selectPageSize').val();
+                $('#selectPageSize').on('click', function() {
+                    if (pageSizeBefore === $(this).val()) {
+                        return;
+                    }
+                    pageSizeBefore = $(this).val();
+                    // In giá trị vào console
+                    console.log('Selected Value: ' + $(this).val());
+
+                    loadProducts($(this).val(), 0);
+                });
+
+                loadProducts(10, 0);
             });
 
-            async function getProducts() {
-                let apiURL = mvHostURL + '/api/v1/product/all';
-                let response = await fetch(apiURL)
-                if (response.ok) {
-                    let data = (await response.json()).data
+            function loadProducts(pageSize, pageNum) {
+                let apiURL = mvHostURLCallApi + '/product/all';
+                let params = {pageSize: pageSize, pageNum: pageNum}
+                $.get(apiURL, params, function (response) {//dùng Ajax JQuery để gọi xuống controller
+                    if (response.status === "OK") {
+                        let data = response.data;
+                        let pagination = response.pagination;
 
-                    let contentTable = $('#contentTable');
-                    $.each(data, function (index, p) {
+                        $('#currentPage').text(pagination.pageNum);
 
-                        let voucherBlock = '';
-                        $.each(p.listVoucherInfoApply, function (voucherIndex, voucherInfo) {
-                            voucherBlock += `<span>${voucherIndex + 1} </span><a href="/san-pham/voucher/detail/${voucherInfo.id}"><span>${voucherInfo.title}</span></a><br>`;
-                        });
+                        $('#first').attr("test", pagination.pageSize);
 
-                        contentTable.append(
-                            '<tr>' +
-                                '<td>' + (index + 1) + '</td>' +
-                                '<td></td>' +
-                                '<td><a href="/san-pham/' + p.productId + '">' + p.productName + '</a></td>' +
-                                '<td>' + p.productTypeName + '</td>' +
-                                '<td></td>' +
-                                '<td>' +
+                        let contentTable = $('#contentTable');
+                        contentTable.empty();
+                        $.each(data, function (index, p) {
+
+                            let variantBlock = '';
+                            $.each(p.productVariantInfo, function (color, quantity) {
+                                variantBlock += `<span class="span">${color} : ${quantity}</span>`;
+                            });
+
+                            let voucherBlock = '';
+                            $.each(p.listVoucherInfoApply, function (voucherIndex, voucherInfo) {
+                                voucherBlock += `<span>${voucherIndex + 1} </span><a href="/san-pham/voucher/detail/${voucherInfo.id}"><span>${voucherInfo.title}</span></a><br>`;
+                            });
+
+                            contentTable.append(
+                                '<tr>' +
+                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td class="text-center"><img src="/' + p.imageActive.directoryPath + '/' + p.imageActive.tenFileKhiLuu + '" style="width: 100px; height: 100px; border-radius: 5px"></td>' +
+                                    '<td><a href="/san-pham/' + p.productId + '">' + p.productName + '</a></td>' +
+                                    '<td>' + p.productTypeName + '</td>' +
+                                    '<td>' + variantBlock + '</td>' +
+                                    '<td>' +
                                     '<div className="span">Hiện có: ' + p.totalQtyStorage + '</div>' +
                                     '<div className="span">Đã bán:  ' + p.totalQtySell + '</div>' +
-                                '</td>' +
-                                '<td>' + p.unitName + '</td>' +
-                                '<td>' + voucherBlock + '</td>' +
-                                '<td>' + p.productStatus + '</td>' +
-                                '<td>' +
+                                    '</td>' +
+                                    '<td>' + p.unitName + '</td>' +
+                                    '<td>' + voucherBlock + '</td>' +
+                                    '<td>' + p.productStatus + '</td>' +
+                                    '<td>' +
                                     '<button class="btn btn-outline-info btn-sm"><a href="/san-pham/' + p.productId + '"><i class="fa-solid fa-eye"></i></a></button>' +
                                     '<button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#update-' + p.productId + '"><i class="fa-solid fa-pencil"></i></button>' +
                                     '<button class="btn btn-outline-danger btn-sm link-delete" entityId="' + p.productId + '" entityName="' + p.productName + '"><i class="fa-solid fa-trash"></i></button>' +
-                                '</td>' +
-                            '</tr>'
-                        );
-                    });
-                } else {
-                    alert('Call API fail!')
-                }
+                                    '</td>' +
+                                '</tr>'
+                            );
+                        });
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
+                });
             }
         </script>
     </body>

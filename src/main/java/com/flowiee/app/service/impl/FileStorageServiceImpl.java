@@ -10,6 +10,7 @@ import com.flowiee.app.service.AccountService;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -318,7 +319,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileRepository.deleteById(fileId);
         File file = new File(CommonUtils.rootPath + "/" + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
         if (file.exists() && file.delete()) {
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return MessageUtils.DELETE_SUCCESS;
         }
         return AppConstants.SERVICE_RESPONSE_FAIL;
     }

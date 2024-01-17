@@ -8,8 +8,8 @@ public class MessageUtils {
     public static final String DELETE_SUCCESS = "Deleted successfully!";
     public static final String DELETE_FAIL = "Delete fail!";
 
-    public static final String FORBIDDEN = "You are not authorized to use this function!";
-    public static final String NOTFOUND = "The resource you are accessing dose not found!";
+    public static final String ERROR_FORBIDDEN = "You are not authorized to use this function!";
+    public static final String ERROR_NOTFOUND = "The resource you are accessing dose not found!";
     public static final String ERROR_LOCKED = "The resource is currently in use and cannot be deleted at this time!";
     public static final String UNAUTHORIZED = "Unauthorized";
     public static final String AUTHENTICATION_ERROR = "Authentication error";
@@ -23,14 +23,11 @@ public class MessageUtils {
     public static final String EMAIL_IS_NOT_FOUND = "Email is not found";
     public static final String ROLE_MISSING = "Role is missing";
     public static final String ROLE_NOT_FOUND = "Role is not found";
-    public static final String DEPARTMENT_MISSING = "Department is missing";
-    public static final String DEPARTMENT_NOT_FOUND = "Department is not found";
     public static final String USER_NOT_FOUND = "User is not found";
     public static final String USER_EXISTED = "User is existed";
     public static final String CREATE_ERROR_OCCURRED = "An error occurred while create %s";
     public static final String UPDATE_ERROR_OCCURRED = "An error occurred while update %s";
     public static final String DELETE_ERROR_OCCURRED = "An error occurred while delete %s";
     public static final String SEARCH_ERROR_OCCURRED = "An error occurred while search %s";
-    public static final String GET_ERROR_OCCURRED = "An error occurred while get %s";
     public static final String REPORT_DATE_TYPE_NOT_VALID = "Date type of request is not valid";
 }

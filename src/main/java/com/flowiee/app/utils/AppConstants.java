@@ -5,17 +5,8 @@ import lombok.Setter;
 
 public class AppConstants {
     public static String PRODUCT = "PRODUCT";
-    public static String TICKETIMPORT = "TICKETIMPORT";
-    public static String TICKETEXPORT = "TICKETEXPORT";
     public static String TEMPLATE_IE_DM_CATEGORY = "Template_IE_DM_Category";
-    public static String TEMPLATE_IE_DM_LOAIKICHCO = "Template_IE_DM_LoaiKichCo";
-    public static String TEMPLATE_IE_DM_LOAIMAUSAC = "Template_IE_DM_LoaiMauSac";
-    public static String TEMPLATE_IE_DM_LOAIKENHBANHANG = "Template_IE_DM_LoaiKenhBanHang";
-    public static String TEMPLATE_IE_DM_LOAIHINHTHUCTHANHTOAN = "Template_IE_DM_LoaiHinhThucThanhToan";
     public static String TEMPLATE_IE_DM_LOAIDONVITINH = "Template_IE_DM_LoaiDonViTinh";
-    public static String TEMPLATE_IE_DM_LOAISANPHAM = "Template_IE_DM_LoaiSanPham";
-    public static String TEMPLATE_IE_DM_LOAITAILIEU = "Template_IE_DM_LoaiTaiLieu";
-    public static String TEMPLATE_IE_DM_FABRICTYPE = "Template_IE_DM_FabricType";
     public static String TEMPLATE_I_SANPHAM = "Template_I_DanhSachSanPham";
     public static String TEMPLATE_E_SANPHAM = "Template_E_DanhSachSanPham";
 

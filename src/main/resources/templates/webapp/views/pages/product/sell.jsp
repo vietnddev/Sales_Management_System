@@ -336,7 +336,7 @@
                                             <!--TẠO ĐƠN HÀNG-->
                                             <div class="col-sm-4">
                                                 <button type="button" class="btn btn-primary w-100 link-confirm"
-                                                        style="padding-right: 3px" th:cartId="${cart.id}">
+                                                        style="padding-right: 3px" th:cartId="${cart.id}" th:actionType="'create'">
                                                     Tạo đơn
                                                 </button>
                                             </div>
@@ -451,7 +451,7 @@
 
     async function loadProducts() {
         let selectElement = $('#productVariantField');
-        let apiURL = mvHostURL + '/api/v1/product/variant/all'
+        let apiURL = mvHostURLCallApi + '/product/variant/all'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -465,7 +465,7 @@
 
     async function loadCustomers() {
         let selectElement = $('#customerField');
-        let apiURL = mvHostURL + '/api/v1/customer/all'
+        let apiURL = mvHostURLCallApi + '/customer/all'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -480,7 +480,7 @@
 
     async function loadAccounts() {
         let selectElement = $('#accountField');
-        let apiURL = mvHostURL + '/api/v1/account/all'
+        let apiURL = mvHostURLCallApi + '/account/all'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -495,7 +495,7 @@
 
     async function loadSalesChannels() {
         let selectElement = $('#salesChannelField');
-        let apiURL = mvHostURL + '/api/v1/category/sales-channel'
+        let apiURL = mvHostURLCallApi + '/category/sales-channel'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -510,7 +510,7 @@
 
     async function loadPaymentMethods() {
         let selectElement = $('#paymentMethodField');
-        let apiURL = mvHostURL + '/api/v1/category/payment-method'
+        let apiURL = mvHostURLCallApi + '/category/payment-method'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -525,7 +525,7 @@
 
     async function loadOrderStatuses() {
         let selectElement = $('#orderStatusField');
-        let apiURL = mvHostURL + '/api/v1/category/order-status'
+        let apiURL = mvHostURLCallApi + '/category/order-status'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
@@ -541,10 +541,9 @@
     async function createOrder() {
         $(".link-confirm").on("click", function(e) {
             e.preventDefault();
-            let type = 'create'
             let title = 'Tạo mới đơn hàng'
             let text = 'Bạn có muốn tạo đơn hàng này?'
-            showConfirmModal($(this), type, title, text);
+            showConfirmModal($(this), title, text);
         });
 
         $('#yesButton').on("click", async function () {
@@ -557,7 +556,7 @@
             let note = $('#noteFieldCart').val()
             let cartId = [[${listCart.get(0).id}]]
 
-            let apiURL = mvHostURL + '/api/v1/order/insert'
+            let apiURL = mvHostURLCallApi + '/order/insert'
             let params = {customerId: customerId,
                           cashierId : accountId,
                           salesChannelId: salesChannelId,

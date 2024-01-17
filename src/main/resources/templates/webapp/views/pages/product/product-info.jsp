@@ -264,9 +264,10 @@
                                 <!--Start modal DELETE hình ảnh-->
                                 <i class="fa-solid fa-trash text-danger col link-delete"
                                    style="cursor: pointer"
+                                   th:entity="'image'"
                                    th:entityId="${list.id}"
                                    th:entityName="${list.tenFileGoc}"
-                                   th:entityType="'image'">
+                                   th:actionType="'delete'">
                                 </i>
                                 <!--eND modal DELETE hình ảnh-->
                             </div>
@@ -329,9 +330,10 @@
                                             <!--./ Button xóa biến thể sản phẩm-->
                                             <button type="button" class="btn btn-sm btn-danger link-delete"
                                                     title="Xóa biến thể sản phẩm"
+                                                    th:entity="'productVariant'"
                                                     th:entityId="${var.productVariantId}"
                                                     th:entityName="${var.name}"
-                                                    th:entityType="'productVariant'">
+                                                    th:actionType="delete">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                             <!--./ End button xóa biến thể sản phẩm-->
@@ -705,20 +707,24 @@
             showConfirmModal($(this));
         });
 
-        $('#yesButton').on("click", async function () {
-            let apiURL = mvHostURL
-            let entityType = $(this).attr("entityType")
+        $('#yesButton').on("click", function () {
+            let apiURL = mvHostURLCallApi
+            let entity = $(this).attr("entity")
             let entityId = $(this).attr("entityId")
-            if (entityType === 'image') {
-                apiURL += '/file/delete/' + entityId
+            let actionType = $(this).attr("actionType")
+
+            if (actionType === "delete") {
+                if (entity === 'image') {
+                    apiURL += '/file/delete/' + entityId
+                }
+                if (entity === 'product') {
+                    apiURL += '/san-pham/delete/' + entityId
+                }
+                if (entity === 'productVariant') {
+                    apiURL += '/san-pham/variant/delete/' + entityId
+                }
             }
-            if (entityType === 'product') {
-                apiURL += '/san-pham/delete/' + entityId
-            }
-            if (entityType === 'productVariant') {
-                apiURL += '/san-pham/variant/delete/' + entityId
-            }
-            await callApiDelete(apiURL);
+            callApiDelete(apiURL);
         });
     })
 </script>

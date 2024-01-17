@@ -9,6 +9,7 @@ import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.ApiResponse;
+import com.flowiee.app.model.PaginationModel;
 import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.service.PriceService;
@@ -41,14 +42,15 @@ public class ProductRestController extends BaseController {
 
     @Operation(summary = "Find all products")
     @GetMapping("/all")
-    public ApiResponse<List<ProductDTO>> findProducts() {
+    public ApiResponse<List<ProductDTO>> findProducts(@RequestParam("pageSize") int pageSize,
+                                                      @RequestParam("pageNum") int pageNum) {
         if (!super.validateModuleProduct.readProduct(true)) {
             return null;
         }
         try {
-            Page<Product> productPage = productService.findAllProducts();
+            Page<Product> productPage = productService.findAllProducts(pageSize, pageNum);
             List<ProductDTO> productList = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(productPage.getContent()));
-            return ApiResponse.ok(productList);
+            return ApiResponse.ok(productList, pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
         }

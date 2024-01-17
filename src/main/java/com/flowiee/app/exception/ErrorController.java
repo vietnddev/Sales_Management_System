@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ErrorController extends BaseController {
     @GetMapping("/403")
     public ModelAndView forbiddenException() {
-        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), MessageUtils.FORBIDDEN);
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), MessageUtils.ERROR_FORBIDDEN);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
         modelAndView.addObject("error", error);
         return baseView(modelAndView);
@@ -22,7 +22,7 @@ public class ErrorController extends BaseController {
 
     @GetMapping("/404")
     public ModelAndView notfoundException() {
-        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), MessageUtils.NOTFOUND);
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), MessageUtils.ERROR_NOTFOUND);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
         modelAndView.addObject("error", error);
         return baseView(modelAndView);

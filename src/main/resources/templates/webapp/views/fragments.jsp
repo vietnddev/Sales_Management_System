@@ -10,40 +10,27 @@
         </div>
 
         <div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
-            <div class="text-center m-1" th:if="${totalItems > 0}">
-                <span>Showing [[${entityName}]] # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-            </div>
+            <!--<div th:if="${totalPages > 1}">  khi tổng số trang > 1 thì mới hiện pagination -->
+            <nav class="row">
+                <select class="custom-select col-1 justify-content-end" id="selectPageSize">
+                    <option name="selectPageSizeOp" value="5">5</option>
+                    <option id="selectPageSizeOp" value="10">10</option>
+                    <option name="selectPageSizeOp" value="50">50</option>
+                </select>
 
-            <div class="text-center m-1" th:unless="${totalItems > 0}"> <!-- nếu tổng số records = 0 =>hiện No Users found -->
-                <span>No [[${entityName}]] found</span>
-            </div>
+                <ul class="pagination col justify-content-end">
+                    <li class="page-item" id="first"><a class="page-link">First</a></li>
 
-            <div th:if="${totalPages > 1}"> <!-- khi tổng số trang > 1 thì mới hiện pagination -->
-                <nav>
-                    <ul class="pagination justify-content-center flex-wrap">
-                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                            <a th:replace="fragments :: page_link(${moduleURL}, 1, 'First')"></a>
-                        </li>
+                    <li class="page-item" id="previous"><a class="page-link">Previous</a></li>
 
-                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                            <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, 'Previous')"></a>
-                        </li>
+                    <li class="page-item"><a class="page-link" id="currentPage">?</a></li>
 
-                        <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
-                            th:each="i : ${#numbers.sequence(1, totalPages)}"><!-- tạo vòng lặp bắt đầu từ 1 đến totalPages)} -->
-                            <a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})"></a>
-                        </li>
+                    <li class="page-item" id="next"><a class="page-link">Next</a></li>
 
-                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                            <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Next')"></a>
-                        </li>
-
-                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                            <a th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, 'Last')"></a>
-                        </li>
+                    <li class="page-item" id="last"><a class="page-link">Last</a></li>
                     </ul>
                 </nav>
-            </div>
+            <!--</div>-->
         </div>
 
         <div th:fragment="format_currency(amount)" th:remove="tag">
@@ -57,6 +44,5 @@
         <div th:fragment="format_time(dateTime)" th:remove="tag">
             <span th:text="${#dates.format(dateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
         </div>
-
     </body>
 </html>

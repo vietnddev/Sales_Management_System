@@ -93,7 +93,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
                         voucherTicket.setCode(randomKey);
                         voucherTicket.setVoucherInfo(voucherInfo);
                         voucherTicket.setStatus(false);
-                        if (AppConstants.SERVICE_RESPONSE_SUCCESS.equals(voucherTicketService.save(voucherTicket))) {
+                        if (voucherTicketService.save(voucherTicket) != null) {
                         	listKeyVoucher.add(randomKey);
                         }
                     }
