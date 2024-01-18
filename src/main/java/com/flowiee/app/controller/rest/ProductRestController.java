@@ -44,11 +44,11 @@ public class ProductRestController extends BaseController {
     @GetMapping("/all")
     public ApiResponse<List<ProductDTO>> findProducts(@RequestParam("pageSize") int pageSize,
                                                       @RequestParam("pageNum") int pageNum) {
-        if (!super.validateModuleProduct.readProduct(true)) {
-            return null;
-        }
         try {
-            Page<Product> productPage = productService.findAllProducts(pageSize, pageNum);
+            if (!super.validateModuleProduct.readProduct(true)) {
+                return null;
+            }
+            Page<Product> productPage = productService.findAllProducts(pageSize, pageNum - 1);
             List<ProductDTO> productList = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(productPage.getContent()));
             return ApiResponse.ok(productList, pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
         } catch (RuntimeException ex) {

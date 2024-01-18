@@ -23,7 +23,7 @@
 
                     <li class="page-item" id="previousPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left"></i></a></li>
 
-                    <li class="page-item disabled"><a class="page-link" id="currentPage">?</a></li>
+                    <li class="page-item disabled"><a class="page-link" id="pageNum">?</a></li>
 
                     <li class="page-item" id="nextPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left fa-flip-horizontal"></i></a></li>
 

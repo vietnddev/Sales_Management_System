@@ -45,7 +45,7 @@
                                                     Export
                                                 </a>
                                                 <button type="button" class="btn btn-success" data-toggle="modal"
-                                                        data-target="#insert">
+                                                        data-target="#insert" id="createProduct">
                                                     <i class="fa-solid fa-circle-plus"></i>
                                                     Thêm mới
                                                 </button>
@@ -121,13 +121,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="modal-footer justify-content-end"
-                                                             style="margin-bottom: -15px;">
-                                                            <button type="button" class="btn btn-default"
-                                                                    data-dismiss="modal">Hủy
-                                                            </button>
-                                                            <button type="submit" class="btn btn-primary">Lưu</button>
-                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -139,78 +136,36 @@
                                         <div class="modal fade" id="insert">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form th:action="@{/san-pham/insert}" th:object="${product}" method="post">
-                                                        <div class="modal-header">
-                                                            <strong class="modal-title">Thêm mới sản phẩm</strong>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        <label>Tên sản phẩm</label>
-                                                                        <input type="text" class="form-control"
-                                                                               placeholder="Tên sản phẩm" name="tenSanPham">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Loại sản phẩm</label>
-                                                                        <select class="custom-select" name="productType">
-                                                                            <option th:each="lstype, iterStat : ${listProductType}"
-                                                                                    th:value="${lstype.id}"
-                                                                                    th:text="${lstype.name}"
-                                                                                    th:selected="${iterStat.index == 0}"></option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Đơn vị tính</label>
-                                                                        <select class="custom-select"
-                                                                                name="unit">
-                                                                            <option th:each="lsDvt, iterStat : ${listDonViTinh}"
-                                                                                    th:value="${lsDvt.id}"
-                                                                                    th:text="${lsDvt.name}"
-                                                                                    th:selected="${iterStat.index == 0}">
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Nhãn hiệu</label>
-                                                                        <select class="custom-select"
-                                                                                name="brand">
-                                                                            <option th:each="lsBrand, iterStat : ${listBrand}"
-                                                                                    th:value="${lsBrand.id}"
-                                                                                    th:text="${lsBrand.name}">
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <!--<div class="form-group">
-                                                                        <label>Mô tả sản phẩm</label>
-                                                                        <textarea class="form-control" rows="5"
-                                                                                  placeholder="Mô tả sản phẩm"
-                                                                                  name="moTaSanPham"></textarea>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Trạng thái</label>
-                                                                        <select class="custom-select" name="status">
-                                                                            <option th:each="productStatus, iterStat : ${listProductStatus}"
-                                                                                    th:value="${productStatus.key}"
-                                                                                    th:text="${productStatus.value}">
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>-->
+                                                    <div class="modal-header">
+                                                        <strong class="modal-title">Thêm mới sản phẩm</strong>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label>Tên sản phẩm</label>
+                                                                    <input type="text" class="form-control" placeholder="Tên sản phẩm" name="tenSanPham">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Loại sản phẩm</label>
+                                                                    <select class="custom-select" id="productTypeField"></select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Đơn vị tính</label>
+                                                                    <select class="custom-select" id="unitField"></select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Nhãn hiệu</label>
+                                                                    <select class="custom-select" id="brandField"></select>
                                                                 </div>
                                                             </div>
-                                                            <div class="modal-footer justify-content-end"
-                                                                 style="margin-bottom: -15px;">
-                                                                <button type="button" class="btn btn-default"
-                                                                        data-dismiss="modal">Hủy
-                                                                </button>
-                                                                <button type="submit" class="btn btn-primary">Lưu</button>
-                                                            </div>
                                                         </div>
-                                                    </form>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                        <button type="button" class="btn btn-primary" id="submitCreateProduct">Lưu</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -242,14 +197,8 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                $(".link-delete").on("click", function(e) {
-                    e.preventDefault();
-                    showConfirmModal($(this));
-                });
-
-                $('#yesButton').on("click", async function () {
-                    let apiURL = mvHostURLCallApi + '/san-pham/delete/' + $(this).attr("entityId")
-                    await callApiDelete(apiURL)
+                $('#createProduct').on('click', function() {
+                    loadCategory();
                 });
 
                 let lvPageSize = $('#selectPageSize').val();
@@ -259,26 +208,38 @@
                         return;
                     }
                     lvPageSize = $(this).val();
-                    loadProducts($(this).val(), 0);
+                    loadProducts($(this).val(), 1);
                 });
 
                 $('#firstPage').on('click', function() {
+                    if ($('#paginationInfo').attr("pageNum") === 1) {
+                        return;
+                    }
                     loadProducts(lvPageSize, 1);
                 });
 
                 $('#previousPage').on('click', function() {
-                    loadProducts(lvPageSize, $('#currentPage').val() - 1);
+                    if ($('#paginationInfo').attr("pageNum") === 1) {
+                        return;
+                    }
+                    loadProducts(lvPageSize, $('#paginationInfo').attr("pageNum") - 1);
                 });
 
                 $('#nextPage').on('click', function() {
-                    loadProducts(lvPageSize, $('#currentPage').val() + 1);
+                    if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
+                        return;
+                    }
+                    loadProducts(lvPageSize, parseInt($('#paginationInfo').attr("pageNum")) + 1);
                 });
 
                 $('#lastPage').on('click', function() {
+                    if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
+                        return;
+                    }
                     loadProducts(lvPageSize, $('#paginationInfo').attr("totalPage"));
                 });
 
-                loadProducts(mvPageSizeDefault, 0);
+                loadProducts(mvPageSizeDefault, 1);
             });
 
             function loadProducts(pageSize, pageNum) {
@@ -288,8 +249,6 @@
                     if (response.status === "OK") {
                         let data = response.data;
                         let pagination = response.pagination;
-
-                        $('#currentPage').text(pagination.pageNum);
 
                         updatePagination(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
 
@@ -335,8 +294,60 @@
                 $('#paginationInfo').attr("pageSize", pageSize);
                 $('#paginationInfo').attr("totalPage", totalPage);
                 $('#paginationInfo').attr("totalElements", totalElements);
+                $('#pageNum').text(pageNum);
 
-                $('#paginationInfo').text('Showing ... to ... of ' + totalElements + ' entries');
+                let startCount = (pageNum - 1) * pageSize + 1;
+                let endCount = startCount + pageSize - 1;
+                if (endCount > totalElements) {
+                    endCount = totalElements;
+                }
+                $('#paginationInfo').text("Showing " + startCount + " to " + endCount + " of " + totalElements + " entries");
+            }
+
+            function loadCategory () {
+                let productTypeSelect = $('#productTypeField');
+                let unitSelect = $('#unitField');
+                let brandSelect = $('#brandField');
+
+                productTypeSelect.empty();
+                unitSelect.empty();
+                brandSelect.empty();
+
+                //Load product type
+                $.get(mvHostURLCallApi + '/category/product-type', function (response) {
+                    productTypeSelect.append('<option>Chọn loại sản phẩm</option>');
+                    if (response.status === "OK") {
+                        $.each(response.data, function (index, d) {
+                            productTypeSelect.append('<option value=' + d.id + '>' + d.name + '</option>');
+                        });
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+
+                //Load unit
+                $.get(mvHostURLCallApi + '/category/unit', function (response) {
+                    unitSelect.append('<option>Chọn đơn vị tính</option>');
+                    if (response.status === "OK") {
+                        $.each(response.data, function (index, d) {
+                            unitSelect.append('<option value=' + d.id + '>' + d.name + '</option>');
+                        });
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+
+                //Load brand
+                $.get(mvHostURLCallApi + '/category/brand', function (response) {
+                    brandSelect.append('<option>Chọn nhãn hiệu</option>');
+                    if (response.status === "OK") {
+                        $.each(response.data, function (index, d) {
+                            brandSelect.append('<option value=' + d.id + '>' + d.name + '</option>');
+                        });
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
             }
         </script>
     </body>
