@@ -120,8 +120,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> findSubCategory(String categoryType) {
-        return categoryRepository.findSubCategory(categoryType);
+    public List<Category> findSubCategory(String categoryType, Integer parentId) {
+        return categoryRepository.findSubCategory(categoryType, parentId);
     }
 
     @Override

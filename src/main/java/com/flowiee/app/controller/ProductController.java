@@ -55,73 +55,10 @@ public class ProductController extends BaseController {
     }
 
     @GetMapping
-    public ModelAndView getAllProducts(@Nullable @RequestParam("pProductType") String pProductType,
-                                       @Nullable @RequestParam("pBrand") String pBrand,
-                                       @Nullable @RequestParam("status") String pStatus) {
+    public ModelAndView loadProductPage() {
         validateModuleProduct.readProduct(true);
-        List<Category> brands = new ArrayList<>();
-        List<Category> productTypes = new ArrayList<>();
-        List<Category> units = new ArrayList<>();
-        categoryService.findSubCategory(Arrays.asList(AppConstants.CATEGORY.BRAND.getName(), AppConstants.CATEGORY.PRODUCT_TYPE.getName(),
-                                                      AppConstants.CATEGORY.UNIT.getName())).forEach(category -> {
-            if (AppConstants.CATEGORY.BRAND.getName().equals(category.getType())) {
-                brands.add(category);
-            }
-            if (AppConstants.CATEGORY.PRODUCT_TYPE.getName().equals(category.getType())) {
-                productTypes.add(category);
-            }
-            if (AppConstants.CATEGORY.UNIT.getName().equals(category.getType())) {
-                units.add(category);
-            }
-        });
-        Map<String, String> listProductStatus = new HashMap<>();
-        for (AppConstants.PRODUCT_STATUS productStatus : AppConstants.PRODUCT_STATUS.values()) {
-            listProductStatus.put(productStatus.name(), productStatus.getLabel());
-        }
-        Page<Product> products = productService.findAllProducts(CommonUtils.getIdFromRequestParam(pProductType), CommonUtils.getIdFromRequestParam(pBrand), pStatus);
-        List<ProductDTO> productsReturn = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(products.getContent()));
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT);
-        modelAndView.addObject("product", new Product());
-        modelAndView.addObject("listProducts", productsReturn);
-        modelAndView.addObject("listVoucherInfo", voucherService.findAll(null, null, null, null));
-        modelAndView.addObject("listProductType", productTypes);
-        modelAndView.addObject("listDonViTinh", units);
-        modelAndView.addObject("listBrand", brands);
-        modelAndView.addObject("listProductStatus", listProductStatus);
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
-        if (pProductType != null) {
-            List<Category> productTypeFilter = new ArrayList<>();
-            productTypeFilter.add(new Category(CommonUtils.getIdFromRequestParam(pProductType), CommonUtils.getNameFromRequestParam(pProductType)));
-            productTypeFilter.addAll(productTypes);
-            modelAndView.addObject("filter_productType", productTypeFilter);
-        } else {
-            modelAndView.addObject("filter_productType", productTypes);
-        }
-        if (pBrand != null) {
-            List<Category> brandFilter = new ArrayList<>();
-            brandFilter.add(new Category(CommonUtils.getIdFromRequestParam(pBrand), CommonUtils.getNameFromRequestParam(pBrand)));
-            brandFilter.addAll(brands);
-            modelAndView.addObject("filter_brand", brandFilter);
-        } else {
-            modelAndView.addObject("filter_brand", brands);
-        }
-        if (pStatus != null) {
-            LinkedHashMap<String, String> statusFilter = new LinkedHashMap<>();
-            statusFilter.put(pStatus.substring(0, pStatus.indexOf("#")), pStatus.substring(pStatus.indexOf("#") + 1));
-            statusFilter.putAll(listProductStatus);
-            modelAndView.addObject("filter_status", statusFilter);
-        } else {
-            modelAndView.addObject("filter_status", listProductStatus);
-        }
-        if (validateModuleProduct.insertProduct(false)) {
-            modelAndView.addObject("action_create", "enable");
-        }
-        if (validateModuleProduct.updateProduct(false)) {
-            modelAndView.addObject("action_update", "enable");
-        }
-        if (validateModuleProduct.deleteProduct(false)) {
-            modelAndView.addObject("action_delete", "enable");
-        }
         return baseView(modelAndView);
     }
 

@@ -48,7 +48,7 @@ public class CategoryController extends BaseController {
         if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        List<Category> listCategory = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType));
+        List<Category> listCategory = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), null);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY_DETAIL);
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listSubCategory", listCategory);

@@ -13,13 +13,23 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("from Category c where c.code = 'ROOT' order by c.sort")
     List<Category> findRootCategory();
 
-    @Query("from Category c where c.type=:type and (c.code is null or c.code <> 'ROOT') order by c.sort")
-    List<Category> findSubCategory(@Param("type") String type);
+    @Query("from Category c " +
+           "where 1=1 " +
+           "and c.type=:type " +
+           "and (c.code is null or c.code <> 'ROOT') " +
+           "and (:parentId is null or c.parentId=:parentId) " +
+           "order by c.sort")
+    List<Category> findSubCategory(@Param("type") String type, @Param("parentId") Integer parentId);
 
     @Query("from Category c where c.type in (:type) and (c.code is null or c.code <> 'ROOT') order by c.sort")
     List<Category> findSubCategory(@Param("type") List<String> type);
 
-    @Query("from Category c where c.type=:type and (c.code is null or c.code <> 'ROOT') and (c.isDefault is null or trim(c.isDefault) = '' or c.isDefault = 'N') order by c.sort")
+    @Query("from Category c " +
+           "where 1=1 " +
+           "and c.type=:type " +
+           "and (c.code is null or c.code <> 'ROOT') " +
+           "and (c.isDefault is null or trim(c.isDefault) = '' or c.isDefault = 'N') " +
+           "order by c.sort")
     List<Category> findSubCategoryUnDefault(@Param("type") String type);
 
     @Query("from Category c where c.type=:type and (c.code is null or c.code <> 'ROOT') and c.isDefault = 'Y'")

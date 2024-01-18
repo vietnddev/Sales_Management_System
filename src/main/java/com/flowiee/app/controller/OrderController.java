@@ -49,11 +49,11 @@ public class OrderController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER);
         modelAndView.addObject("listOrder", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName(), null));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
         modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName(), null));
         modelAndView.addObject("donHangRequest", new OrderRequest());
         modelAndView.addObject("donHang", new Order());
         return baseView(modelAndView);
@@ -70,7 +70,7 @@ public class OrderController extends BaseController {
         modelAndView.addObject("orderDetail", orderDetail);
         modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
         //modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("donHang", new Order());
         //modelAndView.addObject("donHangThanhToan", new OrderPay());
@@ -89,11 +89,11 @@ public class OrderController extends BaseController {
         }
         modelAndView.addObject("listDonHang", orderService.findAllOrder());
         modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName()));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName()));
+        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName(), null));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
         modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName()));
+        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName(), null));
 
         List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);

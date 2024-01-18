@@ -33,9 +33,10 @@ public class CategoryRestController {
 
     @Operation(summary = "Find by type")
     @GetMapping("/{type}")
-    public ApiResponse<List<Category>> findByType(@PathVariable("type") String categoryType) {
+    public ApiResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
+                                                  @RequestParam(value = "parentId", required = false) Integer parentId) {
         try {
-            List<Category> result = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType));
+            List<Category> result = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), null);
             return ApiResponse.ok(result);
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
