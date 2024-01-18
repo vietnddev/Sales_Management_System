@@ -332,29 +332,29 @@
                                                  style="height: 500px;">
                                                 <table class="table table-bordered table-head-fixed text-nowrap">
                                                     <thead>
-                                                    <tr>
-                                                        <th>STT</th>
-                                                        <th>Mã đơn hàng</th>
-                                                        <th>Thời gian đặt hàng</th>
-                                                        <th>Địa chỉ nhận hàng</th>
-                                                        <th>Số tiền</th>
-                                                        <th>Kênh</th>
-                                                        <th>Trạng thái</th>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>STT</th>
+                                                            <th>Mã đơn hàng</th>
+                                                            <th>Thời gian đặt hàng</th>
+                                                            <th>Địa chỉ nhận hàng</th>
+                                                            <th>Số tiền</th>
+                                                            <th>Kênh</th>
+                                                            <th>Trạng thái</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="donHang, index : ${listDonHang}">
-                                                        <td th:text="${index.index + 1}"></td>
-                                                        <td>
-                                                            <a th:href="@{/don-hang/{id}(id=${donHang.id})}"
-                                                               th:text="${donHang.maDonHang}"></a>
-                                                        </td>
-                                                        <td th:text="${donHang.thoiGianDatHang}"></td>
-                                                        <td th:text="${donHang.receiverAddress}"></td>
-                                                        <td th:text="${donHang.totalAmountAfterDiscount}"></td>
-                                                        <td th:text="${donHang.kenhBanHang.name}"></td>
-                                                        <td></td>
-                                                    </tr>
+                                                        <tr th:each="donHang, index : ${listDonHang}">
+                                                            <td th:text="${index.index + 1}"></td>
+                                                            <td>
+                                                                <a th:href="@{/don-hang/{id}(id=${donHang.orderId})}"
+                                                                   th:text="${donHang.orderCode}"></a>
+                                                            </td>
+                                                            <td th:text="${donHang.orderTime}"></td>
+                                                            <td th:text="${donHang.receiveAddress}"></td>
+                                                            <td th:text="${donHang.totalAmountDiscount}"></td>
+                                                            <td th:text="${donHang.salesChannelName}"></td>
+                                                            <td></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -399,15 +399,29 @@
             $('#reservation').daterangepicker()
         })
 
-
-        $(document).ready(function () {
-            let lvContactAddressProvinceFieldBefore = $('#contactAddressProvinceField').val();
-            $('#contactAddressProvinceField').on("click", function (e) {
-                if (($(this).val() > 0) && ($(this).val() !== lvContactAddressProvinceFieldBefore)) {
+        let lvContactAddressProvinceFieldBefore = $('#contactAddressProvinceField').val();
+        $('#contactAddressProvinceField').on("click", function (e) {
+            if ($(this).val().split("_")[0] > 0) {
+                if ($(this).val() !== lvContactAddressProvinceFieldBefore) {
                     loadDistricts($(this).val().split("_")[1]);
                     lvContactAddressProvinceFieldBefore = $(this).val();
                 }
-            });
+            } else {
+                $('#contactAddressDistrictField').empty();
+                $('#contactAddressCommuneField').empty();
+            }
+        });
+
+        let lvContactAddressDistrictFieldBefore = $('#contactAddressDistrictField').val();
+        $('#contactAddressDistrictField').on("click", function (e) {
+            if ($(this).val().split("_")[0] > 0) {
+                if ($(this).val() !== lvContactAddressDistrictFieldBefore) {
+                    loadCommunes($(this).val().split("_")[1]);
+                    lvContactAddressDistrictFieldBefore = $(this).val();
+                }
+            } else {
+                $('#contactAddressCommuneField').empty();
+            }
         });
 
         $('#contactAddressBlock').hide();
@@ -444,12 +458,10 @@
                 lvSelectElement.append('<option>Chọn quận huyện</option>');
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
-                        //lvSelectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
-                        // Thêm thuộc tính mới 'code' vào mỗi option
                         let optionElement = $('<option>', {
-                            value: d.id,
+                            value: d.id + "_" + d.code,
                             text: d.name,
-                            code: d.code  // Thêm thuộc tính 'code' với giá trị từ d.code
+                            code: d.code
                         });
                         lvSelectElement.append(optionElement);
                     });
@@ -460,13 +472,18 @@
         }
 
         function loadCommunes(districtId) {
-            let lvSelectElement = $('#contactAddressDistrictField');
+            let lvSelectElement = $('#contactAddressCommuneField');
             lvSelectElement.empty();
-            $.get(mvHostURLCallApi + '/category/district', {parentId: districtId}, function (response) {
+            $.get(mvHostURLCallApi + '/category/commune', {parentId: districtId}, function (response) {
                 lvSelectElement.append('<option>Chọn phường xã</option>');
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
-                        lvSelectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+                        let optionElement = $('<option>', {
+                            value: d.id,
+                            text: d.name,
+                            code: d.code  // Thêm thuộc tính 'code' với giá trị từ d.code
+                        });
+                        lvSelectElement.append(optionElement);
                     });
                 }
             }).fail(function () {

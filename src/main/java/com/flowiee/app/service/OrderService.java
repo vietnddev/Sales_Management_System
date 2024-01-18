@@ -5,6 +5,7 @@ import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.model.request.OrderRequest;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
@@ -12,6 +13,8 @@ import java.util.List;
 
 public interface OrderService {
     List<OrderDTO> findAllOrder();
+
+    Page<Object[]> findAllOrder(int pageSize, int pageNum);
 
     List<OrderDTO> findAllOrder(Integer orderId);
 
@@ -39,7 +42,7 @@ public interface OrderService {
 
     List<Order> findOrdersByStatus(Integer orderStatusId);
 
-    List<Order> findOrdersByCustomerId(Integer customerId);
+    List<OrderDTO> findOrdersByCustomerId(Integer customerId);
 
     List<Order> findOrdersByPaymentMethodId(Integer paymentMethodId);
 
@@ -52,4 +55,6 @@ public interface OrderService {
     Double findRevenueThisMonth();
 
     ResponseEntity<?> exportDanhSachDonHang();
+
+    List<OrderDTO> convertObjectsToDTO(List<Object[]> objects);
 }

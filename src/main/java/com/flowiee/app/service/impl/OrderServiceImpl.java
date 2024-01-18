@@ -24,6 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -70,12 +74,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findAllOrder() {
-        return this.extractDataQuery(orderRepository.findAll((Integer) null));
+        return this.convertObjectsToDTO(orderRepository.findAll((Integer) null, null, Pageable.unpaged()).getContent());
+    }
+
+    @Override
+    public Page<Object[]> findAllOrder(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("thoiGianDatHang").descending());
+        return orderRepository.findAll((Integer) null,null, pageable);
     }
 
     @Override
     public List<OrderDTO> findAllOrder(Integer orderId) {
-        return this.extractDataQuery(orderRepository.findAll(orderId));
+        return this.convertObjectsToDTO(orderRepository.findAll(orderId, null, Pageable.unpaged()).getContent());
     }
 
     @Override
@@ -116,6 +126,10 @@ public class OrderServiceImpl implements OrderService {
             order.setGhiChu(request.getNote());
             order.setThoiGianDatHang(request.getOrderTime());
             order.setTrangThaiDonHang(new Category(request.getOrderStatusId(), null));
+            order.setReceiverName(request.getReceiveName());
+            order.setReceiverPhone(request.getReceivePhone());
+            order.setReceiverEmail(request.getReceiveEmail());
+            order.setReceiverAddress(request.getReceiveAddress());
 
             if (request.getOrderTimeStr() != null) {
                 Date orderTime = DateUtils.convertStringToDate("dd/MM/yyyy hh:mm a", "dd/MM/yyyy HH:mm:ss", request.getOrderTimeStr());
@@ -263,8 +277,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findOrdersByCustomerId(Integer customerId) {
-        return orderRepository.findByKhachHangId(customerId);
+    public List<OrderDTO> findOrdersByCustomerId(Integer customerId) {
+        return this.convertObjectsToDTO(orderRepository.findAll(null, customerId, Pageable.unpaged()).getContent());
     }
 
     @Override
@@ -340,7 +354,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private List<OrderDTO> extractDataQuery(List<Object[]> objects) {
+    public List<OrderDTO> convertObjectsToDTO(List<Object[]> objects) {
         List<OrderDTO> dataResponse = new ArrayList<>();
         for (Object[] data : objects) {
             OrderDTO order = new OrderDTO();

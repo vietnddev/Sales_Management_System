@@ -30,10 +30,10 @@
             <section class="card" style="height: 70px">
                 <div class="form-group row p-3">
                     <span class="col-1" style="display: flex; align-items: center">
-                        <strong>Tiêu đề</strong>
+                        <strong>Tên phiếu</strong>
                     </span>
-                    <input class="col-5 form-control" id="title" th:value="${draftGoodsImport.title}" required/>
-                    <form class="col-6 row justify-content-end" method="POST"
+                    <input class="col-6 form-control" id="title" th:value="${draftGoodsImport.title}" required/>
+                    <form class="col-5 row justify-content-end" method="POST"
                           th:action="@{/storage/ticket-import/draft/save}"
                           th:object="${goodsImportRequest}">
                         <input type="hidden" name="id" th:value="${draftGoodsImport.id}">
@@ -64,7 +64,7 @@
         <div class="row" style="padding-left: 7px; padding-right: 7px">
             <div class="col-9" style="padding-right: 0">
                 <!-- Section sản phẩm -->
-                <section class="col-12" style="min-height: 350px">
+                <section class="col-12">
                     <div class="card p-3" style="max-height: 350px; overflow: auto">
                         <form class="row" th:action="@{/storage/ticket-import/draft/add-product/{importId}(importId=${draftGoodsImport.id})}" method="POST">
                             <div class="col-sm-10 form-group">
@@ -131,8 +131,8 @@
                 <!-- End section sản phẩm -->
 
                 <!-- Section nguyên vật liệu -->
-                <section class="col-12" style="height: 350px">
-                    <div class="card p-3" style="max-height: 350px; overflow: auto">
+                <section class="col-12">
+                    <div class="card p-3" style="min-height: 366px; max-height: 366px; overflow: auto">
                         <form class="row" th:action="@{/storage/ticket-import/draft/add-material/{importId}(importId=${draftGoodsImport.id})}" method="POST">
                             <div class="col-sm-10 form-group">
                                 <select class="form-control select2" multiple="multiple"

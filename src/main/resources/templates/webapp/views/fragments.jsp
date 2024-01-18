@@ -9,8 +9,7 @@
             </th:block>
         </div>
 
-        <div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
-            <!--<div th:if="${totalPages > 1}">  khi tổng số trang > 1 thì mới hiện pagination -->
+        <div th:fragment="pagination" th:remove="tag">
             <nav class="row" style="display: flex; align-items: center">
                 <select class="custom-select col-1 justify-content-end" id="selectPageSize">
                     <option name="selectPageSizeOp" value="5">5</option>

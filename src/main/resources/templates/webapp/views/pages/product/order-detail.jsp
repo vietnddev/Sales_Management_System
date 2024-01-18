@@ -200,11 +200,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td th:text="${orderDetail.paymentTime}"></td>
-                                                        <td th:text="${orderDetail.payMethodName}"></td>
-                                                        <td th:text="${orderDetail.note}"></td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td th:text="${orderDetail.paymentTime}"></td>
+                                                            <td th:text="${orderDetail.payMethodName}"></td>
+                                                            <td th:text="${orderDetail.note}"></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -323,6 +323,14 @@
                                                     <tbody>
                                                     </tbody>
                                                 </table>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row justify-content-between">
+                                            <div class="col-4" style="display: flex; align-items: center">
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <button type="button" class="btn btn-info">Tạo phiếu xuất hàng</button>
                                             </div>
                                         </div>
                                     </div>

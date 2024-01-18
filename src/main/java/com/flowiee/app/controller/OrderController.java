@@ -47,15 +47,11 @@ public class OrderController extends BaseController {
     public ModelAndView viewAllOrders() {
         validateModuleProduct.readOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER);
-        modelAndView.addObject("listOrder", orderService.findAllOrder());
-        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
         modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName(), null));
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
         modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName(), null));
-        modelAndView.addObject("donHangRequest", new OrderRequest());
-        modelAndView.addObject("donHang", new Order());
         return baseView(modelAndView);
     }
 

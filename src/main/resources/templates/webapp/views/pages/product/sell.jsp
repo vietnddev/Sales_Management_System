@@ -139,23 +139,23 @@
                                                 </tr>
                                                 </tbody>
                                             </table>
+                                            <hr class="w-50 bg-info">
                                         </div>
-                                        <hr>
                                         <div class="row" style="margin-top: -15px">
                                             <div class="col-5 mt-3">
                                                 <div class="row col-12">
                                                     <label for="voucherCodeField">Voucher giảm giá</label>
                                                     <div class="input-group" style="width: 80%">
                                                         <input type="text" class="form-control" id="voucherCodeField">
-                                                        <span class="input-group-append"><button type="button" class="btn btn-info btn-flat">Kiểm tra</button></span>
+                                                        <span class="input-group-append"><button type="button" class="btn btn-info btn-flat" id="btnCheckVoucherIsAvailable">Kiểm tra</button></span>
                                                     </div>
                                                 </div>
-                                                <span class="row col-12 mt-2">Tên đợt khuyến mãi:</span>
-                                                <span class="row col-12 mt-2">Trạng thái: </span>
-                                                <span class="row col-12 mt-2">Phầm trăm giảm: </span>
-                                                <span class="row col-12 mt-2">Tối đa giảm được: </span>
-                                                <span class="row col-12 mt-2">Đối tượng áp dụng: </span>
-                                                <div class="row col-12 mt-2 form-group">
+                                                <span class="row col-12 mt-2" id="voucherTitleField"></span>
+                                                <span class="row col-12 mt-2" id="voucherStatusField"></span>
+                                                <span class="row col-12 mt-2" id="voucherPercentField"></span>
+                                                <span class="row col-12 mt-2" id="voucherMaxPriceField"></span>
+                                                <span class="row col-12 mt-2" id="voucherDoiTuongApDungField"></span>
+                                                <div class="row col-12 mt-2 form-group" id="isUseVoucherBlock">
                                                     <div class="custom-control custom-checkbox">
                                                         <input class="custom-control-input" type="checkbox" id="isUseVoucherField">
                                                         <label for="isUseVoucherField" class="custom-control-label">Sử dụng</label>
@@ -163,7 +163,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-7 mt-3 p-0">
-                                                <div class="row col-12 mt-2">
+                                                <div class="row col-12 mt-2 text-center">
                                                     <label class="col-sm-12">Thông tin người nhận</label>
                                                 </div>
                                                 <div class="row col-12 mt-2">
@@ -233,7 +233,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr class="mt-0">
+                                        <hr class="w-75 mt-0">
                                         <div class="row">
                                             <div class="form-group col-sm-6 pr-0">
                                                 <select class="custom-select" id="accountField" required></select>
@@ -253,7 +253,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr class="mt-0">
+                                        <hr class="w-75 mt-0">
                                         <!--KÊNH BÁN HÀNG-->
                                         <div class="form-group row" style="padding-right: 8px">
                                             <label class="col-sm-6" style="display: flex; align-items: center">Kênh bán hàng</label>
@@ -272,11 +272,11 @@
                                             <label class="col-sm-6" style="display: flex; align-items: center">Trạng thái đơn hàng</label>
                                             <select class="custom-select col-sm-6" id="orderStatusField" required></select>
                                         </div>
-                                        <hr class="mt-0">
+                                        <hr class="w-75 mt-0">
                                         <div class="form-group row">
                                             <label class="col-sm-6">
                                                 Tổng tiền hàng
-                                                <span class="badge badge-danger"
+                                                <span class="badge badge-info"
                                                       th:if="${cart.listItems.size() > 0}"
                                                       th:text="${cart.listItems.size()}"></span>
                                             </label>
@@ -284,24 +284,24 @@
                                             <span class="col-sm-6 text-right"
                                                   th:text="${#numbers.formatDecimal (totalAmountWithoutDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></span>
                                         </div>
-                                        <hr>
+                                        <hr class="w-75">
                                         <div class="form-group row">
                                             <label class="col-sm-6">Phí vận chuyển</label>
                                             <span class="col-sm-6 text-right">0</span>
                                         </div>
-                                        <hr>
+                                        <hr class="w-75">
                                         <div class="form-group row">
                                             <label class="col-sm-6">Khuyến mãi</label>
                                             <span class="col-sm-6 text-right"
                                                   th:text="${#numbers.formatDecimal (amountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></span>
                                         </div>
-                                        <hr>
+                                        <hr class="w-75">
                                         <div class="form-group row">
                                             <label class="col-sm-6">Phải thu</label>
                                             <label class="col-sm-6 text-right"
                                                    th:text="${#numbers.formatDecimal (totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></label>
                                         </div>
-                                        <hr>
+                                        <hr class="w-75">
                                         <div class="form-group">
                                             <label>Ghi chú</label>
                                             <textarea class="form-control" id="noteFieldCart"></textarea>
@@ -407,6 +407,7 @@
     })
 
     let mvCustomers = {};
+    $('#isUseVoucherBlock').hide();
 
     $(document).ready(function () {
         loadCustomers();
@@ -417,6 +418,7 @@
         loadProducts();
         loadReceiveInformationToForm();
         createOrder();
+        checkVoucherIsAvailable();
     });
 
     async function loadProducts() {
@@ -517,6 +519,31 @@
             $('#receiveAddressField').val(mvCustomers[$(this).val()].addressDefault);
         });
     }
+
+    function checkVoucherIsAvailable() {
+        $('#btnCheckVoucherIsAvailable').on('click', function () {
+            let codeInput = $('#voucherCodeField').val();
+            let apiURL = mvHostURLCallApi + '/product/voucher/check/' + codeInput;
+            $.get(apiURL, function (response) {
+                if (response.status === "OK") {
+                    let data = response.data;
+                    $('#voucherTitleField').text("Tên đợt khuyến mãi: " + data.title);
+                    $('#voucherStatusField').text("Trạng thái: " + data.status);
+                    $('#voucherPercentField').text("Phần trăm giảm: " + data.discount);
+                    $('#voucherMaxPriceField').text("Tối đa giảm được: " + data.maxPriceDiscount);
+                    $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + data.doiTuongApDung);
+
+                    if (data.status === 'Đang áp dụng') {
+                        $('#isUseVoucherBlock').show();
+                    } else {
+                        $('#isUseVoucherBlock').hide();
+                    }
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
+            });
+        });
+    }
     
     async function createOrder() {
         $(".link-confirm").on("click", function(e) {
@@ -535,6 +562,10 @@
             let orderStatusId = $('#orderStatusField').val()
             let note = $('#noteFieldCart').val()
             let cartId = [[${listCart.get(0).id}]]
+            let receiveName = $('#receiveNameField').val()
+            let receivePhoneNumber = $('#receivePhoneNumberField').val()
+            let receiveEmail = $('#receiveEmailField').val()
+            let receiveAddress = $('#receiveAddressField').val()
 
             let apiURL = mvHostURLCallApi + '/order/insert'
             let params = {customerId: customerId,
@@ -544,7 +575,11 @@
                           orderStatusId : orderStatusId,
                           note : note,
                           orderTimeStr : orderTime,
-                          cartId : cartId}
+                          cartId : cartId,
+                          receiveName : receiveName,
+                          receivePhone : receivePhoneNumber,
+                          receiveEmail : receiveEmail,
+                          receiveAddress: receiveAddress}
 
             let response = await fetch(apiURL, {
                 method: 'POST',

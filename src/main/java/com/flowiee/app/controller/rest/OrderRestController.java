@@ -14,6 +14,7 @@ import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +33,13 @@ public class OrderRestController extends BaseController {
 
     @Operation(summary = "Find all orders")
     @GetMapping("/all")
-    public ApiResponse<List<OrderDTO>> findAllOrders() {
+    public ApiResponse<List<OrderDTO>> findAllOrders(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
         try {
             if (!super.validateModuleProduct.readOrder(true)) {
                 return null;
             }
-            return ApiResponse.ok(orderService.findAllOrder());
+            Page<Object[]> orderPage =orderService.findAllOrder(pageSize, pageNum - 1);
+            return ApiResponse.ok(orderService.convertObjectsToDTO(orderPage.toList()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
         }

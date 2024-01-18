@@ -2,6 +2,8 @@ package com.flowiee.app.repository;
 
 import com.flowiee.app.entity.Order;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -48,8 +50,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
            "left join Category sc on sc.id = o.kenhBanHang.id and sc.type = 'SALES_CHANNEL' " +
            "left join Category os on os.id = o.trangThaiDonHang.id and os.type = 'ORDER_STATUS' " +
            "left join Category pm on pm.id = o.paymentMethod.id and pm.type = 'PAYMENT_METHOD' " +
-           "left join FileStorage f on f.order.id = o.id")
-    List<Object[]> findAll(@Param("orderId") Integer orderId);
+           "left join FileStorage f on f.order.id = o.id " +
+           "where 1=1 " +
+           "and (:orderId is null or o.id=:orderId) " +
+           "and (:customerId is null or o.customer.id=:customerId)")
+    Page<Object[]> findAll(@Param("orderId") Integer orderId,
+                           @Param("customerId") Integer customerId,
+                           Pageable pageable);
 
     @Query("from Order d where d.trangThaiDonHang.id=:trangThaiDonHangId")
     List<Order> findByTrangThaiDonHang(@Param("trangThaiDonHangId") Integer trangThaiDonHangId);

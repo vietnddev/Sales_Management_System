@@ -87,7 +87,13 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 //Gen list voucher detail
                 List<String> listKeyVoucher = new ArrayList<>();
                 while (listKeyVoucher.size() < voucherInfo.getQuantity()) {
-                    String randomKey = generateRandomKeyVoucher(voucherInfo.getLengthOfKey(), voucherInfo.getVoucherType());
+                    String randomKey = "";
+                    while (randomKey.isEmpty()) {
+                        String tempKey = generateRandomKeyVoucher(voucherInfo.getLengthOfKey(), voucherInfo.getVoucherType());
+                        if (voucherTicketService.findByCode(tempKey) != null) {
+                            randomKey = tempKey;
+                        }
+                    }
                     if (!listKeyVoucher.contains(randomKey)) {             
                         VoucherTicket voucherTicket = new VoucherTicket();
                         voucherTicket.setCode(randomKey);
@@ -130,7 +136,16 @@ public class VoucherInfoServiceImpl implements VoucherService {
             throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         voucherInfoRepository.deleteById(voucherId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
+    }
+
+    @Override
+    public VoucherInfoDTO isAvailable(String voucherTicketCode) {
+        VoucherTicket voucherTicket = voucherTicketService.findByCode(voucherTicketCode);
+        if (voucherTicket != null) {
+            return this.findData(voucherTicket.getVoucherInfo().getId(), null, null, null, null, null).get(0);
+        }
+        return new VoucherInfoDTO();
     }
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {

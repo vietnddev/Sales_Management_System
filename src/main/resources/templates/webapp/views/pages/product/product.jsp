@@ -29,6 +29,35 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="input-group row col-sm-12 p-0">
+                                                <input type="text" class="form-control col-sm ml-3" style="min-width: 300px"
+                                                       name="searchTxt"/>
+
+                                                <div class="input-group col-sm" style="min-width: 240px">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                                    </div>
+                                                    <input type="text" id="reservation" class="form-control float-right"
+                                                           name="thoiGianDatHangSearch"/>
+                                                </div>
+
+                                                <select class="custom-select col-sm" name="kenhBanHang"></select>
+
+                                                <select class="custom-select col-sm" name="hinhThucThanhToan"></select>
+
+                                                <select class="custom-select col-sm" name="trangThaiDonHang"></select>
+
+                                                <select class="custom-select col-sm" name="nhanVienBanHang??"></select>
+
+                                                <button type="submit" name="search" class="btn btn-info form-control">Tìm kiếm
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
                                     <div class="card-header">
                                         <div class="row justify-content-between">
                                             <div class="col-4" style="display: flex; align-items: center">
@@ -54,7 +83,7 @@
                                         <!-- modal-content (Thêm mới sản phẩm)-->
                                     </div>
                                     <!-- /.card-header -->
-                                    <div class="card-body align-items-center">
+                                    <div class="card-body align-items-center p-0">
                                         <table class="table table-bordered table-striped align-items-center">
                                             <thead class="align-self-center">
                                                 <tr class="align-self-center">
@@ -72,24 +101,11 @@
                                             <tbody id="contentTable">
 
                                             </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>STT</th>
-                                                    <th></th>
-                                                    <th>Tên sản phẩm</th>
-                                                    <th>Loại</th>
-                                                    <th>Màu sắc</th>
-                                                    <th>Số lượng</th>
-                                                    <th>Đơn vị tính</th>
-                                                    <th>Khuyến mãi</th>
-                                                    <th>Trạng thái</th>
-                                                </tr>
-                                            </tfoot>
                                         </table>
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
-                                        <div th:replace="fragments :: pagination('/products', 'products')"></div>
+                                        <div th:replace="fragments :: pagination"></div>
                                     </div>
 
 
@@ -212,14 +228,14 @@
                 });
 
                 $('#firstPage').on('click', function() {
-                    if ($('#paginationInfo').attr("pageNum") === 1) {
+                    if (parseInt($('#paginationInfo').attr("pageNum")) === 1) {
                         return;
                     }
                     loadProducts(lvPageSize, 1);
                 });
 
                 $('#previousPage').on('click', function() {
-                    if ($('#paginationInfo').attr("pageNum") === 1) {
+                    if (parseInt($('#paginationInfo').attr("pageNum")) === 1) {
                         return;
                     }
                     loadProducts(lvPageSize, $('#paginationInfo').attr("pageNum") - 1);
@@ -250,7 +266,7 @@
                         let data = response.data;
                         let pagination = response.pagination;
 
-                        updatePagination(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
+                        updatePaginationInfo(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
 
                         let contentTable = $('#contentTable');
                         contentTable.empty();
@@ -258,7 +274,7 @@
 
                             let variantBlock = '';
                             $.each(p.productVariantInfo, function (color, quantity) {
-                                variantBlock += `<span class="span">${color} : ${quantity}</span>`;
+                                variantBlock += `<span class="span">${color} : ${quantity}</span><br>`;
                             });
 
                             let voucherBlock = '';
@@ -287,21 +303,6 @@
                 }).fail(function () {
                     showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
                 });
-            }
-
-            function updatePagination(pageNum, pageSize, totalPage, totalElements) {
-                $('#paginationInfo').attr("pageNum", pageNum);
-                $('#paginationInfo').attr("pageSize", pageSize);
-                $('#paginationInfo').attr("totalPage", totalPage);
-                $('#paginationInfo').attr("totalElements", totalElements);
-                $('#pageNum').text(pageNum);
-
-                let startCount = (pageNum - 1) * pageSize + 1;
-                let endCount = startCount + pageSize - 1;
-                if (endCount > totalElements) {
-                    endCount = totalElements;
-                }
-                $('#paginationInfo').text("Showing " + startCount + " to " + endCount + " of " + totalElements + " entries");
             }
 
             function loadCategory () {

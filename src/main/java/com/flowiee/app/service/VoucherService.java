@@ -18,4 +18,6 @@ public interface VoucherService {
     String update(VoucherInfo voucherInfo, Integer voucherId);
 
     String detele(Integer voucherId);
+
+    VoucherInfoDTO isAvailable(String voucherTicketCode);
 }

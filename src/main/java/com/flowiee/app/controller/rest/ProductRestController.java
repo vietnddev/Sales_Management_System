@@ -38,8 +38,7 @@ public class ProductRestController extends BaseController {
 
     @Operation(summary = "Find all products")
     @GetMapping("/all")
-    public ApiResponse<List<ProductDTO>> findProducts(@RequestParam("pageSize") int pageSize,
-                                                      @RequestParam("pageNum") int pageNum) {
+    public ApiResponse<List<ProductDTO>> findProducts(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
         try {
             if (!super.validateModuleProduct.readProduct(true)) {
                 return null;
@@ -442,15 +441,27 @@ public class ProductRestController extends BaseController {
 
     @Operation(summary = "Delete voucher")
     @PostMapping("/voucher/delete/{voucherInfoId}")
-    public ApiResponse<VoucherInfoDTO> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
+    public ApiResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
         try {
             if(!super.validateModuleProduct.deleteVoucher(true)) {
                 return null;
             }
-            voucherService.detele(voucherInfoId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(voucherService.detele(voucherInfoId));
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "voucher"));
+        }
+    }
+
+    @Operation(summary = "Check the voucher is available")
+    @GetMapping("/voucher/check/{voucherCode}")
+    public ApiResponse<VoucherInfoDTO> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
+        try {
+            if(!super.validateModuleProduct.readVoucher(true)) {
+                return null;
+            }
+            return ApiResponse.ok(voucherService.isAvailable(voucherCode));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
         }
     }
 }
