@@ -61,13 +61,12 @@
                                                     <th>STT</th>
                                                     <th></th>
                                                     <th>Tên sản phẩm</th>
-                                                    <th>Loại sản phẩm</th>
+                                                    <th>Loại</th>
                                                     <th>Màu sắc</th>
                                                     <th>Số lượng</th>
                                                     <th>Đơn vị tính</th>
-                                                    <th>Khuyến mãi đang áp dụng</th>
+                                                    <th>Khuyến mãi</th>
                                                     <th>Trạng thái</th>
-                                                    <th>Thao tác</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="contentTable">
@@ -78,13 +77,12 @@
                                                     <th>STT</th>
                                                     <th></th>
                                                     <th>Tên sản phẩm</th>
-                                                    <th>Loại sản phẩm</th>
+                                                    <th>Loại</th>
                                                     <th>Màu sắc</th>
                                                     <th>Số lượng</th>
                                                     <th>Đơn vị tính</th>
-                                                    <th>Khuyến mãi đang áp dụng</th>
+                                                    <th>Khuyến mãi</th>
                                                     <th>Trạng thái</th>
-                                                    <th>Thao tác</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -254,19 +252,33 @@
                     await callApiDelete(apiURL)
                 });
 
-                let pageSizeBefore = $('#selectPageSize').val();
+                let lvPageSize = $('#selectPageSize').val();
                 $('#selectPageSize').on('click', function() {
-                    if (pageSizeBefore === $(this).val()) {
+                    console.log($(this).val())
+                    if (lvPageSize === $(this).val()) {
                         return;
                     }
-                    pageSizeBefore = $(this).val();
-                    // In giá trị vào console
-                    console.log('Selected Value: ' + $(this).val());
-
+                    lvPageSize = $(this).val();
                     loadProducts($(this).val(), 0);
                 });
 
-                loadProducts(10, 0);
+                $('#firstPage').on('click', function() {
+                    loadProducts(lvPageSize, 1);
+                });
+
+                $('#previousPage').on('click', function() {
+                    loadProducts(lvPageSize, $('#currentPage').val() - 1);
+                });
+
+                $('#nextPage').on('click', function() {
+                    loadProducts(lvPageSize, $('#currentPage').val() + 1);
+                });
+
+                $('#lastPage').on('click', function() {
+                    loadProducts(lvPageSize, $('#paginationInfo').attr("totalPage"));
+                });
+
+                loadProducts(mvPageSizeDefault, 0);
             });
 
             function loadProducts(pageSize, pageNum) {
@@ -279,7 +291,7 @@
 
                         $('#currentPage').text(pagination.pageNum);
 
-                        $('#first').attr("test", pagination.pageSize);
+                        updatePagination(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
 
                         let contentTable = $('#contentTable');
                         contentTable.empty();
@@ -298,7 +310,7 @@
                             contentTable.append(
                                 '<tr>' +
                                     '<td>' + (index + 1) + '</td>' +
-                                    '<td class="text-center"><img src="/' + p.imageActive.directoryPath + '/' + p.imageActive.tenFileKhiLuu + '" style="width: 100px; height: 100px; border-radius: 5px"></td>' +
+                                    '<td class="text-center"><img src="/' + p.imageActive.directoryPath + '/' + p.imageActive.tenFileKhiLuu + '" style="width: 60px; height: 60px; border-radius: 5px"></td>' +
                                     '<td><a href="/san-pham/' + p.productId + '">' + p.productName + '</a></td>' +
                                     '<td>' + p.productTypeName + '</td>' +
                                     '<td>' + variantBlock + '</td>' +
@@ -309,11 +321,6 @@
                                     '<td>' + p.unitName + '</td>' +
                                     '<td>' + voucherBlock + '</td>' +
                                     '<td>' + p.productStatus + '</td>' +
-                                    '<td>' +
-                                    '<button class="btn btn-outline-info btn-sm"><a href="/san-pham/' + p.productId + '"><i class="fa-solid fa-eye"></i></a></button>' +
-                                    '<button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#update-' + p.productId + '"><i class="fa-solid fa-pencil"></i></button>' +
-                                    '<button class="btn btn-outline-danger btn-sm link-delete" entityId="' + p.productId + '" entityName="' + p.productName + '"><i class="fa-solid fa-trash"></i></button>' +
-                                    '</td>' +
                                 '</tr>'
                             );
                         });
@@ -321,6 +328,15 @@
                 }).fail(function () {
                     showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
                 });
+            }
+
+            function updatePagination(pageNum, pageSize, totalPage, totalElements) {
+                $('#paginationInfo').attr("pageNum", pageNum);
+                $('#paginationInfo').attr("pageSize", pageSize);
+                $('#paginationInfo').attr("totalPage", totalPage);
+                $('#paginationInfo').attr("totalElements", totalElements);
+
+                $('#paginationInfo').text('Showing ... to ... of ' + totalElements + ' entries');
             }
         </script>
     </body>

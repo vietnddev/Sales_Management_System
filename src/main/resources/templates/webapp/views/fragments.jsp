@@ -11,23 +11,23 @@
 
         <div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
             <!--<div th:if="${totalPages > 1}">  khi tổng số trang > 1 thì mới hiện pagination -->
-            <nav class="row">
+            <nav class="row" style="display: flex; align-items: center">
                 <select class="custom-select col-1 justify-content-end" id="selectPageSize">
                     <option name="selectPageSizeOp" value="5">5</option>
                     <option id="selectPageSizeOp" value="10">10</option>
                     <option name="selectPageSizeOp" value="50">50</option>
                 </select>
+                <span class="col-3" id="paginationInfo">Showing 1 to 5 of 5 entries</span>
+                <ul class="pagination col-4 justify-content-center mt-0 mb-0">
+                    <li class="page-item" id="firstPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward"></i></a></li>
 
-                <ul class="pagination col justify-content-end">
-                    <li class="page-item" id="first"><a class="page-link">First</a></li>
+                    <li class="page-item" id="previousPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left"></i></a></li>
 
-                    <li class="page-item" id="previous"><a class="page-link">Previous</a></li>
+                    <li class="page-item disabled"><a class="page-link" id="currentPage">?</a></li>
 
-                    <li class="page-item"><a class="page-link" id="currentPage">?</a></li>
+                    <li class="page-item" id="nextPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left fa-flip-horizontal"></i></a></li>
 
-                    <li class="page-item" id="next"><a class="page-link">Next</a></li>
-
-                    <li class="page-item" id="last"><a class="page-link">Last</a></li>
+                    <li class="page-item" id="lastPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward fa-flip-horizontal"></i></a></li>
                     </ul>
                 </nav>
             <!--</div>-->

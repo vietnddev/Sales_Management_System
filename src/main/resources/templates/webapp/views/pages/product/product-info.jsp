@@ -281,7 +281,7 @@
 
                     <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
                     <div class="row col-sm-12 border pt-3">
-                        <div class="col-sm-10" style="max-height: 470px; overflow: scroll">
+                        <div class="col-sm-10" style="max-height: 585px; overflow: scroll">
                             <table class="table table-bordered">
                                 <thead>
                                     <th>#</th>
@@ -439,7 +439,7 @@
                             <div class="form-group">
                                 <label>Tên sản phẩm</label>
                                 <textarea class="form-control" placeholder="Tên sản phẩm"
-                                          name="tenSanPham" required rows="2"
+                                          name="tenSanPham" required rows="4"
                                           th:text="${detailProducts.productName}"></textarea>
                             </div>
                             <div class="form-group">

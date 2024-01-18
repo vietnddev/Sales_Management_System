@@ -103,19 +103,11 @@
                                                 data-placeholder="Chọn nhân viên bán hàng">
                                             <option selected value="0">Chọn nhân viên bán hàng</option>
                                         </select>
-                                        <span class="input-group-append col-sm">
-                                                <button type="submit" name="search" class="btn btn-info">
+                                        <button type="submit" name="search" class="btn btn-info form-control">
                                                     Tìm kiếm
-                                                </button>
-                                            </span>
+                                        </button>
                                     </div>
                                 </form>
-                            </div>
-                            <div class="row justify-content-end">
-                                <a class="col-sm-1 btn btn-success" th:href="@{/don-hang/export}"
-                                   title="Tải về danh sách đơn hàng">
-                                    <i class="fa-solid fa-cloud-arrow-down"></i>
-                                </a>
                             </div>
                         </div>
                     </div>

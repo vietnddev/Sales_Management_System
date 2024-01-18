@@ -480,7 +480,7 @@
 
     async function loadAccounts() {
         let selectElement = $('#accountField');
-        let apiURL = mvHostURLCallApi + '/account/all'
+        let apiURL = mvHostURLCallApi + '/system/account/all'
         let response = await fetch(apiURL)
         if (response.ok) {
             let data = (await response.json()).data
