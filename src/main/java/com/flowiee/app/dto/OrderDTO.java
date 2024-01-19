@@ -19,10 +19,10 @@ public class OrderDTO implements Serializable {
     private String orderCode;
 	private Date orderTime;
     private String orderTimeStr;
-    private String receiverAddress;
-    private String receiverPhone;
-	private String receiverEmail;
-    private String receiverName;
+    private String receiveAddress;
+    private String receivePhone;
+	private String receiveEmail;
+    private String receiveName;
     private Customer orderBy; //future remove
     private Integer customerId;
     private String customerName;
@@ -63,10 +63,10 @@ public class OrderDTO implements Serializable {
 		dto.setOrderId(order.getId());
 		dto.setOrderCode(order.getMaDonHang());
 		dto.setOrderTime(order.getThoiGianDatHang());
-		dto.setReceiverAddress(order.getReceiverAddress());
-		dto.setReceiverName(order.getReceiverName());
-		dto.setReceiverEmail(order.getReceiverEmail());
-		dto.setReceiverPhone(order.getReceiverPhone());
+		dto.setReceiveAddress(order.getReceiverAddress());
+		dto.setReceiveName(order.getReceiverName());
+		dto.setReceiveEmail(order.getReceiverEmail());
+		dto.setReceivePhone(order.getReceiverPhone());
 		dto.setListOrderDetail(order.getListOrderDetail());
 		return dto;
 	}
@@ -81,11 +81,11 @@ public class OrderDTO implements Serializable {
 		builder.append(", orderTime=");
 		builder.append(orderTime);
 		builder.append(", receiverAddress=");
-		builder.append(receiverAddress);
+		builder.append(receiveAddress);
 		builder.append(", receiverPhone=");
-		builder.append(receiverPhone);
+		builder.append(receivePhone);
 		builder.append(", receiverName=");
-		builder.append(receiverName);
+		builder.append(receiveName);
 		builder.append(", orderBy=");
 		builder.append(orderBy);
 		builder.append(", customerId=");

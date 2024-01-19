@@ -38,12 +38,7 @@
                                     <div class="col-sm-8 border">
                                         <form class="row mt-3" th:action="@{/don-hang/ban-hang/cart/item/add}" method="POST">
                                             <div class="col-sm-10 form-group">
-                                                <select class="form-control select2" multiple="multiple"
-                                                        data-placeholder="Chọn sản phẩm"
-                                                        style="width: 100%;"
-                                                        name="bienTheSanPhamId"
-                                                        id="productVariantField"
-                                                        required>
+                                                <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" id="productVariantField" required>
                                                 </select>
                                             </div>
                                             <input type="hidden" name="cartId" th:value="${cart.id}">
@@ -78,11 +73,7 @@
                                                     <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.soLuong, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                     <td>
                                                         <!--UPDATE ITEMS-->
-                                                        <button type="button" class="btn btn-sm btn-primary"
-                                                                data-toggle="modal"
-                                                                th:data-target="'#modalUpdateItems_' + ${item.id}">
-                                                            Cập nhật
-                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${item.id}">Cập nhật</button>
                                                         <div class="modal fade"
                                                              th:id="'modalUpdateItems_' + ${item.id}">
                                                             <div class="modal-dialog">
@@ -91,20 +82,14 @@
                                                                           th:object="${items}" method="POST">
                                                                         <div class="modal-header">
                                                                             <strong class="modal-title">Cập nhật sản phẩm</strong>
-                                                                            <button type="button" class="close"
-                                                                                    data-dismiss="modal"
-                                                                                    aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                                                                             </button>
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <input type="hidden" name="cartId" th:value="${cart.id}">
                                                                             <input type="hidden" name="id"     th:value="${item.id}">
-                                                                            <input type="hidden" name="productVariant"
-                                                                                   th:value="${item.productVariant.id}">
-                                                                            <div class="form-group row"
-                                                                                 style="display: flex; align-items: center;
-                                                                                                        margin: 0 0 15px 0">
+                                                                            <input type="hidden" name="productVariant" th:value="${item.productVariant.id}">
+                                                                            <div class="form-group row" style="display: flex; align-items: center; margin: 0 0 15px 0">
                                                                                 <label class="col-sm-4 text-left">Số lượng</label>
                                                                                 <input class="col-sm-8 form-control"
                                                                                        type="number" name="soLuong"
@@ -112,44 +97,28 @@
                                                                                        max="[[${item.productVariant.soLuongKho}]]"
                                                                                        th:value="${item.soLuong}"/>
                                                                             </div>
-                                                                            <div class="form-group row"
-                                                                                 style="display: flex; align-items: center; margin: 0">
+                                                                            <div class="form-group row" style="display: flex; align-items: center; margin: 0">
                                                                                 <label class="col-sm-4 text-left">Ghi chú</label>
-                                                                                <textarea class="col-sm-8 form-control" id="ghiChu" name="ghiChu"
-                                                                                          th:text="${item.ghiChu}"></textarea>
+                                                                                <textarea class="col-sm-8 form-control" id="ghiChu" name="ghiChu" th:text="${item.ghiChu}"></textarea>
                                                                             </div>
                                                                         </div>
                                                                         <div class="modal-footer justify-content-end">
-                                                                            <button type="button"
-                                                                                    class="btn btn-sm btn-default"
-                                                                                    data-dismiss="modal">Hủy
-                                                                            </button>
-                                                                            <button type="submit"
-                                                                                    class="btn btn-sm btn-primary">Đồng ý
-                                                                            </button>
+                                                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                                                            <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
                                                                         </div>
                                                                     </form>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <!--DELETE ITEMS-->
-                                                        <button type="button" class="btn btn-sm btn-danger"
-                                                                data-toggle="modal"
-                                                                th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa
-                                                        </button>
-                                                        <div class="modal fade"
-                                                             th:id="'modalDeleteItems_' + ${item.id}">
+                                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa</button>
+                                                        <div class="modal fade" th:id="'modalDeleteItems_' + ${item.id}">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
-                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/delete/{itemId}(itemId=${item.id})}"
-                                                                          method="POST">
+                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/delete/{itemId}(itemId=${item.id})}" method="POST">
                                                                         <div class="modal-header">
                                                                             <strong class="modal-title">Cập nhật giỏ hàng</strong>
-                                                                            <button type="button" class="close"
-                                                                                    data-dismiss="modal"
-                                                                                    aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <input type="hidden" name="cartId" th:value="${cart.id}">
@@ -159,14 +128,8 @@
                                                                             khỏi giỏ hàng!
                                                                         </div>
                                                                         <div class="modal-footer justify-content-end">
-                                                                            <button type="button"
-                                                                                    class="btn btn-sm btn-default"
-                                                                                    data-dismiss="modal">Hủy
-                                                                            </button>
-                                                                            <button type="submit"
-                                                                                    class="btn btn-sm btn-primary">Đồng
-                                                                                ý
-                                                                            </button>
+                                                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                                                            <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
                                                                         </div>
                                                                     </form>
                                                                 </div>
@@ -177,17 +140,49 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="row border" style="height: 403px;">
-                                            <form class="col-6 row" action="" method="POST">
-                                                <div class="form-group col-10">
-                                                    <label>Mã voucher</label>
-                                                    <input type="text" class="form-control" placeholder="code" required>
+                                        <hr>
+                                        <div class="row" style="margin-top: -15px">
+                                            <div class="col-5 mt-3">
+                                                <div class="row col-12">
+                                                    <label for="voucherCodeField">Voucher giảm giá</label>
+                                                    <div class="input-group" style="width: 80%">
+                                                        <input type="text" class="form-control" id="voucherCodeField">
+                                                        <span class="input-group-append"><button type="button" class="btn btn-info btn-flat">Kiểm tra</button></span>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-2">
-                                                    <label></label>
-                                                    <button class="form-control btn btn-sm btn-info">Check</button>
+                                                <span class="row col-12 mt-2">Tên đợt khuyến mãi:</span>
+                                                <span class="row col-12 mt-2">Trạng thái: </span>
+                                                <span class="row col-12 mt-2">Phầm trăm giảm: </span>
+                                                <span class="row col-12 mt-2">Tối đa giảm được: </span>
+                                                <span class="row col-12 mt-2">Đối tượng áp dụng: </span>
+                                                <div class="row col-12 mt-2 form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input" type="checkbox" id="isUseVoucherField">
+                                                        <label for="isUseVoucherField" class="custom-control-label">Sử dụng</label>
+                                                    </div>
                                                 </div>
-                                            </form>
+                                            </div>
+                                            <div class="col-7 mt-3 p-0">
+                                                <div class="row col-12 mt-2">
+                                                    <label class="col-sm-12">Thông tin người nhận</label>
+                                                </div>
+                                                <div class="row col-12 mt-2">
+                                                    <label class="col-sm-3" for="receiveNameField">Họ tên</label>
+                                                    <input class="col-sm-9 form-control" type="text" id="receiveNameField">
+                                                </div>
+                                                <div class="row col-12 mt-2">
+                                                    <label class="col-sm-3" for="receivePhoneNumberField">Số điện thoại</label>
+                                                    <input class="col-sm-9 form-control" type="text" id="receivePhoneNumberField">
+                                                </div>
+                                                <div class="row col-12 mt-2">
+                                                    <label class="col-sm-3" for="receiveEmailField">Email</label>
+                                                    <input class="col-sm-9 form-control" type="text" id="receiveEmailField">
+                                                </div>
+                                                <div class="row col-12 mt-2">
+                                                    <label class="col-sm-3" for="receiveAddressField">Địa chỉ</label>
+                                                    <textarea class="col-sm-9 form-control" type="text" id="receiveAddressField" rows="3"></textarea>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-4 border">
@@ -196,11 +191,7 @@
                                                 <select class="custom-select" id="customerField" required></select>
                                             </div>
                                             <div class="col-sm-2 form-group">
-                                                <button type="button" class="btn btn-sm btn-primary"
-                                                        style="height: 38px"
-                                                        data-target="#modalCreateKhachHang" data-toggle="modal">
-                                                     Thêm
-                                                </button>
+                                                <button type="button" class="btn btn-sm btn-primary" style="height: 38px" data-target="#modalCreateKhachHang" data-toggle="modal">Thêm</button>
                                                 <div class="modal fade" id="modalCreateKhachHang">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -208,40 +199,31 @@
                                                                   th:object="${khachHang}" method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Thêm mới khách hàng</strong>
-                                                                    <button type="button" class="close" data-dismiss="modal"
-                                                                            aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <div class="row">
                                                                         <div class="col-12">
                                                                             <div class="form-group">
                                                                                 <label>Tên khách hàng</label>
-                                                                                <input type="text" class="form-control" required
-                                                                                       name="tenKhachHang"/>
+                                                                                <input type="text" class="form-control" required name="tenKhachHang"/>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Số điện thoại</label>
-                                                                                <input type="text" class="form-control" required
-                                                                                       name="soDienThoai"/>
+                                                                                <input type="text" class="form-control" required name="soDienThoai"/>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Email</label>
-                                                                                <input type="email" class="form-control"
-                                                                                       name="email"/>
+                                                                                <input type="email" class="form-control" name="email"/>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Địa chỉ</label>
-                                                                                <input type="text" class="form-control" required
-                                                                                       name="diaChi"/>
+                                                                                <input type="text" class="form-control" required name="diaChi"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer justify-content-end">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
+                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                                                                         <button type="submit" class="btn btn-primary">Lưu</button>
                                                                     </div>
                                                                 </div>
@@ -266,8 +248,7 @@
                                                     <div class="input-group-append"
                                                          data-target="#reservationdatetime"
                                                          data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i>
-                                                        </div>
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -329,25 +310,19 @@
                                         <div class="form-group row">
                                             <!--LƯU NHÁP-->
                                             <div class="col-sm-4">
-                                                <button type="button" class="btn btn-info w-100"
-                                                        style="padding-right: 3px">Lưu nháp
-                                                </button>
+                                                <button type="button" class="btn btn-info w-100" style="padding-right: 3px">Lưu nháp</button>
                                             </div>
                                             <!--TẠO ĐƠN HÀNG-->
                                             <div class="col-sm-4">
-                                                <button type="button" class="btn btn-primary w-100 link-confirm"
-                                                        style="padding-right: 3px" th:cartId="${cart.id}" th:actionType="'create'">
+                                                <button type="button" class="btn btn-primary w-100 link-confirm" style="padding-right: 3px" th:cartId="${cart.id}" th:actionType="'create'">
                                                     Tạo đơn
                                                 </button>
                                             </div>
                                             <!--XÓA GIỎ HÀNG-->
                                             <div class="col-sm-4">
-                                                <button type="button" class="btn btn-danger w-100"
-                                                        style="padding-left: 3px;"
-                                                        data-toggle="modal"
+                                                <button type="button" class="btn btn-danger w-100" style="padding-left: 3px;" data-toggle="modal"
                                                         id="preDeleteDonHang"
-                                                        th:data-target="'#modalDeleteCart_' + ${cart.id}">
-                                                    Clear all
+                                                        th:data-target="'#modalDeleteCart_' + ${cart.id}">Clear all
                                                 </button>
                                             </div>
                                             <div class="modal fade" th:id="'modalDeleteCart_' + ${cart.id}">
@@ -357,22 +332,14 @@
                                                               method="POST">
                                                             <div class="modal-header">
                                                                 <strong class="modal-title">Thông báo xác nhận</strong>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                        aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <input type="hidden" name="id" th:value="${cart.id}">
-                                                                Xác nhận xóa giỏ hàng
+                                                                <input type="hidden" name="id" th:value="${cart.id}">Xác nhận xóa giỏ hàng
                                                             </div>
                                                             <div class="modal-footer justify-content-end">
-                                                                <button type="button" class="btn btn-sm btn-default"
-                                                                        data-dismiss="modal">Hủy
-                                                                </button>
-                                                                <button type="submit" class="btn btn-sm btn-primary">
-                                                                    Đồng ý
-                                                                </button>
+                                                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -439,14 +406,17 @@
         $('#reservation').daterangepicker()
     })
 
+    let mvCustomers = {};
+
     $(document).ready(function () {
-        loadCustomers()
-        loadAccounts()
-        loadSalesChannels()
-        loadPaymentMethods()
-        loadOrderStatuses()
-        loadProducts()
-        createOrder()
+        loadCustomers();
+        loadAccounts();
+        loadSalesChannels();
+        loadPaymentMethods();
+        loadOrderStatuses();
+        loadProducts();
+        loadReceiveInformationToForm();
+        createOrder();
     });
 
     async function loadProducts() {
@@ -468,10 +438,11 @@
         let apiURL = mvHostURLCallApi + '/customer/all'
         let response = await fetch(apiURL)
         if (response.ok) {
-            let data = (await response.json()).data
+            let data = (await response.json()).data;
             selectElement.append('<option>Chọn khách hàng</option>');
             $.each(data, function (index, d) {
                 selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+                mvCustomers[d.id] = d; //Tương tự map trong Java, d.id là key, d là value
             });
         } else {
             alert('Call API fail!')
@@ -538,6 +509,15 @@
         }
     }
 
+    function loadReceiveInformationToForm() {
+        $('#customerField').on('click', function () {
+            $('#receiveNameField').val(mvCustomers[$(this).val()].name);
+            $('#receivePhoneNumberField').val(mvCustomers[$(this).val()].phoneDefault);
+            $('#receiveEmailField').val(mvCustomers[$(this).val()].emailDefault);
+            $('#receiveAddressField').val(mvCustomers[$(this).val()].addressDefault);
+        });
+    }
+    
     async function createOrder() {
         $(".link-confirm").on("click", function(e) {
             e.preventDefault();

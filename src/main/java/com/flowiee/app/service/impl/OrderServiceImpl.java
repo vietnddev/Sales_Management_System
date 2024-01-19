@@ -348,10 +348,10 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderCode(String.valueOf(data[1]));
             order.setOrderTime(DateUtils.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
             order.setOrderTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getOrderTime()));
-            order.setReceiverAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
-            order.setReceiverPhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
-            order.setReceiverName(String.valueOf(data[5]));
-            order.setReceiverEmail(String.valueOf(data[19]));
+            order.setReceiveAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
+            order.setReceivePhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
+            order.setReceiveName(String.valueOf(data[5]));
+            order.setReceiveEmail(String.valueOf(data[19]));
             order.setOrderBy(new Customer(Integer.parseInt(String.valueOf(data[6])), String.valueOf(data[7])));
             order.setAmountDiscount(data[8] != null ? Double.parseDouble(String.valueOf(data[8])) : 0);
             order.setSalesChannel(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));

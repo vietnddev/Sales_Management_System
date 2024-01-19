@@ -119,19 +119,19 @@
                                                     <tbody>
                                                         <tr>
                                                             <th>Khách hàng</th>
-                                                            <td th:text="${orderDetail.receiverName}"></td>
+                                                            <td th:text="${orderDetail.receiveName}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Số điện thoại</th>
-                                                            <td th:text="${orderDetail.receiverPhone}"></td>
+                                                            <td th:text="${orderDetail.receivePhone}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Email</th>
-                                                            <td th:text="${orderDetail.receiverEmail}"></td>
+                                                            <td th:text="${orderDetail.receiveEmail}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Địa chỉ nhận hàng</th>
-                                                            <td th:text="${orderDetail.receiverAddress}"></td>
+                                                            <td th:text="${orderDetail.receiveAddress}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Thời gian đặt hàng</th>

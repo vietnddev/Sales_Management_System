@@ -67,58 +67,93 @@
                                                 </div>
                                                 <div class="row justify-content-between mb-2">
                                                     <span class="col-sm-2"><b>Thông tin liên hệ: </b></span>
-                                                    <button class="btn btn-sm btn-success" type="button" data-toggle="modal"
+                                                    <button class="btn btn-sm btn-success" type="button"
+                                                            data-toggle="modal"
                                                             data-target="#modelAddNewContact">Thêm mới
                                                     </button>
                                                     <div class="modal fade" id="modelAddNewContact">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content text-left">
-                                                                <form th:action="@{/customer/contact/insert}"
-                                                                      th:object="${customerContact}" method="post">
-                                                                    <div class="modal-header">
-                                                                        <strong class="modal-title">Thêm mới thông tin liên hệ</strong>
-                                                                        <button type="button" class="close"
-                                                                                data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
+                                                                <div class="modal-header">
+                                                                    <strong class="modal-title">Thêm mới thông tin liên
+                                                                        hệ</strong>
+                                                                    <button type="button" class="close"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label>Loại</label>
+                                                                        <select class="custom-select" name="code"
+                                                                                id="contactTypeField" required>
+                                                                            <option value="P">Số điện thoại</option>
+                                                                            <option value="E">Email</option>
+                                                                            <option value="A">Địa chỉ</option>
+                                                                        </select>
                                                                     </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label>Loại</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   placeholder="Loại"
-                                                                                   name="code"/>
+                                                                    <div class="form-group"
+                                                                         id="contactPhoneAndEmailBlock">
+                                                                        <label>Giá trị</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Nội dung"
+                                                                               name="value"/>
+                                                                    </div>
+                                                                    <div class="form-group row"
+                                                                         id="contactAddressBlock">
+                                                                        <div class="col-4">
+                                                                            <label>Tỉnh</label>
+                                                                            <select class="custom-select" name="code"
+                                                                                    id="contactAddressProvinceField"
+                                                                                    required></select>
                                                                         </div>
-                                                                        <div class="form-group">
-                                                                            <label>Nội dung</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   placeholder="Nội dung"
-                                                                                   name="value"/>
+                                                                        <div class="col-4">
+                                                                            <label>Huyện</label>
+                                                                            <select class="custom-select" name="code"
+                                                                                    id="contactAddressDistrictField"
+                                                                                    required></select>
                                                                         </div>
-                                                                        <div class="form-group">
-                                                                            <label>Ghi chú</label>
-                                                                            <input type="text" class="form-control"
-                                                                                   placeholder="Ghi chú"
-                                                                                   name="note"/>
+                                                                        <div class="col-4">
+                                                                            <label>Xã</label>
+                                                                            <select class="custom-select" name="code"
+                                                                                    id="contactAddressCommuneField"
+                                                                                    required></select>
                                                                         </div>
-                                                                        <div class="form-group text-left">
-                                                                            <label>Sử dụng mặc định</label>
-                                                                            <input type="checkbox" class="form-control"
-                                                                                   name="isDefault"/>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Trạng thái</label>
+                                                                        <div class="col mt-3">
+                                                                            <label>Số nhà, tên đường</label>
                                                                             <input type="text" class="form-control"
-                                                                                   placeholder="Ghi chú"
-                                                                                   name="note"/>
+                                                                                   name="value"
+                                                                                   placeholder="Số nhà, tên đường"/>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="modal-footer justify-content-end">
-                                                                        <input type="hidden" name="customer" th:value="${customerDetail.id}">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                                        <button type="submit" class="btn btn-primary">Đồng ý</button>
+                                                                    <div class="form-group">
+                                                                        <label>Ghi chú</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Ghi chú"
+                                                                               name="note"/>
                                                                     </div>
-                                                                </form>
+                                                                    <div class="form-group text-left">
+                                                                        <label>Sử dụng mặc định</label>
+                                                                        <input type="checkbox" class="form-control"
+                                                                               name="isDefault"/>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Trạng thái</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Ghi chú"
+                                                                               name="note"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer justify-content-end">
+                                                                    <input type="hidden" name="customer"
+                                                                           th:value="${customerDetail.id}">
+                                                                    <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Hủy
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">Đồng
+                                                                        ý
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -145,11 +180,13 @@
                                                                 <td th:text="${c.status}"></td>
                                                                 <td th:text="${c.note}"></td>
                                                                 <td>
-                                                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                                                    <button class="btn btn-primary btn-sm"
+                                                                            data-toggle="modal"
                                                                             th:data-target="'#update-' + ${c.id}">
-                                                                            <i class="fa-solid fa-pencil"></i>
+                                                                        <i class="fa-solid fa-pencil"></i>
                                                                     </button>
-                                                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                    <button class="btn btn-danger btn-sm"
+                                                                            data-toggle="modal"
                                                                             th:data-target="'#delete-' + ${c.id}">
                                                                         <i class="fa-solid fa-trash"></i>
                                                                     </button>
@@ -157,56 +194,69 @@
                                                                         <div class="modal-dialog">
                                                                             <div class="modal-content">
                                                                                 <form th:action="@{/customer/contact/update/{id}(id=${c.id})}"
-                                                                                      th:object="${customerContact}" method="post">
+                                                                                      th:object="${customerContact}"
+                                                                                      method="post">
                                                                                     <div class="modal-header">
-                                                                                        <strong class="modal-title">Cập nhật thông tin liên hệ</strong>
+                                                                                        <strong class="modal-title">Cập nhật
+                                                                                            thông tin liên hệ</strong>
                                                                                         <button type="button" class="close"
-                                                                                                data-dismiss="modal" aria-label="Close">
+                                                                                                data-dismiss="modal"
+                                                                                                aria-label="Close">
                                                                                             <span aria-hidden="true">&times;</span>
                                                                                         </button>
                                                                                     </div>
                                                                                     <div class="modal-body">
                                                                                         <div class="form-group">
                                                                                             <label>Loại</label>
-                                                                                            <input type="text" class="form-control"
+                                                                                            <input type="text"
+                                                                                                   class="form-control"
                                                                                                    placeholder="Loại"
                                                                                                    name="code"
-                                                                                                   th:value="${c.code}" readonly/>
+                                                                                                   th:value="${c.code}"
+                                                                                                   readonly/>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label>Nội dung</label>
-                                                                                            <input type="text" class="form-control"
+                                                                                            <input type="text"
+                                                                                                   class="form-control"
                                                                                                    placeholder="Nội dung"
                                                                                                    name="value"
                                                                                                    th:value="${c.value}"/>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label>Ghi chú</label>
-                                                                                            <input type="text" class="form-control"
+                                                                                            <input type="text"
+                                                                                                   class="form-control"
                                                                                                    placeholder="Ghi chú"
                                                                                                    name="note"
                                                                                                    th:value="${c.note}"/>
                                                                                         </div>
                                                                                         <div class="form-group text-left">
                                                                                             <label>Sử dụng mặc định</label>
-                                                                                            <input type="checkbox" class="form-control"
+                                                                                            <input type="checkbox"
+                                                                                                   class="form-control"
                                                                                                    name="isDefault"
                                                                                                    th:value="${c.isDefault}"/>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label>Trạng thái</label>
-                                                                                            <input type="text" class="form-control"
+                                                                                            <input type="text"
+                                                                                                   class="form-control"
                                                                                                    placeholder="Ghi chú"
                                                                                                    name="note"
                                                                                                    th:value="${c.note}"/>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="modal-footer justify-content-end">
-                                                                                        <input th:type="hidden" name="customer" th:value="${c.customer.id}">
-                                                                                        <button type="button" class="btn btn-default"
+                                                                                        <input th:type="hidden"
+                                                                                               name="customer"
+                                                                                               th:value="${c.customer.id}">
+                                                                                        <button type="button"
+                                                                                                class="btn btn-default"
                                                                                                 data-dismiss="modal">Hủy
                                                                                         </button>
-                                                                                        <button type="submit" class="btn btn-primary">
+                                                                                        <button type="submit"
+                                                                                                class="btn btn-primary">
                                                                                             Đồng ý
                                                                                         </button>
                                                                                     </div>
@@ -217,25 +267,31 @@
                                                                     <div class="modal fade" th:id="'delete-' + ${c.id}">
                                                                         <div class="modal-dialog">
                                                                             <div class="modal-content">
-                                                                                <form th:action="@{/customer/contact/delete/{id}(id=${c.id})}" method="post">
+                                                                                <form th:action="@{/customer/contact/delete/{id}(id=${c.id})}"
+                                                                                      method="post">
                                                                                     <div class="modal-header">
-                                                                                        <strong class="modal-title">Xác nhận xóa thông tin liên hệ</strong>
+                                                                                        <strong class="modal-title">Xác nhận
+                                                                                            xóa thông tin liên hệ</strong>
                                                                                         <button type="button" class="close"
-                                                                                                data-dismiss="modal" aria-label="Close">
+                                                                                                data-dismiss="modal"
+                                                                                                aria-label="Close">
                                                                                             <span aria-hidden="true">&times;</span>
                                                                                         </button>
                                                                                     </div>
                                                                                     <div class="modal-body">
-                                                                                        Liên hệ <strong class="badge text-bg-info"
-                                                                                                         th:text="${c.value}"
-                                                                                                         style="font-size: 16px;"></strong>
+                                                                                        Liên hệ <strong
+                                                                                            class="badge text-bg-info"
+                                                                                            th:text="${c.value}"
+                                                                                            style="font-size: 16px;"></strong>
                                                                                         sẽ bị xóa vĩnh viễn!
                                                                                     </div>
                                                                                     <div class="modal-footer justify-content-end">
-                                                                                        <button type="button" class="btn btn-default"
+                                                                                        <button type="button"
+                                                                                                class="btn btn-default"
                                                                                                 data-dismiss="modal">Hủy
                                                                                         </button>
-                                                                                        <button type="submit" class="btn btn-primary">
+                                                                                        <button type="submit"
+                                                                                                class="btn btn-primary">
                                                                                             Đồng ý
                                                                                         </button>
                                                                                     </div>
@@ -276,29 +332,29 @@
                                                  style="height: 500px;">
                                                 <table class="table table-bordered table-head-fixed text-nowrap">
                                                     <thead>
-                                                        <tr>
-                                                            <th>STT</th>
-                                                            <th>Mã đơn hàng</th>
-                                                            <th>Thời gian đặt hàng</th>
-                                                            <th>Địa chỉ nhận hàng</th>
-                                                            <th>Số tiền</th>
-                                                            <th>Kênh</th>
-                                                            <th>Trạng thái</th>
-                                                        </tr>
+                                                    <tr>
+                                                        <th>STT</th>
+                                                        <th>Mã đơn hàng</th>
+                                                        <th>Thời gian đặt hàng</th>
+                                                        <th>Địa chỉ nhận hàng</th>
+                                                        <th>Số tiền</th>
+                                                        <th>Kênh</th>
+                                                        <th>Trạng thái</th>
+                                                    </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr th:each="donHang, index : ${listDonHang}">
-                                                            <td th:text="${index.index + 1}"></td>
-                                                            <td>
-                                                                <a th:href="@{/don-hang/{id}(id=${donHang.id})}"
-                                                                   th:text="${donHang.maDonHang}"></a>
-                                                            </td>
-                                                            <td th:text="${donHang.thoiGianDatHang}"></td>
-                                                            <td th:text="${donHang.receiverAddress}"></td>
-                                                            <td th:text="${donHang.totalAmountAfterDiscount}"></td>
-                                                            <td th:text="${donHang.kenhBanHang.name}"></td>
-                                                            <td></td>
-                                                        </tr>
+                                                    <tr th:each="donHang, index : ${listDonHang}">
+                                                        <td th:text="${index.index + 1}"></td>
+                                                        <td>
+                                                            <a th:href="@{/don-hang/{id}(id=${donHang.id})}"
+                                                               th:text="${donHang.maDonHang}"></a>
+                                                        </td>
+                                                        <td th:text="${donHang.thoiGianDatHang}"></td>
+                                                        <td th:text="${donHang.receiverAddress}"></td>
+                                                        <td th:text="${donHang.totalAmountAfterDiscount}"></td>
+                                                        <td th:text="${donHang.kenhBanHang.name}"></td>
+                                                        <td></td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -342,6 +398,81 @@
             //Date range picker
             $('#reservation').daterangepicker()
         })
+
+
+        $(document).ready(function () {
+            let lvContactAddressProvinceFieldBefore = $('#contactAddressProvinceField').val();
+            $('#contactAddressProvinceField').on("click", function (e) {
+                if (($(this).val() > 0) && ($(this).val() !== lvContactAddressProvinceFieldBefore)) {
+                    loadDistricts($(this).val().split("_")[1]);
+                    lvContactAddressProvinceFieldBefore = $(this).val();
+                }
+            });
+        });
+
+        $('#contactAddressBlock').hide();
+        $('#contactTypeField').on("click", function (e) {
+            if ($(this).val() === "A") {
+                $('#contactPhoneAndEmailBlock').hide();
+                $('#contactAddressBlock').show();
+                loadProvinces();
+            } else {
+                $('#contactPhoneAndEmailBlock').show();
+                $('#contactAddressBlock').hide();
+            }
+        });
+
+        function loadProvinces() {
+            let lvSelectElement = $('#contactAddressProvinceField');
+            lvSelectElement.empty();
+            $.get(mvHostURLCallApi + '/category/province', function (response) {
+                lvSelectElement.append('<option value="0">Chọn tỉnh thành</option>');
+                if (response.status === "OK") {
+                    $.each(response.data, function (index, d) {
+                        lvSelectElement.append('<option value=' + d.id + '_' + d.code + '>' + d.name + '</option>');
+                    });
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
+        }
+
+        function loadDistricts(provinceId) {
+            let lvSelectElement = $('#contactAddressDistrictField');
+            lvSelectElement.empty();
+            $.get(mvHostURLCallApi + '/category/district', {parentId: provinceId}, function (response) {
+                lvSelectElement.append('<option>Chọn quận huyện</option>');
+                if (response.status === "OK") {
+                    $.each(response.data, function (index, d) {
+                        //lvSelectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+                        // Thêm thuộc tính mới 'code' vào mỗi option
+                        let optionElement = $('<option>', {
+                            value: d.id,
+                            text: d.name,
+                            code: d.code  // Thêm thuộc tính 'code' với giá trị từ d.code
+                        });
+                        lvSelectElement.append(optionElement);
+                    });
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
+        }
+
+        function loadCommunes(districtId) {
+            let lvSelectElement = $('#contactAddressDistrictField');
+            lvSelectElement.empty();
+            $.get(mvHostURLCallApi + '/category/district', {parentId: districtId}, function (response) {
+                lvSelectElement.append('<option>Chọn phường xã</option>');
+                if (response.status === "OK") {
+                    $.each(response.data, function (index, d) {
+                        lvSelectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+                    });
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
+        }
     </script>
 </div>
 

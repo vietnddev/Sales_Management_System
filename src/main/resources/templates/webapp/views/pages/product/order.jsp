@@ -137,9 +137,9 @@
                                            th:text="${list.orderCode}"></a>
                                     </td>
                                     <td th:text="${list.orderTimeStr}"></td>
-                                    <td th:text="${list.receiverAddress}"></td>
+                                    <td th:text="${list.receiveAddress}"></td>
                                     <td th:text="${list.orderBy.tenKhachHang}"></td>
-                                    <td th:text="${list.receiverPhone}"></td>
+                                    <td th:text="${list.receivePhone}"></td>
                                     <td th:text="${list.totalAmount}"></td>
                                     <td th:text="${list.salesChannel.name}"></td>
                                     <td th:text="${list.note}"></td>
