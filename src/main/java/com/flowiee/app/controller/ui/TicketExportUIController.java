@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.TicketExportGoods;
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(EndPointUtil.STORAGE_TICKET_EXPORT)
-public class TicketExportGoodsController extends BaseController {
+public class TicketExportUIController extends BaseController {
     @Autowired private TicketExportGoodsService ticketExportGoodsService;
     @Autowired private ValidateModuleStorage validateModuleStorage;
 

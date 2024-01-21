@@ -1,140 +1,81 @@
 package com.flowiee.app.controller;
 
-import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Category;
-import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
-import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtils;
-import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.security.ValidateModuleCategory;
-
+import com.flowiee.app.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
-@CrossOrigin
 @RestController
-@RequestMapping("/system/category")
-public class CategoryController extends BaseController {
-    @Autowired private CategoryService categoryService;
-    @Autowired private ValidateModuleCategory validateModuleCategory;
+@RequestMapping("${app.api.prefix}/category")
+@Tag(name = "Category API", description = "Quản lý danh mục hệ thống")
+public class CategoryController {
+    @Autowired
+    private CategoryService categoryService;
 
-    @GetMapping
-    public ModelAndView viewRootCategory() {
-        validateModuleCategory.readCategory(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY);
-        modelAndView.addObject("category", new Category());
-        modelAndView.addObject("listCategory", categoryService.findRootCategory());
-        return baseView(modelAndView);
+    @Operation(summary = "Find all category")
+    @GetMapping("/all")
+    public ApiResponse<List<Category>> findAll() {
+        try {
+            return ApiResponse.ok(categoryService.findRootCategory());
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
+        }
     }
 
+    @Operation(summary = "Find by type")
     @GetMapping("/{type}")
-    public ModelAndView viewSubCategory(@PathVariable("type") String categoryType) {
-        validateModuleCategory.readCategory(true);
-        if (CommonUtils.getCategoryType(categoryType) == null) {
-            throw new NotFoundException("Category not found!");
+    public ApiResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
+                                                  @RequestParam(value = "parentId", required = false) Integer parentId) {
+        try {
+            List<Category> result = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId);
+            return ApiResponse.ok(result);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
         }
-        List<Category> listCategory = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), null);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY_DETAIL);
-        modelAndView.addObject("category", new Category());
-        modelAndView.addObject("listSubCategory", listCategory);
-        modelAndView.addObject("ctgRootType", CommonUtils.getCategoryType(categoryType));
-        modelAndView.addObject("ctgRootName", AppConstants.CATEGORY.valueOf(CommonUtils.getCategoryType(categoryType)).getLabel());
-        modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH);
-        modelAndView.addObject("url_template", "");
-        modelAndView.addObject("url_import", "");
-        modelAndView.addObject("url_export", "");
-        return baseView(modelAndView);
     }
 
-    @PostMapping("/{type}/insert")
-    public ModelAndView insert(@ModelAttribute("category") Category category,
-                               @PathVariable("type") String categoryType,
-                               HttpServletRequest request) {
-        validateModuleCategory.insertCategory(true);
-        if (CommonUtils.getCategoryType(categoryType) == null) {
-            throw new NotFoundException("Category not found!");
+    @Operation(summary = "Create category")
+    @PostMapping("/create")
+    public ApiResponse<Category> createCategory(@RequestBody Category category) {
+        try {
+            return ApiResponse.ok(categoryService.save(category));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "category"));
         }
-        category.setType(CommonUtils.getCategoryType(categoryType));
-        categoryService.save(category);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping("/update/{id}")
-    public ModelAndView update(@ModelAttribute("category") Category category,
-                               @PathVariable("id") Integer categoryId,
-                               HttpServletRequest request) {
-        validateModuleCategory.updateCategory(true);
-        if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
-            throw new NotFoundException("Category not found! categoryId=" + categoryId);
+    @Operation(summary = "Update category")
+    @PutMapping("/update/{categoryId}")
+    public ApiResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
+        try {
+            if (categoryService.findById(categoryId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(categoryService.update(category, categoryId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "category"));
         }
-        if (category.getCode() == null) {
-            category.setCode("");
-        }
-        if (category.getColor() == null) {
-            category.setColor("");
-        }
-        if (category.getNote() == null) {
-            category.setNote("");
-        }
-        categoryService.update(category, categoryId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
-        validateModuleCategory.deleteCategory(true);
-        if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
-            throw new NotFoundException("Category not found! categoryId=" + categoryId);
+    @Operation(summary = "Delete category")
+    @DeleteMapping("/delete/{categoryId}")
+    public ApiResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
+        try {
+            if (categoryService.findById(categoryId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(categoryService.delete(categoryId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "category"));
         }
-        categoryService.delete(categoryId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @GetMapping("/{type}/template")
-    public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
-        validateModuleCategory.importCategory(true);
-        if (CommonUtils.getCategoryType(categoryType) == null) {
-            throw new NotFoundException("Category not found!");
-        }
-        byte[] dataExport = categoryService.exportTemplate(categoryType);
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
-        return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/{type}/import")
-    public ModelAndView importData(@PathVariable("type") String categoryType, @RequestParam("file") MultipartFile file) {
-        validateModuleCategory.importCategory(true);
-        if (CommonUtils.getCategoryType(categoryType) == null) {
-            throw new NotFoundException("Category not found!");
-        }
-        categoryService.importData(file, categoryType);
-        return new ModelAndView("redirect:/{type}");
-    }
-
-    @GetMapping("/{type}/export")
-    public ResponseEntity<?> exportData(@PathVariable("type") String categoryType) {
-        validateModuleCategory.readCategory(true);
-        byte[] dataExport = categoryService.exportData(categoryType);
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
-        return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 }

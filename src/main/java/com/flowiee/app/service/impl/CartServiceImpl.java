@@ -3,7 +3,6 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.Items;
 import com.flowiee.app.entity.OrderCart;
 import com.flowiee.app.entity.SystemLog;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.ItemsRepository;
 import com.flowiee.app.repository.OrderCartRepository;
 import com.flowiee.app.service.CartService;
@@ -86,7 +85,7 @@ public class CartServiceImpl implements CartService {
     public String deleteCart(Integer id) {
         cartRepository.deleteById(id);
         SystemLog systemLog = new SystemLog();
-        systemLog.setModule(SystemModule.PRODUCT.name());
+        systemLog.setModule(AppConstants.SYSTEM_MODULE.PRODUCT.name());
         systemLog.setAction("DELETE_CART");
         systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
         systemLog.setIp(CommonUtils.getCurrentAccountIp());

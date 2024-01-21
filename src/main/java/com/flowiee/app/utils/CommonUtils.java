@@ -1,6 +1,5 @@
 package com.flowiee.app.utils;
 
-import com.flowiee.app.model.role.SystemModule;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -106,7 +105,7 @@ public class CommonUtils {
         return extension;
     }
 
-    public static String getPathDirectory(SystemModule systemModule) {
+    public static String getPathDirectory(AppConstants.SYSTEM_MODULE systemModule) {
         try {
             StringBuilder path = new StringBuilder(fileUploadPath);
             switch (systemModule) {
@@ -142,11 +141,11 @@ public class CommonUtils {
     public static String getPathDirectory(String systemModule) {
         try {
             StringBuilder path = new StringBuilder(fileUploadPath);
-            if (SystemModule.STORAGE.name().equals(systemModule)) {
+            if (AppConstants.SYSTEM_MODULE.STORAGE.name().equals(systemModule)) {
                 path.append("storage");
-            } else if (SystemModule.PRODUCT.name().equals(systemModule)) {
+            } else if (AppConstants.SYSTEM_MODULE.PRODUCT.name().equals(systemModule)) {
                 path.append("product");
-            } else if (SystemModule.CATEGORY.name().equals(systemModule)) {
+            } else if (AppConstants.SYSTEM_MODULE.CATEGORY.name().equals(systemModule)) {
                 path.append("category");
             }
             path.append("/" + CommonUtils.getNamHienTai());

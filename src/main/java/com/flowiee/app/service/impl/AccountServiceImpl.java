@@ -6,12 +6,10 @@ import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.model.role.Role;
-import com.flowiee.app.model.role.SystemAction.SysAction;
 import com.flowiee.app.repository.AccountRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
-import com.flowiee.app.model.role.SystemModule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
             String password = account.getPassword();
             account.setPassword(bCrypt.encode(password));
             Account accountSaved = accountRepository.save(account);
-        	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
+        	SystemLog systemLog = new SystemLog(AppConstants.SYSTEM_MODULE.SYSTEM.name(), AppConstants.SYSTEM_ACTION.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
             logger.info("Insert account success! username=" + account.getUsername());
             return accountSaved;
@@ -116,7 +114,7 @@ public class AccountServiceImpl implements AccountService {
             } else {
                 account.setRole("USER");
             }
-        	SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
+        	SystemLog systemLog = new SystemLog(AppConstants.SYSTEM_MODULE.SYSTEM.name(), AppConstants.SYSTEM_ACTION.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
             logger.info("Update account success! username=" + account.getUsername());
             return accountRepository.save(account);
@@ -134,7 +132,7 @@ public class AccountServiceImpl implements AccountService {
             account = accountRepository.findById(accountId).orElse(null);
             if (account != null) {
                 accountRepository.delete(account);
-                SystemLog systemLog = new SystemLog(SystemModule.SYSTEM.name(), SysAction.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
+                SystemLog systemLog = new SystemLog(AppConstants.SYSTEM_MODULE.SYSTEM.name(), AppConstants.SYSTEM_ACTION.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
                 systemLogService.writeLog(systemLog);
             }
             logger.info("Delete account success! username=" + account.getUsername());

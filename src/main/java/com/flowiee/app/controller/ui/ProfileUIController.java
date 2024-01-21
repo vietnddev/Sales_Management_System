@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.base.BaseAuthorize;
 import com.flowiee.app.base.BaseController;
@@ -26,7 +26,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping
-public class ProfileController extends BaseController {
+public class ProfileUIController extends BaseController {
 	@Autowired private OrderService orderService;
 	@Autowired private BaseAuthorize baseAuthorize;
 

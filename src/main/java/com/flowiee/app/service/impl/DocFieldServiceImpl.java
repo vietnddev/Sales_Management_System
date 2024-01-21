@@ -1,8 +1,6 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.exception.DataInUseException;
-import com.flowiee.app.model.role.SystemAction.StorageAction;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.entity.Document;
@@ -11,6 +9,7 @@ import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocFieldService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import java.util.List;
 @Service
 public class DocFieldServiceImpl implements DocFieldService {
     public static final Logger logger = LoggerFactory.getLogger(DocFieldServiceImpl.class);
-    private static final String module = SystemModule.STORAGE.name();
+    private static final String module = AppConstants.SYSTEM_MODULE.STORAGE.name();
 
     @Autowired
     private DocFieldRepository docFieldRepository;
@@ -61,7 +60,7 @@ public class DocFieldServiceImpl implements DocFieldService {
                 docData.setDocument(document);
                 docDataService.save(docData);
             }
-            systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Thêm mới doc_field: " + docField.toString());
+            systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Thêm mới doc_field: " + docField.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới doc_field " + docField.toString());
         } catch (Exception e) {
             logger.error("An error occurred while insert new docField!", e.getCause().toString());
@@ -73,7 +72,7 @@ public class DocFieldServiceImpl implements DocFieldService {
     public String update(DocField docField, Integer docFieldId) {
         docField.setId(docFieldId);
         docFieldRepository.save(docField);
-        systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Cập nhật doc_field: " + docField.toString());
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Cập nhật doc_field: " + docField.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật doc_field " + docFieldId.toString());
         return "OK";
     }
@@ -86,7 +85,7 @@ public class DocFieldServiceImpl implements DocFieldService {
             throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         docFieldRepository.deleteById(id);
-        systemLogService.writeLog(module, StorageAction.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field: " + docFieldToDelete.toString());
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field: " + docFieldToDelete.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Xóa doc_field " + docFieldToDelete.toString());
         return docFieldToDelete;
     }

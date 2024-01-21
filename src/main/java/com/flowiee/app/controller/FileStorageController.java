@@ -1,80 +1,35 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.security.ValidateModuleProduct;
-import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.FileStorageService;
-
+import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("${app.api.prefix}/file")
 @Tag(name = "File API", description = "Quản lý file đính kèm và hình ảnh sản phẩm")
 public class FileStorageController extends BaseController {
     @Autowired private FileStorageService fileService;
-    @Autowired private ProductService productService;
     @Autowired private ValidateModuleProduct validateModuleProduct;
 
-    @PostMapping("/uploads/san-pham/{id}")
-    public ModelAndView uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productId) throws Exception {
-        validateModuleProduct.updateImage(true);
-        if (productId <= 0 || productService.findProductById(productId) == null) {
-            throw new NotFoundException("Product not found!");
+    @Operation(summary = "Xóa file", description = "Xóa theo id")
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<String> delete(@PathVariable("id") Integer fileId) {
+        try {
+            validateModuleProduct.updateImage(true);
+            if (fileId <= 0 || fileService.findById(fileId) == null) {
+                throw new NotFoundException("Image not found!");
+            }
+            return com.flowiee.app.model.ApiResponse.ok(fileService.delete(fileId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "file"));
         }
-        if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
-        }
-        fileService.saveImageSanPham(file, productId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
-
-    @PostMapping("/uploads/bien-the-san-pham/{id}")
-    public ModelAndView uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productVariantId) throws Exception {
-        validateModuleProduct.updateImage(true);
-        if (productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
-            throw new NotFoundException("Product variant not found!");
-        }
-        if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
-        }
-        fileService.saveImageBienTheSanPham(file, productVariantId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping("/file/change-image-sanpham/{id}")
-    public ModelAndView changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") Integer fileId, HttpServletRequest request) {
-        validateModuleProduct.updateImage(true);
-        if (fileId <= 0 || fileService.findById(fileId) == null) {
-            throw new NotFoundException("Image not found");
-        }
-        if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
-        }
-        fileService.changeImageSanPham(file, fileId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-//    @Operation(summary = "Xóa file", description = "Xóa theo id")
-//    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
-//    @DeleteMapping("/file/delete/{id}")
-//    public ResponseEntity<String> delete(@PathVariable("id") Integer fileId) {
-//        validateModuleProduct.updateImage(true);
-//        if (fileId <= 0 || fileService.findById(fileId) == null) {
-//            throw new NotFoundException("Image not found!");
-//        }
-//        return ResponseEntity.ok().body(fileService.delete(fileId));
-//    }
 }

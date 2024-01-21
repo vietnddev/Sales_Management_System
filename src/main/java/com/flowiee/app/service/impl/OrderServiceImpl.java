@@ -8,8 +8,6 @@ import com.flowiee.app.repository.OrderDetailRepository;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Category;
-import com.flowiee.app.model.role.SystemAction.ProductAction;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
@@ -49,7 +47,7 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
-    private static final String module = SystemModule.PRODUCT.name();
+    private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
@@ -179,7 +177,7 @@ public class OrderServiceImpl implements OrderService {
             cartService.deleteAllItems();
 
             //Log
-            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
             logger.info("Insert new order success! insertBy=" + CommonUtils.getCurrentAccountUsername());
 
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -193,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
     public String saveOrderDetail(OrderDetail orderDetail) {
         try {
             orderDetailRepository.save(orderDetail);
-            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -206,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
     public String updateOrder(Order order, Integer id) {
         order.setId(id);
         orderRepository.save(order);
-        systemLogService.writeLog(module, ProductAction.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + order.toString());
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + order.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -216,7 +214,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderDetail.setId(orderDetailId);
             orderDetailRepository.save(orderDetail);
-            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -235,7 +233,7 @@ public class OrderServiceImpl implements OrderService {
             throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         orderRepository.deleteById(id);
-        systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -245,7 +243,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDetail orderDetail = this.findOrderDetailById(orderDetailId);
         try {
             orderDetailRepository.deleteById(orderDetailId);
-            systemLogService.writeLog(module, ProductAction.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Xóa item of đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {

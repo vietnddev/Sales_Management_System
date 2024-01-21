@@ -46,16 +46,4 @@ public class DateUtils {
         }
         return date;
     }
-
-    public static Date formatDate(Date date, String pattern) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-            String formattedDateStr = sdf.format(date);
-            return sdf.parse(formattedDateStr);
-        } catch (ParseException e) {
-            System.out.println(e.getCause());
-            e.printStackTrace();
-            return date;
-        }
-    }
 }

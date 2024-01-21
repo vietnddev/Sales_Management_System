@@ -1,19 +1,20 @@
 package com.flowiee.app.controller;
 
+import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.utils.*;
-import com.flowiee.app.base.BaseController;
-import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.service.*;
-import com.flowiee.app.model.request.OrderRequest;
-import com.flowiee.app.security.ValidateModuleProduct;
-
+import com.flowiee.app.model.ApiResponse;
+import com.flowiee.app.service.CartService;
+import com.flowiee.app.service.OrderService;
+import com.flowiee.app.utils.DateUtils;
+import com.flowiee.app.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,195 +23,211 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(EndPointUtil.PRO_ORDER)
+@RequestMapping("${app.api.prefix}/order")
+@Tag(name = "Order API", description = "Quản lý đơn hàng")
 public class OrderController extends BaseController {
-    private final OrderService orderService;
-    private final ProductService productService;
-    private final CategoryService categoryService;
-    private final CustomerService customerService;
-    private final CartService cartService;
-    private final VoucherTicketService voucherTicketService;
-    private final ValidateModuleProduct validateModuleProduct;
+    @Autowired private OrderService orderService;
+    @Autowired private CartService cartService;
 
-    @Autowired
-    public OrderController(OrderService orderService, ProductService productService, CategoryService categoryService, CustomerService customerService, CartService cartService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
-        this.orderService = orderService;
-        this.productService = productService;
-        this.categoryService = categoryService;
-        this.customerService = customerService;
-        this.cartService = cartService;
-        this.voucherTicketService = voucherTicketService;
-        this.validateModuleProduct = validateModuleProduct;
-    }
-
-    @GetMapping
-    public ModelAndView viewAllOrders() {
-        validateModuleProduct.readOrder(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER);
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName(), null));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
-        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
-        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName(), null));
-        return baseView(modelAndView);
-    }
-
-    @GetMapping("/{id}")
-    public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) {
-        validateModuleProduct.readOrder(true);
-        if (orderId <= 0 || orderService.findOrderById(orderId) == null) {
-            throw new NotFoundException("Order not found!");
-        }
-        OrderDTO orderDetail = orderService.findOrderById(orderId);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_DETAIL);
-        modelAndView.addObject("orderDetail", orderDetail);
-        modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
-        //modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
-        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("donHang", new Order());
-        //modelAndView.addObject("donHangThanhToan", new OrderPay());
-        return baseView(modelAndView);
-    }
-
-    @GetMapping("/ban-hang")
-    public ModelAndView showPageBanHang() {
-        validateModuleProduct.insertOrder(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_SELL);
-        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
-        if (orderCartCurrent.isEmpty()) {
-            OrderCart orderCart = new OrderCart();
-            orderCart.setCreatedBy(CommonUtils.getCurrentAccountId());
-            cartService.saveCart(orderCart);
-        }
-        modelAndView.addObject("listDonHang", orderService.findAllOrder());
-        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName(), null));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
-        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
-        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName(), null));
-
-        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
-        modelAndView.addObject("listCart", listOrderCart);
-
-        double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
-        double amountDiscount = 0;
-        double totalAmountDiscount = totalAmountWithoutDiscount - amountDiscount;
-        modelAndView.addObject("totalAmountWithoutDiscount", totalAmountWithoutDiscount);
-        modelAndView.addObject("amountDiscount", amountDiscount);
-        modelAndView.addObject("totalAmountDiscount", totalAmountDiscount);
-        modelAndView.addObject("donHangRequest", new OrderRequest());
-        modelAndView.addObject("donHang", new Order());
-        modelAndView.addObject("khachHang", new Customer());
-        modelAndView.addObject("cart", new OrderCart());
-        modelAndView.addObject("items", new Items());
-        return baseView(modelAndView);
-    }
-
-    @PostMapping("/ban-hang/cart/item/add")
-    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId,
-                                       @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
-        validateModuleProduct.insertOrder(true);
-        if (cartId <= 0 || cartService.findCartById(cartId) == null) {
-            throw new NotFoundException("Cart not found!");
-        }
-        List<String> listProductVariantId = Arrays.stream(bienTheSanPhamId).toList();
-        for (String productVariantId : listProductVariantId) {
-            if (cartService.isItemExistsInCart(cartId, Integer.parseInt(productVariantId))) {
-                Items items = cartService.findItemByCartAndProductVariant(cartId, Integer.parseInt(productVariantId));
-                cartService.increaseItemQtyInCart(items.getId(), items.getSoLuong() + 1);
-            } else {
-                Items items = new Items();
-                items.setOrderCart(new OrderCart(cartId));
-                items.setProductVariant(new ProductVariant(Integer.parseInt(productVariantId)));
-                items.setSoLuong(1);
-                items.setGhiChu("");
-                cartService.saveItem(items);
+    @Operation(summary = "Find all orders")
+    @GetMapping("/all")
+    public ApiResponse<List<OrderDTO>> findAllOrders(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
+        try {
+            if (!super.validateModuleProduct.readOrder(true)) {
+                return null;
             }
+            Page<Object[]> orderPage =orderService.findAllOrder(pageSize, pageNum - 1);
+            return ApiResponse.ok(orderService.convertObjectsToDTO(orderPage.toList()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
         }
-        return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
-    @PostMapping("/ban-hang/cart/item/update/{itemId}")
-    public ModelAndView updateItemsOfCart(@RequestParam("cartId") Integer cartId,
-                                          @ModelAttribute("items") Items items,
+    @Operation(summary = "Find detail order")
+    @GetMapping("/{orderId}")
+    public ApiResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Integer orderId) {
+        if (!super.validateModuleProduct.readOrder(true)) {
+            return null;
+        }
+        try {
+            if (orderId <= 0 || orderService.findOrderById(orderId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(orderService.findOrderById(orderId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
+        }
+    }
+
+    @Operation(summary = "Create new order")
+    @PostMapping("/insert")
+    public ApiResponse<String> createOrder(@RequestBody OrderDTO orderRequest) {
+        try {
+            return ApiResponse.ok(orderService.saveOrder(orderRequest));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "order"));
+        }
+    }
+
+    @PutMapping("/update/{orderId}")
+    public ApiResponse<String> update(@RequestBody Order order, @PathVariable("orderId") Integer orderId) {
+        if (!super.validateModuleProduct.updateOrder(true)) {
+            return null;
+        }
+        try {
+            if (orderId <= 0 || order == null || orderService.findOrderById(orderId) == null) {
+                throw new BadRequestException();
+            }
+            orderService.updateOrder(order, orderId);
+            return ApiResponse.ok(MessageUtils.UPDATE_SUCCESS);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "order"));
+        }
+    }
+
+    @DeleteMapping("/delete/{orderId}")
+    public ApiResponse<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
+        if (!super.validateModuleProduct.deleteOrder(true)) {
+            return null;
+        }
+        try {
+            //Check them trang thai
+            return ApiResponse.ok(orderService.deleteOrder(orderId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "order"));
+        }
+    }
+
+    @PostMapping("/cart/{cartId}/item/add")
+    public ApiResponse<List<Items>> addItemsToCart(@RequestBody String[] bienTheSanPhamId, @PathVariable("cartId") Integer cartId) {
+        if (!super.validateModuleProduct.insertOrder(true)) {
+            return null;
+        }
+        try {
+            if (cartId <= 0 || cartService.findCartById(cartId) == null) {
+                throw new BadRequestException();
+            }
+            List<String> listProductVariantId = Arrays.stream(bienTheSanPhamId).toList();
+            for (String productVariantId : listProductVariantId) {
+                if (cartService.isItemExistsInCart(cartId, Integer.parseInt(productVariantId))) {
+                    Items items = cartService.findItemByCartAndProductVariant(cartId, Integer.parseInt(productVariantId));
+                    cartService.increaseItemQtyInCart(items.getId(), items.getSoLuong() + 1);
+                } else {
+                    Items items = new Items();
+                    items.setOrderCart(new OrderCart(cartId));
+                    items.setProductVariant(new ProductVariant(Integer.parseInt(productVariantId)));
+                    items.setSoLuong(1);
+                    items.setGhiChu("");
+                    cartService.saveItem(items);
+                }
+            }
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "items"));
+        }
+    }
+
+    @PutMapping("/cart/{cartId}/item/update/{itemId}")
+    public ApiResponse<Items> updateItemsOfCart(@RequestBody Items items,
+                                          @PathVariable("cartId") Integer cartId,
                                           @PathVariable("itemId") Integer itemId) {
-        validateModuleProduct.insertOrder(true);
-        if (cartId <= 0 || cartService.findCartById(cartId) == null) {
-            throw new NotFoundException("Cart not found!");
+        if (!super.validateModuleProduct.insertOrder(true)) {
+            return null;
         }
-        items.setId(itemId);
-        items.setOrderCart(cartService.findCartById(cartId));
-        if (items.getSoLuong() > 0) {
-            cartService.saveItem(items);
-        } else {
-            cartService.deleteItem(items.getId());
+        try {
+            if (cartId <= 0 || cartService.findCartById(cartId) == null) {
+                throw new BadRequestException();
+            }
+            if (itemId <= 0 || cartService.findItemById(itemId) == null) {
+                throw new BadRequestException();
+            }
+            items.setId(itemId);
+            items.setOrderCart(cartService.findCartById(cartId));
+            if (items.getSoLuong() > 0) {
+                cartService.saveItem(items);
+            } else {
+                cartService.deleteItem(items.getId());
+            }
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "items"));
         }
-        return new ModelAndView("redirect:/don-hang/ban-hang");
     }
 
-    @PostMapping("/ban-hang/cart/item/delete/{itemId}")
-    public ModelAndView deleteItemsOfCart(@RequestParam("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
-        validateModuleProduct.insertOrder(true);
-        if (cartService.findCartById(cartId) == null || cartService.findItemById(itemId) == null) {
-            throw new BadRequestException("Sản phẩm cần xóa trong giỏ hàng không tồn tại! cartId=" + cartId + ", itemId=" + itemId);
+    @DeleteMapping("/cart/{cartId}/item/delete/{itemId}")
+    public ApiResponse<String> deleteItemsOfCart(@PathVariable("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
+        if (!super.validateModuleProduct.insertOrder(true)) {
+            return null;
         }
-        cartService.deleteItem(itemId);
-        return new ModelAndView("redirect:/don-hang/ban-hang");
-    }
-    
-    @PostMapping("/ban-hang/cart/add-voucher/{code}")
-    public ModelAndView checkToUse(@PathVariable("code") String code) {
-        validateModuleProduct.readVoucher(true);
-        ModelAndView modelAndView = new ModelAndView("redirect:/don-hang/ban-hang");
-        modelAndView.addObject("ticket_code", code);
-        modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
-        modelAndView.addObject("ticket_info", voucherTicketService.findByCode(code));
-        return modelAndView;
-    }
-
-    @PostMapping("/update/{id}")
-    public ModelAndView update(@ModelAttribute("donHang") Order order, @PathVariable("id") Integer orderId) {
-        validateModuleProduct.updateOrder(true);
-        orderService.updateOrder(order, orderId);
-        return new ModelAndView("redirect:/don-hang");
-    }
-
-    @PostMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Integer orderId) {
-        validateModuleProduct.deleteOrder(true);
-        orderService.deleteOrder(orderId);
-        return new ModelAndView("redirect:/don-hang");
-    }
-
-    @PostMapping("/thanh-toan/{id}")
-    public ModelAndView doPay(@PathVariable("id") Integer orderId,
-                              @RequestParam("paymentTime") Date paymentTime,
-                              @RequestParam("paymentMethod") Integer paymentMethod,
-                              @RequestParam("note") @Nullable String note) {
-        validateModuleProduct.updateOrder(true);
-        if (orderId == null || orderId <= 0 || orderService.findOrderById(orderId) == null) {
-            throw new NotFoundException("Đơn hàng cần thanh toán không tồn tại! orderId=" + orderId);
+        try {
+            if (cartService.findCartById(cartId) == null || cartService.findItemById(itemId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(cartService.deleteItem(itemId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "items"));
         }
-        if (paymentTime == null) {
-            paymentTime = new Date();
-        }
-        if (paymentMethod == null || paymentMethod <= 0) {
-            throw new BadRequestException("Hình thức thanh toán không hợp lệ!");
-        }
-        orderService.doPay(orderId, paymentTime, paymentMethod, note);
-        return new ModelAndView("redirect:/don-hang/" + orderId);
     }
 
-    @GetMapping(EndPointUtil.PRO_ORDER_EXPORT)
-    public ResponseEntity<?> exportDanhSachDonHang() {
-        validateModuleProduct.readOrder(true);
-        return orderService.exportDanhSachDonHang();
+    @PostMapping("/cart/add-voucher/{code}")
+    public ApiResponse<VoucherInfo> addVoucherToCart(@PathVariable("code") String voucherCode) {
+        if (!super.validateModuleProduct.readVoucher(true)) {
+            return null;
+        }
+        try {
+//            ModelAndView modelAndView = new ModelAndView("redirect:/don-hang/ban-hang");
+//            modelAndView.addObject("ticket_code", code);
+//            modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
+//            modelAndView.addObject("ticket_info", voucherTicketService.findByCode(code));
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "add voucher to cart"));
+        }
     }
 
-    @GetMapping("/abc")
-    public ModelAndView getOrderInfoByScanQRCode() {
-        return null;
+    @PutMapping("/thanh-toan/{orderId}")
+    public ApiResponse<String> doPayOrder(@RequestBody String[] payInfo, @PathVariable("orderId") Integer orderId) {
+        if (!super.validateModuleProduct.updateOrder(true)) {
+            return null;
+        }
+        try {
+            if (orderId == null || orderId <= 0 || orderService.findOrderById(orderId) == null) {
+                throw new BadRequestException();
+            }
+            Date paymentTime = DateUtils.convertStringToDate(null, null, payInfo[0]);
+            int paymentMethod = Integer.parseInt(payInfo[1]);
+            String note = payInfo[2];
+            if (paymentTime == null) {
+                paymentTime = new Date();
+            }
+            if (paymentMethod <= 0) {
+                throw new BadRequestException("Hình thức thanh toán không hợp lệ!");
+            }
+            return ApiResponse.ok(orderService.doPay(orderId, paymentTime, paymentMethod, note));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "pay order"));
+        }
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<?> exportOrders() {
+        if (!super.validateModuleProduct.readOrder(true)) {
+            return null;
+        }
+        try {
+            return null;
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "export order"));
+        }
+    }
+
+    @GetMapping("/scan/QR-Code/{code}")
+    public ModelAndView findOrderInfoByQRCode(@PathVariable("code") String code) {
+        try {
+            //Xử lý code thành id
+            return new ModelAndView().addObject("orderInfo", orderService.findOrderById(null));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "scan order"));
+        }
     }
 }

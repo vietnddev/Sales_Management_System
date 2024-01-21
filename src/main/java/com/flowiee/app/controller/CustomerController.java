@@ -2,166 +2,206 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.CustomerDTO;
-import com.flowiee.app.entity.CustomerContact;
-import com.flowiee.app.utils.*;
-import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.security.ValidateModuleProduct;
-import com.flowiee.app.service.CustomerService;
-import com.flowiee.app.service.OrderService;
 import com.flowiee.app.entity.Customer;
-
+import com.flowiee.app.entity.CustomerContact;
+import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.model.ApiResponse;
+import com.flowiee.app.service.CustomerService;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping(EndPointUtil.PRO_CUSTOMER)
+@RequestMapping("${app.api.prefix}/customer")
+@Tag(name = "Customer API", description = "Quản lý khách hàng")
 public class CustomerController extends BaseController {
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private ValidateModuleProduct validateProductModule;
+    @Autowired private CustomerService customerService;
 
-    @GetMapping
-    public ModelAndView searchCustomer(@Nullable @RequestParam("name") String name,
-                                       @Nullable @RequestParam("sex") String sex,
-                                       @Nullable @RequestParam("birthday") String birthday,
-                                       @Nullable @RequestParam("phone") String phone,
-                                       @Nullable @RequestParam("email") String email,
-                                       @Nullable @RequestParam("address") String address) {
-        validateProductModule.readCustomer(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_CUSTOMER);
-        modelAndView.addObject("listCustomer", customerService.findAllCustomer(name, sex, birthday != null ? DateUtils.convertStringToDate(birthday, "YYYY/MM/dd") : null, phone, email, address));
-        modelAndView.addObject("customer", new CustomerDTO());
-        modelAndView.addObject("filter_name", name);
-        modelAndView.addObject("filter_sex", sex);
-        modelAndView.addObject("filter_birthday", birthday);
-        modelAndView.addObject("filter_phone", phone);
-        modelAndView.addObject("filter_email", email);
-        modelAndView.addObject("filter_address", address);
-        return baseView(modelAndView);
+    @Operation(summary = "Find all")
+    @GetMapping("/all")
+    public ApiResponse<List<CustomerDTO>> findCustomers() {
+        try {
+            List<CustomerDTO> result = customerService.findAllCustomer();
+            return ApiResponse.ok(result);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
+        }
     }
 
-    @GetMapping("/{id}")
-    public ModelAndView findCustomerDetail(@PathVariable("id") Integer customerId) {
-        validateProductModule.readCustomer(true);
-        if (customerId <= 0 || customerService.findCustomerById(customerId) == null) {
-            throw new NotFoundException("Customer not found!");
+    @Operation(summary = "Find detail customer")
+    @GetMapping("/{customerId}")
+    public ApiResponse<Customer> findDetailCustomer(@PathVariable("customerId") Integer customerId) {
+        try {
+            return ApiResponse.ok(customerService.findCustomerById(customerId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
         }
-        List<CustomerContact> listContacts = customerService.findContactsByCustomerId(customerId);
-        for (CustomerContact c : listContacts) {
-            if (AppConstants.CONTACT_TYPE.P.name().equals(c.getCode())) {
-                c.setCode(AppConstants.CONTACT_TYPE.P.getLabel());
-            }
-            if (AppConstants.CONTACT_TYPE.E.name().equals(c.getCode())) {
-                c.setCode(AppConstants.CONTACT_TYPE.E.getLabel());
-            }
-            if (AppConstants.CONTACT_TYPE.A.name().equals(c.getCode())) {
-                c.setCode(AppConstants.CONTACT_TYPE.A.getLabel());
-            }
-        }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_CUSTOMER_DETAIL);
-        modelAndView.addObject("customerDetail", customerService.findCustomerById(customerId));
-        modelAndView.addObject("listCustomerContact", listContacts);
-        modelAndView.addObject("listDonHang", orderService.findOrdersByCustomerId(customerId));
-        return baseView(modelAndView);
     }
 
+    @Operation(summary = "Create customer")
     @PostMapping("/insert")
-    public ModelAndView insertCustomer(@ModelAttribute("customer") CustomerDTO customer) {
-        validateProductModule.insertCustomer(true);
-        if (customer == null) {
-            throw new NotFoundException("Customer not found!");
+    public ApiResponse<String> createCustomer(@RequestBody CustomerDTO customer) {
+        if (!super.validateModuleProduct.insertCustomer(true)) {
+            return null;
         }
-        customerService.saveCustomer(Customer.fromCustomerDTO(customer));
-        return new ModelAndView("redirect:/customer");
+        try {
+            if (customer == null) {
+                throw new BadRequestException();
+            }
+            customerService.saveCustomer(Customer.fromCustomerDTO(customer));
+            return ApiResponse.ok(MessageUtils.CREATE_SUCCESS);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "customer"));
+        }
     }
 
-    @PostMapping("/update/{id}")
-    public ModelAndView updateCustomer(@ModelAttribute("customer") CustomerDTO customer, @PathVariable("id") Integer customerId) {
-        validateProductModule.updateCustomer(true);
-        if (customer == null || customerId <= 0 || customerService.findCustomerById(customerId) == null) {
-            throw new NotFoundException("Customer not found!");
+    @Operation(summary = "Update customer")
+    @PutMapping("/update/{customerId}")
+    public ApiResponse<String> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
+        if (!super.validateModuleProduct.updateCustomer(true)) {
+            return null;
         }
-        customerService.updateCustomer(Customer.fromCustomerDTO(customer), customerId);
-        return new ModelAndView("redirect:/customer");
+        try {
+            if (customer == null || customerId <= 0 || customerService.findCustomerById(customerId) == null) {
+                throw new BadRequestException();
+            }
+            customerService.updateCustomer(Customer.fromCustomerDTO(customer), customerId);
+            return ApiResponse.ok(MessageUtils.UPDATE_SUCCESS);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "customer"));
+        }
     }
 
-    @PostMapping("/delete/{id}")
-    public ModelAndView deleteCustomer(@PathVariable("id") Integer id) {
-        validateProductModule.deleteCustomer(true);
-        if (id <= 0 || customerService.findCustomerById(id) == null) {
-            throw new NotFoundException("Customer not found!");
+    @Operation(summary = "Delete customer")
+    @DeleteMapping("/delete/{customerId}")
+    public ApiResponse<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
+        if (!super.validateModuleProduct.deleteCustomer(true)) {
+            return null;
         }
-        customerService.deleteCustomer(id);
-        return new ModelAndView("redirect:/customer");
+        try {
+            if (customerId <= 0 || customerService.findCustomerById(customerId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(customerService.deleteCustomer(customerId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "customer"));
+        }
     }
 
+    @Operation(summary = "Find contacts of customer")
+    @GetMapping("/{customerId}/contact")
+    public ApiResponse<List<CustomerContact>> findContactsOfCustomer(@PathVariable("customerId") Integer customerId) {
+        if (!super.validateModuleProduct.readCustomer(true)) {
+            return null;
+        }
+        try {
+            if (customerId <= 0 || customerService.findCustomerById(customerId) == null) {
+                throw new BadRequestException();
+            }
+            List<CustomerContact> listContacts = customerService.findContactsByCustomerId(customerId);
+            for (CustomerContact c : listContacts) {
+                if (AppConstants.CONTACT_TYPE.P.name().equals(c.getCode())) {
+                    c.setCode(AppConstants.CONTACT_TYPE.P.getLabel());
+                }
+                if (AppConstants.CONTACT_TYPE.E.name().equals(c.getCode())) {
+                    c.setCode(AppConstants.CONTACT_TYPE.E.getLabel());
+                }
+                if (AppConstants.CONTACT_TYPE.A.name().equals(c.getCode())) {
+                    c.setCode(AppConstants.CONTACT_TYPE.A.getLabel());
+                }
+            }
+            return ApiResponse.ok(listContacts);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "contact"));
+        }
+    }
+
+    @Operation(summary = "Create contact")
     @PostMapping("/contact/insert")
-    public ModelAndView insertCustomerContact(@ModelAttribute("customerContact") CustomerContact customerContact, HttpServletRequest request) {
-        validateProductModule.updateCustomer(true);
-        if (customerContact == null || customerContact.getCustomer() == null) {
-            throw new NotFoundException("Customer not found!");
+    public ApiResponse<CustomerContact> insertContact(@RequestBody CustomerContact customerContact) {
+        if (!super.validateModuleProduct.updateCustomer(true)) {
+            return null;
         }
-        customerService.saveContact(customerContact, customerContact.getCustomer().getId());
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        try {
+            if (customerContact == null || customerContact.getCustomer() == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(customerService.saveContact(customerContact, customerContact.getCustomer().getId()));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "contact"));
+        }
     }
 
-    @PostMapping("/contact/update/{id}")
-    public ModelAndView updateCustomerContact(@ModelAttribute("customerContact") CustomerContact customerContact,
-                                              @PathVariable("id") Integer customerContactId,
-                                              HttpServletRequest request) {
-        validateProductModule.updateCustomer(true);
-        if (customerContact == null || customerContact.getCustomer() == null) {
-            throw new NotFoundException("Customer not found!");
+    @Operation(summary = "Update contact")
+    @PutMapping("/contact/update/{contactId}")
+    public ApiResponse<CustomerContact> updateContact(@RequestBody CustomerContact customerContact, @PathVariable("contactId") Integer contactId) {
+        if (!super.validateModuleProduct.updateCustomer(true)) {
+            return null;
         }
-        customerService.updateContact(customerContact, customerContactId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        try {
+            if (customerContact == null || customerContact.getCustomer() == null || customerService.findContactById(contactId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(customerService.updateContact(customerContact, contactId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
+        }
     }
 
-    @PostMapping("/contact/delete/{id}")
-    public ModelAndView updateCustomerContact(@PathVariable("id") Integer customerContactId,
-                                              HttpServletRequest request) {
-        validateProductModule.updateCustomer(true);
-        if (customerContactId == null || customerService.findContactById(customerContactId) == null) {
-            throw new NotFoundException("Customer not found!");
+    @Operation(summary = "Delete contact")
+    @DeleteMapping("/contact/delete/{contactId}")
+    public ApiResponse<String> deleteContact(@PathVariable("contactId") Integer contactId) {
+        if (!super.validateModuleProduct.updateCustomer(true)) {
+            return null;
         }
-        //Kiểm tra nếu đã được sử dụng thì không cho xóa
-        customerService.deleteContact(customerContactId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        try {
+            if (contactId <= 0 || customerService.findContactById(contactId) == null) {
+                throw new BadRequestException();
+            }
+            //Check in use
+            return ApiResponse.ok(customerService.deleteContact(contactId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "contact"));
+        }
     }
 
-    @PostMapping("/contact/use-default/{contactId}")
-    public ModelAndView setCustomerContactUseDefault(@RequestParam("customerId") Integer customerId,
-                                                     @RequestParam("contactCode") String contactCode,
-                                                     @PathVariable("contactId") Integer contactId,
-                                                     HttpServletRequest request) {
-        validateProductModule.updateCustomer(true);
-        if (customerId <= 0 || customerService.findCustomerById(customerId) == null) {
-            throw new NotFoundException("Customer not found!");
+    @Operation(summary = "Update contact use default")
+    @PatchMapping("/contact/use-default/{contactId}")
+    public ApiResponse<CustomerContact> setContactUseDefault(@RequestParam("customerId") Integer customerId,
+                                                             @RequestParam("contactCode") String contactCode,
+                                                             @PathVariable("contactId") Integer contactId) {
+        if (!super.validateModuleProduct.updateCustomer(true)) {
+            return null;
         }
-        if (contactId <= 0 || customerService.findContactById(contactId) == null) {
-            throw new NotFoundException("Customer contact not found!");
+        try {
+            if (customerId <= 0 || contactId <= 0 || customerService.findCustomerById(customerId) == null || customerService.findContactById(contactId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(customerService.setContactUseDefault(customerId, contactCode, contactId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
         }
-        customerService.setContactUseDefault(customerId, contactCode, contactId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping("/contact/undefault/{contactId}")
-    public ModelAndView setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId,
-                                                       HttpServletRequest request) {
-        validateProductModule.updateCustomer(true);
-        if (contactId <= 0 || customerService.findContactById(contactId) == null) {
-            throw new NotFoundException("Customer contact not found!");
+    @Operation(summary = "Update contact un-use default")
+    @PatchMapping("/contact/undefault/{contactId}")
+    public ApiResponse<CustomerContact> setContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
+        if (!super.validateModuleProduct.updateCustomer(true)) {
+            return null;
         }
-        customerService.setContactUnUseDefault(contactId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        try {
+            if (contactId <= 0 || customerService.findContactById(contactId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(customerService.setContactUnUseDefault(contactId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
+        }
     }
 }

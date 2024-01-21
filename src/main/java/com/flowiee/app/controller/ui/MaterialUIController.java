@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.Material;
@@ -29,7 +29,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(EndPointUtil.STORAGE_MATERIAL)
-public class MaterialController extends BaseController {
+public class MaterialUIController extends BaseController {
     @Autowired private MaterialService materialService;
     @Autowired private CategoryService categoryService;
     @Autowired private TicketImportGoodsService ticketImportService;

@@ -1,8 +1,6 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.model.role.SystemAction.StorageAction;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.Document;
 import com.flowiee.app.dto.DocMetaDTO;
@@ -25,7 +23,7 @@ import java.util.*;
 @Service
 public class DocumentServiceImpl implements DocumentService {
     private static final Logger logger = LoggerFactory.getLogger(DocumentServiceImpl.class);
-    private static final String module = SystemModule.STORAGE.name();
+    private static final String module = AppConstants.SYSTEM_MODULE.STORAGE.name();
 
     @Autowired
     private DocumentRepository documentRepository;
@@ -86,14 +84,14 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document save(Document document) {
-        systemLogService.writeLog(module, StorageAction.STG_DOC_CREATE.name(), "Thêm mới tài liệu: " + document.toString());
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_CREATE.name(), "Thêm mới tài liệu: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
         return documentRepository.save(document);
     }
 
     @Override
     public Document saveReturnEntity(Document document) {
-        systemLogService.writeLog(module, StorageAction.STG_DOC_CREATE.name(), "Thêm mới tài liệu: " + document.toString());
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_CREATE.name(), "Thêm mới tài liệu: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
         return documentRepository.save(document);
     }
@@ -106,7 +104,7 @@ public class DocumentServiceImpl implements DocumentService {
         }
         document.setTen(data.getTen());
         document.setMoTa(data.getMoTa());
-        systemLogService.writeLog(module, StorageAction.STG_DOC_UPDATE.name(), "Cập nhật tài liệu: " + document.toString());
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_UPDATE.name(), "Cập nhật tài liệu: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật tài liệu " + document.toString());
         return documentRepository.save(document);
     }
@@ -121,7 +119,7 @@ public class DocumentServiceImpl implements DocumentService {
                 docDataService.save(docData);
             }
         }
-        systemLogService.writeLog(module, StorageAction.STG_DOC_UPDATE.name(), "Update metadata: " + document.toString());
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_UPDATE.name(), "Update metadata: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Update metadata " + document.toString());
         return "OK";
     }
@@ -132,7 +130,7 @@ public class DocumentServiceImpl implements DocumentService {
         Document document = this.findById(documentId);
         if (document != null) {
             documentRepository.deleteById(documentId);
-            systemLogService.writeLog(module, StorageAction.STG_DOC_DELETE.name(), "Xóa tài liệu: " + document.toString());
+            systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DELETE.name(), "Xóa tài liệu: " + document.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Xóa tài liệu " + document.toString());
             return "OK";
         } else {

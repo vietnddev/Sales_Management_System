@@ -6,8 +6,6 @@ import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.DataInUseException;
-import com.flowiee.app.model.role.SystemAction.ProductAction;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.CategoryRepository;
 import com.flowiee.app.repository.ProductAttributeRepository;
 import com.flowiee.app.repository.ProductRepository;
@@ -45,7 +43,7 @@ import java.util.Objects;
 @Service
 public class ProductServiceImpl implements ProductService {
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
-    private static final String module = SystemModule.PRODUCT.name();
+    private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
     private ProductRepository productsRepository;
@@ -221,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
             product.setMoTaSanPham(product.getMoTaSanPham() != null ? product.getMoTaSanPham() : "");
             product.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.name());
             Product pSaved = productsRepository.save(product);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
             logger.info("Insert product success! " + product.toString());
             return pSaved;
         } catch (Exception e) {
@@ -264,7 +262,7 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 noiDungLogUpdate = productToUpdate.toString();
             }
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
             logger.info("Update product success! productId=" + productId);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -282,7 +280,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new DataInUseException(MessageUtils.ERROR_LOCKED);
             }
             productsRepository.deleteById(id);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
             logger.info("Delete product success! productId=" + id);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -302,7 +300,7 @@ public class ProductServiceImpl implements ProductService {
 //            }
             productVariant.setTenBienThe(tenBienTheSanPham);
             productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant.toString());
             logger.info("Insert productVariant success! " + productVariant.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -318,7 +316,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             productVariant.setId(productVariantId);
             productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
             logger.info("Update productVariant success! " + productVariant.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -333,7 +331,7 @@ public class ProductServiceImpl implements ProductService {
         ProductVariant productVariantToDelete = this.findProductVariantById(productVariantId);
         try {
             productVariantRepository.deleteById(productVariantId);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
             logger.info("Delete productVariant success! " + productVariantToDelete.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -346,20 +344,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String saveProductAttribute(ProductAttribute productAttribute){
         productAttributeRepository.save(productAttribute);
-        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới thuộc tính sản phẩm");
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới thuộc tính sản phẩm");
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String updateProductAttribute(ProductAttribute attribute, Integer attributeId) {
-        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật thuộc tính sản phẩm");
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật thuộc tính sản phẩm");
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public String deleteProductAttribute(Integer attributeId) {
         productAttributeRepository.deleteById(attributeId);
-        systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Xóa thuộc tính sản phẩm");
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa thuộc tính sản phẩm");
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
@@ -369,7 +367,7 @@ public class ProductServiceImpl implements ProductService {
         productVariant.setSoLuongKho(productVariant.getSoLuongKho() - quantity);
         try {
             productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!");

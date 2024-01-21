@@ -6,8 +6,6 @@ import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.entity.ProductVariant;
 import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.model.role.SystemAction.ProductAction;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Price;
 import com.flowiee.app.repository.PriceRepository;
 import com.flowiee.app.service.PriceService;
@@ -28,7 +26,7 @@ import java.util.List;
 @Service
 public class PriceServiceImpl implements PriceService {
     private static final Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
-    private static final String module = SystemModule.PRODUCT.name();
+    private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
     private PriceRepository priceRepository;
@@ -86,7 +84,7 @@ public class PriceServiceImpl implements PriceService {
         }
         try {
             Price priceSaved = priceRepository.save(price);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Thêm mới giá sản phẩm: " + price.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Thêm mới giá sản phẩm: " + price.toString());
             logger.info("Insert price success! insertBy=" + CommonUtils.getCurrentAccountUsername());
             return priceSaved;
         } catch (Exception e) {
@@ -134,7 +132,7 @@ public class PriceServiceImpl implements PriceService {
                 noiDung = "Giá cũ:  -";
             }
             String noiDungCapNhat = "Giá mới: " + price.getGiaBan();
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + noiDung, "Giá sau khi cập nhật: " + noiDungCapNhat);
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + noiDung, "Giá sau khi cập nhật: " + noiDungCapNhat);
             logger.info("Update price success! updateBy=" + CommonUtils.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -149,7 +147,7 @@ public class PriceServiceImpl implements PriceService {
     	try {
             Price price = this.findById(priceId);
             priceRepository.deleteById(priceId);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
             logger.info("Delete price success! deleteBy=" + CommonUtils.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
 		} catch (Exception e) {

@@ -31,49 +31,37 @@
             <li class="nav-item">
               <a th:href="@{${URL_PRODUCT}}" class="nav-link">
                 <i class="fa-solid fa-shirt nav-icon"></i>
-                <p>
-                  Products
-                </p>
+                <p>Sản phẩm</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_PRODUCT_ORDER}}" class="nav-link">
                 <i class="fa-solid fa-cart-shopping nav-icon"></i>
-                <p>
-                  Orders
-                </p>
+                <p>Đơn hàng</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{/don-hang/ban-hang}" class="nav-link">
                 <i class="fa-solid fa-file-invoice-dollar"></i> 
-                <p>
-                  Bán hàng
-                </p>
+                <p>Bán hàng</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{/san-pham/voucher}" class="nav-link">
                 <i class="fa-solid fa-gifts"></i>
-                <p>
-                  Voucher
-                </p>
+                <p>Voucher</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_PRODUCT_CUSTOMER}}" class="nav-link">
                 <i class="fa-solid fa-user-tag"></i>
-                <p>
-                  Khách hàng
-                </p>
+                <p>Khách hàng</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_PRODUCT_GALLERY}}" class="nav-link">
                 <i class="fa-solid fa-image nav-icon"></i>
-                <p>
-                  Thư viện
-                </p>
+                <p>Thư viện</p>
               </a>
             </li>
             <!---->
@@ -86,41 +74,31 @@
             <li class="nav-item">
               <a th:href="@{/storage/dashboard}" class="nav-link">
                 <i class="fa-solid fa-chart-pie nav-icon"></i>
-                <p>
-                  Tổng quan
-                </p>
+                <p>Tổng quan</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_STORAGE_TICKET_IMPORT}}" class="nav-link">
                 <i class="fa-solid fa-cloud-arrow-up fa-rotate-90"></i>
-                <p>
-                  Phiếu nhập
-                </p>
+                <p>Phiếu nhập</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_STORAGE_TICKET_EXPORT}}" class="nav-link">
                 <i class="fa-solid fa-cloud-arrow-up fa-rotate-270"></i>
-                <p>
-                  Phiếu xuất
-                </p>
+                <p>Phiếu xuất</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_STORAGE_MATERIAL}}" class="nav-link">
                 <i class="fa-solid fa-scroll nav-icon"></i>
-                <p>
-                  Nguyên vật liệu
-                </p>
+                <p>Nguyên vật liệu</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_STORAGE_DOCUMENT}}" class="nav-link">
                 <i class="fa-solid fa-file-pdf nav-icon"></i>
-                <p>
-                  Danh sách tài liệu
-                </p>
+                <p>Danh sách tài liệu</p>
               </a>
             </li>
             <!---->
@@ -133,41 +111,31 @@
             <li class="nav-item">
               <a th:href="@{${URL_SYSTEM_CONFIG}}" class="nav-link">
                 <i class="fa-solid fa-gear nav-icon"></i>
-                <p>
-                  Cấu hình
-                </p>
+                <p>Cấu hình</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_CATEGORY}}" class="nav-link">
                 <i class="fa-solid fa-list nav-icon"></i>
-                <p>
-                  System category
-                </p>
+                <p>Danh mục hệ thống</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_SYSTEM_ROLE}}" class="nav-link">
                 <i class="fa-solid fa-user-gear nav-icon"></i>
-                <p>
-                  Nhóm quyền
-                </p>
+                <p>Nhóm quyền</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_SYSTEM_ACCOUNT}}" class="nav-link">
                 <i class="fa-solid fa-users nav-icon"></i>
-                <p>
-                  Tài khoản hệ thống
-                </p>
+                <p>Tài khoản hệ thống</p>
               </a>
             </li>
             <li class="nav-item">
               <a th:href="@{${URL_SYSTEM_LOG}}" class="nav-link">
                 <i class="fa-solid fa-clock nav-icon"></i>
-                <p>
-                  Nhật ký hệ thống
-                </p>
+                <p>Nhật ký hệ thống</p>
               </a>
             </li>
           </ul>

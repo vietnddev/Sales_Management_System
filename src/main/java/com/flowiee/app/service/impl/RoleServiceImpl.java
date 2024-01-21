@@ -3,10 +3,6 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.AccountRole;
 import com.flowiee.app.model.role.*;
-import com.flowiee.app.model.role.SystemAction.CategoryAction;
-import com.flowiee.app.model.role.SystemAction.ProductAction;
-import com.flowiee.app.model.role.SystemAction.StorageAction;
-import com.flowiee.app.model.role.SystemAction.SysAction;
 import com.flowiee.app.repository.RoleRepository;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
@@ -31,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> findAllRole() {
         List<Role> listReturn = new ArrayList<>();
 
-        for (SystemModule sys : SystemModule.values()) {
+        for (AppConstants.SYSTEM_MODULE sys : AppConstants.SYSTEM_MODULE.values()) {
             Role response = new Role();
             Map<String, String> module = new LinkedHashMap<>();
             module.put(sys.name(),sys.getLabel());
@@ -40,28 +36,28 @@ public class RoleServiceImpl implements RoleService {
             switch (sys) {
                 case PRODUCT:
                     List<Role.Action> listActionProduct = new ArrayList<>();
-                    for (ProductAction actionProduct : ProductAction.values()) {
+                    for (AppConstants.PRODUCT_ACTION actionProduct : AppConstants.PRODUCT_ACTION.values()) {
                         listActionProduct.add(new Role.Action(actionProduct.name(), actionProduct.getLabel()));
                     }
                     response.setAction(listActionProduct);
                     break;
                 case STORAGE:
                     List<Role.Action> listActionStaroge = new ArrayList<>();
-                    for (StorageAction actionStorage : StorageAction.values()) {
+                    for (AppConstants.STORAGE_ACTION actionStorage : AppConstants.STORAGE_ACTION.values()) {
                     	listActionStaroge.add(new Role.Action(actionStorage.name(), actionStorage.getLabel()));
                     }
                     response.setAction(listActionStaroge);
                     break;
                 case CATEGORY:
                     List<Role.Action> listActionCategory = new ArrayList<>();
-                    for (CategoryAction actionCategory : CategoryAction.values()) {
+                    for (AppConstants.CATEGORY_ACTION actionCategory : AppConstants.CATEGORY_ACTION.values()) {
                     	listActionCategory.add(new Role.Action(actionCategory.name(), actionCategory.getLabel()));
                     }
                     response.setAction(listActionCategory);
                     break;
                 case SYSTEM:
                     List<Role.Action> listActionSystem = new ArrayList<>();
-                    for (SysAction actionSystem : SysAction.values()) {
+                    for (AppConstants.SYSTEM_ACTION actionSystem : AppConstants.SYSTEM_ACTION.values()) {
                     	listActionSystem.add(new Role.Action(actionSystem.name(), actionSystem.getLabel()));
                     }
                     response.setAction(listActionSystem);
@@ -82,25 +78,25 @@ public class RoleServiceImpl implements RoleService {
         }
         List<FlowieeRole> listReturn = new ArrayList<>();
 
-        for (SystemModule sys : SystemModule.values()) {
+        for (AppConstants.SYSTEM_MODULE sys : AppConstants.SYSTEM_MODULE.values()) {
             switch (sys) {  
                 case PRODUCT:
-                    for (ProductAction actions : ProductAction.values()) {
+                    for (AppConstants.PRODUCT_ACTION actions : AppConstants.PRODUCT_ACTION.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
                 case STORAGE:
-                    for (StorageAction actions : StorageAction.values()) {
+                    for (AppConstants.STORAGE_ACTION actions : AppConstants.STORAGE_ACTION.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
                 case SYSTEM:
-                    for (SysAction actions : SysAction.values()) {
+                    for (AppConstants.SYSTEM_ACTION actions : AppConstants.SYSTEM_ACTION.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
                 case CATEGORY:
-                    for (CategoryAction actions : CategoryAction.values()) {
+                    for (AppConstants.CATEGORY_ACTION actions : AppConstants.CATEGORY_ACTION.values()) {
                         listReturn.add(buildFlowieeRole(accountId, sys.name(), sys.getLabel(),actions.name(), actions.getLabel()));
                     }
                     break;
@@ -112,7 +108,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<String> findAllModuleKey() {
         List<String> listModuleKey = new ArrayList<>();
-        for (SystemModule sys : SystemModule.values()) {
+        for (AppConstants.SYSTEM_MODULE sys : AppConstants.SYSTEM_MODULE.values()) {
             listModuleKey.add(sys.name());
         }
         return listModuleKey;
@@ -121,7 +117,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<ModuleOfFlowiee> findAllModule() {
         List<ModuleOfFlowiee> listModule = new ArrayList<>();
-        for (SystemModule sysModule : SystemModule.values()) {
+        for (AppConstants.SYSTEM_MODULE sysModule : AppConstants.SYSTEM_MODULE.values()) {
             ModuleOfFlowiee moduleOfFlowiee = new ModuleOfFlowiee();
             moduleOfFlowiee.setModuleKey(sysModule.name());
             moduleOfFlowiee.setModuleLabel(sysModule.getLabel());
@@ -133,25 +129,25 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<String> findAllActionKey() {
         List<String> listActionKey = new ArrayList<>();
-        for (SystemModule sys : SystemModule.values()) {
+        for (AppConstants.SYSTEM_MODULE sys : AppConstants.SYSTEM_MODULE.values()) {
             switch (sys) {
                 case PRODUCT:
-                    for (ProductAction actions : ProductAction.values()) {
+                    for (AppConstants.PRODUCT_ACTION actions : AppConstants.PRODUCT_ACTION.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
                 case STORAGE:
-                    for (StorageAction actions : StorageAction.values()) {
+                    for (AppConstants.STORAGE_ACTION actions : AppConstants.STORAGE_ACTION.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
                 case SYSTEM:
-                    for (SysAction actions : SysAction.values()) {
+                    for (AppConstants.SYSTEM_ACTION actions : AppConstants.SYSTEM_ACTION.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
                 case CATEGORY:
-                    for (CategoryAction actions : CategoryAction.values()) {
+                    for (AppConstants.CATEGORY_ACTION actions : AppConstants.CATEGORY_ACTION.values()) {
                         listActionKey.add(actions.name());
                     }
                     break;
@@ -163,25 +159,25 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<ActionOfModule> findAllAction() {
         List<ActionOfModule> listAction = new ArrayList<>();
-        for (SystemModule sysModule : SystemModule.values()) {
+        for (AppConstants.SYSTEM_MODULE sysModule : AppConstants.SYSTEM_MODULE.values()) {
             switch (sysModule) {
                 case PRODUCT:
-                    for (ProductAction sysAction : ProductAction.values()) {
+                    for (AppConstants.PRODUCT_ACTION sysAction : AppConstants.PRODUCT_ACTION.values()) {
                         listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;
                 case STORAGE:
-                    for (StorageAction sysAction : StorageAction.values()) {
+                    for (AppConstants.STORAGE_ACTION sysAction : AppConstants.STORAGE_ACTION.values()) {
                     	listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;
                 case SYSTEM:
-                    for (SysAction sysAction : SysAction.values()) {
+                    for (AppConstants.SYSTEM_ACTION sysAction : AppConstants.SYSTEM_ACTION.values()) {
                     	listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;
                 case CATEGORY:
-                    for (CategoryAction sysAction : CategoryAction.values()) {
+                    for (AppConstants.CATEGORY_ACTION sysAction : AppConstants.CATEGORY_ACTION.values()) {
                     	listAction.add(new ActionOfModule(sysAction.name(), sysAction.getLabel(), sysModule.name()));
                     }
                     break;

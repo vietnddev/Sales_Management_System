@@ -1,8 +1,6 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.exception.ApiException;
-import com.flowiee.app.model.role.SystemAction.ProductAction;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.repository.ProductVariantTempRepository;
 import com.flowiee.app.service.ProductVariantTempService;
@@ -20,7 +18,7 @@ import java.util.List;
 @Service
 public class ProductVariantTempServiceImpl implements ProductVariantTempService {
     private static final Logger logger = LoggerFactory.getLogger(ProductVariantTempServiceImpl.class);
-    private static final String module = SystemModule.PRODUCT.name();
+    private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
     private ProductVariantTempRepository productVariantTempRepository;
@@ -48,7 +46,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
             }
             bienTheSanPham.setTenBienThe(tenBienTheSanPham);
             ProductVariantTemp tempSaved =  productVariantTempRepository.save(bienTheSanPham);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + bienTheSanPham.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + bienTheSanPham.toString());
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Thêm mới biến thể sản phẩm " + bienTheSanPham.toString());
             return tempSaved;
         } catch (Exception e) {
@@ -62,7 +60,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
         ProductVariantTemp bienTheSanPhamToDelete = this.findById(entityId);
         try {
             productVariantTempRepository.deleteById(entityId);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + bienTheSanPhamToDelete.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + bienTheSanPhamToDelete.toString());
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Xóa biến thể sản phẩm " + bienTheSanPhamToDelete.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
@@ -76,7 +74,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
         ProductVariantTemp bienTheSanPhamBefore = this.findById(id);
         try {
             bienTheSanPham.setId(id);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + bienTheSanPhamBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + bienTheSanPham);
             logger.info(ProductVariantTempServiceImpl.class.getName() + ": Cập nhật biến thể sản phẩm " + bienTheSanPhamBefore.toString());
             return productVariantTempRepository.save(bienTheSanPham);
         } catch (Exception e) {
@@ -91,7 +89,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
         bienTheSanPham.setSoLuongKho(bienTheSanPham.getSoLuongKho() - soLuong);
         try {
             productVariantTempRepository.save(bienTheSanPham);
-            systemLogService.writeLog(module, ProductAction.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!", bienTheSanPham);

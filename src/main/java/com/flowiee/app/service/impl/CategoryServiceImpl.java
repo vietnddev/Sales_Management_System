@@ -3,7 +3,6 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.repository.CategoryRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.*;
@@ -32,7 +31,7 @@ import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-	private static final String MODULE = SystemModule.CATEGORY.name();
+	private static final String MODULE = AppConstants.SYSTEM_MODULE.CATEGORY.name();
 	
     private final CategoryRepository      categoryRepository;
     private final CategoryHistoryService  categoryHistoryService;
@@ -251,7 +250,7 @@ public class CategoryServiceImpl implements CategoryService {
                 detailOfFlowieeImport = importSuccess + " / " + totalRecord;
             }
             //Save file attach to storage
-            FileStorage fileStorage = new FileStorage(fileImport, SystemModule.CATEGORY.name());
+            FileStorage fileStorage = new FileStorage(fileImport, AppConstants.SYSTEM_MODULE.CATEGORY.name());
             fileStorage.setGhiChu("IMPORT");
             fileStorage.setStatus(false);
             fileStorage.setActive(false);

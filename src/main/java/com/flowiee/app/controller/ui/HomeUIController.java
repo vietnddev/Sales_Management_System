@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtils;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class HomeController {
+public class HomeUIController {
     @Autowired private AccountService accountService;
 
     @GetMapping(EndPointUtil.SYS_LOGIN)

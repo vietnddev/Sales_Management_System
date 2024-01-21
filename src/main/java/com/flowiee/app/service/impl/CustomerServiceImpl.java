@@ -4,8 +4,6 @@ import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
-import com.flowiee.app.model.role.SystemAction.ProductAction;
-import com.flowiee.app.model.role.SystemModule;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.repository.CustomerContactRepository;
 import com.flowiee.app.repository.CustomerRepository;
@@ -29,7 +27,7 @@ import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
-    private static final String module = SystemModule.PRODUCT.name();
+    private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -108,7 +106,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerContact.setStatus(true);
             this.saveContact(customerContact, customerInserted.getId());
         }
-        systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_CREATE.name(), "Thêm mới khách hàng: " + customer.toString());
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_CREATE.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Thêm mới khách hàng " + customer.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -189,7 +187,7 @@ public class CustomerServiceImpl implements CustomerService {
                 this.saveContact(addressDefault, customerId);
             }
         }
-        systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_UPDATE.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_UPDATE.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Cập nhật khách hàng " + customer.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -213,7 +211,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLog(module, ProductAction.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Xóa khách hàng " + customer.toString());
         return MessageUtils.DELETE_SUCCESS;
     }

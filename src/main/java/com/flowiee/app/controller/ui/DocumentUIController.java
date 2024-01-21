@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.exception.ForbiddenException;
@@ -28,7 +28,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(EndPointUtil.STORAGE)
-public class DocumentController extends BaseController {
+public class DocumentUIController extends BaseController {
     @Autowired
     private DocumentService documentService;
     @Autowired
@@ -69,7 +69,7 @@ public class DocumentController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
         List<Document> listRootDocument = documentService.findRootDocument();
         for (int i = 0; i < listRootDocument.size(); i++) {
-            listRootDocument.get(i).setCreatedAt(DateUtils.formatDate(listRootDocument.get(i).getCreatedAt(), "dd/MM/yyyy"));
+            listRootDocument.get(i).setCreatedAt(listRootDocument.get(i).getCreatedAt());
         }
         modelAndView.addObject("listDocument", listRootDocument);
         modelAndView.addObject("document", new Document());

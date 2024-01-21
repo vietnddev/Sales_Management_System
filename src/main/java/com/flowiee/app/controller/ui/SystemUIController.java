@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Category;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping
-public class SystemController extends BaseController {
+public class SystemUIController extends BaseController {
     @Autowired private ConfigService configService;
     @Autowired private SystemLogService systemLogService;
     @Autowired private RoleService roleService;

@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleProduct;
@@ -19,7 +19,7 @@ import com.flowiee.app.service.SupplierService;
 
 @Controller
 @RequestMapping(EndPointUtil.PRO_SUPPLIER)
-public class SupplierController extends BaseController {
+public class SupplierUIController extends BaseController {
 	@Autowired private SupplierService supplierService;
 	@Autowired private ValidateModuleProduct validateModuleProduct;
 

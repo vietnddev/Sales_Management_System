@@ -2,365 +2,466 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.ProductDTO;
+import com.flowiee.app.dto.ProductVariantDTO;
+import com.flowiee.app.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.model.role.SystemModule;
-import com.flowiee.app.security.ValidateModuleProduct;
-import com.flowiee.app.service.*;
-import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.model.ApiResponse;
+import com.flowiee.app.service.FileStorageService;
+import com.flowiee.app.service.PriceService;
+import com.flowiee.app.service.ProductService;
+import com.flowiee.app.service.VoucherService;
 import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtils;
-import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtils;
-
+import com.flowiee.app.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
-@RequestMapping(EndPointUtil.PRO_PRODUCT)
+@RequestMapping("${app.api.prefix}/product")
+@Tag(name = "Product API", description = "Quản lý sản phẩm")
 public class ProductController extends BaseController {
-    private final ProductService          productService;
-    private final ProductHistoryService   productHistoryService;
-    private final FileStorageService      fileStorageService;
-    private final PriceService            priceService;
-    private final CategoryService         categoryService;
-    private final VoucherService          voucherService;
-    private final VoucherTicketService    voucherTicketService;
-    private final ValidateModuleProduct   validateModuleProduct;
+    @Autowired private PriceService priceService;
+    @Autowired private ProductService productService;
+    @Autowired private VoucherService voucherService;
+    @Autowired private FileStorageService fileStorageService;
 
-    @Autowired
-    public ProductController(ProductService productService, ProductHistoryService productHistoryService, FileStorageService fileStorageService, CategoryService categoryService, PriceService priceService, VoucherService voucherService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
-        this.productService = productService;
-        this.productHistoryService = productHistoryService;
-        this.fileStorageService = fileStorageService;
-        this.categoryService = categoryService;
-        this.priceService = priceService;
-        this.voucherService = voucherService;
-        this.voucherTicketService = voucherTicketService;
-        this.validateModuleProduct = validateModuleProduct;
-    }
-
-    @GetMapping
-    public ModelAndView loadProductPage() {
-        validateModuleProduct.readProduct(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT);
-        modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
-        return baseView(modelAndView);
-    }
-
-    @GetMapping(value = "/{id}")
-    public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
-        validateModuleProduct.readProduct(true);
-        if (productId <= 0 || productService.findProductById(productId) == null) {
-            throw new NotFoundException("Product not found!");
-        }
-        List<Category> productTypes = new ArrayList<>();
-        List<Category> fabricTypes = new ArrayList<>();
-        List<Category> brands = new ArrayList<>();
-        List<Category> colors = new ArrayList<>();
-        List<Category> sizes = new ArrayList<>();
-        List<Category> units = new ArrayList<>();
-        categoryService.findSubCategory(Arrays.asList(AppConstants.CATEGORY.BRAND.getName(), AppConstants.CATEGORY.PRODUCT_TYPE.getName(),
-                                                      AppConstants.CATEGORY.COLOR.getName(), AppConstants.CATEGORY.SIZE.getName(),
-                                                      AppConstants.CATEGORY.FABRIC_TYPE.getName(), AppConstants.CATEGORY.UNIT.getName())).forEach(category -> {
-            if (AppConstants.CATEGORY.PRODUCT_TYPE.getName().equals(category.getType())) {
-                productTypes.add(category);
+    @Operation(summary = "Find all products")
+    @GetMapping("/all")
+    public ApiResponse<List<ProductDTO>> findProducts(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
+        try {
+            if (!super.validateModuleProduct.readProduct(true)) {
+                return null;
             }
-            if (AppConstants.CATEGORY.FABRIC_TYPE.getName().equals(category.getType())) {
-                fabricTypes.add(category);
+            Page<Product> productPage = productService.findAllProducts(pageSize, pageNum - 1);
+            List<ProductDTO> productList = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(productPage.getContent()));
+            return ApiResponse.ok(productList, pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Find detail products")
+    @GetMapping("/{id}")
+    public ApiResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
+        if (!super.validateModuleProduct.readProduct(true)) {
+            return null;
+        }
+        try {
+            return ApiResponse.ok(ProductDTO.fromProduct(productService.findProductById(productId)));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Find all variants")
+    @GetMapping("/variant/all")
+    public ApiResponse<List<ProductVariant>> findProductVariants() {
+        if (!super.validateModuleProduct.readProduct(true)) {
+            return null;
+        }
+        try {
+            List<ProductVariant> result = productService.findAllProductVariants();
+            return ApiResponse.ok(result);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"));
+        }
+    }
+
+    @Operation(summary = "Find all variants of product")
+    @GetMapping("/variant/{productId}")
+    public ApiResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
+        if (!super.validateModuleProduct.readProduct(true)) {
+            return null;
+        }
+        try {
+            return ApiResponse.ok(productService.findAllProductVariantOfProduct(productId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"));
+        }
+    }
+
+    @Operation(summary = "Find detail product variant")
+    @GetMapping("/variant/{id}")
+    public ApiResponse<ProductVariant> findDetailProductVariant(@PathVariable("id") Integer productVariantId) {
+        if (!super.validateModuleProduct.readProduct(true)) {
+            return null;
+        }
+        try {
+            return ApiResponse.ok(productService.findProductVariantById(productVariantId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Create product")
+    @PostMapping("/create")
+    public ApiResponse<Product> createProduct(@RequestBody Product product) {
+        if (!super.validateModuleProduct.insertProduct(true)) {
+            return null;
+        }
+        try {
+            return ApiResponse.ok(productService.saveProduct(product));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Create product variant")
+    @PostMapping("/variant/create")
+    public ApiResponse<List<ProductVariant>> createProductVariant(@RequestBody ProductVariant productVariant) {
+        if (!super.validateModuleProduct.insertProduct(true)) {
+            return null;
+        }
+        try {
+            productService.saveProductVariant(productVariant);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Create product attribute")
+    @PostMapping("/attribute/create")
+    public ApiResponse<List<ProductVariant>> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
+        if (!super.validateModuleProduct.insertProduct(true)) {
+            return null;
+        }
+        try {
+            productService.saveProductAttribute(productAttribute);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product attribute"));
+        }
+    }
+
+    @Operation(summary = "Update product")
+    @PutMapping("/update/{id}")
+    public ApiResponse<ProductDTO> updateProduct(@RequestBody Product product, @PathVariable("id") Integer productId) {
+        if (!super.validateModuleProduct.updateProduct(true)) {
+            return null;
+        }
+        try {
+            productService.updateProduct(product, productId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Update product variant")
+    @PutMapping("/variant/update/{id}")
+    public ApiResponse<ProductVariant> updateProductVariant(@RequestBody ProductVariant productVariant, @PathVariable("id") Integer productVariantId) {
+        if (!super.validateModuleProduct.updateProduct(true)) {
+            return null;
+        }
+        try {
+            productService.updateProductVariant(productVariant, productVariantId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Update product attribute")
+    @PutMapping("/attribute/update/{id}")
+    public ApiResponse<ProductVariant> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
+        if (!super.validateModuleProduct.updateProduct(true)) {
+            return null;
+        }
+        try {
+            productService.updateProductAttribute(productAttribute, productAttributeId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product attribute"));
+        }
+    }
+
+    @Operation(summary = "Delete product")
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<String> deleteProduct(@PathVariable("id") Integer productId) {
+        if (!super.validateModuleProduct.deleteProduct(true)) {
+            return null;
+        }
+        try {
+            return ApiResponse.ok(productService.deleteProduct(productId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Delete product variant")
+    @DeleteMapping("/variant/delete/{id}")
+    public ApiResponse<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
+        if (!super.validateModuleProduct.deleteProduct(true)) {
+            return null;
+        }
+        try {
+            return ApiResponse.ok(productService.deleteProductVariant(productVariantId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"));
+        }
+    }
+
+    @Operation(summary = "Delete product attribute")
+    @DeleteMapping("/attribute/delete/{id}")
+    public ApiResponse<String> deleteProductAttribute(@PathVariable("id") Integer productAttributeId) {
+        if (!super.validateModuleProduct.deleteProduct(true)) {
+            return null;
+        }
+        try {
+            productService.deleteProductAttribute(productAttributeId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product attribute"));
+        }
+    }
+
+    @Operation(summary = "Upload images of product")
+    @PostMapping(value = "/{productId}/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<FileStorage> uploadImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
             }
-            if (AppConstants.CATEGORY.BRAND.getName().equals(category.getType())) {
-                brands.add(category);
+            if (productId <= 0 || productService.findProductById(productId) == null) {
+                throw new BadRequestException();
             }
-            if (AppConstants.CATEGORY.COLOR.getName().equals(category.getType())) {
-                colors.add(category);
+            if (file.isEmpty()) {
+                throw new FileNotFoundException();
             }
-            if (AppConstants.CATEGORY.SIZE.getName().equals(category.getType())) {
-                sizes.add(category);
+            return ApiResponse.ok(fileStorageService.saveImageSanPham(file, productId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "image"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Operation(summary = "Upload images of product variant")
+    @PostMapping(value = "/{productId}/variant/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productVariantId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
             }
-            if (AppConstants.CATEGORY.UNIT.getName().equals(category.getType())) {
-                units.add(category);
+            if (productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
+                throw new BadRequestException();
             }
-        });
-        ProductDTO productDetail = ProductDTO.fromProduct(productService.findProductById(productId));
-        LinkedHashMap<String, String> listProductStatus = new LinkedHashMap<>();
-        if (AppConstants.PRODUCT_STATUS.ACTIVE.getLabel().equals(productDetail.getProductStatus())) {
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
-        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.getLabel().equals(productDetail.getProductStatus())) {
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-        }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
-        modelAndView.addObject("sanPham", new Product());
-        modelAndView.addObject("bienTheSanPham", new ProductVariant());
-        modelAndView.addObject("giaSanPham", new Price());
-        modelAndView.addObject("idSanPham", productId);
-        modelAndView.addObject("detailProducts", productDetail);
-        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariantOfProduct(productId));
-        modelAndView.addObject("listTypeProducts", productTypes);
-        modelAndView.addObject("listDmChatLieuVai", fabricTypes);
-        modelAndView.addObject("listBrand", brands);
-        modelAndView.addObject("listDmMauSacSanPham", colors);
-        modelAndView.addObject("listDmKichCoSanPham", sizes);
-        modelAndView.addObject("listDonViTinh", units);
-        modelAndView.addObject("listProductStatus", listProductStatus);
-        modelAndView.addObject("listProductHistory", productHistoryService.findByProduct(productId));
-        //List image
-        modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(productId));
-        //Image active
-        FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(productId);
-        modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());        
-        return baseView(modelAndView);
-    }
-
-    @GetMapping(value = "/variant/{id}")
-    public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
-        validateModuleProduct.readProduct(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_VARIANT);
-        modelAndView.addObject("bienTheSanPham", new ProductVariant());
-        modelAndView.addObject("thuocTinhSanPham", new ProductAttribute());
-        modelAndView.addObject("giaBanSanPham", new Price());
-        modelAndView.addObject("listThuocTinh", productService.findAllAttributes(variantId));
-        modelAndView.addObject("bienTheSanPhamId", variantId);
-        modelAndView.addObject("bienTheSanPham", productService.findProductVariantById(variantId));
-        modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(variantId));
-        modelAndView.addObject("listPrices", priceService.findPricesByProductVariant(variantId));
-        FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(variantId);
-        if (imageActive == null) {
-            imageActive = new FileStorage();
-        }
-        modelAndView.addObject("imageActive", imageActive);        
-        return baseView(modelAndView);
-    }
-
-    @PostMapping("/insert")
-    public ModelAndView insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
-        validateModuleProduct.insertProduct(true);
-        productService.saveProduct(product);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping("/variant/insert")
-    public ModelAndView insertProductVariant(HttpServletRequest request, @ModelAttribute("bienTheSanPham") ProductVariant productVariant) {
-        validateModuleProduct.updateProduct(true);
-        productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
-        productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
-        productService.saveProductVariant(productVariant);
-        //Khởi tạo giá default của giá bán
-        //priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping("/attribute/insert")
-    public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
-        validateModuleProduct.updateProduct(true);
-        productService.saveProductAttribute(productAttribute);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping(value = "/update/{id}")
-    public ModelAndView updateProductOriginal(HttpServletRequest request,
-                                              @ModelAttribute("sanPham") Product product,
-                                              @PathVariable("id") Integer productId) {
-        validateModuleProduct.updateProduct(true);
-        if (product == null|| productId <= 0 || productService.findProductById(productId) == null) {
-            throw new NotFoundException("Product not found!");
-        }
-        productService.updateProduct(product, productId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping(value = "/variant/update/{id}")
-    public ModelAndView updateProductVariant(HttpServletRequest request,
-                                             @ModelAttribute("productVariant") ProductVariant productVariant,
-                                             @PathVariable("id") Integer productVariantId) {
-        validateModuleProduct.updateProduct(true);
-        if (productService.findProductVariantById(productVariantId) == null) {
-            throw new NotFoundException("Product variant not found!");
-        }
-        productService.updateProductVariant(productVariant, productVariantId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping(value = "/attribute/update/{id}")
-    public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
-                                        @PathVariable("id") Integer attributeId,
-                                        HttpServletRequest request) {
-        validateModuleProduct.updateProduct(true);
-        if (attributeId <= 0 || productService.findProductAttributeById(attributeId) == null) {
-            throw new NotFoundException("Product attribute not found!");
-        }
-        attribute.setId(attributeId);
-        productService.updateProductAttribute(attribute, attributeId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<String> deleteProductOriginal(@PathVariable("id") Integer productId) throws Exception {
-        validateModuleProduct.deleteProduct(true);
-        if (productService.findProductById(productId) == null) {
-            throw new NotFoundException("Product not found!");
-        }
-        return ResponseEntity.ok().body(productService.deleteProduct(productId));
-    }
-
-    @DeleteMapping(value = "/variant/delete/{id}")
-    public ResponseEntity<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
-        validateModuleProduct.updateProduct(true);
-        if (productService.findProductVariantById(productVariantId) == null) {
-            throw new NotFoundException("Product variant not found!");
-        }
-        return ResponseEntity.ok(productService.deleteProductVariant(productVariantId));
-    }
-
-    @DeleteMapping(value = "/attribute/delete/{id}")
-    public ResponseEntity<String> deleteAttribute(@PathVariable("id") Integer attributeId) {
-        validateModuleProduct.updateProduct(true);
-        if (productService.findProductAttributeById(attributeId) == null) {
-            throw new NotFoundException("Product attribute not found!");
-        }
-        return ResponseEntity.ok().body(productService.deleteProductAttribute(attributeId));
-    }
-
-    @PostMapping(value = "/active-image/{sanPhamId}")
-    public ModelAndView activeImageOfProductOriginal(HttpServletRequest request,
-                                                    @PathVariable("sanPhamId") Integer productId,
-                                                    @RequestParam("imageId") Integer imageId) {
-        validateModuleProduct.updateImage(true);
-        if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException("Product or image not found!");
-        }
-        fileStorageService.setImageActiveOfSanPham(productId, imageId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
-    public ModelAndView activeImageOfProductVariant(HttpServletRequest request,
-                                                    @PathVariable("sanPhamBienTheId") Integer productVariantId,
-                                                    @RequestParam("imageId") Integer imageId) {
-        validateModuleProduct.updateImage(true);
-        if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException("Product variant or image not found!");
-        }
-        fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping(value = "/variant/gia-ban/update/{id}")
-    public ModelAndView updateProductPrice(HttpServletRequest request,
-                                           @ModelAttribute("price") Price price,
-                                           @PathVariable("id") Integer productVariantId) {
-        validateModuleProduct.priceManagement(true);
-        if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
-            throw new NotFoundException("Product variant or price not found!");
-        }
-        String idGiaBanHienTai = "";
-        if (!request.getParameter("idGiaBan").equals("-")) {
-            idGiaBanHienTai = request.getParameter("idGiaBan");
-        } else {
-            idGiaBanHienTai = "0";
-        }
-        priceService.update(price, productVariantId, Integer.parseInt(idGiaBanHienTai));
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @GetMapping("/export")
-    public ResponseEntity<?> exportData() {
-        validateModuleProduct.readProduct(true);
-        byte[] dataExport = productService.exportData(null);
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx");
-        return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
-    }
-
-    /** ******************** GALLERY ******************** **/
-    @GetMapping("/gallery")
-    public ModelAndView viewGallery() {
-        validateModuleProduct.readGallery(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_GALLERY);
-        modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(SystemModule.PRODUCT.name()));
-        modelAndView.addObject("listSanPham", productService.findAllProducts().getContent());
-        return baseView(modelAndView);
-    }
-
-    /** ******************** VOUCHER ******************** **/
-    @GetMapping("/voucher")
-    public ModelAndView viewVouchers() {
-        validateModuleProduct.readVoucher(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER);
-        modelAndView.addObject("listVoucher", voucherService.findAll(null, null, null, null));
-        modelAndView.addObject("listProduct", productService.findProductsIdAndProductName());
-        modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
-        modelAndView.addObject("voucher", new VoucherInfo());
-        modelAndView.addObject("voucherDetail", new VoucherTicket());
-        return baseView(modelAndView);
-    }
-
-    @GetMapping("/voucher/detail/{id}")
-    public ModelAndView viewVoucherDetail(@PathVariable("id") Integer voucherInfoId) {
-        validateModuleProduct.readVoucher(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER_DETAIL);
-        modelAndView.addObject("voucherDetail", voucherService.findById(voucherInfoId));
-        modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
-        modelAndView.addObject("voucher", new VoucherInfo());
-        modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
-        return baseView(modelAndView);
-    }
-    
-    @PostMapping("/voucher/insert")
-    public ModelAndView insertVoucher(@ModelAttribute("voucher") VoucherInfo voucherInfo,
-                                      HttpServletRequest request) throws ParseException {
-        validateModuleProduct.insertVoucher(true);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        voucherInfo.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
-        voucherInfo.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
-
-        List<Integer> listProductToApply = new ArrayList<>();
-        String[] pbienTheSP = request.getParameterValues("productToApply");
-        if (pbienTheSP != null) {
-            for (String id : pbienTheSP) {
-                listProductToApply.add(Integer.parseInt(id));
+            if (file.isEmpty()) {
+                throw new FileNotFoundException();
             }
+            return ApiResponse.ok(fileStorageService.saveImageBienTheSanPham(file, productVariantId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "image"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        if (!listProductToApply.isEmpty()) {
-            voucherService.save(voucherInfo, listProductToApply);
-        }
-        return new ModelAndView("redirect:/san-pham/voucher");
     }
 
-    @PostMapping("/voucher/update/{id}")
-    public ModelAndView deleteVoucher(@ModelAttribute("voucherInfo") VoucherInfo voucherInfo, @PathVariable("id") Integer voucherInfoId) {
-        validateModuleProduct.updateVoucher(true);
-        if (voucherInfo == null) {
-            throw new BadRequestException("Voucher to update not null!");
+    @Operation(summary = "Update product image is use default")
+    @PutMapping(value = "/{productId}/active-image/{imageId}")
+    public ApiResponse<FileStorage> activeImageOfProductOriginal(@PathVariable("productId") Integer productId, @PathVariable("imageId") Integer imageId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
+                throw new BadRequestException();
+            }
+            fileStorageService.setImageActiveOfSanPham(productId, imageId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
         }
-        if (voucherInfoId <= 0 || voucherService.findById(voucherInfoId) == null) {
-            throw new NotFoundException("VoucherId invalid!");
-        }
-        voucherService.update(voucherInfo ,voucherInfoId);
-        return new ModelAndView("redirect:/san-pham/voucher");
     }
 
-    @PostMapping("/voucher/delete/{id}")
-    public ModelAndView deleteVoucher(@PathVariable("id") Integer voucherInfoId) {
-        validateModuleProduct.deleteVoucher(true);
-        voucherService.detele(voucherInfoId);
-        return new ModelAndView("redirect:/san-pham/voucher");
+    @Operation(summary = "Update variant image is use default")
+    @PutMapping(value = "/variant/{productVariantId}/active-image/{imageId}")
+    public ApiResponse<FileStorage> activeImageOfProductVariant(@PathVariable("productVariantId") Integer productVariantId, @PathVariable("imageId") Integer imageId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
+                throw new BadRequestException();
+            }
+            fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
+        }
+    }
+
+    @PostMapping(value = "/change-image/{imageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<FileStorage> changeFile(@RequestParam("file") MultipartFile fileUpload, @PathVariable("imageId") Integer imageId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (imageId <= 0 || fileStorageService.findById(imageId) == null) {
+                throw new BadRequestException();
+            }
+            if (fileUpload.isEmpty()) {
+                throw new FileNotFoundException();
+            }
+            return ApiResponse.ok(fileStorageService.changeImageSanPham(fileUpload, imageId));
+        } catch (Exception ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
+        }
+    }
+
+    @Operation(summary = "Create price")
+    @PostMapping(value = "/variant/{productVariantId}/price/create")
+    public ApiResponse<Price> createPrice(@RequestBody Price price, @PathVariable("productVariantId") Integer productVariantId) {
+        try {
+            if (!super.validateModuleProduct.priceManagement(true)) {
+                return null;
+            }
+            if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(priceService.save(price));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "price"));
+        }
+    }
+
+    @Operation(summary = "Update price")
+    @PutMapping(value = "/variant/{productVariantId}/price/update/{priceId}")
+    public ApiResponse<Price> updatePrice(@RequestBody Price price,
+                                          @PathVariable("productVariantId") Integer productVariantId,
+                                          @PathVariable("priceId") Integer priceId) {
+        try {
+            if (!super.validateModuleProduct.priceManagement(true)) {
+                return null;
+            }
+            if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
+                throw new BadRequestException();
+            }
+            priceService.update(price, productVariantId, priceId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "price"));
+        }
+    }
+
+    @Operation(summary = "Find images of all products")
+    @GetMapping("/image/all")
+    public ApiResponse<List<FileStorage>> viewGallery() {
+        try {
+            if (!super.validateModuleProduct.readGallery(true)) {
+                return null;
+            }
+            return ApiResponse.ok(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name()));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"));
+        }
+    }
+
+    @Operation(summary = "Find all vouchers")
+    @GetMapping("/voucher/all")
+    public ApiResponse<List<VoucherInfoDTO>> findAllVouchers() {
+        try {
+            if (!super.validateModuleProduct.readVoucher(true)) {
+                return null;
+            }
+            return ApiResponse.ok(voucherService.findAll(null, null, null, null));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
+        }
+    }
+
+    @Operation(summary = "Find detail voucher")
+    @GetMapping("/voucher/{voucherInfoId}")
+    public ApiResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
+        try {
+            if (!super.validateModuleProduct.readVoucher(true)) {
+                return null;
+            }
+            return ApiResponse.ok(voucherService.findById(voucherInfoId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
+        }
+    }
+
+    @Operation(summary = "Create voucher")
+    @PostMapping("/voucher/create")
+    public ApiResponse<VoucherInfoDTO> createVoucher(@RequestBody VoucherInfo voucherInfo) throws ParseException {
+        try {
+            if (!super.validateModuleProduct.insertVoucher(true)) {
+                return null;
+            }
+            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            //voucherInfo.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
+            //voucherInfo.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
+
+            //List<Integer> listProductToApply = new ArrayList<>();
+            //String[] pbienTheSP = request.getParameterValues("productToApply");
+            //if (pbienTheSP != null) {
+            //    for (String id : pbienTheSP) {
+            //        listProductToApply.add(Integer.parseInt(id));
+            //    }
+            //}
+            //if (!listProductToApply.isEmpty()) {
+            //    voucherService.save(voucherInfo, listProductToApply);
+            //}
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "voucher"));
+        }
+    }
+
+    @Operation(summary = "Update voucher")
+    @PutMapping("/voucher/update/{voucherInfoId}")
+    public ApiResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfo voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
+        try {
+            if (!super.validateModuleProduct.updateVoucher(true)) {
+                return null;
+            }
+            if (voucherInfo == null || voucherService.findById(voucherInfoId) == null) {
+                throw new BadRequestException();
+            }
+            voucherService.update(voucherInfo ,voucherInfoId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "voucher"));
+        }
+    }
+
+    @Operation(summary = "Delete voucher")
+    @PostMapping("/voucher/delete/{voucherInfoId}")
+    public ApiResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
+        try {
+            if(!super.validateModuleProduct.deleteVoucher(true)) {
+                return null;
+            }
+            return ApiResponse.ok(voucherService.detele(voucherInfoId));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "voucher"));
+        }
+    }
+
+    @Operation(summary = "Check the voucher is available")
+    @GetMapping("/voucher/check/{voucherCode}")
+    public ApiResponse<VoucherInfoDTO> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
+        try {
+            if(!super.validateModuleProduct.readVoucher(true)) {
+                return null;
+            }
+            return ApiResponse.ok(voucherService.isAvailable(voucherCode));
+        } catch (RuntimeException ex) {
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
+        }
     }
 }

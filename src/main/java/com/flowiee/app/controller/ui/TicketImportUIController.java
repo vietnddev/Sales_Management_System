@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.TicketImportGoods;
@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
-@RequestMapping(EndPointUtil.STORAGE_TICKET_IMPORT)
-public class TicketImportGoodsController extends BaseController {
+@RequestMapping("/storage/ticket-import")
+public class TicketImportUIController extends BaseController {
     @Autowired private TicketImportGoodsService ticketImportGoodsService;
     @Autowired private SupplierService supplierService;
     @Autowired private ProductService productService;
@@ -39,6 +39,13 @@ public class TicketImportGoodsController extends BaseController {
     public ModelAndView loadPage() {
         validateModuleStorage.importGoods(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT);
+        return baseView(modelAndView);
+    }
+
+    @GetMapping("/create")
+    public ModelAndView loadPageCreate() {
+        validateModuleStorage.importGoods(true);
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_CREATE);
         TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
         if (ticketImportGoodsPresent == null) {
             ticketImportGoodsPresent = ticketImportGoodsService.createDraftImport();

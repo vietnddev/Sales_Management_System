@@ -1,4 +1,4 @@
-package com.flowiee.app.controller;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.model.DashboardModel;
 import com.flowiee.app.security.ValidateModuleProduct;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping()
-public class DashboardController extends BaseController {
+public class DashboardUIController extends BaseController {
     @Autowired
     private ValidateModuleProduct validateModuleProduct;
     @Autowired
