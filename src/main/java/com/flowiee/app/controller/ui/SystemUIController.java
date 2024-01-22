@@ -9,7 +9,6 @@ import com.flowiee.app.security.ValidateModuleSystem;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
-import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,14 +27,14 @@ public class SystemUIController extends BaseController {
     @Autowired private ValidateModuleSystem validateModuleSystem;
     @Autowired private NotificationService notificationService;
 
-    @GetMapping(EndPointUtil.SYS_NOTIFICATION)
+    @GetMapping("/sys/notification")
     public ModelAndView getAllNotification() {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_NOTIFICATION);
         modelAndView.addObject("notification", new Notification());
         return baseView(modelAndView);
     }
 
-    @GetMapping(EndPointUtil.SYS_LOG)
+    @GetMapping("/sys/log")
     public ModelAndView getAllLog() {
         validateModuleSystem.readLog(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_LOG);
@@ -43,7 +42,7 @@ public class SystemUIController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @GetMapping(EndPointUtil.SYS_CONFIG)
+    @GetMapping("/sys/config")
     public ModelAndView showConfig() {
         validateModuleSystem.setupConfig(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_CONFIG);
@@ -63,12 +62,11 @@ public class SystemUIController extends BaseController {
         return new ModelAndView("redirect:/he-thong/config");
     }
 
-    @GetMapping(EndPointUtil.SYS_ROLE)
+    @GetMapping("/sys/role")
     public ModelAndView readRole() {
         validateModuleSystem.readPermission(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
-        modelAndView.addObject("listNotification", notificationService.findAllByReceiveId(CommonUtils.getCurrentAccountId()));
         return baseView(modelAndView);
     }
 

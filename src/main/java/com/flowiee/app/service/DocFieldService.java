@@ -12,9 +12,9 @@ public interface DocFieldService {
 
     List<DocField> findByDocTypeId(Integer doctypeId);
 
-    String save(DocField docField);
+    DocField save(DocField docField);
 
-    String update(DocField docField, Integer docFieldId);
+    DocField update(DocField docField, Integer docFieldId);
 
     DocField delete(Integer id);
 }

@@ -48,33 +48,29 @@ public class DocFieldServiceImpl implements DocFieldService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String save(DocField docField) {
-        try {
-            docFieldRepository.save(docField);
-            List<Document> listDocumentInUsed = docField.getLoaiTaiLieu().getListDocument();
-            for (Document document : listDocumentInUsed) {
-                DocData docData = new DocData();
-                docData.setId(0);
-                docData.setDocField(docField);
-                docData.setNoiDung(null);
-                docData.setDocument(document);
-                docDataService.save(docData);
-            }
-            systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Thêm mới doc_field: " + docField.toString());
-            logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới doc_field " + docField.toString());
-        } catch (Exception e) {
-            logger.error("An error occurred while insert new docField!", e.getCause().toString());
+    public DocField save(DocField docField) {
+        DocField docFieldSaved = docFieldRepository.save(docField);
+        List<Document> listDocumentInUsed = docField.getLoaiTaiLieu().getListDocument();
+        for (Document document : listDocumentInUsed) {
+            DocData docData = new DocData();
+            docData.setId(0);
+            docData.setDocField(docField);
+            docData.setNoiDung(null);
+            docData.setDocument(document);
+            docDataService.save(docData);
         }
-        return "OK";
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Thêm mới doc_field: " + docField.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới doc_field " + docField.toString());
+        return docFieldSaved;
     }
 
     @Override
-    public String update(DocField docField, Integer docFieldId) {
+    public DocField update(DocField docField, Integer docFieldId) {
         docField.setId(docFieldId);
-        docFieldRepository.save(docField);
+        DocField docFieldUpdated = docFieldRepository.save(docField);
         systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Cập nhật doc_field: " + docField.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Cập nhật doc_field " + docFieldId.toString());
-        return "OK";
+        return docFieldUpdated;
     }
 
     @Transactional

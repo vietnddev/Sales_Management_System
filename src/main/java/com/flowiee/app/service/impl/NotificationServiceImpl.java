@@ -26,7 +26,10 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<Notification> findAllByReceiveId(Integer accountId) {
+    public List<Notification> findAllByReceiveId(Integer pageSize, Integer pageNum, Integer totalRecord, Integer accountId) {
+        if (totalRecord != null) {
+            return notificationRepository.findLimitByReceiveId(accountId, totalRecord);
+        }
         return notificationRepository.findAllByReceiveId(accountId);
     }
 

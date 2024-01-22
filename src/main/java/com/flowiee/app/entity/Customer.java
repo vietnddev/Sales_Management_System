@@ -1,5 +1,6 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import com.flowiee.app.dto.CustomerDTO;
@@ -44,10 +45,12 @@ public class Customer extends BaseEntity implements Serializable {
 	@Transient
 	private String addressDefault;
 
+	@JsonIgnore
 	@JsonIgnoreProperties("customer")
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
 	private List<Order> listOrder;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<CustomerContact> listCustomerContact;

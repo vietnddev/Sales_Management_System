@@ -61,7 +61,7 @@ public class Category extends BaseEntity implements java.io.Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
-	private List<TicketImportGoods> listPaymentMethod;
+	private List<TicketImport> listPaymentMethod;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "kenhBanHang", fetch = FetchType.LAZY)

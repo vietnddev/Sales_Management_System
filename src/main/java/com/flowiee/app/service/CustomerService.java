@@ -18,11 +18,11 @@ public interface CustomerService {
 
     Customer findCustomerById(Integer customerId);
 
-    String saveCustomer(Customer Rcustomer);
+    Customer saveCustomer(Customer Rcustomer);
 
     CustomerContact saveContact(CustomerContact customerContact, Integer customerId);
 
-    String updateCustomer(Customer customer, Integer customerId);
+    Customer updateCustomer(Customer customer, Integer customerId);
 
     CustomerContact updateContact(CustomerContact customerContact, Integer contactId);
 

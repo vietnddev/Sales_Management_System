@@ -184,31 +184,6 @@ public class OrderUIController extends BaseController {
         return new ModelAndView("redirect:/don-hang");
     }
 
-    @PostMapping("/thanh-toan/{id}")
-    public ModelAndView doPay(@PathVariable("id") Integer orderId,
-                              @RequestParam("paymentTime") Date paymentTime,
-                              @RequestParam("paymentMethod") Integer paymentMethod,
-                              @RequestParam("note") @Nullable String note) {
-        validateModuleProduct.updateOrder(true);
-        if (orderId == null || orderId <= 0 || orderService.findOrderById(orderId) == null) {
-            throw new NotFoundException("Đơn hàng cần thanh toán không tồn tại! orderId=" + orderId);
-        }
-        if (paymentTime == null) {
-            paymentTime = new Date();
-        }
-        if (paymentMethod == null || paymentMethod <= 0) {
-            throw new BadRequestException("Hình thức thanh toán không hợp lệ!");
-        }
-        orderService.doPay(orderId, paymentTime, paymentMethod, note);
-        return new ModelAndView("redirect:/don-hang/" + orderId);
-    }
-
-    @GetMapping(EndPointUtil.PRO_ORDER_EXPORT)
-    public ResponseEntity<?> exportDanhSachDonHang() {
-        validateModuleProduct.readOrder(true);
-        return orderService.exportDanhSachDonHang();
-    }
-
     @GetMapping("/abc")
     public ModelAndView getOrderInfoByScanQRCode() {
         return null;

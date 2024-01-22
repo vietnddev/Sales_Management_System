@@ -1,25 +1,23 @@
-package com.flowiee.app.controller.ui;
+package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.TicketExport;
+import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.security.ValidateModuleStorage;
-import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.service.TicketExportGoodsService;
+import com.flowiee.app.utils.PagesUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(EndPointUtil.STORAGE_TICKET_EXPORT)
-public class TicketExportUIController extends BaseController {
+@RequestMapping("${app.api.prefix}/ticket-export")
+public class TicketExportController extends BaseController {
     @Autowired private TicketExportGoodsService ticketExportGoodsService;
-    @Autowired private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping
     public ModelAndView viewAllTicket() {
@@ -28,11 +26,21 @@ public class TicketExportUIController extends BaseController {
         return baseView(modelAndView);
     }
     
-    @PostMapping("/insert")
-    public ModelAndView insertNewTicketExport(@ModelAttribute("ticketExport") TicketExport ticketExport) {
-    	validateModuleStorage.exportGoods(true);
-    	ticketExportGoodsService.save(ticketExport);
-    	return new ModelAndView("redirect:/storage/ticket-export");
+    @PostMapping("/create/draft")
+    public ApiResponse<TicketExport> createDraftTicket(@RequestBody(required = false) OrderDTO order) {
+        try {
+            if (!super.validateModuleStorage.exportGoods(true)) {
+                return null;
+            }
+            if (ObjectUtils.isNotEmpty(order)) {
+
+            } else {
+
+            }
+            ticketExportGoodsService.save();
+        } catch (RuntimeException ex) {
+            throw new ApiException();
+        }
     }
     
     @PostMapping("/update/{id}")

@@ -71,6 +71,12 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "payment_status")
 	private Boolean paymentStatus;
 
+	@Column(name = "payment_note")
+	private String paymentNote;
+
+	@Column(name = "payment_amount")
+	private Float paymentAmount;
+
 //	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 //	private List<OrderPay> listOrderPay;
 
@@ -78,18 +84,22 @@ public class Order extends BaseEntity implements Serializable {
 	@JoinColumn(name = "status", nullable = false)
 	private Category trangThaiDonHang;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderDetail> listOrderDetail;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderHistory> listOrderHistory;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<FileStorage> listImageQR;
+
 	public Order(int id) {
 		super.id = id;
 	}
+
 	public Map<String, String> compareTo(Order compare) {
 		Map<String, String> map = new HashMap<>();
 		if (!this.getReceiverName().equals(compare.getReceiverName())) {

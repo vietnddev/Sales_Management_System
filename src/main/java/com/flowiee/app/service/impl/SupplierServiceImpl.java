@@ -23,7 +23,7 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Supplier findById(Integer entityId) {
-        return supplierRepository.findById(entityId).get();
+        return supplierRepository.findById(entityId).orElse(null);
     }
 
     @Override

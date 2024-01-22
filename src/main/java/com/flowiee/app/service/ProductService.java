@@ -48,19 +48,19 @@ public interface ProductService {
 
     Product saveProduct(Product product);
 
-    String updateProduct(Product product, Integer productId);
+    Product updateProduct(Product product, Integer productId);
 
     String deleteProduct(Integer productId);
 
-    String saveProductVariant(ProductVariant productVariant);
+    ProductVariant saveProductVariant(ProductVariant productVariant);
 
-    String updateProductVariant(ProductVariant productVariant, Integer productVariantId);
+    ProductVariant updateProductVariant(ProductVariant productVariant, Integer productVariantId);
 
     String deleteProductVariant(Integer productVariantId);
 
-    String saveProductAttribute(ProductAttribute productAttribute);
+    ProductAttribute saveProductAttribute(ProductAttribute productAttribute);
 
-    String updateProductAttribute(ProductAttribute productAttribute, Integer productAttributeId);
+    ProductAttribute updateProductAttribute(ProductAttribute productAttribute, Integer productAttributeId);
 
     String deleteProductAttribute(Integer productAttributeId);
 

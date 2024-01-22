@@ -13,9 +13,9 @@ public interface VoucherService {
 
     List<VoucherInfoDTO> findByIds(List<Integer> voucherIds, String status);
 
-    String save(VoucherInfo voucherInfo, List<Integer> listSanPhamApDung);
+    VoucherInfo save(VoucherInfo voucherInfo, List<Integer> listSanPhamApDung);
 
-    String update(VoucherInfo voucherInfo, Integer voucherId);
+    VoucherInfo update(VoucherInfo voucherInfo, Integer voucherId);
 
     String detele(Integer voucherId);
 

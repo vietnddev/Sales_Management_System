@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class TicketImportGoods extends BaseEntity implements Serializable {
+public class TicketImport extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "title", nullable = false)
@@ -68,11 +68,11 @@ public class TicketImportGoods extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
     private List<ProductVariantTemp> listProductVariantTemp;
 
-    public TicketImportGoods(Integer id) {
+    public TicketImport(Integer id) {
         super.id = id;
     }
 
-    public TicketImportGoods(Integer id, String title) {
+    public TicketImport(Integer id, String title) {
         super.id = id;
         this.title = title;
     }

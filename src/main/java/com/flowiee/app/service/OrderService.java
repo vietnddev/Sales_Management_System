@@ -14,7 +14,7 @@ import java.util.List;
 public interface OrderService {
     List<OrderDTO> findAllOrder();
 
-    Page<Object[]> findAllOrder(int pageSize, int pageNum);
+    Page<Order> findAllOrder(int pageSize, int pageNum);
 
     List<OrderDTO> findAllOrder(Integer orderId);
 
@@ -34,7 +34,7 @@ public interface OrderService {
 
     String deleteOrderDetail(Integer orderDetailId);
 
-    String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, String note);
+    String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote);
 
     List<Order> findByStaffId(Integer accountId);
 

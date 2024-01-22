@@ -39,7 +39,7 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
            "left join GarmentFactory g on g.id = v.garmentFactory.id " +
            "left join Supplier sp on sp.id = v.supplier.id " +
            "left join Price pr on pr.productVariant.id = v.id and pr.status = 'ACTIVE' " +
-           "left join TicketImportGoods ti on ti.id = v.ticketImportGoods.id " +
+           "left join TicketImport ti on ti.id = v.ticketImportGoods.id " +
            "left join Category c on c.id = v.color.id and c.type = 'COLOR' " +
            "left join Category s on s.id = v.size.id and s.type = 'SIZE' " +
            "left join Category f on f.id = v.fabricType.id and f.type = 'FABRIC_TYPE' " +

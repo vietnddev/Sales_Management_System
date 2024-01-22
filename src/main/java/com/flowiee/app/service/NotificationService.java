@@ -8,7 +8,7 @@ import java.util.List;
 public interface NotificationService extends BaseService<Notification> {
     List<Notification> findAll();
 
-    List<Notification> findAllByReceiveId(Integer accountId);
+    List<Notification> findAllByReceiveId(Integer pageSize, Integer pageNum, Integer totalRecord, Integer accountId);
 
     List<Notification> findLimitByReceiveId(Integer accountId, Integer limit);
 }

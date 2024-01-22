@@ -168,18 +168,19 @@
                         let contentTable = $('#contentTable');
                         contentTable.empty();
                         $.each(data, function (index, d) {
+                            console.log(d)
                             contentTable.append(
                                 '<tr>' +
                                     '<td>' + (index + 1) + '</td>' +
                                     '<td><a href="/don-hang/' + d.orderId + '">' + d.orderCode + '</a></td>' +
                                     '<td>' + d.orderTimeStr + '</td>' +
                                     '<td>' + d.receiveAddress + '</td>' +
-                                    '<td>' + d.orderBy.tenKhachHang + '</td>' +
+                                    '<td>' + d.customerName + '</td>' +
                                     '<td>' + d.receivePhone + '</td>' +
                                     '<td>' + d.totalAmount + '</td>' +
-                                    '<td>' + d.salesChannel.name + '</td>' +
+                                    '<td>' + d.salesChannelName + '</td>' +
                                     '<td>' + d.note + '</td>' +
-                                    '<td>' + d.orderStatus.name + '</td>' +
+                                    '<td>' + d.orderStatusName + '</td>' +
                                     '</tr>'
                             );
                         });

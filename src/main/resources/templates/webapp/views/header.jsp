@@ -134,6 +134,8 @@
 
   </div>
   <div th:fragment="scripts">
+    <!--Lib support format time-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- jQuery -->
     <script th:src="@{/plugins/jquery/jquery.min.js}"></script>
     <!-- jQuery UI 1.11.4 -->

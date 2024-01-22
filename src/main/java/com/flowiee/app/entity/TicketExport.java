@@ -1,14 +1,14 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "stg_ticket_export_goods")
@@ -17,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class TicketExportGoods extends BaseEntity implements Serializable {
+public class TicketExport extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Column(name = "title")
@@ -29,15 +29,10 @@ public class TicketExportGoods extends BaseEntity implements Serializable {
     @Column(name = "export_time", nullable = false)
     private Date exportTime;
 
-    @Column(name = "order_id")
-    private Integer orderId;
-
     @Column(name = "note", length = 500)
     private String note;
 
-	@Override
-	public String toString() {
-		return "TicketExportGoods [id=" + super.id + ", title=" + title + ", exporter=" + exporter + ", exportTime=" + exportTime
-				+ ", orderId=" + orderId + ", note=" + note + "]";
-	}
+    @JsonIgnore
+    @OneToMany(mappedBy = "ticket_export", fetch = FetchType.LAZY)
+    private List<Order> listFileOrder;
 }

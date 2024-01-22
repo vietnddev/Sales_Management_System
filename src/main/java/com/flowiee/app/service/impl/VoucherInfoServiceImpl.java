@@ -2,11 +2,14 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.VoucherInfoDTO;
+import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.repository.VoucherInfoRepository;
 import com.flowiee.app.service.*;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.DateUtils;
 import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
@@ -29,13 +32,13 @@ public class VoucherInfoServiceImpl implements VoucherService {
     @Autowired
     private VoucherInfoRepository voucherInfoRepository;
     @Autowired
-    private VoucherTicketService voucherTicketService;
+    private VoucherTicketService  voucherTicketService;
     @Autowired
-    private VoucherApplyService voucherApplyService;
+    private VoucherApplyService   voucherApplyService;
     @Autowired
-    private ProductService productService;
+    private ProductService        productService;
     @Autowired
-    private EntityManager entityManager;
+    private EntityManager         entityManager;
 
     @Override
     public List<VoucherInfoDTO> findAll(String status, Date startTime, Date endTime, String title) {
@@ -73,54 +76,54 @@ public class VoucherInfoServiceImpl implements VoucherService {
     }
 
     @Override
-    public String save(VoucherInfo voucherInfo, List<Integer> listProductToApply) {
+    public VoucherInfo save(VoucherInfo voucherInfo, List<Integer> listProductToApply) {
         try {
-            if (voucherInfo != null) {
-                voucherInfo = voucherInfoRepository.save(voucherInfo);
-                //
-                for (int sanPhamId : listProductToApply) {
-                    VoucherApply voucherApply = new VoucherApply();
-                    voucherApply.setVoucherId(voucherInfo.getId());
-                    voucherApply.setSanPhamId(sanPhamId);
-                    voucherApplyService.save(voucherApply);
-                }
-                //Gen list voucher detail
-                List<String> listKeyVoucher = new ArrayList<>();
-                while (listKeyVoucher.size() < voucherInfo.getQuantity()) {
-                    String randomKey = "";
-                    while (randomKey.isEmpty()) {
-                        String tempKey = generateRandomKeyVoucher(voucherInfo.getLengthOfKey(), voucherInfo.getVoucherType());
-                        if (voucherTicketService.findByCode(tempKey) != null) {
-                            randomKey = tempKey;
-                        }
-                    }
-                    if (!listKeyVoucher.contains(randomKey)) {             
-                        VoucherTicket voucherTicket = new VoucherTicket();
-                        voucherTicket.setCode(randomKey);
-                        voucherTicket.setVoucherInfo(voucherInfo);
-                        voucherTicket.setStatus(false);
-                        if (voucherTicketService.save(voucherTicket) != null) {
-                        	listKeyVoucher.add(randomKey);
-                        }
-                    }
-                }
-                return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            if (voucherInfo == null) {
+                throw new BadRequestException();
             }
+            voucherInfo = voucherInfoRepository.save(voucherInfo);
+            //
+            for (int sanPhamId : listProductToApply) {
+                VoucherApply voucherApply = new VoucherApply();
+                voucherApply.setVoucherId(voucherInfo.getId());
+                voucherApply.setSanPhamId(sanPhamId);
+                voucherApplyService.save(voucherApply);
+            }
+            //Gen list voucher detail
+            List<String> listKeyVoucher = new ArrayList<>();
+            while (listKeyVoucher.size() < voucherInfo.getQuantity()) {
+                String randomKey = "";
+                while (randomKey.isEmpty()) {
+                    String tempKey = generateRandomKeyVoucher(voucherInfo.getLengthOfKey(), voucherInfo.getVoucherType());
+                    if (voucherTicketService.findByCode(tempKey) != null) {
+                        randomKey = tempKey;
+                    }
+                }
+                if (!listKeyVoucher.contains(randomKey)) {
+                    VoucherTicket voucherTicket = new VoucherTicket();
+                    voucherTicket.setCode(randomKey);
+                    voucherTicket.setVoucherInfo(voucherInfo);
+                    voucherTicket.setStatus(false);
+                    if (voucherTicketService.save(voucherTicket) != null) {
+                        listKeyVoucher.add(randomKey);
+                    }
+                }
+            }
+            return voucherInfo;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            throw new ApiException();
         }
-        return AppConstants.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
-    public String update(VoucherInfo voucherInfo, Integer voucherId) {
+    public VoucherInfo update(VoucherInfo voucherInfo, Integer voucherId) {
         if (voucherInfo == null || voucherId == null || voucherId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         voucherInfo.setId(voucherId);
-        voucherInfoRepository.save(voucherInfo);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return voucherInfoRepository.save(voucherInfo);
     }
 
     @Override
@@ -231,14 +234,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 strSQL += "AND v.ID = " + voucherId + " ";
             }
             if (voucherIds != null) {
-                String inId = "";
-                for (int id : voucherIds) {
-                    inId += id + ",";
-                }
-                if (!inId.isEmpty()) {
-                    inId = inId.substring(0, inId.length() - 1);
-                }
-                strSQL += "AND v.ID IN (" + inId + ") ";
+                strSQL += "AND v.ID IN (" + CommonUtils.convertListIntToStr(voucherIds) + ") ";
             }
             if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(status)) {
                 strSQL += "AND v.STATUS = '" + AppConstants.VOUCHER_STATUS.ACTIVE.name() + "' ";

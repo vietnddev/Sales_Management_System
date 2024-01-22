@@ -72,18 +72,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findAllOrder() {
-        return this.convertObjectsToDTO(orderRepository.findAll((Integer) null, null, Pageable.unpaged()).getContent());
+        return OrderDTO.fromOrders(orderRepository.findAll((Integer) null, null, Pageable.unpaged()).getContent());
     }
 
     @Override
-    public Page<Object[]> findAllOrder(int pageSize, int pageNum) {
+    public Page<Order> findAllOrder(int pageSize, int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("thoiGianDatHang").descending());
         return orderRepository.findAll((Integer) null,null, pageable);
     }
 
     @Override
     public List<OrderDTO> findAllOrder(Integer orderId) {
-        return this.convertObjectsToDTO(orderRepository.findAll(orderId, null, Pageable.unpaged()).getContent());
+        return OrderDTO.fromOrders(orderRepository.findAll(orderId, null, Pageable.unpaged()).getContent());
     }
 
     @Override
@@ -229,9 +229,6 @@ public class OrderServiceImpl implements OrderService {
         if (order.isPaymentStatus()) {
             throw new DataInUseException(MessageUtils.ERROR_LOCKED);
         }
-        if ("DE".equals(order.getOrderStatus().getCode()) || "DO".equals(order.getOrderStatus().getCode())) {
-            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
-        }
         orderRepository.deleteById(id);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
@@ -254,8 +251,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, String note) {
-        orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, note);
+    public String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote) {
+        orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
         return "Thanh toán thành công!";
     }
 
@@ -276,7 +273,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findOrdersByCustomerId(Integer customerId) {
-        return this.convertObjectsToDTO(orderRepository.findAll(null, customerId, Pageable.unpaged()).getContent());
+        return OrderDTO.fromOrders(orderRepository.findAll(null, customerId, Pageable.unpaged()).getContent());
     }
 
     @Override
@@ -354,36 +351,38 @@ public class OrderServiceImpl implements OrderService {
 
     public List<OrderDTO> convertObjectsToDTO(List<Object[]> objects) {
         List<OrderDTO> dataResponse = new ArrayList<>();
-        for (Object[] data : objects) {
-            OrderDTO order = new OrderDTO();
-            order.setOrderId(Integer.parseInt(String.valueOf(data[0])));
-            order.setOrderCode(String.valueOf(data[1]));
-            order.setOrderTime(DateUtils.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            order.setOrderTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getOrderTime()));
-            order.setReceiveAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
-            order.setReceivePhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
-            order.setReceiveName(String.valueOf(data[5]));
-            order.setReceiveEmail(String.valueOf(data[19]));
-            order.setOrderBy(new Customer(Integer.parseInt(String.valueOf(data[6])), String.valueOf(data[7])));
-            order.setAmountDiscount(data[8] != null ? Double.parseDouble(String.valueOf(data[8])) : 0);
-            order.setSalesChannel(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
-            order.setSalesChannelId(Integer.parseInt(String.valueOf(data[9])));
-            order.setSalesChannelName(String.valueOf(data[10]));
-            order.setNote(String.valueOf(data[11]) != null ? String.valueOf(data[11]) : "-");
-            order.setOrderStatus(new Category(Integer.parseInt(String.valueOf(data[12])), String.valueOf(data[13])));
-            order.setPayMethodName(String.valueOf(data[15]));
-            if (data[22] != null) {
-                order.setPaymentTime(DateUtils.convertStringToDate(String.valueOf(data[22]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            }
-            order.setPaymentTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getPaymentTime()));
-            order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[16]))));
-            order.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[17]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            order.setCreatedAtStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getCreatedAt()));
-            order.setQrCode(String.valueOf(data[18]));
-            order.setVoucherUsedCode(data[20] != null ? String.valueOf(data[20]) : "-");
-            order.setPaymentStatus(data[21] != null && Boolean.parseBoolean(String.valueOf(data[21])));
-            dataResponse.add(order);
-        }
+//        for (Object[] data : objects) {
+//            OrderDTO order = new OrderDTO();
+//            order.setOrderId(Integer.parseInt(String.valueOf(data[0])));
+//            order.setOrderCode(String.valueOf(data[1]));
+//            order.setOrderTime(DateUtils.convertStringToDate(String.valueOf(data[2]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+//            order.setOrderTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getOrderTime()));
+//            order.setReceiveAddress(String.valueOf(data[3]) != null ? String.valueOf(data[3]) : "-");
+//            order.setReceivePhone(String.valueOf(data[4]) != null ? String.valueOf(data[4]) : "-");
+//            order.setReceiveName(String.valueOf(data[5]));
+//            order.setReceiveEmail(String.valueOf(data[19]));
+//            order.setOrderBy(new Customer(Integer.parseInt(String.valueOf(data[6])), String.valueOf(data[7])));
+//            order.setAmountDiscount(data[8] != null ? Double.parseDouble(String.valueOf(data[8])) : 0);
+//            order.setSalesChannel(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
+//            order.setSalesChannelId(Integer.parseInt(String.valueOf(data[9])));
+//            order.setSalesChannelName(String.valueOf(data[10]));
+//            order.setNote(String.valueOf(data[11]) != null ? String.valueOf(data[11]) : "-");
+//            order.setOrderStatus(new Category(Integer.parseInt(String.valueOf(data[12])), String.valueOf(data[13])));
+//            order.setPayMethodName(String.valueOf(data[15]));
+//            if (data[22] != null) {
+//                order.setPaymentTime(DateUtils.convertStringToDate(String.valueOf(data[22]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+//            }
+//            order.setPaymentTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getPaymentTime()));
+//            order.setCreatedBy(new Account(Integer.parseInt(String.valueOf(data[16]))));
+//            order.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[17]), "yyyy-MM-dd HH:mm:ss.SSSSSS"));
+//            order.setCreatedAtStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getCreatedAt()));
+//            order.setQrCode(String.valueOf(data[18]));
+//            order.setVoucherUsedCode(data[20] != null ? String.valueOf(data[20]) : "-");
+//            order.setPaymentStatus(data[21] != null && Boolean.parseBoolean(String.valueOf(data[21])));
+//            order.setPaymentAmount(String.valueOf(data[23]));
+//            order.setPaymentNote(String.valueOf(data[24]));
+//            dataResponse.add(order);
+//        }
         return dataResponse;
     }
 }

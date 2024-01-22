@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,13 +30,13 @@ public class PriceServiceImpl implements PriceService {
     private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
-    private PriceRepository priceRepository;
+    private PriceRepository       priceRepository;
     @Autowired
-    private ProductService productService;
+    private ProductService        productService;
     @Autowired
     private ProductHistoryService productHistoryService;
     @Autowired
-    private SystemLogService systemLogService;
+    private SystemLogService      systemLogService;
 
     @Override
     public List<Price> findAll() {
@@ -88,7 +89,7 @@ public class PriceServiceImpl implements PriceService {
             logger.info("Insert price success! insertBy=" + CommonUtils.getCurrentAccountUsername());
             return priceSaved;
         } catch (Exception e) {
-        	logger.error("Insert price fail! price=" + price.toString());
+            logger.error("Insert price fail! price=" + price.toString());
             e.printStackTrace();
             throw new ApiException();
         }
@@ -99,60 +100,55 @@ public class PriceServiceImpl implements PriceService {
         return null;
     }
 
+    @Transactional
     @Override
-    public String update(Price price, int bienTheSanPhamId, int priceId) {
-        try {
-            //Chuyển trạng thái giá hiện tại về false
-            Price disableGiaCu = null;
-            if (priceId > 0) {
-                disableGiaCu = this.findById(priceId);
-                disableGiaCu.setStatus(AppConstants.PRICE_STATUS.INACTIVE.name());
-                priceRepository.save(disableGiaCu);
-            }
-            //Thêm giá mới
-            ProductVariant productVariant = productService.findProductVariantById(bienTheSanPhamId);
-            price.setId(0);
-            price.setProductVariant(productVariant);
-            price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
-            priceRepository.save(price);
-            //
-            ProductHistory productHistory = new ProductHistory();
-            productHistory.setTitle("Cập nhật giá bán");
-            productHistory.setProduct(new Product(productVariant.getProduct().getId()));
-            productHistory.setProductVariant(productVariant);
-            productHistory.setFieldName(productVariant.getTenBienThe());
-            productHistory.setOldValue(disableGiaCu != null ? disableGiaCu.getGiaBan().toString() : "-");
-            productHistory.setNewValue(price.getGiaBan().toString());
-            productHistoryService.save(productHistory);
-            //Lưu log
-            String noiDung = "";
-            if (disableGiaCu != null) {
-                noiDung = "Giá cũ:  " + disableGiaCu.getGiaBan();
-            } else {
-                noiDung = "Giá cũ:  -";
-            }
-            String noiDungCapNhat = "Giá mới: " + price.getGiaBan();
-            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + noiDung, "Giá sau khi cập nhật: " + noiDungCapNhat);
-            logger.info("Update price success! updateBy=" + CommonUtils.getCurrentAccountUsername());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
-        } catch (Exception e) {
-        	logger.error("Update price fail! priceId=" + priceId, e);
-            e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+    public Price update(Price price, int bienTheSanPhamId, int priceId) {
+        //Chuyển trạng thái giá hiện tại về false
+        Price disableGiaCu = null;
+        if (priceId > 0) {
+            disableGiaCu = this.findById(priceId);
+            disableGiaCu.setStatus(AppConstants.PRICE_STATUS.INACTIVE.name());
+            priceRepository.save(disableGiaCu);
         }
+        //Thêm giá mới
+        ProductVariant productVariant = productService.findProductVariantById(bienTheSanPhamId);
+        price.setId(0);
+        price.setProductVariant(productVariant);
+        price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
+        Price priceUpdated = priceRepository.save(price);
+        //
+        ProductHistory productHistory = new ProductHistory();
+        productHistory.setTitle("Cập nhật giá bán");
+        productHistory.setProduct(new Product(productVariant.getProduct().getId()));
+        productHistory.setProductVariant(productVariant);
+        productHistory.setFieldName(productVariant.getTenBienThe());
+        productHistory.setOldValue(disableGiaCu != null ? disableGiaCu.getGiaBan().toString() : "-");
+        productHistory.setNewValue(price.getGiaBan().toString());
+        productHistoryService.save(productHistory);
+        //Lưu log
+        String noiDung = "";
+        if (disableGiaCu != null) {
+            noiDung = "Giá cũ:  " + disableGiaCu.getGiaBan();
+        } else {
+            noiDung = "Giá cũ:  -";
+        }
+        String noiDungCapNhat = "Giá mới: " + price.getGiaBan();
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + noiDung, "Giá sau khi cập nhật: " + noiDungCapNhat);
+        logger.info("Update price success! updateBy=" + CommonUtils.getCurrentAccountUsername());
+        return priceUpdated;
     }
 
     @Override
     public String delete(Integer priceId) {
-    	try {
+        try {
             Price price = this.findById(priceId);
             priceRepository.deleteById(priceId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
             logger.info("Delete price success! deleteBy=" + CommonUtils.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
-		} catch (Exception e) {
-			logger.error("Delete price fail! priceId=" + priceId, e);
-			return AppConstants.SERVICE_RESPONSE_FAIL;
-		}
+        } catch (Exception e) {
+            logger.error("Delete price fail! priceId=" + priceId, e);
+            return AppConstants.SERVICE_RESPONSE_FAIL;
+        }
     }
 }

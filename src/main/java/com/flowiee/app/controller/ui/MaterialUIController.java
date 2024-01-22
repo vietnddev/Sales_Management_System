@@ -3,7 +3,7 @@ package com.flowiee.app.controller.ui;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.entity.Supplier;
-import com.flowiee.app.entity.TicketImportGoods;
+import com.flowiee.app.entity.TicketImport;
 import com.flowiee.app.service.SupplierService;
 import com.flowiee.app.service.TicketImportGoodsService;
 import com.flowiee.app.utils.AppConstants;
@@ -45,7 +45,7 @@ public class MaterialUIController extends BaseController {
                                @Nullable @RequestParam("location") String pLocation,
                                @Nullable @RequestParam("status") String pStatus) {
         validateModuleStorage.readMaterial(true);
-        List<TicketImportGoods> listTicketImport = ticketImportService.findAll();
+        List<TicketImport> listTicketImport = ticketImportService.findAll();
         List<Supplier> listSupplier = supplierService.findAll();
         List<Category> listUnit = categoryService.findSubCategory(AppConstants.CATEGORY.UNIT.getName(), null);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_MATERIAL);
@@ -54,8 +54,8 @@ public class MaterialUIController extends BaseController {
         modelAndView.addObject("listDonViTinh", listUnit);
         modelAndView.addObject("templateImportName", "Name");
         if (pTicketImport != null) {
-            List<TicketImportGoods> ticketImportFilter = new ArrayList<>();
-            ticketImportFilter.add(new TicketImportGoods(CommonUtils.getIdFromRequestParam(pTicketImport), CommonUtils.getNameFromRequestParam(pTicketImport)));
+            List<TicketImport> ticketImportFilter = new ArrayList<>();
+            ticketImportFilter.add(new TicketImport(CommonUtils.getIdFromRequestParam(pTicketImport), CommonUtils.getNameFromRequestParam(pTicketImport)));
             ticketImportFilter.addAll(listTicketImport);
             modelAndView.addObject("filter_ticketImport", ticketImportFilter);
         } else {

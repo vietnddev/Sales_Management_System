@@ -24,7 +24,7 @@ public class Material extends BaseEntity implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
-    private TicketImportGoods ticketImportGoods;
+    private TicketImport ticketImport;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
@@ -97,7 +97,7 @@ public class Material extends BaseEntity implements Serializable {
     public Material fromMaterialRequest(MaterialRequest request) {
     	Material mat = new Material();
     	mat.setId(request.getId());
-    	mat.setTicketImportGoods(new TicketImportGoods(request.getTicketImportId()));
+    	mat.setTicketImport(new TicketImport(request.getTicketImportId()));
     	mat.setSupplier(new Supplier(request.getSupplierId(), null));
     	mat.setQuantity(request.getQuantity());
     	mat.setUnit(new Category(request.getUnitId(), null));
@@ -115,7 +115,7 @@ public class Material extends BaseEntity implements Serializable {
 		builder.append("Material [id=");
 		builder.append(super.id);
 		builder.append(", ticketImportGoods=");
-		builder.append(ticketImportGoods);
+		builder.append(ticketImport);
 		builder.append(", supplier=");
 		builder.append(supplier);
 		builder.append(", code=");

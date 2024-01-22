@@ -36,9 +36,10 @@ public class OrderController extends BaseController {
             if (!super.validateModuleProduct.readOrder(true)) {
                 return null;
             }
-            Page<Object[]> orderPage =orderService.findAllOrder(pageSize, pageNum - 1);
-            return ApiResponse.ok(orderService.convertObjectsToDTO(orderPage.toList()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
+            Page<Order> orderPage = orderService.findAllOrder(pageSize, pageNum - 1);
+            return ApiResponse.ok(OrderDTO.fromOrders(orderPage.getContent()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
         }
     }
@@ -185,8 +186,12 @@ public class OrderController extends BaseController {
         }
     }
 
-    @PutMapping("/thanh-toan/{orderId}")
-    public ApiResponse<String> doPayOrder(@RequestBody String[] payInfo, @PathVariable("orderId") Integer orderId) {
+    @PutMapping("/do-pay/{orderId}")
+    public ApiResponse<String> doPayOrder(@PathVariable("orderId") Integer orderId,
+                                          @RequestParam("paymentTime") Date paymentTime,
+                                          @RequestParam("paymentMethod") Integer paymentMethod,
+                                          @RequestParam("paymentAmount") Float paymentAmount,
+                                          @RequestParam(value = "paymentNote", required = false) String paymentNote) {
         if (!super.validateModuleProduct.updateOrder(true)) {
             return null;
         }
@@ -194,16 +199,13 @@ public class OrderController extends BaseController {
             if (orderId == null || orderId <= 0 || orderService.findOrderById(orderId) == null) {
                 throw new BadRequestException();
             }
-            Date paymentTime = DateUtils.convertStringToDate(null, null, payInfo[0]);
-            int paymentMethod = Integer.parseInt(payInfo[1]);
-            String note = payInfo[2];
             if (paymentTime == null) {
                 paymentTime = new Date();
             }
             if (paymentMethod <= 0) {
                 throw new BadRequestException("Hình thức thanh toán không hợp lệ!");
             }
-            return ApiResponse.ok(orderService.doPay(orderId, paymentTime, paymentMethod, note));
+            return ApiResponse.ok(orderService.doPay(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote));
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "pay order"));
         }

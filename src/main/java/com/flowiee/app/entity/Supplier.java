@@ -41,7 +41,7 @@ public class Supplier extends BaseEntity implements Serializable {
     private String status;
 
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private List<TicketImportGoods> listTicketImportGoods;
+    private List<TicketImport> listTicketImportGoods;
 
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private List<ProductVariant> listProductVariant;

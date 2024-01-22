@@ -13,5 +13,5 @@ public interface PriceService extends BaseService<Price> {
 
     Price findGiaHienTai(int bienTheSanPhamId);
 
-    String update(Price price, int bienTheSanPhamId, int giaSanPhamId);
+    Price update(Price price, int bienTheSanPhamId, int giaSanPhamId);
 }

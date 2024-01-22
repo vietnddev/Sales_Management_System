@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.ByteArrayOutputStream;
@@ -46,27 +47,27 @@ public class ProductServiceImpl implements ProductService {
     private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
-    private ProductRepository productsRepository;
+    private ProductRepository          productsRepository;
     @Autowired
-    private ProductVariantRepository productVariantRepository;
+    private ProductVariantRepository   productVariantRepository;
     @Autowired
     private ProductAttributeRepository productAttributeRepository;
     @Autowired
-    private PriceService priceService;
+    private PriceService               priceService;
     @Autowired
-    private SystemLogService systemLogService;
+    private SystemLogService           systemLogService;
     @Autowired
-    private FileStorageService fileService;
+    private FileStorageService         fileService;
     @Autowired
-    private EntityManager entityManager;
+    private EntityManager              entityManager;
     @Autowired
-    private ProductHistoryService productHistoryService;
+    private ProductHistoryService      productHistoryService;
     @Autowired
-    private VoucherService voucherInfoService;
+    private VoucherService             voucherInfoService;
     @Autowired
-    private VoucherApplyService voucherApplyService;
+    private VoucherApplyService        voucherApplyService;
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryRepository         categoryRepository;
 
     @Override
     public Page<Product> findAllProducts() {
@@ -173,7 +174,7 @@ public class ProductServiceImpl implements ProductService {
         for (ProductVariant productVariant : data) {
             ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
             List<PriceDTO> listPriceOfProductVariant = priceService.findPricesByProductVariant(dataModel.getProductVariantId());
-            PriceDTO price =  PriceDTO.fromPrice(priceService.findGiaHienTai(dataModel.getProductVariantId()));
+            PriceDTO price = PriceDTO.fromPrice(priceService.findGiaHienTai(dataModel.getProductVariantId()));
             if (price != null) {
                 dataModel.setPriceSellId(price.getId());
                 dataModel.setPriceSellValue(Double.parseDouble(price.getGiaBan()));
@@ -191,7 +192,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductAttribute> findAllAttributes(Integer productVariantId){
+    public List<ProductAttribute> findAllAttributes(Integer productVariantId) {
         ProductVariant productVariant = new ProductVariant();
         productVariant.setId(productVariantId);
         return productAttributeRepository.findByProductVariantId(productVariant);
@@ -208,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductAttribute findProductAttributeById(Integer attributeId){
+    public ProductAttribute findProductAttributeById(Integer attributeId) {
         return productAttributeRepository.findById(attributeId).orElse(null);
     }
 
@@ -230,45 +231,40 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public String updateProduct(Product productToUpdate, Integer productId) {
+    public Product updateProduct(Product productToUpdate, Integer productId) {
         Product productBefore = null;
-        try {
-            if (productToUpdate.getMoTaSanPham().isEmpty()) {
-                productToUpdate.setMoTaSanPham("-");;
-            }
-            productBefore = this.findProductById(productId);
-            productBefore.compareTo(productToUpdate).forEach((key, value) -> {
-                ProductHistory productHistory = new ProductHistory();
-                productHistory.setTitle("Update product");
-                productHistory.setProduct(new Product(productId));
-                productHistory.setFieldName(key);
-                productHistory.setOldValue(value.substring(0, value.indexOf("#")));
-                productHistory.setNewValue(value.substring(value.indexOf("#") + 1));
-                productHistoryService.save(productHistory);
-            });
-
-            productToUpdate.setId(productId);
-            productToUpdate.setLastUpdatedBy(CommonUtils.getCurrentAccountUsername());
-            productsRepository.save(productToUpdate);
-            String noiDungLog = "";
-            String noiDungLogUpdate = "";
-            if (productBefore.toString().length() > 1950) {
-                noiDungLog = productBefore.toString().substring(0, 1950);
-            } else {
-                noiDungLog = productBefore.toString();
-            }
-            if (productToUpdate.toString().length() > 1950) {
-                noiDungLogUpdate = productToUpdate.toString().substring(0, 1950);
-            } else {
-                noiDungLogUpdate = productToUpdate.toString();
-            }
-            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
-            logger.info("Update product success! productId=" + productId);
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
-        } catch (Exception e) {
-            logger.error("Update product fail! productId=" + productId, e);
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+        if (productToUpdate.getMoTaSanPham().isEmpty()) {
+            productToUpdate.setMoTaSanPham("-");
         }
+        productBefore = this.findProductById(productId);
+        productBefore.compareTo(productToUpdate).forEach((key, value) -> {
+            ProductHistory productHistory = new ProductHistory();
+            productHistory.setTitle("Update product");
+            productHistory.setProduct(new Product(productId));
+            productHistory.setFieldName(key);
+            productHistory.setOldValue(value.substring(0, value.indexOf("#")));
+            productHistory.setNewValue(value.substring(value.indexOf("#") + 1));
+            productHistoryService.save(productHistory);
+        });
+
+        productToUpdate.setId(productId);
+        productToUpdate.setLastUpdatedBy(CommonUtils.getCurrentAccountUsername());
+        Product productUpdated = productsRepository.save(productToUpdate);
+        String noiDungLog = "";
+        String noiDungLogUpdate = "";
+        if (productBefore.toString().length() > 1950) {
+            noiDungLog = productBefore.toString().substring(0, 1950);
+        } else {
+            noiDungLog = productBefore.toString();
+        }
+        if (productToUpdate.toString().length() > 1950) {
+            noiDungLogUpdate = productToUpdate.toString().substring(0, 1950);
+        } else {
+            noiDungLogUpdate = productToUpdate.toString();
+        }
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
+        logger.info("Update product success! productId=" + productId);
+        return productUpdated;
     }
 
     @Transactional
@@ -290,7 +286,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String saveProductVariant(ProductVariant productVariant) {
+    public ProductVariant saveProductVariant(ProductVariant productVariant) {
         try {
             String tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
 //            if (productVariant.getTenBienThe().isEmpty()) {
@@ -299,31 +295,31 @@ public class ProductServiceImpl implements ProductService {
 //                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
 //            }
             productVariant.setTenBienThe(tenBienTheSanPham);
-            productVariantRepository.save(productVariant);
+            ProductVariant productVariantSaved = productVariantRepository.save(productVariant);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant.toString());
             logger.info("Insert productVariant success! " + productVariant.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return productVariantSaved;
         } catch (Exception e) {
             logger.error("Insert productVariant fail! " + productVariant.toString(), e);
             e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new ApiException();
         }
     }
 
     @Override
-    public String updateProductVariant(ProductVariant productVariant, Integer productVariantId) {
+    public ProductVariant updateProductVariant(ProductVariant productVariant, Integer productVariantId) {
         ProductVariant productVariantBefore = this.findProductVariantById(productVariantId);
         try {
             productVariant.setId(productVariantId);
-            productVariantRepository.save(productVariant);
+            ProductVariant productVariantUpdated = productVariantRepository.save(productVariant);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
             logger.info("Update productVariant success! " + productVariant.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return productVariantUpdated;
         } catch (Exception e) {
             logger.info("Update productVariant fail! " + productVariant.toString(), e);
             e.printStackTrace();
+            throw new ApiException();
         }
-        return AppConstants.SERVICE_RESPONSE_FAIL;
     }
 
     @Override
@@ -342,16 +338,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String saveProductAttribute(ProductAttribute productAttribute){
-        productAttributeRepository.save(productAttribute);
+    public ProductAttribute saveProductAttribute(ProductAttribute productAttribute) {
+        ProductAttribute productAttributeSaved = productAttributeRepository.save(productAttribute);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới thuộc tính sản phẩm");
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return productAttributeSaved;
     }
 
     @Override
-    public String updateProductAttribute(ProductAttribute attribute, Integer attributeId) {
+    public ProductAttribute updateProductAttribute(ProductAttribute attribute, Integer attributeId) {
+        attribute.setId(attributeId);
+        ProductAttribute productAttributeUpdated = productAttributeRepository.save(attribute);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật thuộc tính sản phẩm");
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return productAttributeUpdated;
     }
 
     @Override
@@ -424,12 +422,12 @@ public class ProductServiceImpl implements ProductService {
             productVariant.setTenBienThe(String.valueOf(data[4]));
             productVariant.setColor(new Category(Integer.parseInt(String.valueOf(data[5])), String.valueOf(data[6])));
             productVariant.setSize(new Category(Integer.parseInt(String.valueOf(data[7])), String.valueOf(data[8])));
-            productVariant.setFabricType( new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
+            productVariant.setFabricType(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
             productVariant.setSoLuongKho(Integer.parseInt(String.valueOf(data[11])));
             productVariant.setSoLuongDaBan(Integer.parseInt(String.valueOf(data[12])));
             productVariant.setGarmentFactory(new GarmentFactory(Integer.parseInt(String.valueOf(data[13])), String.valueOf(data[14])));
             productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15])), String.valueOf(data[16])));
-            productVariant.setTicketImportGoods(new TicketImportGoods(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
+            productVariant.setTicketImport(new TicketImport(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
             Integer priceId = data[19] != null ? Integer.parseInt(String.valueOf(data[19])) : null;
             Double priceSellValue = data[20] != null ? Double.parseDouble(String.valueOf(data[20])) : null;
             productVariant.setPrice(new Price(priceId, priceSellValue));

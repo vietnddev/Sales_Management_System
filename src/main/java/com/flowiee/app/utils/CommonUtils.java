@@ -293,4 +293,15 @@ public class CommonUtils {
     public static String getNameFromRequestParam(String param) {
         return param != null ? param.substring(param.indexOf("#") + 1) : null;
     }
+
+    public static String convertListIntToStr(List<Integer> listId) {
+        StringBuilder str = new StringBuilder();
+        for (int id : listId) {
+            str.append(id).append(",");
+        }
+        if (!str.isEmpty()) {
+            str = new StringBuilder(str.substring(0, str.length() - 1));
+        }
+        return str.toString();
+    }
 }

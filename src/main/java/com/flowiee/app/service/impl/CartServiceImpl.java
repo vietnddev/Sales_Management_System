@@ -3,6 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.Items;
 import com.flowiee.app.entity.OrderCart;
 import com.flowiee.app.entity.SystemLog;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.ItemsRepository;
 import com.flowiee.app.repository.OrderCartRepository;
 import com.flowiee.app.service.CartService;
@@ -25,7 +26,7 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ItemsRepository itemsRepository;
     @Autowired
-    private SystemLogService    systemLogService;
+    private SystemLogService systemLogService;
     @Autowired
     private PriceService priceService;
 
@@ -66,19 +67,17 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public String saveCart(OrderCart orderCart) {
+    public OrderCart saveCart(OrderCart orderCart) {
         if (orderCart == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        cartRepository.save(orderCart);
-        return "OK";
+        return cartRepository.save(orderCart);
     }
 
     @Override
-    public String updateCart(OrderCart cart, Integer cartId) {
+    public OrderCart updateCart(OrderCart cart, Integer cartId) {
         cart.setId(cartId);
-        cartRepository.save(cart);
-        return "OK";
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -95,22 +94,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public String saveItem(Items items) {
+    public Items saveItem(Items items) {
         if (items == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        itemsRepository.save(items);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return itemsRepository.save(items);
     }
 
     @Override
-    public String updateItem(Items entity, Integer entityId) {
+    public Items updateItem(Items entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         entity.setId(entityId);
-        itemsRepository.save(entity);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return itemsRepository.save(entity);
     }
 
     @Override

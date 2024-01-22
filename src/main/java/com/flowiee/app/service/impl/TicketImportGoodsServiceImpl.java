@@ -1,12 +1,12 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Category;
+import com.flowiee.app.entity.TicketImport;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Account;
-import com.flowiee.app.entity.TicketImportGoods;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.repository.TicketImportRepository;
 import com.flowiee.app.service.TicketImportGoodsService;
@@ -29,22 +29,22 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
 //    private static String STATUS_REJECT = "REJECT";
 
     @Override
-    public List<TicketImportGoods> findAll() {
+    public List<TicketImport> findAll() {
         return ticketImportRepository.findAll();
     }
 
     @Override
-    public List<TicketImportGoods> findAll(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
+    public List<TicketImport> findAll(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
         return ticketImportRepository.findAll(text, supplierId, paymentMethod, payStatus, importStatus);
     }
 
     @Override
-    public TicketImportGoods findById(Integer entityId) {
+    public TicketImport findById(Integer entityId) {
         return ticketImportRepository.findById(entityId).orElse(null);
     }
 
     @Override
-    public TicketImportGoods save(TicketImportGoods entity) {
+    public TicketImport save(TicketImport entity) {
         if (entity == null) {
             throw new BadRequestException();
         }
@@ -52,7 +52,7 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     }
 
     @Override
-    public TicketImportGoods update(TicketImportGoods entity, Integer entityId) {
+    public TicketImport update(TicketImport entity, Integer entityId) {
         if (entity == null || this.findById(entityId) == null) {
             throw new BadRequestException();
         }
@@ -65,8 +65,8 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
         if (entityId == null || entityId <= 0) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        TicketImportGoods ticketImportGoods = this.findById(entityId);
-        if (ticketImportGoods == null) {
+        TicketImport ticketImport = this.findById(entityId);
+        if (ticketImport == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         ticketImportRepository.deleteById(entityId);
@@ -75,38 +75,37 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
 ;
 
     @Override
-    public String saveDraft(TicketImportGoodsRequest request) {
+    public TicketImport saveDraft(TicketImportGoodsRequest request) {
         if (request == null || request.getId() == null || request.getId() <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        TicketImportGoods ticketImportGoods = this.findById(request.getId());
-        if (ticketImportGoods == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+        TicketImport ticketImport = this.findById(request.getId());
+        if (ticketImport == null) {
+            throw new BadRequestException();
         }
-        ticketImportGoods.setId(request.getId());
-        ticketImportGoods.setTitle(request.getTitle());
+        ticketImport.setId(request.getId());
+        ticketImport.setTitle(request.getTitle());
         if (request.getSupplierId() != null && request.getSupplierId() > 0) {
-            ticketImportGoods.setSupplier(new Supplier(request.getSupplierId(), null));
+            ticketImport.setSupplier(new Supplier(request.getSupplierId(), null));
         }
         if (request.getPaymentMethodId() != null && request.getPaymentMethodId() > 0) {
-            ticketImportGoods.setPaymentMethod(new Category(request.getPaymentMethodId(), null));
+            ticketImport.setPaymentMethod(new Category(request.getPaymentMethodId(), null));
         }
         if (request.getReceivedBy() != null && request.getReceivedBy() > 0) {
-            ticketImportGoods.setReceivedBy(new Account(request.getReceivedBy()));
+            ticketImport.setReceivedBy(new Account(request.getReceivedBy()));
         }
-        ticketImportGoods.setDiscount(request.getDiscount());
-        ticketImportGoods.setPaidAmount(request.getPaidAmount());
-        ticketImportGoods.setPaidStatus(request.getPaidStatus());
+        ticketImport.setDiscount(request.getDiscount());
+        ticketImport.setPaidAmount(request.getPaidAmount());
+        ticketImport.setPaidStatus(request.getPaidStatus());
         if (request.getOrderTime() != null) {
-            ticketImportGoods.setOrderTime(request.getOrderTime());
+            ticketImport.setOrderTime(request.getOrderTime());
         }
         if (request.getReceivedTime() != null) {
-            ticketImportGoods.setReceivedTime(request.getReceivedTime());
+            ticketImport.setReceivedTime(request.getReceivedTime());
         }
-        ticketImportGoods.setNote(request.getNote());
-        ticketImportGoods.setStatus(STATUS_DRAFT);
-        ticketImportRepository.save(ticketImportGoods);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        ticketImport.setNote(request.getNote());
+        ticketImport.setStatus(STATUS_DRAFT);
+        return ticketImportRepository.save(ticketImport);
     }
 
 //    @Override
@@ -168,8 +167,8 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
 //    }
 
     @Override
-    public List<TicketImportGoods> findByMaterialId(Integer materialId) {
-        List<TicketImportGoods> listData = new ArrayList<>();
+    public List<TicketImport> findByMaterialId(Integer materialId) {
+        List<TicketImport> listData = new ArrayList<>();
         if (materialId != null && materialId >= 0) {
             //listData = goodsImportRepository.findByMaterialId(materialId);
         }
@@ -177,8 +176,8 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     }
 
     @Override
-    public List<TicketImportGoods> findBySupplierId(Integer supplierId) {
-        List<TicketImportGoods> listData = new ArrayList<>();
+    public List<TicketImport> findBySupplierId(Integer supplierId) {
+        List<TicketImport> listData = new ArrayList<>();
         if (supplierId != null && supplierId >= 0) {
             listData = ticketImportRepository.findBySupplierId(supplierId);
         }
@@ -186,8 +185,8 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     }
 
     @Override
-    public List<TicketImportGoods> findByPaymentMethod(String paymentMethod) {
-        List<TicketImportGoods> listData = new ArrayList<>();
+    public List<TicketImport> findByPaymentMethod(String paymentMethod) {
+        List<TicketImport> listData = new ArrayList<>();
         if (paymentMethod != null) {
             listData = ticketImportRepository.findByPaymentMethod(paymentMethod);
         }
@@ -195,8 +194,8 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     }
 
     @Override
-    public List<TicketImportGoods> findByPaidStatus(String paidStatus) {
-        List<TicketImportGoods> listData = new ArrayList<>();
+    public List<TicketImport> findByPaidStatus(String paidStatus) {
+        List<TicketImport> listData = new ArrayList<>();
         if (paidStatus != null && CommonUtils.getPaymentStatusCategory().containsKey(paidStatus)) {
             listData = ticketImportRepository.findByPaidStatus(paidStatus);
         }
@@ -204,8 +203,8 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     }
 
     @Override
-    public List<TicketImportGoods> findByAccountId(Integer accountId) {
-        List<TicketImportGoods> listData = new ArrayList<>();
+    public List<TicketImport> findByAccountId(Integer accountId) {
+        List<TicketImport> listData = new ArrayList<>();
         if (accountId != null && accountId > 0) {
             listData = ticketImportRepository.findByReceiveBy(accountId);
         }
@@ -213,33 +212,32 @@ public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
     }
 
     @Override
-    public TicketImportGoods findDraftImportPresent(Integer createdBy) {
+    public TicketImport findDraftImportPresent(Integer createdBy) {
         return ticketImportRepository.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
     }
 
     @Override
-    public TicketImportGoods createDraftImport() {
-        TicketImportGoods ticketImportGoods = new TicketImportGoods();
-        ticketImportGoods.setTitle("Title");
-        ticketImportGoods.setStatus(STATUS_DRAFT);
-        ticketImportGoods.setCreatedBy(CommonUtils.getCurrentAccountId());
-        ticketImportGoods.setOrderTime(new Date());
-        ticketImportGoods.setReceivedTime(new Date());
-        ticketImportGoods = ticketImportRepository.save(ticketImportGoods);
-        return ticketImportGoods;
+    public TicketImport createDraftImport() {
+        TicketImport ticketImport = new TicketImport();
+        ticketImport.setTitle("Title");
+        ticketImport.setStatus(STATUS_DRAFT);
+        ticketImport.setCreatedBy(CommonUtils.getCurrentAccountId());
+        ticketImport.setOrderTime(new Date());
+        ticketImport.setReceivedTime(new Date());
+        ticketImport = ticketImportRepository.save(ticketImport);
+        return ticketImport;
     }
 
     @Override
-    public String updateStatus(Integer entityId, String status) {
+    public TicketImport updateStatus(Integer entityId, String status) {
         if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
-        TicketImportGoods ticketImportGoods = this.findById(entityId);
-        if (ticketImportGoods == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+        TicketImport ticketImport = this.findById(entityId);
+        if (ticketImport == null) {
+            throw new BadRequestException();
         }
-        ticketImportGoods.setStatus(status);
-        ticketImportRepository.save(ticketImportGoods);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        ticketImport.setStatus(status);
+        return ticketImportRepository.save(ticketImport);
     }
 }

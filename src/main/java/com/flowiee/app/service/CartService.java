@@ -18,15 +18,15 @@ public interface CartService {
 
     Items findItemByCartAndProductVariant(Integer cartId, Integer productVariantId);
 
-    String saveCart(OrderCart orderCart);
+    OrderCart saveCart(OrderCart orderCart);
 
-    String updateCart(OrderCart orderCart, Integer cartId);
+    OrderCart updateCart(OrderCart orderCart, Integer cartId);
 
     String deleteCart(Integer cartId);
 
-    String saveItem(Items items);
+    Items saveItem(Items items);
 
-    String updateItem(Items items, Integer cartId);
+    Items updateItem(Items items, Integer cartId);
 
     String deleteItem(Integer cartId);
 

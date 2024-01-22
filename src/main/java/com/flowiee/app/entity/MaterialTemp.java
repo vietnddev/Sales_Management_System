@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "pro_material_temp")
@@ -27,7 +26,7 @@ public class MaterialTemp extends BaseEntity implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
-    private TicketImportGoods ticketImportGoods;
+    private TicketImport ticketImport;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
@@ -65,7 +64,7 @@ public class MaterialTemp extends BaseEntity implements Serializable {
         MaterialTemp materialTemp = new MaterialTemp();
         //materialTemp.setId(material.getId());
         materialTemp.setMaterialId(material.getId());
-        materialTemp.setTicketImportGoods(material.getTicketImportGoods());
+        materialTemp.setTicketImport(material.getTicketImport());
         materialTemp.setSupplier(material.getSupplier());
         materialTemp.setCode(material.getCode());
         materialTemp.setName(material.getName());
@@ -81,7 +80,7 @@ public class MaterialTemp extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MaterialTemp [id=" + super.id + ", materialId=" + materialId + ", ticketImportGoods=" + ticketImportGoods + ", supplier="
+		return "MaterialTemp [id=" + super.id + ", materialId=" + materialId + ", ticketImportGoods=" + ticketImport + ", supplier="
 				+ supplier + ", code=" + code + ", name=" + name + ", quantity=" + quantity + ", unit=" + unit
 				+ ", location=" + location + ", note=" + note + ", status=" + status + "]";
 	}        

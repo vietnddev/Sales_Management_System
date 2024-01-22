@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.entity.Account;
-import com.flowiee.app.entity.TicketImportGoods;
+import com.flowiee.app.entity.TicketImport;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.entity.MaterialTemp;
 import com.flowiee.app.entity.ProductVariant;
@@ -46,64 +46,64 @@ public class TicketImportUIController extends BaseController {
     public ModelAndView loadPageCreate() {
         validateModuleStorage.importGoods(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_CREATE);
-        TicketImportGoods ticketImportGoodsPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
-        if (ticketImportGoodsPresent == null) {
-            ticketImportGoodsPresent = ticketImportGoodsService.createDraftImport();
+        TicketImport ticketImportPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
+        if (ticketImportPresent == null) {
+            ticketImportPresent = ticketImportGoodsService.createDraftImport();
         }
         modelAndView.addObject("goodsImportRequest", new TicketImportGoodsRequest());
-        modelAndView.addObject("goodsImport", new TicketImportGoods());
-        modelAndView.addObject("draftGoodsImport", ticketImportGoodsPresent);
-        modelAndView.addObject("orderTime", ticketImportGoodsPresent.getOrderTime().toString().substring(0, 10));
-        modelAndView.addObject("receivedTime", ticketImportGoodsPresent.getReceivedTime().toString().substring(0, 10));
+        modelAndView.addObject("goodsImport", new TicketImport());
+        modelAndView.addObject("draftGoodsImport", ticketImportPresent);
+        modelAndView.addObject("orderTime", ticketImportPresent.getOrderTime().toString().substring(0, 10));
+        modelAndView.addObject("receivedTime", ticketImportPresent.getReceivedTime().toString().substring(0, 10));
         modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
-        modelAndView.addObject("listBienTheSanPhamSelected", productVariantServiceTemp.findByImportId(ticketImportGoodsPresent.getId()));
+        modelAndView.addObject("listBienTheSanPhamSelected", productVariantServiceTemp.findByImportId(ticketImportPresent.getId()));
         modelAndView.addObject("listMaterial", materialService.findAll());
-        modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(ticketImportGoodsPresent.getId()));
+        modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(ticketImportPresent.getId()));
 
         List<Supplier> listSupplier = new ArrayList<>();
-        if (ticketImportGoodsPresent.getSupplier() == null) {
+        if (ticketImportPresent.getSupplier() == null) {
             listSupplier.add(new Supplier(null, "Chọn supplier"));
             listSupplier.addAll(supplierService.findAll());
         } else {
-            listSupplier.add(ticketImportGoodsPresent.getSupplier());
+            listSupplier.add(ticketImportPresent.getSupplier());
             List<Supplier> listSupplierTemp = supplierService.findAll();
-            listSupplierTemp.remove(ticketImportGoodsPresent.getSupplier());
+            listSupplierTemp.remove(ticketImportPresent.getSupplier());
             listSupplier.addAll(listSupplierTemp);
         }
         modelAndView.addObject("listSupplier", listSupplier);
 
         List<Category> listHinhThucThanhToan = new ArrayList<>();
-        if (ticketImportGoodsPresent.getPaymentMethod() == null) {
+        if (ticketImportPresent.getPaymentMethod() == null) {
             listHinhThucThanhToan.add(new Category(null, "Chọn hình thức thanh toán"));
             listHinhThucThanhToan.addAll(categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
         } else {
-            listHinhThucThanhToan.add(ticketImportGoodsPresent.getPaymentMethod());
+            listHinhThucThanhToan.add(ticketImportPresent.getPaymentMethod());
             List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null);
-            listHinhThucThanhToanTemp.remove(ticketImportGoodsPresent.getPaymentMethod());
+            listHinhThucThanhToanTemp.remove(ticketImportPresent.getPaymentMethod());
             listHinhThucThanhToan.addAll(listHinhThucThanhToanTemp);
         }
         modelAndView.addObject("listHinhThucThanhToan", listHinhThucThanhToan);
 
         List<Account> listAccount = new ArrayList<>();
-        if (ticketImportGoodsPresent.getReceivedBy() == null) {
+        if (ticketImportPresent.getReceivedBy() == null) {
             listAccount.add(new Account(null, null, "Chọn người nhập hàng"));
             listAccount.addAll(accountService.findAll());
         } else {
-            listAccount.add(ticketImportGoodsPresent.getReceivedBy());
+            listAccount.add(ticketImportPresent.getReceivedBy());
             List<Account> lístAccountTemp = accountService.findAll();
-            lístAccountTemp.remove(ticketImportGoodsPresent.getReceivedBy());
+            lístAccountTemp.remove(ticketImportPresent.getReceivedBy());
             listAccount.addAll(lístAccountTemp);
         }
         modelAndView.addObject("listNhanVien", listAccount);
 
         Map<String, String> listTrangThaiThanhToan = new HashMap<>();
-        if (ticketImportGoodsPresent.getPaidStatus() == null || ticketImportGoodsPresent.getPaidStatus().isEmpty()) {
+        if (ticketImportPresent.getPaidStatus() == null || ticketImportPresent.getPaidStatus().isEmpty()) {
             listTrangThaiThanhToan.put(null, "Chọn trạng thái thanh toán");
             listTrangThaiThanhToan.putAll(CommonUtils.getPaymentStatusCategory());
         } else {
-            listTrangThaiThanhToan.put(ticketImportGoodsPresent.getPaidStatus(), CommonUtils.getPaymentStatusCategory().get(ticketImportGoodsPresent.getPaidStatus()));
+            listTrangThaiThanhToan.put(ticketImportPresent.getPaidStatus(), CommonUtils.getPaymentStatusCategory().get(ticketImportPresent.getPaidStatus()));
             Map<String, String> listTrangThaiThanhToanTemp = CommonUtils.getPaymentStatusCategory();
-            listTrangThaiThanhToanTemp.remove(ticketImportGoodsPresent.getPaidStatus());
+            listTrangThaiThanhToanTemp.remove(ticketImportPresent.getPaidStatus());
             listTrangThaiThanhToan.putAll(listTrangThaiThanhToanTemp);
         }
         modelAndView.addObject("listTrangThaiThanhToan", listTrangThaiThanhToan);
@@ -123,7 +123,7 @@ public class TicketImportUIController extends BaseController {
         List<String> listProductVariantId = Arrays.stream(request.getParameterValues("productVariantId")).toList();
         for (String productVariantId : listProductVariantId) {
             ProductVariant productVariant =  productService.findProductVariantById(Integer.parseInt(productVariantId));
-            productVariant.setTicketImportGoods(new TicketImportGoods(importId));
+            productVariant.setTicketImport(new TicketImport(importId));
 
             ProductVariantTemp temp = productVariantServiceTemp.findProductVariantInGoodsImport(importId, productVariant.getId());
             if (temp != null) {
@@ -144,7 +144,7 @@ public class TicketImportUIController extends BaseController {
         List<String> listMaterialId = Arrays.stream(request.getParameterValues("materialId")).toList();
         for (String materialId : listMaterialId) {
             Material material = materialService.findById(Integer.parseInt(materialId));
-            material.setTicketImportGoods(new TicketImportGoods(importId));
+            material.setTicketImport(new TicketImport(importId));
 
             MaterialTemp temp = materialServiceTemp.findMaterialInGoodsImport(importId, material.getId());
             if (temp != null) {
@@ -170,23 +170,23 @@ public class TicketImportUIController extends BaseController {
     @GetMapping("/search")
     public void search() {
         validateModuleStorage.importGoods(true);
-        List<TicketImportGoods> data = ticketImportGoodsService.findAll(null, 1, null, null, null);
+        List<TicketImport> data = ticketImportGoodsService.findAll(null, 1, null, null, null);
         if (data != null) {
-            for (TicketImportGoods o : data) {
+            for (TicketImport o : data) {
                 System.out.println(o.toString());
             }
         }
     }
 
     @GetMapping("/update/{id}")
-    public ModelAndView update(@ModelAttribute("goodsImport") TicketImportGoods ticketImportGoods,
+    public ModelAndView update(@ModelAttribute("goodsImport") TicketImport ticketImport,
                          @PathVariable("id") Integer importId,
                          HttpServletRequest request) {
         validateModuleStorage.importGoods(true);
         if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        ticketImportGoodsService.update(ticketImportGoods, importId);
+        ticketImportGoodsService.update(ticketImport, importId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 

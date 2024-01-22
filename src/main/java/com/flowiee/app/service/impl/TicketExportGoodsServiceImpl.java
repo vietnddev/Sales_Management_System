@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.entity.TicketExportGoods;
+import com.flowiee.app.entity.TicketExport;
 import com.flowiee.app.repository.TicketExportRepository;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.ProductService;
@@ -21,18 +21,18 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
     private ProductService productService;
 
     @Override
-    public List<TicketExportGoods> findAll() {
+    public List<TicketExport> findAll() {
         return ticketExportRepository.findAll();
     }
 
     @Override
-    public TicketExportGoods findById(Integer entityId) {
+    public TicketExport findById(Integer entityId) {
         return ticketExportRepository.findById(entityId).get();
     }
 
     @Override
-    public TicketExportGoods save(TicketExportGoods ticket) {
-        TicketExportGoods ticketExportSaved = ticketExportRepository.save(ticket);
+    public TicketExport save(TicketExport ticket) {
+        TicketExport ticketExportSaved = ticketExportRepository.save(ticket);
         //Code for order status
         //PR -> Preparing
         //WS -> Waiting shipper
@@ -46,7 +46,7 @@ public class TicketExportGoodsServiceImpl implements TicketExportGoodsService {
     }
 
     @Override
-    public TicketExportGoods update(TicketExportGoods ticket, Integer entityId) {
+    public TicketExport update(TicketExport ticket, Integer entityId) {
         ticket.setId(entityId);
         return ticketExportRepository.save(ticket);
     }

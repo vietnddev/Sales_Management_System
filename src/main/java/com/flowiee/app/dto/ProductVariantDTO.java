@@ -79,8 +79,8 @@ public class ProductVariantDTO implements Serializable {
         dto.setSupplierId(input.getSupplier().getId());
         dto.setSupplierName(input.getSupplier().getName());
         //dto.setTicketImportGoods(input.getTicketImportGoods());
-        dto.setTicketImportGoodsId(input.getTicketImportGoods().getId());
-        dto.setTicketImportGoodsTitle(input.getTicketImportGoods().getTitle());
+        dto.setTicketImportGoodsId(input.getTicketImport().getId());
+        dto.setTicketImportGoodsTitle(input.getTicketImport().getTitle());
         dto.setDiscountPercent(null);
         dto.setPriceBuyId(null);
         dto.setPriceBuyValue(null);

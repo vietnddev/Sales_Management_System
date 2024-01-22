@@ -7,7 +7,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Builder
 @Entity
@@ -64,7 +63,7 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
-    private TicketImportGoods ticketImportGoods;
+    private TicketImport ticketImport;
 
     @Transient
     private Price price;
@@ -99,7 +98,7 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
         productVariantTemp.setFabricType(productVariant.getFabricType());
         productVariantTemp.setGarmentFactory(productVariant.getGarmentFactory());
         productVariantTemp.setSupplier(productVariant.getSupplier());
-        productVariantTemp.setTicketImportGoods(productVariant.getTicketImportGoods());
+        productVariantTemp.setTicketImport(productVariant.getTicketImport());
         productVariantTemp.setPrice(productVariant.getPrice());
 //        productVariantTemp.setListThuocTinh(productVariant.getListThuocTinh());
 //        productVariantTemp.setListGiaBan(productVariant.getListGiaBan());
@@ -115,6 +114,6 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
 				+ maSanPham + ", tenBienThe=" + tenBienThe + ", soLuongKho=" + soLuongKho + ", soLuongDaBan="
 				+ soLuongDaBan + ", trangThai=" + trangThai + ", loaiMauSac=" + loaiMauSac + ", loaiKichCo="
 				+ loaiKichCo + ", fabricType=" + fabricType + ", garmentFactory=" + garmentFactory + ", supplier="
-				+ supplier + ", ticketImportGoods=" + ticketImportGoods + ", price=" + price + "]";
+				+ supplier + ", ticketImportGoods=" + ticketImport + ", price=" + price + "]";
 	}  
 }

@@ -67,7 +67,7 @@ public class ProductVariant extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_import_id")
-    private TicketImportGoods ticketImportGoods;
+    private TicketImport ticketImport;
 
     @Transient
     private Price price;
@@ -131,7 +131,7 @@ public class ProductVariant extends BaseEntity implements Serializable {
 		return "ProductVariant [id=" + super.id + ", product=" + product + ", maSanPham=" + maSanPham + ", tenBienThe=" + tenBienThe
 				+ ", soLuongKho=" + soLuongKho + ", soLuongDaBan=" + soLuongDaBan + ", trangThai=" + trangThai
 				+ ", color=" + color + ", size=" + size + ", fabricType=" + fabricType + ", garmentFactory="
-				+ garmentFactory + ", supplier=" + supplier + ", ticketImportGoods=" + ticketImportGoods + ", price="
+				+ garmentFactory + ", supplier=" + supplier + ", ticketImportGoods=" + ticketImport + ", price="
 				+ price + "]";
 	}     
 }

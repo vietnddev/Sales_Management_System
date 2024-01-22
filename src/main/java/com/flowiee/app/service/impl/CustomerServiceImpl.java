@@ -76,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public String saveCustomer(Customer customer) {
+    public Customer saveCustomer(Customer customer) {
         customer.setCreatedBy(CommonUtils.getCurrentAccountId());
         Customer customerInserted = customerRepository.save(customer);
         if (customer.getPhoneDefault() != null) {
@@ -108,7 +108,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_CREATE.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Thêm mới khách hàng " + customer.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return customerInserted;
     }
 
     @Override
@@ -121,12 +121,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public String updateCustomer(Customer customer, Integer customerId) {
+    public Customer updateCustomer(Customer customer, Integer customerId) {
         if (customer == null || customerId <= 0 || this.findCustomerById(customerId) == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         customer.setId(customerId);
-        customerRepository.save(customer);
+        Customer customerUpdated = customerRepository.save(customer);
 
         CustomerContact phoneDefault = null;
         CustomerContact emailDefault = null;
@@ -189,7 +189,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_UPDATE.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
         logger.info(ProductServiceImpl.class.getName() + ": Cập nhật khách hàng " + customer.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return customerUpdated;
     }
 
     @Override
