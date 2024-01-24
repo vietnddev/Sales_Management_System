@@ -39,7 +39,7 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
            "left join GarmentFactory g on g.id = v.garmentFactory.id " +
            "left join Supplier sp on sp.id = v.supplier.id " +
            "left join Price pr on pr.productVariant.id = v.id and pr.status = 'ACTIVE' " +
-           "left join TicketImport ti on ti.id = v.ticketImportGoods.id " +
+           "left join TicketImport ti on ti.id = v.ticketImport.id " +
            "left join Category c on c.id = v.color.id and c.type = 'COLOR' " +
            "left join Category s on s.id = v.size.id and s.type = 'SIZE' " +
            "left join Category f on f.id = v.fabricType.id and f.type = 'FABRIC_TYPE' " +
@@ -56,7 +56,7 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
     @Query("from ProductVariant b where b.product.id=:productId and b.color.id=:colorId and b.size.id=:sizeId")
     ProductVariant findByColorAndSize(@Param("productId") Integer productId, @Param("colorId") Integer colorId, @Param("sizeId")  Integer sizeId);
 
-    @Query("from ProductVariant b where b.ticketImportGoods.id=:importId")
+    @Query("from ProductVariant b where b.ticketImport.id=:importId")
     List<ProductVariant> findByImportId(@Param("importId") Integer importId);
 
     @Query("from ProductVariant p where p.fabricType.id=:fabricTypeId")

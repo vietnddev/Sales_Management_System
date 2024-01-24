@@ -56,16 +56,16 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<Material> listMaterial;
 
-    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<ProductVariant> listProductVariant;
 
-    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<MaterialTemp> listMaterialTemp;
 
-    @OneToMany(mappedBy = "ticketImportGoods", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<ProductVariantTemp> listProductVariantTemp;
 
     public TicketImport(Integer id) {

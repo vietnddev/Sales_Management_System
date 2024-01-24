@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query("from Material m " +
-           "where (:ticketImportId is null or m.ticketImportGoods.id=:ticketImportId) " +
+           "where (:ticketImportId is null or m.ticketImport.id=:ticketImportId) " +
            "and (:supplierId is null or m.supplier.id=:supplierId) " +
            "and (:unitId is null or m.unit.id=:unitId) " +
            "and (:code is null or m.code=:code) " +
@@ -26,7 +26,7 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query("from Material m where m.code=:code")
     List<Material> findByCode(@Param("code") String code);
 
-    @Query("from Material m where m.ticketImportGoods.id=:importId")
+    @Query("from Material m where m.ticketImport.id=:importId")
     List<Material> findByImportId(@Param("importId") Integer importId);
 
     @Query("from Material m where m.unit.id=:unitId")

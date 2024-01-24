@@ -51,15 +51,29 @@
                                             <th>STT</th>
                                             <th>Tiêu đề</th>
                                             <th>Loại hàng hóa</th>
-                                            <th>Tên</th>
+                                            <th>Tên hàng hóa</th>
+                                            <th>Người xuất</th>
                                             <th>Thời gian xuất</th>
                                             <th>Ghi chú</th>
                                             <th>Trạng thái</th>
+                                            <th></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-
+                                        <tr th:each="list, index : ${listTicketExport}">
+                                            <td th:text="${index.index + 1}"></td>
+                                            <td th:text="${list.title}"></td>
+                                            <td th:text="'Sản phẩm (test)'"></td>
+                                            <td th:text="'Quần ...,áo ... (test)'"></td>
+                                            <td th:text="${list.exporter}"></td>
+                                            <td th:text="${list.exportTime}"></td>
+                                            <td th:text="${list.note}"></td>
+                                            <td th:text="${list.status}"></td>
+                                            <td>In</td>
+                                        </tr>
                                     </tbody>
-                                    <tfoot></tfoot>
+                                    <tfoot>
+                                    </tfoot>
                                 </table>
                             </div>
                             <!-- /.card-body -->

@@ -6,6 +6,7 @@ import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TicketExport extends BaseEntity implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Column(name = "title")
@@ -32,7 +34,10 @@ public class TicketExport extends BaseEntity implements Serializable {
     @Column(name = "note", length = 500)
     private String note;
 
+    @Column(name = "status")
+    private String status;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "ticket_export", fetch = FetchType.LAZY)
-    private List<Order> listFileOrder;
+    @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
+    private List<Order> listOrders;
 }

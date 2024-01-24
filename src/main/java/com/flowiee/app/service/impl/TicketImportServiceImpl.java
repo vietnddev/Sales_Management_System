@@ -9,7 +9,7 @@ import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.repository.TicketImportRepository;
-import com.flowiee.app.service.TicketImportGoodsService;
+import com.flowiee.app.service.TicketImportService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TicketImportGoodsServiceImpl implements TicketImportGoodsService {
+public class TicketImportServiceImpl implements TicketImportService {
     @Autowired
     private TicketImportRepository ticketImportRepository;
 

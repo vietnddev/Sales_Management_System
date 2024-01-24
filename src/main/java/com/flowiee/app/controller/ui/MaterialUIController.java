@@ -5,7 +5,7 @@ import com.flowiee.app.entity.Material;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.entity.TicketImport;
 import com.flowiee.app.service.SupplierService;
-import com.flowiee.app.service.TicketImportGoodsService;
+import com.flowiee.app.service.TicketImportService;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
@@ -31,9 +31,9 @@ import java.util.List;
 @RequestMapping(EndPointUtil.STORAGE_MATERIAL)
 public class MaterialUIController extends BaseController {
     @Autowired private MaterialService materialService;
-    @Autowired private CategoryService categoryService;
-    @Autowired private TicketImportGoodsService ticketImportService;
-    @Autowired private SupplierService supplierService;
+    @Autowired private CategoryService     categoryService;
+    @Autowired private TicketImportService ticketImportService;
+    @Autowired private SupplierService     supplierService;
     @Autowired private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping

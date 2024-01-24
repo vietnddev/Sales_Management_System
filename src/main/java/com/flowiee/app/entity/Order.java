@@ -7,10 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table(name = "pro_order")
@@ -79,6 +76,10 @@ public class Order extends BaseEntity implements Serializable {
 
 //	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 //	private List<OrderPay> listOrderPay;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ticket_export_id")
+	private TicketExport ticketExport;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status", nullable = false)

@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface MaterialTempRepository extends JpaRepository<MaterialTemp, Integer> {
-    @Query("from MaterialTemp m where m.ticketImportGoods.id=:importId")
+    @Query("from MaterialTemp m where m.ticketImport.id=:importId")
     List<MaterialTemp> findByImportId(@Param("importId") Integer importId);
     
-    @Query("from MaterialTemp m where m.ticketImportGoods.id=:importId and m.materialId=:materialId")
+    @Query("from MaterialTemp m where m.ticketImport.id=:importId and m.materialId=:materialId")
     MaterialTemp findMaterialInGoodsImport(@Param("importId") Integer importId, @Param("materialId") Integer materialId);
 }

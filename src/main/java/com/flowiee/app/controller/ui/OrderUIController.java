@@ -1,5 +1,7 @@
 package com.flowiee.app.controller.ui;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.BadRequestException;
@@ -56,13 +58,14 @@ public class OrderUIController extends BaseController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) {
+    public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) throws JsonProcessingException {
         validateModuleProduct.readOrder(true);
         if (orderId <= 0 || orderService.findOrderById(orderId) == null) {
             throw new NotFoundException("Order not found!");
         }
         OrderDTO orderDetail = orderService.findOrderById(orderId);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_DETAIL);
+        modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail);
         modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
         //modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));

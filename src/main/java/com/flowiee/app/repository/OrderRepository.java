@@ -122,4 +122,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 //           "from Order o " +
 //           "where extract(year from o.thoiGianDatHang) = extract(year from current_date)")
 //    List<Object[]> findRevenueEachMonthOfYear();
+
+    @Modifying
+    @Query("update Order set ticketExport.id=:ticketExportId where id=:orderId")
+    void setTicketExportInfo(@Param("orderId") Integer orderId, @Param("ticketExportId") Integer ticketExportId);
 }

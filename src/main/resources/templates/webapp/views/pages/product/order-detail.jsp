@@ -192,15 +192,15 @@
                                                 <div class="row justify-content-between">
                                                     <div class="col-2" style="display: flex; align-items: center"></div>
                                                     <div class="col-10 text-right">
-                                                        <button type="button" class="btn btn-primary">In</button>
-                                                        <button type="button" class="btn btn-success"
+                                                        <button type="button" class="btn btn-sm btn-primary">In</button>
+                                                        <button type="button" class="btn btn-sm btn-success"
                                                                 data-toggle="modal"
                                                                 data-target="#modalThanhToan"
                                                                 disabled
                                                                 th:if="${orderDetail.paymentStatus}">
                                                             Đã thanh toán
                                                         </button>
-                                                        <button type="button" class="btn btn-success"
+                                                        <button type="button" class="btn btn-sm btn-success"
                                                                 data-toggle="modal"
                                                                 data-target="#modalThanhToan"
                                                                 th:if="${!orderDetail.paymentStatus}">
@@ -274,11 +274,8 @@
                                                 </div>
                                                 <hr>
                                                 <div class="row justify-content-between">
-                                                    <div class="col-4" style="display: flex; align-items: center">
-                                                    </div>
-                                                    <div class="col-4 text-right">
-                                                        <button type="button" class="btn btn-info">Tạo phiếu xuất hàng</button>
-                                                    </div>
+                                                    <div class="col-4" style="display: flex; align-items: center"></div>
+                                                    <div class="col-4 text-right"><button type="button" class="btn btn-sm btn-info link-confirm">Tạo phiếu xuất hàng</button></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -294,6 +291,8 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+
+    <div th:replace="modal_fragments :: confirm_modal"></div>
 
     <div th:replace="footer :: footer">
         <!-- Nhúng các file JavaScript vào -->
@@ -321,12 +320,29 @@
             $('#reservation').daterangepicker()
         })
 
+        let mvOrderDetail = {}
         $(document).ready(function () {
             let rawPaymentTime = $('#paymentTimeField').text();
-            console.log(rawPaymentTime)
             let formattedTime = moment(rawPaymentTime, "YYYY-MM-DD HH:mm:ss.S").format('DD/MM/YYYY HH:mm:ss');
             $('#paymentTimeField').text(formattedTime);
 
+            loadOrderDetail();
+            doPay();
+            createTicketExport();
+        });
+
+        function loadOrderDetail() {
+            let apiURL = mvHostURLCallApi + "/order/" + [[${orderDetailId}]];
+            $.get(apiURL, function (response) {
+                if (response.status === "OK") {
+                    mvOrderDetail = response.data;
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
+        }
+
+        function doPay() {
             $("#btnDoPaySubmit").on("click", function(e) {
                 e.preventDefault();
                 let paymentTime = $('#paymentTimeField_DoPay').val();
@@ -349,7 +365,34 @@
                     }
                 });
             });
-        });
+        }
+
+        function createTicketExport() {
+            $(".link-confirm").on("click", function () {
+                $(this).attr("actionType", "create");
+                showConfirmModal($(this), "Tạo phiếu xuất kho", "Bạn có chắc muốn tạo phiếu?");
+            });
+
+            $("#yesButton").on("click", function () {
+                let apiURL = mvHostURLCallApi + "/ticket-export/create-draft";
+                let body = {orderId : mvOrderDetail.orderId, orderCode : mvOrderDetail.orderCode};
+                $.ajax({
+                    url: apiURL,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(body),
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status === "OK") {
+                            alert("Tạo phiếu xuất kho thành công!")
+                            window.location = mvHostURL + "/storage/ticket-export";
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        showErrorModal("Could not connect to the server" );
+                    }
+                });
+            });
+        }
     </script>
 </div>
 

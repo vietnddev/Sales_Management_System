@@ -26,8 +26,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/storage/ticket-import")
 public class TicketImportUIController extends BaseController {
-    @Autowired private TicketImportGoodsService ticketImportGoodsService;
-    @Autowired private SupplierService supplierService;
+    @Autowired private TicketImportService ticketImportService;
+    @Autowired private SupplierService     supplierService;
     @Autowired private ProductService productService;
     @Autowired private ProductVariantTempService productVariantServiceTemp;
     @Autowired private MaterialService materialService;
@@ -46,9 +46,9 @@ public class TicketImportUIController extends BaseController {
     public ModelAndView loadPageCreate() {
         validateModuleStorage.importGoods(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_CREATE);
-        TicketImport ticketImportPresent = ticketImportGoodsService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
+        TicketImport ticketImportPresent = ticketImportService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
         if (ticketImportPresent == null) {
-            ticketImportPresent = ticketImportGoodsService.createDraftImport();
+            ticketImportPresent = ticketImportService.createDraftImport();
         }
         modelAndView.addObject("goodsImportRequest", new TicketImportGoodsRequest());
         modelAndView.addObject("goodsImport", new TicketImport());
@@ -117,7 +117,7 @@ public class TicketImportUIController extends BaseController {
     @PostMapping("/draft/add-product/{importId}")
     public ModelAndView addProductVariantToDraftImport(@PathVariable("importId") Integer importId, HttpServletRequest request) {
         validateModuleStorage.importGoods(true);
-        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportService.findById(importId) == null) {
             throw new NotFoundException("Goods import to add product not found!");
         }
         List<String> listProductVariantId = Arrays.stream(request.getParameterValues("productVariantId")).toList();
@@ -138,7 +138,7 @@ public class TicketImportUIController extends BaseController {
     @PostMapping("/draft/add-material/{importId}")
     public String addMaterialToDraftImport(@PathVariable("importId") Integer importId, HttpServletRequest request) {
         validateModuleStorage.importGoods(true);
-        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportService.findById(importId) == null) {
             throw new NotFoundException("Goods import to add material not found!");
         }
         List<String> listMaterialId = Arrays.stream(request.getParameterValues("materialId")).toList();
@@ -162,7 +162,7 @@ public class TicketImportUIController extends BaseController {
         validateModuleStorage.importGoods(true);
         ticketImportGoodsRequest.setOrderTime(DateUtils.convertStringToDate(request.getParameter("orderTime_"), "yyyy-MM-dd"));
         ticketImportGoodsRequest.setReceivedTime(DateUtils.convertStringToDate(request.getParameter("receivedTime_"), "yyyy-MM-dd"));
-        ticketImportGoodsService.saveDraft(ticketImportGoodsRequest);
+        ticketImportService.saveDraft(ticketImportGoodsRequest);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -170,7 +170,7 @@ public class TicketImportUIController extends BaseController {
     @GetMapping("/search")
     public void search() {
         validateModuleStorage.importGoods(true);
-        List<TicketImport> data = ticketImportGoodsService.findAll(null, 1, null, null, null);
+        List<TicketImport> data = ticketImportService.findAll(null, 1, null, null, null);
         if (data != null) {
             for (TicketImport o : data) {
                 System.out.println(o.toString());
@@ -183,40 +183,40 @@ public class TicketImportUIController extends BaseController {
                          @PathVariable("id") Integer importId,
                          HttpServletRequest request) {
         validateModuleStorage.importGoods(true);
-        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        ticketImportGoodsService.update(ticketImport, importId);
+        ticketImportService.update(ticketImport, importId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @GetMapping("/reset/{id}")
     public ModelAndView clear(@PathVariable("id") Integer draftImportId) {
         validateModuleStorage.importGoods(true);
-        if (draftImportId <= 0 || ticketImportGoodsService.findById(draftImportId) == null) {
+        if (draftImportId <= 0 || ticketImportService.findById(draftImportId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        ticketImportGoodsService.delete(draftImportId);
+        ticketImportService.delete(draftImportId);
         return new ModelAndView("redirect:");
     }
 
     @PostMapping("/send-approval/{id}")
     public ModelAndView sendApproval(@PathVariable("id") Integer importId) {
         validateModuleStorage.importGoods(true);
-        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        ticketImportGoodsService.updateStatus(importId, "");
+        ticketImportService.updateStatus(importId, "");
         return new ModelAndView("redirect:");
     }
 
     @PostMapping("/approve/{id}")
     public ModelAndView approve(@PathVariable("id") Integer importId) {
         validateModuleStorage.importGoods(true);
-        if (importId <= 0 || ticketImportGoodsService.findById(importId) == null) {
+        if (importId <= 0 || ticketImportService.findById(importId) == null) {
             throw new NotFoundException("Goods import not found!");
         }
-        ticketImportGoodsService.updateStatus(importId, "");
+        ticketImportService.updateStatus(importId, "");
         return new ModelAndView("redirect:");
     }
 }
