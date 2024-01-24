@@ -3,6 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
+import com.flowiee.app.dto.TicketExportDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,4 +41,15 @@ public class TicketExport extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
     private List<Order> listOrders;
+
+    public static TicketExport fromTicketExportDTO(TicketExportDTO dto) {
+        TicketExport ticketExport = new TicketExport();
+        ticketExport.setId(dto.getId());
+        ticketExport.setTitle(dto.getTitle());
+        ticketExport.setExporter(dto.getExporter());
+        ticketExport.setExportTime(dto.getExportTime());
+        ticketExport.setNote(dto.getNote());
+        ticketExport.setStatus(dto.getStatus());
+        return ticketExport;
+    }
 }

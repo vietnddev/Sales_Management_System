@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.TicketExport;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.OrderRepository;
@@ -8,13 +9,13 @@ import com.flowiee.app.repository.TicketExportRepository;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.TicketExportService;
-import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class TicketExportServiceImpl implements TicketExportService {
         return null;
     }
 
+    @Transactional
     @Override
     public TicketExport save(OrderDTO orderDTO) {
         if (!ObjectUtils.isNotEmpty(orderDTO)) {
@@ -66,18 +68,25 @@ public class TicketExportServiceImpl implements TicketExportService {
         ticketExport.setNote(null);
         ticketExport.setStatus("DRAFT");
         ticketExport = ticketExportRepository.save(ticketExport);
-        //orderRepository.setTicketExportInfo(orderDTO.getOrderId(), ticketExport.getId());
+        orderRepository.setTicketExportInfo(orderDTO.getOrderId(), ticketExport.getId());
         return ticketExport;
     }
 
+    @Transactional
     @Override
-    public TicketExport update(TicketExport ticket, Integer entityId) {
-        ticket.setId(entityId);
+    public TicketExport update(TicketExport ticket, Integer ticketExportId) {
+        ticket.setId(ticketExportId);
         return ticketExportRepository.save(ticket);
     }
 
     @Override
-    public String delete(Integer entityId) {
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+    public String delete(Integer ticketExportId) {
+        Order order = orderRepository.findByTicketExport(ticketExportId);
+        if (order != null) {
+            order.setTicketExport(null);
+            orderRepository.save(order);
+        }
+        ticketExportRepository.deleteById(ticketExportId);
+        return MessageUtils.DELETE_SUCCESS;
     }
 }

@@ -5,7 +5,7 @@ function showErrorModal(message) {
 function showModalDialog(title, message) {
     $("#modalTitle").text(title);
     $("#modalBody").text(message);
-    $("#modalDialog").modal();
+    $("#dialogModal").modal();
 }
 
 function showConfirmModal(linkObject, title, text) {
@@ -19,13 +19,21 @@ function showConfirmModal(linkObject, title, text) {
     $("#yesButton").attr("entityName", linkObject.attr("entityName"));
     $("#yesButton").attr("actionType", linkObject.attr("actionType"));
 
-    if (actionType === 'create') {
+    if (actionType === 'create' || actionType === 'update') {
         $("#confirmTitle").text(title);
         $("#confirmText").text(text);
     }
     if (actionType === 'delete') {
-        $("#confirmTitle").text("Xác nhận xóa");
-        $("#confirmText").text("Bạn chắc chắn muốn xóa: " + entityName + "?");
+        if (title === null) {
+            $("#confirmTitle").text("Xác nhận xóa");
+        } else {
+            $("#confirmTitle").text(title);
+        }
+        if (text === null) {
+            $("#confirmText").text("Bạn chắc chắn muốn xóa: " + entityName + "?");
+        } else {
+            $("#confirmText").text(text);
+        }
     }
     $("#confirmModal").modal();//hiển thị modal
 }

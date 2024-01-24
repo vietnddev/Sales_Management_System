@@ -2,26 +2,34 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.dto.TicketExportDTO;
 import com.flowiee.app.entity.TicketExport;
 import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.TicketExportService;
-import com.flowiee.app.utils.PagesUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("${app.api.prefix}/ticket-export")
+@RequestMapping("${app.api.prefix}/storage/ticket-export")
 public class TicketExportController extends BaseController {
     @Autowired private TicketExportService ticketExportService;
 
     @GetMapping
-    public ModelAndView viewAllTicket() {
+    public ApiResponse<List<TicketExport>> findAll() {
         validateModuleStorage.exportGoods(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_EXPORT);
-        return baseView(modelAndView);
+        return ApiResponse.ok(ticketExportService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<TicketExportDTO> findDetail(@PathVariable("id") Integer ticketExportId) {
+        validateModuleStorage.exportGoods(true);
+        return ApiResponse.ok(TicketExportDTO.fromTicketExport(ticketExportService.findById(ticketExportId)));
     }
     
     @PostMapping("/create-draft")
@@ -37,17 +45,21 @@ public class TicketExportController extends BaseController {
         }
     }
     
-    @PostMapping("/update/{id}")
-    public ModelAndView updateTicketExport(@ModelAttribute("ticketExport") TicketExport ticketExport, @PathVariable("id") Integer ticketExportId) {
+    @PutMapping("/update/{id}")
+    public ApiResponse<TicketExportDTO> updateTicketExport(@RequestBody TicketExport ticketExport, @PathVariable("id") Integer ticketExportId) {
     	validateModuleStorage.exportGoods(true);
-    	ticketExportService.update(ticketExport, ticketExportId);
-    	return new ModelAndView("redirect:/storage/ticket-export");
+        if (ObjectUtils.isEmpty(ticketExportService.findById(ticketExportId))) {
+            throw new BadRequestException();
+        }
+        return ApiResponse.ok(TicketExportDTO.fromTicketExport(ticketExportService.update(ticketExport, ticketExportId)));
     }
-    
-    @PostMapping("/delete/{id}")
-    public ModelAndView deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
-    	validateModuleStorage.exportGoods(true);
-    	ticketExportService.delete(ticketExportId);
-    	return new ModelAndView("redirect:/storage/ticket-export");
+
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<String> deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
+        validateModuleStorage.exportGoods(true);
+        if (ObjectUtils.isEmpty(ticketExportService.findById(ticketExportId))) {
+            throw new BadRequestException();
+        }
+        return ApiResponse.ok(ticketExportService.delete(ticketExportId));
     }
 }

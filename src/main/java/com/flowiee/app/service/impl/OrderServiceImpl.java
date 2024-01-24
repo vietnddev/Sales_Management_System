@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.dto.OrderDetailDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.exception.DataInUseException;
@@ -105,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
             totalAmount += d.getPrice() * d.getSoLuong();
         }
         OrderDTO dto = orders.get(0);
-        dto.setListOrderDetail(listOrderDetail);
+        dto.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(listOrderDetail));
         dto.setTotalProduct(totalProduct);
         dto.setTotalAmount(totalAmount);
         dto.setTotalAmountDiscount(dto.getTotalAmount() - dto.getAmountDiscount());

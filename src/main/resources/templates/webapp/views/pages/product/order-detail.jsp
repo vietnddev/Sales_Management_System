@@ -56,8 +56,7 @@
                                     <div class="tab-pane fade show active" id="THONG_TIN" role="tabpanel"
                                          aria-labelledby="custom-tabs-one-home-tab">
                                         <div class="row">
-                                            <div class="card-body table-responsive col-sm-12 p-0"
-                                                 style="height: 250px;">
+                                            <div class="card-body table-responsive col-sm-12 p-0" style="height: 250px;">
                                                 <table class="table table-bordered table-head-fixed text-nowrap">
                                                     <thead>
                                                         <tr>
@@ -75,15 +74,15 @@
                                                         <tr th:each="list, index : ${listOrderDetail}">
                                                             <td th:text="${index.index + 1}" style="font-weight: bold"></td>
                                                             <td>
-                                                                <a th:text="${list.productVariant.tenBienThe}"
-                                                                   th:href="@{/san-pham/variant/{id}(id=${list.productVariant.id})}"></a>
+                                                                <a th:text="${list.productVariantDTO.name}"
+                                                                   th:href="@{/san-pham/variant/{id}(id=${list.productVariantDTO.productVariantId})}"></a>
                                                             </td>
-                                                            <td th:text="${list.productVariant.product.unit.name}"></td>
-                                                            <td th:text="${list.soLuong}" class="text-right"></td>
+                                                            <td th:text="${list.productVariantDTO.unitName}"></td>
+                                                            <td th:text="${list.quantity}" class="text-right"></td>
                                                             <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
                                                             <td th:text="${list.priceOriginal != null} ? ${#numbers.formatDecimal (list.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
-                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.soLuong, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
-                                                            <td th:text="${list.ghiChu}"></td>
+                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${list.note}"></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="6"></td>
@@ -140,38 +139,35 @@
                                             <div class="card-footer col-sm-3 p-0">
                                                 <table class="table">
                                                     <tbody>
-                                                    <tr>
-                                                        <th>Số lượng sản phẩm</th>
-                                                        <td th:text="${orderDetail.totalProduct}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Voucher</th>
-                                                        <td th:text="${orderDetail.voucherUsedCode}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Giảm giá</th>
-                                                        <td th:text="${orderDetail.amountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.amountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Phí ship</th>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Tổng phải thu</th>
-                                                        <td th:text="${orderDetail.totalAmountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>Số lượng sản phẩm</th>
+                                                            <td th:text="${orderDetail.totalProduct}"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Voucher</th>
+                                                            <td th:text="${orderDetail.voucherUsedCode}"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Giảm giá</th>
+                                                            <td th:text="${orderDetail.amountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.amountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Phí ship</th>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Tổng phải thu</th>
+                                                            <td th:text="${orderDetail.totalAmountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
                                                 <div class="row justify-content-between">
-                                                    <div class="col-4" style="display: flex; align-items: center">
-                                                    </div>
+                                                    <div class="col-4" style="display: flex; align-items: center"></div>
                                                     <div class="col-4 text-right">
-                                                        <button type="button" class="btn btn-danger">
-                                                            Hủy đơn hàng
-                                                        </button>
+                                                        <button type="button" class="btn btn-danger">Hủy đơn hàng</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -193,17 +189,7 @@
                                                     <div class="col-2" style="display: flex; align-items: center"></div>
                                                     <div class="col-10 text-right">
                                                         <button type="button" class="btn btn-sm btn-primary">In</button>
-                                                        <button type="button" class="btn btn-sm btn-success"
-                                                                data-toggle="modal"
-                                                                data-target="#modalThanhToan"
-                                                                disabled
-                                                                th:if="${orderDetail.paymentStatus}">
-                                                            Đã thanh toán
-                                                        </button>
-                                                        <button type="button" class="btn btn-sm btn-success"
-                                                                data-toggle="modal"
-                                                                data-target="#modalThanhToan"
-                                                                th:if="${!orderDetail.paymentStatus}">
+                                                        <button type="button" class="btn btn-sm btn-success" id="btnDoPay">
                                                             Thanh toán
                                                         </button>
                                                         <!--POPUP THANH TOÁN-->
@@ -253,29 +239,29 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-8">
+                                            <div class="col-1"></div>
+                                            <div class="col-7">
                                                 <div class="row">
                                                     <div class="card-body table-responsive col-sm-12 p-0" style="height: 150px;">
                                                         <table class="table table-head-fixed text-nowrap">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>#</th>
-                                                                    <th>Mã phiếu</th>
-                                                                    <th>Thời gian xuất kho</th>
+                                                                    <th>Tên</th>
+                                                                    <th>Người xuất</th>
+                                                                    <th>Thời gian xuất</th>
                                                                     <th>Ghi chú</th>
                                                                     <th>Trạng thái</th>
                                                                     <th>Thao tác</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
-                                                            </tbody>
+                                                            <tbody id="tableContentTicket"></tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                                 <hr>
                                                 <div class="row justify-content-between">
                                                     <div class="col-4" style="display: flex; align-items: center"></div>
-                                                    <div class="col-4 text-right"><button type="button" class="btn btn-sm btn-info link-confirm">Tạo phiếu xuất hàng</button></div>
+                                                    <div class="col-4 text-right"><button type="button" class="btn btn-sm btn-info link-confirm" id="btnCreateTicketExport">Tạo phiếu xuất hàng</button></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -292,20 +278,15 @@
     </div>
     <!-- /.content-wrapper -->
 
+    <div th:replace="modal_fragments :: dialog_modal"></div>
     <div th:replace="modal_fragments :: confirm_modal"></div>
 
-    <div th:replace="footer :: footer">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+    <div th:replace="footer :: footer"></div>
 
     <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
+    <aside class="control-sidebar control-sidebar-dark"></aside>
 
-    <div th:replace="header :: scripts">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+    <div th:replace="header :: scripts"></div>
 
     <script>
         $(function () {
@@ -322,14 +303,17 @@
 
         let mvOrderDetail = {}
         $(document).ready(function () {
-            let rawPaymentTime = $('#paymentTimeField').text();
-            let formattedTime = moment(rawPaymentTime, "YYYY-MM-DD HH:mm:ss.S").format('DD/MM/YYYY HH:mm:ss');
-            $('#paymentTimeField').text(formattedTime);
-
+            init();
             loadOrderDetail();
             doPay();
             createTicketExport();
         });
+
+        function init() {
+            let rawPaymentTime = $('#paymentTimeField').text();
+            let formattedTime = moment(rawPaymentTime, "YYYY-MM-DD HH:mm:ss.S").format('DD/MM/YYYY HH:mm:ss');
+            $('#paymentTimeField').text(formattedTime);
+        }
 
         function loadOrderDetail() {
             let apiURL = mvHostURLCallApi + "/order/" + [[${orderDetailId}]];
@@ -343,6 +327,15 @@
         }
 
         function doPay() {
+            $("#btnDoPay").on("click", function () {
+                if (mvOrderDetail.paymentStatus === true) {
+                    showModalDialog("Thông báo", "Đơn hàng này đã được thanh toán!");
+                    return;
+                } else {
+                    $("#modalThanhToan").modal();
+                }
+            })
+
             $("#btnDoPaySubmit").on("click", function(e) {
                 e.preventDefault();
                 let paymentTime = $('#paymentTimeField_DoPay').val();
@@ -369,12 +362,16 @@
 
         function createTicketExport() {
             $(".link-confirm").on("click", function () {
+                if (mvOrderDetail.ticketExportId != null) {
+                    showModalDialog("Thông báo", "Đơn hàng này đã được tạo phiếu xuất kho!");
+                    return;
+                }
                 $(this).attr("actionType", "create");
                 showConfirmModal($(this), "Tạo phiếu xuất kho", "Bạn có chắc muốn tạo phiếu?");
             });
 
             $("#yesButton").on("click", function () {
-                let apiURL = mvHostURLCallApi + "/ticket-export/create-draft";
+                let apiURL = mvHostURLCallApi + "/storage/ticket-export/create-draft";
                 let body = {orderId : mvOrderDetail.orderId, orderCode : mvOrderDetail.orderCode};
                 $.ajax({
                     url: apiURL,
@@ -383,12 +380,26 @@
                     data: JSON.stringify(body),
                     success: function (data, textStatus, jqXHR) {
                         if (data.status === "OK") {
-                            alert("Tạo phiếu xuất kho thành công!")
-                            window.location = mvHostURL + "/storage/ticket-export";
+
+                            $("#tableContentTicket").empty();
+                            $("#tableContentTicket").append(
+                                '<tr>' +
+                                    '<td>' +
+                                        '<a href="/storage/ticket-export/' + data.id + '">' + data.id + '</a>' +
+                                    '</td>' +
+                                    '<td>' + data.exporter + '</td>' +
+                                    '<td>' + data.exportTime + '</td>' +
+                                    '<td>' + data.note + '</td>' +
+                                    '<td>' + data.status + '</td>' +
+                                    '<td></td>' +
+                                '<tr>'
+                        );
+
+                            alert("Tạo phiếu xuất kho thành công!");
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        showErrorModal("Could not connect to the server" );
+                        showErrorModal("Could not connect to the server");
                     }
                 });
             });

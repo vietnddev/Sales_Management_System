@@ -33,9 +33,10 @@ public class OrderUIController extends BaseController {
     private final CartService cartService;
     private final VoucherTicketService voucherTicketService;
     private final ValidateModuleProduct validateModuleProduct;
+    private final TicketExportService ticketExportService;
 
     @Autowired
-    public OrderUIController(OrderService orderService, ProductService productService, CategoryService categoryService, CustomerService customerService, CartService cartService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
+    public OrderUIController(OrderService orderService, ProductService productService, CategoryService categoryService, CustomerService customerService, CartService cartService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct, TicketExportService ticketExportService) {
         this.orderService = orderService;
         this.productService = productService;
         this.categoryService = categoryService;
@@ -43,6 +44,7 @@ public class OrderUIController extends BaseController {
         this.cartService = cartService;
         this.voucherTicketService = voucherTicketService;
         this.validateModuleProduct = validateModuleProduct;
+        this.ticketExportService = ticketExportService;
     }
 
     @GetMapping
@@ -64,11 +66,15 @@ public class OrderUIController extends BaseController {
             throw new NotFoundException("Order not found!");
         }
         OrderDTO orderDetail = orderService.findOrderById(orderId);
+        TicketExport ticketExportDetail = new TicketExport();
+        if (orderDetail.getTicketExportId() != null) {
+            ticketExportDetail = ticketExportService.findById(orderDetail.getTicketExportId());
+        }
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_DETAIL);
         modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail);
-        modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetail());
-        //modelAndView.addObject("listThanhToan", orderPayService.findByOrder(id));
+        modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetailDTO());
+        modelAndView.addObject("ticketExportDetail", ticketExportDetail);
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
         modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("donHang", new Order());
@@ -86,13 +92,6 @@ public class OrderUIController extends BaseController {
             orderCart.setCreatedBy(CommonUtils.getCurrentAccountId());
             cartService.saveCart(orderCart);
         }
-        modelAndView.addObject("listDonHang", orderService.findAllOrder());
-        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
-        modelAndView.addObject("listKenhBanHang", categoryService.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.getName(), null));
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
-        modelAndView.addObject("listKhachHang", customerService.findAllCustomer());
-        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
-        modelAndView.addObject("listTrangThaiDonHang", categoryService.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.getName(), null));
 
         List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
         modelAndView.addObject("listCart", listOrderCart);

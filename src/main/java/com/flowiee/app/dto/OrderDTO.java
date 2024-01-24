@@ -1,11 +1,10 @@
 package com.flowiee.app.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -55,9 +54,10 @@ public class OrderDTO implements Serializable {
 	private String paymentNote;
 	private Integer cartId;
 	private String note;
-	@JsonIgnore
-	private List<OrderDetail> listOrderDetail;
-	//private List<OrderDetailDTO> listOrderDetailDTO;
+	private Integer ticketExportId;
+	//@JsonIgnore
+	//private List<OrderDetail> listOrderDetail;
+	private List<OrderDetailDTO> listOrderDetailDTO;
 
 	public static OrderDTO fromOrder(Order order) {
 		OrderDTO dto = new OrderDTO();
@@ -101,14 +101,20 @@ public class OrderDTO implements Serializable {
 		dto.setPaymentNote(order.getPaymentNote());
 		dto.setCartId(null);
 		dto.setNote(order.getGhiChu());
-		dto.setListOrderDetail(order.getListOrderDetail());
+		if (order.getTicketExport() != null) {
+			dto.setTicketExportId(order.getTicketExport().getId());
+		}
+		//dto.setListOrderDetail(order.getListOrderDetail());
+		dto.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(order.getListOrderDetail()));
 		return dto;
 	}
 
 	public static List<OrderDTO> fromOrders(List<Order> orders) {
 		List<OrderDTO> list = new ArrayList<>();
-		for (Order p : orders) {
-			list.add(OrderDTO.fromOrder(p));
+		if (ObjectUtils.isNotEmpty(orders)) {
+			for (Order p : orders) {
+				list.add(OrderDTO.fromOrder(p));
+			}
 		}
 		return list;
 	}

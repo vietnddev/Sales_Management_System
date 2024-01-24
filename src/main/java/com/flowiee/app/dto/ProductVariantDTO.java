@@ -4,13 +4,16 @@ import com.flowiee.app.entity.*;
 import com.flowiee.app.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
 public class ProductVariantDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Integer productVariantId;
@@ -24,6 +27,10 @@ public class ProductVariantDTO implements Serializable {
     private String description;
     private String status;
     //private Category color; //future remove
+    private Integer productTypeId;
+    private String productTypeName;
+    private Integer unitId;
+    private String unitName;
     private Integer colorId;
     private String colorName;
     //private Category size; //future remove
@@ -63,6 +70,14 @@ public class ProductVariantDTO implements Serializable {
         dto.setSoldQty(input.getSoLuongKho());
         dto.setDescription(input.getMaSanPham());
         dto.setStatus(input.getTrangThai());
+        if (ObjectUtils.isNotEmpty(input.getProduct().getProductType())) {
+            dto.setProductTypeId(input.getProduct().getProductType().getId());
+            dto.setProductTypeName(input.getProduct().getProductType().getName());
+        }
+        if (ObjectUtils.isNotEmpty(input.getProduct().getUnit())) {
+            dto.setUnitId(input.getProduct().getUnit().getId());
+            dto.setUnitName(input.getProduct().getUnit().getName());
+        }
         //dto.setColor(input.getColor());
         dto.setColorId(input.getColor().getId());
         dto.setColorName(input.getColor().getName());
@@ -73,14 +88,20 @@ public class ProductVariantDTO implements Serializable {
         dto.setFabricTypeId(input.getFabricType().getId());
         dto.setFabricTypeName(input.getFabricType().getName());
         //dto.setGarmentFactory(input.getGarmentFactory());
-        dto.setGarmentFactoryId(input.getGarmentFactory().getId());
-        dto.setGarmentFactoryName(input.getGarmentFactory().getName());
+        if (ObjectUtils.isNotEmpty(input.getGarmentFactory())) {
+            dto.setGarmentFactoryId(input.getGarmentFactory().getId());
+            dto.setGarmentFactoryName(input.getGarmentFactory().getName());
+        }
         //dto.setSupplier(input.getSupplier());
-        dto.setSupplierId(input.getSupplier().getId());
-        dto.setSupplierName(input.getSupplier().getName());
+        if (ObjectUtils.isNotEmpty(input.getSupplier())) {
+            dto.setSupplierId(input.getSupplier().getId());
+            dto.setSupplierName(input.getSupplier().getName());
+        }
         //dto.setTicketImportGoods(input.getTicketImportGoods());
-        dto.setTicketImportGoodsId(input.getTicketImport().getId());
-        dto.setTicketImportGoodsTitle(input.getTicketImport().getTitle());
+        if (ObjectUtils.isNotEmpty(input.getTicketImport())) {
+            dto.setTicketImportGoodsId(input.getTicketImport().getId());
+            dto.setTicketImportGoodsTitle(input.getTicketImport().getTitle());
+        }
         dto.setDiscountPercent(null);
         dto.setPriceBuyId(null);
         dto.setPriceBuyValue(null);

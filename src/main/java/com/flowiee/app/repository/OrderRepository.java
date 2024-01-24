@@ -126,4 +126,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Modifying
     @Query("update Order set ticketExport.id=:ticketExportId where id=:orderId")
     void setTicketExportInfo(@Param("orderId") Integer orderId, @Param("ticketExportId") Integer ticketExportId);
+
+    @Query("from Order where ticketExport.id=:ticketExportId")
+    Order findByTicketExport(@Param("ticketExportId") Integer ticketExportId);
 }

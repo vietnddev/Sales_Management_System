@@ -74,6 +74,19 @@ public class AppConstants {
     }
 
     @Getter
+    public enum TICKET_EX_STATUS {
+        DRAFT("Lưu nháp"),
+        COMPLETED("Hoàn thành"),
+        CANCEL("Hủy");
+
+        private final String label;
+
+        TICKET_EX_STATUS(String label) {
+            this.label = label;
+        }
+    }
+
+    @Getter
     public enum CONTACT_TYPE {
         P("Số điện thoại"),
         E("Email"),

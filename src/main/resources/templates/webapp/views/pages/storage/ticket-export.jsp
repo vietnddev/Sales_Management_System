@@ -62,7 +62,9 @@
                                     <tbody>
                                         <tr th:each="list, index : ${listTicketExport}">
                                             <td th:text="${index.index + 1}"></td>
-                                            <td th:text="${list.title}"></td>
+                                            <td>
+                                                <a th:href="@{/storage/ticket-export/{id}(id=${list.id})}" th:text="${list.title}"></a>
+                                            </td>
                                             <td th:text="'Sản phẩm (test)'"></td>
                                             <td th:text="'Quần ...,áo ... (test)'"></td>
                                             <td th:text="${list.exporter}"></td>

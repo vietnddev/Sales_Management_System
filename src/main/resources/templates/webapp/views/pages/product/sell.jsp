@@ -38,8 +38,7 @@
                                     <div class="col-sm-8 border">
                                         <form class="row mt-3" th:action="@{/don-hang/ban-hang/cart/item/add}" method="POST">
                                             <div class="col-sm-10 form-group">
-                                                <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" id="productVariantField" required>
-                                                </select>
+                                                <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" id="productVariantField" required></select>
                                             </div>
                                             <input type="hidden" name="cartId" th:value="${cart.id}">
                                             <div class="col-sm-2 form-group">
