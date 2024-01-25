@@ -228,7 +228,7 @@ public class OrderServiceImpl implements OrderService {
     public String deleteOrder(Integer id) {
         OrderDTO order = this.findOrderById(id);
         if (order.isPaymentStatus()) {
-            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         orderRepository.deleteById(id);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());

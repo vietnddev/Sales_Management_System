@@ -41,6 +41,9 @@ public class Price extends BaseEntity implements Serializable {
     @Column(name = "unit_sell")
     private String unitSell;
 
+    @Column(name = "promotion")
+    private Double promotion;
+
     @Column(name = "status", nullable = false, length = 10)
     private String status;
 

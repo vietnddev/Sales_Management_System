@@ -121,13 +121,8 @@
     let mvExportTime = $("#exportTimeField");
     let mvNote = $("#noteField");
     let mvStatus = $("#statusField");
-    let mvTicketExportStatus = {};
 
     $(document).ready(function() {
-        mvTicketExportStatus["DRAFT"] = "Nháp";
-        mvTicketExportStatus["COMPLETED"] = "Hoàn thành";
-        mvTicketExportStatus["CANCEL"] = "Hủy";
-
         loadTicketExportDetail();
         //updateTicketDetail();
         //deleteTicketDetail();
@@ -150,10 +145,6 @@
                 mvStatus.append('<option value=' + data.status + ' selected>' + mvTicketExportStatus[data.status] + '</option>');
                 if (data.status === "DRAFT") {
                     mvStatus.append("<option value='COMPLETED'>Hoàn thành</option><option value='CANCEL'>Hủy</option>");
-                } else if (data.status === "COMPLETED") {
-                    mvStatus.append("<option value='DRAFT'>Nháp</option><option value='CANCEL'>Hủy</option>");
-                } else if (data.status === "CANCEL") {
-                    mvStatus.append("<option value='DRAFT'>Nháp</option><option value='COMPLETED'>Hoàn thành</option>");
                 }
 
                 let contentTable = $('#contentTable');
@@ -202,8 +193,8 @@
                             window.location.reload();
                         }
                     },
-                    error: function () {
-                        showErrorModal("Could not connect to the server");
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
                     }
                 });
             } else if ($(this).attr("actionType") === "delete") {
@@ -217,8 +208,8 @@
                             window.location = mvHostURL + "/storage/ticket-export";
                         }
                     },
-                    error: function () {
-                        showErrorModal("Could not connect to the server");
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
                     }
                 });
             }

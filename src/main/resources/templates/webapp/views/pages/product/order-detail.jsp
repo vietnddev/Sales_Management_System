@@ -301,10 +301,12 @@
             $('#reservation').daterangepicker()
         })
 
-        let mvOrderDetail = {}
+        let mvOrderDetail = {};
+        let mvTicketExportTable= $("#tableContentTicket");
         $(document).ready(function () {
             init();
             loadOrderDetail();
+            loadTicketExportInfo();
             doPay();
             createTicketExport();
         });
@@ -326,11 +328,23 @@
             });
         }
 
+        function loadTicketExportInfo() {
+            $("#THANH_TOAN_TAB").on("click", function () {
+                let apiURL = mvHostURLCallApi + "/storage/ticket-export/" + mvOrderDetail.ticketExportId;
+                $.get(apiURL, function (response) {
+                    if (response.status === "OK") {
+                        setTicketExportTableValue(response.data);
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+            })
+        }
+
         function doPay() {
             $("#btnDoPay").on("click", function () {
                 if (mvOrderDetail.paymentStatus === true) {
                     showModalDialog("Thông báo", "Đơn hàng này đã được thanh toán!");
-                    return;
                 } else {
                     $("#modalThanhToan").modal();
                 }
@@ -378,31 +392,33 @@
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(body),
-                    success: function (data, textStatus, jqXHR) {
-                        if (data.status === "OK") {
-
-                            $("#tableContentTicket").empty();
-                            $("#tableContentTicket").append(
-                                '<tr>' +
-                                    '<td>' +
-                                        '<a href="/storage/ticket-export/' + data.id + '">' + data.id + '</a>' +
-                                    '</td>' +
-                                    '<td>' + data.exporter + '</td>' +
-                                    '<td>' + data.exportTime + '</td>' +
-                                    '<td>' + data.note + '</td>' +
-                                    '<td>' + data.status + '</td>' +
-                                    '<td></td>' +
-                                '<tr>'
-                        );
-
-                            alert("Tạo phiếu xuất kho thành công!");
+                    success: function (response, textStatus, jqXHR) {
+                        if (response.status === "OK") {
+                            let data = response.data;
+                            setTicketExportTableValue(data);
                         }
+                        alert("Tạo phiếu xuất kho thành công!");
+                        $("#confirmModal").modal("hide");
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         showErrorModal("Could not connect to the server");
                     }
                 });
             });
+        }
+
+        function setTicketExportTableValue(data) {
+            mvTicketExportTable.empty();
+            mvTicketExportTable.append(
+                '<tr>' +
+                    '<td><a href="/storage/ticket-export/' + data.id + '">' + data.title + '</a></td>' +
+                    '<td>' + data.exporter + '</td>' +
+                    '<td>' + data.exportTime + '</td>' +
+                    '<td>' + data.note + '</td>' +
+                    '<td>' + mvTicketExportStatus[data.status] + '</td>' +
+                    '<td></td>' +
+                '<tr>'
+            );
         }
     </script>
 </div>

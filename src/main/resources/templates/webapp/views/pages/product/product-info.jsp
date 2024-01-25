@@ -503,17 +503,16 @@
                                     </button>
                                     <button class="btn btn-danger link-delete" type="button" name="delete"
                                             title="Xóa biến thể sản phẩm"
+                                            th:entity="'product'"
                                             th:entityId="${detailProducts.productId}"
                                             th:entityName="${detailProducts.productName}"
-                                            th:entityType="'product'">
+                                            th:actionType="'delete'">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
                             </div>
-                            <input type="hidden" name="id"
-                                   th:value="${detailProducts.productId}"/>
-                            <input type="hidden" name="moTaSanPham" id="describes_virtual"
-                                   th:value="${detailProducts.productDes}"/>
+                            <input type="hidden" name="id" th:value="${detailProducts.productId}"/>
+                            <input type="hidden" name="moTaSanPham" id="describes_virtual" th:value="${detailProducts.productDes}"/>
                         </form>
                         <!--./ END THÔNG TIN SẢN PHẨM GỐC-->
 
@@ -529,7 +528,7 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div class="modal-body" style="max-height: 800px; overflow: scroll">
+                                    <div class="modal-body p-0" style="max-height: 800px; overflow: scroll">
                                         <table class="table table-bordered" style="margin-bottom: 0">
                                             <thead>
                                                 <tr>
@@ -567,63 +566,55 @@
                         <div class="modal fade" id="insertBTSP">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form th:action="@{/san-pham/variant/insert}"
-                                          th:object="${bienTheSanPham}"
-                                          method="post">
-                                        <div class="modal-header">
-                                            <strong class="modal-title">Thêm mới biến thể sản phẩm</strong>
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <input type="hidden" name="product"
-                                                           th:value="${detailProducts.productId}"/>
-                                                    <input type="hidden" name="maSanPham" value=""/>                                            
-                                                    <div class="form-group">
-                                                        <label>Chọn chất liệu vải</label>
-                                                        <select class="custom-select" name="fabricType">
-                                                            <option th:each="lsFabric, iterStat : ${listDmChatLieuVai}"
-                                                                    th:value="${lsFabric.id}"
-                                                                    th:text="${lsFabric.name}"
-                                                                    th:selected="${iterStat.index == 0}"></option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Chọn màu sắc</label>
-                                                        <select class="custom-select" name="color">
-                                                            <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
-                                                                    th:value="${lsColor.id}"
-                                                                    th:text="${lsColor.name}"
-                                                                    th:selected="${iterStat.index == 0}"></option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Chọn kích cỡ</label>
-                                                        <select class="custom-select" name="size">
-                                                            <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
-                                                                    th:value="${lsSize.id}"
-                                                                    th:text="${lsSize.name}"
-                                                                    th:selected="${iterStat.index == 0}"></option>
-                                                        </select>
-                                                    </div>
+                                    <div class="modal-header">
+                                        <strong class="modal-title">Thêm mới biến thể sản phẩm</strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="fabricTypeField">Chọn chất liệu vải</label>
+                                                    <select class="custom-select" name="fabricType" id="fabricTypeField">
+                                                        <option th:each="lsFabric, iterStat : ${listDmChatLieuVai}"
+                                                                th:value="${lsFabric.id}"
+                                                                th:text="${lsFabric.name}"
+                                                                th:selected="${iterStat.index == 0}"></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="colorField">Chọn màu sắc</label>
+                                                    <select class="custom-select" name="color" id="colorField">
+                                                        <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
+                                                                th:value="${lsColor.id}"
+                                                                th:text="${lsColor.name}"
+                                                                th:selected="${iterStat.index == 0}"></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sizeField">Chọn kích cỡ</label>
+                                                    <select class="custom-select" name="size" id="sizeField">
+                                                        <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
+                                                                th:value="${lsSize.id}"
+                                                                th:text="${lsSize.name}"
+                                                                th:selected="${iterStat.index == 0}"></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="originalPriceField">Giá bán gốc</label>
+                                                    <input class="form-control" type="text" name="originalPrice" id="originalPriceField">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="promotionPriceField">Giá khuyến mãi</label>
+                                                    <input class="form-control" type="text" name="promotionPrice" id="promotionPriceField">
                                                 </div>
                                             </div>
-                                            <div class="modal-footer justify-content-end"
-                                                 style="margin-bottom: -15px;">
-                                                <button type="button" class="btn btn-default"
-                                                        data-dismiss="modal">
-                                                    Hủy
-                                                </button>
-                                                <button type="submit" name="create_bienTheSP" class="btn btn-primary">
-                                                    Lưu
-                                                </button>
-                                            </div>
                                         </div>
-                                    </form>
+                                        <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                            <button type="button" class="btn btn-primary" id="createProductVariantSubmit">Lưu</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -684,7 +675,15 @@
 <!-- ./wrapper -->
 
 <script>
+    let mvProductId = [[${detailProducts.productId}]];
+
     $(document).ready(function () {
+        init();
+        createProductVariant();
+        deleteAction();
+    });
+
+    function init() {
         $('.product-image-thumb').on('click', function () {
             var $image_element = $(this).find('img')
             $('.product-image').prop('src', $image_element.attr('src'))
@@ -702,9 +701,50 @@
             }
         });
 
+        $("#originalPriceField").on("change", function () {
+            let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            $(this).val(inputValue);
+        });
+
+        $("#promotionPriceField").on("change", function () {
+            let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            $(this).val(inputValue);
+        });
+    }
+
+    function createProductVariant() {
+        $("#createProductVariantSubmit").on("click", function () {
+            let apiURL = mvHostURLCallApi + "/product/variant/create";
+            let body = {
+                product : mvProductId,
+                fabricTypeId : $("#fabricTypeField").val(),
+                colorId : $("#colorField").val(),
+                sizeId : $("#sizeField").val(),
+                priceSellId : $("#originalPriceField").val().replace(/,/g, ''),
+                promotionPriceId : $("#promotionPriceField").val().replace(/,/g, '')
+            };
+            $.ajax({
+                url: apiURL,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(body),
+                success: function (response) {
+                    if (response.status === "OK") {
+                        alert("Create new product variant successfully!");
+                        window.location.reload();
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + $.parseJSON(xhr.responseText).message);
+                }
+            });
+        });
+    }
+
+    function deleteAction() {
         $(".link-delete").on("click", function(e) {
             e.preventDefault();
-            showConfirmModal($(this));
+            showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + $(this).attr("entityName"));
         });
 
         $('#yesButton').on("click", function () {
@@ -718,15 +758,15 @@
                     apiURL += '/file/delete/' + entityId
                 }
                 if (entity === 'product') {
-                    apiURL += '/san-pham/delete/' + entityId
+                    apiURL += '/product/delete/' + entityId
                 }
                 if (entity === 'productVariant') {
-                    apiURL += '/san-pham/variant/delete/' + entityId
+                    apiURL += '/product/variant/delete/' + entityId
                 }
             }
             callApiDelete(apiURL);
         });
-    })
+    }
 </script>
 
 <script> // Upload file

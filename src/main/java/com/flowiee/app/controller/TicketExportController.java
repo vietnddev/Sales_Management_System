@@ -8,6 +8,7 @@ import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.TicketExportService;
+import com.flowiee.app.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -57,8 +58,12 @@ public class TicketExportController extends BaseController {
     @DeleteMapping("/delete/{id}")
     public ApiResponse<String> deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
         validateModuleStorage.exportGoods(true);
-        if (ObjectUtils.isEmpty(ticketExportService.findById(ticketExportId))) {
+        TicketExport ticketExportToDelete = ticketExportService.findById(ticketExportId);
+        if (ObjectUtils.isEmpty(ticketExportToDelete)) {
             throw new BadRequestException();
+        }
+        if ("COMPLETED".equals(ticketExportToDelete.getStatus())) {
+            throw new BadRequestException(MessageUtils.ERROR_DATA_LOCKED);
         }
         return ApiResponse.ok(ticketExportService.delete(ticketExportId));
     }

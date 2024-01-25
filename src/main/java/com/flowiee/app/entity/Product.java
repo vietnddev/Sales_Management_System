@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
+import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.dto.VoucherInfoDTO;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -79,6 +80,18 @@ public class Product extends BaseEntity implements Serializable {
     public Product(Integer id, String name) {
         super.id = id;
         this.tenSanPham = name;
+    }
+
+    public static Product fromProductDTO(ProductDTO dto) {
+        Product p = new Product();
+        p.setId(dto.getProductId());
+        p.setProductType(new Category(dto.getProductTypeId(), dto.getProductTypeName()));
+        p.setBrand(new Category(dto.getBrandId(), dto.getBrandName()));
+        p.setTenSanPham(dto.getProductName());
+        p.setUnit(new Category(dto.getUnitId(), dto.getUnitName()));
+        p.setMoTaSanPham(dto.getProductDes());
+        p.setStatus(dto.getProductStatus());
+        return p;
     }
 
     public Map<String, String> compareTo(Product productToCompare) {

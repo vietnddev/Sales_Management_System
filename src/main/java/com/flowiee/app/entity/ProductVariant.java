@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.flowiee.app.base.BaseEntity;
 
+import com.flowiee.app.dto.ProductVariantDTO;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -104,6 +105,16 @@ public class ProductVariant extends BaseEntity implements Serializable {
 
     public ProductVariant (int id) {
         super.id = id;
+    }
+
+    public static ProductVariant fromProductVariantDTO(ProductVariantDTO dto) {
+        ProductVariant p = new ProductVariant();
+        p.setId(dto.getProductVariantId());
+        p.setProduct(new Product(dto.getProductId()));
+        p.setFabricType(new Category(dto.getFabricTypeId(), dto.getFabricTypeName()));
+        p.setColor(new Category(dto.getColorId(), dto.getColorName()));
+        p.setSize(new Category(dto.getSizeId(), dto.getSizeName()));
+        return p;
     }
 
     public Map<String, String> compareTo(ProductVariant entityToCompare) {

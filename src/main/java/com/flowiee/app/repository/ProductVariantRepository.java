@@ -1,6 +1,7 @@
 package com.flowiee.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -73,4 +74,8 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
 
     @Query("select SUM(nvl(p.soLuongDaBan, 0)) as totalQtySell from ProductVariant p where p.product.id=:productId")
     Integer findTotalQtySell(@Param("productId") Integer productId);
+
+    @Modifying
+    @Query("update ProductVariant p set p.soLuongKho = (p.soLuongKho - :soldQty), p.soLuongDaBan = (p.soLuongDaBan + :soldQty) where p.id=:productVariantId")
+    void updateQuantity(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
 }

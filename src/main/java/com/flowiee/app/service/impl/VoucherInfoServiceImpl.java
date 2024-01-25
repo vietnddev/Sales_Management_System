@@ -136,7 +136,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         if (!voucherApplyService.findByVoucherId(voucherId).isEmpty()) {
-            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         voucherInfoRepository.deleteById(voucherId);
         return MessageUtils.DELETE_SUCCESS;

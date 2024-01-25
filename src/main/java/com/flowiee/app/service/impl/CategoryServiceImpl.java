@@ -107,7 +107,7 @@ public class CategoryServiceImpl implements CategoryService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         if (categoryInUse(entityId)) {
-            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         categoryRepository.deleteById(entityId);
         return MessageUtils.DELETE_SUCCESS;

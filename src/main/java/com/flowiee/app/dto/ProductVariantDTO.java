@@ -56,6 +56,8 @@ public class ProductVariantDTO implements Serializable {
     private Float priceMaxDiscount;
     private Float priceAfterDiscount;
     private String unitCurrency;
+    private Integer promotionPriceId;
+    private Double promotionPriceValue;
     private List<PriceDTO> listPrices;
 
     public static ProductVariantDTO fromProductVariant(ProductVariant input) {
@@ -67,7 +69,7 @@ public class ProductVariantDTO implements Serializable {
         //dto.setQuantity(input.getSoLuongKho());
         dto.setStorageQty(input.getSoLuongKho());
         //dto.setSell(input.getSoLuongDaBan());
-        dto.setSoldQty(input.getSoLuongKho());
+        dto.setSoldQty(input.getSoLuongDaBan());
         dto.setDescription(input.getMaSanPham());
         dto.setStatus(input.getTrangThai());
         if (ObjectUtils.isNotEmpty(input.getProduct().getProductType())) {

@@ -6,6 +6,11 @@ const mvCurrentAccountUsername = '';
 
 const mvPageSizeDefault = 5;
 
+const mvTicketExportStatus = {};
+mvTicketExportStatus["DRAFT"] = "Nháp";
+mvTicketExportStatus["COMPLETED"] = "Hoàn thành";
+mvTicketExportStatus["CANCEL"] = "Hủy";
+
 function updatePaginationInfo(pageNum, pageSize, totalPage, totalElements) {
     $('#paginationInfo').attr("pageNum", pageNum);
     $('#paginationInfo').attr("pageSize", pageSize);

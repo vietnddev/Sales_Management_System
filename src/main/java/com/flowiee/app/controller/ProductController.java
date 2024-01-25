@@ -46,7 +46,7 @@ public class ProductController extends BaseController {
             Page<Product> productPage = productService.findAllProducts(pageSize, pageNum - 1);
             List<ProductDTO> productList = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(productPage.getContent()));
             return ApiResponse.ok(productList, pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
             throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
         }
     }
@@ -106,12 +106,12 @@ public class ProductController extends BaseController {
 
     @Operation(summary = "Create product")
     @PostMapping("/create")
-    public ApiResponse<Product> createProduct(@RequestBody Product product) {
+    public ApiResponse<Product> createProduct(@RequestBody ProductDTO product) {
         if (!super.validateModuleProduct.insertProduct(true)) {
             return null;
         }
         try {
-            return ApiResponse.ok(productService.saveProduct(product));
+            return ApiResponse.ok(productService.saveProduct(Product.fromProductDTO(product)));
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
         }
@@ -119,13 +119,12 @@ public class ProductController extends BaseController {
 
     @Operation(summary = "Create product variant")
     @PostMapping("/variant/create")
-    public ApiResponse<List<ProductVariant>> createProductVariant(@RequestBody ProductVariant productVariant) {
+    public ApiResponse<ProductVariant> createProductVariant(@RequestBody ProductVariantDTO productVariantDTO) {
         if (!super.validateModuleProduct.insertProduct(true)) {
             return null;
         }
         try {
-            productService.saveProductVariant(productVariant);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(productService.saveProductVariant(ProductVariant.fromProductVariantDTO(productVariantDTO)));
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
         }

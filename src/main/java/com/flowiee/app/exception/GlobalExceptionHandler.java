@@ -1,6 +1,7 @@
 package com.flowiee.app.exception;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.utils.PagesUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ public class GlobalExceptionHandler extends BaseController {
 
     @ExceptionHandler
     public ModelAndView exceptionHandler(AuthenticationException ex) {
-        logger.error("AuthenticationException", ex);        
+        logger.error("AuthenticationException", ex);
         return new ModelAndView(PagesUtils.SYS_LOGIN);
     }
 
@@ -29,12 +30,8 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ModelAndView exceptionHandler(BadRequestException ex) {
-        logger.error("BadRequestException", ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
-        modelAndView.addObject("error", error);
-        return baseView(modelAndView);
+    public ApiResponse<?> exceptionHandler(BadRequestException ex) {
+        return ApiResponse.fail(ex.getMessage(), ex, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
@@ -72,6 +69,15 @@ public class GlobalExceptionHandler extends BaseController {
     @ExceptionHandler
     public ModelAndView exceptionHandler(Exception ex) {
         logger.error("Exception", ex);
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
+        modelAndView.addObject("error", error);
+        return baseView(modelAndView);
+    }
+
+    @ExceptionHandler
+    public ModelAndView exceptionHandler(RuntimeException ex) {
+        logger.error("RuntimeException", ex);
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
         modelAndView.addObject("error", error);

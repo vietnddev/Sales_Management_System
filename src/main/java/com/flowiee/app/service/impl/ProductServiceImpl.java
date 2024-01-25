@@ -273,7 +273,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Product productToDelete = this.findProductById(id);
             if (productInUse(id)) {
-                throw new DataInUseException(MessageUtils.ERROR_LOCKED);
+                throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
             }
             productsRepository.deleteById(id);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
@@ -359,17 +359,16 @@ public class ProductServiceImpl implements ProductService {
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
+    @Transactional
     @Override
-    public String updateProductVariantQuantity(Integer quantity, Integer id) {
-        ProductVariant productVariant = this.findProductVariantById(id);
-        productVariant.setSoLuongKho(productVariant.getSoLuongKho() - quantity);
+    public String updateProductVariantQuantity(Integer quantity, Integer productVariantId) {
         try {
-            productVariantRepository.save(productVariant);
+            productVariantRepository.updateQuantity(quantity, productVariantId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return MessageUtils.UPDATE_SUCCESS;
         } catch (Exception e) {
-            logger.error("Lỗi khi cập nhật số lượng sản phẩm!");
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            logger.error("Lỗi khi cập nhật số lượng sản phẩm!", e);
+            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product quantity"), e);
         }
     }
 
@@ -380,11 +379,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId) {
-        return productVariantRepository.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
+        try {
+            return productVariantRepository.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
+        } catch (RuntimeException ex) {
+            logger.error("Error finding product variant quantity", ex);
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
-    public Double findProductVariantPriceSell(int id) {
+    public Double findProductVariantPriceSell(int id) throws RuntimeException {
         if (priceService.findGiaHienTai(id) != null) {
             return priceService.findGiaHienTai(id).getGiaBan();
         }
@@ -392,11 +396,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean productInUse(Integer productId) {
+    public boolean productInUse(Integer productId) throws RuntimeException {
         return (!this.findAllProductVariantOfProduct(productId).isEmpty());
     }
 
-    private Page<Product> setImageActiveAndLoadVoucherApply(Page<Product> products) {
+    private Page<Product> setImageActiveAndLoadVoucherApply(Page<Product> products) throws RuntimeException {
         for (Product p : products) {
             FileStorage imageActive = fileService.findImageActiveOfSanPham(p.getId());
             p.setImageActive(Objects.requireNonNullElseGet(imageActive, FileStorage::new));
@@ -412,7 +416,7 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
-    private List<ProductVariant> extractProductVariantQuery(List<Object[]> objects) {
+    private List<ProductVariant> extractProductVariantQuery(List<Object[]> objects) throws RuntimeException {
         List<ProductVariant> dataResponse = new ArrayList<>();
         for (Object[] data : objects) {
             ProductVariant productVariant = new ProductVariant();

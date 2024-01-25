@@ -66,7 +66,7 @@ public class ApiResponse<T> implements Serializable {
         return new ApiResponse<>(true, httpStatus, message, null, data, pagination);
     }
 
-    public static <T> ApiResponse<T> fail(@NonNull String message, @NonNull Throwable cause) {
-        return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, message, cause.getMessage(), null, null);
+    public static <T> ApiResponse<T> fail(@NonNull String message, @NonNull Throwable cause, @NonNull HttpStatus httpStatus) {
+        return new ApiResponse<>(false, httpStatus, message, cause.getMessage(), null, null);
     }
 }

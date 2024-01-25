@@ -208,7 +208,7 @@ public class CustomerServiceImpl implements CustomerService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         if (!orderService.findOrdersByCustomerId(id).isEmpty()) {
-            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         customerRepository.deleteById(id);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());

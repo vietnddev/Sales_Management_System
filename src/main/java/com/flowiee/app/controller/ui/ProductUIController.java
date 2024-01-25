@@ -152,16 +152,16 @@ public class ProductUIController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping("/variant/insert")
-    public ModelAndView insertProductVariant(HttpServletRequest request, @ModelAttribute("bienTheSanPham") ProductVariant productVariant) {
-        validateModuleProduct.updateProduct(true);
-        productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
-        productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
-        productService.saveProductVariant(productVariant);
-        //Khởi tạo giá default của giá bán
-        //priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
+//    @PostMapping("/variant/insert")
+//    public ModelAndView insertProductVariant(HttpServletRequest request, @ModelAttribute("bienTheSanPham") ProductVariant productVariant) {
+//        validateModuleProduct.updateProduct(true);
+//        productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
+//        productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
+//        productService.saveProductVariant(productVariant);
+//        //Khởi tạo giá default của giá bán
+//        //priceService.save(Price.builder().productVariant(productVariant).giaBan(0D).status(AppConstants.PRICE_STATUS.ACTIVE.name()).build());
+//        return new ModelAndView("redirect:" + request.getHeader("referer"));
+//    }
 
     @PostMapping("/attribute/insert")
     public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {

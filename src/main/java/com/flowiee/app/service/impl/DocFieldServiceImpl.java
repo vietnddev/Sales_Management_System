@@ -78,7 +78,7 @@ public class DocFieldServiceImpl implements DocFieldService {
     public DocField delete(Integer id) {
         DocField docFieldToDelete = findById(id);
         if (!docDataService.findByDocField(id).isEmpty()) {
-            throw new DataInUseException(MessageUtils.ERROR_LOCKED);
+            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         docFieldRepository.deleteById(id);
         systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field: " + docFieldToDelete.toString());

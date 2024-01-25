@@ -161,7 +161,7 @@
                                                             <div class="col-12">
                                                                 <div class="form-group">
                                                                     <label>Tên sản phẩm</label>
-                                                                    <input type="text" class="form-control" placeholder="Tên sản phẩm" name="tenSanPham">
+                                                                    <input type="text" class="form-control" placeholder="Tên sản phẩm" id="productNameField">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label>Loại sản phẩm</label>
@@ -180,7 +180,7 @@
                                                     </div>
                                                     <div class="modal-footer justify-content-end">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                        <button type="button" class="btn btn-primary" id="submitCreateProduct">Lưu</button>
+                                                        <button type="button" class="btn btn-primary" id="createProductSubmit">Lưu</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -215,6 +215,10 @@
             $(document).ready(function() {
                 $('#createProduct').on('click', function() {
                     loadCategory();
+                });
+
+                $('#createProductSubmit').on('click', function() {
+                    createProduct();
                 });
 
                 let lvPageSize = $('#selectPageSize').val();
@@ -348,6 +352,30 @@
                     }
                 }).fail(function () {
                     showErrorModal("Could not connect to the server");
+                });
+            }
+
+            function createProduct() {
+                let apiURL = mvHostURLCallApi + "/product/create";
+                let productTypeId = $("#productTypeField").val();
+                let brandId       = $("#brandField").val();
+                let productName   = $("#productNameField").val();
+                let unitId        = $("#unitField").val();
+                let body = {productTypeId : productTypeId, brandId : brandId, productName : productName, unitId : unitId};
+                $.ajax({
+                    url: apiURL,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(body),
+                    success: function (response, textStatus, jqXHR) {
+                        if (response.status === "OK") {
+                            alert("Create successfully")
+                            window.location.reload();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        showErrorModal("Could not connect to the server");
+                    }
                 });
             }
         </script>
