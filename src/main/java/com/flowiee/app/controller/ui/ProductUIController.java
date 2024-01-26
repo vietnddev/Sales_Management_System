@@ -34,17 +34,15 @@ public class ProductUIController extends BaseController {
     private final ProductHistoryService   productHistoryService;
     private final FileStorageService      fileStorageService;
     private final PriceService            priceService;
-    private final CategoryService         categoryService;
     private final VoucherService          voucherService;
     private final VoucherTicketService    voucherTicketService;
     private final ValidateModuleProduct   validateModuleProduct;
 
     @Autowired
-    public ProductUIController(ProductService productService, ProductHistoryService productHistoryService, FileStorageService fileStorageService, CategoryService categoryService, PriceService priceService, VoucherService voucherService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
+    public ProductUIController(ProductService productService, ProductHistoryService productHistoryService, FileStorageService fileStorageService, PriceService priceService, VoucherService voucherService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
         this.productService = productService;
         this.productHistoryService = productHistoryService;
         this.fileStorageService = fileStorageService;
-        this.categoryService = categoryService;
         this.priceService = priceService;
         this.voucherService = voucherService;
         this.voucherTicketService = voucherTicketService;
@@ -65,34 +63,6 @@ public class ProductUIController extends BaseController {
         if (productId <= 0 || productService.findProductById(productId) == null) {
             throw new NotFoundException("Product not found!");
         }
-        List<Category> productTypes = new ArrayList<>();
-        List<Category> fabricTypes = new ArrayList<>();
-        List<Category> brands = new ArrayList<>();
-        List<Category> colors = new ArrayList<>();
-        List<Category> sizes = new ArrayList<>();
-        List<Category> units = new ArrayList<>();
-        categoryService.findSubCategory(Arrays.asList(AppConstants.CATEGORY.BRAND.getName(), AppConstants.CATEGORY.PRODUCT_TYPE.getName(),
-                                                      AppConstants.CATEGORY.COLOR.getName(), AppConstants.CATEGORY.SIZE.getName(),
-                                                      AppConstants.CATEGORY.FABRIC_TYPE.getName(), AppConstants.CATEGORY.UNIT.getName())).forEach(category -> {
-            if (AppConstants.CATEGORY.PRODUCT_TYPE.getName().equals(category.getType())) {
-                productTypes.add(category);
-            }
-            if (AppConstants.CATEGORY.FABRIC_TYPE.getName().equals(category.getType())) {
-                fabricTypes.add(category);
-            }
-            if (AppConstants.CATEGORY.BRAND.getName().equals(category.getType())) {
-                brands.add(category);
-            }
-            if (AppConstants.CATEGORY.COLOR.getName().equals(category.getType())) {
-                colors.add(category);
-            }
-            if (AppConstants.CATEGORY.SIZE.getName().equals(category.getType())) {
-                sizes.add(category);
-            }
-            if (AppConstants.CATEGORY.UNIT.getName().equals(category.getType())) {
-                units.add(category);
-            }
-        });
         ProductDTO productDetail = ProductDTO.fromProduct(productService.findProductById(productId));
         LinkedHashMap<String, String> listProductStatus = new LinkedHashMap<>();
         if (AppConstants.PRODUCT_STATUS.ACTIVE.getLabel().equals(productDetail.getProductStatus())) {
@@ -103,18 +73,9 @@ public class ProductUIController extends BaseController {
             listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
-        modelAndView.addObject("sanPham", new Product());
-        modelAndView.addObject("bienTheSanPham", new ProductVariant());
-        modelAndView.addObject("giaSanPham", new Price());
         modelAndView.addObject("idSanPham", productId);
         modelAndView.addObject("detailProducts", productDetail);
         modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariantOfProduct(productId));
-        modelAndView.addObject("listTypeProducts", productTypes);
-        modelAndView.addObject("listDmChatLieuVai", fabricTypes);
-        modelAndView.addObject("listBrand", brands);
-        modelAndView.addObject("listDmMauSacSanPham", colors);
-        modelAndView.addObject("listDmKichCoSanPham", sizes);
-        modelAndView.addObject("listDonViTinh", units);
         modelAndView.addObject("listProductStatus", listProductStatus);
         modelAndView.addObject("listProductHistory", productHistoryService.findByProduct(productId));
         //List image

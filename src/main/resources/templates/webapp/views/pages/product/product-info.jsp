@@ -430,40 +430,25 @@
                             </div>
                             <div class="form-group">
                                 <label>Nhãn hiệu</label>
-                                <select class="custom-select" name="brand">
-                                    <option
-                                            th:each="lsBrand, iterStat : ${listBrand}"
-                                            th:value="${lsBrand.id}"
-                                            th:text="${lsBrand.name}"></option>
-                                    <option th:value="${detailProducts.brandId}"
-                                            th:text="${detailProducts.brandName}" selected></option>
+                                <select class="custom-select" name="brand" id="brandField">
+                                    <option th:value="${detailProducts.brandId}" th:text="${detailProducts.brandName}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Loại sản phẩm</label>
-                                <select class="custom-select" name="productType">
-                                    <option
-                                            th:each="lstype, iterStat : ${listTypeProducts}"
-                                            th:value="${lstype.id}"
-                                            th:text="${lstype.name}"></option>
-                                    <option th:value="${detailProducts.productTypeId}"
-                                            th:text="${detailProducts.productTypeName}" selected></option>
+                                <select class="custom-select" name="productType" id="productTypeField">
+                                    <option th:value="${detailProducts.productTypeId}" th:text="${detailProducts.productTypeName}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Đơn vị tính</label>
-                                <select class="custom-select" name="unit">
-                                    <option
-                                            th:each="lsDvt, iterStat : ${listDonViTinh}"
-                                            th:value="${lsDvt.id}"
-                                            th:text="${lsDvt.name}"></option>
-                                    <option th:value="${detailProducts.unitId}"
-                                            th:text="${detailProducts.unitName}" selected></option>
+                                <select class="custom-select" name="unit" id="unitField">
+                                    <option th:value="${detailProducts.unitId}" th:text="${detailProducts.unitName}" selected></option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Trạng thái</label>
-                                <select class="custom-select" name="status">
+                                <select class="custom-select" name="status" id="statusField">
                                     <option th:each="productStatus, iterStat : ${listProductStatus}"
                                             th:value="${productStatus.key}"
                                             th:text="${productStatus.value}">
@@ -480,7 +465,8 @@
                                     </button>
                                     <button class="btn btn-success" type="button"
                                             data-toggle="modal" data-target="#insertBTSP"
-                                            title="Thêm mới biến thể sản phẩm">
+                                            title="Thêm mới biến thể sản phẩm"
+                                            id="btnCreateProductVariant">
                                         <i class="fa-solid fa-circle-plus"></i>
                                     </button>
                                     <button class="btn btn-info" type="submit" name="update"
@@ -565,30 +551,15 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="fabricTypeField">Chọn chất liệu vải</label>
-                                                    <select class="custom-select" id="fabricTypeField">
-                                                        <option th:each="lsFabric, iterStat : ${listDmChatLieuVai}"
-                                                                th:value="${lsFabric.id}"
-                                                                th:text="${lsFabric.name}"
-                                                                th:selected="${iterStat.index == 0}"></option>
-                                                    </select>
+                                                    <select class="custom-select" id="fabricTypeField"></select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="colorField">Chọn màu sắc</label>
-                                                    <select class="custom-select" id="colorField">
-                                                        <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
-                                                                th:value="${lsColor.id}"
-                                                                th:text="${lsColor.name}"
-                                                                th:selected="${iterStat.index == 0}"></option>
-                                                    </select>
+                                                    <select class="custom-select" id="colorField"></select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="sizeField">Chọn kích cỡ</label>
-                                                    <select class="custom-select" id="sizeField">
-                                                        <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
-                                                                th:value="${lsSize.id}"
-                                                                th:text="${lsSize.name}"
-                                                                th:selected="${iterStat.index == 0}"></option>
-                                                    </select>
+                                                    <select class="custom-select" id="sizeField"></select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="originalPriceField">Giá bán gốc</label>
@@ -602,7 +573,7 @@
                                         </div>
                                         <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                            <button type="button" class="btn btn-primary" id="createProductVariantSubmit">Lưu</button>
+                                            <button type="button" class="btn btn-primary" id="btnCreateProductVariantSubmit">Lưu</button>
                                         </div>
                                     </div>
                                 </div>
@@ -669,9 +640,12 @@
     let mvProductId = [[${detailProducts.productId}]];
     let mvProductNameField = $("#productNameField");
     let mvProductVariantNameField = $("#productVariantNameField");
+    let mvProductTypeField = $("#productTypeField");
     let mvFabricTypeField = $("#fabricTypeField");
+    let mvBrandField = $("#brandField");
     let mvColorField = $("#colorField");
     let mvSizeField = $("#sizeField");
+    let mvUnitField = $("#unitField");
 
     $(document).ready(function () {
         init();
@@ -707,21 +681,78 @@
             $(this).val(inputValue);
         });
 
+        //Auto fill product variant name in field
         $("#colorField").on("click", function () {
             autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
         });
         $("#sizeField").on("click", function () {
             autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
         });
-        autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
+
+        //Load categories for product core
+        loadCategoriesOfProductCore();
+
+        //Load categories for create product variant
+         $("#btnCreateProductVariant").on("click", function () {
+             loadCategoriesOfProductVariant();
+             autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
+         });
     }
 
     function autoFillVariantNameInField(pProductName, pSizeName, pColorName) {
         $("#productVariantNameField").val(pProductName + " - Size " + pSizeName + " - Màu " + pColorName);
     }
 
+    function loadCategoriesOfProductCore() {
+        $.get(mvHostURLCallApi + "/category/brand", function (response) {
+            if (response.status === "OK") {
+                $.each(response.data, function (index, d) {
+                    mvBrandField.append('<option value=' + d.id + '>' + d.name + '</option>');
+                });
+            }
+        });
+        $.get(mvHostURLCallApi + "/category/product-type", function (response) {
+            if (response.status === "OK") {
+                $.each(response.data, function (index, d) {
+                    mvProductTypeField.append('<option value=' + d.id + '>' + d.name + '</option>');
+                });
+            }
+        });
+        $.get(mvHostURLCallApi + "/category/unit", function (response) {
+            if (response.status === "OK") {
+                $.each(response.data, function (index, d) {
+                    mvUnitField.append('<option value=' + d.id + '>' + d.name + '</option>');
+                });
+            }
+        });
+    }
+
+    function loadCategoriesOfProductVariant() {
+        $.get(mvHostURLCallApi + "/category/fabric-type", function (response) {
+            if (response.status === "OK") {
+                $.each(response.data, function (index, d) {
+                    mvFabricTypeField.append('<option value=' + d.id + '>' + d.name + '</option>');
+                });
+            }
+        });
+        $.get(mvHostURLCallApi + "/category/color", function (response) {
+            if (response.status === "OK") {
+                $.each(response.data, function (index, d) {
+                    mvColorField.append('<option value=' + d.id + '>' + d.name + '</option>');
+                });
+            }
+        });
+        $.get(mvHostURLCallApi + "/category/size", function (response) {
+            if (response.status === "OK") {
+                $.each(response.data, function (index, d) {
+                    mvSizeField.append('<option value=' + d.id + '>' + d.name + '</option>');
+                });
+            }
+        });
+    }
+
     function createProductVariant() {
-        $("#createProductVariantSubmit").on("click", function () {
+        $("#btnCreateProductVariantSubmit").on("click", function () {
             let paramsCheckExists = {productId : mvProductId, colorId : mvColorField.val(), sizeId : mvSizeField.val()}
             $.get(mvHostURLCallApi + "/product/variant/exists", paramsCheckExists, function (response) {
                 if (response.data === true) {
