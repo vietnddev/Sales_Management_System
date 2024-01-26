@@ -221,6 +221,7 @@
     <script th:src="@{/js/Common.js}"></script>
     <script th:src="@{/js/APIHelper.js}"></script>
     <script th:src="@{/js/Modal.js}"></script>
+    <script th:src="@{/js/Utils.js}"></script>
   </div>
 
 </body>

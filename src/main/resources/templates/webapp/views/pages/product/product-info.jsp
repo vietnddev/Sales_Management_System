@@ -347,10 +347,7 @@
                                                               th:object="${price}" method="post">
                                                             <div class="modal-header">
                                                                 <strong class="modal-title">Cập nhật giá bán</strong>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                        aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="form-group row">
@@ -360,19 +357,13 @@
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <label class="col-sm-4">Giá điều chỉnh</label>
-                                                                    <input class="col-sm-8 form-control" type="number"
-                                                                           name="giaBan">
+                                                                    <input class="col-sm-8 form-control" type="number" name="giaBan">
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-end">
-                                                                <input type="hidden" name="idGiaBan"
-                                                                       th:value="${var.priceSellId != null} ? ${var.priceSellId} : '-'">
-                                                                <button type="button" class="btn btn-sm btn-default"
-                                                                        data-dismiss="modal">Hủy
-                                                                </button>
-                                                                <button type="submit" class="btn btn-sm btn-primary">
-                                                                    Đồng ý
-                                                                </button>
+                                                                <input type="hidden" name="idGiaBan" th:value="${var.priceSellId != null} ? ${var.priceSellId} : '-'">
+                                                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -391,33 +382,28 @@
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <strong class="modal-title"
-                                                    th:text="'Lịch sử giá bán của [' + ${var.name} + ']'">
-                                            </strong>
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                            <strong class="modal-title" th:text="'Lịch sử giá bán của [' + ${var.name} + ']'"></strong>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <table class="table table-bordered" style="margin-bottom: 0">
                                                 <thead>
-                                                <tr>
-                                                    <td>STT</td>
-                                                    <td>Giá bán</td>
-                                                    <td>Thời gian cập nhật</td>
-                                                    <td>Trạng thái</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td>STT</td>
+                                                        <td>Giá bán</td>
+                                                        <td>Thời gian cập nhật</td>
+                                                        <td>Trạng thái</td>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr th:each="p, index : ${var.listPrices}">
-                                                    <td th:text="${index.index + 1}"></td>
-                                                    <td>
-                                                        <span th:text="${p.giaBan != null} ? ${#numbers.formatDecimal (p.giaBan, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></span>
-                                                    </td>
-                                                    <td th:text="${p.createdAt}"></td>
-                                                    <td th:text="${p.status}"></td>
-                                                </tr>
+                                                    <tr th:each="p, index : ${var.listPrices}">
+                                                        <td th:text="${index.index + 1}"></td>
+                                                        <td>
+                                                            <span th:text="${p.giaBan != null} ? ${#numbers.formatDecimal (p.giaBan, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></span>
+                                                        </td>
+                                                        <td th:text="${p.createdAt}"></td>
+                                                        <td th:text="${p.status}"></td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -439,7 +425,7 @@
                             <div class="form-group">
                                 <label>Tên sản phẩm</label>
                                 <textarea class="form-control" placeholder="Tên sản phẩm"
-                                          name="tenSanPham" required rows="4"
+                                          name="tenSanPham" required rows="4" id="productNameField"
                                           th:text="${detailProducts.productName}"></textarea>
                             </div>
                             <div class="form-group">
@@ -574,8 +560,12 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
+                                                    <label for="productVariantNameField">Tên</label>
+                                                    <input class="form-control" type="text" id="productVariantNameField">
+                                                </div>
+                                                <div class="form-group">
                                                     <label for="fabricTypeField">Chọn chất liệu vải</label>
-                                                    <select class="custom-select" name="fabricType" id="fabricTypeField">
+                                                    <select class="custom-select" id="fabricTypeField">
                                                         <option th:each="lsFabric, iterStat : ${listDmChatLieuVai}"
                                                                 th:value="${lsFabric.id}"
                                                                 th:text="${lsFabric.name}"
@@ -584,7 +574,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="colorField">Chọn màu sắc</label>
-                                                    <select class="custom-select" name="color" id="colorField">
+                                                    <select class="custom-select" id="colorField">
                                                         <option th:each="lsColor, iterStat : ${listDmMauSacSanPham}"
                                                                 th:value="${lsColor.id}"
                                                                 th:text="${lsColor.name}"
@@ -593,7 +583,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="sizeField">Chọn kích cỡ</label>
-                                                    <select class="custom-select" name="size" id="sizeField">
+                                                    <select class="custom-select" id="sizeField">
                                                         <option th:each="lsSize, iterStat : ${listDmKichCoSanPham}"
                                                                 th:value="${lsSize.id}"
                                                                 th:text="${lsSize.name}"
@@ -602,11 +592,11 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="originalPriceField">Giá bán gốc</label>
-                                                    <input class="form-control" type="text" name="originalPrice" id="originalPriceField">
+                                                    <input class="form-control" type="text" id="originalPriceField">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="promotionPriceField">Giá khuyến mãi</label>
-                                                    <input class="form-control" type="text" name="promotionPrice" id="promotionPriceField">
+                                                    <input class="form-control" type="text" id="promotionPriceField">
                                                 </div>
                                             </div>
                                         </div>
@@ -675,7 +665,13 @@
 <!-- ./wrapper -->
 
 <script>
+    let mvProductVariantList = {};
     let mvProductId = [[${detailProducts.productId}]];
+    let mvProductNameField = $("#productNameField");
+    let mvProductVariantNameField = $("#productVariantNameField");
+    let mvFabricTypeField = $("#fabricTypeField");
+    let mvColorField = $("#colorField");
+    let mvSizeField = $("#sizeField");
 
     $(document).ready(function () {
         init();
@@ -710,32 +706,52 @@
             let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             $(this).val(inputValue);
         });
+
+        $("#colorField").on("click", function () {
+            autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
+        });
+        $("#sizeField").on("click", function () {
+            autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
+        });
+        autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
+    }
+
+    function autoFillVariantNameInField(pProductName, pSizeName, pColorName) {
+        $("#productVariantNameField").val(pProductName + " - Size " + pSizeName + " - Màu " + pColorName);
     }
 
     function createProductVariant() {
         $("#createProductVariantSubmit").on("click", function () {
-            let apiURL = mvHostURLCallApi + "/product/variant/create";
-            let body = {
-                product : mvProductId,
-                fabricTypeId : $("#fabricTypeField").val(),
-                colorId : $("#colorField").val(),
-                sizeId : $("#sizeField").val(),
-                priceSellId : $("#originalPriceField").val().replace(/,/g, ''),
-                promotionPriceId : $("#promotionPriceField").val().replace(/,/g, '')
-            };
-            $.ajax({
-                url: apiURL,
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(body),
-                success: function (response) {
-                    if (response.status === "OK") {
-                        alert("Create new product variant successfully!");
-                        window.location.reload();
-                    }
-                },
-                error: function (xhr) {
-                    alert("Error: " + $.parseJSON(xhr.responseText).message);
+            let paramsCheckExists = {productId : mvProductId, colorId : mvColorField.val(), sizeId : mvSizeField.val()}
+            $.get(mvHostURLCallApi + "/product/variant/exists", paramsCheckExists, function (response) {
+                if (response.data === true) {
+                    alert("This product variant already exists!");
+                } else {
+                    let apiURL = mvHostURLCallApi + "/product/variant/create";
+                    let body = {
+                        productId : mvProductId,
+                        name : mvProductVariantNameField.val(),
+                        fabricTypeId : $("#fabricTypeField").val(),
+                        colorId : $("#colorField").val(),
+                        sizeId : $("#sizeField").val(),
+                        priceSellId : mvFormatCurrency($("#originalPriceField").val()),
+                        promotionPriceId : mvFormatCurrency($("#promotionPriceField").val())
+                    };
+                    $.ajax({
+                        url: apiURL,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(body),
+                        success: function (response) {
+                            if (response.status === "OK") {
+                                alert("Create new product variant successfully!");
+                                window.location.reload();
+                            }
+                        },
+                        error: function (xhr) {
+                            alert("Error: " + $.parseJSON(xhr.responseText).message);
+                        }
+                    });
                 }
             });
         });

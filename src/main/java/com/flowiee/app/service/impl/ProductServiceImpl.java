@@ -14,6 +14,7 @@ import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.MessageUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -220,8 +221,8 @@ public class ProductServiceImpl implements ProductService {
             product.setMoTaSanPham(product.getMoTaSanPham() != null ? product.getMoTaSanPham() : "");
             product.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.name());
             Product pSaved = productsRepository.save(product);
-            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product.toString());
-            logger.info("Insert product success! " + product.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product);
+            logger.info("Insert product success! " + product);
             return pSaved;
         } catch (Exception e) {
             logger.error("Insert product fail!", e);
@@ -288,19 +289,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVariant saveProductVariant(ProductVariant productVariant) {
         try {
-            String tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
-//            if (productVariant.getTenBienThe().isEmpty()) {
-//                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
-//            } else {
-//                tenBienTheSanPham = productVariant.getProduct().getTenSanPham() + " - " + productVariant.getTenBienThe() + " - Size " + productVariant.getSize().getName() + " - Màu " + productVariant.getColor().getName();
-//            }
-            productVariant.setTenBienThe(tenBienTheSanPham);
+            productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
+            productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
             ProductVariant productVariantSaved = productVariantRepository.save(productVariant);
-            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant.toString());
-            logger.info("Insert productVariant success! " + productVariant.toString());
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant);
+            logger.info("Insert productVariant success! " + productVariant);
             return productVariantSaved;
         } catch (Exception e) {
-            logger.error("Insert productVariant fail! " + productVariant.toString(), e);
+            logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product variant"), e);
             e.printStackTrace();
             throw new ApiException();
         }
@@ -313,7 +309,7 @@ public class ProductServiceImpl implements ProductService {
             productVariant.setId(productVariantId);
             ProductVariant productVariantUpdated = productVariantRepository.save(productVariant);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
-            logger.info("Update productVariant success! " + productVariant.toString());
+            logger.info("Update productVariant success! " + productVariant);
             return productVariantUpdated;
         } catch (Exception e) {
             logger.info("Update productVariant fail! " + productVariant.toString(), e);
@@ -328,7 +324,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             productVariantRepository.deleteById(productVariantId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
-            logger.info("Delete productVariant success! " + productVariantToDelete.toString());
+            logger.info("Delete productVariant success! " + productVariantToDelete);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
         } catch (Exception e) {
             logger.error("Delete productVariant fail! " + productVariantToDelete.toString(), e);
@@ -398,6 +394,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean productInUse(Integer productId) throws RuntimeException {
         return (!this.findAllProductVariantOfProduct(productId).isEmpty());
+    }
+
+    @Override
+    public boolean isProductVariantExists(int productId, int colorId, int sizeId) {
+        ProductVariant productVariant = productVariantRepository.findByColorAndSize(productId, colorId, sizeId);
+        return ObjectUtils.isNotEmpty(productVariant);
     }
 
     private Page<Product> setImageActiveAndLoadVoucherApply(Page<Product> products) throws RuntimeException {

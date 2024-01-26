@@ -104,6 +104,22 @@ public class ProductController extends BaseController {
         }
     }
 
+    @Operation(summary = "Check product variant already exists")
+    @GetMapping("/variant/exists")
+    public ApiResponse<Boolean> checkProductVariantAlreadyExists(@RequestParam("productId") Integer productId,
+                                                                 @RequestParam("colorId") Integer colorId,
+                                                                 @RequestParam("sizeId") Integer sizeId) {
+        if (!super.validateModuleProduct.readProduct(true)) {
+            return null;
+        }
+        try {
+            return ApiResponse.ok(productService.isProductVariantExists(productId, colorId, sizeId));
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
+        }
+    }
+
     @Operation(summary = "Create product")
     @PostMapping("/create")
     public ApiResponse<Product> createProduct(@RequestBody ProductDTO product) {
@@ -126,6 +142,7 @@ public class ProductController extends BaseController {
         try {
             return ApiResponse.ok(productService.saveProductVariant(ProductVariant.fromProductVariantDTO(productVariantDTO)));
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
         }
     }

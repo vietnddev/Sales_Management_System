@@ -111,6 +111,7 @@ public class ProductVariant extends BaseEntity implements Serializable {
         ProductVariant p = new ProductVariant();
         p.setId(dto.getProductVariantId());
         p.setProduct(new Product(dto.getProductId()));
+        p.setTenBienThe(dto.getName());
         p.setFabricType(new Category(dto.getFabricTypeId(), dto.getFabricTypeName()));
         p.setColor(new Category(dto.getColorId(), dto.getColorName()));
         p.setSize(new Category(dto.getSizeId(), dto.getSizeName()));

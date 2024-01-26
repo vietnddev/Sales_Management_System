@@ -74,5 +74,7 @@ public interface ProductService {
 
     boolean productInUse(Integer productId);
 
+    boolean isProductVariantExists(int productId, int colorId, int sizeId);
+
     byte[] exportData(List<Integer> listSanPhamId);
 }
