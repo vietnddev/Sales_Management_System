@@ -33,7 +33,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>STT</th>
@@ -46,18 +46,7 @@
                                             <th>IP</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr th:each="log, index : ${listLog}">
-                                            <td th:text="${index.index + 1}"></td>
-                                            <td th:text="${log.username}"></td>
-                                            <td th:text="${log.module}"></td>
-                                            <td th:text="${log.action}" style="max-width: 100px"></td>
-                                            <td th:text="${log.noiDung}" style="max-width: 250px"></td>
-                                            <td th:text="${log.noiDungCapNhat}" style="max-width: 250px"></td>
-                                            <td th:text="${log.createdAt}"></td>
-                                            <td th:text="${log.ip}"></td>
-                                        </tr>
-                                    </tbody>
+                                    <tbody id="contentTable"></tbody>
                                     <tfoot>
                                         <tr>
                                             <th>STT</th>
@@ -73,6 +62,9 @@
                                 </table>
                             </div>
                             <!-- /.card-body -->
+                            <div class="card-footer">
+                                <div th:replace="fragments :: pagination"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,7 +84,44 @@
         <!-- Nhúng các file JavaScript vào -->
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        loadLogs(mvPageSizeDefault, 1);
+        updateTableContentWhenOnClickPagination(loadLogs)
+    });
 
+    function loadLogs(pageSize, pageNum) {
+        let apiURL = mvHostURLCallApi + '/sys/log/all';
+        let params = {pageSize: pageSize, pageNum: pageNum}
+        $.get(apiURL, params, function (response) {
+            if (response.status === "OK") {
+                let data = response.data;
+                let pagination = response.pagination;
+
+                updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
+
+                let contentTable = $('#contentTable');
+                contentTable.empty();
+                $.each(data, function (index, d) {
+                    contentTable.append(
+                        '<tr>' +
+                            '<td>' + ((pageNum - 1) * pageSize + 1) + index + '</td>' +
+                            '<td>' + d.username + '</td>' +
+                            '<td>' + d.module + '</td>' +
+                            '<td style="max-width: 100px">' + d.action + '</td>' +
+                            '<td style="max-width: 250px">' + d.noiDung + '</td>' +
+                            '<td style="max-width: 250px">' + d.noiDungCapNhat + '</td>' +
+                            '<td>' + d.createdAt + '</td>' +
+                            '<td>' + d.ip + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+        }).fail(function () {
+            showErrorModal("Could not connect to the server");
+        });
+    }
+</script>
 </body>
 
 </html>

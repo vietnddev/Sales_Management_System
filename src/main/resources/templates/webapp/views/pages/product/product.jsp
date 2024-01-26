@@ -221,45 +221,8 @@
                     createProduct();
                 });
 
-                let lvPageSize = $('#selectPageSize').val();
-                $('#selectPageSize').on('click', function() {
-                    console.log($(this).val())
-                    if (lvPageSize === $(this).val()) {
-                        return;
-                    }
-                    lvPageSize = $(this).val();
-                    loadProducts($(this).val(), 1);
-                });
-
-                $('#firstPage').on('click', function() {
-                    if (parseInt($('#paginationInfo').attr("pageNum")) === 1) {
-                        return;
-                    }
-                    loadProducts(lvPageSize, 1);
-                });
-
-                $('#previousPage').on('click', function() {
-                    if (parseInt($('#paginationInfo').attr("pageNum")) === 1) {
-                        return;
-                    }
-                    loadProducts(lvPageSize, $('#paginationInfo').attr("pageNum") - 1);
-                });
-
-                $('#nextPage').on('click', function() {
-                    if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
-                        return;
-                    }
-                    loadProducts(lvPageSize, parseInt($('#paginationInfo').attr("pageNum")) + 1);
-                });
-
-                $('#lastPage').on('click', function() {
-                    if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
-                        return;
-                    }
-                    loadProducts(lvPageSize, $('#paginationInfo').attr("totalPage"));
-                });
-
                 loadProducts(mvPageSizeDefault, 1);
+                updateTableContentWhenOnClickPagination(loadProducts)
             });
 
             function loadProducts(pageSize, pageNum) {
@@ -270,7 +233,7 @@
                         let data = response.data;
                         let pagination = response.pagination;
 
-                        updatePaginationInfo(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
+                        updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
 
                         let contentTable = $('#contentTable');
                         contentTable.empty();
@@ -288,7 +251,7 @@
 
                             contentTable.append(
                                 '<tr>' +
-                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td>' + ((pageNum - 1) * pageSize + 1) + index + '</td>' +
                                     '<td class="text-center"><img src="/' + p.imageActive.directoryPath + '/' + p.imageActive.tenFileKhiLuu + '" style="width: 60px; height: 60px; border-radius: 5px"></td>' +
                                     '<td><a href="/san-pham/' + p.productId + '">' + p.productName + '</a></td>' +
                                     '<td>' + p.productTypeName + '</td>' +

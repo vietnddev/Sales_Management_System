@@ -6,6 +6,10 @@ import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -19,6 +23,12 @@ public class SystemLogServiceImpl implements SystemLogService {
     private SystemLogRepository logRepository;
     @Autowired
     private EntityManager entityManager;
+
+    @Override
+    public Page<SystemLog> findAll(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
+        return logRepository.findAll(pageable);
+    }
 
     @Override
     public List<SystemLog> getAll() {

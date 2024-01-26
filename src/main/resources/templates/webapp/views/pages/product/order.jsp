@@ -113,46 +113,9 @@
             })
 
             $(document).ready(function () {
-                let lvPageSize = $('#selectPageSize').val();
-                $('#selectPageSize').on('click', function () {
-                    console.log($(this).val())
-                    if (lvPageSize === $(this).val()) {
-                        return;
-                    }
-                    lvPageSize = $(this).val();
-                    loadOrders($(this).val(), 1);
-                });
-
-                $('#firstPage').on('click', function () {
-                    if (parseInt($('#paginationInfo').attr("pageNum")) === 1) {
-                        return;
-                    }
-                    loadOrders(lvPageSize, 1);
-                });
-
-                $('#previousPage').on('click', function () {
-                    if (parseInt($('#paginationInfo').attr("pageNum")) === 1) {
-                        return;
-                    }
-                    loadOrders(lvPageSize, $('#paginationInfo').attr("pageNum") - 1);
-                });
-
-                $('#nextPage').on('click', function () {
-                    if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
-                        return;
-                    }
-                    loadOrders(lvPageSize, parseInt($('#paginationInfo').attr("pageNum")) + 1);
-                });
-
-                $('#lastPage').on('click', function () {
-                    if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
-                        return;
-                    }
-                    loadOrders(lvPageSize, $('#paginationInfo').attr("totalPage"));
-                });
-
                 loadOrders(mvPageSizeDefault, 1);
                 loadCategories();
+                updateTableContentWhenOnClickPagination(loadOrders)
             });
 
             function loadOrders(pageSize, pageNum) {
@@ -163,7 +126,7 @@
                         let data = response.data;
                         let pagination = response.pagination;
 
-                        updatePaginationInfo(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
+                        updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
 
                         let contentTable = $('#contentTable');
                         contentTable.empty();
@@ -171,7 +134,7 @@
                             console.log(d)
                             contentTable.append(
                                 '<tr>' +
-                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td>' + ((pageNum - 1) * pageSize + 1) + index + '</td>' +
                                     '<td><a href="/don-hang/' + d.orderId + '">' + d.orderCode + '</a></td>' +
                                     '<td>' + d.orderTimeStr + '</td>' +
                                     '<td>' + d.receiveAddress + '</td>' +
