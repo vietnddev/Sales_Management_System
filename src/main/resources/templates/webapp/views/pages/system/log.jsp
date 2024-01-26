@@ -32,7 +32,7 @@
                                 <h3 class="card-title"><strong>NHẬT KÝ HỆ THỐNG</strong></h3>
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body">
+                            <div class="card-body p-0">
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
@@ -105,7 +105,7 @@
                 $.each(data, function (index, d) {
                     contentTable.append(
                         '<tr>' +
-                            '<td>' + ((pageNum - 1) * pageSize + 1) + index + '</td>' +
+                            '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
                             '<td>' + d.username + '</td>' +
                             '<td>' + d.module + '</td>' +
                             '<td style="max-width: 100px">' + d.action + '</td>' +

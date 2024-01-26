@@ -48,12 +48,12 @@ public class TicketImportUIController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_CREATE);
         TicketImport ticketImportPresent = ticketImportService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
         if (ticketImportPresent == null) {
-            ticketImportPresent = ticketImportService.createDraftImport();
+            ticketImportPresent = ticketImportService.createDraftTicketImport(null);
         }
         modelAndView.addObject("goodsImportRequest", new TicketImportGoodsRequest());
         modelAndView.addObject("goodsImport", new TicketImport());
         modelAndView.addObject("draftGoodsImport", ticketImportPresent);
-        modelAndView.addObject("orderTime", ticketImportPresent.getOrderTime().toString().substring(0, 10));
+        //modelAndView.addObject("orderTime", ticketImportPresent.getOrderTime().toString().substring(0, 10));
         modelAndView.addObject("receivedTime", ticketImportPresent.getReceivedTime().toString().substring(0, 10));
         modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
         modelAndView.addObject("listBienTheSanPhamSelected", productVariantServiceTemp.findByImportId(ticketImportPresent.getId()));

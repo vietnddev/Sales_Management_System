@@ -7,7 +7,7 @@ public class MessageUtils {
 
     public static final String ERROR_FORBIDDEN = "You are not authorized to use this function!";
     public static final String ERROR_NOTFOUND    = "The resource you are accessing dose not found!";
-    public static final String ERROR_DATA_LOCKED = "The resource is currently in use and cannot be deleted at this time!";
+    public static final String ERROR_DATA_LOCKED = "The resource is currently in use and cannot be update or delete at this time!";
     public static final String UNAUTHORIZED      = "Unauthorized";
     public static final String AUTHENTICATION_ERROR = "Authentication error";
     public static final String LOGIN_USERNAME_MISSING = "Please input username to login!";

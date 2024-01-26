@@ -40,7 +40,7 @@
                                         <h3 class="card-title"><strong>XUẤT HÀNG HÓA</strong></h3>
                                     </div>
                                     <div class="col-4 text-right">
-                                        <a class="btn btn-success" th:href="@{/storage/ticket-import/create}">Thêm mới</a>
+                                        <!---<a class="btn btn-success" th:href="@{/storage/ticket-import/create}">Thêm mới</a>-->
                                     </div>
                                 </div>
                             </div>

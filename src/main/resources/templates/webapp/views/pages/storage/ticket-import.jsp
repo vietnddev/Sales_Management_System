@@ -40,29 +40,53 @@
                                         <h3 class="card-title"><strong>NHẬP HÀNG HÓA</strong></h3>
                                     </div>
                                     <div class="col-4 text-right">
-                                        <a class="btn btn-success" th:href="@{/storage/ticket-import/create}">Thêm mới</a>
+                                        <button class="btn btn-success" data-toggle="modal" data-target="#modalNewDraft" id="btnNewDraft">Thêm mới</button>
+                                        <div class="modal fade" id="modalNewDraft">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content text-left">
+                                                    <div class="modal-header">
+                                                        <strong class="modal-title">Thêm mới phiếu nhập hàng</strong>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label for="titleField">Tên phiếu nhập</label>
+                                                                    <input type="text" class="form-control" id="titleField" required/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                        <button type="button" class="btn btn-primary" id="btnNewDraftSubmit">Lưu</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped">
+                            <div class="card-body p-0">
+                                <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>STT</th>
                                             <th>Tiêu đề</th>
-                                            <th>Loại hàng hóa</th>
-                                            <th>Tên</th>
+                                            <th>Người nhập</th>
                                             <th>Thời gian nhập</th>
                                             <th>Ghi chú</th>
                                             <th>Trạng thái</th>
+                                        </tr>
                                     </thead>
-                                    <tbody>
-
-                                    </tbody>
+                                    <tbody id="contentTable"></tbody>
                                     <tfoot></tfoot>
                                 </table>
                             </div>
-                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <div th:replace="fragments :: pagination"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,7 +110,73 @@
     </div>
 
 </div>
+<script>
+    $(document).ready(function () {
+        init();
+        createNewDraft();
+        loadTickImports(mvPageSizeDefault, 1);
+        updateTableContentWhenOnClickPagination(loadTickImports);
+    });
 
+    function init() {}
+
+    function loadTickImports(pageSize, pageNum) {
+        let apiURL = mvHostURLCallApi + "/storage/ticket-import/all";
+        let params = {pageSize: pageSize, pageNum: pageNum}
+        $.get(apiURL, params, function (response) {
+            if (response.status === "OK") {
+                let data = response.data;
+                let pagination = response.pagination;
+
+                updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
+
+                let contentTable = $('#contentTable');
+                contentTable.empty();
+                $.each(data, function (index, d) {
+                    contentTable.append(
+                        '<tr>' +
+                            '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
+                            '<td><a href="/storage/ticket-import/'+ d.id +'">' + d.title + '</td>' +
+                            '<td>' + d.importer + '</td>' +
+                            '<td>' + d.importTime + '</td>' +
+                            '<td>' + d.note + '</td>' +
+                            '<td>' + mvTicketImportStatus[d.status] + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+        }).fail(function () {
+            showErrorModal("Could not connect to the server");
+        });
+    }
+
+    function createNewDraft() {
+        $("#btnNewDraftSubmit").on("click", function () {
+            let title = $("#titleField").val();
+            if (title === null || title.trim() === "") {
+                alert("Title is can not allow null value");
+            } else {
+                let apiURL = mvHostURLCallApi + "/storage/ticket-import/create-draft";
+                let body = {title : title}
+                $.ajax({
+                    url: apiURL,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(body),
+                    success: function (response) {
+                        if (response.status === "OK") {
+                            alert("Create successfully");
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
+                    }
+                });
+            }
+        })
+    }
+</script>
 </body>
 
 </html>

@@ -3,11 +3,14 @@ package com.flowiee.app.service;
 import com.flowiee.app.base.BaseService;
 import com.flowiee.app.entity.TicketImport;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface TicketImportService extends BaseService<TicketImport> {
     List<TicketImport> findAll();
+
+    Page<TicketImport> findAll(int pageSize, int pageNum);
 
     List<TicketImport> findAll(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus);
 
@@ -27,7 +30,7 @@ public interface TicketImportService extends BaseService<TicketImport> {
 
     TicketImport findDraftImportPresent(Integer createdBy);
 
-    TicketImport createDraftImport();
+    TicketImport createDraftTicketImport(String title);
 
     TicketImport updateStatus(Integer entityId, String status);
 }

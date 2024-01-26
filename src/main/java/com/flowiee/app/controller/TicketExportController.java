@@ -9,6 +9,7 @@ import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.TicketExportService;
 import com.flowiee.app.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${app.api.prefix}/storage/ticket-export")
+@Tag(name = "Ticket export API", description = "Quản lý xuất hàng")
 public class TicketExportController extends BaseController {
     @Autowired private TicketExportService ticketExportService;
 

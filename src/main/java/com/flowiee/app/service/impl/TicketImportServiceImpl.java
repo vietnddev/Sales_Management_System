@@ -2,16 +2,23 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.TicketImport;
+import com.flowiee.app.exception.ApiException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
-import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Account;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.repository.TicketImportRepository;
 import com.flowiee.app.service.TicketImportService;
 
+import com.flowiee.app.utils.MessageUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +27,8 @@ import java.util.List;
 
 @Service
 public class TicketImportServiceImpl implements TicketImportService {
+    private static final Logger logger = LoggerFactory.getLogger(TicketImportServiceImpl.class);
+
     @Autowired
     private TicketImportRepository ticketImportRepository;
 
@@ -31,6 +40,12 @@ public class TicketImportServiceImpl implements TicketImportService {
     @Override
     public List<TicketImport> findAll() {
         return ticketImportRepository.findAll();
+    }
+
+    @Override
+    public Page<TicketImport> findAll(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
+        return ticketImportRepository.findAll(pageable);
     }
 
     @Override
@@ -62,15 +77,13 @@ public class TicketImportServiceImpl implements TicketImportService {
 
     @Override
     public String delete(Integer entityId) {
-        if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+        try {
+            ticketImportRepository.deleteById(entityId);
+            return MessageUtils.DELETE_SUCCESS;
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "ticket import"), ex);
+            throw new ApiException();
         }
-        TicketImport ticketImport = this.findById(entityId);
-        if (ticketImport == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
-        ticketImportRepository.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 ;
 
@@ -97,9 +110,9 @@ public class TicketImportServiceImpl implements TicketImportService {
         ticketImport.setDiscount(request.getDiscount());
         ticketImport.setPaidAmount(request.getPaidAmount());
         ticketImport.setPaidStatus(request.getPaidStatus());
-        if (request.getOrderTime() != null) {
-            ticketImport.setOrderTime(request.getOrderTime());
-        }
+//        if (request.getOrderTime() != null) {
+//            ticketImport.setOrderTime(request.getOrderTime());
+//        }
         if (request.getReceivedTime() != null) {
             ticketImport.setReceivedTime(request.getReceivedTime());
         }
@@ -217,12 +230,13 @@ public class TicketImportServiceImpl implements TicketImportService {
     }
 
     @Override
-    public TicketImport createDraftImport() {
+    public TicketImport createDraftTicketImport(String title) {
         TicketImport ticketImport = new TicketImport();
-        ticketImport.setTitle("Title");
+        ticketImport.setTitle(title);
         ticketImport.setStatus(STATUS_DRAFT);
         ticketImport.setCreatedBy(CommonUtils.getCurrentAccountId());
-        ticketImport.setOrderTime(new Date());
+        ticketImport.setImporter(CommonUtils.getCurrentAccountUsername());
+        ticketImport.setImportTime(new Date());
         ticketImport.setReceivedTime(new Date());
         ticketImport = ticketImportRepository.save(ticketImport);
         return ticketImport;

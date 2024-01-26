@@ -134,7 +134,7 @@
                             console.log(d)
                             contentTable.append(
                                 '<tr>' +
-                                    '<td>' + ((pageNum - 1) * pageSize + 1) + index + '</td>' +
+                                    '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
                                     '<td><a href="/don-hang/' + d.orderId + '">' + d.orderCode + '</a></td>' +
                                     '<td>' + d.orderTimeStr + '</td>' +
                                     '<td>' + d.receiveAddress + '</td>' +

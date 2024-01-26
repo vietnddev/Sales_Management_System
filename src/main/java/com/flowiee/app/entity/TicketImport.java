@@ -1,6 +1,11 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.flowiee.app.base.BaseEntity;
 
 import lombok.*;
@@ -40,8 +45,14 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Column(name = "pay_status")
     private String paidStatus;
 
-    @Column(name = "order_time")
-    private Date orderTime;
+    @Column(name = "importer")
+    private String importer;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+//    @JsonSerialize(using = DateSerializer.class)
+//    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
+    @Column(name = "import_time")
+    private Date importTime;
 
     @Column(name = "received_time")
     private Date receivedTime;
@@ -81,7 +92,7 @@ public class TicketImport extends BaseEntity implements Serializable {
 	public String toString() {
 		return "TicketImportGoods [id=" + super.id + ", title=" + title + ", supplier=" + supplier + ", discount=" + discount
 				+ ", paymentMethod=" + paymentMethod + ", paidAmount=" + paidAmount + ", paidStatus=" + paidStatus
-				+ ", orderTime=" + orderTime + ", receivedTime=" + receivedTime + ", receivedBy=" + receivedBy
+				+ ", receivedTime=" + receivedTime + ", receivedBy=" + receivedBy
 				+ ", note=" + note + ", status=" + status + "]";
 	}
 }

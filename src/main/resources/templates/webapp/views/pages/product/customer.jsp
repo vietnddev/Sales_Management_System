@@ -40,10 +40,7 @@
                                         <h3 class="card-title"><strong>DANH SÁCH KHÁCH HÀNG</strong></h3>
                                     </div>
                                     <div class="col-4 text-right">
-                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#modelAddKhachHang" id="testOK">
-                                                Thêm mới
-                                        </button>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modelAddKhachHang" id="testOK">Thêm mới</button>
                                         <div class="modal fade" id="modelAddKhachHang">
                                             <div class="modal-dialog">
                                                 <div class="modal-content text-left">
@@ -51,18 +48,14 @@
                                                           th:object="${customer}" method="post">
                                                         <div class="modal-header">
                                                             <strong class="modal-title">Thêm mới khách hàng</strong>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label>Tên khách hàng</label>
-                                                                        <input type="text" class="form-control" required
-                                                                               name="name"/>
+                                                                        <input type="text" class="form-control" required name="name"/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Giới tính</label>
@@ -73,18 +66,15 @@
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Số điện thoại</label>
-                                                                        <input type="text" class="form-control" required
-                                                                               name="phoneDefault"/>
+                                                                        <input type="text" class="form-control" required name="phoneDefault"/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Email</label>
-                                                                        <input type="email" class="form-control"
-                                                                               name="emailDefault"/>
+                                                                        <input type="email" class="form-control" name="emailDefault"/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Địa chỉ</label>
-                                                                        <input type="text" class="form-control" required
-                                                                               name="addressDefault"/>
+                                                                        <input type="text" class="form-control" required name="addressDefault"/>
                                                                     </div>
                                                                 </div>
                                                             </div>

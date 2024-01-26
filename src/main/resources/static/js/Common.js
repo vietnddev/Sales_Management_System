@@ -6,6 +6,12 @@ const mvHostURL = 'http://localhost:8085';
 const mvCurrentAccountId = '';
 const mvCurrentAccountUsername = '';
 
+//Config ticket import status
+const mvTicketImportStatus = {};
+mvTicketImportStatus["DRAFT"] = "Nháp";
+mvTicketImportStatus["COMPLETED"] = "Hoàn thành";
+mvTicketImportStatus["CANCEL"] = "Hủy";
+
 //Config ticket export status
 const mvTicketExportStatus = {};
 mvTicketExportStatus["DRAFT"] = "Nháp";
