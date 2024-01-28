@@ -68,18 +68,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findCurrentAccount() {
-        Account account = null;
-        WebAuthenticationDetails details = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Object authDetails = authentication.getDetails();
-            if (authDetails instanceof WebAuthenticationDetails) {
-                details = (WebAuthenticationDetails) authDetails;
-            }
-            account = this.findByUsername(authentication.getName());
-            account.setIp(details != null ? details.getRemoteAddress() : "unknown");
-        }
-        return account;
+        return this.findById(CommonUtils.getCurrentAccountId());
     }
 
     @Override
