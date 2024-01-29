@@ -1,14 +1,19 @@
-# Flowiee System (Development stage)
-Flowiee System
+# Flowiee System
+Flowiee System is...
 
-Url: http://localhost:8085/login
-
-Some main technologies are used on the FE side:
-+ HTML, CSS, JavaScript
-+ JQuery, Bootstrap
-
-Some main technologies are used on the BE side:
-+ Java
+Some technologies are used:
++ Java, Javascript
 + Spring Boot, Spring Security, Spring Data JPA
 + Maven, Thymeleaf, Log4j
-+ Oracle (about 50 entities), diagram: https://dbdiagram.io/d/64859460722eb77494c1ae83
++ Oracle database
++ HTML, CSS, Bootstrap, JQuery
+
+Setup the software:
++ Install JDK 19, maven
++ Install Oracle and change config to connect in application.properties file
++ Change config port, send mail,... in application.properties file
+
+Login:
++ URL: http://host:port/sys/login
+
+If you have any questions, please contact me by email: nguyenducviet0684@gmail.com
