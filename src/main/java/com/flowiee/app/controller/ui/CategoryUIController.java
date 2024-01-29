@@ -49,6 +49,7 @@ public class CategoryUIController extends BaseController {
         List<Category> listCategory = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), null);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY_DETAIL);
         modelAndView.addObject("category", new Category());
+        modelAndView.addObject("categoryType", categoryType);
         modelAndView.addObject("listSubCategory", listCategory);
         modelAndView.addObject("ctgRootType", CommonUtils.getCategoryType(categoryType));
         modelAndView.addObject("ctgRootName", AppConstants.CATEGORY.valueOf(CommonUtils.getCategoryType(categoryType)).getLabel());

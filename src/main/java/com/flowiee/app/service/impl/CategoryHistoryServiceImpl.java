@@ -12,32 +12,32 @@ import java.util.List;
 @Service
 public class CategoryHistoryServiceImpl implements CategoryHistoryService {
     @Autowired
-    private CategoryHistoryRepository categoryHistoryRepository;
+    private CategoryHistoryRepository categoryHistoryRepo;
 
     @Override
     public List<CategoryHistory> findAll() {
-        return categoryHistoryRepository.findAll();
+        return categoryHistoryRepo.findAll();
     }
 
     @Override
     public CategoryHistory findById(Integer entityId) {
-        return categoryHistoryRepository.findById(entityId).orElse(null);
+        return categoryHistoryRepo.findById(entityId).orElse(null);
     }
 
     @Override
     public CategoryHistory save(CategoryHistory entity) {
-        return categoryHistoryRepository.save(entity);
+        return categoryHistoryRepo.save(entity);
     }
 
     @Override
     public CategoryHistory update(CategoryHistory entity, Integer entityId) {
         entity.setId(entityId);
-        return categoryHistoryRepository.save(entity);
+        return categoryHistoryRepo.save(entity);
     }
 
     @Override
     public String delete(Integer entityId) {
-        categoryHistoryRepository.deleteById(entityId);
+        categoryHistoryRepo.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

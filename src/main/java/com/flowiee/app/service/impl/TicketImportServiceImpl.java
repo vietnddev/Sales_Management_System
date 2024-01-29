@@ -30,7 +30,7 @@ public class TicketImportServiceImpl implements TicketImportService {
     private static final Logger logger = LoggerFactory.getLogger(TicketImportServiceImpl.class);
 
     @Autowired
-    private TicketImportRepository ticketImportRepository;
+    private TicketImportRepository ticketImportRepo;
 
     private static String STATUS_DRAFT = "DRAFT";
 //    private static String STATUS_APPROVING = "APPROVING";
@@ -39,23 +39,23 @@ public class TicketImportServiceImpl implements TicketImportService {
 
     @Override
     public List<TicketImport> findAll() {
-        return ticketImportRepository.findAll();
+        return ticketImportRepo.findAll();
     }
 
     @Override
     public Page<TicketImport> findAll(int pageSize, int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        return ticketImportRepository.findAll(pageable);
+        return ticketImportRepo.findAll(pageable);
     }
 
     @Override
     public List<TicketImport> findAll(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
-        return ticketImportRepository.findAll(text, supplierId, paymentMethod, payStatus, importStatus);
+        return ticketImportRepo.findAll(text, supplierId, paymentMethod, payStatus, importStatus);
     }
 
     @Override
     public TicketImport findById(Integer entityId) {
-        return ticketImportRepository.findById(entityId).orElse(null);
+        return ticketImportRepo.findById(entityId).orElse(null);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class TicketImportServiceImpl implements TicketImportService {
         if (entity == null) {
             throw new BadRequestException();
         }
-        return ticketImportRepository.save(entity);
+        return ticketImportRepo.save(entity);
     }
 
     @Override
@@ -72,13 +72,13 @@ public class TicketImportServiceImpl implements TicketImportService {
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return ticketImportRepository.save(entity);
+        return ticketImportRepo.save(entity);
     }
 
     @Override
     public String delete(Integer entityId) {
         try {
-            ticketImportRepository.deleteById(entityId);
+            ticketImportRepo.deleteById(entityId);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {
             logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "ticket import"), ex);
@@ -118,7 +118,7 @@ public class TicketImportServiceImpl implements TicketImportService {
         }
         ticketImport.setNote(request.getNote());
         ticketImport.setStatus(STATUS_DRAFT);
-        return ticketImportRepository.save(ticketImport);
+        return ticketImportRepo.save(ticketImport);
     }
 
 //    @Override
@@ -192,7 +192,7 @@ public class TicketImportServiceImpl implements TicketImportService {
     public List<TicketImport> findBySupplierId(Integer supplierId) {
         List<TicketImport> listData = new ArrayList<>();
         if (supplierId != null && supplierId >= 0) {
-            listData = ticketImportRepository.findBySupplierId(supplierId);
+            listData = ticketImportRepo.findBySupplierId(supplierId);
         }
         return listData;
     }
@@ -201,7 +201,7 @@ public class TicketImportServiceImpl implements TicketImportService {
     public List<TicketImport> findByPaymentMethod(String paymentMethod) {
         List<TicketImport> listData = new ArrayList<>();
         if (paymentMethod != null) {
-            listData = ticketImportRepository.findByPaymentMethod(paymentMethod);
+            listData = ticketImportRepo.findByPaymentMethod(paymentMethod);
         }
         return listData;
     }
@@ -210,7 +210,7 @@ public class TicketImportServiceImpl implements TicketImportService {
     public List<TicketImport> findByPaidStatus(String paidStatus) {
         List<TicketImport> listData = new ArrayList<>();
         if (paidStatus != null && CommonUtils.getPaymentStatusCategory().containsKey(paidStatus)) {
-            listData = ticketImportRepository.findByPaidStatus(paidStatus);
+            listData = ticketImportRepo.findByPaidStatus(paidStatus);
         }
         return listData;
     }
@@ -219,14 +219,14 @@ public class TicketImportServiceImpl implements TicketImportService {
     public List<TicketImport> findByAccountId(Integer accountId) {
         List<TicketImport> listData = new ArrayList<>();
         if (accountId != null && accountId > 0) {
-            listData = ticketImportRepository.findByReceiveBy(accountId);
+            listData = ticketImportRepo.findByReceiveBy(accountId);
         }
         return listData;
     }
 
     @Override
     public TicketImport findDraftImportPresent(Integer createdBy) {
-        return ticketImportRepository.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
+        return ticketImportRepo.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class TicketImportServiceImpl implements TicketImportService {
         ticketImport.setImporter(CommonUtils.getCurrentAccountUsername());
         ticketImport.setImportTime(new Date());
         ticketImport.setReceivedTime(new Date());
-        ticketImport = ticketImportRepository.save(ticketImport);
+        ticketImport = ticketImportRepo.save(ticketImport);
         return ticketImport;
     }
 
@@ -252,6 +252,6 @@ public class TicketImportServiceImpl implements TicketImportService {
             throw new BadRequestException();
         }
         ticketImport.setStatus(status);
-        return ticketImportRepository.save(ticketImport);
+        return ticketImportRepo.save(ticketImport);
     }
 }

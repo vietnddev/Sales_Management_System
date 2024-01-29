@@ -5,10 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý khách hàng</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
-
+    <div th:replace="header :: stylesheets"></div>
     <style>
         .table td.vertical-center {
             vertical-align: middle;
@@ -18,19 +15,13 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-    <!-- Navbar (header) -->
     <div th:replace="header :: header"></div>
-    <!-- /.navbar (header)-->
 
-    <!-- Main Sidebar Container -->
     <div th:replace="sidebar :: sidebar"></div>
 
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
-        <!-- Main content -->
         <section class="content">
             <div class="container-fluid vertical-center">
-                <!-- Small boxes (Stat box) -->
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -44,8 +35,7 @@
                                         <div class="modal fade" id="modelAddKhachHang">
                                             <div class="modal-dialog">
                                                 <div class="modal-content text-left">
-                                                    <form th:action="@{/customer/insert}"
-                                                          th:object="${customer}" method="post">
+                                                    <form th:action="@{/customer/insert}" th:object="${customer}" method="post">
                                                         <div class="modal-header">
                                                             <strong class="modal-title">Thêm mới khách hàng</strong>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -79,9 +69,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-end">
-                                                                <button type="button" class="btn btn-default"
-                                                                        data-dismiss="modal">Hủy
-                                                                </button>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                                                                 <button type="submit" class="btn btn-primary">Lưu</button>
                                                             </div>
                                                         </div>
@@ -111,9 +99,7 @@
                                     <tbody>
                                         <tr th:each="list, index : ${listCustomer}">
                                             <td th:text="${index.index + 1}" class="vertical-center"></td>
-                                            <td class="vertical-center">
-                                                <a th:href="@{/customer/{id}(id=${list.id})}" th:text="${list.name}"></a>
-                                            </td>
+                                            <td class="vertical-center"><a th:href="@{/customer/{id}(id=${list.id})}" th:text="${list.name}"></a></td>
                                             <td th:text="${list.sex}" class="vertical-center"></td>
                                             <td th:text="${list.birthday}" class="vertical-center"></td>
                                             <td th:text="${list.phoneDefault}" class="vertical-center"></td>
@@ -132,12 +118,10 @@
                                                 <div class="modal fade" th:id="'update-' + ${list.id}">
                                                     <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
-                                                            <form th:action="@{/customer/update/{id}(id=${list.id})}"
-                                                                  th:object="${customer}" method="post">
+                                                            <form th:action="@{/customer/update/{id}(id=${list.id})}" th:object="${customer}" method="post">
                                                                 <div class="modal-header">
                                                                     <strong class="modal-title">Cập nhật thông tin khách hàng</strong>
-                                                                    <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
@@ -146,8 +130,7 @@
                                                                         <div class="col-12">
                                                                             <div class="form-group">
                                                                                 <label>Tên khách hàng</label>
-                                                                                <input type="text" class="form-control" required
-                                                                                       name="name" th:value="${list.name}"/>
+                                                                                <input type="text" class="form-control" required name="name" th:value="${list.name}"/>
                                                                             </div>
                                                                             <div class="form-group" th:if="${list.sex} == 'Nam'">
                                                                                 <label>Giới tính</label>
@@ -165,25 +148,20 @@
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Số điện thoại</label>
-                                                                                <input type="text" class="form-control" required
-                                                                                       name="phoneDefault" th:value="${list.phoneDefault}"/>
+                                                                                <input type="text" class="form-control" required name="phoneDefault" th:value="${list.phoneDefault}"/>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Email</label>
-                                                                                <input type="email" class="form-control"
-                                                                                       name="emailDefault" th:value="${list.emailDefault}"/>
+                                                                                <input type="email" class="form-control" name="emailDefault" th:value="${list.emailDefault}"/>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Địa chỉ</label>
-                                                                                <input type="text" class="form-control" required
-                                                                                       name="addressDefault" th:value="${list.addressDefault}"/>
+                                                                                <input type="text" class="form-control" required name="addressDefault" th:value="${list.addressDefault}"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer justify-content-end">
-                                                                        <button type="button" class="btn btn-default"
-                                                                                data-dismiss="modal">Hủy
-                                                                        </button>
+                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                                                                         <button type="submit" class="btn btn-primary">Lưu</button>
                                                                     </div>
                                                                 </div>
@@ -208,28 +186,18 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <!-- /.card-body -->
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-
-    <div th:replace="footer :: footer">
-        <!-- Nhúng các file JavaScript vào -->
     </div>
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
+    <div th:replace="footer :: footer"></div>
 
-    <div th:replace="header :: scripts">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+    <aside class="control-sidebar control-sidebar-dark"></aside>
+
+    <div th:replace="header :: scripts"></div>
 
 </div>
 

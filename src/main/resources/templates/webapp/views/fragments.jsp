@@ -16,7 +16,7 @@
                     <option id="selectPageSizeOp" value="10">10</option>
                     <option name="selectPageSizeOp" value="50">50</option>
                 </select>
-                <span class="col-3" id="paginationInfo">Showing 1 to 5 of 5 entries</span>
+                <span class="col-3" id="paginationInfo">Showing ... to ... of ... entries</span>
                 <ul class="pagination col-4 justify-content-center mt-0 mb-0">
                     <li class="page-item" id="firstPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward"></i></a></li>
 
@@ -27,9 +27,9 @@
                     <li class="page-item" id="nextPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left fa-flip-horizontal"></i></a></li>
 
                     <li class="page-item" id="lastPage" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward fa-flip-horizontal"></i></a></li>
-                    </ul>
-                </nav>
-            <!--</div>-->
+                </ul>
+                <span class="col-4 text-right" id="totalPages">Total pages ...</span>
+            </nav>
         </div>
 
         <div th:fragment="format_currency(amount)" th:remove="tag">

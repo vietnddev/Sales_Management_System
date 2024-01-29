@@ -51,8 +51,7 @@
 
                                             <select class="custom-select col-sm" name="nhanVienBanHang??"></select>
 
-                                            <button type="submit" name="search" class="btn btn-info form-control">Tìm kiếm
-                                            </button>
+                                            <button type="submit" name="search" class="btn btn-info form-control">Tìm kiếm</button>
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +78,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- /.card-body -->
                                 <div class="card-footer">
                                     <div th:replace="fragments :: pagination"></div>
                                 </div>

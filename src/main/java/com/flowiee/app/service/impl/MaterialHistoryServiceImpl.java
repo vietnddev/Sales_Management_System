@@ -14,16 +14,16 @@ import java.util.List;
 @Service
 public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     @Autowired
-    private MaterialHistoryRepository materialHistoryRepository;
+    private MaterialHistoryRepository materialHistoryRepo;
 
     @Override
     public List<MaterialHistory> findAll() {
-        return materialHistoryRepository.findAll();
+        return materialHistoryRepo.findAll();
     }
 
     @Override
     public MaterialHistory findById(Integer entityId) {
-        return materialHistoryRepository.findById(entityId).get();
+        return materialHistoryRepo.findById(entityId).get();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
         if (entity == null) {
             throw new BadRequestException();
         }
-        return materialHistoryRepository.save(entity);
+        return materialHistoryRepo.save(entity);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return materialHistoryRepository.save(entity);
+        return materialHistoryRepo.save(entity);
     }
 
     @Override
@@ -48,17 +48,17 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
         if (entityId == null || entityId <= 0) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        materialHistoryRepository.deleteById(entityId);
+        materialHistoryRepo.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public List<MaterialHistory> findByMaterialId(Integer materialId) {
-        return materialHistoryRepository.findByMaterialId(materialId);
+        return materialHistoryRepo.findByMaterialId(materialId);
     }
 
     @Override
     public List<MaterialHistory> findByFieldName(String fieldName) {
-        return materialHistoryRepository.findByFieldName(fieldName);
+        return materialHistoryRepo.findByFieldName(fieldName);
     }
 }

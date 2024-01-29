@@ -15,6 +15,10 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,43 +37,43 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 	private static final String MODULE = AppConstants.SYSTEM_MODULE.CATEGORY.name();
 	
-    private final CategoryRepository      categoryRepository;
-    private final CategoryHistoryService  categoryHistoryService;
-    private final ProductService          productService;
-    private final OrderService            orderService;
-    private final DocumentService         documentService;
-    private final NotificationService     notificationService;
-    private final ImportService           importService;
-    private final FlowieeImportRepository flowieeImportRepository;
-    private final FileStorageService      fileStorageService;
-    private final FileStorageRepository   fileStorageRepository;
-    private final AccountService          accountService;
-    private final MaterialService         materialService;
+    private final CategoryRepository categoryRepo;
+    private final CategoryHistoryService categoryHistoryService;
+    private final ProductService productService;
+    private final OrderService orderService;
+    private final DocumentService documentService;
+    private final NotificationService notificationService;
+    private final ImportService importService;
+    private final FlowieeImportRepository flowieeImportRepo;
+    private final FileStorageService fileStorageService;
+    private final FileStorageRepository fileStorageRepo;
+    private final AccountService accountService;
+    private final MaterialService materialService;
 
     @Autowired
-    public CategoryServiceImpl(ImportService importService, CategoryRepository categoryRepository, CategoryHistoryService categoryHistoryService, ProductService productService, MaterialService materialService, OrderService orderService, DocumentService documentService, NotificationService notificationService, FlowieeImportRepository flowieeImportRepository, FileStorageService fileStorageService, FileStorageRepository fileStorageRepository, AccountService accountService) {
+    public CategoryServiceImpl(ImportService importService, CategoryRepository categoryRepo, CategoryHistoryService categoryHistoryService, ProductService productService, MaterialService materialService, OrderService orderService, DocumentService documentService, NotificationService notificationService, FlowieeImportRepository flowieeImportRepo, FileStorageService fileStorageService, FileStorageRepository fileStorageRepo, AccountService accountService) {
         this.importService = importService;
-        this.categoryRepository = categoryRepository;
+        this.categoryRepo = categoryRepo;
         this.categoryHistoryService = categoryHistoryService;
         this.productService = productService;
         this.materialService = materialService;
         this.orderService = orderService;
         this.documentService = documentService;
         this.notificationService = notificationService;
-        this.flowieeImportRepository = flowieeImportRepository;
+        this.flowieeImportRepo = flowieeImportRepo;
         this.fileStorageService = fileStorageService;
-        this.fileStorageRepository = fileStorageRepository;
+        this.fileStorageRepo = fileStorageRepo;
         this.accountService = accountService;
     }
 
     @Override
     public List<Category> findAll() {
-        return categoryRepository.findAll();
+        return categoryRepo.findAll();
     }
 
     @Override
     public Category findById(Integer entityId) {
-        return categoryRepository.findById(entityId).orElse(null);
+        return categoryRepo.findById(entityId).orElse(null);
     }
 
     @Override
@@ -77,7 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (entity == null) {
             throw new BadRequestException();
         }
-        return categoryRepository.save(entity);
+        return categoryRepo.save(entity);
     }
 
     @Transactional
@@ -97,7 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryHistoryService.save(categoryHistory);
         });
         entity.setId(entityId);
-        return categoryRepository.save(entity);
+        return categoryRepo.save(entity);
     }
 
     @Transactional
@@ -109,33 +113,39 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryInUse(entityId)) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
-        categoryRepository.deleteById(entityId);
+        categoryRepo.deleteById(entityId);
         return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override
     public List<Category> findRootCategory() {
-        return categoryRepository.findRootCategory();
+        return categoryRepo.findRootCategory();
     }
 
     @Override
     public List<Category> findSubCategory(String categoryType, Integer parentId) {
-        return categoryRepository.findSubCategory(categoryType, parentId);
+        return categoryRepo.findSubCategory(categoryType, parentId, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public Page<Category> findSubCategory(String categoryType, Integer parentId, int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
+        return categoryRepo.findSubCategory(categoryType, parentId, pageable);
     }
 
     @Override
     public List<Category> findSubCategory(List<String> categoryTypes) {
-        return categoryRepository.findSubCategory(categoryTypes);
+        return categoryRepo.findSubCategory(categoryTypes);
     }
 
     @Override
     public Category findSubCategoryDefault(String categoryType) {
-        return categoryRepository.findSubCategoryDefault(categoryType);
+        return categoryRepo.findSubCategoryDefault(categoryType);
     }
 
     @Override
     public List<Category> findSubCategoryUnDefault(String categoryType) {
-        return categoryRepository.findSubCategoryUnDefault(categoryType);
+        return categoryRepo.findSubCategoryUnDefault(categoryType);
     }
 
     @Override
@@ -268,7 +278,7 @@ public class CategoryServiceImpl implements CategoryService {
             flowieeImport.setDetail(detailOfFlowieeImport);
             flowieeImport.setSuccessRecord(importSuccess);
             flowieeImport.setTotalRecord(totalRecord);
-            flowieeImport.setFileId(fileStorageRepository.findByCreatedTime(fileStorage.getCreatedAt()).getId());
+            flowieeImport.setFileId(fileStorageRepo.findByCreatedTime(fileStorage.getCreatedAt()).getId());
             importService.save(flowieeImport);
 
             Notification notification = new Notification();
@@ -278,7 +288,7 @@ public class CategoryServiceImpl implements CategoryService {
             //notification.setType(MessagesUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);
             notification.setReaded(false);
-            notification.setImportId(flowieeImportRepository.findByStartTime(flowieeImport.getStartTime()).getId());
+            notification.setImportId(flowieeImportRepo.findByStartTime(flowieeImport.getStartTime()).getId());
             notificationService.save(notification);
 
             return AppConstants.SERVICE_RESPONSE_SUCCESS;

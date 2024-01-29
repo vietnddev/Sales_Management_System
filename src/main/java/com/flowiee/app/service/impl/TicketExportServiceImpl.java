@@ -8,7 +8,6 @@ import com.flowiee.app.entity.TicketExport;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.repository.TicketExportRepository;
-import com.flowiee.app.service.OrderService;
 import com.flowiee.app.service.ProductHistoryService;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.TicketExportService;
@@ -25,20 +24,19 @@ import java.util.List;
 
 @Service
 public class TicketExportServiceImpl implements TicketExportService {
-    @Autowired private TicketExportRepository ticketExportRepository;
-    @Autowired private OrderService orderService;
+    @Autowired private TicketExportRepository ticketExportRepo;
     @Autowired private OrderRepository orderRepository;
     @Autowired private ProductService productService;
     @Autowired private ProductHistoryService productHistoryService;
 
     @Override
     public List<TicketExport> findAll() {
-        return ticketExportRepository.findAll();
+        return ticketExportRepo.findAll();
     }
 
     @Override
     public TicketExport findById(Integer entityId) {
-        return ticketExportRepository.findById(entityId).orElse(null);
+        return ticketExportRepo.findById(entityId).orElse(null);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class TicketExportServiceImpl implements TicketExportService {
         ticketExport.setExportTime(new Date());
         ticketExport.setNote(null);
         ticketExport.setStatus("DRAFT");
-        ticketExport = ticketExportRepository.save(ticketExport);
+        ticketExport = ticketExportRepo.save(ticketExport);
         orderRepository.setTicketExportInfo(orderDTO.getOrderId(), ticketExport.getId());
         return ticketExport;
     }
@@ -87,7 +85,7 @@ public class TicketExportServiceImpl implements TicketExportService {
         ticketExportToUpdate.setTitle(ticket.getTitle());
         ticketExportToUpdate.setNote(ticket.getNote());
         ticketExportToUpdate.setStatus(ticket.getStatus());
-        TicketExport ticketExportUpdated = ticketExportRepository.save(ticketExportToUpdate);
+        TicketExport ticketExportUpdated = ticketExportRepo.save(ticketExportToUpdate);
 
         if (AppConstants.TICKET_EX_STATUS.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
             Order order = orderRepository.findByTicketExport(ticketExportUpdated.getId());
@@ -119,7 +117,7 @@ public class TicketExportServiceImpl implements TicketExportService {
             order.setTicketExport(null);
             orderRepository.save(order);
         }
-        ticketExportRepository.deleteById(ticketExportId);
+        ticketExportRepo.deleteById(ticketExportId);
         return MessageUtils.DELETE_SUCCESS;
     }
 }

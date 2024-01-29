@@ -1,6 +1,8 @@
 package com.flowiee.app.repository;
 
 import com.flowiee.app.entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
            "and (c.code is null or c.code <> 'ROOT') " +
            "and (:parentId is null or c.parentId=:parentId) " +
            "order by c.sort")
-    List<Category> findSubCategory(@Param("type") String type, @Param("parentId") Integer parentId);
+    Page<Category> findSubCategory(@Param("type") String type, @Param("parentId") Integer parentId, Pageable pageable);
 
     @Query("from Category c where c.type in (:type) and (c.code is null or c.code <> 'ROOT') order by c.sort")
     List<Category> findSubCategory(@Param("type") List<String> type);

@@ -15,21 +15,21 @@ import java.util.List;
 @Service
 public class MaterialTempServiceImpl implements MaterialTempService {
     @Autowired
-    private MaterialTempRepository materialTempRepository;
+    private MaterialTempRepository materialTempRepo;
 
     @Override
     public List<MaterialTemp> findAll() {
-        return materialTempRepository.findAll();
+        return materialTempRepo.findAll();
     }
 
     @Override
     public MaterialTemp findById(Integer entityId) {
-        return materialTempRepository.findById(entityId).get();
+        return materialTempRepo.findById(entityId).get();
     }
 
     @Override
     public MaterialTemp save(MaterialTemp entity) {
-        return materialTempRepository.save(entity);
+        return materialTempRepo.save(entity);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MaterialTempServiceImpl implements MaterialTempService {
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return materialTempRepository.save(entity);
+        return materialTempRepo.save(entity);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MaterialTempServiceImpl implements MaterialTempService {
         if (entityId == null || entityId <= 0) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        materialTempRepository.deleteById(entityId);
+        materialTempRepo.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
@@ -54,13 +54,13 @@ public class MaterialTempServiceImpl implements MaterialTempService {
     public List<MaterialTemp> findByImportId(Integer importId) {
         List<MaterialTemp> listData = new ArrayList<>();
         if (importId != null && importId > 0) {
-            listData = materialTempRepository.findByImportId(importId);
+            listData = materialTempRepo.findByImportId(importId);
         }
         return listData;
     }
 
 	@Override
 	public MaterialTemp findMaterialInGoodsImport(Integer importId, Integer materialId) {
-		return materialTempRepository.findMaterialInGoodsImport(importId, materialId);
+		return materialTempRepo.findMaterialInGoodsImport(importId, materialId);
 	}
 }

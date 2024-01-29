@@ -14,16 +14,16 @@ import java.util.List;
 @Service
 public class GarmentFactoryServiceImpl implements GarmentFactoryService {
     @Autowired
-    private GarmentFactoryRepository garmentFactoryRepository;
+    private GarmentFactoryRepository garmentFactoryRepo;
 
     @Override
     public List<GarmentFactory> findAll() {
-        return garmentFactoryRepository.findAll();
+        return garmentFactoryRepo.findAll();
     }
 
     @Override
     public GarmentFactory findById(Integer entityId) {
-        return garmentFactoryRepository.findById(entityId).get();
+        return garmentFactoryRepo.findById(entityId).get();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class GarmentFactoryServiceImpl implements GarmentFactoryService {
         if (entity == null) {
             throw new BadRequestException();
         }
-        return garmentFactoryRepository.save(entity);
+        return garmentFactoryRepo.save(entity);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class GarmentFactoryServiceImpl implements GarmentFactoryService {
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return garmentFactoryRepository.save(entity);
+        return garmentFactoryRepo.save(entity);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GarmentFactoryServiceImpl implements GarmentFactoryService {
         if (garmentFactory == null) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        garmentFactoryRepository.deleteById(entityId);
+        garmentFactoryRepo.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

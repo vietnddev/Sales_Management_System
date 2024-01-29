@@ -48,51 +48,51 @@ public class ProductServiceImpl implements ProductService {
     private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
-    private ProductRepository          productsRepository;
+    private ProductRepository productsRepo;
     @Autowired
-    private ProductVariantRepository   productVariantRepository;
+    private ProductVariantRepository productVariantRepo;
     @Autowired
-    private ProductAttributeRepository productAttributeRepository;
+    private ProductAttributeRepository productAttributeRepo;
     @Autowired
-    private PriceService               priceService;
+    private PriceService priceService;
     @Autowired
-    private SystemLogService           systemLogService;
+    private SystemLogService systemLogService;
     @Autowired
-    private FileStorageService         fileService;
+    private FileStorageService fileService;
     @Autowired
-    private EntityManager              entityManager;
+    private EntityManager entityManager;
     @Autowired
-    private ProductHistoryService      productHistoryService;
+    private ProductHistoryService productHistoryService;
     @Autowired
-    private VoucherService             voucherInfoService;
+    private VoucherService voucherInfoService;
     @Autowired
-    private VoucherApplyService        voucherApplyService;
+    private VoucherApplyService voucherApplyService;
     @Autowired
-    private CategoryRepository         categoryRepository;
+    private CategoryRepository categoryRepo;
 
     @Override
     public Page<Product> findAllProducts() {
-        Page<Product> products = productsRepository.findAll(null, null, null, Pageable.unpaged());
+        Page<Product> products = productsRepo.findAll(null, null, null, Pageable.unpaged());
         return this.setImageActiveAndLoadVoucherApply(products);
     }
 
     @Override
     public Page<Product> findAllProducts(Integer productTypeId, Integer brandId, String status) {
-        Page<Product> products = productsRepository.findAll(productTypeId, brandId, status, Pageable.unpaged());
+        Page<Product> products = productsRepo.findAll(productTypeId, brandId, status, Pageable.unpaged());
         return this.setImageActiveAndLoadVoucherApply(products);
     }
 
     @Override
     public Page<Product> findAllProducts(int size, int page) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Product> products = productsRepository.findAll(null, null, null, pageable);
+        Page<Product> products = productsRepo.findAll(null, null, null, pageable);
         return this.setImageActiveAndLoadVoucherApply(products);
     }
 
     @Override
     public List<Product> findProductsIdAndProductName() {
         List<Product> products = new ArrayList<>();
-        productsRepository.findIdAndName(AppConstants.PRODUCT_STATUS.ACTIVE.name()).forEach(objects -> {
+        productsRepo.findIdAndName(AppConstants.PRODUCT_STATUS.ACTIVE.name()).forEach(objects -> {
             Product p = new Product();
             p.setId(Integer.parseInt(String.valueOf(objects[0])));
             p.setTenSanPham(String.valueOf(objects[1]));
@@ -103,17 +103,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findProductsByType(Integer productTypeId) {
-        return productsRepository.findByProductType(productTypeId);
+        return productsRepo.findByProductType(productTypeId);
     }
 
     @Override
     public List<Product> findProductsByUnit(Integer unitId) {
-        return productsRepository.findByUnit(unitId);
+        return productsRepo.findByUnit(unitId);
     }
 
     @Override
     public List<Product> findProductsByBrand(Integer brandId) {
-        return productsRepository.findByBrand(brandId);
+        return productsRepo.findByBrand(brandId);
     }
 
     @Override
@@ -121,9 +121,9 @@ public class ProductServiceImpl implements ProductService {
         for (ProductDTO p : productDTOs) {
             LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
             int totalQtyStorage = 0;
-            for (Category color : categoryRepository.findColorOfProduct(p.getProductId())) {
+            for (Category color : categoryRepo.findColorOfProduct(p.getProductId())) {
                 StringBuilder sizeName = new StringBuilder();
-                List<Category> listSize = categoryRepository.findSizeOfColorOfProduct(p.getProductId(), color.getId());
+                List<Category> listSize = categoryRepo.findSizeOfColorOfProduct(p.getProductId(), color.getId());
                 for (int i = 0; i < listSize.size(); i++) {
                     int qtyStorage = this.findProductVariantQuantityBySizeOfEachColor(p.getProductId(), color.getId(), listSize.get(i).getId());
                     if (i == listSize.size() - 1) {
@@ -145,33 +145,33 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductVariant> findAllProductVariants() {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, null, null));
+        return this.extractProductVariantQuery(productVariantRepo.findAll(null, null, null, null, null));
     }
 
     @Override
     public List<ProductVariant> findProductVariantBySize(Integer sizeId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, sizeId, null));
+        return this.extractProductVariantQuery(productVariantRepo.findAll(null, null, null, sizeId, null));
     }
 
     @Override
     public List<ProductVariant> findProductVariantByColor(Integer colorId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, colorId, null, null));
+        return this.extractProductVariantQuery(productVariantRepo.findAll(null, null, colorId, null, null));
     }
 
     @Override
     public List<ProductVariant> findProductVariantByImport(Integer ticketImportId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, ticketImportId, null, null, null));
+        return this.extractProductVariantQuery(productVariantRepo.findAll(null, ticketImportId, null, null, null));
     }
 
     @Override
     public List<ProductVariant> findProductVariantByFabricType(Integer fabricTypeId) {
-        return this.extractProductVariantQuery(productVariantRepository.findAll(null, null, null, null, fabricTypeId));
+        return this.extractProductVariantQuery(productVariantRepo.findAll(null, null, null, null, fabricTypeId));
     }
 
     @Override
     public List<ProductVariantDTO> findAllProductVariantOfProduct(Integer productId) {
         List<ProductVariantDTO> listReturn = new ArrayList<>();
-        List<ProductVariant> data = this.extractProductVariantQuery(productVariantRepository.findAll(productId, null, null, null, null));
+        List<ProductVariant> data = this.extractProductVariantQuery(productVariantRepo.findAll(productId, null, null, null, null));
         for (ProductVariant productVariant : data) {
             ProductVariantDTO dataModel = ProductVariantDTO.fromProductVariant(productVariant);
             List<PriceDTO> listPriceOfProductVariant = priceService.findPricesByProductVariant(dataModel.getProductVariantId());
@@ -196,22 +196,22 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductAttribute> findAllAttributes(Integer productVariantId) {
         ProductVariant productVariant = new ProductVariant();
         productVariant.setId(productVariantId);
-        return productAttributeRepository.findByProductVariantId(productVariant);
+        return productAttributeRepo.findByProductVariantId(productVariant);
     }
 
     @Override
     public Product findProductById(Integer id) {
-        return productsRepository.findById(id).orElse(null);
+        return productsRepo.findById(id).orElse(null);
     }
 
     @Override
     public ProductVariant findProductVariantById(Integer productVariantId) {
-        return productVariantRepository.findById(productVariantId).orElse(null);
+        return productVariantRepo.findById(productVariantId).orElse(null);
     }
 
     @Override
     public ProductAttribute findProductAttributeById(Integer attributeId) {
-        return productAttributeRepository.findById(attributeId).orElse(null);
+        return productAttributeRepo.findById(attributeId).orElse(null);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCreatedBy(CommonUtils.getCurrentAccountId());
             product.setMoTaSanPham(product.getMoTaSanPham() != null ? product.getMoTaSanPham() : "");
             product.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.name());
-            Product pSaved = productsRepository.save(product);
+            Product pSaved = productsRepo.save(product);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product);
             logger.info("Insert product success! " + product);
             return pSaved;
@@ -250,7 +250,7 @@ public class ProductServiceImpl implements ProductService {
 
         productToUpdate.setId(productId);
         productToUpdate.setLastUpdatedBy(CommonUtils.getCurrentAccountUsername());
-        Product productUpdated = productsRepository.save(productToUpdate);
+        Product productUpdated = productsRepo.save(productToUpdate);
         String noiDungLog = "";
         String noiDungLogUpdate = "";
         if (productBefore.toString().length() > 1950) {
@@ -276,7 +276,7 @@ public class ProductServiceImpl implements ProductService {
             if (productInUse(id)) {
                 throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
             }
-            productsRepository.deleteById(id);
+            productsRepo.deleteById(id);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
             logger.info("Delete product success! productId=" + id);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -291,7 +291,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
             productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
-            ProductVariant productVariantSaved = productVariantRepository.save(productVariant);
+            ProductVariant productVariantSaved = productVariantRepo.save(productVariant);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant);
             logger.info("Insert productVariant success! " + productVariant);
             return productVariantSaved;
@@ -307,7 +307,7 @@ public class ProductServiceImpl implements ProductService {
         ProductVariant productVariantBefore = this.findProductVariantById(productVariantId);
         try {
             productVariant.setId(productVariantId);
-            ProductVariant productVariantUpdated = productVariantRepository.save(productVariant);
+            ProductVariant productVariantUpdated = productVariantRepo.save(productVariant);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productVariantBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productVariant);
             logger.info("Update productVariant success! " + productVariant);
             return productVariantUpdated;
@@ -322,7 +322,7 @@ public class ProductServiceImpl implements ProductService {
     public String deleteProductVariant(Integer productVariantId) {
         ProductVariant productVariantToDelete = this.findProductVariantById(productVariantId);
         try {
-            productVariantRepository.deleteById(productVariantId);
+            productVariantRepo.deleteById(productVariantId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
             logger.info("Delete productVariant success! " + productVariantToDelete);
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -335,7 +335,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductAttribute saveProductAttribute(ProductAttribute productAttribute) {
-        ProductAttribute productAttributeSaved = productAttributeRepository.save(productAttribute);
+        ProductAttribute productAttributeSaved = productAttributeRepo.save(productAttribute);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới thuộc tính sản phẩm");
         return productAttributeSaved;
     }
@@ -343,14 +343,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductAttribute updateProductAttribute(ProductAttribute attribute, Integer attributeId) {
         attribute.setId(attributeId);
-        ProductAttribute productAttributeUpdated = productAttributeRepository.save(attribute);
+        ProductAttribute productAttributeUpdated = productAttributeRepo.save(attribute);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật thuộc tính sản phẩm");
         return productAttributeUpdated;
     }
 
     @Override
     public String deleteProductAttribute(Integer attributeId) {
-        productAttributeRepository.deleteById(attributeId);
+        productAttributeRepo.deleteById(attributeId);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa thuộc tính sản phẩm");
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
@@ -359,7 +359,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String updateProductVariantQuantity(Integer quantity, Integer productVariantId) {
         try {
-            productVariantRepository.updateQuantity(quantity, productVariantId);
+            productVariantRepo.updateQuantity(quantity, productVariantId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
             return MessageUtils.UPDATE_SUCCESS;
         } catch (Exception e) {
@@ -370,13 +370,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer findProductVariantTotalQtySell(Integer productId) {
-        return productVariantRepository.findTotalQtySell(productId);
+        return productVariantRepo.findTotalQtySell(productId);
     }
 
     @Override
     public Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId) {
         try {
-            return productVariantRepository.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
+            return productVariantRepo.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
         } catch (RuntimeException ex) {
             logger.error("Error finding product variant quantity", ex);
             throw new RuntimeException(ex);
@@ -398,7 +398,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean isProductVariantExists(int productId, int colorId, int sizeId) {
-        ProductVariant productVariant = productVariantRepository.findByColorAndSize(productId, colorId, sizeId);
+        ProductVariant productVariant = productVariantRepo.findByColorAndSize(productId, colorId, sizeId);
         return ObjectUtils.isNotEmpty(productVariant);
     }
 

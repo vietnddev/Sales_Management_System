@@ -12,42 +12,42 @@ import java.util.List;
 @Service
 public class OrderHistoryServiceImpl implements OrderHistoryService {
     @Autowired
-    private OrderHistoryRepository orderHistoryRepository;
+    private OrderHistoryRepository orderHistoryRepo;
 
     @Override
     public List<OrderHistory> findAll() {
-        return orderHistoryRepository.findAll();
+        return orderHistoryRepo.findAll();
     }
 
     @Override
     public OrderHistory findById(Integer orderHistoryId) {
-        return orderHistoryRepository.findById(orderHistoryId).orElse(null);
+        return orderHistoryRepo.findById(orderHistoryId).orElse(null);
     }
 
     @Override
     public OrderHistory save(OrderHistory orderHistory) {
-        return orderHistoryRepository.save(orderHistory);
+        return orderHistoryRepo.save(orderHistory);
     }
 
     @Override
     public OrderHistory update(OrderHistory orderHistory, Integer orderHistoryId) {
         orderHistory.setId(orderHistoryId);
-        return orderHistoryRepository.save(orderHistory);
+        return orderHistoryRepo.save(orderHistory);
     }
 
     @Override
     public String delete(Integer orderHistoryId) {
-        orderHistoryRepository.deleteById(orderHistoryId);
+        orderHistoryRepo.deleteById(orderHistoryId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public List<OrderHistory> findByOrderId(Integer orderId) {
-        return orderHistoryRepository.findByOrderId(orderId);
+        return orderHistoryRepo.findByOrderId(orderId);
     }
 
     @Override
     public List<OrderHistory> findByOrderDetailId(Integer orderDetailId) {
-        return orderHistoryRepository.findByOrderDetailId(orderDetailId);
+        return orderHistoryRepo.findByOrderDetailId(orderDetailId);
     }
 }

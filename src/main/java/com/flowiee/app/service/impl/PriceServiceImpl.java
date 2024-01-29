@@ -30,22 +30,22 @@ public class PriceServiceImpl implements PriceService {
     private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
-    private PriceRepository       priceRepository;
+    private PriceRepository priceRepo;
     @Autowired
-    private ProductService        productService;
+    private ProductService productService;
     @Autowired
     private ProductHistoryService productHistoryService;
     @Autowired
-    private SystemLogService      systemLogService;
+    private SystemLogService systemLogService;
 
     @Override
     public List<Price> findAll() {
-        return priceRepository.findAll();
+        return priceRepo.findAll();
     }
 
     @Override
     public List<PriceDTO> findPricesByProductVariant(int productVariantId) {
-        List<PriceDTO> listPrice = PriceDTO.fromPrices(priceRepository.findPriceByProductVariant(productVariantId));
+        List<PriceDTO> listPrice = PriceDTO.fromPrices(priceRepo.findPriceByProductVariant(productVariantId));
         if (!listPrice.isEmpty()) {
             for (PriceDTO p : listPrice) {
                 if (AppConstants.PRICE_STATUS.ACTIVE.name().equals(p.getStatus())) {
@@ -61,7 +61,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Price findById(Integer priceId) {
-        Price p = priceRepository.findById(priceId).orElse(null);
+        Price p = priceRepo.findById(priceId).orElse(null);
         if (p != null) {
             if (AppConstants.PRICE_STATUS.ACTIVE.name().equals(p.getStatus())) {
                 p.setStatus(AppConstants.PRICE_STATUS.ACTIVE.getLabel());
@@ -75,7 +75,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Price findGiaHienTai(int bienTheSanPhamId) {
-        return priceRepository.findGiaBanHienTai(productService.findProductVariantById(bienTheSanPhamId), AppConstants.PRICE_STATUS.ACTIVE.name());
+        return priceRepo.findGiaBanHienTai(productService.findProductVariantById(bienTheSanPhamId), AppConstants.PRICE_STATUS.ACTIVE.name());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class PriceServiceImpl implements PriceService {
             throw new BadRequestException();
         }
         try {
-            Price priceSaved = priceRepository.save(price);
+            Price priceSaved = priceRepo.save(price);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Thêm mới giá sản phẩm: " + price.toString());
             logger.info("Insert price success! insertBy=" + CommonUtils.getCurrentAccountUsername());
             return priceSaved;
@@ -108,14 +108,14 @@ public class PriceServiceImpl implements PriceService {
         if (priceId > 0) {
             disableGiaCu = this.findById(priceId);
             disableGiaCu.setStatus(AppConstants.PRICE_STATUS.INACTIVE.name());
-            priceRepository.save(disableGiaCu);
+            priceRepo.save(disableGiaCu);
         }
         //Thêm giá mới
         ProductVariant productVariant = productService.findProductVariantById(bienTheSanPhamId);
         price.setId(0);
         price.setProductVariant(productVariant);
         price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
-        Price priceUpdated = priceRepository.save(price);
+        Price priceUpdated = priceRepo.save(price);
         //
         ProductHistory productHistory = new ProductHistory();
         productHistory.setTitle("Cập nhật giá bán");
@@ -142,7 +142,7 @@ public class PriceServiceImpl implements PriceService {
     public String delete(Integer priceId) {
         try {
             Price price = this.findById(priceId);
-            priceRepository.deleteById(priceId);
+            priceRepo.deleteById(priceId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
             logger.info("Delete price success! deleteBy=" + CommonUtils.getCurrentAccountUsername());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;

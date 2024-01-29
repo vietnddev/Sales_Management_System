@@ -10,6 +10,7 @@ import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,10 +35,12 @@ public class CategoryController {
     @Operation(summary = "Find by type")
     @GetMapping("/{type}")
     public ApiResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
-                                                  @RequestParam(value = "parentId", required = false) Integer parentId) {
+                                                  @RequestParam(value = "parentId", required = false) Integer parentId,
+                                                  @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                  @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
-            List<Category> result = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId);
-            return ApiResponse.ok(result);
+            Page<Category> categories = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId, pageSize, pageNum - 1);
+            return ApiResponse.ok(categories.getContent(), pageNum, pageSize, categories.getTotalPages(), categories.getTotalElements());
         } catch (RuntimeException ex) {
             throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
         }

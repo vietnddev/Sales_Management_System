@@ -16,41 +16,41 @@ import java.util.List;
 @Service
 public class VoucherApplyServiceImpl implements VoucherApplyService {
     @Autowired
-    private VoucherApplyRepository voucherApplyRepository;
+    private VoucherApplyRepository voucherApplyRepo;
 
     @Override
     public List<VoucherApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
-        return this.extractDataQuery(voucherApplyRepository.findAll((Integer) null));
+        return this.extractDataQuery(voucherApplyRepo.findAll((Integer) null));
     }
 
     @Override
     public List<VoucherApplyDTO> findByProductId(Integer productId) {
-        return this.extractDataQuery(voucherApplyRepository.findAll(productId));
+        return this.extractDataQuery(voucherApplyRepo.findAll(productId));
     }
 
     @Override
     public VoucherApplyDTO findOneByProductId(Integer productId) {
-        return this.extractDataQuery(voucherApplyRepository.findAll(productId)).get(0);
+        return this.extractDataQuery(voucherApplyRepo.findAll(productId)).get(0);
     }
 
     @Override
     public List<VoucherApply> findAll() {
-        return voucherApplyRepository.findAll();
+        return voucherApplyRepo.findAll();
     }
 
     @Override
     public List<VoucherApply> findByVoucherId(Integer voucherId) {
-        return voucherApplyRepository.findByVoucherId(voucherId);
+        return voucherApplyRepo.findByVoucherId(voucherId);
     }
 
     @Override
     public VoucherApply findById(Integer id) {
-        return voucherApplyRepository.findById(id).orElse(null);
+        return voucherApplyRepo.findById(id).orElse(null);
     }
 
     @Override
     public VoucherApply save(VoucherApply voucherApply) {
-        return voucherApplyRepository.save(voucherApply);
+        return voucherApplyRepo.save(voucherApply);
     }
 
     @Override
@@ -59,13 +59,13 @@ public class VoucherApplyServiceImpl implements VoucherApplyService {
             throw new BadRequestException();
         }
         voucherApply.setId(id);
-        return voucherApplyRepository.save(voucherApply);
+        return voucherApplyRepo.save(voucherApply);
     }
 
     @Override
     public String delete(Integer entityId) {
         if (this.findById(entityId) != null) {
-            voucherApplyRepository.deleteById(entityId);
+            voucherApplyRepo.deleteById(entityId);
         }
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }

@@ -14,21 +14,21 @@ import java.util.List;
 @Service
 public class SupplierServiceImpl implements SupplierService {
     @Autowired
-    private SupplierRepository supplierRepository;
+    private SupplierRepository supplierRepo;
 
     @Override
     public List<Supplier> findAll() {
-        return supplierRepository.findAll();
+        return supplierRepo.findAll();
     }
 
     @Override
     public Supplier findById(Integer entityId) {
-        return supplierRepository.findById(entityId).orElse(null);
+        return supplierRepo.findById(entityId).orElse(null);
     }
 
     @Override
     public Supplier save(Supplier entity) {
-        return supplierRepository.save(entity);
+        return supplierRepo.save(entity);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SupplierServiceImpl implements SupplierService {
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return supplierRepository.save(entity);
+        return supplierRepo.save(entity);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SupplierServiceImpl implements SupplierService {
         if (entityId == null || entityId <= 0) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        supplierRepository.deleteById(entityId);
+        supplierRepo.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 }

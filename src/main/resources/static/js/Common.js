@@ -33,6 +33,8 @@ function updatePaginationUI(pageNum, pageSize, totalPage, totalElements) {
         endCount = totalElements;
     }
     $('#paginationInfo').text("Showing " + startCount + " to " + endCount + " of " + totalElements + " entries");
+
+    $('#totalPages').text("Total pages " + totalPage);
 }
 
 function updateTableContentWhenOnClickPagination(loadNewDataMethod) {

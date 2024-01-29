@@ -18,23 +18,23 @@ import java.util.List;
 @Service
 public class VoucherTicketServiceImpl implements VoucherTicketService {
     @Autowired
-    private VoucherTicketlRepository voucherTicketlRepository;
+    private VoucherTicketlRepository voucherTicketlRepo;
     @Autowired
     private VoucherService voucherInfoService;
 
     @Override
     public List<VoucherTicket> findAll() {
-        return voucherTicketlRepository.findAll();
+        return voucherTicketlRepo.findAll();
     }
 
     @Override
     public List<VoucherTicket> findByVoucherInfoId(Integer voucherId) {
-        return voucherTicketlRepository.findByVoucherId(voucherId);
+        return voucherTicketlRepo.findByVoucherId(voucherId);
     }
 
     @Override
     public VoucherTicket findById(Integer voucherDetailId) {
-        return voucherTicketlRepository.findById(voucherDetailId).orElse(null);
+        return voucherTicketlRepo.findById(voucherDetailId).orElse(null);
     }
 
     @Transactional
@@ -44,7 +44,7 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
             throw new BadRequestException();
         }
         if (this.findByCode(voucherTicket.getCode()) == null) {
-        	return voucherTicketlRepository.save(voucherTicket);
+        	return voucherTicketlRepo.save(voucherTicket);
         } else {
         	throw new ApiException();
         }
@@ -57,7 +57,7 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
             throw new BadRequestException();
         }
         voucherTicket.setId(voucherDetailId);
-        return voucherTicketlRepository.save(voucherTicket);
+        return voucherTicketlRepo.save(voucherTicket);
     }
 
     @Override
@@ -69,13 +69,13 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
         if (voucherTicket == null || voucherTicket.isStatus()) {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
-        voucherTicketlRepository.deleteById(entityId);
+        voucherTicketlRepo.deleteById(entityId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
 	@Override
 	public VoucherTicket findByCode(String code) {
-		return voucherTicketlRepository.findByCode(code);
+		return voucherTicketlRepo.findByCode(code);
 	}
 
 	@Override

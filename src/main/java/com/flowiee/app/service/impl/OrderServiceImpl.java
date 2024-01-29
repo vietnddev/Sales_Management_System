@@ -50,8 +50,8 @@ public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
-    private final OrderRepository orderRepository;
-    private final OrderDetailRepository orderDetailRepository;
+    private final OrderRepository orderRepo;
+    private final OrderDetailRepository orderDetailRepo;
     private final ProductService productService;
     private final SystemLogService systemLogService;
     private final CartService cartService;
@@ -60,9 +60,9 @@ public class OrderServiceImpl implements OrderService {
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductService productService, SystemLogService systemLogService, CartService cartService, PriceService priceService, VoucherTicketService voucherTicketService, FileStorageService fileStorageService) {
-        this.orderRepository = orderRepository;
-        this.orderDetailRepository = orderDetailRepository;
+    public OrderServiceImpl(OrderRepository orderRepo, OrderDetailRepository orderDetailRepo, ProductService productService, SystemLogService systemLogService, CartService cartService, PriceService priceService, VoucherTicketService voucherTicketService, FileStorageService fileStorageService) {
+        this.orderRepo = orderRepo;
+        this.orderDetailRepo = orderDetailRepo;
         this.productService = productService;
         this.systemLogService = systemLogService;
         this.cartService = cartService;
@@ -73,23 +73,23 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findAllOrder() {
-        return OrderDTO.fromOrders(orderRepository.findAll((Integer) null, null, Pageable.unpaged()).getContent());
+        return OrderDTO.fromOrders(orderRepo.findAll((Integer) null, null, Pageable.unpaged()).getContent());
     }
 
     @Override
     public Page<Order> findAllOrder(int pageSize, int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("thoiGianDatHang").descending());
-        return orderRepository.findAll((Integer) null,null, pageable);
+        return orderRepo.findAll((Integer) null,null, pageable);
     }
 
     @Override
     public List<OrderDTO> findAllOrder(Integer orderId) {
-        return OrderDTO.fromOrders(orderRepository.findAll(orderId, null, Pageable.unpaged()).getContent());
+        return OrderDTO.fromOrders(orderRepo.findAll(orderId, null, Pageable.unpaged()).getContent());
     }
 
     @Override
     public List<OrderDetail> findOrderDetailsByOrderId(Integer orderId) {
-        return orderDetailRepository.findByOrderId(orderId);
+        return orderDetailRepo.findByOrderId(orderId);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class OrderServiceImpl implements OrderService {
             }
             order.setPaymentStatus(false);
 
-            Order orderSaved = orderRepository.save(order);
+            Order orderSaved = orderRepo.save(order);
 
             //QRCode
             fileStorageService.saveQRCodeOfOrder(orderSaved.getId());
@@ -172,7 +172,7 @@ public class OrderServiceImpl implements OrderService {
                 voucherTicket.setStatus(true);
                 voucherTicketService.update(voucherTicket, voucherTicket.getId());
             }
-            orderRepository.save(orderSaved);
+            orderRepo.save(orderSaved);
 
             //Sau khi đã lưu đơn hàng thì xóa all items
             cartService.deleteAllItems();
@@ -191,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String saveOrderDetail(OrderDetail orderDetail) {
         try {
-            orderDetailRepository.save(orderDetail);
+            orderDetailRepo.save(orderDetail);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -204,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String updateOrder(Order order, Integer id) {
         order.setId(id);
-        orderRepository.save(order);
+        orderRepo.save(order);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + order.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -214,7 +214,7 @@ public class OrderServiceImpl implements OrderService {
     public String updateOrderDetail(OrderDetail orderDetail, Integer orderDetailId) {
         try {
             orderDetail.setId(orderDetailId);
-            orderDetailRepository.save(orderDetail);
+            orderDetailRepo.save(orderDetail);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -230,7 +230,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.isPaymentStatus()) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
-        orderRepository.deleteById(id);
+        orderRepo.deleteById(id);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -240,7 +240,7 @@ public class OrderServiceImpl implements OrderService {
     public String deleteOrderDetail(Integer orderDetailId) {
         OrderDetail orderDetail = this.findOrderDetailById(orderDetailId);
         try {
-            orderDetailRepository.deleteById(orderDetailId);
+            orderDetailRepo.deleteById(orderDetailId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Xóa item of đơn hàng " + orderDetail.toString());
             return AppConstants.SERVICE_RESPONSE_SUCCESS;
@@ -253,48 +253,48 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public String doPay(Integer orderId, Date paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote) {
-        orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
+        orderRepo.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
         return "Thanh toán thành công!";
     }
 
     @Override
     public List<Order> findByStaffId(Integer customerId) {
-        return orderRepository.findByNhanvienId(customerId);
+        return orderRepo.findByNhanvienId(customerId);
     }
 
     @Override
     public List<Order> findOrdersBySalesChannelId(Integer salesChannelId) {
-        return orderRepository.findBySalesChannel(salesChannelId);
+        return orderRepo.findBySalesChannel(salesChannelId);
     }
 
     @Override
     public List<Order> findOrdersByStatus(Integer orderStatusId) {
-        return orderRepository.findByOrderStatus(orderStatusId);
+        return orderRepo.findByOrderStatus(orderStatusId);
     }
 
     @Override
     public List<OrderDTO> findOrdersByCustomerId(Integer customerId) {
-        return OrderDTO.fromOrders(orderRepository.findAll(null, customerId, Pageable.unpaged()).getContent());
+        return OrderDTO.fromOrders(orderRepo.findAll(null, customerId, Pageable.unpaged()).getContent());
     }
 
     @Override
     public List<Order> findOrdersByPaymentMethodId(Integer paymentMethodId) {
-        return orderRepository.findByPaymentMethodId(paymentMethodId);
+        return orderRepo.findByPaymentMethodId(paymentMethodId);
     }
 
     @Override
     public List<Order> findOrdersToday() {
-        return orderRepository.findOrdersToday();
+        return orderRepo.findOrdersToday();
     }
 
     @Override
     public OrderDetail findOrderDetailById(Integer orderDetailId) {
-        return orderDetailRepository.findById(orderDetailId).orElse(null);
+        return orderDetailRepo.findById(orderDetailId).orElse(null);
     }
 
     @Override
     public Double findRevenueToday() {
-        return orderRepository.findRevenueToday();
+        return orderRepo.findRevenueToday();
     }
 
     @Override

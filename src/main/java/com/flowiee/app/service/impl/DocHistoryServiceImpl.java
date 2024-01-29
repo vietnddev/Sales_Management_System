@@ -12,38 +12,38 @@ import java.util.List;
 @Service
 public class DocHistoryServiceImpl implements DocHistoryService {
     @Autowired
-    private DocHistoryRepository docHistoryRepository;
+    private DocHistoryRepository docHistoryRepo;
 
     @Override
     public List<DocHistory> findAll() {
-        return docHistoryRepository.findAll();
+        return docHistoryRepo.findAll();
     }
 
     @Override
     public DocHistory findById(Integer docHistoryId) {
-        return docHistoryRepository.findById(docHistoryId).orElse(null);
+        return docHistoryRepo.findById(docHistoryId).orElse(null);
     }
 
     @Override
     public DocHistory save(DocHistory docHistory) {
-        return docHistoryRepository.save(docHistory);
+        return docHistoryRepo.save(docHistory);
     }
 
     @Override
     public DocHistory update(DocHistory docHistory, Integer docHistoryId) {
         docHistory.setId(docHistoryId);
-        return docHistoryRepository.save(docHistory);
+        return docHistoryRepo.save(docHistory);
     }
 
     @Override
     public String delete(Integer docHistoryId) {
-        docHistoryRepository.deleteById(docHistoryId);
+        docHistoryRepo.deleteById(docHistoryId);
         return AppConstants.SERVICE_RESPONSE_SUCCESS;
     }
 
     @Override
     public List<DocHistory> findByDocument(Integer documentId) {
-        return docHistoryRepository.findByDocument(documentId);
+        return docHistoryRepo.findByDocument(documentId);
     }
 
     @Override

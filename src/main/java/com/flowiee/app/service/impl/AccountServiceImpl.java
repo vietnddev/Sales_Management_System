@@ -30,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
 	private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 	
     @Autowired
-    AccountRepository accountRepository;
+    AccountRepository accountRepo;
     @Autowired
     private SystemLogService systemLogService;
     @Autowired
@@ -39,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> findAll() {
         List<Account> listAccountReturn = new ArrayList<>();
-        for (Account account : accountRepository.findAll()) {
+        for (Account account : accountRepo.findAll()) {
             account.setListRole(roleService.findAllRole());
             for (Role role : account.getListRole()) {
                 String module = role.getModule().keySet().toString().replaceAll("\\[|\\]", "").replaceAll("\"", "");
@@ -58,12 +58,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findByUsername(String username) {
-        return accountRepository.findByUsername(username);
+        return accountRepo.findByUsername(username);
     }
 
     @Override
     public Account findById(Integer accountId) {
-        return accountRepository.findById(accountId).orElse(null);
+        return accountRepo.findById(accountId).orElse(null);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class AccountServiceImpl implements AccountService {
             BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
             String password = account.getPassword();
             account.setPassword(bCrypt.encode(password));
-            Account accountSaved = accountRepository.save(account);
+            Account accountSaved = accountRepo.save(account);
         	SystemLog systemLog = new SystemLog(AppConstants.SYSTEM_MODULE.SYSTEM.name(), AppConstants.SYSTEM_ACTION.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
             logger.info("Insert account success! username=" + account.getUsername());
@@ -117,7 +117,7 @@ public class AccountServiceImpl implements AccountService {
         	SystemLog systemLog = new SystemLog(AppConstants.SYSTEM_MODULE.SYSTEM.name(), AppConstants.SYSTEM_ACTION.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
             systemLogService.writeLog(systemLog);
             logger.info("Update account success! username=" + account.getUsername());
-            return accountRepository.save(account);
+            return accountRepo.save(account);
 		} catch (Exception e) {
 			logger.error("Update account fail! username=" + account.getUsername(), e);
             throw new ApiException();
@@ -129,9 +129,9 @@ public class AccountServiceImpl implements AccountService {
     public String delete(Integer accountId) {
     	Account account = null;
     	try {
-            account = accountRepository.findById(accountId).orElse(null);
+            account = accountRepo.findById(accountId).orElse(null);
             if (account != null) {
-                accountRepository.delete(account);
+                accountRepo.delete(account);
                 SystemLog systemLog = new SystemLog(AppConstants.SYSTEM_MODULE.SYSTEM.name(), AppConstants.SYSTEM_ACTION.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
                 systemLogService.writeLog(systemLog);
             }

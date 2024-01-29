@@ -30,7 +30,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
     private static final Logger logger = LoggerFactory.getLogger(VoucherInfoServiceImpl.class);
 
     @Autowired
-    private VoucherInfoRepository voucherInfoRepository;
+    private VoucherInfoRepository voucherInfoRepo;
     @Autowired
     private VoucherTicketService  voucherTicketService;
     @Autowired
@@ -81,7 +81,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
             if (voucherInfo == null) {
                 throw new BadRequestException();
             }
-            voucherInfo = voucherInfoRepository.save(voucherInfo);
+            voucherInfo = voucherInfoRepo.save(voucherInfo);
             //
             for (int sanPhamId : listProductToApply) {
                 VoucherApply voucherApply = new VoucherApply();
@@ -123,7 +123,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
             throw new BadRequestException();
         }
         voucherInfo.setId(voucherId);
-        return voucherInfoRepository.save(voucherInfo);
+        return voucherInfoRepo.save(voucherInfo);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
         if (!voucherApplyService.findByVoucherId(voucherId).isEmpty()) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
-        voucherInfoRepository.deleteById(voucherId);
+        voucherInfoRepo.deleteById(voucherId);
         return MessageUtils.DELETE_SUCCESS;
     }
 
