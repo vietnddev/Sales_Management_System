@@ -50,8 +50,10 @@ public class CategoryController {
     @PostMapping("/create")
     public ApiResponse<Category> createCategory(@RequestBody Category category) {
         try {
+            category.setType(CommonUtils.getCategoryType(category.getType()));
             return ApiResponse.ok(categoryService.save(category));
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "category"));
         }
     }
@@ -63,8 +65,19 @@ public class CategoryController {
             if (categoryService.findById(categoryId) == null) {
                 throw new BadRequestException();
             }
+            category.setType(CommonUtils.getCategoryType(category.getType()));
+            if (category.getCode() == null) {
+                category.setCode("");
+            }
+            if (category.getColor() == null) {
+                category.setColor("");
+            }
+            if (category.getNote() == null) {
+                category.setNote("");
+            }
             return ApiResponse.ok(categoryService.update(category, categoryId));
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "category"));
         }
     }
@@ -78,6 +91,7 @@ public class CategoryController {
             }
             return ApiResponse.ok(categoryService.delete(categoryId));
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "category"));
         }
     }

@@ -6,6 +6,7 @@ import com.flowiee.app.service.CategoryHistoryService;
 import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,12 @@ public class CategoryHistoryServiceImpl implements CategoryHistoryService {
     @Override
     public List<CategoryHistory> findAll() {
         return categoryHistoryRepo.findAll();
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllByCategory(Integer categoryId) {
+         categoryHistoryRepo.deleteAllByCategory(categoryId);
     }
 
     @Override

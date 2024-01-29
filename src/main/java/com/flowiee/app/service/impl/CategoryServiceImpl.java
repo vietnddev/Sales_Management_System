@@ -113,6 +113,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryInUse(entityId)) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
+        categoryHistoryService.deleteAllByCategory(entityId);
         categoryRepo.deleteById(entityId);
         return MessageUtils.DELETE_SUCCESS;
     }

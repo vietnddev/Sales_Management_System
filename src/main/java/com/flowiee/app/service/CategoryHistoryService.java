@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CategoryHistoryService extends BaseService<CategoryHistory> {
     List<CategoryHistory> findAll();
+
+    void deleteAllByCategory(Integer categoryId);
 }

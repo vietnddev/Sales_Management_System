@@ -60,49 +60,49 @@ public class CategoryUIController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping("/{type}/insert")
-    public ModelAndView insert(@ModelAttribute("category") Category category,
-                               @PathVariable("type") String categoryType,
-                               HttpServletRequest request) {
-        validateModuleCategory.insertCategory(true);
-        if (CommonUtils.getCategoryType(categoryType) == null) {
-            throw new NotFoundException("Category not found!");
-        }
-        category.setType(CommonUtils.getCategoryType(categoryType));
-        categoryService.save(category);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
+//    @PostMapping("/{type}/insert")
+//    public ModelAndView insert(@ModelAttribute("category") Category category,
+//                               @PathVariable("type") String categoryType,
+//                               HttpServletRequest request) {
+//        validateModuleCategory.insertCategory(true);
+//        if (CommonUtils.getCategoryType(categoryType) == null) {
+//            throw new NotFoundException("Category not found!");
+//        }
+//        category.setType(CommonUtils.getCategoryType(categoryType));
+//        categoryService.save(category);
+//        return new ModelAndView("redirect:" + request.getHeader("referer"));
+//    }
 
-    @PostMapping("/update/{id}")
-    public ModelAndView update(@ModelAttribute("category") Category category,
-                               @PathVariable("id") Integer categoryId,
-                               HttpServletRequest request) {
-        validateModuleCategory.updateCategory(true);
-        if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
-            throw new NotFoundException("Category not found! categoryId=" + categoryId);
-        }
-        if (category.getCode() == null) {
-            category.setCode("");
-        }
-        if (category.getColor() == null) {
-            category.setColor("");
-        }
-        if (category.getNote() == null) {
-            category.setNote("");
-        }
-        categoryService.update(category, categoryId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
+//    @PostMapping("/update/{id}")
+//    public ModelAndView update(@ModelAttribute("category") Category category,
+//                               @PathVariable("id") Integer categoryId,
+//                               HttpServletRequest request) {
+//        validateModuleCategory.updateCategory(true);
+//        if (category.getType() == null || categoryId <= 0 || categoryService.findById(categoryId) == null) {
+//            throw new NotFoundException("Category not found! categoryId=" + categoryId);
+//        }
+//        if (category.getCode() == null) {
+//            category.setCode("");
+//        }
+//        if (category.getColor() == null) {
+//            category.setColor("");
+//        }
+//        if (category.getNote() == null) {
+//            category.setNote("");
+//        }
+//        categoryService.update(category, categoryId);
+//        return new ModelAndView("redirect:" + request.getHeader("referer"));
+//    }
 
-    @PostMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
-        validateModuleCategory.deleteCategory(true);
-        if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
-            throw new NotFoundException("Category not found! categoryId=" + categoryId);
-        }
-        categoryService.delete(categoryId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
+//    @PostMapping("/delete/{id}")
+//    public ModelAndView delete(@PathVariable("id") Integer categoryId, HttpServletRequest request) {
+//        validateModuleCategory.deleteCategory(true);
+//        if (categoryId <= 0 || categoryService.findById(categoryId) == null) {
+//            throw new NotFoundException("Category not found! categoryId=" + categoryId);
+//        }
+//        categoryService.delete(categoryId);
+//        return new ModelAndView("redirect:" + request.getHeader("referer"));
+//    }
 
     @GetMapping("/{type}/template")
     public ResponseEntity<?> exportTemplate(@PathVariable("type") String categoryType) {
