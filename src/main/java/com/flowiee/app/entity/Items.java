@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "pro_order_items")
@@ -32,7 +33,7 @@ public class Items extends BaseEntity implements Serializable {
     private OrderCart orderCart;
 
     @Transient
-    private Double price;
+    private BigDecimal price;
 
 	@Override
 	public String toString() {

@@ -7,6 +7,7 @@ import com.flowiee.app.entity.ProductAttribute;
 import com.flowiee.app.entity.ProductVariant;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -70,7 +71,7 @@ public interface ProductService {
 
     Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId);
 
-    Double findProductVariantPriceSell(int id);
+    BigDecimal findProductVariantPriceSell(int id);
 
     boolean productInUse(Integer productId);
 

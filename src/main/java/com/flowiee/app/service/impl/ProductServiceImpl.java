@@ -32,6 +32,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -384,7 +385,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Double findProductVariantPriceSell(int id) throws RuntimeException {
+    public BigDecimal findProductVariantPriceSell(int id) throws RuntimeException {
         if (priceService.findGiaHienTai(id) != null) {
             return priceService.findGiaHienTai(id).getGiaBan();
         }
@@ -435,7 +436,7 @@ public class ProductServiceImpl implements ProductService {
             productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15])), String.valueOf(data[16])));
             productVariant.setTicketImport(new TicketImport(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
             Integer priceId = data[19] != null ? Integer.parseInt(String.valueOf(data[19])) : null;
-            Double priceSellValue = data[20] != null ? Double.parseDouble(String.valueOf(data[20])) : null;
+            BigDecimal priceSellValue = data[20] != null ? new BigDecimal(String.valueOf(data[20])) : null;
             productVariant.setPrice(new Price(priceId, priceSellValue));
             productVariant.setTrangThai(String.valueOf(data[21]));
             dataResponse.add(productVariant);

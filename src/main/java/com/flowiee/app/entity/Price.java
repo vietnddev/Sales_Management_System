@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Builder
@@ -29,20 +30,14 @@ public class Price extends BaseEntity implements Serializable {
     @JoinColumn(name = "material_id")
     private Material material;
 
-    @Column(name = "buy")
-    private Double giaMua;
+    @Column(name = "type")// B (buy) or S (sell)
+    private String type;
 
-    @Column(name = "unit_buy")
-    private String unitBuy;
+    @Column(name = "original")
+    private BigDecimal giaBan;
 
-    @Column(name = "sell")
-    private Double giaBan;
-
-    @Column(name = "unit_sell")
-    private String unitSell;
-
-    @Column(name = "promotion")
-    private Double promotion;
+    @Column(name = "discount")
+    private BigDecimal discount;
 
     @Column(name = "status", nullable = false, length = 10)
     private String status;
@@ -50,14 +45,13 @@ public class Price extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "productPrice", fetch = FetchType.LAZY)
     private List<ProductHistory> listProductHistory;
 
-    public Price (Integer id, Double priceSell) {
+    public Price (Integer id, BigDecimal priceSell) {
         super.id = id;
         this.giaBan = priceSell;
     }
 
 	@Override
 	public String toString() {
-		return "Price [id=" + super.id + ", productVariant=" + productVariant + ", material=" + material + ", giaMua=" + giaMua
-				+ ", unitBuy=" + unitBuy + ", giaBan=" + giaBan + ", unitSell=" + unitSell + ", status=" + status + "]";
+		return "Price [id=" + super.id + ", productVariant=" + productVariant + ", material=" + material + ", giaBan=" + giaBan + ", status=" + status + "]";
 	}
 }
