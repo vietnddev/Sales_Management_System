@@ -35,12 +35,8 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ModelAndView exceptionHandler(DataExistsException ex) {
-        logger.error("DataInUseException", ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
-        modelAndView.addObject("error", error);
-        return baseView(modelAndView);
+    public ApiResponse<?> exceptionHandler(DataExistsException ex) {
+        return ApiResponse.fail(ex.getMessage(), ex, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler
@@ -53,17 +49,13 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ModelAndView exceptionHandler(DataInUseException ex) {
-        logger.error("DataInUseException", ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.LOCKED.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
-        modelAndView.addObject("error", error);
-        return baseView(modelAndView);
+    public ApiResponse<?> exceptionHandler(DataInUseException ex) {
+        return ApiResponse.fail(ex.getMessage(), ex, HttpStatus.LOCKED);
     }
 
     @ExceptionHandler
-    public ErrorResponse exceptionHandler(ApiException ex) {
-        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+    public ApiResponse<?> exceptionHandler(ApiException ex) {
+        return ApiResponse.fail(ex.getMessage(), ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler
@@ -76,11 +68,7 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ModelAndView exceptionHandler(RuntimeException ex) {
-        logger.error("RuntimeException", ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
-        modelAndView.addObject("error", error);
-        return baseView(modelAndView);
+    public ApiResponse<?> exceptionHandler(RuntimeException ex) {
+        return ApiResponse.fail(ex.getMessage(), ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
