@@ -2,6 +2,9 @@
 const mvHostURLCallApi = 'http://localhost:8085/api/v1';
 const mvHostURL = 'http://localhost:8085';
 
+//Language to use
+let mvLang = "vi";
+
 //User login info
 const mvCurrentAccountId = '';
 const mvCurrentAccountUsername = '';
@@ -35,6 +38,11 @@ function updatePaginationUI(pageNum, pageSize, totalPage, totalElements) {
     $('#paginationInfo').text("Showing " + startCount + " to " + endCount + " of " + totalElements + " entries");
 
     $('#totalPages').text("Total pages " + totalPage);
+
+    if(pageNum === 1) {
+        $('#firstPage').attr("disable", "");
+        $('#previousPage').attr("disable", "");
+    }
 }
 
 function updateTableContentWhenOnClickPagination(loadNewDataMethod) {

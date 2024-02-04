@@ -32,6 +32,28 @@
             </nav>
         </div>
 
+        <div th:fragment="searchTool(brandCTG, productTypeCTG, colorCTG, sizeCTG, unitCTG, isDiscount, productStatus)" th:remove="tag">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row col-8 input-group">
+                        <input class="form-control col-8 mr-1" id="txtFilter"/>
+                        <a class="btn btn-outline-secondary col-2 mr-1" data-toggle="collapse" href="#collapseExample"
+                           role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa-solid fa-caret-down mr-2"></i>Nâng cao</a>
+                        <button class="btn btn-info form-control col-2" id="btnSearchFilter"><i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm kiếm</button>
+                    </div>
+                    <div class="row col-12 collapse w-100 mt-3" id="collapseExample">
+                        <select class="form-control custom-select col mr-1" id="brandFilter"       th:if="${brandCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="productTypeFilter" th:if="${productTypeCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="colorFilter"       th:if="${brandCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="sizeFilter"        th:if="${brandCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="unitFilter"        th:if="${brandCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="discountFilter"    th:if="${brandCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col"      id="statusFilter"      th:if="${brandCTG == 'Y'}"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div th:fragment="format_currency(amount)" th:remove="tag">
             <span>$ </span>[[${#numbers.formatDecimal(amount, 1, 'COMMA', 2, 'POINT')}]]
         </div>

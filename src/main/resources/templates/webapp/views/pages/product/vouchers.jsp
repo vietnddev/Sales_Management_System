@@ -9,8 +9,7 @@
         <!--Nhúng các file css, icon,...-->
     </div>
     <style rel="stylesheet">
-        .table td,
-        th {
+        .table td, th {
             vertical-align: middle;
         }
     </style>
@@ -38,6 +37,9 @@
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
                     <div class="col-12">
+                        <!--Search tool-->
+                        <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+
                         <div class="card">
                             <div class="card-header">
                                 <div class="row justify-content-between">

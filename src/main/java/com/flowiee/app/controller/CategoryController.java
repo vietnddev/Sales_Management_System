@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("${app.api.prefix}/category")
@@ -39,9 +40,13 @@ public class CategoryController {
                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                   @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
+            if (Objects.isNull(pageSize) || Objects.isNull(pageNum)) {
+                return ApiResponse.ok(categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId));
+            }
             Page<Category> categories = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId, pageSize, pageNum - 1);
             return ApiResponse.ok(categories.getContent(), pageNum, pageSize, categories.getTotalPages(), categories.getTotalElements());
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
         }
     }

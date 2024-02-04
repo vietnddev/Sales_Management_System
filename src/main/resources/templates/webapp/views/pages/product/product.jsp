@@ -25,42 +25,19 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row justify-content-between">
-                                        <div class="input-group row col-sm-12 p-0">
-                                            <input type="text" class="form-control col-sm ml-3" style="min-width: 300px" name="searchTxt"/>
+                            <!--Search tool-->
+                            <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
 
-                                            <div class="input-group col-sm" style="min-width: 240px">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                                </div>
-                                                <input type="text" id="reservation" class="form-control float-right" name="thoiGianDatHangSearch"/>
-                                            </div>
-
-                                            <select class="custom-select col-sm" name="kenhBanHang"></select>
-
-                                            <select class="custom-select col-sm" name="hinhThucThanhToan"></select>
-
-                                            <select class="custom-select col-sm" name="trangThaiDonHang"></select>
-
-                                            <select class="custom-select col-sm" name="nhanVienBanHang??"></select>
-
-                                            <button type="submit" name="search" class="btn btn-info form-control">Tìm kiếm</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row justify-content-between">
                                         <div class="col-4" style="display: flex; align-items: center">
-                                            <h3 class="card-title"><strong>DANH SÁCH SẢN PHẨM</strong></h3>
+                                            <h3 class="card-title"><strong th:text="#{product_list}" class="text-uppercase"></strong></h3>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import"><i class="fa-solid fa-cloud-arrow-up"></i>Import</button>
-                                            <a th:href="@{${url_export}}" class="btn btn-info"><i class="fa-solid fa-cloud-arrow-down"></i>Export</a>
-                                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insert" id="createProduct"><i class="fa-solid fa-circle-plus"></i>Thêm mới</button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Import</button>
+                                            <a th:href="@{${url_export}}" class="btn btn-info"><i class="fa-solid fa-cloud-arrow-down mr-2"></i>Export</a>
+                                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insert" id="createProduct"><i class="fa-solid fa-circle-plus mr-2"></i>Thêm mới</button>
                                         </div>
                                     </div>
                                     <!-- modal-content (Thêm mới sản phẩm)-->
@@ -213,22 +190,22 @@
                             voucherBlock += `<span>${voucherIndex + 1} </span><a href="/san-pham/voucher/detail/${voucherInfo.id}"><span>${voucherInfo.title}</span></a><br>`;
                         });
 
-                        contentTable.append(
-                            '<tr>' +
-                                '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
-                                '<td class="text-center"><img src="/' + p.imageActive.directoryPath + '/' + p.imageActive.tenFileKhiLuu + '" style="width: 60px; height: 60px; border-radius: 5px"></td>' +
-                                '<td><a href="/san-pham/' + p.productId + '">' + p.productName + '</a></td>' +
-                                '<td>' + p.productTypeName + '</td>' +
-                                '<td>' + variantBlock + '</td>' +
-                                '<td>' +
-                                '<div className="span">Hiện có: ' + p.totalQtyStorage + '</div>' +
-                                '<div className="span">Đã bán:  ' + p.totalQtySell + '</div>' +
-                                '</td>' +
-                                '<td>' + p.unitName + '</td>' +
-                                '<td>' + voucherBlock + '</td>' +
-                                '<td>' + p.productStatus + '</td>' +
-                            '</tr>'
-                        );
+                        contentTable.append(`
+                            <tr>
+                                <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                                <td class="text-center"><img src="/${p.imageActive.directoryPath}/${p.imageActive.tenFileKhiLuu}" style="width: 60px; height: 60px; border-radius: 5px"></td>
+                                <td><a href="/san-pham/${p.productId}">${p.productName}</a></td>
+                                <td>${p.productTypeName}</td>
+                                <td>${variantBlock}</td>
+                                <td>
+                                <div className="span">Hiện có: ${p.totalQtyStorage}</div>
+                                <div className="span">Đã bán: ${p.totalQtySell}</div>
+                                </td>
+                                <td>${p.unitName}</td>
+                                <td>${voucherBlock}</td>
+                                <td>${p.productStatus}</td>
+                            </tr>
+                        `);
                     });
                 }
             }).fail(function () {

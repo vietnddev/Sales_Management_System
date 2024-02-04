@@ -4,12 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Danh sách đơn hàng</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <div th:replace="header :: stylesheets"></div>
     <style rel="stylesheet">
-        .table td,
-        th {
+        .table td, th {
             vertical-align: middle;
         }
     </style>
@@ -28,54 +25,27 @@
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row justify-content-between">
-                                        <div class="input-group row col-sm-12 p-0">
-                                            <input type="text" class="form-control col-sm ml-3" style="min-width: 300px"
-                                                   name="searchTxt"/>
+                            <!--Search tool-->
+                            <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
 
-                                            <div class="input-group col-sm" style="min-width: 240px">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                                </div>
-                                                <input type="text" id="reservation" class="form-control float-right"
-                                                       name="thoiGianDatHangSearch"/>
-                                            </div>
-
-                                            <select class="custom-select col-sm" name="kenhBanHang"></select>
-
-                                            <select class="custom-select col-sm" name="hinhThucThanhToan"></select>
-
-                                            <select class="custom-select col-sm" name="trangThaiDonHang"></select>
-
-                                            <select class="custom-select col-sm" name="nhanVienBanHang??"></select>
-
-                                            <button type="submit" name="search" class="btn btn-info form-control">Tìm kiếm</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="card">
                                 <div class="card-body align-items-center p-0">
                                     <table class="table table-bordered table-striped align-items-center">
                                         <thead class="align-self-center">
-                                        <tr class="align-self-center">
-                                            <th>STT</th>
-                                            <th>Mã đơn hàng</th>
-                                            <th>Thời gian đặt hàng</th>
-                                            <th>Địa chỉ giao hàng</th>
-                                            <th>Khách hàng</th>
-                                            <th>SĐT nhận hàng</th>
-                                            <th>Số tiền</th>
-                                            <th>Kênh bán hàng</th>
-                                            <th>Ghi chú</th>
-                                            <th>Trạng thái</th>
-                                        </tr>
+                                            <tr class="align-self-center">
+                                                <th>STT</th>
+                                                <th>Mã đơn hàng</th>
+                                                <th>Thời gian đặt hàng</th>
+                                                <th>Địa chỉ giao hàng</th>
+                                                <th>Khách hàng</th>
+                                                <th>SĐT nhận hàng</th>
+                                                <th>Số tiền</th>
+                                                <th>Kênh bán hàng</th>
+                                                <th>Ghi chú</th>
+                                                <th>Trạng thái</th>
+                                            </tr>
                                         </thead>
-                                        <tbody id="contentTable">
-
-                                        </tbody>
+                                        <tbody id="contentTable"></tbody>
                                     </table>
                                 </div>
                                 <div class="card-footer">
@@ -130,20 +100,20 @@
                         contentTable.empty();
                         $.each(data, function (index, d) {
                             console.log(d)
-                            contentTable.append(
-                                '<tr>' +
-                                    '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
-                                    '<td><a href="/don-hang/' + d.orderId + '">' + d.orderCode + '</a></td>' +
-                                    '<td>' + d.orderTimeStr + '</td>' +
-                                    '<td>' + d.receiveAddress + '</td>' +
-                                    '<td>' + d.customerName + '</td>' +
-                                    '<td>' + d.receivePhone + '</td>' +
-                                    '<td>' + d.totalAmount + '</td>' +
-                                    '<td>' + d.salesChannelName + '</td>' +
-                                    '<td>' + d.note + '</td>' +
-                                    '<td>' + d.orderStatusName + '</td>' +
-                                    '</tr>'
-                            );
+                            contentTable.append(`
+                               <tr>
+                                    <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                                    <td><a href="/don-hang/${d.orderId}">${d.orderCode}</a></td>
+                                    <td>${d.orderTimeStr}</td>
+                                    <td>${d.receiveAddress}</td>
+                                    <td>${d.customerName}</td>
+                                    <td>${d.receivePhone}</td>
+                                    <td>${d.totalAmount}</td>
+                                    <td>${d.salesChannelName}</td>
+                                    <td>${d.note}</td>
+                                    <td>${d.orderStatusName}</td>
+                                </tr>
+                            `);
                         });
                     }
                 }).fail(function () {

@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tài khoản hệ thống</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <div th:replace="header :: stylesheets"></div>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -27,6 +24,9 @@
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
                     <div class="col-12">
+                        <!--Search tool-->
+                        <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+
                         <div class="card">
                             <div class="card-header">
                                 <div class="row justify-content-between">
@@ -34,10 +34,7 @@
                                         <h3 class="card-title"><strong>TÀI KHOẢN HỆ THỐNG</strong></h3>
                                     </div>
                                     <div class="col-4 text-right">
-                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#insert">
-                                            Thêm mới
-                                        </button>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insert">Thêm mới</button>
                                     </div>
                                 </div>
                                 <!-- modal-content (Thêm mới)-->
@@ -48,9 +45,7 @@
                                     <div th:each="list, index : ${listAccount}"
                                          class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
                                         <div class="card bg-light d-flex flex-fill">
-                                            <div class="card-header text-muted border-bottom-0">
-                                                Nhân viên cửa hàng
-                                            </div>
+                                            <div class="card-header text-muted border-bottom-0">Nhân viên cửa hàng</div>
                                             <div class="card-body pt-0">
                                                 <div class="row">
                                                     <div class="col-7">
@@ -67,8 +62,7 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-5 text-center">
-                                                        <img src="../../dist/img/user1-128x128.jpg" alt="user-avatar"
-                                                             class="img-circle img-fluid">
+                                                        <img src="../../dist/img/user1-128x128.jpg" alt="user-avatar" class="img-circle img-fluid">
                                                     </div>
                                                 </div>
                                             </div>
@@ -95,72 +89,55 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <strong class="modal-title">Phân quyền</strong>
-                                                        <button type="button" class="close"
-                                                                data-dismiss="modal" aria-label="Close">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                            <div class="card card-primary card-tabs"
-                                                                 style="min-height: 550px; margin-bottom: 0px">
-                                                                <div class="card-header p-0 pt-1">
-                                                                    <ul class="nav nav-tabs"
-                                                                        id="custom-tabs-one-tab"
-                                                                        role="tablist">
-                                                                        <li class="nav-item"
-                                                                            th:each="role : ${list.listRole}">
-                                                                            <a class="nav-link"
-                                                                               th:id="'#' + ${role.module.entrySet().iterator().next().key} + '_' + ${list.id}"
-                                                                               data-toggle="pill"
-                                                                               th:href="'#' + ${role.module.entrySet().iterator().next().key} + '_' + ${list.id}"
-                                                                               role="tab"
-                                                                               aria-controls="custom-tabs-one-home"
-                                                                               aria-selected="true"
-                                                                               style="font-weight: bold"
-                                                                               th:text="${role.module.entrySet().iterator().next().value}">
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="card-body"
-                                                                     style="max-height: 485px; overflow: overlay">
-                                                                    <div class="tab-content"
-                                                                         id="custom-tabs-one-tabContent">
-                                                                        <div class="tab-pane fade"
-                                                                             role="tabpanel"
-                                                                             aria-labelledby="custom-tabs-one-home-tab"
-                                                                             th:each="role : ${list.listRole}"
-                                                                             th:id="${role.module.entrySet().iterator().next().key} + '_' + ${list.id}">
-                                                                            <table class="table table-bordered table-striped w-100">
-                                                                                <thead>
+                                                        <div class="card card-primary card-tabs" style="min-height: 550px; margin-bottom: 0px">
+                                                            <div class="card-header p-0 pt-1">
+                                                                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                                                    <li class="nav-item" th:each="role : ${list.listRole}">
+                                                                        <a class="nav-link"
+                                                                           th:id="'#' + ${role.module.entrySet().iterator().next().key} + '_' + ${list.id}"
+                                                                           data-toggle="pill"
+                                                                           th:href="'#' + ${role.module.entrySet().iterator().next().key} + '_' + ${list.id}"
+                                                                           role="tab"
+                                                                           aria-controls="custom-tabs-one-home"
+                                                                           aria-selected="true"
+                                                                           style="font-weight: bold"
+                                                                           Th:text="${role.module.entrySet().iterator().next().value}">
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="card-body" style="max-height: 485px; overflow: overlay">
+                                                                <div class="tab-content" id="custom-tabs-one-tabContent">
+                                                                    <div class="tab-pane fade"
+                                                                         role="tabpanel"
+                                                                         aria-labelledby="custom-tabs-one-home-tab"
+                                                                         th:each="role : ${list.listRole}"
+                                                                         th:id="${role.module.entrySet().iterator().next().key} + '_' + ${list.id}">
+                                                                        <table class="table table-bordered table-striped w-100">
+                                                                            <thead>
                                                                                 <tr>
                                                                                     <th>STT</th>
                                                                                     <th></th>
                                                                                     <th>Key</th>
                                                                                     <th>Tên quyền</th>
                                                                                 </tr>
-                                                                                </thead>
-                                                                                <tbody>
+                                                                            </thead>
+                                                                            <tbody>
                                                                                 <tr th:each="action : ${role.action}">
                                                                                     <td>
-                                                                                        <input type="hidden"
-                                                                                               name="module"
-                                                                                               th:value="${role.module.entrySet().iterator().next().key}">
-                                                                                        <input type="hidden"
-                                                                                               name="keyAction"
-                                                                                               th:value="${action.keyAction}">
-                                                                                        <input type="hidden"
-                                                                                               name="valueAction"
-                                                                                               th:value="${action.valueAction}">
+                                                                                        <input type="hidden" name="module" th:value="${role.module.entrySet().iterator().next().key}">
+                                                                                        <input type="hidden" name="keyAction" th:value="${action.keyAction}">
+                                                                                        <input type="hidden" name="valueAction" th:value="${action.valueAction}">
                                                                                     </td>
                                                                                     <td class="text-center">
-                                                                                        <div class="form-group clearfix"
-                                                                                             style="margin: 0 auto">
+                                                                                        <div class="form-group clearfix" style="margin: 0 auto">
                                                                                             <div class="icheck-primary">
-                                                                                                <input type="checkbox"
-                                                                                                       name="isChecked"
-                                                                                                       th:checked="${action.isChecked}"
-                                                                                                       th:id="'checked_' + ${action.keyAction}">
+                                                                                                <input type="checkbox" name="isChecked" th:checked="${action.isChecked}" th:id="'checked_' + ${action.keyAction}">
                                                                                                 <label th:for="'checked_' + ${action.keyAction}"></label>
                                                                                             </div>
                                                                                         </div>
@@ -168,12 +145,12 @@
                                                                                     <td th:text="${action.keyAction}"></td>
                                                                                     <td th:text="${action.valueAction}"></td>
                                                                                 </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -188,30 +165,18 @@
                                                           th:object="${account}"
                                                           method="post">
                                                         <div class="modal-header">
-                                                            <strong class="modal-title">Xác nhận khóa tài
-                                                                khoản</strong>
-                                                            <button type="button" class="close"
-                                                                    data-dismiss="modal" aria-label="Close">
+                                                            <strong class="modal-title">Xác nhận khóa tài khoản</strong>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="card-body">
-                                                                Tài khoản <strong class="badge text-bg-info"
-                                                                                  th:text="${list.hoTen}"
-                                                                                  style="font-size: 16px;"></strong>
-                                                                sẽ bị khóa!
+                                                                Tài khoản <strong class="badge text-bg-info" th:text="${list.hoTen}" style="font-size: 16px;"></strong>sẽ bị khóa!
                                                             </div>
-                                                            <div class="modal-footer justify-content-end"
-                                                                 style="margin-bottom: -15px;">
-                                                                <button type="button"
-                                                                        class="btn btn-default"
-                                                                        data-dismiss="modal">Hủy
-                                                                </button>
-                                                                <button type="submit"
-                                                                        class="btn btn-primary">
-                                                                    Đồng ý
-                                                                </button>
+                                                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-primary">Đồng ý</button>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -228,10 +193,8 @@
                                                     <form th:action="@{/sys/tai-khoan/update/{id}(id=${list.id})}"
                                                           th:object="${account}" method="post">
                                                         <div class="modal-header">
-                                                            <strong class="modal-title">Cập nhật thông tin tài
-                                                                khoản</strong>
-                                                            <button type="button" class="close"
-                                                                    data-dismiss="modal" aria-label="Close">
+                                                            <strong class="modal-title">Cập nhật thông tin tài khoản</strong>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -240,32 +203,24 @@
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label>Tên đăng nhập</label>
-                                                                        <input type="text" class="form-control"
-                                                                               placeholder="Tên đăng nhập"
-                                                                               th:value="${list.username}"
-                                                                               disabled/>
+                                                                        <input type="text" class="form-control" placeholder="Tên đăng nhập" th:value="${list.username}" disabled/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Họ tên</label>
-                                                                        <input type="text" class="form-control"
-                                                                               placeholder="Họ tên" name="hoTen"
-                                                                               th:value="${list.hoTen}"/>
+                                                                        <input type="text" class="form-control" placeholder="Họ tên" name="hoTen" th:value="${list.hoTen}"/>
                                                                     </div>
                                                                     <div class="form-group"
                                                                          th:if="${list.gioiTinh}">
                                                                         <label>Giới tính</label>
-                                                                        <select class="custom-select"
-                                                                                name="gioiTinh">
-                                                                            <option value="true" selected>Nam
-                                                                            </option>
+                                                                        <select class="custom-select" name="gioiTinh">
+                                                                            <option value="true" selected>Nam</option>
                                                                             <option value="false">Nữ</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="form-group"
                                                                          th:if="not ${list.gioiTinh}">
                                                                         <label>Giới tính</label>
-                                                                        <select class="custom-select"
-                                                                                name="gioiTinh">
+                                                                        <select class="custom-select" name="gioiTinh">
                                                                             <option value="true">Nam</option>
                                                                             <option value="false" selected>Nữ
                                                                             </option>
@@ -273,51 +228,34 @@
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Số điện thoại</label>
-                                                                        <input type="text" class="form-control"
-                                                                               placeholder="Số điện thoại"
-                                                                               name="soDienThoai"
-                                                                               th:value="${list.soDienThoai}"/>
+                                                                        <input type="text" class="form-control" placeholder="Số điện thoại" name="soDienThoai" th:value="${list.soDienThoai}"/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Email</label>
-                                                                        <input type="email" class="form-control"
-                                                                               placeholder="Email" name="email"
-                                                                               th:value="${list.email}"/>
+                                                                        <input type="email" class="form-control" placeholder="Email" name="email" th:value="${list.email}"/>
                                                                     </div>
                                                                     <div class="form-group"
                                                                          th:if="${list.trangThai}">
                                                                         <label>Trạng thái</label>
-                                                                        <select class="custom-select"
-                                                                                name="trangThai">
-                                                                            <option value="true" selected>Kích
-                                                                                hoạt
-                                                                            </option>
+                                                                        <select class="custom-select" name="trangThai">
+                                                                            <option value="true" selected>Kích hoạt</option>
                                                                             <option value="false">Khóa</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="form-group"
                                                                          th:if="not ${list.trangThai}">
                                                                         <label>Trạng thái</label>
-                                                                        <select class="custom-select"
-                                                                                name="trangThai">
+                                                                        <select class="custom-select" name="trangThai">
                                                                             <option value="true">Khóa</option>
-                                                                            <option value="false" selected>Hoạt
-                                                                                động
-                                                                            </option>
+                                                                            <option value="false" selected>Hoạt động</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="modal-footer justify-content-end"
-                                                                 style="margin-bottom: -15px;">
-                                                                <input type="hidden" name="username"
-                                                                       th:value="${list.username}"/>
-                                                                <button type="button" class="btn btn-default"
-                                                                        data-dismiss="modal">Hủy
-                                                                </button>
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    Lưu
-                                                                </button>
+                                                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                                                <input type="hidden" name="username" th:value="${list.username}"/>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-primary">Lưu</button>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -329,7 +267,6 @@
                                 </div>
                             </div>
 
-
                             <div class="modal fade" id="insert">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -337,8 +274,7 @@
                                               method="post">
                                             <div class="modal-header">
                                                 <strong class="modal-title">Thêm mới tài khoản</strong>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
@@ -380,18 +316,14 @@
                                                         <div class="form-group">
                                                             <label>Trạng thái</label>
                                                             <select class="custom-select" name="trangThai">
-                                                                <option value="true" selected>Kích hoạt
-                                                                </option>
+                                                                <option value="true" selected>Kích hoạt</option>
                                                                 <option value="false">Khóa</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer justify-content-end"
-                                                     style="margin-bottom: -15px;">
-                                                    <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">Hủy
-                                                    </button>
+                                                <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                                                     <button type="submit" class="btn btn-primary">Lưu</button>
                                                 </div>
                                             </div>
@@ -410,18 +342,12 @@
     </div>
     <!-- /.content-wrapper -->
 
-    <div th:replace="footer :: footer">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+    <div th:replace="footer :: footer"><!-- Nhúng các file JavaScript vào --></div>
 
     <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
+    <aside class="control-sidebar control-sidebar-dark"><!-- Control sidebar content goes here --></aside>
 
-    <div th:replace="header :: scripts">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+    <div th:replace="header :: scripts"><!-- Nhúng các file JavaScript vào --></div>
 </div>
 
 </body>

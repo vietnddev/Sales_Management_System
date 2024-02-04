@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-12 mb-3" style="height: 200px; border-radius:  10px;" th:each="c, index : ${listCategory}">
                             <a th:href="@{${c.endpoint}}">
-                                <div class="info-box bg-success h-100" style="border-radius: 20px;">
+                                <div class="info-box bg-success h-100" style="border-radius: 20px; opacity: 95%">
                                     <span class="info-box-icon"><i th:class="${c.icon}"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text font-weight-bold text-uppercase" style="font-size: 20px" th:text="${c.name}"></span>

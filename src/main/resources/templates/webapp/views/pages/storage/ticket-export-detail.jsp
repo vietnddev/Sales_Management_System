@@ -132,15 +132,15 @@
                     let contentTable = $('#contentTable');
                     contentTable.empty();
                     $.each(lvOrderDetails, function (index, d) {
-                        contentTable.append(
-                            '<tr>' +
-                            '<td>' + (index + 1) + '</td>' +
-                            '<td>' + d.productVariantDTO.productTypeName + '</td>' +
-                            '<td>' + d.productVariantDTO.name + '</td>' +
-                            '<td>' + d.quantity + '</td>' +
-                            '<td>' + d.note + '</td>' +
-                            '</tr>'
-                        );
+                        contentTable.append(`
+                            <tr>
+                                <td>${(index + 1)}</td>
+                                <td>${d.productVariantDTO.productTypeName}</td>
+                                <td>${d.productVariantDTO.name}</td>
+                                <td>${d.quantity}</td>
+                                <td>${d.note}</td>
+                            </tr>
+                        `);
                     });
                 }
             }).fail(function () {

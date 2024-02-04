@@ -25,6 +25,9 @@
             <div class="container-fluid vertical-center">
                 <div class="row">
                     <div class="col-12">
+                        <!--Search tool-->
+                        <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+
                         <div class="card">
                             <div class="card-header">
                                 <div class="row justify-content-between">
@@ -116,16 +119,16 @@
                 let contentTable = $('#contentTable');
                 contentTable.empty();
                 $.each(data, function (index, d) {
-                    contentTable.append(
-                        '<tr>' +
-                            '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
-                            '<td><a href="/storage/ticket-import/'+ d.id +'">' + d.title + '</td>' +
-                            '<td>' + d.importer + '</td>' +
-                            '<td>' + d.importTime + '</td>' +
-                            '<td>' + d.note + '</td>' +
-                            '<td>' + mvTicketImportStatus[d.status] + '</td>' +
-                        '</tr>'
-                    );
+                    contentTable.append(`
+                        <tr>
+                            <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                            <td><a href="/storage/ticket-import/${d.id}">${d.title}</td>
+                            <td>${d.importer}</td>
+                            <td>${d.importTime}</td>
+                            <td>${d.note}</td>
+                            <td>${mvTicketImportStatus[d.status]}</td>
+                        </tr>
+                    `);
                 });
             }
         }).fail(function () {

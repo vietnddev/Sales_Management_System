@@ -24,6 +24,9 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
+                            <!--Search tool-->
+                            <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row justify-content-between">
@@ -291,22 +294,22 @@
                     contentTable.empty();
                     $.each(data, function (index, d) {
                         mvCategories[d.id] = d;
-                        contentTable.append(
-                            '<tr>' +
-                                '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
-                                '<td>' + d.code + '</td>' +
-                                '<td>' + d.name + '</td>' +
-                                '<td>' + d.note + '</td>' +
-                                '<td></td>' +
-                                '<td></td>' +
-                                '<td>' + d.isDefault + '</td>' +
-                                '<td>' + d.sort + '</td>' +
-                                '<td>' +
-                                    '<button class="btn btn-info   btn-sm btn-update mr-1" id="' + d.id + '"><i class="fa-solid fa-pencil"></i></button>' +
-                                    '<button class="btn btn-danger btn-sm btn-delete"      id="' + d.id + '"><i class="fa-solid fa-trash"></i></button>' +
-                                '</td>' +
-                            '</tr>'
-                        );
+                        contentTable.append(`
+                            <tr>
+                                <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                                <td>${d.code}</td>
+                                <td>${d.name}</td>
+                                <td>${d.note}</td>
+                                <td></td>
+                                <td></td>
+                                <td>${d.isDefault}</td>
+                                <td>${d.sort}</td>
+                                <td>
+                                    <button class="btn btn-info   btn-sm btn-update mr-1" id="${d.id}"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-sm btn-delete"      id="${d.id}"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `);
                     });
                 }
             }).fail(function () {
