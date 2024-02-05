@@ -5,9 +5,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Flowiee Official | Dashboard</title>
-  <th:block th:fragment="stylesheets"><!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <th:block th:fragment="stylesheets">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
     <!-- Ionicons -->
@@ -62,7 +62,6 @@
 
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
-
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item">
           <a class="nav-link">
@@ -79,6 +78,19 @@
           <a class="nav-link" th:href="@{/sys/profile}">
             <i class="fa-regular fa-user"></i>
           </a>
+        </li>
+        <li class="nav-item" style="width: 36px;">
+          <div class="btn-group" style="margin-bottom: -3px">
+            <a class="nav-link pl-0 pr-0">
+              <i class="fa-solid fa-language"></i>
+            </a>
+            <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false"></button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" id="langOptionVi" style="cursor: pointer">Vietnamese</a>
+              <a class="dropdown-item" id="langOptionEn" style="cursor: pointer">English</a>
+            </div>
+          </div>
+          <hr class="bg-info mt-0 mb-0">
         </li>
         <li class="nav-item">
           <a class="nav-link" th:href="@{/sys/logout}">

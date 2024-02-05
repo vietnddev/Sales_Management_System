@@ -6,19 +6,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.io.Serial;
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public class ApiException extends RuntimeException {
+public class AppException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public ApiException() {
+    public AppException() {
         super();
     }
 
-    public ApiException(String message) {
+    public AppException(String message) {
         super(message);
     }
 
-    public ApiException(String message, Throwable cause) {
+    public AppException(String message, Throwable cause) {
         super(message, cause);
     }
 }

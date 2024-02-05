@@ -4,7 +4,7 @@ import com.flowiee.app.dto.PriceDTO;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.repository.CategoryRepository;
 import com.flowiee.app.repository.ProductAttributeRepository;
@@ -73,20 +73,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> findAllProducts() {
-        Page<Product> products = productsRepo.findAll(null, null, null, Pageable.unpaged());
+        //Page<Product> products = productsRepo.findAll(null, null, null, null, null, null, Pageable.unpaged());
+        Page<Product> products = productsRepo.findAll(Pageable.unpaged());
         return this.setImageActiveAndLoadVoucherApply(products);
     }
 
     @Override
     public Page<Product> findAllProducts(Integer productTypeId, Integer brandId, String status) {
-        Page<Product> products = productsRepo.findAll(productTypeId, brandId, status, Pageable.unpaged());
+        //Page<Product> products = productsRepo.findAll(null, brandId, productTypeId, status, null, null, Pageable.unpaged());
+        Page<Product> products = productsRepo.findAll(Pageable.unpaged());
         return this.setImageActiveAndLoadVoucherApply(products);
     }
 
     @Override
-    public Page<Product> findAllProducts(int size, int page) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Product> products = productsRepo.findAll(null, null, null, pageable);
+    public Page<Product> findAllProducts(int pageSize, int pageNum, String txtSearch, Integer productType, Integer color, Integer size) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
+        //Page<Product> products = productsRepo.findAll(txtSearch, null, productType, null, color, size, pageable);
+        Page<Product> products = productsRepo.findAll(txtSearch, null, pageable);
         return this.setImageActiveAndLoadVoucherApply(products);
     }
 
@@ -179,15 +182,20 @@ public class ProductServiceImpl implements ProductService {
             PriceDTO price = PriceDTO.fromPrice(priceService.findGiaHienTai(dataModel.getProductVariantId()));
             if (price != null) {
                 dataModel.setPriceSellId(price.getId());
-                dataModel.setPriceSellValue(Double.parseDouble(price.getGiaBan()));
+                if (price.getOriginal() != null) {
+                    dataModel.setPriceSellValue(price.getOriginal().doubleValue());
+                }
+                if (price.getDiscount() != null) {
+                    dataModel.setPriceAfterDiscount(price.getDiscount().floatValue());
+                }
             } else {
                 dataModel.setPriceSellId(null);
                 dataModel.setPriceSellValue(null);
+                dataModel.setPriceAfterDiscount(null);
             }
             dataModel.setListPrices(listPriceOfProductVariant);
             dataModel.setDiscountPercent(null);
             dataModel.setPriceMaxDiscount(null);
-            dataModel.setPriceAfterDiscount(null);
             listReturn.add(dataModel);
         }
         return listReturn;
@@ -227,7 +235,7 @@ public class ProductServiceImpl implements ProductService {
             return pSaved;
         } catch (Exception e) {
             logger.error("Insert product fail!", e);
-            throw new ApiException();
+            throw new AppException();
         }
     }
 
@@ -299,7 +307,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product variant"), e);
             e.printStackTrace();
-            throw new ApiException();
+            throw new AppException();
         }
     }
 
@@ -315,7 +323,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             logger.info("Update productVariant fail! " + productVariant.toString(), e);
             e.printStackTrace();
-            throw new ApiException();
+            throw new AppException();
         }
     }
 
@@ -365,7 +373,7 @@ public class ProductServiceImpl implements ProductService {
             return MessageUtils.UPDATE_SUCCESS;
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!", e);
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product quantity"), e);
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product quantity"), e);
         }
     }
 

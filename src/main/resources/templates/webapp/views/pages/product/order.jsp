@@ -34,7 +34,7 @@
                                         <thead class="align-self-center">
                                             <tr class="align-self-center">
                                                 <th>STT</th>
-                                                <th>Mã đơn hàng</th>
+                                                <th th:text="#{pro.order.code}"></th>
                                                 <th>Thời gian đặt hàng</th>
                                                 <th>Địa chỉ giao hàng</th>
                                                 <th>Khách hàng</th>
@@ -99,7 +99,6 @@
                         let contentTable = $('#contentTable');
                         contentTable.empty();
                         $.each(data, function (index, d) {
-                            console.log(d)
                             contentTable.append(`
                                <tr>
                                     <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>

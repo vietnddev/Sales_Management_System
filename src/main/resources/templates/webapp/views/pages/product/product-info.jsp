@@ -217,7 +217,8 @@
                                         <th>Chất liệu</th>
                                         <th>Số lượng</th>
                                         <th>Đã bán</th>
-                                        <th>Giá bán</th>
+                                        <th>Giá gốc</th>
+                                        <th>Giá khuyến mãi</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
                                     </thead>
@@ -232,6 +233,12 @@
                                             <td th:text="${var.soldQty}"></td>
                                             <td>
                                                 <span th:text="${var.priceSellValue != null} ? ${#numbers.formatDecimal (var.priceSellValue, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"
+                                                      th:data-target="'#modalLichSuGiaBan_' + ${var.productVariantId}" data-toggle="modal"
+                                                      style="color: #007bff; cursor: pointer">
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span th:text="${var.priceAfterDiscount != null} ? ${#numbers.formatDecimal (var.priceAfterDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"
                                                       th:data-target="'#modalLichSuGiaBan_' + ${var.productVariantId}" data-toggle="modal"
                                                       style="color: #007bff; cursor: pointer">
                                                 </span>
@@ -266,12 +273,24 @@
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-4">Giá hiện tại</label>
+                                                                        <label class="col-sm-4">Giá gốc</label>
                                                                         <input th:value="${var.priceSellValue != null} ? ${#numbers.formatDecimal (var.priceSellValue, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="col-sm-8 form-control" type="text" readonly>
                                                                     </div>
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-4">Giá điều chỉnh</label>
                                                                         <input class="col-sm-8 form-control" type="number" name="giaBan">
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4">Giá khuyến mãi</label>
+                                                                        <input th:value="${var.priceAfterDiscount != null} ? ${#numbers.formatDecimal (var.priceAfterDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="col-sm-8 form-control" type="text" readonly>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4">Giá điều chỉnh</label>
+                                                                        <input class="col-sm-8 form-control" type="number" name="giaBan">
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4">Ghi chú</label>
+                                                                        <textarea class="col-sm-8 form-control" type="text" id="noteField" rows="3"></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer justify-content-end">
@@ -302,7 +321,8 @@
                                                     <thead>
                                                         <tr>
                                                             <td>STT</td>
-                                                            <td>Giá bán</td>
+                                                            <td>Giá gốc</td>
+                                                            <td>Giá khuyến mãi</td>
                                                             <td>Thời gian cập nhật</td>
                                                             <td>Trạng thái</td>
                                                         </tr>
@@ -310,7 +330,8 @@
                                                     <tbody>
                                                         <tr th:each="p, index : ${var.listPrices}">
                                                             <td th:text="${index.index + 1}"></td>
-                                                            <td><span th:text="${p.giaBan != null} ? ${#numbers.formatDecimal (p.giaBan, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></span></td>
+                                                            <td><span th:text="${p.original != null} ? ${#numbers.formatDecimal (p.original, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></span></td>
+                                                            <td><span th:text="${p.discount != null} ? ${#numbers.formatDecimal (p.discount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></span></td>
                                                             <td th:text="${p.createdAt}"></td>
                                                             <td th:text="${p.status}"></td>
                                                         </tr>

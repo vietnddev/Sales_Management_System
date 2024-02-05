@@ -54,7 +54,7 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ApiResponse<?> exceptionHandler(ApiException ex) {
+    public ApiResponse<?> exceptionHandler(AppException ex) {
         return ApiResponse.fail(ex.getMessage(), ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

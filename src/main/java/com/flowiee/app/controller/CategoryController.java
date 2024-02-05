@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.entity.Category;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.CategoryService;
@@ -29,7 +29,7 @@ public class CategoryController {
         try {
             return ApiResponse.ok(categoryService.findRootCategory());
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
         }
     }
 
@@ -47,7 +47,7 @@ public class CategoryController {
             return ApiResponse.ok(categories.getContent(), pageNum, pageSize, categories.getTotalPages(), categories.getTotalElements());
         } catch (RuntimeException ex) {
             ex.printStackTrace();
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"));
         }
     }
 
@@ -59,7 +59,7 @@ public class CategoryController {
             return ApiResponse.ok(categoryService.save(category));
         } catch (RuntimeException ex) {
             ex.printStackTrace();
-            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "category"));
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "category"));
         }
     }
 
@@ -83,7 +83,7 @@ public class CategoryController {
             return ApiResponse.ok(categoryService.update(category, categoryId));
         } catch (RuntimeException ex) {
             ex.printStackTrace();
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "category"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "category"));
         }
     }
 
@@ -97,7 +97,7 @@ public class CategoryController {
             return ApiResponse.ok(categoryService.delete(categoryId));
         } catch (RuntimeException ex) {
             ex.printStackTrace();
-            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "category"));
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "category"));
         }
     }
 }

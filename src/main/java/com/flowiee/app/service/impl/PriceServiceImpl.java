@@ -4,7 +4,7 @@ import com.flowiee.app.dto.PriceDTO;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.entity.ProductVariant;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.entity.Price;
 import com.flowiee.app.repository.PriceRepository;
@@ -91,7 +91,7 @@ public class PriceServiceImpl implements PriceService {
         } catch (Exception e) {
             logger.error("Insert price fail! price=" + price.toString());
             e.printStackTrace();
-            throw new ApiException();
+            throw new AppException();
         }
     }
 

@@ -36,80 +36,79 @@ public class TicketImportUIController extends BaseController {
     @Autowired private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping
-    public ModelAndView loadPage() {
+    public ModelAndView viewTickets() {
         validateModuleStorage.importGoods(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT);
         return baseView(modelAndView);
     }
 
-    @GetMapping("/create")
-    public ModelAndView loadPageCreate() {
+    @GetMapping("/{id}")
+    public ModelAndView viewDetail(@PathVariable("id") Integer ticketImportId) {
         validateModuleStorage.importGoods(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_CREATE);
-        TicketImport ticketImportPresent = ticketImportService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
-        if (ticketImportPresent == null) {
-            ticketImportPresent = ticketImportService.createDraftTicketImport(null);
-        }
-        modelAndView.addObject("goodsImportRequest", new TicketImportGoodsRequest());
-        modelAndView.addObject("goodsImport", new TicketImport());
-        modelAndView.addObject("draftGoodsImport", ticketImportPresent);
-        //modelAndView.addObject("orderTime", ticketImportPresent.getOrderTime().toString().substring(0, 10));
-        modelAndView.addObject("receivedTime", ticketImportPresent.getReceivedTime().toString().substring(0, 10));
-        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
-        modelAndView.addObject("listBienTheSanPhamSelected", productVariantServiceTemp.findByImportId(ticketImportPresent.getId()));
-        modelAndView.addObject("listMaterial", materialService.findAll());
-        modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(ticketImportPresent.getId()));
-
-        List<Supplier> listSupplier = new ArrayList<>();
-        if (ticketImportPresent.getSupplier() == null) {
-            listSupplier.add(new Supplier(null, "Chọn supplier"));
-            listSupplier.addAll(supplierService.findAll());
-        } else {
-            listSupplier.add(ticketImportPresent.getSupplier());
-            List<Supplier> listSupplierTemp = supplierService.findAll();
-            listSupplierTemp.remove(ticketImportPresent.getSupplier());
-            listSupplier.addAll(listSupplierTemp);
-        }
-        modelAndView.addObject("listSupplier", listSupplier);
-
-        List<Category> listHinhThucThanhToan = new ArrayList<>();
-        if (ticketImportPresent.getPaymentMethod() == null) {
-            listHinhThucThanhToan.add(new Category(null, "Chọn hình thức thanh toán"));
-            listHinhThucThanhToan.addAll(categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
-        } else {
-            listHinhThucThanhToan.add(ticketImportPresent.getPaymentMethod());
-            List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null);
-            listHinhThucThanhToanTemp.remove(ticketImportPresent.getPaymentMethod());
-            listHinhThucThanhToan.addAll(listHinhThucThanhToanTemp);
-        }
-        modelAndView.addObject("listHinhThucThanhToan", listHinhThucThanhToan);
-
-        List<Account> listAccount = new ArrayList<>();
-        if (ticketImportPresent.getReceivedBy() == null) {
-            listAccount.add(new Account(null, null, "Chọn người nhập hàng"));
-            listAccount.addAll(accountService.findAll());
-        } else {
-            listAccount.add(ticketImportPresent.getReceivedBy());
-            List<Account> lístAccountTemp = accountService.findAll();
-            lístAccountTemp.remove(ticketImportPresent.getReceivedBy());
-            listAccount.addAll(lístAccountTemp);
-        }
-        modelAndView.addObject("listNhanVien", listAccount);
-
-        Map<String, String> listTrangThaiThanhToan = new HashMap<>();
-        if (ticketImportPresent.getPaidStatus() == null || ticketImportPresent.getPaidStatus().isEmpty()) {
-            listTrangThaiThanhToan.put(null, "Chọn trạng thái thanh toán");
-            listTrangThaiThanhToan.putAll(CommonUtils.getPaymentStatusCategory());
-        } else {
-            listTrangThaiThanhToan.put(ticketImportPresent.getPaidStatus(), CommonUtils.getPaymentStatusCategory().get(ticketImportPresent.getPaidStatus()));
-            Map<String, String> listTrangThaiThanhToanTemp = CommonUtils.getPaymentStatusCategory();
-            listTrangThaiThanhToanTemp.remove(ticketImportPresent.getPaidStatus());
-            listTrangThaiThanhToan.putAll(listTrangThaiThanhToanTemp);
-        }
-        modelAndView.addObject("listTrangThaiThanhToan", listTrangThaiThanhToan);
-
-        //
-        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_DETAIL);
+        modelAndView.addObject("ticketImportId", ticketImportId);
+//        TicketImport ticketImportPresent = ticketImportService.findDraftImportPresent(CommonUtils.getCurrentAccountId());
+//        if (ticketImportPresent == null) {
+//            ticketImportPresent = ticketImportService.createDraftTicketImport(null);
+//        }
+//        modelAndView.addObject("goodsImportRequest", new TicketImportGoodsRequest());
+//        modelAndView.addObject("goodsImport", new TicketImport());
+//        modelAndView.addObject("draftGoodsImport", ticketImportPresent);
+//        modelAndView.addObject("receivedTime", ticketImportPresent.getReceivedTime().toString().substring(0, 10));
+//        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariants());
+//        modelAndView.addObject("listBienTheSanPhamSelected", productVariantServiceTemp.findByImportId(ticketImportPresent.getId()));
+//        modelAndView.addObject("listMaterial", materialService.findAll());
+//        modelAndView.addObject("listMaterialSelected", materialServiceTemp.findByImportId(ticketImportPresent.getId()));
+//
+//        List<Supplier> listSupplier = new ArrayList<>();
+//        if (ticketImportPresent.getSupplier() == null) {
+//            listSupplier.add(new Supplier(null, "Chọn supplier"));
+//            listSupplier.addAll(supplierService.findAll());
+//        } else {
+//            listSupplier.add(ticketImportPresent.getSupplier());
+//            List<Supplier> listSupplierTemp = supplierService.findAll();
+//            listSupplierTemp.remove(ticketImportPresent.getSupplier());
+//            listSupplier.addAll(listSupplierTemp);
+//        }
+//        modelAndView.addObject("listSupplier", listSupplier);
+//
+//        List<Category> listHinhThucThanhToan = new ArrayList<>();
+//        if (ticketImportPresent.getPaymentMethod() == null) {
+//            listHinhThucThanhToan.add(new Category(null, "Chọn hình thức thanh toán"));
+//            listHinhThucThanhToan.addAll(categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
+//        } else {
+//            listHinhThucThanhToan.add(ticketImportPresent.getPaymentMethod());
+//            List<Category> listHinhThucThanhToanTemp = categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null);
+//            listHinhThucThanhToanTemp.remove(ticketImportPresent.getPaymentMethod());
+//            listHinhThucThanhToan.addAll(listHinhThucThanhToanTemp);
+//        }
+//        modelAndView.addObject("listHinhThucThanhToan", listHinhThucThanhToan);
+//
+//        List<Account> listAccount = new ArrayList<>();
+//        if (ticketImportPresent.getReceivedBy() == null) {
+//            listAccount.add(new Account(null, null, "Chọn người nhập hàng"));
+//            listAccount.addAll(accountService.findAll());
+//        } else {
+//            listAccount.add(ticketImportPresent.getReceivedBy());
+//            List<Account> lístAccountTemp = accountService.findAll();
+//            lístAccountTemp.remove(ticketImportPresent.getReceivedBy());
+//            listAccount.addAll(lístAccountTemp);
+//        }
+//        modelAndView.addObject("listNhanVien", listAccount);
+//
+//        Map<String, String> listTrangThaiThanhToan = new HashMap<>();
+//        if (ticketImportPresent.getPaidStatus() == null || ticketImportPresent.getPaidStatus().isEmpty()) {
+//            listTrangThaiThanhToan.put(null, "Chọn trạng thái thanh toán");
+//            listTrangThaiThanhToan.putAll(CommonUtils.getPaymentStatusCategory());
+//        } else {
+//            listTrangThaiThanhToan.put(ticketImportPresent.getPaidStatus(), CommonUtils.getPaymentStatusCategory().get(ticketImportPresent.getPaidStatus()));
+//            Map<String, String> listTrangThaiThanhToanTemp = CommonUtils.getPaymentStatusCategory();
+//            listTrangThaiThanhToanTemp.remove(ticketImportPresent.getPaidStatus());
+//            listTrangThaiThanhToan.putAll(listTrangThaiThanhToanTemp);
+//        }
+//        modelAndView.addObject("listTrangThaiThanhToan", listTrangThaiThanhToan);
+//
+//        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
 
         return baseView(modelAndView);
     }

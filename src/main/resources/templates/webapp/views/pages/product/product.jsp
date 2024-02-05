@@ -32,7 +32,7 @@
                                 <div class="card-header">
                                     <div class="row justify-content-between">
                                         <div class="col-4" style="display: flex; align-items: center">
-                                            <h3 class="card-title"><strong th:text="#{product_list}" class="text-uppercase"></strong></h3>
+                                            <h3 class="card-title"><strong th:text="#{pro.product.list}" class="text-uppercase"></strong></h3>
                                         </div>
                                         <div class="col-6 text-right">
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Import</button>
@@ -153,6 +153,8 @@
     </div>
 
     <script type="text/javascript">
+        let mvSearchTool = ["BRAND", "PRODUCT_TYPE", "COLOR", "SIZE", "UNIT", "DISCOUNT", "PRODUCT_STATUS"];
+
         $(document).ready(function () {
             $('#createProduct').on('click', function () {
                 loadCategory();
@@ -163,12 +165,25 @@
             });
 
             loadProducts(mvPageSizeDefault, 1);
-            updateTableContentWhenOnClickPagination(loadProducts)
+            updateTableContentWhenOnClickPagination(loadProducts);
+
+            setupSearchTool(mvSearchTool);
+            $("#btnSearch").on("click", function () {
+                let brandFilter = $('#brandFilter').val();
+                let unitFilter = $('#unitFilter').val();
+                let discountFilter = $('#discountFilter').val();
+                let productStatusFilter = $('#productStatusFilter').val();
+                loadProducts($('#paginationInfo').attr("pageSize"), 1);
+            })
         });
 
         function loadProducts(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + '/product/all';
-            let params = {pageSize: pageSize, pageNum: pageNum}
+            let apiURL = mvHostURLCallApi + '/supplier/all';
+            let params = {
+                pageSize: pageSize,
+                pageNum: pageNum,
+                txtSearch : $('#txtFilter').val()
+            }
             $.get(apiURL, params, function (response) {//dùng Ajax JQuery để gọi xuống controller
                 if (response.status === "OK") {
                     let data = response.data;

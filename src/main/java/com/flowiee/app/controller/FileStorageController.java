@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.security.ValidateModuleProduct;
@@ -29,7 +29,7 @@ public class FileStorageController extends BaseController {
             }
             return com.flowiee.app.model.ApiResponse.ok(fileService.delete(fileId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "file"));
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "file"));
         }
     }
 }

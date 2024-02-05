@@ -4,7 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.CustomerDTO;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.CustomerContact;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.CustomerService;
@@ -30,7 +30,7 @@ public class CustomerController extends BaseController {
             List<CustomerDTO> result = customerService.findAllCustomer();
             return ApiResponse.ok(result);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
         }
     }
 
@@ -40,7 +40,7 @@ public class CustomerController extends BaseController {
         try {
             return ApiResponse.ok(customerService.findCustomerById(customerId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
         }
     }
 
@@ -57,7 +57,7 @@ public class CustomerController extends BaseController {
             customerService.saveCustomer(Customer.fromCustomerDTO(customer));
             return ApiResponse.ok(MessageUtils.CREATE_SUCCESS);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "customer"));
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "customer"));
         }
     }
 
@@ -74,7 +74,7 @@ public class CustomerController extends BaseController {
             customerService.updateCustomer(Customer.fromCustomerDTO(customer), customerId);
             return ApiResponse.ok(MessageUtils.UPDATE_SUCCESS);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "customer"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "customer"));
         }
     }
 
@@ -90,7 +90,7 @@ public class CustomerController extends BaseController {
             }
             return ApiResponse.ok(customerService.deleteCustomer(customerId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "customer"));
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "customer"));
         }
     }
 
@@ -118,7 +118,7 @@ public class CustomerController extends BaseController {
             }
             return ApiResponse.ok(listContacts);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "contact"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "contact"));
         }
     }
 
@@ -134,7 +134,7 @@ public class CustomerController extends BaseController {
             }
             return ApiResponse.ok(customerService.saveContact(customerContact, customerContact.getCustomer().getId()));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "contact"));
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "contact"));
         }
     }
 
@@ -150,7 +150,7 @@ public class CustomerController extends BaseController {
             }
             return ApiResponse.ok(customerService.updateContact(customerContact, contactId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
         }
     }
 
@@ -167,7 +167,7 @@ public class CustomerController extends BaseController {
             //Check in use
             return ApiResponse.ok(customerService.deleteContact(contactId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "contact"));
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "contact"));
         }
     }
 
@@ -185,7 +185,7 @@ public class CustomerController extends BaseController {
             }
             return ApiResponse.ok(customerService.setContactUseDefault(customerId, contactCode, contactId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
         }
     }
 
@@ -201,7 +201,7 @@ public class CustomerController extends BaseController {
             }
             return ApiResponse.ok(customerService.setContactUnUseDefault(contactId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"));
         }
     }
 }

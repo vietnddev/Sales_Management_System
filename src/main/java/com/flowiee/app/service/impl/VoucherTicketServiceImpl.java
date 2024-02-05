@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.VoucherTicket;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.VoucherTicketlRepository;
 import com.flowiee.app.service.VoucherService;
@@ -46,7 +46,7 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
         if (this.findByCode(voucherTicket.getCode()) == null) {
         	return voucherTicketlRepo.save(voucherTicket);
         } else {
-        	throw new ApiException();
+        	throw new AppException();
         }
     }
 

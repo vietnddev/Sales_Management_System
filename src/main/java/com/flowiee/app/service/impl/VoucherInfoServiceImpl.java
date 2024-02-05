@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
 import com.flowiee.app.dto.VoucherInfoDTO;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.repository.VoucherInfoRepository;
@@ -113,7 +113,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            throw new ApiException();
+            throw new AppException();
         }
     }
 

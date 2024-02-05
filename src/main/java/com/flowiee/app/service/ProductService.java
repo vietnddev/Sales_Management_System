@@ -15,7 +15,7 @@ public interface ProductService {
 
     Page<Product> findAllProducts(Integer productTypeId, Integer brandId, String status);
 
-    Page<Product> findAllProducts(int size, int page);
+    Page<Product> findAllProducts(int pageSize, int pageNum, String txtSearch, Integer productType, Integer color, Integer size);
 
     List<Product> findProductsIdAndProductName();
 

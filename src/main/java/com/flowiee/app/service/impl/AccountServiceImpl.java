@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.entity.Account;
@@ -14,10 +14,7 @@ import com.flowiee.app.service.SystemLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -89,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
             return accountSaved;
 		} catch (Exception e) {
 			logger.error("Insert account fail! username=" + account.getUsername(), e);
-			throw new ApiException();
+			throw new AppException();
 		}
     }
 
@@ -109,7 +106,7 @@ public class AccountServiceImpl implements AccountService {
             return accountRepo.save(account);
 		} catch (Exception e) {
 			logger.error("Update account fail! username=" + account.getUsername(), e);
-            throw new ApiException();
+            throw new AppException();
 		}
     }
 

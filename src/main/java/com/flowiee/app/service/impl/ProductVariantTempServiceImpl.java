@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.repository.ProductVariantTempRepository;
 import com.flowiee.app.service.ProductVariantTempService;
@@ -51,7 +51,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
             return tempSaved;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ApiException();
+            throw new AppException();
         }
     }
 
@@ -79,7 +79,7 @@ public class ProductVariantTempServiceImpl implements ProductVariantTempService 
             return productVariantTempRepo.save(bienTheSanPham);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ApiException();
+            throw new AppException();
         }
     }
 

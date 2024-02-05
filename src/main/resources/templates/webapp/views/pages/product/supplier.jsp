@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý nhà cung cấp</title>
+    <div th:replace="header :: stylesheets"></div>
+    <style>
+        .table td.vertical-center {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <div th:replace="header :: header"></div>
+
+    <div th:replace="sidebar :: sidebar"></div>
+
+    <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
+        <section class="content">
+            <div class="container-fluid vertical-center">
+                <div class="row">
+                    <div class="col-12">
+                        <!--Search tool-->
+                        <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row justify-content-between">
+                                    <div class="col-4" style="display: flex; align-items: center">
+                                        <h3 class="card-title"><strong>DANH SÁCH NHÀ CUNG CẤP</strong></h3>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modelAddKhachHang" id="testOK">Thêm mới</button>
+                                        <div class="modal fade" id="modelAddKhachHang">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content text-left">
+                                                    <form th:action="@{/customer/insert}" th:object="${customer}" method="post">
+                                                        <div class="modal-header">
+                                                            <strong class="modal-title">Thêm mới khách hàng</strong>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label>Tên khách hàng</label>
+                                                                        <input type="text" class="form-control" required name="name"/>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Giới tính</label>
+                                                                        <select class="custom-select col-sm" name="sex" data-placeholder="Chọn giới tính">
+                                                                            <option selected value="M">Nam</option>
+                                                                            <option selected value="F">Nữ</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Số điện thoại</label>
+                                                                        <input type="text" class="form-control" required name="phoneDefault"/>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Email</label>
+                                                                        <input type="email" class="form-control" name="emailDefault"/>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Địa chỉ</label>
+                                                                        <input type="text" class="form-control" required name="addressDefault"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-end">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên nhà cung cấp</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Loại sản phẩm cung cấp</th>
+                                            <th>Ghi chú</th>
+                                            <th>Trạng thái</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="contentTable"></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên nhà cung cấp</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Loại sản phẩm cung cấp</th>
+                                            <th>Ghi chú</th>
+                                            <th>Trạng thái</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                <div th:replace="fragments :: pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="footer :: footer"></div>
+
+    <aside class="control-sidebar control-sidebar-dark"></aside>
+
+    <div th:replace="header :: scripts"></div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        loadSuppliers(mvPageSizeDefault, 1);
+        updateTableContentWhenOnClickPagination(loadSuppliers);
+    });
+
+    function loadSuppliers(pageSize, pageNum) {
+        let apiURL = mvHostURLCallApi + '/supplier/all';
+        let params = {pageSize: pageSize, pageNum: pageNum}
+        $.get(apiURL, params, function (response) {
+            if (response.status === "OK") {
+                let data = response.data;
+                let pagination = response.pagination;
+
+                updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
+
+                let contentTable = $('#contentTable');
+                contentTable.empty();
+                $.each(data, function (index, d) {
+                    contentTable.append(`
+                        <tr>
+                            <td class="vertical-center">${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                            <td class="vertical-center"><a href="/customer/${d.id}">${d.name}</a></td>
+                            <td class="vertical-center">${d.phone}</td>
+                            <td class="vertical-center">${d.email}</td>
+                            <td class="vertical-center">${d.address}</td>
+                            <td class="vertical-center">${d.productProvided}</td>
+                            <td class="vertical-center">${d.note}</td>
+                            <td class="vertical-center">${d.status}</td>
+                            <td class="vertical-center"></td>
+                        </tr>
+                    `);
+                });
+            }
+        }).fail(function () {
+            showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
+        });
+    }
+</script>
+</body>
+</html>

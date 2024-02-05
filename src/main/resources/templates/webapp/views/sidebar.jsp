@@ -39,6 +39,9 @@
                                 <a th:href="@{${URL_PRODUCT_CUSTOMER}}" class="nav-link"><i class="fa-solid fa-user-tag mr-2"></i><p>Khách hàng</p></a>
                             </li>
                             <li class="nav-item">
+                                <a th:href="@{${URL_PRODUCT_SUPPLIER}}" class="nav-link"><i class="fa-solid fa-user-tag mr-2"></i><p>Nhà cung cấp</p></a>
+                            </li>
+                            <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT_GALLERY}}" class="nav-link"><i class="fa-solid fa-image nav-icon mr-2"></i><p>Thư viện</p></a>
                             </li>
 

@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.SystemLog;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.SystemLogService;
 import com.flowiee.app.utils.MessageUtils;
@@ -33,7 +33,7 @@ public class SystemController extends BaseController {
             Page<SystemLog> logPage = logService.findAll(pageSize, pageNum - 1);
             return ApiResponse.ok(logPage.getContent(), pageNum, pageSize, logPage.getTotalPages(), logPage.getTotalElements());
         } catch (Exception ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "system log"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "system log"));
         }
     }
 }

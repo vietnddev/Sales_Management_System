@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Notification;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.NotificationService;
 import com.flowiee.app.utils.MessageUtils;
@@ -26,7 +26,7 @@ public class NotificationController extends BaseController {
         try {
             return ApiResponse.ok(notificationService.findAll());
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "notification"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "notification"));
         }
     }
 
@@ -39,7 +39,7 @@ public class NotificationController extends BaseController {
         try {
             return ApiResponse.ok(notificationService.findAllByReceiveId(pageSize, pageNum, totalRecord, accountId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "notification"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "notification"));
         }
     }
 }

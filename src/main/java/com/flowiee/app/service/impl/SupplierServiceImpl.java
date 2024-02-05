@@ -7,6 +7,10 @@ import com.flowiee.app.service.SupplierService;
 
 import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +23,12 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public List<Supplier> findAll() {
         return supplierRepo.findAll();
+    }
+
+    @Override
+    public Page<Supplier> findAll(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
+        return supplierRepo.findAll(pageable);
     }
 
     @Override

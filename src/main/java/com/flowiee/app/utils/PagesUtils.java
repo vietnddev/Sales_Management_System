@@ -37,7 +37,7 @@ public class PagesUtils {
     public static final String STG_DOCTYPE_DETAIL = "/pages/storage/doctype-detail";
     public static final String STG_MATERIAL = "/pages/storage/material";
     public static final String STG_TICKET_IMPORT = "/pages/storage/ticket-import";
-    public static final String STG_TICKET_IMPORT_CREATE = "/pages/storage/ticket-import-create";
+    public static final String STG_TICKET_IMPORT_DETAIL = "/pages/storage/ticket-import-detail";
     public static final String STG_TICKET_EXPORT = "/pages/storage/ticket-export";
     public static final String STG_TICKET_EXPORT_DETAIL = "/pages/storage/ticket-export-detail";
 }

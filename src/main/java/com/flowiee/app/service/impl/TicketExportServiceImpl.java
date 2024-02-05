@@ -16,6 +16,10 @@ import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,12 @@ public class TicketExportServiceImpl implements TicketExportService {
     @Override
     public List<TicketExport> findAll() {
         return ticketExportRepo.findAll();
+    }
+
+    @Override
+    public Page<TicketExport> findAll(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("exportTime").descending());
+        return ticketExportRepo.findAll(pageable);
     }
 
     @Override

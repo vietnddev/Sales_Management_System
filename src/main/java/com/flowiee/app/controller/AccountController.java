@@ -2,7 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Account;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataExistsException;
 import com.flowiee.app.exception.NotFoundException;
@@ -34,7 +34,7 @@ public class AccountController extends BaseController {
         try {
             return ApiResponse.ok(accountService.findAll());
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"));
         }
     }
 
@@ -47,7 +47,7 @@ public class AccountController extends BaseController {
         try {
             return ApiResponse.ok(accountService.findById(accountId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"));
         }
     }
 
@@ -66,7 +66,7 @@ public class AccountController extends BaseController {
             }
             return ApiResponse.ok(accountService.save(account));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"));
         }
     }
 
@@ -82,7 +82,7 @@ public class AccountController extends BaseController {
             }
             return ApiResponse.ok(accountService.update(account, accountId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"));
         }
     }
 
@@ -108,7 +108,7 @@ public class AccountController extends BaseController {
 //            }
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException();
+            throw new AppException();
         }
     }
 
@@ -124,7 +124,7 @@ public class AccountController extends BaseController {
             }
             return ApiResponse.ok(accountService.delete(accountId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "account"));
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "account"));
         }
     }
 
@@ -137,7 +137,7 @@ public class AccountController extends BaseController {
         try {
             return ApiResponse.ok(roleService.findAllRoleByAccountId(accountId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "role"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "role"));
         }
     }
 }

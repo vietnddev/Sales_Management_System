@@ -18,7 +18,7 @@ import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.service.SupplierService;
 
 @Controller
-@RequestMapping(EndPointUtil.PRO_SUPPLIER)
+@RequestMapping("/san-pham/supplier")
 public class SupplierUIController extends BaseController {
 	@Autowired private SupplierService supplierService;
 	@Autowired private ValidateModuleProduct validateModuleProduct;
@@ -27,18 +27,7 @@ public class SupplierUIController extends BaseController {
 	public ModelAndView viewAllSupplier() {
 		validateModuleProduct.readSupplier(true);
 		ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_SUPPLIER);
-		modelAndView.addObject("supplier", new Supplier());
-		modelAndView.addObject("listSuplier", supplierService.findAll());		
+		modelAndView.addObject("listSupplier", supplierService.findAll());
 		return baseView(modelAndView);
-	}
-
-	@PostMapping("/insert")
-	public ModelAndView insertSupplier(@ModelAttribute("supplier") Supplier supplier) {
-		validateModuleProduct.insertSupplier(true);
-		if (supplier == null) {
-			throw new NotFoundException("Customer not found!");
-		}
-		supplierService.save(supplier);
-		return new ModelAndView("redirect:/product/supplier");
 	}
 }

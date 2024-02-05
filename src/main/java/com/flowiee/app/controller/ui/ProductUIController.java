@@ -3,15 +3,15 @@ package com.flowiee.app.controller.ui;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.*;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtils;
-import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.utils.PagesUtils;
+import com.flowiee.app.utils.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
 public class ProductUIController extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductUIController.class);
+
     private final ProductService          productService;
     private final ProductHistoryService   productHistoryService;
     private final FileStorageService      fileStorageService;
@@ -59,31 +61,37 @@ public class ProductUIController extends BaseController {
 
     @GetMapping(value = "/{id}")
     public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
-        validateModuleProduct.readProduct(true);
-        if (productId <= 0 || productService.findProductById(productId) == null) {
-            throw new NotFoundException("Product not found!");
+        try {
+            validateModuleProduct.readProduct(true);
+            if (productId <= 0 || productService.findProductById(productId) == null) {
+                throw new NotFoundException("Product not found!");
+            }
+            ProductDTO productDetail = ProductDTO.fromProduct(productService.findProductById(productId));
+            LinkedHashMap<String, String> listProductStatus = new LinkedHashMap<>();
+            if (AppConstants.PRODUCT_STATUS.ACTIVE.getLabel().equals(productDetail.getProductStatus())) {
+                listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
+                listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
+            } else if (AppConstants.PRODUCT_STATUS.INACTIVE.getLabel().equals(productDetail.getProductStatus())) {
+                listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
+                listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
+            }
+            ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
+            modelAndView.addObject("idSanPham", productId);
+            modelAndView.addObject("detailProducts", productDetail);
+            modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariantOfProduct(productId));
+            modelAndView.addObject("listProductStatus", listProductStatus);
+            modelAndView.addObject("listProductHistory", productHistoryService.findByProduct(productId));
+            //List image
+            modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(productId));
+            //Image active
+            FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(productId);
+            modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());
+            return baseView(modelAndView);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product detail"), ex);
+            throw new AppException();
         }
-        ProductDTO productDetail = ProductDTO.fromProduct(productService.findProductById(productId));
-        LinkedHashMap<String, String> listProductStatus = new LinkedHashMap<>();
-        if (AppConstants.PRODUCT_STATUS.ACTIVE.getLabel().equals(productDetail.getProductStatus())) {
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
-        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.getLabel().equals(productDetail.getProductStatus())) {
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
-            listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-        }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
-        modelAndView.addObject("idSanPham", productId);
-        modelAndView.addObject("detailProducts", productDetail);
-        modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariantOfProduct(productId));
-        modelAndView.addObject("listProductStatus", listProductStatus);
-        modelAndView.addObject("listProductHistory", productHistoryService.findByProduct(productId));
-        //List image
-        modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(productId));
-        //Image active
-        FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(productId);
-        modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());        
-        return baseView(modelAndView);
     }
 
     @GetMapping(value = "/variant/{id}")

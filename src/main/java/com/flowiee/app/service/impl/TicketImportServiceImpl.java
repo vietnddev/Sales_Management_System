@@ -2,7 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.TicketImport;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.request.TicketImportGoodsRequest;
 import com.flowiee.app.utils.CommonUtils;
@@ -82,7 +82,7 @@ public class TicketImportServiceImpl implements TicketImportService {
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {
             logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "ticket import"), ex);
-            throw new ApiException();
+            throw new AppException();
         }
     }
 ;

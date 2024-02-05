@@ -23,10 +23,6 @@ public class PriceDTO implements Serializable {
     private String type;
     private BigDecimal original;
     private BigDecimal discount;
-    private String giaMua;
-    //private String unitBuy;
-    private String giaBan;
-    //private String unitSell;
     private String status;
     private Date createdAt;
     private Integer createdBy;
@@ -38,10 +34,6 @@ public class PriceDTO implements Serializable {
             dto.setProductVariant(p.getProductVariant());
             dto.setMaterial(p.getMaterial());
             dto.setType(p.getType());
-            //dto.setGiaMua(String.valueOf(p.getGiaMua()));
-            //dto.setUnitBuy(p.getUnitBuy());
-            dto.setGiaBan(String.valueOf(p.getGiaBan()));
-            //dto.setUnitSell(p.getUnitSell());
             dto.setOriginal(p.getGiaBan());
             dto.setDiscount(p.getDiscount());
             dto.setStatus(p.getStatus());
@@ -69,14 +61,6 @@ public class PriceDTO implements Serializable {
 		builder.append(productVariant);
 		builder.append(", material=");
 		builder.append(material);
-		builder.append(", giaMua=");
-		builder.append(giaMua);
-//		builder.append(", unitBuy=");
-//		builder.append(unitBuy);
-		builder.append(", giaBan=");
-		builder.append(giaBan);
-//		builder.append(", unitSell=");
-//		builder.append(unitSell);
 		builder.append(", status=");
 		builder.append(status);
 		builder.append(", createdAt=");

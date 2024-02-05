@@ -3,12 +3,11 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.exception.ApiException;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.CartService;
 import com.flowiee.app.service.OrderService;
-import com.flowiee.app.utils.DateUtils;
 import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,7 +39,7 @@ public class OrderController extends BaseController {
             return ApiResponse.ok(OrderDTO.fromOrders(orderPage.getContent()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             ex.printStackTrace();
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
         }
     }
 
@@ -56,7 +55,7 @@ public class OrderController extends BaseController {
             }
             return ApiResponse.ok(orderService.findOrderById(orderId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
         }
     }
 
@@ -66,7 +65,7 @@ public class OrderController extends BaseController {
         try {
             return ApiResponse.ok(orderService.saveOrder(orderRequest));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "order"));
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "order"));
         }
     }
 
@@ -82,7 +81,7 @@ public class OrderController extends BaseController {
             orderService.updateOrder(order, orderId);
             return ApiResponse.ok(MessageUtils.UPDATE_SUCCESS);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "order"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "order"));
         }
     }
 
@@ -95,7 +94,7 @@ public class OrderController extends BaseController {
             //Check them trang thai
             return ApiResponse.ok(orderService.deleteOrder(orderId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "order"));
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "order"));
         }
     }
 
@@ -124,7 +123,7 @@ public class OrderController extends BaseController {
             }
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "items"));
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "items"));
         }
     }
 
@@ -151,7 +150,7 @@ public class OrderController extends BaseController {
             }
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "items"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "items"));
         }
     }
 
@@ -166,7 +165,7 @@ public class OrderController extends BaseController {
             }
             return ApiResponse.ok(cartService.deleteItem(itemId));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "items"));
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "items"));
         }
     }
 
@@ -182,7 +181,7 @@ public class OrderController extends BaseController {
 //            modelAndView.addObject("ticket_info", voucherTicketService.findByCode(code));
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "add voucher to cart"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "add voucher to cart"));
         }
     }
 
@@ -207,7 +206,7 @@ public class OrderController extends BaseController {
             }
             return ApiResponse.ok(orderService.doPay(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "pay order"));
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "pay order"));
         }
     }
 
@@ -219,7 +218,7 @@ public class OrderController extends BaseController {
         try {
             return null;
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "export order"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "export order"));
         }
     }
 
@@ -229,7 +228,7 @@ public class OrderController extends BaseController {
             //Xử lý code thành id
             return new ModelAndView().addObject("orderInfo", orderService.findOrderById(null));
         } catch (RuntimeException ex) {
-            throw new ApiException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "scan order"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "scan order"));
         }
     }
 }
