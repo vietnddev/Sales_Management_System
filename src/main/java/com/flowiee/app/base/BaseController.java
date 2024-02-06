@@ -3,10 +3,13 @@ package com.flowiee.app.base;
 import com.flowiee.app.security.ValidateModuleCategory;
 import com.flowiee.app.security.ValidateModuleStorage;
 import com.flowiee.app.security.ValidateModuleSystem;
+import com.flowiee.app.service.impl.TicketImportServiceImpl;
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.utils.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,6 +18,8 @@ import java.util.Objects;
 
 @Component
 public class BaseController {
+	protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+
 	@Autowired protected AccountService accountService;
 	@Autowired protected ValidateModuleProduct validateModuleProduct;
 	@Autowired protected ValidateModuleSystem validateModuleSystem;

@@ -11,6 +11,10 @@ import com.flowiee.app.service.MaterialService;
 
 import com.flowiee.app.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,8 +28,14 @@ public class MaterialServiceImpl implements MaterialService {
     private MaterialHistoryService materialHistoryService;
 
     @Override
-    public List<Material> findAll() {
-        return materialRepository.findAll();
+    public Page<Material> findAll(Integer pageSize, Integer pageNum) {
+        Pageable pageable;
+        if (pageSize == null || pageNum == null) {
+            pageable = Pageable.unpaged();
+        } else {
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
+        }
+        return materialRepository.findAll(pageable);
     }
 
     @Override

@@ -26,14 +26,14 @@
             <!-- Section title -->
             <div class="col-12" style="padding-left: 15px; padding-right: 8px; padding-bottom: 0px; margin-bottom: 0px">
                 <section class="card" style="height: 70px">
-                    <div class="form-group row p-3">
-                        <label class="col-1 font-weight-bold" for="titleField"
-                               style="display: flex; align-items: center">Tên phiếu</label>
-                        <input class="col-6 form-control" type="text" id="titleField"/>
-                        <form class="col-5 row justify-content-end" method="POST">
-                            <button type="submit" class="btn btn-sm btn-primary mr-2" onclick="copyData()"><i class="fa-solid fa-check mr-1"></i> Lưu nháp</button>
-                            <button type="button" class="btn btn-sm btn-info" style="margin-right: -15px"><i class="fa-solid fa-paper-plane mr-1"></i> Lưu</button>
-                        </form>
+                    <div class="form-group row justify-content-between p-3">
+                        <div class="col row">
+                            <label class="col-2 font-weight-bold" for="titleField" style="display: flex; align-items: center">Tên phiếu</label>
+                            <input class="col-10 form-control" type="text" id="titleField"/>
+                        </div>
+                        <div class="col row justify-content-end">
+                            <button type="button" class="col-2 justify-content-end btn btn-info" id="btnUpdateTicket"><i class="fa-solid fa-check mr-2"></i>Cập nhật</button>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -43,16 +43,16 @@
                 <div class="col-9" style="padding-right: 0">
                     <section class="col-12">
                         <div class="card p-3" style="max-height: 350px; overflow: auto">
-                            <form class="row" th:action="@{/storage/ticket-import/draft/add-product}" method="POST">
+                            <div class="row">
                                 <div class="col-sm-10 form-group">
                                     <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" id="productVariantField" required></select>
                                 </div>
                                 <div class="col-sm-2 form-group">
-                                    <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px; font-weight: bold">Thêm</button>
+                                    <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px; font-weight: bold" id="btnAddProduct">Thêm</button>
                                 </div>
-                            </form>
+                            </div>
                             <div class="row">
-                                <table class="table text-nowrap text-center align-items-center">
+                                <table class="table text-nowrap align-items-center">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -73,16 +73,16 @@
                     <!-- Section nguyên vật liệu -->
                     <section class="col-12">
                         <div class="card p-3" style="min-height: 366px; max-height: 366px; overflow: auto">
-                            <form class="row" th:action="@{/storage/ticket-import/draft/add-material/{importId}}" method="POST">
+                            <div class="row">
                                 <div class="col-sm-10 form-group">
                                     <select class="form-control select2" multiple="multiple" data-placeholder="Chọn nguyên vật liệu" style="width: 100%;" id="materialField" required></select>
                                 </div>
                                 <div class="col-sm-2 form-group">
-                                    <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px; font-weight: bold">Thêm</button>
+                                    <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px; font-weight: bold" id="btnAddMaterial">Thêm</button>
                                 </div>
-                            </form>
+                            </div>
                             <div class="row">
-                                <table class="table text-nowrap text-center align-items-center">
+                                <table class="table text-nowrap align-items-center">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -106,7 +106,7 @@
                     <section class="col-12 card p-3" style="height: 716px">
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Nhà cung cấp</span>
-                            <select class="custom-select col-7" data-placeholder="Chọn supplier" id="supplierField"></select>
+                            <select class="custom-select col-7" id="supplierField"></select>
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Số tiền</span>
@@ -118,11 +118,11 @@
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Hình thức TT</span>
-                            <select class="custom-select col-7" data-placeholder="Chọn kênh bán hàng" id="paymentMethodField"></select>
+                            <select class="custom-select col-7" id="paymentMethodField"></select>
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Trạng thái TT</span>
-                            <select class="custom-select col-7" data-placeholder="Chọn kênh bán hàng" id="paymentStatusField"></select>
+                            <select class="custom-select col-7" id="paymentStatusField"></select>
                         </div>
                         <hr class="mt-0">
                         <div class="form-group row" style="padding-right: 8px">
@@ -136,7 +136,7 @@
                         <hr class="mt-0">
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Người nhận hàng</span>
-                            <select class="custom-select col-7" data-placeholder="Chọn người nhận" id="receiverField"></select>
+                            <input class="col-7 form-control" id="receiverField" disabled></input>
                         </div>
                         <div class="form-group">
                             <label for="noteField">Ghi chú</label>
@@ -150,6 +150,8 @@
     </div>
 
     <div th:replace="footer :: footer"></div>
+
+    <div th:replace="modal_fragments :: confirm_modal"></div>
 
     <aside class="control-sidebar control-sidebar-dark"></aside>
 
@@ -165,9 +167,14 @@
         let mvProductVariantSelected = {};
         let mvMaterialSelected = {};
         let mvTitle = $("#titleField");
+        let mvNote = $("#noteField");
+        let mvReceiver = $("#receiverField");
 
         $(document).ready(function () {
             init();
+            addProduct();
+            addMaterial();
+            updateInfo();
         });
 
         function init() {
@@ -185,13 +192,16 @@
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     mvTicketImportDetail = response.data;
-                    mvProductVariantSelected = mvTicketImportDetail.listProductVariant;
-                    mvMaterialSelected = mvTicketImportDetail.listMaterial;
+                    mvProductVariantSelected = mvTicketImportDetail.listProductVariantTemp;
+                    mvMaterialSelected = mvTicketImportDetail.listMaterialTemp;
 
                     setProductSelectedTableInfo(mvProductVariantSelected);
                     setMaterialSelectedTableInfo(mvMaterialSelected);
 
-                    mvTitle.text(mvTicketImportDetail.title);
+                    mvTitle.val(mvTicketImportDetail.title);
+                    mvReceiver.val(mvTicketImportDetail.importer);
+                    mvNote.val(mvTicketImportDetail.note);
+                    loadAccounts();
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
@@ -266,30 +276,16 @@
             });
         }
 
-        function loadAccounts() {
-            let apiURL = mvHostURLCallApi + "/system/account/all";
-            $.get(apiURL, function (response) {
-                if (response.status === "OK") {
-                    $('#receiverField').append(`<option>Chọn người nhận hàng</option>`);
-                    $.each(response.data, function (index, d) {
-                        $('#receiverField').append(`<option value="${d.id}">${d.hoTen}</option>`);
-                    });
-                }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");
-            });
-        }
-
         function setProductSelectedTableInfo(productVariants) {
             $.each(productVariants, function (index, d) {
                 $("#productContentTable").append(`
                     <tr>
                         <td>${index + 1}</td>
                         <td className="text-left text-wrap" style="max-width: 200px">
-                            <a href="/san-pham/variant/${d.id}">${d.tenBienThe}</a>
+                            <a href="/san-pham/variant/${d.id}">${d.name}</a>
                         </td>
                         <td></td>
-                        <td>${d.soLuongKho}</td>
+                        <td>${d.quantity}</td>
                         <td></td>
                         <td>
                             <button type="button" className="btn btn-sm btn-primary" data-toggle="modal" data-target="'#modalUpdateItems_' + ${d.id}">Cập nhật</button>
@@ -306,7 +302,7 @@
                     <tr>
                         <td>${index + 1}</td>
                         <td className="text-left">
-                            <input type="hidden" id="bienTheSanPhamId" th:value="${item.Id}"/>
+                            <input type="hidden" id="bienTheSanPhamId" th:value="${d.id}"/>
                             <a href="/san-pham/variant/${d.id}">${d.name}</a>
                         </td>
                         <td></td>
@@ -320,55 +316,89 @@
                 `);
             });
         }
+        
+        function addProduct() {
+            $("#btnAddProduct").on("click", function () {
+                let productVariantIds = $("#productVariantField").val();
+                if ($.isEmptyObject(productVariantIds)) {
+                    alert("Vui lòng chọn sản phẩm!");
+                } else {
+                    let apiURL = mvHostURLCallApi + "/storage/ticket-import/" + mvTicketImportDetail.id + "/add-product";
+                    $.ajax({
+                        url: apiURL,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(productVariantIds),
+                        success: function (response, textStatus, jqXHR) {
+                            if (response.status === "OK") {
+                                let productAdded = response.data;
+                                setProductSelectedTableInfo(productAdded);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            showErrorModal("Could not connect to the server");
+                        }
+                    });
+                }
+            })
+        }
 
+        function addMaterial() {
+            $("#btnAddMaterial").on("click", function () {
+                let materialIds = $("#materialField").val();
+                if ($.isEmptyObject(materialIds)) {
+                    alert("Vui lòng chọn nguyên vật liệu!");
+                } else {
+                    let apiURL = mvHostURLCallApi + "/storage/ticket-import/" + mvTicketImportDetail.id + "/add-material";
+                    $.ajax({
+                        url: apiURL,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(materialIds),
+                        success: function (response, textStatus, jqXHR) {
+                            if (response.status === "OK") {
+                                let materialAdded = response.data;
+                                setMaterialSelectedTableInfo(materialAdded);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            showErrorModal("Could not connect to the server");
+                        }
+                    });
+                }
+            })
+        }
 
-        // function copyData() {
-        //     var title = document.getElementById('title').value;
-        //     document.getElementById('titleSubmit').value = title;
-        //
-        //     var supplierId = document.getElementById('supplierId').value;
-        //     document.getElementById('supplierIdSubmit').value = supplierId;
-        //
-        //     var discount = document.getElementById('discount').value;
-        //     document.getElementById('discountSubmit').value = discount;
-        //
-        //     var paymentMethodId = document.getElementById('paymentMethodId').value;
-        //     document.getElementById('paymentMethodIdSubmit').value = paymentMethodId;
-        //
-        //     var paidAmount = document.getElementById('paidAmount').value;
-        //     document.getElementById('paidAmountSubmit').value = paidAmount;
-        //
-        //     var paidStatus = document.getElementById('paidStatus').value;
-        //     document.getElementById('paidStatusSubmit').value = paidStatus;
-        //
-        //     var orderTime = document.getElementById('orderTime').value;
-        //     document.getElementById('orderTimeSubmit').value = orderTime;
-        //
-        //     var receivedTime = document.getElementById('receivedTime').value;
-        //     document.getElementById('receivedTimeSubmit').value = receivedTime;
-        //
-        //     var receivedBy = document.getElementById('receivedBy').value;
-        //     document.getElementById('receivedBySubmit').value = receivedBy;
-        //
-        //     var note = document.getElementById('note').value;
-        //     document.getElementById('noteSubmit').value = note;
-        //
-        //     <!--Lấy danh sách items-->
-        //     var tableBody = document.getElementById("itemsTable");
-        //     var rows = tableBody.getElementsByTagName("tr");
-        //     var listBienTheSanPhamId = [];
-        //     for (var i = 0; i < rows.length; i++) {
-        //         var cells = rows[i].getElementsByTagName("td");
-        //         for (var j = 0; j < cells.length; j++) {
-        //             var input = cells[j].querySelector("input#bienTheSanPhamId");
-        //             if (input) {
-        //                 listBienTheSanPhamId.push(input.value);
-        //             }
-        //         }
-        //     }
-        //     var listBienTheSanPhamIdx = document.getElementById('listBienTheSanPhamId');
-        //     listBienTheSanPhamIdx.value = listBienTheSanPhamId;
-        // }
+        function updateInfo() {
+            $("#btnUpdateTicket").on("click", function () {
+                $(this).attr("actionType", "update");
+                showConfirmModal($(this), "Thông báo hệ thống!", "Bạn muốn cập nhật thông tin phiếu nhập hàng hóa?")
+            })
+
+            $("#yesButton").on("click", function () {
+                let apiURL = mvHostURLCallApi + "/storage/ticket-import/update/" + mvTicketImportDetail.id;
+                let body = {
+                    title : mvTitle.val(),
+
+                };
+                $.ajax({
+                    url: apiURL,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(body),
+                    success: function (response, textStatus, jqXHR) {
+                        if (response.status === "OK") {
+                            let ticketImportUpdated = response.data;
+                            alert("Tạo phiếu xuất kho thành công!");
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert(status + ': ' + JSON.stringify(xhr.responseJSON));
+                    }
+                });
+            })
+        }
     </script>
 
     <script>

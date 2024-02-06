@@ -17,6 +17,10 @@ import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +42,20 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private OrderService orderService;
 
-//    @Override
-//    public List<Customer> findAllCustomer() {
-//        return customerRepository.findAll();
-//    }
-
     @Override
     public List<CustomerDTO> findAllCustomer() {
         return this.findAllCustomer(null, null, null, null, null, null);
+    }
+
+    @Override
+    public Page<Customer> findAllCustomer(Integer pageSize, Integer pageNum) {
+        Pageable pageable;
+        if (pageSize == null || pageNum == null) {
+            pageable = Pageable.unpaged();
+        } else {
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by("tenKhachHang").descending());
+        }
+        return customerRepository.findAll(pageable);
     }
 
     @Override
@@ -281,5 +291,21 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerContact customerContact = this.findContactById(contactId);
         customerContact.setIsDefault("N");
         return this.updateContact(customerContact, customerContact.getId());
+    }
+
+    @Override
+    public List<CustomerDTO> convertToDTOAndSetContactDefault(Page<Customer> customers) {
+        List<CustomerDTO> dataReturn =  new ArrayList<>();
+        customers.getContent().forEach(customer -> {
+            CustomerDTO dto = CustomerDTO.fromCustomer(customer);
+            CustomerContact phoneDefault = this.findContactPhoneUseDefault(customer.getId());
+            CustomerContact emailDefault = this.findContactEmailUseDefault(customer.getId());
+            CustomerContact addressDefault = this.findContactAddressUseDefault(customer.getId());
+            dto.setPhoneDefault(phoneDefault != null ? phoneDefault.getValue() : "");
+            dto.setEmailDefault(emailDefault != null ? emailDefault.getValue() : "");
+            dto.setAddressDefault(addressDefault != null ? addressDefault.getValue() : "");
+            dataReturn.add(dto);
+        });
+        return dataReturn;
     }
 }

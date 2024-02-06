@@ -2,11 +2,12 @@ package com.flowiee.app.service;
 
 import com.flowiee.app.base.BaseService;
 import com.flowiee.app.entity.Material;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface  MaterialService extends BaseService<Material> {
-    List<Material> findAll();
+    Page<Material> findAll(Integer pageSize, Integer pageNum);
 
     List<Material> findAll(Integer ticketImportId, Integer supplierId, Integer unitId, String code, String name, String location, String status);
 

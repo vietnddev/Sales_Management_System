@@ -1,6 +1,7 @@
 package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -54,28 +55,25 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Column(name = "import_time")
     private Date importTime;
 
-    @Column(name = "received_time")
-    private Date receivedTime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "received_by")
-    private Account receivedBy;
-
     @Column(name = "note")
     private String note;
 
     @Column(name = "status", nullable = false)
     private String status;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<Material> listMaterial;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<ProductVariant> listProductVariant;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<MaterialTemp> listMaterialTemp;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<ProductVariantTemp> listProductVariantTemp;
 
@@ -92,7 +90,6 @@ public class TicketImport extends BaseEntity implements Serializable {
 	public String toString() {
 		return "TicketImportGoods [id=" + super.id + ", title=" + title + ", supplier=" + supplier + ", discount=" + discount
 				+ ", paymentMethod=" + paymentMethod + ", paidAmount=" + paidAmount + ", paidStatus=" + paidStatus
-				+ ", receivedTime=" + receivedTime + ", receivedBy=" + receivedBy
 				+ ", note=" + note + ", status=" + status + "]";
 	}
 }

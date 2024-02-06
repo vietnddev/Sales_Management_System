@@ -1,11 +1,13 @@
 package com.flowiee.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.flowiee.app.entity.MaterialTemp;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,4 +18,9 @@ public interface MaterialTempRepository extends JpaRepository<MaterialTemp, Inte
     
     @Query("from MaterialTemp m where m.ticketImport.id=:importId and m.materialId=:materialId")
     MaterialTemp findMaterialInGoodsImport(@Param("importId") Integer importId, @Param("materialId") Integer materialId);
+
+    @Transactional
+    @Modifying
+    @Query("update MaterialTemp m set m.quantity = (m.quantity + :quantity) where m.id =:materialTempId")
+    void updateQuantityIncrease(@Param("materialTempId") Integer materialTempId, @Param("quantity") Integer quantity);
 }

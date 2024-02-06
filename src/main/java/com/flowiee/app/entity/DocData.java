@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DocData extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "noi_dung", length = 2000)

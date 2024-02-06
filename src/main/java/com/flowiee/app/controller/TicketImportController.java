@@ -1,8 +1,12 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.dto.TicketImportDTO;
+import com.flowiee.app.entity.MaterialTemp;
+import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.entity.TicketImport;
 import com.flowiee.app.exception.AppException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.TicketImportService;
 import com.flowiee.app.utils.MessageUtils;
@@ -22,13 +26,13 @@ public class TicketImportController extends BaseController {
 
     @Operation(summary = "Find all phiếu nhập")
     @GetMapping("/all")
-    public ApiResponse<List<TicketImport>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
+    public ApiResponse<List<TicketImportDTO>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
         try {
             if (!super.validateModuleStorage.importGoods(true)) {
                 return null;
             }
-            Page<TicketImport> logPage = ticketImportService.findAll(pageSize, pageNum - 1);
-            return ApiResponse.ok(logPage.getContent(), pageNum, pageSize, logPage.getTotalPages(), logPage.getTotalElements());
+            Page<TicketImport> ticketImports = ticketImportService.findAll(pageSize, pageNum - 1);
+            return ApiResponse.ok(TicketImportDTO.fromTicketImports(ticketImports.getContent()), pageNum, pageSize, ticketImports.getTotalPages(), ticketImports.getTotalElements());
         } catch (Exception ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "ticket import"));
         }
@@ -36,12 +40,12 @@ public class TicketImportController extends BaseController {
 
     @Operation(summary = "Find detail phiếu nhập")
     @GetMapping("/{id}")
-    public ApiResponse<TicketImport> findDetail(@PathVariable("id") Integer ticketImportId) {
+    public ApiResponse<TicketImportDTO> findDetail(@PathVariable("id") Integer ticketImportId) {
         try {
             if (!super.validateModuleStorage.importGoods(true)) {
                 return null;
             }
-            return ApiResponse.ok(ticketImportService.findById(ticketImportId));
+            return ApiResponse.ok(TicketImportDTO.fromTicketImport(ticketImportService.findById(ticketImportId)));
         } catch (Exception ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "ticket import"));
         }
@@ -86,6 +90,45 @@ public class TicketImportController extends BaseController {
         } catch (RuntimeException ex) {
             ex.printStackTrace();
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "ticket import"));
+        }
+    }
+
+    @Operation(summary = "Add sản phẩm vào phiếu nhập hàng")
+    @PostMapping("/{id}/add-product")
+    public ApiResponse<List<ProductVariantTemp>> addProductVariantToTicket(@PathVariable("id") Integer ticketImportId,
+                                                                           @RequestBody List<Integer> productVariantIds) {
+        if (!super.validateModuleStorage.importGoods(true)) {
+            throw new BadRequestException();
+        }
+        if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId) == null) {
+            throw new BadRequestException("Goods import to add product not found!");
+        }
+        try {
+            System.out.println(productVariantIds);
+            return ApiResponse.ok(ticketImportService.addProductToTicket(ticketImportId, productVariantIds));
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket_import"), ex);
+            throw new AppException();
+        }
+    }
+
+    @Operation(summary = "Add nguyên vật liệu vào phiếu nhập hàng")
+    @PostMapping("/{id}/add-material")
+    public ApiResponse<List<MaterialTemp>> addMaterialToTicket(@PathVariable("id") Integer ticketImportId,
+                                                               @RequestBody List<Integer> materialIds) {
+        if (!super.validateModuleStorage.importGoods(true)) {
+            throw new BadRequestException();
+        }
+        if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId) == null) {
+            throw new BadRequestException("Goods import to add product not found!");
+        }
+        try {
+            return ApiResponse.ok(ticketImportService.addMaterialToTicket(ticketImportId, materialIds));
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket_import"), ex);
+            throw new AppException();
         }
     }
 }

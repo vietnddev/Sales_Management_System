@@ -94,7 +94,6 @@
                     let contentTable = $('#contentTable');
                     contentTable.empty();
                     $.each(data, function (index, d) {
-                        console.log(d)
                         contentTable.append(`
                             <tr>
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>

@@ -1,86 +1,32 @@
 package com.flowiee.app.controller.ui;
 
-import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.Material;
-import com.flowiee.app.entity.Supplier;
-import com.flowiee.app.entity.TicketImport;
-import com.flowiee.app.service.SupplierService;
-import com.flowiee.app.service.TicketImportService;
-import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.security.ValidateModuleStorage;
 import com.flowiee.app.service.MaterialService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(EndPointUtil.STORAGE_MATERIAL)
 public class MaterialUIController extends BaseController {
     @Autowired private MaterialService materialService;
-    @Autowired private CategoryService     categoryService;
-    @Autowired private TicketImportService ticketImportService;
-    @Autowired private SupplierService     supplierService;
     @Autowired private ValidateModuleStorage validateModuleStorage;
 
     @GetMapping
-    public ModelAndView getAll(@Nullable @RequestParam("ticketImport") String pTicketImport,
-                               @Nullable @RequestParam("supplier") String pSupplier,
-                               @Nullable @RequestParam("code") String pCode,
-                               @Nullable @RequestParam("name") String pName,
-                               @Nullable @RequestParam("unit") String pUnit,
-                               @Nullable @RequestParam("location") String pLocation,
-                               @Nullable @RequestParam("status") String pStatus) {
+    public ModelAndView viewMaterials() {
         validateModuleStorage.readMaterial(true);
-        List<TicketImport> listTicketImport = ticketImportService.findAll();
-        List<Supplier> listSupplier = supplierService.findAll();
-        List<Category> listUnit = categoryService.findSubCategory(AppConstants.CATEGORY.UNIT.getName(), null);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_MATERIAL);
-        modelAndView.addObject("material", new Material());
-        modelAndView.addObject("listMaterial", materialService.findAll());
-        modelAndView.addObject("listDonViTinh", listUnit);
         modelAndView.addObject("templateImportName", "Name");
-        if (pTicketImport != null) {
-            List<TicketImport> ticketImportFilter = new ArrayList<>();
-            ticketImportFilter.add(new TicketImport(CommonUtils.getIdFromRequestParam(pTicketImport), CommonUtils.getNameFromRequestParam(pTicketImport)));
-            ticketImportFilter.addAll(listTicketImport);
-            modelAndView.addObject("filter_ticketImport", ticketImportFilter);
-        } else {
-            modelAndView.addObject("filter_ticketImport", listTicketImport);
-        }
-        if (pSupplier != null) {
-            List<Supplier> supplierFilter = new ArrayList<>();
-            supplierFilter.add(new Supplier(CommonUtils.getIdFromRequestParam(pSupplier), CommonUtils.getNameFromRequestParam(pSupplier)));
-            supplierFilter.addAll(listSupplier);
-            modelAndView.addObject("filter_supplier", supplierFilter);
-        } else {
-            modelAndView.addObject("filter_supplier", listSupplier);
-        }
-        if (pUnit != null) {
-            List<Category> unitFilter = new ArrayList<>();
-            unitFilter.add(new Category(CommonUtils.getIdFromRequestParam(pUnit), CommonUtils.getNameFromRequestParam(pUnit)));
-            unitFilter.addAll(listUnit);
-            modelAndView.addObject("filter_unit", unitFilter);
-        } else {
-            modelAndView.addObject("filter_unit", listUnit);
-        }
-        modelAndView.addObject("filter_code", pCode);
-        modelAndView.addObject("filter_name", pName);
-        modelAndView.addObject("filter_location", pLocation);
-        modelAndView.addObject("filter_status", pStatus);
         modelAndView.addObject("url_template", EndPointUtil.STORAGE_MATERIAL_TEMPLATE);
         modelAndView.addObject("url_import", EndPointUtil.STORAGE_MATERIAL_IMPORT);
         modelAndView.addObject("url_export", EndPointUtil.STORAGE_MATERIAL_EXPORT);

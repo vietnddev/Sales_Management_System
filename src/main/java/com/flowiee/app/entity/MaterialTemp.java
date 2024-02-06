@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
@@ -19,21 +20,15 @@ import java.io.Serializable;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MaterialTemp extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goods_import_id", nullable = false)
+    private TicketImport ticketImport;
 
 	@Column(name = "material_id", nullable = false)
 	private Integer materialId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_import_id")
-    private TicketImport ticketImport;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
-
-    @Column(name = "code", length = 20)
-    private String code;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -41,47 +36,6 @@ public class MaterialTemp extends BaseEntity implements Serializable {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "unit", nullable = false)
-    private Category unit;
-
-    @Column(name = "location")
-    private String location;
-
     @Column(name = "note")
     private String note;
-
-    @Column(name = "status", nullable = false)
-    private boolean status;
-
-//    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
-//    private List<MaterialHistory> listMaterialHistory;
-//
-//    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
-//    private List<Price> listPrice;
-
-    public static MaterialTemp convertFromMaterial(Material material) {
-        MaterialTemp materialTemp = new MaterialTemp();
-        //materialTemp.setId(material.getId());
-        materialTemp.setMaterialId(material.getId());
-        materialTemp.setTicketImport(material.getTicketImport());
-        materialTemp.setSupplier(material.getSupplier());
-        materialTemp.setCode(material.getCode());
-        materialTemp.setName(material.getName());
-        materialTemp.setQuantity(material.getQuantity());
-        materialTemp.setUnit(material.getUnit());
-        materialTemp.setLocation(material.getLocation());
-        materialTemp.setNote(material.getNote());
-        materialTemp.setStatus(material.isStatus());
-//        materialTemp.setListMaterialHistory(material.getListMaterialHistory());
-//        materialTemp.setListPrice(material.getListPrice());
-        return materialTemp;
-    }
-
-	@Override
-	public String toString() {
-		return "MaterialTemp [id=" + super.id + ", materialId=" + materialId + ", ticketImportGoods=" + ticketImport + ", supplier="
-				+ supplier + ", code=" + code + ", name=" + name + ", quantity=" + quantity + ", unit=" + unit
-				+ ", location=" + location + ", note=" + note + ", status=" + status + "]";
-	}        
 }

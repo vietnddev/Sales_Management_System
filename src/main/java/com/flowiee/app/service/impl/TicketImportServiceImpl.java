@@ -1,17 +1,18 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.entity.Category;
-import com.flowiee.app.entity.TicketImport;
+import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.model.request.TicketImportGoodsRequest;
+import com.flowiee.app.repository.MaterialTempRepository;
+import com.flowiee.app.repository.ProductVariantTempRepository;
+import com.flowiee.app.service.MaterialService;
+import com.flowiee.app.service.ProductService;
 import com.flowiee.app.utils.CommonUtils;
-import com.flowiee.app.entity.Account;
-import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.repository.TicketImportRepository;
 import com.flowiee.app.service.TicketImportService;
 
 import com.flowiee.app.utils.MessageUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,11 @@ import java.util.List;
 public class TicketImportServiceImpl implements TicketImportService {
     private static final Logger logger = LoggerFactory.getLogger(TicketImportServiceImpl.class);
 
-    @Autowired
-    private TicketImportRepository ticketImportRepo;
+    @Autowired private TicketImportRepository ticketImportRepo;
+    @Autowired private ProductService productService;
+    @Autowired private ProductVariantTempRepository productVariantTempRepo;
+    @Autowired private MaterialService materialService;
+    @Autowired private MaterialTempRepository materialTempRepo;
 
     private static String STATUS_DRAFT = "DRAFT";
 //    private static String STATUS_APPROVING = "APPROVING";
@@ -84,41 +88,6 @@ public class TicketImportServiceImpl implements TicketImportService {
             logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "ticket import"), ex);
             throw new AppException();
         }
-    }
-;
-
-    @Override
-    public TicketImport saveDraft(TicketImportGoodsRequest request) {
-        if (request == null || request.getId() == null || request.getId() <= 0) {
-            throw new BadRequestException();
-        }
-        TicketImport ticketImport = this.findById(request.getId());
-        if (ticketImport == null) {
-            throw new BadRequestException();
-        }
-        ticketImport.setId(request.getId());
-        ticketImport.setTitle(request.getTitle());
-        if (request.getSupplierId() != null && request.getSupplierId() > 0) {
-            ticketImport.setSupplier(new Supplier(request.getSupplierId(), null));
-        }
-        if (request.getPaymentMethodId() != null && request.getPaymentMethodId() > 0) {
-            ticketImport.setPaymentMethod(new Category(request.getPaymentMethodId(), null));
-        }
-        if (request.getReceivedBy() != null && request.getReceivedBy() > 0) {
-            ticketImport.setReceivedBy(new Account(request.getReceivedBy()));
-        }
-        ticketImport.setDiscount(request.getDiscount());
-        ticketImport.setPaidAmount(request.getPaidAmount());
-        ticketImport.setPaidStatus(request.getPaidStatus());
-//        if (request.getOrderTime() != null) {
-//            ticketImport.setOrderTime(request.getOrderTime());
-//        }
-        if (request.getReceivedTime() != null) {
-            ticketImport.setReceivedTime(request.getReceivedTime());
-        }
-        ticketImport.setNote(request.getNote());
-        ticketImport.setStatus(STATUS_DRAFT);
-        return ticketImportRepo.save(ticketImport);
     }
 
 //    @Override
@@ -180,51 +149,6 @@ public class TicketImportServiceImpl implements TicketImportService {
 //    }
 
     @Override
-    public List<TicketImport> findByMaterialId(Integer materialId) {
-        List<TicketImport> listData = new ArrayList<>();
-        if (materialId != null && materialId >= 0) {
-            //listData = goodsImportRepository.findByMaterialId(materialId);
-        }
-        return listData;
-    }
-
-    @Override
-    public List<TicketImport> findBySupplierId(Integer supplierId) {
-        List<TicketImport> listData = new ArrayList<>();
-        if (supplierId != null && supplierId >= 0) {
-            listData = ticketImportRepo.findBySupplierId(supplierId);
-        }
-        return listData;
-    }
-
-    @Override
-    public List<TicketImport> findByPaymentMethod(String paymentMethod) {
-        List<TicketImport> listData = new ArrayList<>();
-        if (paymentMethod != null) {
-            listData = ticketImportRepo.findByPaymentMethod(paymentMethod);
-        }
-        return listData;
-    }
-
-    @Override
-    public List<TicketImport> findByPaidStatus(String paidStatus) {
-        List<TicketImport> listData = new ArrayList<>();
-        if (paidStatus != null && CommonUtils.getPaymentStatusCategory().containsKey(paidStatus)) {
-            listData = ticketImportRepo.findByPaidStatus(paidStatus);
-        }
-        return listData;
-    }
-
-    @Override
-    public List<TicketImport> findByAccountId(Integer accountId) {
-        List<TicketImport> listData = new ArrayList<>();
-        if (accountId != null && accountId > 0) {
-            listData = ticketImportRepo.findByReceiveBy(accountId);
-        }
-        return listData;
-    }
-
-    @Override
     public TicketImport findDraftImportPresent(Integer createdBy) {
         return ticketImportRepo.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
     }
@@ -237,7 +161,6 @@ public class TicketImportServiceImpl implements TicketImportService {
         ticketImport.setCreatedBy(CommonUtils.getCurrentAccountId());
         ticketImport.setImporter(CommonUtils.getCurrentAccountUsername());
         ticketImport.setImportTime(new Date());
-        ticketImport.setReceivedTime(new Date());
         ticketImport = ticketImportRepo.save(ticketImport);
         return ticketImport;
     }
@@ -253,5 +176,55 @@ public class TicketImportServiceImpl implements TicketImportService {
         }
         ticketImport.setStatus(status);
         return ticketImportRepo.save(ticketImport);
+    }
+
+    @Override
+    public List<ProductVariantTemp> addProductToTicket(Integer ticketImportId, List<Integer> productVariantIds) {
+        List<ProductVariantTemp> listAdded = new ArrayList<>();
+        for (Integer productVariantId : productVariantIds) {
+            ProductVariant productVariant =  productService.findProductVariantById(productVariantId);
+            if (ObjectUtils.isEmpty(productVariant)) {
+                continue;
+            }
+            ProductVariantTemp temp = productVariantTempRepo.findProductVariantInGoodsImport(ticketImportId, productVariant.getId());
+            if (temp != null) {
+                productVariantTempRepo.updateQuantityIncrease(temp.getId(), 1);
+            } else {
+                ProductVariantTemp productVariantTemp = new ProductVariantTemp();
+                productVariantTemp.setTicketImport(new TicketImport(ticketImportId));
+                productVariantTemp.setProductVariantId(productVariantId);
+                productVariantTemp.setName(productVariant.getTenBienThe());
+                productVariantTemp.setQuantity(1);
+                productVariantTemp.setNote(null);
+                ProductVariantTemp productVariantTempAdded = productVariantTempRepo.save(productVariantTemp);
+                listAdded.add(productVariantTempAdded);
+            }
+        }
+        return listAdded;
+    }
+
+    @Override
+    public List<MaterialTemp> addMaterialToTicket(Integer ticketImportId, List<Integer> materialIds) {
+        List<MaterialTemp> listAdded = new ArrayList<>();
+        for (Integer materialId : materialIds) {
+            Material material = materialService.findById(materialId);
+            if (ObjectUtils.isEmpty(material)) {
+                continue;
+            }
+            MaterialTemp temp = materialTempRepo.findMaterialInGoodsImport(ticketImportId, material.getId());
+            if (temp != null) {
+                materialTempRepo.updateQuantityIncrease(temp.getId(), 1);
+            } else {
+                MaterialTemp materialTemp = new MaterialTemp();
+                materialTemp.setTicketImport(new TicketImport(ticketImportId));
+                materialTemp.setMaterialId(materialId);
+                materialTemp.setName(material.getName());
+                materialTemp.setQuantity(1);
+                materialTemp.setNote(null);
+                MaterialTemp materialTempAdded = materialTempRepo.save(materialTemp);
+                listAdded.add(materialTempAdded);
+            }
+        }
+        return listAdded;
     }
 }

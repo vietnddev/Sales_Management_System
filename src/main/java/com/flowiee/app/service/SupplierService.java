@@ -9,5 +9,5 @@ import java.util.List;
 public interface SupplierService extends BaseService<Supplier> {
     List<Supplier> findAll();
 
-    Page<Supplier> findAll(int pageSize, int pageNum);
+    Page<Supplier> findAll(Integer pageSize, Integer pageNum);
 }

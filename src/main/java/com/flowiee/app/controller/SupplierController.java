@@ -25,13 +25,19 @@ public class SupplierController extends BaseController {
 
     @Operation(summary = "Find all nhà cung cấp")
     @GetMapping("/all")
-    public ApiResponse<List<Supplier>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
+    public ApiResponse<List<Supplier>> findAll(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                               @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
             if (!super.validateModuleStorage.readMaterial(true)) {
                 return null;
             }
-            Page<Supplier> suppliers = supplierService.findAll(pageSize, pageNum - 1);
-            return ApiResponse.ok(suppliers.getContent(), pageNum, pageSize, suppliers.getTotalPages(), suppliers.getTotalElements());
+            if (pageSize != null && pageNum != null) {
+                Page<Supplier> suppliers = supplierService.findAll(pageSize, pageNum - 1);
+                return ApiResponse.ok(suppliers.getContent(), pageNum, pageSize, suppliers.getTotalPages(), suppliers.getTotalElements());
+            } else {
+                Page<Supplier> suppliers = supplierService.findAll(null, null);
+                return ApiResponse.ok(suppliers.getContent(), 1, 0, suppliers.getTotalPages(), suppliers.getTotalElements());
+            }
         } catch (Exception ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "supplier"));
         }

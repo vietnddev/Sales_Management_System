@@ -26,8 +26,13 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Page<Supplier> findAll(int pageSize, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
+    public Page<Supplier> findAll(Integer pageSize, Integer pageNum) {
+        Pageable pageable;
+        if (pageSize == null || pageNum == null) {
+            pageable = Pageable.unpaged();
+        } else {
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
+        }
         return supplierRepo.findAll(pageable);
     }
 

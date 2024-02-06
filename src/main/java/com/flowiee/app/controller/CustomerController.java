@@ -13,6 +13,7 @@ import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,13 +24,23 @@ import java.util.List;
 public class CustomerController extends BaseController {
     @Autowired private CustomerService customerService;
 
-    @Operation(summary = "Find all")
+    @Operation(summary = "Find all customers")
     @GetMapping("/all")
-    public ApiResponse<List<CustomerDTO>> findCustomers() {
+    public ApiResponse<List<CustomerDTO>> findCustomers(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                        @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
-            List<CustomerDTO> result = customerService.findAllCustomer();
-            return ApiResponse.ok(result);
+            if (!super.validateModuleProduct.readCustomer(true)) {
+                return null;
+            }
+            if (pageSize != null && pageNum != null) {
+                Page<Customer> customers = customerService.findAllCustomer(pageSize, pageNum - 1);
+                return ApiResponse.ok(customerService.convertToDTOAndSetContactDefault(customers), pageNum, pageSize, customers.getTotalPages(), customers.getTotalElements());
+            } else {
+                Page<Customer> customers = customerService.findAllCustomer(null, null);
+                return ApiResponse.ok(customerService.convertToDTOAndSetContactDefault(customers), 1, 0, customers.getTotalPages(), customers.getTotalElements());
+            }
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"));
         }
     }

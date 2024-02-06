@@ -8,6 +8,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -103,6 +104,14 @@ public class ProductVariantDTO implements Serializable {
             dto.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
         }
         return dto;
+    }
+
+    public static List<ProductVariantDTO> fromProductVariants(List<ProductVariant> productVariants) {
+        List<ProductVariantDTO> list = new ArrayList<>();
+        for (ProductVariant p : productVariants) {
+            list.add(ProductVariantDTO.fromProductVariant(p));
+        }
+        return list;
     }
 
 	@Override

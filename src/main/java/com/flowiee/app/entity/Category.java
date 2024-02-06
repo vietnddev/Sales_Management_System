@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Category extends BaseEntity implements java.io.Serializable {
+public class Category extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "type", length = 20, nullable = false)
@@ -82,10 +85,6 @@ public class Category extends BaseEntity implements java.io.Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
 	private List<Material> listUnit;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
-	private List<MaterialTemp> listUnitTemp;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)

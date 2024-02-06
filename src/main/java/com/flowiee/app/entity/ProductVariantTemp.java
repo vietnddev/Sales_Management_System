@@ -6,6 +6,7 @@ import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Builder
@@ -17,103 +18,22 @@ import java.io.Serializable;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductVariantTemp extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
-	
-	@Column(name = "product_variant_id", nullable = false)
-	private Integer productVariantId;
-	
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "san_pham_id", nullable = false)
-    private Product product;
-    
-    @Column(name = "ma_san_pham", length = 50, nullable = false)
-    private String maSanPham;
-    
-    @Column(name = "ten_bien_the")
-    private String tenBienThe;
-
-    @Column(name = "so_luong_kho", nullable = false)
-    private int soLuongKho;
-
-    @Column(name = "da_ban", nullable = false)
-    private int soLuongDaBan;
-
-    @Column(name = "status", nullable = false)
-    private String trangThai;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mau_sac_id", nullable = false)
-    private Category loaiMauSac;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kich_co_id", nullable = false)
-    private Category loaiKichCo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_lieu_vai_id", nullable = false)
-    private Category fabricType;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "garment_factory_id")
-    private GarmentFactory garmentFactory;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_import_id")
+    @JoinColumn(name = "goods_import_id", nullable = false)
     private TicketImport ticketImport;
 
-    @Transient
-    private Price price;
+	@Column(name = "product_variant_id", nullable = false)
+	private Integer productVariantId;
+    
+    @Column(name = "name", nullable = false)
+    private String name;
 
-//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-//    private List<ProductAttribute> listThuocTinh;
-//
-//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-//    private List<Price> listGiaBan;
-//
-//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-//    private List<OrderDetail> listOrderDetail;
-//
-//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-//    private List<FileStorage> listFileStorage;
-//
-//    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
-//    private List<Items> listItems;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
-    public static ProductVariantTemp convertFromProductVariant(ProductVariant productVariant) {
-        ProductVariantTemp productVariantTemp = new ProductVariantTemp();
-        //productVariantTemp.setId(productVariant.getId());
-        productVariantTemp.setProduct(productVariant.getProduct());
-        productVariantTemp.setProductVariantId(productVariant.getId());
-        productVariantTemp.setMaSanPham(productVariant.getMaSanPham());
-        productVariantTemp.setTenBienThe(productVariant.getTenBienThe());
-        productVariantTemp.setSoLuongKho(productVariant.getSoLuongKho());
-        productVariantTemp.setSoLuongDaBan(productVariant.getSoLuongDaBan());
-        productVariantTemp.setTrangThai(productVariant.getTrangThai());
-        productVariantTemp.setLoaiMauSac(productVariant.getColor());
-        productVariantTemp.setLoaiKichCo(productVariant.getSize());
-        productVariantTemp.setFabricType(productVariant.getFabricType());
-        productVariantTemp.setGarmentFactory(productVariant.getGarmentFactory());
-        productVariantTemp.setSupplier(productVariant.getSupplier());
-        productVariantTemp.setTicketImport(productVariant.getTicketImport());
-        productVariantTemp.setPrice(productVariant.getPrice());
-//        productVariantTemp.setListThuocTinh(productVariant.getListThuocTinh());
-//        productVariantTemp.setListGiaBan(productVariant.getListGiaBan());
-//        productVariantTemp.setListOrderDetail(productVariant.getListOrderDetail());
-//        productVariantTemp.setListFileStorage(productVariant.getListFileStorage());
-//        productVariantTemp.setListItems(productVariant.getListItems());
-        return productVariantTemp;
-    }
-
-	@Override
-	public String toString() {
-		return "ProductVariantTemp [id=" + super.id + ", producVariantId=" + productVariantId + ", product=" + product + ", maSanPham="
-				+ maSanPham + ", tenBienThe=" + tenBienThe + ", soLuongKho=" + soLuongKho + ", soLuongDaBan="
-				+ soLuongDaBan + ", trangThai=" + trangThai + ", loaiMauSac=" + loaiMauSac + ", loaiKichCo="
-				+ loaiKichCo + ", fabricType=" + fabricType + ", garmentFactory=" + garmentFactory + ", supplier="
-				+ supplier + ", ticketImportGoods=" + ticketImport + ", price=" + price + "]";
-	}  
+    @Column(name = "note")
+    private String note;
 }

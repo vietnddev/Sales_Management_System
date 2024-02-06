@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Customer extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "ten_khach_hang", length = 100, nullable = false)
