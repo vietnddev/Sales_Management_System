@@ -6,6 +6,7 @@ import com.flowiee.app.repository.MaterialHistoryRepository;
 import com.flowiee.app.service.MaterialHistoryService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
             return AppConstants.SERVICE_RESPONSE_FAIL;
         }
         materialHistoryRepo.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override

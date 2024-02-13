@@ -26,7 +26,8 @@ public class DashboardUIController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_DASHBOARD);
 
         DashboardModel dashboard = dashboardService.loadDashboard();
-
+        //Total products
+        modelAndView.addObject("totalProducts", dashboard.getTotalProducts());
         //Số lượng đơn hàng hôm nay
         modelAndView.addObject("soLuongDonHangHomNay", dashboard.getOrdersTodayQty());
         modelAndView.addObject("danhSachDonHangHomNay", dashboard.getListOrdersToday());

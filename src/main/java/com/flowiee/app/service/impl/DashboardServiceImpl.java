@@ -7,6 +7,7 @@ import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.DashboardService;
 
 import com.flowiee.app.service.OrderService;
+import com.flowiee.app.service.ProductService;
 import com.flowiee.app.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ public class DashboardServiceImpl implements DashboardService {
     private OrderService orderService;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private ProductService productService;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -167,6 +170,7 @@ public class DashboardServiceImpl implements DashboardService {
         List<Order> ordersToday = orderService.findOrdersToday();
 
         DashboardModel dashboard = new DashboardModel();
+        dashboard.setTotalProducts(productService.totalProductsInStorage());
         dashboard.setRevenueToday(revenueToday);
         dashboard.setRevenueThisMonth(revenueThisMonth);
         dashboard.setOrdersTodayQty(ordersToday.size());

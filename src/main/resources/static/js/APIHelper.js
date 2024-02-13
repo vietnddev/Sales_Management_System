@@ -12,14 +12,18 @@ async function callApiDelete(apiURL) {
 }
 */
 
-function callApiDelete(apiURL) {
+function callApiDelete(apiURL, redirectTo) {
     $.ajax({
         url: apiURL,
         type: 'DELETE',
         success: function(result) {
             // Xử lý kết quả nếu cần thiết
             alert(result.data)
-            window.location.reload()
+            if (redirectTo != null) {
+                window.location = mvHostURL + redirectTo;
+            } else {
+                window.location.reload();
+            }
         },
         error: function(xhr, status, error) {
             // Xử lý lỗi nếu có

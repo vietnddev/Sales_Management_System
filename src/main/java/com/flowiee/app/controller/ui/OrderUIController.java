@@ -1,7 +1,6 @@
 package com.flowiee.app.controller.ui;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowiee.app.dto.OrderDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.BadRequestException;
@@ -10,17 +9,13 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.*;
-import com.flowiee.app.model.request.OrderRequest;
 import com.flowiee.app.security.ValidateModuleProduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -102,11 +97,6 @@ public class OrderUIController extends BaseController {
         modelAndView.addObject("totalAmountWithoutDiscount", totalAmountWithoutDiscount);
         modelAndView.addObject("amountDiscount", amountDiscount);
         modelAndView.addObject("totalAmountDiscount", totalAmountDiscount);
-        modelAndView.addObject("donHangRequest", new OrderRequest());
-        modelAndView.addObject("donHang", new Order());
-        modelAndView.addObject("khachHang", new Customer());
-        modelAndView.addObject("cart", new OrderCart());
-        modelAndView.addObject("items", new Items());
         return baseView(modelAndView);
     }
 

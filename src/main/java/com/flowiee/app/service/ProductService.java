@@ -53,7 +53,7 @@ public interface ProductService {
 
     String deleteProduct(Integer productId);
 
-    ProductVariant saveProductVariant(ProductVariant productVariant);
+    ProductVariant saveProductVariant(ProductVariantDTO productVariantDTO);
 
     ProductVariant updateProductVariant(ProductVariant productVariant, Integer productVariantId);
 
@@ -65,11 +65,13 @@ public interface ProductService {
 
     String deleteProductAttribute(Integer productAttributeId);
 
-    String updateProductVariantQuantity(Integer soLuong, Integer id);
+    String updateProductVariantQuantity(Integer soLuong, Integer id, String type);
 
     Integer findProductVariantTotalQtySell(Integer productId);
 
     Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId);
+
+    Integer totalProductsInStorage();
 
     BigDecimal findProductVariantPriceSell(int id);
 

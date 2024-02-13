@@ -4,6 +4,7 @@ import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.repository.ProductHistoryRepository;
 import com.flowiee.app.service.ProductHistoryService;
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class ProductHistoryServiceImpl implements ProductHistoryService {
     @Override
     public String delete(Integer productHistoryId) {
         productHistoryRepository.deleteById(productHistoryId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override

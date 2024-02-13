@@ -4,6 +4,7 @@ import com.flowiee.app.entity.CategoryHistory;
 import com.flowiee.app.repository.CategoryHistoryRepository;
 import com.flowiee.app.service.CategoryHistoryService;
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,6 @@ public class CategoryHistoryServiceImpl implements CategoryHistoryService {
     @Override
     public String delete(Integer entityId) {
         categoryHistoryRepo.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 }

@@ -16,4 +16,6 @@ public interface  MaterialService extends BaseService<Material> {
     List<Material> findByImportId(Integer importId);
 
     List<Material> findByUnit(Integer unitId);
+
+    void updateQuantity(Integer quantity, Integer materialId, String type);
 }

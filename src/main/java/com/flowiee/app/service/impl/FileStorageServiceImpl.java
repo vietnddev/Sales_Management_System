@@ -122,6 +122,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.PRODUCT.name());
         fileInfo.setTenFileGoc(imageQRCodeName);
+        fileInfo.setTenFileCustomize(imageQRCodeName);
         fileInfo.setTenFileKhiLuu(currentTime + "_" + imageQRCodeName);
         //fileInfo.setKichThuocFile();
         fileInfo.setExtension(AppConstants.FILE_EXTENSION.PNG.getLabel());
@@ -176,6 +177,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.PRODUCT.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
+        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
@@ -199,6 +201,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.PRODUCT.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
+        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
@@ -224,6 +227,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.STORAGE.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
+        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
@@ -262,6 +266,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.STORAGE.name());
         fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
+        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
         fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setKichThuocFile(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
@@ -293,6 +298,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
         //Update thông tin file mới
         fileToChange.setTenFileGoc(fileAttached.getOriginalFilename());
+        fileToChange.setTenFileCustomize(fileAttached.getOriginalFilename());
         fileToChange.setTenFileKhiLuu(currentTime + "_" + fileAttached.getOriginalFilename());
         fileToChange.setKichThuocFile(fileAttached.getSize());
         fileToChange.setExtension(CommonUtils.getExtension(fileAttached.getOriginalFilename()));

@@ -8,15 +8,14 @@ import com.flowiee.app.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
+import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.ApiResponse;
-import com.flowiee.app.service.FileStorageService;
-import com.flowiee.app.service.PriceService;
-import com.flowiee.app.service.ProductService;
-import com.flowiee.app.service.VoucherService;
+import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +33,9 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý sản phẩm")
 public class ProductController extends BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-
     @Autowired private PriceService priceService;
     @Autowired private ProductService productService;
+    @Autowired private ProductHistoryService productHistoryService;
     @Autowired private VoucherService voucherService;
     @Autowired private FileStorageService fileStorageService;
 
@@ -88,7 +86,7 @@ public class ProductController extends BaseController {
     }
 
     @Operation(summary = "Find all variants of product")
-    @GetMapping("/variant/{productId}")
+    @GetMapping("/{productId}/variants")
     public ApiResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
         if (!super.validateModuleProduct.readProduct(true)) {
             return null;
@@ -149,10 +147,10 @@ public class ProductController extends BaseController {
             return null;
         }
         try {
-            return ApiResponse.ok(productService.saveProductVariant(ProductVariant.fromProductVariantDTO(productVariantDTO)));
+            return ApiResponse.ok(productService.saveProductVariant(productVariantDTO));
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
+            logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "productVariant"), ex);
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "productVariant"));
         }
     }
 
@@ -296,7 +294,7 @@ public class ProductController extends BaseController {
 
     @Operation(summary = "Update product image is use default")
     @PutMapping(value = "/{productId}/active-image/{imageId}")
-    public ApiResponse<FileStorage> activeImageOfProductOriginal(@PathVariable("productId") Integer productId, @PathVariable("imageId") Integer imageId) {
+    public ApiResponse<FileStorage> activeImageOfProduct(@PathVariable("productId") Integer productId, @PathVariable("imageId") Integer imageId) {
         try {
             if (!super.validateModuleProduct.updateImage(true)) {
                 return null;
@@ -305,6 +303,26 @@ public class ProductController extends BaseController {
                 throw new BadRequestException();
             }
             fileStorageService.setImageActiveOfSanPham(productId, imageId);
+            return ApiResponse.ok(null);
+        } catch (RuntimeException ex) {
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
+        }
+    }
+
+    @Operation(summary = "Change image of product")
+    @PutMapping(value = "/{productId}/change-image/{imageId}")
+    public ApiResponse<FileStorage> changeImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("imageId") Integer imageId) {
+        try {
+            if (!super.validateModuleProduct.updateImage(true)) {
+                return null;
+            }
+            if (imageId <= 0 || fileStorageService.findById(imageId) == null) {
+                throw new BadRequestException("Image not found");
+            }
+            if (file.isEmpty()) {
+                throw new BadRequestException("File attach not found!");
+            }
+            fileStorageService.changeImageSanPham(file, imageId);
             return ApiResponse.ok(null);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
@@ -381,8 +399,38 @@ public class ProductController extends BaseController {
         }
     }
 
+    @Operation(summary = "Get histories of product")
+    @GetMapping(value = "/{productId}/history")
+    public ApiResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
+        try {
+            if (!super.validateModuleProduct.readProduct(true)) {
+                return null;
+            }
+            if (ObjectUtils.isEmpty(productService.findProductById(productId))) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(productHistoryService.findByProduct(productId));
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product history"), ex);
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product history"));
+        }
+    }
+
+    @Operation(summary = "Find images of product")
+    @GetMapping("{productId}/images")
+    public ApiResponse<List<FileStorage>> getImagesOfProduct(@PathVariable("productId") Integer productId) {
+        try {
+            if (!super.validateModuleProduct.readProduct(true)) {
+                return null;
+            }
+            return ApiResponse.ok(fileStorageService.getImageOfSanPham(productId));
+        } catch (RuntimeException ex) {
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"));
+        }
+    }
+
     @Operation(summary = "Find images of all products")
-    @GetMapping("/image/all")
+    @GetMapping("/images/all")
     public ApiResponse<List<FileStorage>> viewGallery() {
         try {
             if (!super.validateModuleProduct.readGallery(true)) {
@@ -391,102 +439,6 @@ public class ProductController extends BaseController {
             return ApiResponse.ok(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name()));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"));
-        }
-    }
-
-    @Operation(summary = "Find all vouchers")
-    @GetMapping("/voucher/all")
-    public ApiResponse<List<VoucherInfoDTO>> findAllVouchers() {
-        try {
-            if (!super.validateModuleProduct.readVoucher(true)) {
-                return null;
-            }
-            return ApiResponse.ok(voucherService.findAll(null, null, null, null));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
-        }
-    }
-
-    @Operation(summary = "Find detail voucher")
-    @GetMapping("/voucher/{voucherInfoId}")
-    public ApiResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
-        try {
-            if (!super.validateModuleProduct.readVoucher(true)) {
-                return null;
-            }
-            return ApiResponse.ok(voucherService.findById(voucherInfoId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
-        }
-    }
-
-    @Operation(summary = "Create voucher")
-    @PostMapping("/voucher/create")
-    public ApiResponse<VoucherInfoDTO> createVoucher(@RequestBody VoucherInfo voucherInfo) throws ParseException {
-        try {
-            if (!super.validateModuleProduct.insertVoucher(true)) {
-                return null;
-            }
-            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            //voucherInfo.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
-            //voucherInfo.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
-
-            //List<Integer> listProductToApply = new ArrayList<>();
-            //String[] pbienTheSP = request.getParameterValues("productToApply");
-            //if (pbienTheSP != null) {
-            //    for (String id : pbienTheSP) {
-            //        listProductToApply.add(Integer.parseInt(id));
-            //    }
-            //}
-            //if (!listProductToApply.isEmpty()) {
-            //    voucherService.save(voucherInfo, listProductToApply);
-            //}
-            return ApiResponse.ok(null);
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "voucher"));
-        }
-    }
-
-    @Operation(summary = "Update voucher")
-    @PutMapping("/voucher/update/{voucherInfoId}")
-    public ApiResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfo voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
-        try {
-            if (!super.validateModuleProduct.updateVoucher(true)) {
-                return null;
-            }
-            if (voucherInfo == null || voucherService.findById(voucherInfoId) == null) {
-                throw new BadRequestException();
-            }
-            voucherService.update(voucherInfo ,voucherInfoId);
-            return ApiResponse.ok(null);
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "voucher"));
-        }
-    }
-
-    @Operation(summary = "Delete voucher")
-    @PostMapping("/voucher/delete/{voucherInfoId}")
-    public ApiResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
-        try {
-            if(!super.validateModuleProduct.deleteVoucher(true)) {
-                return null;
-            }
-            return ApiResponse.ok(voucherService.detele(voucherInfoId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "voucher"));
-        }
-    }
-
-    @Operation(summary = "Check the voucher is available")
-    @GetMapping("/voucher/check/{voucherCode}")
-    public ApiResponse<VoucherInfoDTO> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
-        try {
-            if(!super.validateModuleProduct.readVoucher(true)) {
-                return null;
-            }
-            return ApiResponse.ok(voucherService.isAvailable(voucherCode));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"));
         }
     }
 }

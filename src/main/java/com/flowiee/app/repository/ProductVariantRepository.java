@@ -76,6 +76,13 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
     Integer findTotalQtySell(@Param("productId") Integer productId);
 
     @Modifying
+    @Query("update ProductVariant p set p.soLuongKho = (p.soLuongKho + :soldQty) where p.id=:productVariantId")
+    void updateQuantityIncrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
+
+    @Modifying
     @Query("update ProductVariant p set p.soLuongKho = (p.soLuongKho - :soldQty), p.soLuongDaBan = (p.soLuongDaBan + :soldQty) where p.id=:productVariantId")
-    void updateQuantity(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
+    void updateQuantityDecrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
+
+    @Query("select sum(p.soLuongKho) from ProductVariant p where p.trangThai = 'ACTIVE'")
+    Integer countTotalQuantity();
 }

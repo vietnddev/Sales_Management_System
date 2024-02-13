@@ -2,8 +2,8 @@ package com.flowiee.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.model.request.MaterialRequest;
 
+import com.flowiee.app.dto.MaterialDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -94,19 +94,16 @@ public class Material extends BaseEntity implements Serializable {
         return map;
     }
 
-    public Material fromMaterialRequest(MaterialRequest request) {
-    	Material mat = new Material();
-    	mat.setId(request.getId());
-    	mat.setTicketImport(new TicketImport(request.getTicketImportId()));
-    	mat.setSupplier(new Supplier(request.getSupplierId(), null));
-    	mat.setQuantity(request.getQuantity());
-    	mat.setUnit(new Category(request.getUnitId(), null));
-    	mat.setCode(request.getCode());
-    	mat.setName(request.getName());
-    	mat.setLocation(request.getLocation());
-    	mat.setNote(request.getNote());
-    	mat.setStatus(request.getStatus());
-    	return mat;
+    public static Material fromMaterialDTO(MaterialDTO dto) {
+    	Material material = new Material();
+        material.setId(dto.getId());
+        material.setCode(dto.getCode());
+        material.setName(dto.getName());
+        material.setLocation(dto.getLocation());
+        material.setUnit(new Category(dto.getUnitId(), dto.getUnitName()));
+        material.setQuantity(dto.getQuantity());
+        material.setNote(dto.getNote());
+        return material;
     }
 
 	@Override

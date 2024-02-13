@@ -67,14 +67,14 @@ public class TicketImportController extends BaseController {
 
     @Operation(summary = "Cập nhật phiếu nhập hàng")
     @PutMapping("/update/{id}")
-    public ApiResponse<TicketImport> updateTicket(@RequestBody TicketImport ticketImport, @PathVariable("id") Integer ticketImportId) {
+    public ApiResponse<TicketImportDTO> updateTicket(@RequestBody TicketImportDTO ticketImportDTO, @PathVariable("id") Integer ticketImportId) {
         if (!super.validateModuleStorage.importGoods(true)) {
             return null;
         }
         try {
-            return ApiResponse.ok(ticketImportService.update(ticketImport, ticketImportId));
+            return ApiResponse.ok(TicketImportDTO.fromTicketImport(ticketImportService.update(TicketImport.fromTicketImportDTO(ticketImportDTO), ticketImportId)));
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket import"), ex);
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket import"));
         }
     }
@@ -88,7 +88,7 @@ public class TicketImportController extends BaseController {
         try {
             return ApiResponse.ok(ticketImportService.delete(ticketImportId));
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "ticket import"), ex);
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "ticket import"));
         }
     }
@@ -104,10 +104,8 @@ public class TicketImportController extends BaseController {
             throw new BadRequestException("Goods import to add product not found!");
         }
         try {
-            System.out.println(productVariantIds);
             return ApiResponse.ok(ticketImportService.addProductToTicket(ticketImportId, productVariantIds));
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
             logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket_import"), ex);
             throw new AppException();
         }
@@ -126,7 +124,6 @@ public class TicketImportController extends BaseController {
         try {
             return ApiResponse.ok(ticketImportService.addMaterialToTicket(ticketImportId, materialIds));
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
             logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket_import"), ex);
             throw new AppException();
         }

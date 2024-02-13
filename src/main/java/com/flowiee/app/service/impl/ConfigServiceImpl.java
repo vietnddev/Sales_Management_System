@@ -5,6 +5,7 @@ import com.flowiee.app.repository.FlowieeConfigRepository;
 import com.flowiee.app.service.ConfigService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import java.util.List;
 
 @Service
 public class ConfigServiceImpl implements ConfigService {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigServiceImpl.class);
-
     @Autowired
     private FlowieeConfigRepository flowieeConfigRepository;
 
@@ -49,6 +48,6 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public String delete(Integer id) {
         flowieeConfigRepository.deleteById(id);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 }

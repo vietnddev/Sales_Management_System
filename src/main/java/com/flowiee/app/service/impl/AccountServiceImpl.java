@@ -11,6 +11,7 @@ import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
 
+import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,6 @@ import javax.transaction.Transactional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-	private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
-	
     @Autowired
     AccountRepository accountRepo;
     @Autowired
@@ -122,10 +121,10 @@ public class AccountServiceImpl implements AccountService {
                 systemLogService.writeLog(systemLog);
             }
             logger.info("Delete account success! username=" + account.getUsername());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return MessageUtils.DELETE_SUCCESS;
 		} catch (Exception e) {
 			logger.error("Delete account fail! username=" + account.getUsername(), e);
-			return AppConstants.SERVICE_RESPONSE_FAIL;
+			throw new AppException();
 		}
     }
 }

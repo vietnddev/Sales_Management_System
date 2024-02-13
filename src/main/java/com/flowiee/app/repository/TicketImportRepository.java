@@ -32,8 +32,8 @@ public interface TicketImportRepository extends JpaRepository<TicketImport, Inte
     @Query("from TicketImport i where i.paidStatus=:paidStatus")
     List<TicketImport> findByPaidStatus(@Param("paidStatus") String paidStatus);
 
-    @Query("from TicketImport i where i.receivedBy.id=:accountId")
-    List<TicketImport> findByReceiveBy(@Param("accountId") Integer accountId);
+    @Query("from TicketImport i where i.importer=:importer")
+    List<TicketImport> findByReceiveBy(@Param("importer") String importer);
 
     @Query("from TicketImport i where i.status=:status and i.createdBy=:createdBy")
     TicketImport findDraftGoodsImportPresent(@Param("status") String status, @Param("createdBy") Integer createdBy);

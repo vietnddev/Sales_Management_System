@@ -40,6 +40,11 @@
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css}">
     <!-- fullCalendar -->
     <link rel="stylesheet" th:href="@{/plugins/fullcalendar/main.css}">
+    <!-- Select2 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css}">
   </th:block>
 </head>
 
@@ -211,6 +216,10 @@
     <!-- fullCalendar 2.2.5 -->
     <script th:src="@{/plugins/moment/moment.min.js}"></script>
     <script th:src="@{/plugins/fullcalendar/main.js}"></script>
+    <!-- Select2 -->
+    <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+    <!-- Bootstrap4 Duallistbox -->
+    <script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
     <!-- Page specific script -->
     <script>
       $(function () {

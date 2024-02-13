@@ -9,6 +9,7 @@ import com.flowiee.app.service.VoucherService;
 import com.flowiee.app.service.VoucherTicketService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,15 +63,12 @@ public class VoucherTicketServiceImpl implements VoucherTicketService {
 
     @Override
     public String delete(Integer entityId) {
-        if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
         VoucherTicket voucherTicket = this.findById(entityId);
         if (voucherTicket == null || voucherTicket.isStatus()) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new AppException();
         }
         voucherTicketlRepo.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
 	@Override

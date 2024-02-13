@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,5 +99,15 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public List<Material> findByUnit(Integer unitId) {
         return materialRepository.findByUnit(unitId);
+    }
+
+    @Transactional
+    @Override
+    public void updateQuantity(Integer quantity, Integer materialId, String type) {
+        if ("I".equals(type)) {
+            materialRepository.updateQuantityIncrease(quantity, materialId);
+        } else if ("D".equals(type)) {
+            materialRepository.updateQuantityDecrease(quantity, materialId);
+        }
     }
 }

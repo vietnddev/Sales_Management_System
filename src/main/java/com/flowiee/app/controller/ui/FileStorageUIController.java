@@ -59,15 +59,4 @@ public class FileStorageUIController extends BaseController {
         fileService.changeImageSanPham(file, fileId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
-
-//    @Operation(summary = "Xóa file", description = "Xóa theo id")
-//    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
-//    @DeleteMapping("/file/delete/{id}")
-//    public ResponseEntity<String> delete(@PathVariable("id") Integer fileId) {
-//        validateModuleProduct.updateImage(true);
-//        if (fileId <= 0 || fileService.findById(fileId) == null) {
-//            throw new NotFoundException("Image not found!");
-//        }
-//        return ResponseEntity.ok().body(fileService.delete(fileId));
-//    }
 }

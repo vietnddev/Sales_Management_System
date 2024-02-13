@@ -29,7 +29,7 @@
                                     <span class="info-box-icon"><i th:class="${c.icon}"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text font-weight-bold text-uppercase" style="font-size: 20px" th:text="${c.name}"></span>
-                                        <span class="info-box-number">41,410</span>
+                                        <span class="info-box-number" th:text="${c.totalSubRecords}"></span>
                                         <div class="progress">
                                             <div class="progress-bar" style="width: 70%"></div>
                                         </div>

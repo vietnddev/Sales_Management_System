@@ -102,7 +102,7 @@ public class TicketExportServiceImpl implements TicketExportService {
             for (OrderDetail orderDetail : order.getListOrderDetail()) {
                 int soldQtyInOrder = orderDetail.getSoLuong();
                 int productVariantId = orderDetail.getProductVariant().getId();
-                productService.updateProductVariantQuantity(soldQtyInOrder, productVariantId);
+                productService.updateProductVariantQuantity(soldQtyInOrder, productVariantId, "D");
 
                 //Save log
                 int storageQty = orderDetail.getProductVariant().getSoLuongKho();

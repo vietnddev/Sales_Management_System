@@ -120,7 +120,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findRootCategory() {
-        return categoryRepo.findRootCategory();
+        List<Category> roots = categoryRepo.findRootCategory();
+        List<Object[]> recordsOfEachType = categoryRepo.totalRecordsOfEachType();
+        for (Category c : roots) {
+            for (Object[] o : recordsOfEachType) {
+                if (c.getType().equals(o[0])) {
+                    c.setTotalSubRecords(Integer.parseInt(String.valueOf(o[1])));
+                    break;
+                }
+            }
+        }
+        return roots;
     }
 
     @Override

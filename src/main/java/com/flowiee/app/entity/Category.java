@@ -3,7 +3,6 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.model.request.CategoryRequest;
 import com.flowiee.app.utils.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,6 +60,9 @@ public class Category extends BaseEntity implements Serializable {
 
 	@Column(name = "status", length = 20, nullable = false)
 	private Boolean status;
+
+	@Transient
+	private Integer totalSubRecords;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
@@ -150,18 +152,6 @@ public class Category extends BaseEntity implements Serializable {
 			map.put("Use default","#" + CommonUtils.now("HH:mm:ss dd/MM/yyyy"));
 		}
 		return map;
-	}
-	
-	public Category fromCategoryRequest(CategoryRequest request) {
-		Category category = new Category();
-		category.setId(request.getId());
-		category.setType(request.getType());
-		category.setCode(request.getCode());
-		category.setName(request.getName());
-		category.setSort(request.getSort());
-		category.setIsDefault(request.getIsDefault());
-		category.setStatus(request.getStatus());
-		return category;
 	}
 
 	@Override

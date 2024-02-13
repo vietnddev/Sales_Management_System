@@ -306,7 +306,9 @@
         $(document).ready(function () {
             init();
             loadOrderDetail();
-            loadTicketExportInfo();
+            if (mvOrderDetail.ticketExportId != null) {
+                loadTicketExportInfo();
+            }
             doPay();
             createTicketExport();
         });

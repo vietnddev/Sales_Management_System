@@ -34,498 +34,442 @@
         <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
 
             <section class="content">
-                <div class="card card-solid" style="background-color: #f4f6f9;">
-                    <div class="row" style="background-color: #fff; border-radius: 15px; padding: 15px;">
-                        <div class="col-sm-12 mb-1">
-                            <h3 class="text-center"><b th:text="${detailProducts.productName}" style="text-transform: uppercase;"></b></h3>
-                            <hr class="w-50 bg-info">
-                        </div>
-                        <div class="col-sm-5">
-                            <!--Start Image chính-->
-                            <div class="row">
-                                <img th:src="@{'/' + ${imageActive.directoryPath} + '/' + ${imageActive.tenFileKhiLuu}}" class="product-image" alt="Product Image" style="width: 100%; border-radius: 5px; margin: auto">
+                <div class="card card-solid" style="background-color: #f4f6f9">
+                    <div class="row" style="background-color: #fff; padding-top: 15px">
+                        <div class="col-12 row justify-content-between mb-1">
+                            <div class="col-6" style="display: flex; align-items: center">
+                                <h3 class="text-center"><b style="text-transform: uppercase" id="productNameHeader"></b></h3>
                             </div>
-                            <!--./ End Image chính-->
-
-                            <div class="row mt-2">
-                                <button type="button" class="btn btn-sm btn-success w-25" style="margin: auto"
-                                        data-toggle="modal" data-target="#modalUploadImage" title="Upload hình ảnh cho sản phẩm">
-                                        <i class="fa-solid fa-upload"></i>
+                            <div class="col-6 text-right">
+                                <button class="btn btn-secondary" type="button"
+                                        data-toggle="modal" data-target="#viewHistory"
+                                        title="Xem lịch sử cập nhật sản phẩm"
+                                        id="btnViewProductHistory">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
                                 </button>
-                                <div class="modal fade" id="modalUploadImage">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <strong class="modal-title">Upload image sản phẩm</strong>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row" style="max-height: 520px; overflow: scroll">
-                                                    <div class="card col-sm-12">
-                                                        <div class="card-body">
-                                                            <div id="actions" class="row">
-                                                                <div class="col-lg-7">
-                                                                    <div class="btn-group w-100">
-                                                                        <span class="btn btn-sm btn-success col fileinput-button" title="Chọn file từ máy tính"><i class="fas fa-plus"></i><span><!--Chọn file--></span></span>
-                                                                        <button type="submit" class="btn btn-sm btn-primary col start"><i class="fas fa-upload"></i><span><!--Tải lên SV--></span></button>
-                                                                        <button type="reset" class="btn btn-sm btn-warning col cancel"><i class="fas fa-times-circle"></i><span><!--Hủy--></span></button>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-5 d-flex align-items-center">
-                                                                    <div class="fileupload-process w-100">
-                                                                        <div id="total-progress" class="progress progress-striped active" role="progressbar"
-                                                                             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                                                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="table table-striped files" id="previews">
-                                                                <div id="template" class="row mt-2">
-                                                                    <div class="col-auto">
-                                                                        <span class="preview"><img src="data:," alt="" data-dz-thumbnail/></span>
-                                                                    </div>
-                                                                    <div class="col d-flex align-items-center">
-                                                                        <p class="mb-0">
-                                                                            <span class="lead" data-dz-name></span>
-                                                                            (<span data-dz-size></span>)
-                                                                        </p>
-                                                                        <strong class="error text-danger" data-dz-errormessage></strong>
-                                                                    </div>
-                                                                    <div class="col-3 d-flex align-items-center">
-                                                                        <div class="progress progress-striped active w-100" role="progressbar"
-                                                                             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                                                            <div class="progress-bar progress-bar-success" style="width:0%" data-dz-uploadprogress></div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-auto d-flex align-items-center">
-                                                                        <div class="btn-group">
-                                                                            <button class="btn btn-sm btn-primary start"><i class="fas fa-upload"></i><span><!--Tải lên SV--></span></button>
-                                                                            <button data-dz-remove class="btn btn-sm btn-warning cancel"><i class="fas fa-times-circle"></i><span><!--Hủy--></span></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- /.card-body -->
-                                                        <div class="card-footer">
-                                                            <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và tổng dung lượng không vượt 50MB cho mỗi lượt.</i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-end">
-                                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <button class="btn btn-success" type="button"
+                                        data-toggle="modal" data-target="#insertOrUpdateProductVariant"
+                                        title="Thêm mới biến thể sản phẩm"
+                                        id="btnCreateProductVariant">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                </button>
+                                <button class="btn btn-info" id="btnUpdateProduct"
+                                        title="Cập nhật sản phẩm chính">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </button>
+                                <button class="btn btn-danger link-delete" type="button" name="delete"
+                                        title="Xóa biến thể sản phẩm"
+                                        th:entity="'product'"
+                                        th:entityId="${detailProducts.productId}"
+                                        th:entityName="${detailProducts.productName}"
+                                        th:actionType="'delete'">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <!--./ Srart Sub-Image-->
-                        <div class="col-sm-7 row" style="max-height: 345px; overflow: scroll">
-                            <div th:each="list : ${listImageOfSanPham}"
-                                 th:class="(${list.isActive} ? 'col-sm-3 row mb-2 border border-primary' : 'col-sm-3 row mb-2 border')"
-                                 th:style="(${list.isActive} ? 'border-radius: 10px; margin: 3px; max-width: 24%; background-color:aliceblue' : 'border-radius: 10px; margin: 3px; max-width: 24%')">
-                                <div class="row col-sm-12 product-image-thumb" style="margin: auto">
-                                    <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}" alt="Product Image">
+                        <div class="col-12">
+                            <div class="card card-primary card-outline card-tabs">
+                                <div class="card-header p-0 pt-1 border-bottom-0">
+                                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link font-weight-bold active" id="custom-tabs-three-general-tab" data-toggle="pill" href="#custom-tabs-three-general" role="tab" aria-controls="custom-tabs-three-general" aria-selected="true">Thông tin chung</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link font-weight-bold" id="custom-tabs-two-variants-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Danh sách sản phẩm chi tiết</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link font-weight-bold" id="custom-tabs-three-images-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Hình ảnh sản phẩm</a>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div class="row col-sm-12 mb-2">
-                                    <!--Start modal UPDATE hình ảnh-->
-                                    <i class="fa-solid fa-arrows-rotate text-info col" style="cursor: pointer"
-                                       data-toggle="modal" th:data-target="'#modalChangeImage_' + ${list.id}">
-                                    </i>
-                                    <div class="modal fade" th:id="'modalChangeImage_' + ${list.id}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content text-left">
-                                                <form th:action="@{/file/change-image-sanpham/{id}(id=${list.id})}" enctype="multipart/form-data" method="post">
-                                                    <div class="modal-header">
-                                                        <strong class="modal-title">Thay đổi hình ảnh</strong>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="row">
-                                                            <div class="form-group">
-                                                                <label>Chọn hình mới</label>
-                                                                <input class="form-control" type="file" name="file" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer justify-content-end">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--End modal UPDATE hình ảnh-->
-
-                                    <!--Start modal Active hình ảnh-->
-                                    <i class="fa-regular fa-circle-check col" style="cursor: pointer"
-                                       data-toggle="modal" th:data-target="'#modalActiveImage_' + ${list.id}">
-                                    </i>
-                                    <div class="modal fade" th:id="'modalActiveImage_' + ${list.id}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content text-left">
-                                                <form th:action="@{/san-pham/active-image/{sanPhamId}(sanPhamId=${detailProducts.productId})}" method="post">
-                                                    <div class="modal-header">
-                                                        <strong class="modal-title">Đặt ảnh hiển thị default</strong>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Xác nhận chọn this image is default!
-                                                        <input type="hidden" name="imageId" th:value="${list.id}">
-                                                    </div>
-                                                    <div class="modal-footer justify-content-end">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--End modal Active hình ảnh-->
-
-                                    <!--Start modal DELETE hình ảnh-->
-                                    <i class="fa-solid fa-trash text-danger col link-delete" style="cursor: pointer"
-                                       th:entity="'image'"
-                                       th:entityId="${list.id}"
-                                       th:entityName="${list.tenFileGoc}"
-                                       th:actionType="'delete'">
-                                    </i>
-                                    <!--End modal DELETE hình ảnh-->
-                                </div>
-                            </div>
-                        </div>
-                        <!--./ End Sub-Image-->
-
-                        <div class="row col-sm-12">
-                            <hr class="w-50 bg-info">
-                        </div>
-
-                        <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
-                        <div class="row col-sm-12 border pt-3">
-                            <div class="col-sm-10" style="max-height: 585px; overflow: scroll">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <th>#</th>
-                                        <th>Tên biến thể</th>
-                                        <th>Màu sắc</th>
-                                        <th>Kích cỡ</th>
-                                        <th>Chất liệu</th>
-                                        <th>Số lượng</th>
-                                        <th>Đã bán</th>
-                                        <th>Giá gốc</th>
-                                        <th>Giá khuyến mãi</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="var, index : ${listBienTheSanPham}">
-                                            <td th:text="${index.index + 1}"></td>
-                                            <td><a th:href="@{/san-pham/variant/{id}(id=${var.productVariantId})}" th:text="${var.name}"></a></td>
-                                            <td th:text="${var.colorName}"></td>
-                                            <td th:text="${var.sizeName}"></td>
-                                            <td th:text="${var.fabricTypeName}"></td>
-                                            <td th:text="${var.storageQty}"></td>
-                                            <td th:text="${var.soldQty}"></td>
-                                            <td>
-                                                <span th:text="${var.priceSellValue != null} ? ${#numbers.formatDecimal (var.priceSellValue, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"
-                                                      th:data-target="'#modalLichSuGiaBan_' + ${var.productVariantId}" data-toggle="modal"
-                                                      style="color: #007bff; cursor: pointer">
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span th:text="${var.priceAfterDiscount != null} ? ${#numbers.formatDecimal (var.priceAfterDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"
-                                                      th:data-target="'#modalLichSuGiaBan_' + ${var.productVariantId}" data-toggle="modal"
-                                                      style="color: #007bff; cursor: pointer">
-                                                </span>
-                                            </td>
-                                            <td th:text="${var.status}"></td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-info" title="Cập nhật biến thể sản phẩm">
-                                                    <i class="fa-solid fa-circle-check"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary" type="button" data-toggle="modal"
-                                                        title="Cập nhật giá sản phẩm" th:data-target="'#modalUpdateGiaBan_' + ${var.productVariantId}">
-                                                    <i class="fa-solid fa-dollar-sign"></i>
-                                                </button>
-                                                <!--./ Button xóa biến thể sản phẩm-->
-                                                <button type="button" class="btn btn-sm btn-danger link-delete" title="Xóa biến thể sản phẩm"
-                                                        th:entity="'productVariant'"
-                                                        th:entityId="${var.productVariantId}"
-                                                        th:entityName="${var.name}"
-                                                        th:actionType="delete">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
-                                                <!--./ End button xóa biến thể sản phẩm-->
-
-                                                <!--MODAL UPDATE GIÁ BÁN-->
-                                                <div class="modal fade" th:id="'modalUpdateGiaBan_' + ${var.productVariantId}">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <form th:action="@{/san-pham/variant/gia-ban/update/{id}(id=${var.productVariantId})}" th:object="${price}" method="post">
-                                                                <div class="modal-header">
-                                                                    <strong class="modal-title">Cập nhật giá bán</strong>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-4">Giá gốc</label>
-                                                                        <input th:value="${var.priceSellValue != null} ? ${#numbers.formatDecimal (var.priceSellValue, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="col-sm-8 form-control" type="text" readonly>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-4">Giá điều chỉnh</label>
-                                                                        <input class="col-sm-8 form-control" type="number" name="giaBan">
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-4">Giá khuyến mãi</label>
-                                                                        <input th:value="${var.priceAfterDiscount != null} ? ${#numbers.formatDecimal (var.priceAfterDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="col-sm-8 form-control" type="text" readonly>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-4">Giá điều chỉnh</label>
-                                                                        <input class="col-sm-8 form-control" type="number" name="giaBan">
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-4">Ghi chú</label>
-                                                                        <textarea class="col-sm-8 form-control" type="text" id="noteField" rows="3"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer justify-content-end">
-                                                                    <input type="hidden" name="idGiaBan" th:value="${var.priceSellId != null} ? ${var.priceSellId} : '-'">
-                                                                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                                                                    <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--END ./ MODAL UPDATE GIÁ BÁN-->
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <!--LỊCH SỬ ĐIỀU CHỈNH GIÁ BÁN-->
-                                <div class="modal fade" th:each="var, index : ${listBienTheSanPham}" th:id="'modalLichSuGiaBan_' + ${var.productVariantId}">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <strong class="modal-title" th:text="'Lịch sử giá bán của [' + ${var.name} + ']'"></strong>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <table class="table table-bordered" style="margin-bottom: 0">
-                                                    <thead>
-                                                        <tr>
-                                                            <td>STT</td>
-                                                            <td>Giá gốc</td>
-                                                            <td>Giá khuyến mãi</td>
-                                                            <td>Thời gian cập nhật</td>
-                                                            <td>Trạng thái</td>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr th:each="p, index : ${var.listPrices}">
-                                                            <td th:text="${index.index + 1}"></td>
-                                                            <td><span th:text="${p.original != null} ? ${#numbers.formatDecimal (p.original, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></span></td>
-                                                            <td><span th:text="${p.discount != null} ? ${#numbers.formatDecimal (p.discount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></span></td>
-                                                            <td th:text="${p.createdAt}"></td>
-                                                            <td th:text="${p.status}"></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="modal-footer justify-content-end">
-                                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--END ./ LỊCH SỬ ĐIỀU CHỈNH GIÁ BÁN-->
-                            </div>
-
-                            <!--THÔNG TIN SẢN PHẨM GỐC-->
-                            <form class="col-sm-2" th:action="@{/san-pham/update/{id}(id=${detailProducts.productId})}"
-                                  th:object="${sanPham}" method="post" style="background-color: #fff; border-radius: 15px; padding: 15px;">
-                                <div class="form-group">
-                                    <label>Tên sản phẩm</label>
-                                    <textarea class="form-control" placeholder="Tên sản phẩm"
-                                              name="tenSanPham" required rows="4" id="productNameField"
-                                              th:text="${detailProducts.productName}">
-                                    </textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Nhãn hiệu</label>
-                                    <select class="custom-select" name="brand" id="brandField">
-                                        <option th:value="${detailProducts.brandId}" th:text="${detailProducts.brandName}" selected></option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Loại sản phẩm</label>
-                                    <select class="custom-select" name="productType" id="productTypeField">
-                                        <option th:value="${detailProducts.productTypeId}" th:text="${detailProducts.productTypeName}" selected></option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Đơn vị tính</label>
-                                    <select class="custom-select" name="unit" id="unitField">
-                                        <option th:value="${detailProducts.unitId}" th:text="${detailProducts.unitName}" selected></option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Trạng thái</label>
-                                    <select class="custom-select" name="status" id="statusField">
-                                        <option th:each="productStatus, iterStat : ${listProductStatus}"
-                                                th:value="${productStatus.key}"
-                                                th:text="${productStatus.value}">
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Thao tác</label>
-                                    <div class="col-sm-12">
-                                        <button class="btn btn-secondary" type="button"
-                                                data-toggle="modal" data-target="#viewHistory"
-                                                title="Xem lịch sử cập nhật sản phẩm">
-                                            <i class="fa-solid fa-clock-rotate-left"></i>
-                                        </button>
-                                        <button class="btn btn-success" type="button"
-                                                data-toggle="modal" data-target="#insertBTSP"
-                                                title="Thêm mới biến thể sản phẩm"
-                                                id="btnCreateProductVariant">
-                                            <i class="fa-solid fa-circle-plus"></i>
-                                        </button>
-                                        <button class="btn btn-info" type="submit" name="update"
-                                                title="Cập nhật biến thể sản phẩm">
-                                            <i class="fa-solid fa-circle-check"></i>
-                                        </button>
-                                        <button class="btn btn-danger link-delete" type="button" name="delete"
-                                                title="Xóa biến thể sản phẩm"
-                                                th:entity="'product'"
-                                                th:entityId="${detailProducts.productId}"
-                                                th:entityName="${detailProducts.productName}"
-                                                th:actionType="'delete'">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="id" th:value="${detailProducts.productId}"/>
-                                <input type="hidden" name="moTaSanPham" id="describes_virtual" th:value="${detailProducts.productDes}"/>
-                            </form>
-                            <!--./ END THÔNG TIN SẢN PHẨM GỐC-->
-
-                            <div class="modal fade" id="viewHistory">
-                                <div class="modal-dialog modal-xl">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <strong class="modal-title" th:text="'Lịch sử cập nhật thông tin của [' + ${detailProducts.productName} + ']'"></strong>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body p-0" style="max-height: 800px; overflow: scroll">
-                                            <table class="table table-bordered" style="margin-bottom: 0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>STT</th>
-                                                        <th>Title</th>
-                                                        <th>Field name</th>
-                                                        <th>Old value</th>
-                                                        <th>New value</th>
-                                                        <th>Updated by</th>
-                                                        <th>Time</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr th:each="his, index : ${listProductHistory}">
-                                                        <td th:text="${index.index + 1}"></td>
-                                                        <td th:text="${his.title}"></td>
-                                                        <td th:text="${his.fieldName}"></td>
-                                                        <td th:text="${his.oldValue}"></td>
-                                                        <td th:text="${his.newValue}"></td>
-                                                        <td th:text="${his.createdBy}"></td>
-                                                        <td th:text="${his.createdAt}"></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="modal-footer justify-content-end">
-                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="modal fade" id="insertBTSP">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <strong class="modal-title">Thêm mới biến thể sản phẩm</strong>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
+                                <div class="card-body p-0">
+                                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                                        <div class="tab-pane fade active show" id="custom-tabs-three-general" role="tabpanel" aria-labelledby="custom-tabs-three-general-tab">
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-9" style="padding-top: 25px">
+                                                    <textarea id="summernote" th:text="${detailProducts.productDes}"></textarea>
+                                                </div>
+                                                <!--THÔNG TIN SẢN PHẨM GỐC-->
+                                                <div class="col-3" style="background-color: #fff; border-radius: 15px; padding: 15px;">
                                                     <div class="form-group">
-                                                        <label for="productVariantNameField">Tên</label>
-                                                        <input class="form-control" type="text" id="productVariantNameField">
+                                                        <label>Tên sản phẩm</label>
+                                                        <textarea class="form-control" placeholder="Tên sản phẩm"
+                                                                  name="tenSanPham" required rows="4" id="productNameField"
+                                                                  th:text="${detailProducts.productName}">
+                                                        </textarea>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="fabricTypeField">Chọn chất liệu vải</label>
-                                                        <select class="custom-select" id="fabricTypeField"></select>
+                                                        <label>Nhãn hiệu</label>
+                                                        <select class="custom-select" name="brand" id="brandField">
+                                                            <option th:value="${detailProducts.brandId}" th:text="${detailProducts.brandName}" selected></option>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="colorField">Chọn màu sắc</label>
-                                                        <select class="custom-select" id="colorField"></select>
+                                                        <label>Loại sản phẩm</label>
+                                                        <select class="custom-select" name="productType" id="productTypeField">
+                                                            <option th:value="${detailProducts.productTypeId}" th:text="${detailProducts.productTypeName}" selected></option>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="sizeField">Chọn kích cỡ</label>
-                                                        <select class="custom-select" id="sizeField"></select>
+                                                        <label>Đơn vị tính</label>
+                                                        <select class="custom-select" name="unit" id="unitField">
+                                                            <option th:value="${detailProducts.unitId}" th:text="${detailProducts.unitName}" selected></option>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="originalPriceField">Giá bán gốc</label>
-                                                        <input class="form-control" type="text" id="originalPriceField">
+                                                        <label>Trạng thái</label>
+                                                        <select class="custom-select" name="status" id="statusField">
+                                                            <option th:each="productStatus, iterStat : ${listProductStatus}"
+                                                                    th:value="${productStatus.key}"
+                                                                    th:text="${productStatus.value}">
+                                                            </option>
+                                                        </select>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="promotionPriceField">Giá khuyến mãi</label>
-                                                        <input class="form-control" type="text" id="promotionPriceField">
-                                                    </div>
+                                                    <input type="hidden" id="describes_virtual" th:value="${detailProducts.productDes}"/>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                <button type="button" class="btn btn-primary" id="btnCreateProductVariantSubmit">Lưu</button>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-two-variants-tab">
+                                            <!--START DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
+                                            <div class="row col-sm-12 border pl-0 pr-0 pb-0">
+                                                <div class="col-sm-12 pl-0 pr-0" style="max-height: 600px; overflow: scroll">
+                                                    <table class="table table-bordered table-head-fixed">
+                                                        <thead>
+                                                            <th>#</th>
+                                                            <th>Tên biến thể</th>
+                                                            <th>Màu</th>
+                                                            <th>Size</th>
+                                                            <th>Chất liệu</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Đã bán</th>
+                                                            <th>Giá gốc</th>
+                                                            <th>Giá khuyến mãi</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Thao tác</th>
+                                                        </thead>
+                                                        <tbody id="tableProductVariant"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!--/. END DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-images-tab">
+                                            <div class="row mt-3">
+                                                <div class="col-6">
+                                                    <!--Start Image chính-->
+                                                    <div class="row" style="max-height: 400px; overflow: scroll">
+                                                        <img class="product-image" th:src="@{'/' + ${imageActive.directoryPath} + '/' + ${imageActive.tenFileKhiLuu}}" alt="Product Image" style="width: 100%; border-radius: 5px; margin: auto" id="imageActive">
+                                                    </div>
+                                                    <!--./ End Image chính-->
+
+                                                    <div class="row mt-2">
+                                                        <button type="button" class="btn btn-sm btn-success w-25" style="margin: auto"
+                                                                data-toggle="modal" data-target="#modalUploadImage" title="Upload hình ảnh cho sản phẩm">
+                                                            <i class="fa-solid fa-upload"></i>
+                                                        </button>
+                                                        <div class="modal fade" id="modalUploadImage">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <strong class="modal-title">Upload image sản phẩm</strong>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="row" style="max-height: 520px; overflow: scroll">
+                                                                            <div class="card col-sm-12">
+                                                                                <div class="card-body">
+                                                                                    <div id="actions" class="row">
+                                                                                        <div class="col-lg-7">
+                                                                                            <div class="btn-group w-100">
+                                                                                                <span class="btn btn-sm btn-success col fileinput-button" title="Chọn file từ máy tính"><i class="fas fa-plus"></i><span><!--Chọn file--></span></span>
+                                                                                                <button type="submit" class="btn btn-sm btn-primary col start"><i class="fas fa-upload"></i><span><!--Tải lên SV--></span></button>
+                                                                                                <button type="reset" class="btn btn-sm btn-warning col cancel"><i class="fas fa-times-circle"></i><span><!--Hủy--></span></button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-lg-5 d-flex align-items-center">
+                                                                                            <div class="fileupload-process w-100">
+                                                                                                <div id="total-progress" class="progress progress-striped active" role="progressbar"
+                                                                                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                                                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="table table-striped files" id="previews">
+                                                                                        <div id="template" class="row mt-2">
+                                                                                            <div class="col-auto">
+                                                                                                <span class="preview"><img src="data:," alt="" data-dz-thumbnail/></span>
+                                                                                            </div>
+                                                                                            <div class="col d-flex align-items-center">
+                                                                                                <p class="mb-0">
+                                                                                                    <span class="lead" data-dz-name></span>
+                                                                                                    (<span data-dz-size></span>)
+                                                                                                </p>
+                                                                                                <strong class="error text-danger" data-dz-errormessage></strong>
+                                                                                            </div>
+                                                                                            <div class="col-3 d-flex align-items-center">
+                                                                                                <div class="progress progress-striped active w-100" role="progressbar"
+                                                                                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                                                                    <div class="progress-bar progress-bar-success" style="width:0%" data-dz-uploadprogress></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-auto d-flex align-items-center">
+                                                                                                <div class="btn-group">
+                                                                                                    <button class="btn btn-sm btn-primary start"><i class="fas fa-upload"></i><span><!--Tải lên SV--></span></button>
+                                                                                                    <button data-dz-remove class="btn btn-sm btn-warning cancel"><i class="fas fa-times-circle"></i><span><!--Hủy--></span></button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- /.card-body -->
+                                                                                <div class="card-footer">
+                                                                                    <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và tổng dung lượng không vượt 50MB cho mỗi lượt.</i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer justify-content-end">
+                                                                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            <span class="font-weight-bold">Thông tin image</span>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row form-group">
+                                                                <label class="col-4">Tên image</label>
+                                                                <input class="col-8 form-control" type="text" id="imageNameField">
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <label class="col-4">Kích thước</label>
+                                                                <input class="col-8 form-control" type="text" id="imageSizeField">
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <label class="col-4">Tên file gốc</label>
+                                                                <input class="col-8 form-control" type="text" id="imageOriginalNameField">
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <label class="col-4">Người upload</label>
+                                                                <input class="col-8 form-control" type="text" id="imageUploadByField">
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <label class="col-4">Thời gian upload</label>
+                                                                <input class="col-8 form-control" type="text" id="imageUploadAtField">
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <label class="col-4">Trạng thái</label>
+                                                                <input class="col-8 form-control" type="text" id="imageStatusField">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12 mt-2"><hr class="w-50 bg-info"></div>
+
+                                                <!--Srart Sub-Image-->
+                                                <div class="row" style="max-height: 500px; overflow: scroll" id="gridSubImages"></div>
+                                                <!--End Sub-Image-->
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!--/. END DANH SÁCH BIỂN THỂ VÀ THÔNG TIN CHUNG-->
 
-                        <div class="row col-sm-12 mt-3 border" style="padding-top: 10px">
-                            <div class="nav nav-tabs" id="product-tab" role="tablist">
-                                <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab" href="#product-desc"
-                                   role="tab" aria-controls="product-desc" aria-selected="true">
-                                   <label>Mô tả sản phẩm</label>
-                                </a>
-                                <a class="nav-item nav-link" id="product-comments-tab" data-toggle="tab" href="#product-comments"
-                                   role="tab" aria-controls="product-comments" aria-selected="false">Comments</a>
-                                <a class="nav-item nav-link" id="product-rating-tab" data-toggle="tab" href="#product-rating"
-                                   role="tab" aria-controls="product-rating" aria-selected="false">Rating</a>
+                        <!--Modal product history-->
+                        <div class="modal fade" id="viewHistory">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <strong class="modal-title" th:text="'Lịch sử cập nhật thông tin của [' + ${detailProducts.productName} + ']'"></strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body p-0" style="max-height: 800px; overflow: scroll">
+                                        <table class="table table-bordered" style="margin-bottom: 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Title</th>
+                                                    <th>Field name</th>
+                                                    <th>Old value</th>
+                                                    <th>New value</th>
+                                                    <th>Updated by</th>
+                                                    <th>Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tableProductHistory"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="tab-content w-100 mt-3" id="nav-tabContent">
-                                <div class="tab-pane fade show active" id="product-desc" role="tabpanel" aria-labelledby="product-desc-tab">
-                                    <textarea id="summernote" th:text="${detailProducts.productDes}"></textarea>
+                        </div>
+
+                        <!--Modal insert and update product variant-->
+                        <div class="modal fade" id="insertOrUpdateProductVariant">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <strong class="modal-title">Thêm mới biến thể sản phẩm</strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="productVariantNameField">Tên</label>
+                                                    <input class="form-control" type="text" id="productVariantNameField">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="fabricTypeField">Chọn chất liệu vải</label>
+                                                    <select class="custom-select" id="fabricTypeField"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="colorField">Chọn màu sắc</label>
+                                                    <select class="custom-select" id="colorField"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sizeField">Chọn kích cỡ</label>
+                                                    <select class="custom-select" id="sizeField"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="originalPriceField">Giá bán gốc</label>
+                                                    <input class="form-control" type="text" id="originalPriceField">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="promotionPriceField">Giá khuyến mãi</label>
+                                                    <input class="form-control" type="text" id="promotionPriceField">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                            <button type="button" class="btn btn-primary" id="btnCreateProductVariantSubmit">Lưu</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="tab-pane fade" id="product-comments" role="tabpanel" aria-labelledby="product-comments-tab">
-                                    About comment ...
+                            </div>
+                        </div>
+
+                        <!--Modal update giá bán của mỗi sản phẩm biến thể-->
+                        <div class="modal fade" id="modalUpdatePrice">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <strong class="modal-title">Cập nhật giá bán</strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4">Giá gốc</label>
+                                            <input class="col-sm-8 form-control" type="text" id="orgPriceFieldFUP" readonly>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4">Giá điều chỉnh</label>
+                                            <input class="col-sm-8 form-control" type="number" id="orgPriceToUpdateFieldFUP" name="giaBan">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4">Giá khuyến mãi</label>
+                                            <input class="col-sm-8 form-control" type="text" id="promoPriceFieldFUP" readonly>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4">Giá điều chỉnh</label>
+                                            <input class="col-sm-8 form-control" type="number" id="promoPriceToUpdateFieldFUP" name="giaBan">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4">Ghi chú</label>
+                                            <textarea class="col-sm-8 form-control" type="text" id="noteFieldFUP" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                        <button type="submit" class="btn btn-sm btn-primary" id="btnUpdatePriceSubmit">Đồng ý</button>
+                                    </div>
                                 </div>
-                                <div class="tab-pane fade" id="product-rating" role="tabpanel" aria-labelledby="product-rating-tab">
-                                    About rating ...
+                            </div>
+                        </div>
+
+                        <!--Modal lịch sử giá bán-->
+                        <div class="modal fade" id="modalPriceHistory">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <strong class="modal-title" id="modalPriceHistoryTitle"></strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body p-0">
+                                        <table class="table table-bordered" style="margin-bottom: 0">
+                                            <thead>
+                                                <tr>
+                                                    <td>STT</td>
+                                                    <td>Giá gốc</td>
+                                                    <td>Giá khuyến mãi</td>
+                                                    <td>Thời gian cập nhật</td>
+                                                    <td>Trạng thái</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tablePriceHistory"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Modal thay đổi image-->
+                        <div class="modal fade" id="modalChangeImage">
+                            <div class="modal-dialog">
+                                <div class="modal-content text-left">
+                                    <div class="modal-header">
+                                        <strong class="modal-title">Thay đổi hình ảnh</strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label>Chọn hình mới</label>
+                                                <input class="form-control" type="file" id="imageToChange">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-end">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                        <button type="submit" class="btn btn-primary" id="btnChangeImageSubmit">Lưu</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Modal active image-->
+                        <div class="modal fade" id="modalActiveImage">
+                            <div class="modal-dialog">
+                                <div class="modal-content text-left">
+                                    <div class="modal-header">
+                                        <strong class="modal-title">Đặt ảnh hiển thị default</strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Xác nhận chọn this image is default!
+                                    </div>
+                                    <div class="modal-footer justify-content-end">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                        <button type="button" class="btn btn-primary" id="btnActiveImageSubmit">Lưu</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -544,8 +488,9 @@
     </div>
 
     <script>
-        let mvProductVariantList = {};
-        let mvProductId = [[${detailProducts.productId}]];
+        let mvProductDetail = {};
+        let mvProductVariantList = [];
+        let mvProductId = [[${productId}]];
         let mvProductNameField = $("#productNameField");
         let mvProductVariantNameField = $("#productVariantNameField");
         let mvProductTypeField = $("#productTypeField");
@@ -554,11 +499,23 @@
         let mvColorField = $("#colorField");
         let mvSizeField = $("#sizeField");
         let mvUnitField = $("#unitField");
+        let mvStatusField = $("#statusField");
+        let mvImagesOfProduct = [];
+        let mvImageActive = {};
 
         $(document).ready(function () {
             init();
             createProductVariant();
             deleteAction();
+            loadVariantsOfProduct();
+            loadImagesOfProduct();
+            loadHistoryOfProduct();
+            loadPriceHistoryOfProduct();
+            loadImageInfoOnForm();
+            updatePrice();
+            updateProduct();
+            changeImage();
+            activeImage();
         });
 
         function init() {
@@ -568,7 +525,6 @@
                 $('.product-image-thumb.active').removeClass('active')
                 $(this).addClass('active')
             });
-
             $('#summernote').summernote({
                 height: 500, // chiều cao của trình soạn thảo
                 callbacks: {
@@ -578,17 +534,14 @@
                     }
                 }
             });
-
             $("#originalPriceField").on("change", function () {
                 let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 $(this).val(inputValue);
             });
-
             $("#promotionPriceField").on("change", function () {
                 let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 $(this).val(inputValue);
             });
-
             //Auto fill product variant name in field
             $("#colorField").on("click", function () {
                 autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
@@ -596,15 +549,27 @@
             $("#sizeField").on("click", function () {
                 autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
             });
-
             //Load categories for product core
             loadCategoriesOfProductCore();
-
             //Load categories for create product variant
              $("#btnCreateProductVariant").on("click", function () {
                  loadCategoriesOfProductVariant();
                  autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
              });
+             //Load product detail
+             loadProductDetail();
+        }
+
+        function loadProductDetail() {
+            let apiURL = mvHostURLCallApi + '/product/' + mvProductId;
+            $.get(apiURL, function (response) {
+                if (response.status === "OK") {
+                    mvProductDetail = response.data;
+                    $("#productNameHeader").text(mvProductDetail.productName);
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
         }
 
         function autoFillVariantNameInField(pProductName, pSizeName, pColorName) {
@@ -661,7 +626,17 @@
 
         function createProductVariant() {
             $("#btnCreateProductVariantSubmit").on("click", function () {
-                let paramsCheckExists = {productId : mvProductId, colorId : mvColorField.val(), sizeId : mvSizeField.val()}
+                if ($("#originalPriceField").val() === "") {
+                    alert("Can't insert null origial price!")
+                    return;
+                }
+                let paramsCheckExists = {
+                    productId : mvProductId,
+                    colorId : mvColorField.val(),
+                    sizeId : mvSizeField.val(),
+                    priceSellValue : $("#originalPriceField").val(),
+                    promotionPriceValue : $("#promotionPriceField").val()
+                }
                 $.get(mvHostURLCallApi + "/product/variant/exists", paramsCheckExists, function (response) {
                     if (response.data === true) {
                         alert("This product variant already exists!");
@@ -673,8 +648,8 @@
                             fabricTypeId : $("#fabricTypeField").val(),
                             colorId : $("#colorField").val(),
                             sizeId : $("#sizeField").val(),
-                            priceSellId : mvFormatCurrency($("#originalPriceField").val()),
-                            promotionPriceId : mvFormatCurrency($("#promotionPriceField").val())
+                            priceSellValue : $("#originalPriceField").val().replaceAll(',', ''),
+                            promotionPriceValue : $("#promotionPriceField").val().replaceAll(',', '')
                         };
                         $.ajax({
                             url: apiURL,
@@ -702,6 +677,22 @@
                 showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + $(this).attr("entityName"));
             });
 
+            $(document).on("click", ".btn-delete-variant", function () {
+                let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
+                $(this).attr("entity", "productVariant");
+                $(this).attr("entityId", productVariant.productVariantId);
+                $(this).attr("actionType", "delete");
+                showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + productVariant.name);
+            })
+
+            $(document).on("click", ".btn-delete-image", function () {
+                let image = mvImagesOfProduct[$(this).attr("imageId")];
+                $(this).attr("entity", "image");
+                $(this).attr("entityId", image.id);
+                $(this).attr("actionType", "delete");
+                showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + image.tenFileCustomize);
+            })
+
             $('#yesButton').on("click", function () {
                 let apiURL = mvHostURLCallApi
                 let entity = $(this).attr("entity")
@@ -719,8 +710,326 @@
                         apiURL += '/product/variant/delete/' + entityId
                     }
                 }
-                callApiDelete(apiURL);
+
+                if (entity === "product") {
+                    callApiDelete(apiURL, "/san-pham");
+                } else {
+                    callApiDelete(apiURL);
+                }
             });
+        }
+
+        function loadHistoryOfProduct() {
+            $("#btnViewProductHistory").on("click", function () {
+                let apiURL = mvHostURLCallApi + '/product/' + mvProductId + '/history';
+                $.get(apiURL, function (response) {
+                    if (response.status === "OK") {
+                        let data = response.data;
+                        let contentTable = $('#tableProductHistory');
+                        contentTable.empty();
+                        $.each(data, function (index, d) {
+                            contentTable.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${d.title}</td>
+                                <td>${d.fieldName}</td>
+                                <td>${d.oldValue}</td>
+                                <td>${d.newValue}</td>
+                                <td>${d.createdBy}</td>
+                                <td>${d.createdAt}</td>
+                            </tr>
+                        `);
+                        });
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+            })
+        }
+
+        function loadPriceHistoryOfProduct() {
+            $(document).on("click", ".btn-view-price-history", function () {
+                let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
+                let pricesOfProduct = productVariant.listPrices;
+                $("#tablePriceHistory").empty();
+                $.each(pricesOfProduct, function (index, d) {
+                    let originalPrice = d.original;
+                    let promotionPrice = d.discount;
+                    if ($.isNumeric(originalPrice)) {
+                        originalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice);
+                    } else {
+                        originalPrice = '-';
+                    }
+                    if ($.isNumeric(promotionPrice)) {
+                        promotionPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(promotionPrice);
+                    } else {
+                        promotionPrice = '-';
+                    }
+                    $("#tablePriceHistory").append(`
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td><span>${originalPrice}</span></td>
+                            <td><span>${promotionPrice}</span></td>
+                            <td>${d.createdAt}</td>
+                            <td>${d.status}</td>
+                        </tr>
+                  `);
+                })
+                $("#modalPriceHistoryTitle").text("Lịch sử giá bán của [${productVariant.name}]")
+                $("#modalPriceHistory").modal();
+            })
+        }
+
+        function updatePrice() {
+            $(document).on("click", ".btn-update-price", function () {
+                let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
+                let originalPrice = productVariant.priceSellValue;
+                let promotionPrice = productVariant.priceAfterDiscount;
+                if ($.isNumeric(originalPrice)) {
+                    originalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice);
+                } else {
+                    originalPrice = '-';
+                }
+                if ($.isNumeric(promotionPrice)) {
+                    promotionPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(promotionPrice);
+                } else {
+                    promotionPrice = '-';
+                }
+                $("#orgPriceFieldFUP").val(originalPrice);
+                $("#promoPriceFieldFUP").val(promotionPrice);
+                let btnSubmitUpdate = $("#btnUpdatePriceSubmit");
+                btnSubmitUpdate.attr("productVariantId", $(this).attr("productVariantId"));
+                btnSubmitUpdate.attr("priceId", productVariant.priceSellId);
+                $("#modalUpdatePrice").modal();
+            })
+
+            $("#btnUpdatePriceSubmit").on("click", function () {
+                if ($("#orgPriceToUpdateFieldFUP").val() === "") {
+                    return;
+                }
+                let apiURL = mvHostURLCallApi + "/product/variant/" + $(this).attr("productVariantId") + "/price/update/" + $(this).attr("priceId");
+                let body = {
+                    productVariant : {id: $(this).attr("productVariantId")},
+                    name : mvProductVariantNameField.val(),
+                    type : "S",
+                    giaBan : $("#orgPriceToUpdateFieldFUP").val(),
+                    discount : $("#promoPriceToUpdateFieldFUP").val()
+                };
+                $.ajax({
+                    url: apiURL,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(body),
+                    success: function (response) {
+                        if (response.status === "OK") {
+                            alert("Update successfully!");
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
+                    }
+                });
+            })
+        }
+
+        function updateProduct() {
+            $("#btnUpdateProduct").on("click", function () {
+                let isConfirm = confirm("Bạn muốn cập nhật thông tin sản phẩm?");
+                if (isConfirm === true) {
+                    let apiURL = mvHostURLCallApi + "/product/update/" + mvProductId;
+                    let body = {
+                        id : mvProductId,
+                        tenSanPham : mvProductNameField.val(),
+                        brand : {id: mvBrandField.val()},
+                        productType : {id: mvProductTypeField.val()},
+                        unit : {id: mvUnitField.val()},
+                        moTaSanPham : $("#describes_virtual").val(),
+                        status : mvStatusField.val()
+                    };
+                    $.ajax({
+                        url: apiURL,
+                        type: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify(body),
+                        success: function (response) {
+                            if (response.status === "OK") {
+                                alert("Update successfully!");
+                                window.location.reload();
+                            }
+                        },
+                        error: function (xhr) {
+                            alert("Error: " + $.parseJSON(xhr.responseText).message);
+                        }
+                    });
+                }
+            })
+        }
+
+        function loadVariantsOfProduct() {
+            $("#custom-tabs-two-variants-tab").on("click", function () {
+                let apiURL = mvHostURLCallApi + '/product/' + mvProductId + '/variants';
+                $.get(apiURL, function (response) {
+                    if (response.status === "OK") {
+                        let data = response.data;
+                        let contentTable = $("#tableProductVariant");
+                        contentTable.empty();
+                        mvProductVariantList = [];
+                        $.each(data, function (index, d) {
+                            mvProductVariantList[d.productVariantId] = d;
+                            let originalPrice = d.priceSellValue;
+                            let promotionPrice = d.priceAfterDiscount;
+                            if ($.isNumeric(originalPrice)) {
+                                originalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice);
+                            } else {
+                                originalPrice = '-';
+                            }
+                            if ($.isNumeric(promotionPrice)) {
+                                promotionPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(promotionPrice);
+                            } else {
+                                promotionPrice = '-';
+                            }
+                            contentTable.append(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td><a href="/san-pham/variant/${d.productVariantId}">${d.name}</a></td>
+                                    <td>${d.colorName}</td>
+                                    <td>${d.sizeName}</td>
+                                    <td>${d.fabricTypeName}</td>
+                                    <td>${d.storageQty}</td>
+                                    <td>${d.soldQty}</td>
+                                    <td>
+                                        <span class="btn-view-price-history" productVariantId="${d.productVariantId}" style="color: #007bff; cursor: pointer">${originalPrice}</span>
+                                    </td>
+                                    <td>
+                                        <span class="btn-view-price-history" productVariantId="${d.productVariantId}" style="color: #007bff; cursor: pointer">${promotionPrice}</span>
+                                    </td>
+                                    <td>${d.status}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-info btn-update-variant" title="Cập nhật biến thể sản phẩm"><i class="fa-solid fa-circle-check"></i></button>
+                                        <button type="button" class="btn btn-sm btn-primary btn-update-price" title="Cập nhật giá sản phẩm" productVariantId="${d.productVariantId}"><i class="fa-solid fa-dollar-sign"></i></button>
+                                        <button type="button" class="btn btn-sm btn-danger btn-delete-variant" title="Xóa biến thể sản phẩm" productVariantId="${d.productVariantId}"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `);
+                        })
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+            })
+        }
+
+        function changeImage() {
+            $(document).on("click", ".btn-change-image", function () {
+                let image = mvImagesOfProduct[$(this).attr("imageId")];
+                $("#btnChangeImageSubmit").attr("imageId", image.id);
+                $("#modalChangeImage").modal();
+            })
+
+            $("#btnChangeImageSubmit").on("click", function () {
+                let apiURL = mvHostURLCallApi + "/product/" + mvProductId + "/change-image/" + $(this).attr("imageId");
+                let file = $("#imageToChange")[0].files[0];
+                let formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    url: apiURL,
+                    type: "PUT",
+                    data: formData,
+                    processData: false,  // Không xử lý dữ liệu
+                    contentType: false,  // Không đặt kiểu dữ liệu
+                    success: function(response) {
+                        if (response.status === "OK") {
+                            alert("Change successfully!");
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
+                    }
+                });
+            })
+        }
+
+        function activeImage() {
+            $(document).on("click", ".btn-active-image", function () {
+                let image = mvImagesOfProduct[$(this).attr("imageId")];
+                $("#btnActiveImageSubmit").attr("imageId", image.id);
+                $("#modalActiveImage").modal();
+            })
+
+            $("#btnActiveImageSubmit").on("click", function () {
+                let apiURL = mvHostURLCallApi + "/product/" + mvProductId + "/active-image/" + $(this).attr("imageId");
+                $.ajax({
+                    url: apiURL,
+                    type: "PUT",
+                    success: function (response) {
+                        if (response.status === "OK") {
+                            alert("Update successfully!");
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
+                    }
+                });
+            })
+        }
+
+        function loadImageInfoOnForm() {
+            $(document).on("click", ".sub-image", function () {
+                let subImage = mvImagesOfProduct[$(this).attr("imageId")];
+                $("#imageNameField").val(subImage.tenFileCustomize);
+                $("#imageSizeField").val(subImage.kichThuocFile);
+                $("#imageOriginalNameField").val(subImage.tenFileGoc);
+                $("#imageUploadByField").val(subImage.account.username);
+                $("#imageUploadAtField").val(subImage.createdAt);
+                $("#imageStatusField").val(subImage.isActive);
+            })
+        }
+
+        function loadImagesOfProduct() {
+            $("#custom-tabs-three-images-tab").on("click", function () {
+                let apiURL = mvHostURLCallApi + '/product/' + mvProductId + '/images';
+                $.get(apiURL, function (response) {
+                    if (response.status === "OK") {
+                        let data = response.data;
+                        let gridSubImages = $("#gridSubImages");
+                        mvImagesOfProduct = [];
+                        $.each(data, function (index, d) {
+                            mvImagesOfProduct[d.id] = d;
+                            if (d.isActive === true) {
+                                mvImageActive = d;
+                            }
+                            let classCard;
+                            let styleCard;
+                            if (d.isActive) {
+                                classCard = "card border border-primary";
+                                styleCard = "height: 186px; background-color:aliceblue";
+                            } else {
+                                classCard = "card border";
+                                styleCard = "height: 186px"
+                            }
+                            gridSubImages.append(`
+                                <div class="col-2">
+                                    <div class="${classCard}" style="${styleCard}">
+                                        <div class="card-body product-image-thumb" style="margin: auto">
+                                            <img src="/${d.directoryPath}/${d.tenFileKhiLuu}" alt="Product Image" class="sub-image" imageId="${d.id}">
+                                        </div>
+                                        <div class="card-footer row">
+                                            <i style="cursor: pointer" imageId="${d.id}" class="fa-solid fa-arrows-rotate text-info col btn-change-image"></i>
+                                            <i style="cursor: pointer" imageId="${d.id}" class="fa-regular fa-circle-check col btn-active-image"></i>
+                                            <i style="cursor: pointer" imageId="${d.id}" class="fa-solid fa-trash text-danger col btn-delete-image"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        })
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+            })
         }
     </script>
 

@@ -271,7 +271,7 @@
                 mvId = category.id;
                 $(this).attr("actionType", "delete");
                 $(this).attr("entityName", category.name);
-                showConfirmModal($(this), "Xóa danh mục hệ thống", "Bạn chắc chắn muốn xác danh mục: " + category.name);
+                showConfirmModal($(this), "Xóa danh mục hệ thống", "Bạn chắc chắn muốn xóa danh mục: " + category.name);
             });
 
             $('#yesButton').on("click", function () {

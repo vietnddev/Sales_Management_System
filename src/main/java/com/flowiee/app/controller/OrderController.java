@@ -38,7 +38,7 @@ public class OrderController extends BaseController {
             Page<Order> orderPage = orderService.findAllOrder(pageSize, pageNum - 1);
             return ApiResponse.ok(OrderDTO.fromOrders(orderPage.getContent()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"), ex);
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
         }
     }
@@ -55,16 +55,18 @@ public class OrderController extends BaseController {
             }
             return ApiResponse.ok(orderService.findOrderById(orderId));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"), ex);
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));
         }
     }
 
     @Operation(summary = "Create new order")
     @PostMapping("/insert")
-    public ApiResponse<String> createOrder(@RequestBody OrderDTO orderRequest) {
+    public ApiResponse<String> createOrder(@RequestBody OrderDTO orderDTO) {
         try {
-            return ApiResponse.ok(orderService.saveOrder(orderRequest));
+            return ApiResponse.ok(orderService.saveOrder(orderDTO));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "order"), ex);
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "order"));
         }
     }
@@ -81,6 +83,7 @@ public class OrderController extends BaseController {
             orderService.updateOrder(order, orderId);
             return ApiResponse.ok(MessageUtils.UPDATE_SUCCESS);
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "order"), ex);
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "order"));
         }
     }
@@ -94,6 +97,7 @@ public class OrderController extends BaseController {
             //Check them trang thai
             return ApiResponse.ok(orderService.deleteOrder(orderId));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "order"), ex);
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "order"));
         }
     }

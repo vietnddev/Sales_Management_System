@@ -8,6 +8,7 @@ import com.flowiee.app.service.AccountService;
 import com.flowiee.app.service.RoleService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -227,7 +228,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public String deleteAllRole(Integer accountId) {
         roleRepository.deleteByAccountId(accountId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     private FlowieeRole buildFlowieeRole(Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {

@@ -3,6 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.service.MailService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,7 +27,7 @@ public class MailServiceImpl implements MailService {
                 helper.setTo(to);
                 helper.setText(body, true);
                 javaMailSender.send(mimeMessage);
-                return AppConstants.SERVICE_RESPONSE_SUCCESS;
+                return MessageUtils.DELETE_SUCCESS;
             } catch (MessagingException exception) {
                 exception.printStackTrace();
             }

@@ -3,17 +3,16 @@ package com.flowiee.app.controller;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.Supplier;
 import com.flowiee.app.exception.AppException;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.service.SupplierService;
 import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class SupplierController extends BaseController {
     public ApiResponse<List<Supplier>> findAll(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
-            if (!super.validateModuleStorage.readMaterial(true)) {
+            if (!super.validateModuleProduct.readSupplier(true)) {
                 return null;
             }
             if (pageSize != null && pageNum != null) {
@@ -38,8 +37,57 @@ public class SupplierController extends BaseController {
                 Page<Supplier> suppliers = supplierService.findAll(null, null);
                 return ApiResponse.ok(suppliers.getContent(), 1, 0, suppliers.getTotalPages(), suppliers.getTotalElements());
             }
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "supplier"), ex);
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "supplier"));
+        }
+    }
+
+    @Operation(summary = "Thêm mới nhà cung cấp")
+    @PostMapping("/create")
+    public ApiResponse<Supplier> createNewSupplier(@RequestBody Supplier supplier) {
+        try {
+            if (!super.validateModuleProduct.insertSupplier(true)) {
+                return null;
+            }
+            return ApiResponse.ok(supplierService.save(supplier));
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "supplier"), ex);
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "supplier"));
+        }
+    }
+
+    @Operation(summary = "Cập nhật nhà cung cấp")
+    @PutMapping("/update/{id}")
+    public ApiResponse<Supplier> updateSupplier(@RequestBody Supplier supplier, @PathVariable("id") Integer supplierId) {
+        try {
+            if (!super.validateModuleProduct.updateSupplier(true)) {
+                return null;
+            }
+            if (ObjectUtils.isEmpty(supplierService.findById(supplierId))) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(supplierService.update(supplier, supplierId));
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "supplier"), ex);
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "supplier"));
+        }
+    }
+
+    @Operation(summary = "Xóa nhà cung cấp")
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<String> deleteSupplier(@PathVariable("id") Integer supplierId) {
+        try {
+            if (!super.validateModuleProduct.updateSupplier(true)) {
+                return null;
+            }
+            if (ObjectUtils.isEmpty(supplierService.findById(supplierId))) {
+                throw new BadRequestException();
+            }
+            return ApiResponse.ok(supplierService.delete(supplierId));
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "supplier"), ex);
+            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "supplier"));
         }
     }
 }

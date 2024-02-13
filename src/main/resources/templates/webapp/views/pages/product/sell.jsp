@@ -522,7 +522,7 @@
     function checkVoucherIsAvailable() {
         $('#btnCheckVoucherIsAvailable').on('click', function () {
             let codeInput = $('#voucherCodeField').val();
-            let apiURL = mvHostURLCallApi + '/product/voucher/check/' + codeInput;
+            let apiURL = mvHostURLCallApi + '/voucher/check/' + codeInput;
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     let data = response.data;

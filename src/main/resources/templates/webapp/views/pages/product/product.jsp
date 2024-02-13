@@ -178,7 +178,7 @@
         });
 
         function loadProducts(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + '/supplier/all';
+            let apiURL = mvHostURLCallApi + '/product/all';
             let params = {
                 pageSize: pageSize,
                 pageNum: pageNum,
@@ -194,7 +194,6 @@
                     let contentTable = $('#contentTable');
                     contentTable.empty();
                     $.each(data, function (index, p) {
-
                         let variantBlock = '';
                         $.each(p.productVariantInfo, function (color, quantity) {
                             variantBlock += `<span class="span">${color} : ${quantity}</span><br>`;

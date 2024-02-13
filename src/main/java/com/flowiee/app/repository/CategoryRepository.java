@@ -42,4 +42,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     @Query("from Category c where c.id in (select p.size.id from ProductVariant p where p.product.id=:productId and p.color.id=:colorId)")
     List<Category> findSizeOfColorOfProduct(Integer productId, Integer colorId);
+
+    @Query("select c.type, nvl((select count(*) from Category where code <> 'ROOT' and type = c.type), 0) as total_records " +
+           "from Category c " +
+           "where c.code = 'ROOT'")
+    List<Object[]> totalRecordsOfEachType();
 }

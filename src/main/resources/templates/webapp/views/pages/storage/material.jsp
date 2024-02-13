@@ -5,12 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Flowiee | Quản lý nguyên vật liệu</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <div th:replace="header :: stylesheets"></div>
     <style rel="stylesheet">
-        .table td,
-        th {
+        .table td, th {
             vertical-align: middle;
         }
     </style>
@@ -45,7 +42,9 @@
                                         <div class="col-6 text-right">
                                             <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Import</button>
                                             <a th:href="@{${url_export}}" class="btn btn-sm btn-info"><i class="fa-solid fa-cloud-arrow-down mr-2"></i>Export</a>
-                                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#insert"><i class="fa-solid fa-circle-plus mr-2"></i>Thêm mới</button>
+                                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#insert" id="btnInsertForm">
+                                                <i class="fa-solid fa-circle-plus mr-2"></i>Thêm mới
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -216,11 +215,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="modal-footer justify-content-end"
-                                                         style="margin-bottom: -15px;">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">Hủy
-                                                        </button>
+                                                    <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                                                         <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </div>
@@ -234,90 +230,60 @@
                                 <div class="modal fade" id="insert">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form th:action="@{/storage/material/insert}"
-                                                  th:object="${material}" method="post">
-                                                <div class="modal-header">
-                                                    <strong class="modal-title">Thêm mới nguyên vật liệu</strong>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group">
-                                                                <label>Loại</label>
-                                                                <select class="custom-select col-sm" name="code"
-                                                                        data-placeholder="Loại">
-                                                                    <option value="MAIN">Nguyên liệu sản xuất</option>
-                                                                    <option value="SUB">Phụ liệu sản xuất</option>
-                                                                    <option value="OTHER">Khác</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Tên nguyên vật liệu</label>
-                                                                <input type="text" class="form-control"
-                                                                       name="name" required/>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Số lượng</label>
-                                                                <input type="number" class="form-control" value="1"
-                                                                       name="quantity" required/>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Đơn vị tính</label>
-                                                                <select class="custom-select col-sm" name="unit"
-                                                                        data-placeholder="Đơn vị tính">
-                                                                    <option th:each="u : ${listDonViTinh}"
-                                                                            th:value="${u.id}"
-                                                                            th:text="${u.name}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Ghi chú</label>
-                                                                <textarea class="form-control" rows="5"
-                                                                          placeholder="Ghi chú"
-                                                                          name="note"></textarea>
-                                                            </div>
+                                            <div class="modal-header">
+                                                <strong class="modal-title">Thêm mới nguyên vật liệu</strong>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="form-group">
+                                                            <label>Loại</label>
+                                                            <select class="custom-select col-sm" name="code" data-placeholder="Loại">
+                                                                <option value="MAIN">Nguyên liệu sản xuất</option>
+                                                                <option value="SUB">Phụ liệu sản xuất</option>
+                                                                <option value="OTHER">Khác</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="nameField">Tên nguyên vật liệu</label>
+                                                            <input type="text" class="form-control" id="nameField" required/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="quantityField">Số lượng</label>
+                                                            <input type="number" class="form-control" value="1" id="quantityField" required/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="unitField">Đơn vị tính</label>
+                                                            <select class="custom-select col-sm" name="unit" id="unitField"></select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="noteField">Ghi chú</label>
+                                                            <textarea class="form-control" rows="5" placeholder="Ghi chú" id="noteField"></textarea>
                                                         </div>
                                                     </div>
-                                                    <div class="modal-footer justify-content-end"
-                                                         style="margin-bottom: -15px;">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">Hủy
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                    </div>
                                                 </div>
-                                            </form>
+                                            </div>
+                                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                <button type="button" class="btn btn-primary" id="btnInsertSubmit">Lưu</button>
+                                            </div>
                                         </div>
-                                        <!-- /.modal-content -->
                                     </div>
-                                    <!-- /.modal-dialog -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
 
-        <div th:replace="footer :: footer">
-            <!-- Nhúng các file JavaScript vào -->
-        </div>
+        <div th:replace="footer :: footer"></div>
 
         <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
+        <aside class="control-sidebar control-sidebar-dark"></aside>
 
-        <div th:replace="header :: scripts">
-            <!-- Nhúng các file JavaScript vào -->
-        </div>
+        <div th:replace="header :: scripts"></div>
     </div>
     <script>
         let mvMaterials = {};
@@ -325,6 +291,7 @@
         $(document).ready(function () {
             loadMaterials(mvPageSizeDefault, 1);
             updateTableContentWhenOnClickPagination(loadMaterials);
+            insert();
         });
 
         function loadMaterials(pageSize, pageNum) {
@@ -373,6 +340,44 @@
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
             });
+        }
+        
+        function insert() {
+            $("#btnInsertForm").on("click", function () {
+                $.get(mvHostURLCallApi + "/category/unit", function (response) {
+                    if (response.status === "OK") {
+                        $.each(response.data, function (index, d) {
+                            $("#unitField").append('<option value=' + d.id + '>' + d.name + '</option>');
+                        });
+                    }
+                });
+            })
+
+            $("#btnInsertSubmit").on("click", function () {
+                let apiURL = mvHostURLCallApi + "/storage/material/create";
+                let body = {
+                    code : $("#codeField").val(),
+                    name : $("#nameField").val(),
+                    unitId : $("#unitField").val(),
+                    quantity : $("#quantityField").val(),
+                    note : $("#noteField").val()
+                };
+                $.ajax({
+                    url: apiURL,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(body),
+                    success: function (response) {
+                        if (response.status === "OK") {
+                            alert("Create new material successfully!");
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
+                    }
+                });
+            })
         }
     </script>
 </body>

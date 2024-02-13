@@ -108,8 +108,10 @@ public class ProductVariantDTO implements Serializable {
 
     public static List<ProductVariantDTO> fromProductVariants(List<ProductVariant> productVariants) {
         List<ProductVariantDTO> list = new ArrayList<>();
-        for (ProductVariant p : productVariants) {
-            list.add(ProductVariantDTO.fromProductVariant(p));
+        if (ObjectUtils.isNotEmpty(productVariants)) {
+            for (ProductVariant p : productVariants) {
+                list.add(ProductVariantDTO.fromProductVariant(p));
+            }
         }
         return list;
     }

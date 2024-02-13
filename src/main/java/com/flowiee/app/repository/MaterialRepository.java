@@ -1,6 +1,7 @@
 package com.flowiee.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -31,4 +32,12 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
 
     @Query("from Material m where m.unit.id=:unitId")
     List<Material> findByUnit(@Param("unitId") Integer unitId);
+
+    @Modifying
+    @Query("update Material m set m.quantity = (m.quantity + :quantity) where m.id=:materialId")
+    void updateQuantityIncrease(@Param("quantity") Integer quantity, @Param("materialId") Integer materialId);
+
+    @Modifying
+    @Query("update Material m set m.quantity = (m.quantity - :quantity) where m.id=:materialId")
+    void updateQuantityDecrease(@Param("quantity") Integer quantity, @Param("materialId") Integer materialId);
 }

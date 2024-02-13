@@ -30,25 +30,17 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
 public class ProductUIController extends BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(ProductUIController.class);
-
     private final ProductService          productService;
-    private final ProductHistoryService   productHistoryService;
     private final FileStorageService      fileStorageService;
-    private final PriceService            priceService;
     private final VoucherService          voucherService;
     private final VoucherTicketService    voucherTicketService;
-    private final ValidateModuleProduct   validateModuleProduct;
 
     @Autowired
-    public ProductUIController(ProductService productService, ProductHistoryService productHistoryService, FileStorageService fileStorageService, PriceService priceService, VoucherService voucherService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct) {
+    public ProductUIController(ProductService productService, FileStorageService fileStorageService, VoucherService voucherService, VoucherTicketService voucherTicketService) {
         this.productService = productService;
-        this.productHistoryService = productHistoryService;
         this.fileStorageService = fileStorageService;
-        this.priceService = priceService;
         this.voucherService = voucherService;
         this.voucherTicketService = voucherTicketService;
-        this.validateModuleProduct = validateModuleProduct;
     }
 
     @GetMapping
@@ -76,19 +68,15 @@ public class ProductUIController extends BaseController {
                 listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
             }
             ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
-            modelAndView.addObject("idSanPham", productId);
+            modelAndView.addObject("productId", productId);
             modelAndView.addObject("detailProducts", productDetail);
             modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariantOfProduct(productId));
             modelAndView.addObject("listProductStatus", listProductStatus);
-            modelAndView.addObject("listProductHistory", productHistoryService.findByProduct(productId));
-            //List image
-            modelAndView.addObject("listImageOfSanPham", fileStorageService.getImageOfSanPham(productId));
             //Image active
             FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(productId);
             modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());
             return baseView(modelAndView);
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
             logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product detail"), ex);
             throw new AppException();
         }
@@ -98,14 +86,10 @@ public class ProductUIController extends BaseController {
     public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
         validateModuleProduct.readProduct(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_VARIANT);
-        modelAndView.addObject("bienTheSanPham", new ProductVariant());
-        modelAndView.addObject("thuocTinhSanPham", new ProductAttribute());
-        modelAndView.addObject("giaBanSanPham", new Price());
         modelAndView.addObject("listThuocTinh", productService.findAllAttributes(variantId));
         modelAndView.addObject("bienTheSanPhamId", variantId);
         modelAndView.addObject("bienTheSanPham", productService.findProductVariantById(variantId));
         modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(variantId));
-        modelAndView.addObject("listPrices", priceService.findPricesByProductVariant(variantId));
         FileStorage imageActive = fileStorageService.findImageActiveOfSanPhamBienThe(variantId);
         if (imageActive == null) {
             imageActive = new FileStorage();
@@ -114,29 +98,10 @@ public class ProductUIController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @PostMapping("/insert")
-    public ModelAndView insertProductOriginal(HttpServletRequest request, @ModelAttribute("sanPham") Product product) {
-        validateModuleProduct.insertProduct(true);
-        productService.saveProduct(product);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
     @PostMapping("/attribute/insert")
     public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
         validateModuleProduct.updateProduct(true);
         productService.saveProductAttribute(productAttribute);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping(value = "/update/{id}")
-    public ModelAndView updateProductOriginal(HttpServletRequest request,
-                                              @ModelAttribute("sanPham") Product product,
-                                              @PathVariable("id") Integer productId) {
-        validateModuleProduct.updateProduct(true);
-        if (product == null|| productId <= 0 || productService.findProductById(productId) == null) {
-            throw new NotFoundException("Product not found!");
-        }
-        productService.updateProduct(product, productId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -174,18 +139,6 @@ public class ProductUIController extends BaseController {
         return ResponseEntity.ok().body(productService.deleteProductAttribute(attributeId));
     }
 
-    @PostMapping(value = "/active-image/{sanPhamId}")
-    public ModelAndView activeImageOfProductOriginal(HttpServletRequest request,
-                                                    @PathVariable("sanPhamId") Integer productId,
-                                                    @RequestParam("imageId") Integer imageId) {
-        validateModuleProduct.updateImage(true);
-        if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException("Product or image not found!");
-        }
-        fileStorageService.setImageActiveOfSanPham(productId, imageId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
     @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
     public ModelAndView activeImageOfProductVariant(HttpServletRequest request,
                                                     @PathVariable("sanPhamBienTheId") Integer productVariantId,
@@ -195,24 +148,6 @@ public class ProductUIController extends BaseController {
             throw new NotFoundException("Product variant or image not found!");
         }
         fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping(value = "/variant/gia-ban/update/{id}")
-    public ModelAndView updateProductPrice(HttpServletRequest request,
-                                           @ModelAttribute("price") Price price,
-                                           @PathVariable("id") Integer productVariantId) {
-        validateModuleProduct.priceManagement(true);
-        if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
-            throw new NotFoundException("Product variant or price not found!");
-        }
-        String idGiaBanHienTai = "";
-        if (!request.getParameter("idGiaBan").equals("-")) {
-            idGiaBanHienTai = request.getParameter("idGiaBan");
-        } else {
-            idGiaBanHienTai = "0";
-        }
-        priceService.update(price, productVariantId, Integer.parseInt(idGiaBanHienTai));
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -226,7 +161,6 @@ public class ProductUIController extends BaseController {
         return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 
-    /** ******************** GALLERY ******************** **/
     @GetMapping("/gallery")
     public ModelAndView viewGallery() {
         validateModuleProduct.readGallery(true);
@@ -236,16 +170,12 @@ public class ProductUIController extends BaseController {
         return baseView(modelAndView);
     }
 
-    /** ******************** VOUCHER ******************** **/
     @GetMapping("/voucher")
     public ModelAndView viewVouchers() {
         validateModuleProduct.readVoucher(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER);
-        modelAndView.addObject("listVoucher", voucherService.findAll(null, null, null, null));
         modelAndView.addObject("listProduct", productService.findProductsIdAndProductName());
         modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
-        modelAndView.addObject("voucher", new VoucherInfo());
-        modelAndView.addObject("voucherDetail", new VoucherTicket());
         return baseView(modelAndView);
     }
 
@@ -255,7 +185,6 @@ public class ProductUIController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER_DETAIL);
         modelAndView.addObject("voucherDetail", voucherService.findById(voucherInfoId));
         modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
-        modelAndView.addObject("voucher", new VoucherInfo());
         modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
         return baseView(modelAndView);
     }

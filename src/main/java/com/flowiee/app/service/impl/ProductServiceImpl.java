@@ -296,11 +296,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductVariant saveProductVariant(ProductVariant productVariant) {
+    public ProductVariant saveProductVariant(ProductVariantDTO productVariantDTO) {
         try {
+            ProductVariant productVariant = ProductVariant.fromProductVariantDTO(productVariantDTO);
             productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
             productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
             ProductVariant productVariantSaved = productVariantRepo.save(productVariant);
+
+            if (ObjectUtils.isNotEmpty(productVariantDTO.getPriceSellValue())) {
+                Price price = new Price();
+                price.setProductVariant(productVariantSaved);
+                price.setType("S");
+                price.setGiaBan(BigDecimal.valueOf(productVariantDTO.getPriceSellValue()));
+                price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
+                if (ObjectUtils.isNotEmpty(productVariantDTO.getPromotionPriceValue())) {
+                    price.setDiscount(BigDecimal.valueOf(productVariantDTO.getPromotionPriceValue()));
+                }
+                priceService.save(price);
+            }
+
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + productVariant);
             logger.info("Insert productVariant success! " + productVariant);
             return productVariantSaved;
@@ -366,10 +380,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public String updateProductVariantQuantity(Integer quantity, Integer productVariantId) {
+    public String updateProductVariantQuantity(Integer quantity, Integer productVariantId, String type) {
         try {
-            productVariantRepo.updateQuantity(quantity, productVariantId);
-            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật lại số lượng sản phẩm khi tạo đơn hàng");
+            if ("I".equals(type)) {
+                productVariantRepo.updateQuantityIncrease(quantity, productVariantId);
+            } else if ("D".equals(type)) {
+                productVariantRepo.updateQuantityDecrease(quantity, productVariantId);
+            }
+            systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Update product quantity");
             return MessageUtils.UPDATE_SUCCESS;
         } catch (Exception e) {
             logger.error("Lỗi khi cập nhật số lượng sản phẩm!", e);
@@ -390,6 +408,11 @@ public class ProductServiceImpl implements ProductService {
             logger.error("Error finding product variant quantity", ex);
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public Integer totalProductsInStorage() {
+        return productVariantRepo.countTotalQuantity();
     }
 
     @Override

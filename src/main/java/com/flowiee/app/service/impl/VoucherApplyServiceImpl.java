@@ -7,6 +7,7 @@ import com.flowiee.app.repository.VoucherApplyRepository;
 import com.flowiee.app.service.VoucherApplyService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,7 @@ public class VoucherApplyServiceImpl implements VoucherApplyService {
         if (this.findById(entityId) != null) {
             voucherApplyRepo.deleteById(entityId);
         }
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     private List<VoucherApplyDTO> extractDataQuery(List<Object[]> objects) {

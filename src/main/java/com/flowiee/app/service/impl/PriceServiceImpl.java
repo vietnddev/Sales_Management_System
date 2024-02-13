@@ -26,7 +26,6 @@ import java.util.List;
 
 @Service
 public class PriceServiceImpl implements PriceService {
-    private static final Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
     private static final String module = AppConstants.SYSTEM_MODULE.PRODUCT.name();
 
     @Autowired
@@ -114,6 +113,7 @@ public class PriceServiceImpl implements PriceService {
         ProductVariant productVariant = productService.findProductVariantById(bienTheSanPhamId);
         price.setId(0);
         price.setProductVariant(productVariant);
+        price.setType("S");
         price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
         Price priceUpdated = priceRepo.save(price);
         //

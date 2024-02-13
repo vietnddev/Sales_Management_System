@@ -8,9 +8,13 @@ import com.flowiee.app.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 
+import javax.persistence.Column;
+import java.io.Serial;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +22,7 @@ import java.util.List;
 @Getter
 @Setter
 public class VoucherInfoDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Integer id;
@@ -67,6 +72,16 @@ public class VoucherInfoDTO implements Serializable {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<VoucherInfoDTO> fromVoucherInfos(List<VoucherInfo> voucherInfos) {
+        List<VoucherInfoDTO> list = new ArrayList<>();
+        if (ObjectUtils.isNotEmpty(voucherInfos)) {
+            for (VoucherInfo v : voucherInfos) {
+                list.add(VoucherInfoDTO.fromVoucherInfo(v));
+            }
+        }
+        return list;
     }
 
 	@Override

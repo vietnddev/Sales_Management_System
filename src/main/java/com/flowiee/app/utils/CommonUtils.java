@@ -1,5 +1,6 @@
 package com.flowiee.app.utils;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -98,9 +99,11 @@ public class CommonUtils {
 
     public static String getExtension(String fileName) {
         String extension = "";
-        int lastIndex = fileName.lastIndexOf('.');
-        if (lastIndex > 0 && lastIndex < fileName.length() - 1) {
-            extension = fileName.substring(lastIndex + 1);
+        if (ObjectUtils.isNotEmpty(fileName)) {
+            int lastIndex = fileName.lastIndexOf('.');
+            if (lastIndex > 0 && lastIndex < fileName.length() - 1) {
+                extension = fileName.substring(lastIndex + 1);
+            }
         }
         return extension;
     }

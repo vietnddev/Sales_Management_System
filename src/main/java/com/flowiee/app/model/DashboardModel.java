@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class DashboardModel {
+    private Integer totalProducts;
     private String revenueToday;
     private String revenueThisMonth;
     private Integer ordersTodayQty;

@@ -53,8 +53,7 @@
                             <div class="card-body" style="min-height: 600px; overflow: overlay;">
                                 <div>
                                     <div class="btn-group w-100 mb-2">
-                                        <a class="btn btn-info active" href="javascript:void(0)" data-filter="all"> Tất
-                                            cả </a>
+                                        <a class="btn btn-info active" href="javascript:void(0)" data-filter="all"> Tất cả </a>
                                         <a class="btn btn-info" href="javascript:void(0)" th:data-filter="${listp.id}"
                                            th:each="listp : ${listSanPham}" th:text="${listp.tenSanPham}"></a>
                                     </div>
@@ -67,23 +66,16 @@
                                                 <option value="sortData"> Sort by Custom Data</option>
                                             </select>
                                             <div class="btn-group">
-                                                <a class="btn btn-default" href="javascript:void(0)" data-sortAsc>
-                                                    Ascending </a>
-                                                <a class="btn btn-default" href="javascript:void(0)" data-sortDesc>
-                                                    Descending </a>
+                                                <a class="btn btn-default" href="javascript:void(0)" data-sortAsc>Ascending </a>
+                                                <a class="btn btn-default" href="javascript:void(0)" data-sortDesc>Descending </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="filter-container p-0 row col-sm-12">
-                                    <div class="filtr-item col-sm-2" th:data-category="${list.product.id}"
-                                         th:each="list : ${listImages}"
-                                         style="min-height: 200px; width: 100%; display: inline;">
-                                        <a th:href="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"
-                                           data-toggle="lightbox"
-                                           th:data-title="${list.tenFileCustomize}">
-                                            <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"
-                                                 class="img-fluid mb-2" style="max-height: 180px; width: 100%;"/>
+                                    <div class="filtr-item col-sm-2" th:data-category="${list.product.id}" th:each="list : ${listImages}" style="min-height: 200px; width: 100%; display: inline;">
+                                        <a th:href="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}" data-toggle="lightbox" th:data-title="${list.tenFileCustomize}">
+                                            <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}" class="img-fluid mb-2" style="max-height: 180px; width: 100%;"/>
                                         </a>
                                     </div>
                                 </div>
@@ -119,6 +111,8 @@
             $('.product-image-thumb.active').removeClass('active')
             $(this).addClass('active')
         })
+
+
     })
 </script>
 

@@ -6,6 +6,7 @@ import com.flowiee.app.repository.NotificationRepository;
 import com.flowiee.app.service.NotificationService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,6 @@ import java.util.List;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
-    private static final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
-
     @Autowired
     private NotificationRepository notificationRepository;
 
@@ -64,14 +63,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public String delete(Integer entityId) {
-        if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
         Notification notification = this.findById(entityId);
         if (notification == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         notificationRepository.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 }

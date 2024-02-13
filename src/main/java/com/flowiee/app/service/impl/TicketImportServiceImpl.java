@@ -28,18 +28,11 @@ import java.util.List;
 
 @Service
 public class TicketImportServiceImpl implements TicketImportService {
-    private static final Logger logger = LoggerFactory.getLogger(TicketImportServiceImpl.class);
-
     @Autowired private TicketImportRepository ticketImportRepo;
     @Autowired private ProductService productService;
     @Autowired private ProductVariantTempRepository productVariantTempRepo;
     @Autowired private MaterialService materialService;
     @Autowired private MaterialTempRepository materialTempRepo;
-
-    private static String STATUS_DRAFT = "DRAFT";
-//    private static String STATUS_APPROVING = "APPROVING";
-//    private static String STATUS_APPROVED = "APPROVED";
-//    private static String STATUS_REJECT = "REJECT";
 
     @Override
     public List<TicketImport> findAll() {
@@ -71,12 +64,27 @@ public class TicketImportServiceImpl implements TicketImportService {
     }
 
     @Override
-    public TicketImport update(TicketImport entity, Integer entityId) {
-        if (entity == null || this.findById(entityId) == null) {
+    public TicketImport update(TicketImport ticketImport, Integer entityId) {
+        TicketImport ticketImportToUpdate = this.findById(entityId);
+        if (ticketImportToUpdate == null) {
             throw new BadRequestException();
         }
-        entity.setId(entityId);
-        return ticketImportRepo.save(entity);
+        if ("COMPLETED".equals(ticketImportToUpdate.getStatus()) || "CANCEL".equals(ticketImportToUpdate.getStatus())) {
+            throw new BadRequestException(MessageUtils.ERROR_DATA_LOCKED);
+        }
+        ticketImport.setId(entityId);
+        TicketImport ticketImportUpdated = ticketImportRepo.save(ticketImport);
+        if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemp())) {
+            for (ProductVariantTemp p : ticketImport.getListProductVariantTemp()) {
+                productService.updateProductVariantQuantity(p.getQuantity(), p.getProductVariantId(), "I");
+            }
+        }
+        if (ObjectUtils.isNotEmpty(ticketImport.getListMaterialTemp())) {
+            for (MaterialTemp m : ticketImport.getListMaterialTemp()) {
+                materialService.updateQuantity(m.getQuantity(), m.getMaterialId(), "I");
+            }
+        }
+        return ticketImportUpdated;
     }
 
     @Override
@@ -150,14 +158,14 @@ public class TicketImportServiceImpl implements TicketImportService {
 
     @Override
     public TicketImport findDraftImportPresent(Integer createdBy) {
-        return ticketImportRepo.findDraftGoodsImportPresent(STATUS_DRAFT, createdBy);
+        return ticketImportRepo.findDraftGoodsImportPresent("DRAFT", createdBy);
     }
 
     @Override
     public TicketImport createDraftTicketImport(String title) {
         TicketImport ticketImport = new TicketImport();
         ticketImport.setTitle(title);
-        ticketImport.setStatus(STATUS_DRAFT);
+        ticketImport.setStatus("DRAFT");
         ticketImport.setCreatedBy(CommonUtils.getCurrentAccountId());
         ticketImport.setImporter(CommonUtils.getCurrentAccountUsername());
         ticketImport.setImportTime(new Date());

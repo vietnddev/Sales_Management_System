@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.flowiee.app.base.BaseEntity;
 
+import com.flowiee.app.dto.TicketImportDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -84,6 +85,19 @@ public class TicketImport extends BaseEntity implements Serializable {
     public TicketImport(Integer id, String title) {
         super.id = id;
         this.title = title;
+    }
+
+    public static TicketImport fromTicketImportDTO(TicketImportDTO dto) {
+        TicketImport ticketImport = new TicketImport();
+        ticketImport.setId(dto.getId());
+        ticketImport.setTitle(dto.getTitle());
+        ticketImport.setImporter(dto.getImporter());
+        ticketImport.setImportTime(dto.getImportTime());
+        ticketImport.setNote(dto.getNote());
+        ticketImport.setStatus(dto.getStatus());
+        ticketImport.setListProductVariantTemp(dto.getListProductVariantTemp());
+        ticketImport.setListMaterialTemp(dto.getListMaterialTemp());
+        return ticketImport;
     }
 
 	@Override

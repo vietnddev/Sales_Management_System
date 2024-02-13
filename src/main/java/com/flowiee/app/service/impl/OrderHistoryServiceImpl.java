@@ -3,7 +3,7 @@ package com.flowiee.app.service.impl;
 import com.flowiee.app.entity.OrderHistory;
 import com.flowiee.app.repository.OrderHistoryRepository;
 import com.flowiee.app.service.OrderHistoryService;
-import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     @Override
     public String delete(Integer orderHistoryId) {
         orderHistoryRepo.deleteById(orderHistoryId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override

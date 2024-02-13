@@ -32,7 +32,7 @@
                             <input class="col-10 form-control" type="text" id="titleField"/>
                         </div>
                         <div class="col row justify-content-end">
-                            <button type="button" class="col-2 justify-content-end btn btn-info" id="btnUpdateTicket"><i class="fa-solid fa-check mr-2"></i>Cập nhật</button>
+                            <button type="button" class="col-3 justify-content-end btn btn-info" id="btnUpdateTicket"><i class="fa-solid fa-check mr-2"></i>Cập nhật</button>
                         </div>
                     </div>
                 </section>
@@ -40,7 +40,7 @@
             <!-- End section title -->
 
             <div class="row" style="padding-left: 7px; padding-right: 7px">
-                <div class="col-9" style="padding-right: 0">
+                <div class="col-8" style="padding-right: 0">
                     <section class="col-12">
                         <div class="card p-3" style="max-height: 350px; overflow: auto">
                             <div class="row">
@@ -57,9 +57,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th class="text-left">Tên sản phẩm</th>
-                                            <th>Đơn giá</th>
                                             <th>Số lượng</th>
-                                            <th>Thành tiền</th>
+                                            <th>Ghi chú</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -87,9 +86,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th class="text-left">Tên nguyên vật liệu</th>
-                                            <th>Đơn giá</th>
                                             <th>Số lượng</th>
-                                            <th>Thành tiền</th>
+                                            <th>Ghi chú</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -102,45 +100,27 @@
                 </div>
 
                 <!-- Section form thông tin -->
-                <div class="col-3" style="padding-left: 0">
+                <div class="col-4" style="padding-left: 0">
                     <section class="col-12 card p-3" style="height: 716px">
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Nhà cung cấp</span>
                             <select class="custom-select col-7" id="supplierField"></select>
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
-                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Số tiền</span>
-                            <input class="col-7 form-control" type="number" id="paidAmountField" required/>
-                        </div>
-                        <div class="form-group row" style="padding-right: 8px">
-                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Discount</span>
-                            <input class="col-7 form-control" type="number" id="discountField" required/>
-                        </div>
-                        <div class="form-group row" style="padding-right: 8px">
-                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Hình thức TT</span>
-                            <select class="custom-select col-7" id="paymentMethodField"></select>
-                        </div>
-                        <div class="form-group row" style="padding-right: 8px">
-                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Trạng thái TT</span>
-                            <select class="custom-select col-7" id="paymentStatusField"></select>
-                        </div>
-                        <hr class="mt-0">
-                        <div class="form-group row" style="padding-right: 8px">
-                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Thời gian đặt</span>
+                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Thời gian nhập</span>
                             <input class="col-7 form-control" type="date" id="orderTimeField"/>
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
-                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Thời gian nhận</span>
-                            <input class="col-7 form-control" type="date" id="receivedTimeField"/>
-                        </div>
-                        <hr class="mt-0">
-                        <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Người nhận hàng</span>
-                            <input class="col-7 form-control" id="receiverField" disabled></input>
+                            <input class="col-7 form-control" id="importerField" disabled></input>
                         </div>
                         <div class="form-group">
                             <label for="noteField">Ghi chú</label>
-                            <textarea class="form-control" id="noteField"></textarea>
+                            <textarea class="form-control" rows="5" id="noteField"></textarea>
+                        </div>
+                        <div class="form-group row" style="padding-right: 8px">
+                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Trạng thái</span>
+                            <select class="custom-select col-7" id="statusField"></select>
                         </div>
                     </section>
                 </div>
@@ -168,7 +148,7 @@
         let mvMaterialSelected = {};
         let mvTitle = $("#titleField");
         let mvNote = $("#noteField");
-        let mvReceiver = $("#receiverField");
+        let mvImporter = $("#importerField");
 
         $(document).ready(function () {
             init();
@@ -184,7 +164,6 @@
             loadSuppliers();
             loadPaymentMethods();
             loadPaymentStatuses();
-            loadAccounts();
         }
 
         function findTickImportDetail() {
@@ -199,9 +178,16 @@
                     setMaterialSelectedTableInfo(mvMaterialSelected);
 
                     mvTitle.val(mvTicketImportDetail.title);
-                    mvReceiver.val(mvTicketImportDetail.importer);
+                    mvImporter.val(mvTicketImportDetail.importer);
                     mvNote.val(mvTicketImportDetail.note);
-                    loadAccounts();
+
+                    if (mvTicketImportDetail.status === "COMPLETED") {
+                        $("#statusField").append(`<option value="COMPLETED">Hoàn thành</option>`);
+                    } else if (mvTicketImportDetail.status === "CANCEL") {
+                        $("#statusField").append(`<option value="CANCEL">Hủy</option>`);
+                    } else {
+                        $("#statusField").append(`<option value="DRAFT">Nháp</option><option value="COMPLETED">Hoàn thành</option><option value="CANCEL">Hủy</option>`);
+                    }
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
@@ -278,18 +264,18 @@
 
         function setProductSelectedTableInfo(productVariants) {
             $.each(productVariants, function (index, d) {
+                console.log("4")
                 $("#productContentTable").append(`
                     <tr>
                         <td>${index + 1}</td>
                         <td className="text-left text-wrap" style="max-width: 200px">
                             <a href="/san-pham/variant/${d.id}">${d.name}</a>
                         </td>
-                        <td></td>
                         <td>${d.quantity}</td>
                         <td></td>
                         <td>
-                            <button type="button" className="btn btn-sm btn-primary" data-toggle="modal" data-target="'#modalUpdateItems_' + ${d.id}">Cập nhật</button>
-                            <button type="button" className="btn btn-sm btn-danger"  data-toggle="modal" data-target="'#modalDeleteItems_' + ${d.id}">Xóa</button>
+                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="'#modalUpdateItems_' + ${d.id}">Cập nhật</button>
+                            <button type="button" class="btn btn-sm btn-danger"  data-toggle="modal" data-target="'#modalDeleteItems_' + ${d.id}">Xóa</button>
                         </td>
                     </tr>
                 `);
@@ -305,12 +291,11 @@
                             <input type="hidden" id="bienTheSanPhamId" th:value="${d.id}"/>
                             <a href="/san-pham/variant/${d.id}">${d.name}</a>
                         </td>
-                        <td></td>
                         <td>${d.quantity}</td>
                         <td></td>
                         <td>
-                            <button type="button" className="btn btn-sm btn-primary" data-toggle="modal" data-target="'#modalUpdateItems_' + ${d.id}">Cập nhật</button>
-                            <button type="button" className="btn btn-sm btn-danger"  data-toggle="modal" data-target="'#modalDeleteItems_' + ${d.id}">Xóa</button>
+                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="'#modalUpdateItems_' + ${d.id}">Cập nhật</button>
+                            <button type="button" class="btn btn-sm btn-danger"  data-toggle="modal" data-target="'#modalDeleteItems_' + ${d.id}">Xóa</button>
                         </td>
                     </tr>
                 `);
@@ -318,6 +303,7 @@
         }
         
         function addProduct() {
+            let productAdded = [];
             $("#btnAddProduct").on("click", function () {
                 let productVariantIds = $("#productVariantField").val();
                 if ($.isEmptyObject(productVariantIds)) {
@@ -331,8 +317,7 @@
                         data: JSON.stringify(productVariantIds),
                         success: function (response, textStatus, jqXHR) {
                             if (response.status === "OK") {
-                                let productAdded = response.data;
-                                setProductSelectedTableInfo(productAdded);
+                                productAdded = response.data;
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -341,6 +326,13 @@
                     });
                 }
             })
+            if (productAdded != null) {
+                $.each(productAdded, function (d) {
+                    mvProductVariantSelected.push(d);
+                })
+                $("#productContentTable").empty();
+                setProductSelectedTableInfo(mvProductVariantSelected);
+            }
         }
 
         function addMaterial() {
@@ -358,7 +350,9 @@
                         success: function (response, textStatus, jqXHR) {
                             if (response.status === "OK") {
                                 let materialAdded = response.data;
-                                setMaterialSelectedTableInfo(materialAdded);
+                                mvMaterialSelected.push(materialAdded);
+                                $("#materialContentTable").empty();
+                                setMaterialSelectedTableInfo(mvMaterialSelected);
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -379,7 +373,11 @@
                 let apiURL = mvHostURLCallApi + "/storage/ticket-import/update/" + mvTicketImportDetail.id;
                 let body = {
                     title : mvTitle.val(),
-
+                    importTime : $("#importTimeField").val(),
+                    importer : $("#importerField").val(),
+                    status : $("#statusField").val(),
+                    listProductVariantTemp : mvProductVariantSelected,
+                    listMaterialTemp : mvMaterialSelected
                 };
                 $.ajax({
                     url: apiURL,
@@ -389,12 +387,12 @@
                     success: function (response, textStatus, jqXHR) {
                         if (response.status === "OK") {
                             let ticketImportUpdated = response.data;
-                            alert("Tạo phiếu xuất kho thành công!");
+                            alert("Cập nhật thành công!");
                             window.location.reload();
                         }
                     },
-                    error: function(xhr, status, error) {
-                        alert(status + ': ' + JSON.stringify(xhr.responseJSON));
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
                     }
                 });
             })

@@ -1,6 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.dto.MaterialDTO;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.model.ApiResponse;
@@ -10,10 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,8 +37,22 @@ public class MaterialController extends BaseController {
                 return ApiResponse.ok(materials.getContent(), 1, 0, materials.getTotalPages(), materials.getTotalElements());
             }
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "material"), ex);
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "material"));
+        }
+    }
+
+    @Operation(summary = "Create new material")
+    @PostMapping("/create")
+    public ApiResponse<MaterialDTO> insert(@RequestBody MaterialDTO materialDTO) {
+        try {
+            if (!super.validateModuleStorage.insertMaterial(true)) {
+                return null;
+            }
+            return ApiResponse.ok(MaterialDTO.fromMaterial(materialService.save(Material.fromMaterialDTO(materialDTO))));
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "material"), ex);
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "material"));
         }
     }
 }

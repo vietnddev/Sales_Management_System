@@ -3,6 +3,7 @@ package com.flowiee.app.dto;
 import com.flowiee.app.entity.Material;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class MaterialDTO implements Serializable {
     private String unitName;
     private Integer quantity;
     private String location;
+    private String note;
     private Boolean status;
 
     public static MaterialDTO fromMaterial(Material material) {
@@ -41,14 +43,17 @@ public class MaterialDTO implements Serializable {
         }
         dto.setQuantity(material.getQuantity());
         dto.setLocation(material.getLocation());
+        dto.setNote(material.getNote());
         dto.setStatus(material.isStatus());
         return dto;
     }
 
     public static List<MaterialDTO> fromMaterials(List<Material> materials) {
         List<MaterialDTO> list = new ArrayList<>();
-        for (Material m : materials) {
-            list.add(MaterialDTO.fromMaterial(m));
+        if (ObjectUtils.isNotEmpty(materials)) {
+            for (Material m : materials) {
+                list.add(MaterialDTO.fromMaterial(m));
+            }
         }
         return list;
     }

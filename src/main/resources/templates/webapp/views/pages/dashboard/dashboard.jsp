@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Flowiee Offical | Dashboard</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <div th:replace="header :: stylesheets"></div>
     <!--Chart JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
@@ -22,8 +20,29 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
+                    <div class="col">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-10" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>[[${totalProducts}]]</h3>
+                                <p>Total products available</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
 
                     <div class="col-lg-3 col-6">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-10" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
@@ -78,6 +97,10 @@
                     </div>
                     <!-- ./col -->
                     <div class="col-lg-3 col-6">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-10" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
@@ -92,6 +115,10 @@
                     </div>
                     <!-- ./col -->
                     <div class="col-lg-3 col-6">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-10" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <!-- small box -->
                         <div class="small-box bg-primary">
                             <div class="inner">
@@ -106,6 +133,10 @@
                     </div>
                     <!-- ./col -->
                     <div class="col-lg-3 col-6">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-10" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
@@ -123,6 +154,10 @@
                 <div class="row">
                     <!--THỐNG KÊ THEO KÊNH BÁN HÀNG-->
                     <div class="col-sm-6">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-11" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-1" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <div class="card card-info">
                             <div class="card-header">
                                 <h3 class="card-title">Doanh thu theo kênh bán hàng</h3>
@@ -163,6 +198,10 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-11" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-1" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <div class="card card-info">
                             <div class="card-header">
                                 <h3 class="card-title">Doanh thu của các tháng trong năm</h3>
@@ -205,6 +244,10 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-11" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-1" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <div class="card card-info">
                             <div class="card-header">
                                 <h3 class="card-title">Doanh thu theo các ngày trong tháng</h3>
@@ -247,6 +290,10 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
+                        <div class="col-12 input-group w-100 p-0 mb-2">
+                            <input class="form-control col-11" id="txtFilter"/>
+                            <button class="btn btn-info form-control col-1" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
                         <div class="card card-info">
                             <div class="card-header">
                                 <h3 class="card-title">Top 10 sản phẩm bán chạy</h3>

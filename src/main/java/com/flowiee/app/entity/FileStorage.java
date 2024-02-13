@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
@@ -29,6 +30,7 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class FileStorage extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "customize_name")
@@ -89,6 +91,9 @@ public class FileStorage extends BaseEntity implements Serializable {
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
+
+    @Transient
+    private String src;
 
     @JsonIgnore
     @OneToMany(mappedBy = "fileStorage", fetch = FetchType.LAZY)
