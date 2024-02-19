@@ -217,7 +217,7 @@
                                 </td>
                                 <td>${p.unitName}</td>
                                 <td>${voucherBlock}</td>
-                                <td>${p.productStatus}</td>
+                                <td>${mvProductStatus[p.productStatus]}</td>
                             </tr>
                         `);
                     });

@@ -93,38 +93,24 @@
                                                 <!--THÔNG TIN SẢN PHẨM GỐC-->
                                                 <div class="col-3" style="background-color: #fff; border-radius: 15px; padding: 15px;">
                                                     <div class="form-group">
-                                                        <label>Tên sản phẩm</label>
-                                                        <textarea class="form-control" placeholder="Tên sản phẩm"
-                                                                  name="tenSanPham" required rows="4" id="productNameField"
-                                                                  th:text="${detailProducts.productName}">
-                                                        </textarea>
+                                                        <label>Tên sản phẩm</label><i class="fa-solid fa-unlock ml-2" id="unlock"></i>
+                                                        <textarea class="form-control" placeholder="Tên sản phẩm" required rows="4" id="productNameField"></textarea>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Nhãn hiệu</label>
-                                                        <select class="custom-select" name="brand" id="brandField">
-                                                            <option th:value="${detailProducts.brandId}" th:text="${detailProducts.brandName}" selected></option>
-                                                        </select>
+                                                        <select class="custom-select" name="brand" id="brandField"></select>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Loại sản phẩm</label>
-                                                        <select class="custom-select" name="productType" id="productTypeField">
-                                                            <option th:value="${detailProducts.productTypeId}" th:text="${detailProducts.productTypeName}" selected></option>
-                                                        </select>
+                                                        <select class="custom-select" name="productType" id="productTypeField"></select>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Đơn vị tính</label>
-                                                        <select class="custom-select" name="unit" id="unitField">
-                                                            <option th:value="${detailProducts.unitId}" th:text="${detailProducts.unitName}" selected></option>
-                                                        </select>
+                                                        <select class="custom-select" name="unit" id="unitField"></select>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Trạng thái</label>
-                                                        <select class="custom-select" name="status" id="statusField">
-                                                            <option th:each="productStatus, iterStat : ${listProductStatus}"
-                                                                    th:value="${productStatus.key}"
-                                                                    th:text="${productStatus.value}">
-                                                            </option>
-                                                        </select>
+                                                        <select class="custom-select" name="status" id="statusField"></select>
                                                     </div>
                                                     <input type="hidden" id="describes_virtual" th:value="${detailProducts.productDes}"/>
                                                 </div>
@@ -158,9 +144,7 @@
                                             <div class="row mt-3">
                                                 <div class="col-6">
                                                     <!--Start Image chính-->
-                                                    <div class="row" style="max-height: 400px; overflow: scroll">
-                                                        <img class="product-image" th:src="@{'/' + ${imageActive.directoryPath} + '/' + ${imageActive.tenFileKhiLuu}}" alt="Product Image" style="width: 100%; border-radius: 5px; margin: auto" id="imageActive">
-                                                    </div>
+                                                    <div class="row" style="max-height: 400px; overflow: scroll" id="mainImage"></div>
                                                     <!--./ End Image chính-->
 
                                                     <div class="row mt-2">
@@ -276,7 +260,7 @@
                                                 <div class="col-12 mt-2"><hr class="w-50 bg-info"></div>
 
                                                 <!--Srart Sub-Image-->
-                                                <div class="row" style="max-height: 500px; overflow: scroll" id="gridSubImages"></div>
+                                                <div class="row w-100" style="max-height: 500px; overflow: scroll" id="gridSubImages"></div>
                                                 <!--End Sub-Image-->
                                             </div>
                                         </div>
@@ -549,23 +533,25 @@
             $("#sizeField").on("click", function () {
                 autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
             });
+            //Load product detail
+            loadProductDetail();
             //Load categories for product core
-            loadCategoriesOfProductCore();
+            //loadCategoriesOfProductCore();
             //Load categories for create product variant
              $("#btnCreateProductVariant").on("click", function () {
                  loadCategoriesOfProductVariant();
                  autoFillVariantNameInField(mvProductNameField.val(), mvSizeField.find(":selected").text(), mvColorField.find(":selected").text());
              });
-             //Load product detail
-             loadProductDetail();
         }
 
-        function loadProductDetail() {
+        async function loadProductDetail() {
             let apiURL = mvHostURLCallApi + '/product/' + mvProductId;
-            $.get(apiURL, function (response) {
+            await $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     mvProductDetail = response.data;
                     $("#productNameHeader").text(mvProductDetail.productName);
+                    $("#productNameField").val(mvProductDetail.productName);
+                    loadCategoriesOfProductCore();
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
@@ -577,6 +563,9 @@
         }
 
         function loadCategoriesOfProductCore() {
+            mvBrandField.empty();
+            mvBrandField.append(`<option value="${mvProductDetail.brandId}">${mvProductDetail.brandName}</option>`);
+            console.log("mvProductDetail " + mvProductDetail.productName)
             $.get(mvHostURLCallApi + "/category/brand", function (response) {
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
@@ -584,6 +573,8 @@
                     });
                 }
             });
+            mvProductTypeField.empty();
+            mvProductTypeField.append(`<option value="${mvProductDetail.productTypeId}">${mvProductDetail.productTypeName}</option>`);
             $.get(mvHostURLCallApi + "/category/product-type", function (response) {
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
@@ -591,6 +582,8 @@
                     });
                 }
             });
+            mvUnitField.empty();
+            mvUnitField.append(`<option value="${mvProductDetail.unitId}">${mvProductDetail.unitName}</option>`);
             $.get(mvHostURLCallApi + "/category/unit", function (response) {
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
@@ -598,6 +591,15 @@
                     });
                 }
             });
+
+            mvStatusField.empty();
+            if (mvProductDetail.productStatus === "ACTIVE") {
+                mvStatusField.append(`<option value="ACTIVE">${mvProductStatus["ACTIVE"]}</option>`);
+                mvStatusField.append(`<option value="INACTIVE">${mvProductStatus["INACTIVE"]}</option>`);
+            } else if (mvProductDetail.productStatus === "INACTIVE") {
+                mvStatusField.append(`<option value="INACTIVE">${mvProductStatus["INACTIVE"]}</option>`);
+                mvStatusField.append(`<option value="ACTIVE">${mvProductStatus["ACTIVE"]}</option>`);
+            }
         }
 
         function loadCategoriesOfProductVariant() {
@@ -976,16 +978,24 @@
             })
         }
 
-        function loadImageInfoOnForm() {
+        function loadImageInfoOnForm(subImage) {
             $(document).on("click", ".sub-image", function () {
-                let subImage = mvImagesOfProduct[$(this).attr("imageId")];
-                $("#imageNameField").val(subImage.tenFileCustomize);
-                $("#imageSizeField").val(subImage.kichThuocFile);
-                $("#imageOriginalNameField").val(subImage.tenFileGoc);
-                $("#imageUploadByField").val(subImage.account.username);
-                $("#imageUploadAtField").val(subImage.createdAt);
+                subImage = mvImagesOfProduct[$(this).attr("imageId")];
+                $("#imageNameField").val(subImage.name);
+                $("#imageSizeField").val(subImage.size);
+                $("#imageOriginalNameField").val(subImage.originalName);
+                $("#imageUploadByField").val(subImage.uploadBy);
+                $("#imageUploadAtField").val(subImage.uploadAt);
                 $("#imageStatusField").val(subImage.isActive);
             })
+            if (subImage != null) {
+                $("#imageNameField").val(subImage.name);
+                $("#imageSizeField").val(subImage.size);
+                $("#imageOriginalNameField").val(subImage.originalName);
+                $("#imageUploadByField").val(subImage.uploadBy);
+                $("#imageUploadAtField").val(subImage.uploadAt);
+                $("#imageStatusField").val(subImage.isActive);
+            }
         }
 
         function loadImagesOfProduct() {
@@ -998,12 +1008,12 @@
                         mvImagesOfProduct = [];
                         $.each(data, function (index, d) {
                             mvImagesOfProduct[d.id] = d;
-                            if (d.isActive === true) {
-                                mvImageActive = d;
-                            }
                             let classCard;
                             let styleCard;
                             if (d.isActive) {
+                                mvImageActive = d;
+                                loadImageInfoOnForm(mvImageActive);
+                                $("#mainImage").append(`<img class="product-image" src="/${mvImageActive.src}" alt="Product Image" style="width: 100%; border-radius: 5px; margin: auto" id="imageActive">`);
                                 classCard = "card border border-primary";
                                 styleCard = "height: 186px; background-color:aliceblue";
                             } else {
@@ -1014,7 +1024,7 @@
                                 <div class="col-2">
                                     <div class="${classCard}" style="${styleCard}">
                                         <div class="card-body product-image-thumb" style="margin: auto">
-                                            <img src="/${d.directoryPath}/${d.tenFileKhiLuu}" alt="Product Image" class="sub-image" imageId="${d.id}">
+                                            <img src="/${d.src}" alt="Product Image" class="sub-image" imageId="${d.id}">
                                         </div>
                                         <div class="card-footer row">
                                             <i style="cursor: pointer" imageId="${d.id}" class="fa-solid fa-arrows-rotate text-info col btn-change-image"></i>

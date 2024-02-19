@@ -9,6 +9,11 @@ let mvLang = "vi";
 const mvCurrentAccountId = '';
 const mvCurrentAccountUsername = '';
 
+//Config product status
+const mvProductStatus = {};
+mvProductStatus["ACTIVE"] = "Đang kinh doanh";
+mvProductStatus["INACTIVE"] = "Ngừng kinh doanh";
+
 //Config ticket import status
 const mvTicketImportStatus = {};
 mvTicketImportStatus["DRAFT"] = "Nháp";

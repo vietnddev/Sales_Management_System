@@ -1,7 +1,6 @@
 package com.flowiee.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flowiee.app.entity.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,9 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -67,10 +68,20 @@ public class FileDTO implements Serializable {
             dto.setSrc(fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
             dto.setIsActive(fileStorage.isActive());
             dto.setStatus(fileStorage.isStatus());
-            dto.setSize(Long.parseLong(String.valueOf(fileStorage.getKichThuocFile())));
+            dto.setSize(fileStorage.getKichThuocFile());
             dto.setContent(fileStorage.getNoiDung());
             dto.setUploadAt(fileStorage.getCreatedAt());
         }
         return dto;
+    }
+
+    public static List<FileDTO> fromFileStorages(List<FileStorage> fileStorages) {
+        List<FileDTO> list = new ArrayList<>();
+        if (ObjectUtils.isNotEmpty(fileStorages)) {
+            for (FileStorage f : fileStorages) {
+                list.add(FileDTO.fromFileStorage(f));
+            }
+        }
+        return list;
     }
 }

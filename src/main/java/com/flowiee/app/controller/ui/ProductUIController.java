@@ -1,6 +1,7 @@
 package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.dto.FileDTO;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
@@ -58,23 +59,9 @@ public class ProductUIController extends BaseController {
             if (productId <= 0 || productService.findProductById(productId) == null) {
                 throw new NotFoundException("Product not found!");
             }
-            ProductDTO productDetail = ProductDTO.fromProduct(productService.findProductById(productId));
-            LinkedHashMap<String, String> listProductStatus = new LinkedHashMap<>();
-            if (AppConstants.PRODUCT_STATUS.ACTIVE.getLabel().equals(productDetail.getProductStatus())) {
-                listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-                listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
-            } else if (AppConstants.PRODUCT_STATUS.INACTIVE.getLabel().equals(productDetail.getProductStatus())) {
-                listProductStatus.put(AppConstants.PRODUCT_STATUS.INACTIVE.name(), AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
-                listProductStatus.put(AppConstants.PRODUCT_STATUS.ACTIVE.name(), AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-            }
             ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
             modelAndView.addObject("productId", productId);
-            modelAndView.addObject("detailProducts", productDetail);
-            modelAndView.addObject("listBienTheSanPham", productService.findAllProductVariantOfProduct(productId));
-            modelAndView.addObject("listProductStatus", listProductStatus);
-            //Image active
-            FileStorage imageActive = fileStorageService.findImageActiveOfSanPham(productId);
-            modelAndView.addObject("imageActive", imageActive != null ? imageActive : new FileStorage());
+            modelAndView.addObject("detailProducts", ProductDTO.fromProduct(productService.findProductById(productId)));
             return baseView(modelAndView);
         } catch (RuntimeException ex) {
             logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product detail"), ex);
@@ -165,8 +152,8 @@ public class ProductUIController extends BaseController {
     public ModelAndView viewGallery() {
         validateModuleProduct.readGallery(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_GALLERY);
-        modelAndView.addObject("listImages", fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name()));
-        modelAndView.addObject("listSanPham", productService.findAllProducts().getContent());
+        modelAndView.addObject("listImages", FileDTO.fromFileStorages(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name())));
+        modelAndView.addObject("listSanPham", productService.findProductsIdAndProductName());
         return baseView(modelAndView);
     }
 

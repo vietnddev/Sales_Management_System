@@ -50,7 +50,7 @@
                             <div class="card-header">
                                 <h4 class="card-title">Thư viện hình ảnh</h4>
                             </div>
-                            <div class="card-body" style="min-height: 600px; overflow: overlay;">
+                            <div class="card-body">
                                 <div>
                                     <div class="btn-group w-100 mb-2">
                                         <a class="btn btn-info active" href="javascript:void(0)" data-filter="all"> Tất cả </a>
@@ -58,8 +58,7 @@
                                            th:each="listp : ${listSanPham}" th:text="${listp.tenSanPham}"></a>
                                     </div>
                                     <div class="mb-2">
-                                        <a class="btn btn-secondary" href="javascript:void(0)" data-shuffle> Shuffle
-                                            items </a>
+                                        <a class="btn btn-secondary" href="javascript:void(0)" data-shuffle> Shuffle items </a>
                                         <div class="float-right">
                                             <select class="custom-select" style="width: auto;" data-sortOrder>
                                                 <option value="index"> Sort by Position</option>
@@ -73,9 +72,9 @@
                                     </div>
                                 </div>
                                 <div class="filter-container p-0 row col-sm-12">
-                                    <div class="filtr-item col-sm-2" th:data-category="${list.product.id}" th:each="list : ${listImages}" style="min-height: 200px; width: 100%; display: inline;">
-                                        <a th:href="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}" data-toggle="lightbox" th:data-title="${list.tenFileCustomize}">
-                                            <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}" class="img-fluid mb-2" style="max-height: 180px; width: 100%;"/>
+                                    <div class="filtr-item col-sm-2" th:data-category="${list.productId}" th:each="list : ${listImages}" style="min-height: 200px; width: 100%; display: inline;">
+                                        <a th:href="@{'/' + ${list.src}}" data-toggle="lightbox" th:data-title="${list.name}">
+                                            <img th:src="@{'/' + ${list.src}}" class="img-fluid mb-2" style="max-height: 180px; width: 100%;"/>
                                         </a>
                                     </div>
                                 </div>

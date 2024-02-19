@@ -52,7 +52,7 @@ public class FileStorage extends BaseEntity implements Serializable {
     private String contentType;
 
     @Column(name = "file_size")
-    private float kichThuocFile;
+    private long kichThuocFile;
 
     @Column(name = "content")
     private byte[] noiDung;

@@ -2,6 +2,7 @@ package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.controller.ui.ProductUIController;
+import com.flowiee.app.dto.FileDTO;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.dto.ProductVariantDTO;
 import com.flowiee.app.dto.VoucherInfoDTO;
@@ -10,6 +11,7 @@ import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.ApiResponse;
+import com.flowiee.app.model.PaginationModel;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.MessageUtils;
@@ -418,13 +420,15 @@ public class ProductController extends BaseController {
 
     @Operation(summary = "Find images of product")
     @GetMapping("{productId}/images")
-    public ApiResponse<List<FileStorage>> getImagesOfProduct(@PathVariable("productId") Integer productId) {
+    public ApiResponse<List<FileDTO>> getImagesOfProduct(@PathVariable("productId") Integer productId) {
         try {
             if (!super.validateModuleProduct.readProduct(true)) {
                 return null;
             }
-            return ApiResponse.ok(fileStorageService.getImageOfSanPham(productId));
+            List<FileStorage> images = fileStorageService.getImageOfSanPham(productId);
+            return ApiResponse.ok(FileDTO.fromFileStorages(images), 1, 0, 1, images.size());
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"), ex);
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"));
         }
     }
@@ -438,7 +442,7 @@ public class ProductController extends BaseController {
             }
             return ApiResponse.ok(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name()));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "galleries"));
         }
     }
 }

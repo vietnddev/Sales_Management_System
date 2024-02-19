@@ -6,6 +6,7 @@ import com.flowiee.app.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Integer productId;
@@ -67,11 +69,11 @@ public class ProductDTO implements Serializable {
         dto.setCreatedById(product.getCreatedBy());
         dto.setCreatedByName(null);
         dto.setListVoucherInfoApply(product.getListVoucherInfoApply());
-        if (AppConstants.PRODUCT_STATUS.ACTIVE.name().equals(product.getStatus())) {
-            dto.setProductStatus(AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.name().equals(product.getStatus())) {
-            dto.setProductStatus(AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
-        }
+//        if (AppConstants.PRODUCT_STATUS.ACTIVE.name().equals(product.getStatus())) {
+//            dto.setProductStatus(AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
+//        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.name().equals(product.getStatus())) {
+//            dto.setProductStatus(AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
+//        }
         return dto;
     }
 
