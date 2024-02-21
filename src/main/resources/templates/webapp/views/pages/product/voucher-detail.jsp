@@ -1,56 +1,39 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý voucher</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style rel="stylesheet">
-        .table td,
-        th {
+        .table td, th {
             vertical-align: middle;
         }
     </style>
-    <!-- Select2 -->
-    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
-    <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
-    <!-- Bootstrap4 Duallistbox -->
-    <link rel="stylesheet" th:href="@{/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css}">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-    <!-- Navbar (header) -->
-    <div th:replace="header :: header"></div>
-    <!-- /.navbar (header)-->
+    <div class="wrapper">
+        <div th:replace="header :: header"></div>
 
-    <!-- Main Sidebar Container -->
-    <div th:replace="sidebar :: sidebar"></div>
+        <div th:replace="sidebar :: sidebar"></div>
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
-        <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                <!-- Small boxes (Stat box) -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row justify-content-between">
-                                    <div class="col-4" style="display: flex; align-items: center">
-                                        <h3 class="card-title"><strong>VOUCHER</strong></h3>
+        <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card"></div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row justify-content-between">
+                                        <div class="col-4" style="display: flex; align-items: center">
+                                            <h3 class="card-title"><strong>Danh sách mã phiếu giảm giá</strong></h3>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- /.card-header -->
-
-                            <div class="card-body row align-items-center">
-                                <div class="col-6">
-                                    <table id="example1" class="table table-bordered table-striped align-items-center">
+                                <div class="card-body row align-items-center">
+                                    <table class="table table-bordered table-striped align-items-center">
                                         <thead class="align-self-center">
                                             <tr class="align-self-center">
                                                 <th>STT</th>
@@ -60,54 +43,86 @@
                                                 <th>Trạng thái</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr th:each="list, index : ${listVoucherTicket}">
-                                            <td th:text="${index.index + 1}"></td>
-                                            <td th:text="${list.code}"></td>
-                                            <td th:text="${list.customer != null} ? ${list.customer.tenKhachHang} : ''"></td>
-                                            <td th:text="${list.activeTime}"></td>
-                                            <td th:text="${list.status == false} ? 'Chưa sử dụng' : 'Đã sử dụng'"></td>
-                                        </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="align-self-center">
-                                                <th>STT</th>
-                                                <th>Mã</th>
-                                                <th>Khách hàng sử dụng</th>
-                                                <th>Thời gian sử dụng</th>
-                                                <th>Trạng thái</th>
-                                            </tr>
-                                        </tfoot>
+                                        <tbody id="contentTable"></tbody>
                                     </table>
                                 </div>
+                                <div class="card-footer">
+                                    <div th:replace="fragments :: pagination"></div>
+                                </div>
                             </div>
-                            <!-- /.card-body -->
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
+            </section>
+        </div>
 
-    <div th:replace="footer :: footer">
-        <!-- Nhúng các file JavaScript vào -->
-    </div>
+        <div th:replace="footer :: footer"></div>
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark"></aside>
 
-    <div th:replace="header :: scripts">
-        <!-- Nhúng các file JavaScript vào -->
+        <div th:replace="header :: scripts"></div>
     </div>
 
-    <!-- Select2 -->
-    <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
-    <!-- Bootstrap4 Duallistbox -->
-    <script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
+    <script>
+        let mvVoucherInfoId = [[${voucherInfoId}]];
+        let mvVoucherDetail = {};
+        let mvTickets = [];
+
+        $(document).ready(function () {
+            loadVoucherDetail();
+            loadTickets(mvPageSizeDefault, 1);
+            updateTableContentWhenOnClickPagination(loadTickets)
+        });
+
+        function loadVoucherDetail() {
+            let apiURL = mvHostURLCallApi + '/voucher/' + mvVoucherInfoId;
+            $.get(apiURL, function (response) {
+                if (response.status === "OK") {
+                    mvVoucherDetail = response.data;
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
+        }
+        
+        function loadTickets(pageSize, pageNum) {
+            let apiURL = mvHostURLCallApi + '/voucher/' + mvVoucherInfoId + '/tickets';
+            let params = {pageSize: pageSize, pageNum: pageNum}
+            $.get(apiURL, params, function (response) {
+                if (response.status === "OK") {
+                    mvTickets = response.data;
+
+                    let pagination = response.pagination;
+                    updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
+
+                    let contentTable = $('#contentTable');
+                    contentTable.empty();
+                    $.each(mvTickets, function (index, d) {
+                        let customerName = "";
+                        if (d.customer != null) {
+                            customerName = d.customer.tenKhachHang;
+                        }
+                        let status = "Chưa sử dụng";
+                        if (d.status === true) {
+                            status = "Đã sử dụng";
+                        }
+                        contentTable.append(`
+                            <tr>
+                                <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                                <td>${d.code}</td>
+                                <td>${customerName}</td>
+                                <td>${d.activeTime}</td>
+                                <td>${status}</td>
+                            </tr>
+                        `);
+                    });
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
+        }
+    </script>
 
     <script>
         $(function () {
@@ -136,8 +151,5 @@
             $('#reservation').daterangepicker()
         })
     </script>
-</div>
-
 </body>
-
 </html>

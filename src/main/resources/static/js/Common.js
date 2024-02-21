@@ -187,3 +187,12 @@ function setupSearchTool(keySearch) {
         })
     })
 }
+
+let convertDateT1 = (dateInput) => {
+    let dateObject = new Date(dateInput);
+    let year = dateObject.getFullYear();
+    let month = dateObject.getMonth() + 1; // Tháng (đánh số từ 0)
+    let day = dateObject.getDate();
+    // Format lại chuỗi ngày tháng thành 'dd/MM/yyyy'
+    return formattedDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year;
+}

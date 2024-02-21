@@ -5,6 +5,7 @@ import com.flowiee.app.entity.Product;
 import com.flowiee.app.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -47,33 +48,45 @@ public class ProductDTO implements Serializable {
 
     public static ProductDTO fromProduct(Product product) {
         ProductDTO dto = new ProductDTO();
-        dto.setProductId(product.getId());
-        dto.setProductTypeId(product.getProductType().getId());
-        dto.setProductTypeName(product.getProductType().getName());
-        dto.setBrandId(product.getBrand().getId());
-        dto.setBrandName(product.getBrand().getName());
-        dto.setProductName(product.getTenSanPham());
-        dto.setUnitId(product.getUnit().getId());
-        dto.setUnitName(product.getUnit().getName());
-        dto.setProductDes(product.getMoTaSanPham());
-        dto.setProductStatus(product.getStatus());
-        dto.setImageActiveId(product.getImageActive() != null ? product.getImageActive().getId() : null);
-        dto.setImageActive(product.getImageActive());
+        if (product != null) {
+            dto.setProductId(product.getId());
+            if (ObjectUtils.isNotEmpty(product.getProductType())) {
+                dto.setProductTypeId(product.getProductType().getId());
+                dto.setProductTypeName(product.getProductType().getName());
+            }
+            if (ObjectUtils.isNotEmpty(product.getBrand())) {
+                dto.setBrandId(product.getBrand().getId());
+                dto.setBrandName(product.getBrand().getName());
+            }
+            dto.setProductName(product.getTenSanPham());
+            if (ObjectUtils.isNotEmpty(product.getUnit())) {
+                dto.setUnitId(product.getUnit().getId());
+                dto.setUnitName(product.getUnit().getName());
+            }
+            dto.setProductDes(product.getMoTaSanPham());
+            dto.setProductStatus(product.getStatus());
+            dto.setImageActiveId(product.getImageActive() != null ? product.getImageActive().getId() : null);
+            dto.setImageActive(product.getImageActive());
 //      dto.setVoucherApplyId(null);
 //      dto.setVoucherApplyTitle(null);
 //      dto.setDiscountPercent(null);
 //      dto.setDiscountMaxPrice(null);
-        dto.setProductVariantQty(product.getListBienThe().size());
-        dto.setSoldQty(null);
-        dto.setCreatedAt(product.getCreatedAt());
-        dto.setCreatedById(product.getCreatedBy());
-        dto.setCreatedByName(null);
-        dto.setListVoucherInfoApply(product.getListVoucherInfoApply());
+            if (ObjectUtils.isNotEmpty(product.getListBienThe())) {
+                dto.setProductVariantQty(product.getListBienThe().size());
+            }
+            dto.setSoldQty(null);
+            dto.setCreatedAt(product.getCreatedAt());
+            dto.setCreatedById(product.getCreatedBy());
+            dto.setCreatedByName(null);
+            if (ObjectUtils.isNotEmpty(product.getListVoucherInfoApply())) {
+                dto.setListVoucherInfoApply(product.getListVoucherInfoApply());
+            }
 //        if (AppConstants.PRODUCT_STATUS.ACTIVE.name().equals(product.getStatus())) {
 //            dto.setProductStatus(AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
 //        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.name().equals(product.getStatus())) {
 //            dto.setProductStatus(AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
 //        }
+        }
         return dto;
     }
 

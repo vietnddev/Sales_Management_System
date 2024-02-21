@@ -56,18 +56,18 @@ public class OrderServiceImpl implements OrderService {
     private final SystemLogService systemLogService;
     private final CartService cartService;
     private final PriceService priceService;
-    private final VoucherTicketService voucherTicketService;
+    private final VoucherService voucherService;
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepo, OrderDetailRepository orderDetailRepo, ProductService productService, SystemLogService systemLogService, CartService cartService, PriceService priceService, VoucherTicketService voucherTicketService, FileStorageService fileStorageService) {
+    public OrderServiceImpl(OrderRepository orderRepo, OrderDetailRepository orderDetailRepo, ProductService productService, SystemLogService systemLogService, CartService cartService, PriceService priceService, VoucherService voucherService, FileStorageService fileStorageService) {
         this.orderRepo = orderRepo;
         this.orderDetailRepo = orderDetailRepo;
         this.productService = productService;
         this.systemLogService = systemLogService;
         this.cartService = cartService;
         this.priceService = priceService;
-        this.voucherTicketService = voucherTicketService;
+        this.voucherService = voucherService;
         this.fileStorageService = fileStorageService;
     }
 
@@ -159,9 +159,9 @@ public class OrderServiceImpl implements OrderService {
             }
 
             //Update voucher ticket status
-            VoucherTicket voucherTicket = voucherTicketService.findByCode(request.getVoucherUsedCode());
+            VoucherTicket voucherTicket = voucherService.findTicketByCode((request.getVoucherUsedCode()));
             if (voucherTicket != null) {
-                String statusCode = voucherTicketService.checkTicketToUse(request.getVoucherUsedCode());
+                String statusCode = voucherService.checkTicketToUse(request.getVoucherUsedCode());
                 if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(statusCode)) {
                     orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
                     orderSaved.setAmountDiscount(request.getAmountDiscount());
@@ -170,7 +170,7 @@ public class OrderServiceImpl implements OrderService {
                 voucherTicket.setCustomer(orderSaved.getCustomer());
                 voucherTicket.setActiveTime(new Date());
                 voucherTicket.setStatus(true);
-                voucherTicketService.update(voucherTicket, voucherTicket.getId());
+                voucherService.updateTicket(voucherTicket, voucherTicket.getId());
             }
             orderRepo.save(orderSaved);
 

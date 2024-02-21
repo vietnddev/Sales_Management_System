@@ -37,9 +37,9 @@ public interface FileStorageService extends BaseService<FileStorage> {
 
     FileStorage findImageActiveOfSanPhamBienThe(int sanPhamBienTheId);
 
-    String setImageActiveOfSanPham(Integer sanPhamId, Integer imageId);
+    FileStorage setImageActiveOfSanPham(Integer sanPhamId, Integer imageId);
 
-    String setImageActiveOfBienTheSanPham(Integer bienTheSanPhamId, Integer imageId);
+    FileStorage setImageActiveOfBienTheSanPham(Integer bienTheSanPhamId, Integer imageId);
 
     String saveQRCodeOfOrder(int orderId) throws IOException, WriterException;
 

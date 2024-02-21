@@ -112,7 +112,7 @@ public class OrderController extends BaseController {
                 throw new BadRequestException();
             }
             List<String> listProductVariantId = Arrays.stream(bienTheSanPhamId).toList();
-            for (String productVariantId : listProductVariantId) {
+            for (String productVariantId : Arrays.stream(bienTheSanPhamId).toList()) {
                 if (cartService.isItemExistsInCart(cartId, Integer.parseInt(productVariantId))) {
                     Items items = cartService.findItemByCartAndProductVariant(cartId, Integer.parseInt(productVariantId));
                     cartService.increaseItemQtyInCart(items.getId(), items.getSoLuong() + 1);

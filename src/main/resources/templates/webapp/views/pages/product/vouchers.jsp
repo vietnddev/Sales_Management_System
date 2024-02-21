@@ -33,7 +33,7 @@
                                             <h3 class="card-title"><strong>DANH SÁCH VOUCHER</strong></h3>
                                         </div>
                                         <div class="col-4 text-right">
-                                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insert">Thêm mới</button>
+                                            <button type="button" class="btn btn-success" id="btnInsertForm">Thêm mới</button>
                                         </div>
                                     </div>
                                 </div>
@@ -60,83 +60,65 @@
                                 </div>
 
                                 <!-- modal insert -->
-                                <div class="modal fade" id="insert">
+                                <div class="modal fade" id="modalInsert">
                                     <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
-                                            <form th:action="@{/san-pham/voucher/insert}" th:object="${voucher}"
-                                                  method="POST">
-                                                <div class="modal-header">
-                                                    <strong class="modal-title">Thêm mới voucher</strong>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="form-group col-sm-12">
-                                                            <label>Tiêu đề</label>
-                                                            <input type="text" class="form-control" placeholder="Tiêu đề" name="title" required>
-                                                        </div>
-                                                        <div class="form-group col-sm-12">
-                                                            <label>Sản phẩm áp dụng</label>
-                                                            <select class="form-control select2" multiple="multiple"
-                                                                    data-placeholder="Sản phẩm áp dụng"
-                                                                    style="width: 100%;"
-                                                                    name="productToApply" required>
-                                                                <option th:each="option : ${listProduct}"
-                                                                        th:value="${option.id}"
-                                                                        th:text="${option.tenSanPham}">
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-sm-6">
-                                                            <label>Đối tượng áp dụng</label>
-                                                            <textarea class="form-control" name="doiTuongApDung" rows="3" required></textarea>
-                                                        </div>
-                                                        <div class="form-group col-sm-6">
-                                                            <label>Mô tả thêm</label>
-                                                            <textarea class="form-control" name="description" rows="3"></textarea>
-                                                        </div>
-                                                        <div class="form-group col-sm-4">
-                                                            <label>Số lượng</label>
-                                                            <input type="number" class="form-control" name="quantity" required>
-                                                        </div>
-                                                        <div class="form-group col-sm-4">
-                                                            <label>Số lượng ký tự</label>
-                                                            <input type="number" class="form-control" value="15" name="lengthOfKey" required>
-                                                        </div>
-                                                        <div class="form-group col-sm-4">
-                                                            <label>Loại mã phiếu</label>
-                                                            <select class="custom-select" name="voucherType" required>
-                                                                <option th:each="entry, index : ${listVoucherType}"
-                                                                        th:value="${entry.key}"
-                                                                        th:text="${entry.value}"
-                                                                        th:selected="${index.index == 0}"></option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-sm-3">
-                                                            <label>% Discount</label>
-                                                            <input type="number" class="form-control" name="discount" min="0" required>
-                                                        </div>
-                                                        <div class="form-group col-sm-3">
-                                                            <label>Max discount</label>
-                                                            <input type="text" class="form-control" name="maxPriceDiscount" required>
-                                                        </div>
-                                                        <div class="form-group col-sm-3">
-                                                            <label>Thời gian bắt đầu</label>
-                                                            <input type="date" class="form-control" name="startTime_" required>
-                                                        </div>
-                                                        <div class="form-group col-sm-3">
-                                                            <label>Thời gian kết thúc</label>
-                                                            <input type="date" class="form-control" name="endTime_" required>
-                                                        </div>
+                                            <div class="modal-header">
+                                                <strong class="modal-title">Thêm mới voucher</strong>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="form-group col-sm-12">
+                                                        <label>Tiêu đề</label>
+                                                        <input class="form-control" type="text" placeholder="Tiêu đề" id="titleField">
                                                     </div>
-                                                    <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                                    <div class="form-group col-sm-12">
+                                                        <label>Sản phẩm áp dụng</label>
+                                                        <select class="form-control select2" multiple="multiple" data-placeholder="Sản phẩm áp dụng" style="width: 100%;" id="applicableProductsField"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-6">
+                                                        <label>Đối tượng áp dụng</label>
+                                                        <textarea class="form-control" id="applicableObjectsField" rows="3"></textarea>
+                                                    </div>
+                                                    <div class="form-group col-sm-6">
+                                                        <label>Mô tả thêm</label>
+                                                        <textarea class="form-control" id="descriptionField" rows="3"></textarea>
+                                                    </div>
+                                                    <div class="form-group col-sm-4">
+                                                        <label>Số lượng</label>
+                                                        <input class="form-control" type="number" id="quantityField">
+                                                    </div>
+                                                    <div class="form-group col-sm-4">
+                                                        <label>Số lượng ký tự</label>
+                                                        <input class="form-control" type="number" id="lengthField" value="15">
+                                                    </div>
+                                                    <div class="form-group col-sm-4">
+                                                        <label>Loại mã phiếu</label>
+                                                        <select class="custom-select" id="typeField"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-3">
+                                                        <label>% Discount</label>
+                                                        <input class="form-control" type="number" id="discountPercentField" min="0" max="100">
+                                                    </div>
+                                                    <div class="form-group col-sm-3">
+                                                        <label>Max discount</label>
+                                                        <input class="form-control" type="text" id="discountMaxPriceField">
+                                                    </div>
+                                                    <div class="form-group col-sm-3">
+                                                        <label>Thời gian bắt đầu</label>
+                                                        <input class="form-control" type="date" id="startTimeField">
+                                                    </div>
+                                                    <div class="form-group col-sm-3">
+                                                        <label>Thời gian kết thúc</label>
+                                                        <input class="form-control" type="date" id="endTimeField">
                                                     </div>
                                                 </div>
-                                            </form>
+                                            </div>
+                                            <div class="modal-footer justify-content-end">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                <button type="submit" class="btn btn-primary" id="btnInsertSubmit">Lưu</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -152,42 +134,130 @@
         <aside class="control-sidebar control-sidebar-dark"></aside>
 
         <div th:replace="header :: scripts"></div>
-
-        <script>
-            $(function () {
-                //Initialize Select2 Elements
-                $('.select2').select2()
-                //Initialize Select2 Elements
-                $('.select2bs4').select2({
-                    theme: 'bootstrap4'
-                })
-
-                //Bootstrap Duallistbox
-                $('.duallistbox').bootstrapDualListbox()
-
-                $("input[data-bootstrap-switch]").each(function () {
-                    $(this).bootstrapSwitch('state', $(this).prop('checked'));
-                })
-
-                //Date and time picker
-                $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
-                //Timepicker
-                $('#timepicker').datetimepicker({
-                    format: 'LT'
-                })
-
-                //Date range picker
-                $('#reservation').daterangepicker()
-            })
-        </script>
     </div>
     <script>
         let mvVouchers = {};
+        let mvId;
+        let mvTitle = $('#titleField');
+        let mvDescription = $('#descriptionField');
+        let mvApplicableObjects = $('#applicableObjectsField');
+        let mvApplicableProductIds = $('#applicableProductsField');
+        let mvType = $('#typeField');
+        let mvQuantity = $('#quantityField');
+        let mvLength = $('#lengthField');
+        let mvDiscountPercent = $('#discountPercentField');
+        let mvDiscountPrice;
+        let mvDiscountMaxPrice = $('#discountMaxPriceField');
+        let mvStartTime = $('#startTimeField');
+        let mvEndTime = $('#endTimeField');
+        let mvStatus;
+        let mvCreatedAt;
+        let mvCreatedBy;
 
         $(document).ready(function () {
+            init();
+            insertNewVoucher();
+        });
+
+        function init() {
             loadVouchers(mvPageSizeDefault, 1);
             updateTableContentWhenOnClickPagination(loadVouchers);
-        });
+        }
+
+        let validate = () => {
+            if (mvTitle.val() === "") {
+                alert("Vui lòng nhập tên voucher!");
+                return false;
+            }
+            if (mvApplicableProductIds.val() === "") {
+                alert("Vui lòng chọn sản phẩm!");
+                return false;
+            }
+            if (mvApplicableObjects.val() === "") {
+                alert("Vui lòng nhập đối tượng áp dụng!");
+                return false;
+            }
+            if (mvQuantity.val() === "") {
+                alert("Vui lòng nhập số lượng phiếu voucher!");
+                return false;
+            }
+            if (mvDiscountPercent.val() === "") {
+                alert("Vui lòng nhập phần trăm khuyến mãi!");
+                return false;
+            }
+            if (mvStartTime.val() === "") {
+                alert("Vui lòng nhập ngày bắt đầu!");
+                return false;
+            }
+            if (mvEndTime.val() === "") {
+                alert("Vui lòng nhập ngày kết thúc!");
+                return false;
+            }
+            return true;
+        }
+
+        function insertNewVoucher() {
+            $("#btnInsertForm").on("click", function () {
+                loadProducts();
+                mvType.append(`<option value="BOTH">Chữ và số</option><option value="TEXT">Chữ</option><option value="NUMBER">Số</option>`);
+                $("#modalInsert").modal();
+            })
+
+            $("#btnInsertSubmit").on("click", function () {
+                if (!validate()) {
+                    return;
+                }
+                let applicableProducts = [];
+                $.each(mvApplicableProductIds.val(), function (d) {
+                    applicableProducts.push({productId : d});
+                })
+                let apiURL = mvHostURLCallApi + "/voucher/create";
+                let body = {
+                    title : mvTitle.val(),
+                    description : mvDescription.val(),
+                    applicableObjects : mvApplicableObjects.val(),
+                    voucherType : mvType.val(),
+                    quantity : mvQuantity.val(),
+                    length : mvLength.val(),
+                    discount : mvDiscountPercent.val(),
+                    discountPriceMax : mvDiscountMaxPrice.val(),
+                    startTime : convertDateT1(mvStartTime.val()),
+                    endTime : convertDateT1(mvEndTime.val()),
+                    applicableProducts : applicableProducts
+                };
+                $.ajax({
+                    url: apiURL,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(body),
+                    success: function (response) {
+                        if (response.status === "OK") {
+                            alert("Create new voucher successfully!");
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + $.parseJSON(xhr.responseText).message);
+                    }
+                });
+            })
+        }
+
+        function loadProducts() {
+            let apiURL = mvHostURLCallApi + '/product/all';
+            let params = {fullInfo: false}
+            $.get(apiURL, params, function (response) {
+                if (response.status === "OK") {
+                    let products = response.data;
+                    mvApplicableProductIds.empty();
+                    $.each(products, function (index, d) {
+                        mvApplicableProductIds.append(`<option value="${d.productId}">${d.productName}</option>`);
+                    });
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
+        }
 
         function loadVouchers(pageSize, pageNum) {
             let apiURL = mvHostURLCallApi + '/voucher/all';
@@ -206,7 +276,7 @@
                     contentTable.empty();
                     $.each(mvVouchers, function (index, d) {
                         let productApplyBlock = '';
-                        $.each(d.listSanPhamApDung, function (applyIndex, applyInfo) {
+                        $.each(d.applicableProducts, function (applyIndex, applyInfo) {
                             productApplyBlock += `<span class="mr-2">${applyIndex + 1}</span><a href="/san-pham/${applyInfo.id}"><span>${applyInfo.tenSanPham}</span></a><br>`;
                         });
 
@@ -214,22 +284,18 @@
                             <tr>
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
                                 <td>
-                                    <a th:href="/san-pham/voucher/detail/${d.id}"><span>${d.title}</span></a>
+                                    <a href="/san-pham/voucher/detail/${d.id}"><span>${d.title}</span></a>
                                 </td>
                                 <td>
                                     ${productApplyBlock}
                                 </td>
-                                <td>${d.doiTuongApDung}</td>
+                                <td>${d.applicableObjects}</td>
                                 <td>
-                                    <span>Phần trăm: ${d.discount} %</span>
-                                    <br>
-                                    <span>Giảm tối đa: ${d.maxPriceDiscount} đ</span>
+                                    <span>Phần trăm: ${d.discount} %</span> <br> <span>Giảm tối đa: ${d.discountPriceMax} đ</span>
                                 </td>
                                 <td>${d.quantity}</td>
                                 <td>
-                                    <span>Ngày bắt đầu: ${d.startTime}</span>
-                                    <br>
-                                    <span>Ngày kết thúc: ${d.endTime}</span>
+                                    <span>Ngày bắt đầu: ${d.startTime}</span> <br> <span>Ngày kết thúc: ${d.endTime}</span>
                                 </td>
                                 <td>${d.status}</td>
                             </tr>
@@ -240,6 +306,34 @@
                 showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
             });
         }
+    </script>
+
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+
+            $("input[data-bootstrap-switch]").each(function () {
+                $(this).bootstrapSwitch('state', $(this).prop('checked'));
+            })
+
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+        })
     </script>
 </body>
 </html>

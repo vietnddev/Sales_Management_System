@@ -1,18 +1,14 @@
 package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.FileDTO;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.security.ValidateModuleProduct;
 import com.flowiee.app.service.*;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.utils.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -22,26 +18,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(EndPointUtil.PRO_PRODUCT)
 public class ProductUIController extends BaseController {
-    private final ProductService          productService;
-    private final FileStorageService      fileStorageService;
-    private final VoucherService          voucherService;
-    private final VoucherTicketService    voucherTicketService;
+    private final ProductService productService;
+    private final FileStorageService fileStorageService;
+    private final VoucherService voucherService;
 
     @Autowired
-    public ProductUIController(ProductService productService, FileStorageService fileStorageService, VoucherService voucherService, VoucherTicketService voucherTicketService) {
+    public ProductUIController(ProductService productService, FileStorageService fileStorageService, VoucherService voucherService) {
         this.productService = productService;
         this.fileStorageService = fileStorageService;
         this.voucherService = voucherService;
-        this.voucherTicketService = voucherTicketService;
     }
 
     @GetMapping
@@ -92,22 +82,10 @@ public class ProductUIController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping(value = "/variant/update/{id}")
-    public ModelAndView updateProductVariant(HttpServletRequest request,
-                                             @ModelAttribute("productVariant") ProductVariant productVariant,
-                                             @PathVariable("id") Integer productVariantId) {
-        validateModuleProduct.updateProduct(true);
-        if (productService.findProductVariantById(productVariantId) == null) {
-            throw new NotFoundException("Product variant not found!");
-        }
-        productService.updateProductVariant(productVariant, productVariantId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
     @PostMapping(value = "/attribute/update/{id}")
     public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
-                                        @PathVariable("id") Integer attributeId,
-                                        HttpServletRequest request) {
+                                               @PathVariable("id") Integer attributeId,
+                                               HttpServletRequest request) {
         validateModuleProduct.updateProduct(true);
         if (attributeId <= 0 || productService.findProductAttributeById(attributeId) == null) {
             throw new NotFoundException("Product attribute not found!");
@@ -148,53 +126,18 @@ public class ProductUIController extends BaseController {
         return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 
-    @GetMapping("/gallery")
-    public ModelAndView viewGallery() {
-        validateModuleProduct.readGallery(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_GALLERY);
-        modelAndView.addObject("listImages", FileDTO.fromFileStorages(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name())));
-        modelAndView.addObject("listSanPham", productService.findProductsIdAndProductName());
-        return baseView(modelAndView);
-    }
-
     @GetMapping("/voucher")
     public ModelAndView viewVouchers() {
         validateModuleProduct.readVoucher(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER);
-        modelAndView.addObject("listProduct", productService.findProductsIdAndProductName());
-        modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
-        return baseView(modelAndView);
+        return baseView(new ModelAndView(PagesUtils.PRO_VOUCHER));
     }
 
     @GetMapping("/voucher/detail/{id}")
     public ModelAndView viewVoucherDetail(@PathVariable("id") Integer voucherInfoId) {
         validateModuleProduct.readVoucher(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER_DETAIL);
-        modelAndView.addObject("voucherDetail", voucherService.findById(voucherInfoId));
-        modelAndView.addObject("listVoucherTicket", voucherTicketService.findByVoucherInfoId(voucherInfoId));
-        modelAndView.addObject("listVoucherType", CommonUtils.getVoucherType());
+        modelAndView.addObject("voucherInfoId", voucherInfoId);
         return baseView(modelAndView);
-    }
-    
-    @PostMapping("/voucher/insert")
-    public ModelAndView insertVoucher(@ModelAttribute("voucher") VoucherInfo voucherInfo,
-                                      HttpServletRequest request) throws ParseException {
-        validateModuleProduct.insertVoucher(true);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        voucherInfo.setStartTime(dateFormat.parse(request.getParameter("startTime_")));
-        voucherInfo.setEndTime(dateFormat.parse(request.getParameter("endTime_")));
-
-        List<Integer> listProductToApply = new ArrayList<>();
-        String[] pbienTheSP = request.getParameterValues("productToApply");
-        if (pbienTheSP != null) {
-            for (String id : pbienTheSP) {
-                listProductToApply.add(Integer.parseInt(id));
-            }
-        }
-        if (!listProductToApply.isEmpty()) {
-            voucherService.save(voucherInfo, listProductToApply);
-        }
-        return new ModelAndView("redirect:/san-pham/voucher");
     }
 
     @PostMapping("/voucher/update/{id}")
@@ -203,17 +146,17 @@ public class ProductUIController extends BaseController {
         if (voucherInfo == null) {
             throw new BadRequestException("Voucher to update not null!");
         }
-        if (voucherInfoId <= 0 || voucherService.findById(voucherInfoId) == null) {
+        if (voucherInfoId <= 0 || voucherService.findVoucherDetail(voucherInfoId) == null) {
             throw new NotFoundException("VoucherId invalid!");
         }
-        voucherService.update(voucherInfo ,voucherInfoId);
+        voucherService.updateVoucher(voucherInfo ,voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");
     }
 
     @PostMapping("/voucher/delete/{id}")
     public ModelAndView deleteVoucher(@PathVariable("id") Integer voucherInfoId) {
         validateModuleProduct.deleteVoucher(true);
-        voucherService.detele(voucherInfoId);
+        voucherService.deteleVoucher(voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");
     }
 }

@@ -529,8 +529,8 @@
                     $('#voucherTitleField').text("Tên đợt khuyến mãi: " + data.title);
                     $('#voucherStatusField').text("Trạng thái: " + data.status);
                     $('#voucherPercentField').text("Phần trăm giảm: " + data.discount);
-                    $('#voucherMaxPriceField').text("Tối đa giảm được: " + data.maxPriceDiscount);
-                    $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + data.doiTuongApDung);
+                    $('#voucherMaxPriceField').text("Tối đa giảm được: " + data.discountPriceMax);
+                    $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + data.applicableObjects);
 
                     if (data.status === 'Đang áp dụng') {
                         $('#isUseVoucherBlock').show();

@@ -375,7 +375,7 @@ public class ProductServiceImpl implements ProductService {
     public String deleteProductAttribute(Integer attributeId) {
         productAttributeRepo.deleteById(attributeId);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa thuộc tính sản phẩm");
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Transactional
@@ -444,7 +444,7 @@ public class ProductServiceImpl implements ProductService {
                 listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
             });
             if (!listVoucherInfoId.isEmpty()) {
-                p.setListVoucherInfoApply(voucherInfoService.findByIds(listVoucherInfoId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
+                p.setListVoucherInfoApply(voucherInfoService.findAllVouchers(listVoucherInfoId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
             }
         }
         return products;

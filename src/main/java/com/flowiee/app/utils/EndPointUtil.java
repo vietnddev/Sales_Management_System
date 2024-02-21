@@ -20,7 +20,7 @@ public class EndPointUtil {
     public static final String PRO_CUSTOMER = "/customer";
     public static final String PRO_ORDER_EXPORT = PRO_ORDER + "/export";
     public static final String PRO_SUPPLIER = PRO_PRODUCT + "/supplier";
-    public static final String PRO_GALLERY = PRO_PRODUCT + "/gallery";
+    public static final String PRO_GALLERY = "/gallery";
 
     public static final String STORAGE = "/storage";
     public static final String STORAGE_DOCUMENT = STORAGE + "/document";

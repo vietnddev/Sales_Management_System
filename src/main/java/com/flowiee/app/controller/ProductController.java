@@ -1,25 +1,19 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.controller.ui.ProductUIController;
 import com.flowiee.app.dto.FileDTO;
 import com.flowiee.app.dto.ProductDTO;
 import com.flowiee.app.dto.ProductVariantDTO;
-import com.flowiee.app.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.ApiResponse;
-import com.flowiee.app.model.PaginationModel;
 import com.flowiee.app.service.*;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -28,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -38,17 +31,20 @@ public class ProductController extends BaseController {
     @Autowired private PriceService priceService;
     @Autowired private ProductService productService;
     @Autowired private ProductHistoryService productHistoryService;
-    @Autowired private VoucherService voucherService;
     @Autowired private FileStorageService fileStorageService;
 
     @Operation(summary = "Find all products")
     @GetMapping("/all")
-    public ApiResponse<List<ProductDTO>> findProducts(@RequestParam("pageSize") int pageSize,
-                                                      @RequestParam("pageNum") int pageNum,
-                                                      @RequestParam(value = "txtSearch", required = false) String txtSearch) {
+    public ApiResponse<List<ProductDTO>> findProducts(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                                      @RequestParam(value = "txtSearch", required = false) String txtSearch,
+                                                      @RequestParam(value = "fullInfo", required = false) Boolean fullInfo) {
         try {
             if (!super.validateModuleProduct.readProduct(true)) {
                 return null;
+            }
+            if (fullInfo != null && !fullInfo) {
+                return ApiResponse.ok(ProductDTO.fromProducts(productService.findProductsIdAndProductName()));
             }
             Page<Product> productPage = productService.findAllProducts(pageSize, pageNum - 1, txtSearch, null, null, null);
             List<ProductDTO> productList = productService.setInfoVariantOfProduct(ProductDTO.fromProducts(productPage.getContent()));
@@ -125,6 +121,7 @@ public class ProductController extends BaseController {
             return ApiResponse.ok(productService.isProductVariantExists(productId, colorId, sizeId));
         } catch (RuntimeException ex) {
             ex.printStackTrace();
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"));
         }
     }
@@ -138,6 +135,7 @@ public class ProductController extends BaseController {
         try {
             return ApiResponse.ok(productService.saveProduct(Product.fromProductDTO(product)));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"), ex);
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"));
         }
     }
@@ -158,13 +156,12 @@ public class ProductController extends BaseController {
 
     @Operation(summary = "Create product attribute")
     @PostMapping("/attribute/create")
-    public ApiResponse<List<ProductVariant>> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
+    public ApiResponse<ProductAttribute> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
         if (!super.validateModuleProduct.insertProduct(true)) {
             return null;
         }
         try {
-            productService.saveProductAttribute(productAttribute);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(productService.saveProductAttribute(productAttribute));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product attribute"));
         }
@@ -177,9 +174,9 @@ public class ProductController extends BaseController {
             return null;
         }
         try {
-            productService.updateProduct(product, productId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(ProductDTO.fromProduct(productService.updateProduct(product, productId)));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"), ex);
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"));
         }
     }
@@ -191,8 +188,7 @@ public class ProductController extends BaseController {
             return null;
         }
         try {
-            productService.updateProductVariant(productVariant, productVariantId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(productService.updateProductVariant(productVariant, productVariantId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"));
         }
@@ -200,13 +196,12 @@ public class ProductController extends BaseController {
 
     @Operation(summary = "Update product attribute")
     @PutMapping("/attribute/update/{id}")
-    public ApiResponse<ProductVariant> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
+    public ApiResponse<ProductAttribute> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
         if (!super.validateModuleProduct.updateProduct(true)) {
             return null;
         }
         try {
-            productService.updateProductAttribute(productAttribute, productAttributeId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(productService.updateProductAttribute(productAttribute, productAttributeId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product attribute"));
         }
@@ -221,6 +216,7 @@ public class ProductController extends BaseController {
         try {
             return ApiResponse.ok(productService.deleteProduct(productId));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"), ex);
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"));
         }
     }
@@ -234,6 +230,7 @@ public class ProductController extends BaseController {
         try {
             return ApiResponse.ok(productService.deleteProductVariant(productVariantId));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "productVariant"), ex);
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"));
         }
     }
@@ -245,9 +242,9 @@ public class ProductController extends BaseController {
             return null;
         }
         try {
-            productService.deleteProductAttribute(productAttributeId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(productService.deleteProductAttribute(productAttributeId));
         } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product attribute"), ex);
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product attribute"));
         }
     }
@@ -304,8 +301,7 @@ public class ProductController extends BaseController {
             if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
                 throw new BadRequestException();
             }
-            fileStorageService.setImageActiveOfSanPham(productId, imageId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(fileStorageService.setImageActiveOfSanPham(productId, imageId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
         }
@@ -324,8 +320,7 @@ public class ProductController extends BaseController {
             if (file.isEmpty()) {
                 throw new BadRequestException("File attach not found!");
             }
-            fileStorageService.changeImageSanPham(file, imageId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(fileStorageService.changeImageSanPham(file, imageId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
         }
@@ -341,8 +336,7 @@ public class ProductController extends BaseController {
             if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
                 throw new BadRequestException();
             }
-            fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(fileStorageService.setImageActiveOfBienTheSanPham(productVariantId, imageId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"));
         }
@@ -394,8 +388,7 @@ public class ProductController extends BaseController {
             if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
                 throw new BadRequestException();
             }
-            priceService.update(price, productVariantId, priceId);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok(priceService.update(price, productVariantId, priceId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "price"));
         }

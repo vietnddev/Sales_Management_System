@@ -42,13 +42,13 @@
                         <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm kiếm</button>
                     </div>
                     <div class="row col-12 collapse w-100 mt-3" id="collapseExample">
-                        <select class="form-control custom-select col mr-1" id="brandFilter"       th:if="${brandCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="productTypeFilter" th:if="${productTypeCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="colorFilter"       th:if="${colorCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="sizeFilter"        th:if="${sizeCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="unitFilter"        th:if="${unitCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="discountFilter"    th:if="${isDiscountCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col"      id="productStatusFilter"      th:if="${productStatus == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="brandFilter"         th:if="${brandCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="productTypeFilter"   th:if="${productTypeCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="colorFilter"         th:if="${colorCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="sizeFilter"          th:if="${sizeCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="unitFilter"          th:if="${unitCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col mr-1" id="discountFilter"      th:if="${isDiscountCTG == 'Y'}"></select>
+                        <select class="form-control custom-select col"      id="productStatusFilter" th:if="${productStatus == 'Y'}"></select>
                     </div>
                 </div>
             </div>

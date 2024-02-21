@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.FileStorageRepository;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.DocumentService;
@@ -15,6 +16,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,46 +75,42 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public FileStorage findImageActiveOfSanPhamBienThe(int sanPhamBienTheId) {
-        return fileRepository.findImageActiveOfSanPhamBienThe(sanPhamBienTheId, true);
+    public FileStorage findImageActiveOfSanPhamBienThe(int productVariantId) {
+        return fileRepository.findImageActiveOfSanPhamBienThe(productVariantId, true);
     }
 
     @Override
-    public String setImageActiveOfSanPham(Integer sanPhamId, Integer imageId) {
+    public FileStorage setImageActiveOfSanPham(Integer productId, Integer imageId) {
+        FileStorage imageToActive = fileRepository.findById(imageId).orElse(null);
+        if (imageToActive == null) {
+            throw new BadRequestException();
+        }
         //Bỏ image default hiện tại
-        FileStorage imageActiving = fileRepository.findImageActiveOfSanPham(sanPhamId, true);
+        FileStorage imageActiving = fileRepository.findImageActiveOfSanPham(productId, true);
         if (imageActiving != null) {
             imageActiving.setActive(false);
             fileRepository.save(imageActiving);
         }
-
         //Active lại image theo id được truyền vào
-        FileStorage imageToActive = fileRepository.findById(imageId).orElse(null);
-        if (imageToActive != null) {
-            imageToActive.setActive(true);
-            fileRepository.save(imageToActive);
-            return "OK";
-        }
-        return "NOK";
+        imageToActive.setActive(true);
+        return fileRepository.save(imageToActive);
     }
 
     @Override
-    public String setImageActiveOfBienTheSanPham(Integer bienTheSanPhamId, Integer imageId) {
-        //Bỏ image default hiện tại
-        FileStorage imageActiving = fileRepository.findImageActiveOfSanPhamBienThe(bienTheSanPhamId, true);
-        if (imageActiving != null) {
-            imageActiving.setActive(false);
-            fileRepository.save(imageActiving);
-        }
-
-        //Active lại image theo id được truyền vào
+    public FileStorage setImageActiveOfBienTheSanPham(Integer productVariantId, Integer imageId) {
         FileStorage imageToActive = fileRepository.findById(imageId).orElse(null);
-        if (imageToActive != null) {
-            imageToActive.setActive(true);
-            fileRepository.save(imageToActive);
-            return "OK";
+        if (imageToActive == null) {
+            throw new BadRequestException();
         }
-        return "NOK";
+        //Bỏ image default hiện tại
+        FileStorage imageActivating = fileRepository.findImageActiveOfSanPhamBienThe(productVariantId, true);
+        if (ObjectUtils.isNotEmpty(imageActivating)) {
+            imageActivating.setActive(false);
+            fileRepository.save(imageActivating);
+        }
+        //Active lại image theo id được truyền vào
+        imageToActive.setActive(true);
+        return fileRepository.save(imageToActive);
     }
 
     @Override
@@ -283,6 +281,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         return "OK";
     }
 
+    @Transactional
     @Override
     public FileStorage changeImageSanPham(MultipartFile fileAttached, int fileId) {
         Long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
@@ -294,7 +293,7 @@ public class FileStorageServiceImpl implements FileStorageService {
                 file.delete();
             }
         } catch (Exception e) {
-            logger.error("File cần change không tồn tại!", e.getCause().getMessage());
+            logger.error("File not found!", e);
         }
         //Update thông tin file mới
         fileToChange.setTenFileGoc(fileAttached.getOriginalFilename());

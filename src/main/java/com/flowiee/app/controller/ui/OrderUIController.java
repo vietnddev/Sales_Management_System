@@ -22,22 +22,20 @@ import java.util.List;
 @RequestMapping(EndPointUtil.PRO_ORDER)
 public class OrderUIController extends BaseController {
     private final OrderService orderService;
-    private final ProductService productService;
     private final CategoryService categoryService;
     private final CustomerService customerService;
     private final CartService cartService;
-    private final VoucherTicketService voucherTicketService;
+    private final VoucherService voucherService;
     private final ValidateModuleProduct validateModuleProduct;
     private final TicketExportService ticketExportService;
 
     @Autowired
-    public OrderUIController(OrderService orderService, ProductService productService, CategoryService categoryService, CustomerService customerService, CartService cartService, VoucherTicketService voucherTicketService, ValidateModuleProduct validateModuleProduct, TicketExportService ticketExportService) {
+    public OrderUIController(OrderService orderService, CategoryService categoryService, CustomerService customerService, CartService cartService, VoucherService voucherService, ValidateModuleProduct validateModuleProduct, TicketExportService ticketExportService) {
         this.orderService = orderService;
-        this.productService = productService;
         this.categoryService = categoryService;
         this.customerService = customerService;
         this.cartService = cartService;
-        this.voucherTicketService = voucherTicketService;
+        this.voucherService = voucherService;
         this.validateModuleProduct = validateModuleProduct;
         this.ticketExportService = ticketExportService;
     }
@@ -157,8 +155,8 @@ public class OrderUIController extends BaseController {
         validateModuleProduct.readVoucher(true);
         ModelAndView modelAndView = new ModelAndView("redirect:/don-hang/ban-hang");
         modelAndView.addObject("ticket_code", code);
-        modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
-        modelAndView.addObject("ticket_info", voucherTicketService.findByCode(code));
+        modelAndView.addObject("ticket_status", voucherService.checkTicketToUse(code));
+        modelAndView.addObject("ticket_info", voucherService.findTicketByCode(code));
         return modelAndView;
     }
 

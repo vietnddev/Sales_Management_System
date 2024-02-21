@@ -1,5 +1,6 @@
 package com.flowiee.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
@@ -10,9 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
 
-import javax.persistence.Column;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,19 +29,22 @@ public class VoucherInfoDTO implements Serializable {
     private Integer id;
     private String title;
     private String description;
-    private String doiTuongApDung;
+    private String applicableObjects;
     private String voucherType;
     private Integer quantity;
-    private Integer lengthOfKey;
+    private Integer length;
     private Integer discount;
-    private Float maxPriceDiscount;
-    private String startTime;
-    private String endTime;
+    private BigDecimal discountPrice;
+    private BigDecimal discountPriceMax;
+    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
+    private Date startTime;
+    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
+    private Date endTime;
     private String status;
     private Date createdAt;
     private Integer createdBy;
     private List<VoucherTicket> listVoucherTicket;
-    private List<Product> listSanPhamApDung;
+    private List<ProductDTO> applicableProducts;
 
     public static VoucherInfoDTO fromVoucherInfo(VoucherInfo voucherInfo) {
         try {
@@ -48,14 +52,13 @@ public class VoucherInfoDTO implements Serializable {
             voucherInfoDTO.setId(voucherInfo.getId());
             voucherInfoDTO.setTitle(voucherInfo.getTitle());
             voucherInfoDTO.setDescription(voucherInfo.getDescription());
-            voucherInfoDTO.setDoiTuongApDung(voucherInfo.getDoiTuongApDung());
+            voucherInfoDTO.setApplicableObjects(voucherInfo.getApplicableObjects());
             voucherInfoDTO.setVoucherType(voucherInfo.getVoucherType());
             voucherInfoDTO.setQuantity(voucherInfo.getQuantity());
-            voucherInfoDTO.setLengthOfKey(voucherInfo.getLengthOfKey());
             voucherInfoDTO.setDiscount(voucherInfo.getDiscount());
-            voucherInfoDTO.setMaxPriceDiscount(voucherInfo.getMaxPriceDiscount());
-            voucherInfoDTO.setStartTime(String.valueOf(voucherInfo.getStartTime()).substring(0, 10));
-            voucherInfoDTO.setEndTime(String.valueOf(voucherInfo.getEndTime()).substring(0, 10));
+            voucherInfoDTO.setDiscountPriceMax(voucherInfo.getMaxPriceDiscount());
+            voucherInfoDTO.setStartTime(voucherInfo.getStartTime());
+            voucherInfoDTO.setEndTime(voucherInfo.getEndTime());
             //Checking status
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = DateUtils.convertStringToDate(String.valueOf(voucherInfo.getStartTime()).substring(0, 10), "yyyy-MM-dd");
@@ -87,8 +90,8 @@ public class VoucherInfoDTO implements Serializable {
 	@Override
 	public String toString() {
 		return "VoucherInfoDTO [id=" + id + ", title=" + title + ", description=" + description + ", doiTuongApDung="
-				+ doiTuongApDung + ", voucherType=" + voucherType + ", quantity=" + quantity + ", lengthOfKey="
-				+ lengthOfKey + ", discount=" + discount + ", maxPriceDiscount=" + maxPriceDiscount + ", startTime="
+				+ applicableObjects + ", voucherType=" + voucherType + ", quantity=" + quantity
+				+ ", discount=" + discount + ", maxPriceDiscount=" + discountPriceMax + ", startTime="
 				+ startTime + ", endTime=" + endTime + ", status=" + status + ", createdAt=" + createdAt
 				+ ", createdBy=" + createdBy + "]";
 	}   

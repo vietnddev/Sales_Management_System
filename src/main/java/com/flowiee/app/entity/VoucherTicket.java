@@ -26,11 +26,14 @@ public class VoucherTicket extends BaseEntity implements Serializable {
     @Column(name = "code", nullable = false, length = 15)
     private String code;
 
+    @Column(name = "length", nullable = false)
+    private Integer length;
+
     @Column(name = "active_time")
     private Date activeTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "khach_hang")
+    @JoinColumn(name = "customer")
     private Customer customer;
 
     @Column(name = "status", nullable = false)
