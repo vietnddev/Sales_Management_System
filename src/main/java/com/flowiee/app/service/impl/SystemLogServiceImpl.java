@@ -19,15 +19,13 @@ import java.util.List;
 
 @Service
 public class SystemLogServiceImpl implements SystemLogService {
-    @Autowired
-    private SystemLogRepository logRepository;
-    @Autowired
-    private EntityManager entityManager;
+    @Autowired private SystemLogRepository systemLogRepo;
+    @Autowired private EntityManager entityManager;
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        return logRepository.findAll(pageable);
+        return systemLogRepo.findAll(pageable);
     }
 
     @Override
@@ -52,7 +50,7 @@ public class SystemLogServiceImpl implements SystemLogService {
 
     @Override
     public SystemLog writeLog(SystemLog log) {
-        return logRepository.save(log);
+        return systemLogRepo.save(log);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setNoiDungCapNhat(null);
         systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
         systemLog.setIp(CommonUtils.getCurrentAccountIp());
-        return logRepository.save(systemLog);
+        return systemLogRepo.save(systemLog);
     }
 
     @Override
@@ -76,6 +74,6 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setNoiDungCapNhat(noiDungCapNhat);
         systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
         systemLog.setIp(CommonUtils.getCurrentAccountIp());
-        return logRepository.save(systemLog);
+        return systemLogRepo.save(systemLog);
     }
 }

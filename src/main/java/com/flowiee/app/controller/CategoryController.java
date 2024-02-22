@@ -20,8 +20,12 @@ import java.util.Objects;
 @RequestMapping("${app.api.prefix}/category")
 @Tag(name = "Category API", description = "Quản lý danh mục hệ thống")
 public class CategoryController {
+    private final CategoryService categoryService;
+
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @Operation(summary = "Find all category")
     @GetMapping("/all")

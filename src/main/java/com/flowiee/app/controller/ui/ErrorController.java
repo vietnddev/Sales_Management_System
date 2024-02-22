@@ -1,6 +1,7 @@
-package com.flowiee.app.exception;
+package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.base.BaseController;
+import com.flowiee.app.exception.ErrorResponse;
 import com.flowiee.app.utils.MessageUtils;
 import com.flowiee.app.utils.PagesUtils;
 import org.springframework.http.HttpStatus;

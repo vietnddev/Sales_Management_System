@@ -4,14 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.flowiee.app.entity.FlowieeConfig;
+import com.flowiee.app.entity.SystemConfig;
 
 import java.util.List;
 
 @Repository
-public interface FlowieeConfigRepository extends JpaRepository<FlowieeConfig, Integer> {
-    @Query("from FlowieeConfig order by sort")
-    List<FlowieeConfig> findAll();
+public interface FlowieeConfigRepository extends JpaRepository<SystemConfig, Integer> {
+    @Query("from SystemConfig order by sort")
+    List<SystemConfig> findAll();
 
-    FlowieeConfig findByCode(String code);
+    SystemConfig findByCode(String code);
 }

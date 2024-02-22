@@ -23,7 +23,7 @@ public interface FileStorageService extends BaseService<FileStorage> {
 
     FileStorage saveImageBienTheSanPham(MultipartFile fileUpload, int bienTheId) throws IOException;
 
-    String saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
+    FileStorage saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException;
 
     String saveFileOfImport(MultipartFile fileImport, FileStorage fileInfo) throws IOException;
 

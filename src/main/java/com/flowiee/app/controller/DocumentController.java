@@ -1,33 +1,33 @@
-package com.flowiee.app.controller.ui;
+package com.flowiee.app.controller;
 
-import com.flowiee.app.entity.Category;
-import com.flowiee.app.exception.ForbiddenException;
-import com.flowiee.app.service.CategoryService;
-import com.flowiee.app.entity.DocData;
-import com.flowiee.app.entity.DocField;
-import com.flowiee.app.entity.Document;
-import com.flowiee.app.dto.DocMetaDTO;
-import com.flowiee.app.service.DocDataService;
-import com.flowiee.app.service.DocFieldService;
-import com.flowiee.app.service.DocShareService;
-import com.flowiee.app.service.DocumentService;
-import com.flowiee.app.service.FileStorageService;
-import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.base.BaseController;
-
-import com.flowiee.app.utils.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.app.dto.DocMetaDTO;
+import com.flowiee.app.dto.DocumentDTO;
+import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.AppException;
+import com.flowiee.app.exception.ForbiddenException;
+import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.model.ApiResponse;
+import com.flowiee.app.service.*;
+import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
+import com.flowiee.app.utils.PagesUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/storage")
-public class DocumentUIController extends BaseController {
+@RequestMapping("${app.api.prefix}/storage")
+public class DocumentController extends BaseController {
     private final DocumentService documentService;
     private final DocFieldService docFieldService;
     private final DocDataService docDataService;
@@ -35,8 +35,7 @@ public class DocumentUIController extends BaseController {
     private final DocShareService docShareService;
     private final CategoryService categoryService;
 
-    @Autowired
-    public DocumentUIController(DocumentService documentService, DocFieldService docFieldService, DocDataService docDataService, FileStorageService fileStorageService, DocShareService docShareService, CategoryService categoryService) {
+    public DocumentController(DocumentService documentService, DocFieldService docFieldService, DocDataService docDataService, FileStorageService fileStorageService, DocShareService docShareService, CategoryService categoryService) {
         this.documentService = documentService;
         this.docFieldService = docFieldService;
         this.docDataService = docDataService;
@@ -44,6 +43,38 @@ public class DocumentUIController extends BaseController {
         this.docShareService = docShareService;
         this.categoryService = categoryService;
     }
+
+    @Operation(summary = "Find all documents")
+    @GetMapping("/root")
+    public ApiResponse<List<DocumentDTO>> getAllDocuments(@RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum) {
+        try {
+            if (!super.validateModuleStorage.readDoc(true)) {
+                return null;
+            }
+            Page<Document> documents = documentService.findRootDocument(pageSize, pageNum - 1);
+            return ApiResponse.ok(DocumentDTO.fromDocuments(documents.getContent()), pageNum, pageSize, documents.getTotalPages(), documents.getTotalElements());
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "documents"), ex);
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "documents"));
+        }
+    }
+
+    @Operation(summary = "Create new document")
+    @PostMapping(value = "/document/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<DocumentDTO> insertNewDoc(@RequestBody DocumentDTO document) {
+        try {
+            if (!super.validateModuleStorage.insertDoc(true)) {
+                return null;
+            }
+            return ApiResponse.ok(documentService.save(document));
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "document"), ex);
+            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "document"), ex);
+        }
+    }
+
+    /* ****************** */
+
 
     //Dashboard
     @GetMapping("/dashboard")
@@ -63,11 +94,39 @@ public class DocumentUIController extends BaseController {
         return baseView(modelAndView);
     }
 
-    //Root screen
+    //Màn hình root
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
         validateModuleStorage.readDoc(true);
-        return baseView(new ModelAndView(PagesUtils.STG_DOCUMENT));
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
+        List<Document> listRootDocument = documentService.findRootDocument(null, null).getContent();
+        for (int i = 0; i < listRootDocument.size(); i++) {
+            listRootDocument.get(i).setCreatedAt(listRootDocument.get(i).getCreatedAt());
+        }
+        modelAndView.addObject("listDocument", listRootDocument);
+        modelAndView.addObject("document", new Document());
+        //select-option danh sách loại tài liệu
+        List<Category> listLoaiTaiLieu = new ArrayList<>();
+        listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
+        listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
+        modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
+        //select-option danh sách thư mục
+        List<Document> listFolder = new ArrayList<>();
+        listFolder.add(new Document(0, "--Chọn thư mục--"));
+        listFolder.addAll(documentService.findAllFolder());
+        modelAndView.addObject("listFolder", listFolder);
+        //Parent name
+        modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
+        if (validateModuleStorage.insertDoc(false)) {
+            modelAndView.addObject("action_create", "enable");
+        }
+        if (validateModuleStorage.updateDoc(false)) {
+            modelAndView.addObject("action_update", "enable");
+        }
+        if (validateModuleStorage.deleteDoc(false)) {
+            modelAndView.addObject("action_delete", "enable");
+        }
+        return baseView(modelAndView);
     }
 
     @GetMapping("/document/{aliasPath}")
@@ -135,36 +194,6 @@ public class DocumentUIController extends BaseController {
 
         return new ModelAndView();
     }
-
-    //Insert FILE và FOLDER
-//    @PostMapping("/document/insert")
-//    public ModelAndView insert(HttpServletRequest request,
-//                               @ModelAttribute("document") Document document,
-//                               @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
-//        validateModuleStorage.insertDoc(true);
-//        document.setAsName(CommonUtils.generateAliasName(document.getName()));
-//        document.setCreatedBy(CommonUtils.getCurrentAccountId());
-//        if (document.getParentId() == null) {
-//            document.setParentId(0);
-//        }
-//        Document documentSaved = documentService.saveReturnEntity(document);
-//        //Trường hợp document được tạo mới là file upload
-//        if (document.getIsFolder().equals(AppConstants.DOCUMENT_TYPE.FI.name()) && file != null) {
-//            //Lưu file đính kèm vào thư mục chứ file upload
-//            fileStorageService.saveFileOfDocument(file, documentSaved.getId());
-//
-//            //Lưu giá trị default vào DocData
-//            List<DocField> listDocField = docFieldService.findByDocTypeId(document.getLoaiTaiLieu().getId());
-//            for (DocField docField : listDocField) {
-//                DocData docData = DocData.builder()
-//                        .docField(new DocField(docField.getId()))
-//                        .document(new Document(document.getId()))
-//                        .noiDung("").build();
-//                docDataService.save(docData);
-//            }
-//        }
-//        return new ModelAndView("redirect:" + request.getHeader("referer"));
-//    }
 
     @PostMapping("/document/change-file/{id}")
     public ModelAndView changeFile(@RequestParam("file") MultipartFile file,

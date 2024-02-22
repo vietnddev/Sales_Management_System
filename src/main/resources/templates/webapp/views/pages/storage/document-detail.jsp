@@ -110,7 +110,7 @@
                         <div class="row justify-content-between">
                             <div class="col-12" style="display: flex; align-items: center">
                                 <h3 class="card-title">
-                                    <strong th:text="${docDetail.ten}"></strong>
+                                    <strong th:text="${docDetail.name}"></strong>
                                 </h3>
                             </div>
                         </div>

@@ -28,10 +28,18 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý sản phẩm")
 public class ProductController extends BaseController {
-    @Autowired private PriceService priceService;
-    @Autowired private ProductService productService;
-    @Autowired private ProductHistoryService productHistoryService;
-    @Autowired private FileStorageService fileStorageService;
+    private final PriceService priceService;
+    private final ProductService productService;
+    private final ProductHistoryService productHistoryService;
+    private final FileStorageService fileStorageService;
+
+    @Autowired
+    public ProductController(PriceService priceService, ProductService productService, ProductHistoryService productHistoryService, FileStorageService fileStorageService) {
+        this.priceService = priceService;
+        this.productService = productService;
+        this.productHistoryService = productHistoryService;
+        this.fileStorageService = fileStorageService;
+    }
 
     @Operation(summary = "Find all products")
     @GetMapping("/all")
@@ -435,7 +443,7 @@ public class ProductController extends BaseController {
             }
             return ApiResponse.ok(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name()));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "galleries"));
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"));
         }
     }
 }

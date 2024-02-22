@@ -3,9 +3,11 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
+import com.flowiee.app.dto.DocumentDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -20,26 +22,27 @@ import java.util.Map;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Document extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
     @Column(name = "parent_id", nullable = false)
     private Integer parentId;
 
-    @Column(name = "loai", nullable = false)
-    private String loai;
+    @Column(name = "is_folder", nullable = false)
+    private String isFolder;
 
-    @Column(name = "ten", nullable = false)
-    private String ten;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "alias_name", nullable = false)
-    private String aliasName;
+    @Column(name = "as_name", nullable = false)
+    private String asName;
 
-    @Column(name = "mo_ta")
-    private String moTa;
+    @Column(name = "description")
+    private String description;
 
     @JsonIgnoreProperties("listDocument")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loai_tai_lieu_id")
+    @JoinColumn(name = "doc_type_id")
     private Category loaiTaiLieu;
 
     @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -59,23 +62,35 @@ public class Document extends BaseEntity implements Serializable {
     }
     
     public Document(Integer id, String name) {
-    	this.ten = name;
+    	this.name = name;
     }
-    
+
+    public static Document fromDocumentDTO(DocumentDTO dto) {
+        Document document = new Document();
+        document.setId(dto.getId());
+        document.setIsFolder(dto.getIsFolder());
+        document.setName(dto.getName());
+        document.setAsName(dto.getAliasName());
+        document.setParentId(dto.getParentId());
+        document.setDescription(dto.getDescription());
+        document.setLoaiTaiLieu(new Category(dto.getDocTypeId(), dto.getDocTypeName()));
+        return document;
+    }
+
     public Map<String, String> compareTo(Document documentToCompare) {
         Map<String, String> map = new HashMap<>();
         if (!this.getParentId().equals(documentToCompare.getParentId())) {
             map.put("Move", "From " +this.getParentId() + "#To " + documentToCompare.getParentId());
         }
-        if (!this.getTen().equals(documentToCompare.getTen())) {
-            map.put("Document name", this.getTen() + "#" + documentToCompare.getTen());
+        if (!this.getName().equals(documentToCompare.getName())) {
+            map.put("Document name", this.getName() + "#" + documentToCompare.getName());
         }
         if (!this.getLoaiTaiLieu().getName().equals(documentToCompare.getLoaiTaiLieu().getName())) {
             map.put("Document type", this.getLoaiTaiLieu().getName() + "#" + documentToCompare.getLoaiTaiLieu().getName());
         }
-        if (!this.getMoTa().equals(documentToCompare.getMoTa())) {
-            String descriptionOld = this.getMoTa().length() > 9999 ? this.getMoTa().substring(0, 9999) : this.getMoTa();
-            String descriptionNew = documentToCompare.getMoTa().length() > 9999 ? documentToCompare.getMoTa().substring(0, 9999) : documentToCompare.getMoTa();
+        if (!this.getDescription().equals(documentToCompare.getDescription())) {
+            String descriptionOld = this.getDescription().length() > 9999 ? this.getDescription().substring(0, 9999) : this.getDescription();
+            String descriptionNew = documentToCompare.getDescription().length() > 9999 ? documentToCompare.getDescription().substring(0, 9999) : documentToCompare.getDescription();
             map.put("Description", descriptionOld + "#" + descriptionNew);
         }
         return map;
@@ -83,7 +98,7 @@ public class Document extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Document [id=" + super.id + ", parentId=" + parentId + ", loai=" + loai + ", ten=" + ten + ", aliasName=" + aliasName
-				+ ", moTa=" + moTa + ", loaiTaiLieu=" + loaiTaiLieu + "]";
+		return "Document [id=" + super.id + ", parentId=" + parentId + ", loai=" + isFolder + ", ten=" + name + ", aliasName=" + asName
+				+ ", moTa=" + description + ", loaiTaiLieu=" + loaiTaiLieu + "]";
 	}        
 }

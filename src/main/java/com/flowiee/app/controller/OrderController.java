@@ -25,8 +25,14 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/order")
 @Tag(name = "Order API", description = "Quản lý đơn hàng")
 public class OrderController extends BaseController {
-    @Autowired private OrderService orderService;
-    @Autowired private CartService cartService;
+    private final OrderService orderService;
+    private final CartService  cartService;
+
+    @Autowired
+    public OrderController(OrderService orderService, CartService cartService) {
+        this.orderService = orderService;
+        this.cartService = cartService;
+    }
 
     @Operation(summary = "Find all orders")
     @GetMapping("/all")
@@ -133,8 +139,8 @@ public class OrderController extends BaseController {
 
     @PutMapping("/cart/{cartId}/item/update/{itemId}")
     public ApiResponse<Items> updateItemsOfCart(@RequestBody Items items,
-                                          @PathVariable("cartId") Integer cartId,
-                                          @PathVariable("itemId") Integer itemId) {
+                                                @PathVariable("cartId") Integer cartId,
+                                                @PathVariable("itemId") Integer itemId) {
         if (!super.validateModuleProduct.insertOrder(true)) {
             return null;
         }

@@ -220,7 +220,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public String saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
+    public FileStorage saveFileOfDocument(MultipartFile fileUpload, Integer documentId) throws IOException {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.STORAGE.name());
@@ -234,12 +234,12 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setDocument(new Document(documentId));
         fileInfo.setAccount(accountService.findCurrentAccount());
         fileInfo.setActive(true);
-        fileRepository.save(fileInfo);
+        FileStorage fileSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
-        return "OK";
+        return fileSaved;
     }
 
     @Override

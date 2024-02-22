@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.*;
@@ -19,7 +20,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class FlowieeConfig extends BaseEntity implements Serializable {
+public class SystemConfig extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "code", nullable = false)
@@ -34,7 +36,7 @@ public class FlowieeConfig extends BaseEntity implements Serializable {
 	@Column(name = "sort")
 	private Integer sort;
 	
-	public FlowieeConfig(Integer id, String key, String name, String value, Integer sort) {
+	public SystemConfig(Integer id, String key, String name, String value, Integer sort) {
 		super.id = id;
 		this.code = key;
 		this.value = value;

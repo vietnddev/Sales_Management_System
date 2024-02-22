@@ -188,20 +188,23 @@ public class CommonUtils {
     }
 
     public static String generateAliasName(String text) {
-        // Loại bỏ dấu tiếng Việt và ký tự đặc biệt
-        String normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        String textWithoutAccents = pattern.matcher(normalizedText).replaceAll("");
-        String cleanedText = textWithoutAccents.replaceAll("[^a-zA-Z0-9 ]", "");
+        String transformedText = "";
+        if (text != null) {
+            // Loại bỏ dấu tiếng Việt và ký tự đặc biệt
+            String normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD);
+            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+            String textWithoutAccents = pattern.matcher(normalizedText).replaceAll("");
+            String cleanedText = textWithoutAccents.replaceAll("[^a-zA-Z0-9 ]", "");
 
-        // Chuyển đổi thành chữ thường (lowercase)
-        String lowercaseText = cleanedText.toLowerCase();
+            // Chuyển đổi thành chữ thường (lowercase)
+            String lowercaseText = cleanedText.toLowerCase();
 
-        // Thay thế khoảng trắng bằng dấu gạch ngang ("-")
-        String transformedText = lowercaseText.replace(" ", "-");
+            // Thay thế khoảng trắng bằng dấu gạch ngang ("-")
+            transformedText = lowercaseText.replace(" ", "-");
 
-        if (transformedText.endsWith("-")) {
-            transformedText = transformedText.substring(0, transformedText.length() - 1);
+            if (transformedText.endsWith("-")) {
+                transformedText = transformedText.substring(0, transformedText.length() - 1);
+            }
         }
         return transformedText;
     }

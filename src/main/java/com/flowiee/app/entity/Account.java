@@ -8,6 +8,7 @@ import com.flowiee.app.model.role.Role;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Account extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "username", nullable = false)

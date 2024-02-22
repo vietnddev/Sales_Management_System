@@ -221,7 +221,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.toString());
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.getTenKhachHang());
         logger.info(ProductServiceImpl.class.getName() + ": Xóa khách hàng " + customer.toString());
         return MessageUtils.DELETE_SUCCESS;
     }

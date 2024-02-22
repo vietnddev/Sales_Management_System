@@ -3,8 +3,6 @@ package com.flowiee.app.exception;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.model.ApiResponse;
 import com.flowiee.app.utils.PagesUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,8 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
     @ExceptionHandler
     public ModelAndView exceptionHandler(AuthenticationException ex) {
         logger.error("AuthenticationException", ex);

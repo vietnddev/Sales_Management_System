@@ -16,8 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${app.api.prefix}/file")
 @Tag(name = "File API", description = "Quản lý file đính kèm và hình ảnh sản phẩm")
 public class FileStorageController extends BaseController {
-    @Autowired private FileStorageService fileService;
-    @Autowired private ValidateModuleProduct validateModuleProduct;
+    private final FileStorageService    fileService;
+    private final ValidateModuleProduct validateModuleProduct;
+
+    @Autowired
+    public FileStorageController(FileStorageService fileService, ValidateModuleProduct validateModuleProduct) {
+        this.fileService = fileService;
+        this.validateModuleProduct = validateModuleProduct;
+    }
 
     @Operation(summary = "Xóa file", description = "Xóa theo id")
     @DeleteMapping("/delete/{id}")

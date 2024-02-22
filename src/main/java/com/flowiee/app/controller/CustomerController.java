@@ -22,7 +22,12 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/customer")
 @Tag(name = "Customer API", description = "Quản lý khách hàng")
 public class CustomerController extends BaseController {
-    @Autowired private CustomerService customerService;
+    private final CustomerService customerService;
+
+    @Autowired
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @Operation(summary = "Find all customers")
     @GetMapping("/all")
