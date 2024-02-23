@@ -48,7 +48,7 @@ public class ProductController extends BaseController {
                                                       @RequestParam(value = "txtSearch", required = false) String txtSearch,
                                                       @RequestParam(value = "fullInfo", required = false) Boolean fullInfo) {
         try {
-            if (!super.validateModuleProduct.readProduct(true)) {
+            if (!super.vldModuleProduct.readProduct(true)) {
                 return null;
             }
             if (fullInfo != null && !fullInfo) {
@@ -67,7 +67,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Find detail products")
     @GetMapping("/{id}")
     public ApiResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
-        if (!super.validateModuleProduct.readProduct(true)) {
+        if (!super.vldModuleProduct.readProduct(true)) {
             return null;
         }
         try {
@@ -80,7 +80,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Find all variants")
     @GetMapping("/variant/all")
     public ApiResponse<List<ProductVariant>> findProductVariants() {
-        if (!super.validateModuleProduct.readProduct(true)) {
+        if (!super.vldModuleProduct.readProduct(true)) {
             return null;
         }
         try {
@@ -94,7 +94,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Find all variants of product")
     @GetMapping("/{productId}/variants")
     public ApiResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
-        if (!super.validateModuleProduct.readProduct(true)) {
+        if (!super.vldModuleProduct.readProduct(true)) {
             return null;
         }
         try {
@@ -107,7 +107,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Find detail product variant")
     @GetMapping("/variant/{id}")
     public ApiResponse<ProductVariant> findDetailProductVariant(@PathVariable("id") Integer productVariantId) {
-        if (!super.validateModuleProduct.readProduct(true)) {
+        if (!super.vldModuleProduct.readProduct(true)) {
             return null;
         }
         try {
@@ -122,7 +122,7 @@ public class ProductController extends BaseController {
     public ApiResponse<Boolean> checkProductVariantAlreadyExists(@RequestParam("productId") Integer productId,
                                                                  @RequestParam("colorId") Integer colorId,
                                                                  @RequestParam("sizeId") Integer sizeId) {
-        if (!super.validateModuleProduct.readProduct(true)) {
+        if (!super.vldModuleProduct.readProduct(true)) {
             return null;
         }
         try {
@@ -137,7 +137,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Create product")
     @PostMapping("/create")
     public ApiResponse<Product> createProduct(@RequestBody ProductDTO product) {
-        if (!super.validateModuleProduct.insertProduct(true)) {
+        if (!super.vldModuleProduct.insertProduct(true)) {
             return null;
         }
         try {
@@ -151,7 +151,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Create product variant")
     @PostMapping("/variant/create")
     public ApiResponse<ProductVariant> createProductVariant(@RequestBody ProductVariantDTO productVariantDTO) {
-        if (!super.validateModuleProduct.insertProduct(true)) {
+        if (!super.vldModuleProduct.insertProduct(true)) {
             return null;
         }
         try {
@@ -165,7 +165,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Create product attribute")
     @PostMapping("/attribute/create")
     public ApiResponse<ProductAttribute> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
-        if (!super.validateModuleProduct.insertProduct(true)) {
+        if (!super.vldModuleProduct.insertProduct(true)) {
             return null;
         }
         try {
@@ -178,7 +178,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Update product")
     @PutMapping("/update/{id}")
     public ApiResponse<ProductDTO> updateProduct(@RequestBody Product product, @PathVariable("id") Integer productId) {
-        if (!super.validateModuleProduct.updateProduct(true)) {
+        if (!super.vldModuleProduct.updateProduct(true)) {
             return null;
         }
         try {
@@ -192,7 +192,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Update product variant")
     @PutMapping("/variant/update/{id}")
     public ApiResponse<ProductVariant> updateProductVariant(@RequestBody ProductVariant productVariant, @PathVariable("id") Integer productVariantId) {
-        if (!super.validateModuleProduct.updateProduct(true)) {
+        if (!super.vldModuleProduct.updateProduct(true)) {
             return null;
         }
         try {
@@ -205,7 +205,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Update product attribute")
     @PutMapping("/attribute/update/{id}")
     public ApiResponse<ProductAttribute> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
-        if (!super.validateModuleProduct.updateProduct(true)) {
+        if (!super.vldModuleProduct.updateProduct(true)) {
             return null;
         }
         try {
@@ -218,7 +218,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Delete product")
     @DeleteMapping("/delete/{id}")
     public ApiResponse<String> deleteProduct(@PathVariable("id") Integer productId) {
-        if (!super.validateModuleProduct.deleteProduct(true)) {
+        if (!super.vldModuleProduct.deleteProduct(true)) {
             return null;
         }
         try {
@@ -232,7 +232,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Delete product variant")
     @DeleteMapping("/variant/delete/{id}")
     public ApiResponse<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
-        if (!super.validateModuleProduct.deleteProduct(true)) {
+        if (!super.vldModuleProduct.deleteProduct(true)) {
             return null;
         }
         try {
@@ -246,7 +246,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Delete product attribute")
     @DeleteMapping("/attribute/delete/{id}")
     public ApiResponse<String> deleteProductAttribute(@PathVariable("id") Integer productAttributeId) {
-        if (!super.validateModuleProduct.deleteProduct(true)) {
+        if (!super.vldModuleProduct.deleteProduct(true)) {
             return null;
         }
         try {
@@ -261,7 +261,7 @@ public class ProductController extends BaseController {
     @PostMapping(value = "/{productId}/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<FileStorage> uploadImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productId) {
         try {
-            if (!super.validateModuleProduct.updateImage(true)) {
+            if (!super.vldModuleProduct.updateImage(true)) {
                 return null;
             }
             if (productId <= 0 || productService.findProductById(productId) == null) {
@@ -282,7 +282,7 @@ public class ProductController extends BaseController {
     @PostMapping(value = "/{productId}/variant/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productVariantId) {
         try {
-            if (!super.validateModuleProduct.updateImage(true)) {
+            if (!super.vldModuleProduct.updateImage(true)) {
                 return null;
             }
             if (productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
@@ -303,7 +303,7 @@ public class ProductController extends BaseController {
     @PutMapping(value = "/{productId}/active-image/{imageId}")
     public ApiResponse<FileStorage> activeImageOfProduct(@PathVariable("productId") Integer productId, @PathVariable("imageId") Integer imageId) {
         try {
-            if (!super.validateModuleProduct.updateImage(true)) {
+            if (!super.vldModuleProduct.updateImage(true)) {
                 return null;
             }
             if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
@@ -319,7 +319,7 @@ public class ProductController extends BaseController {
     @PutMapping(value = "/{productId}/change-image/{imageId}")
     public ApiResponse<FileStorage> changeImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("imageId") Integer imageId) {
         try {
-            if (!super.validateModuleProduct.updateImage(true)) {
+            if (!super.vldModuleProduct.updateImage(true)) {
                 return null;
             }
             if (imageId <= 0 || fileStorageService.findById(imageId) == null) {
@@ -338,7 +338,7 @@ public class ProductController extends BaseController {
     @PutMapping(value = "/variant/{productVariantId}/active-image/{imageId}")
     public ApiResponse<FileStorage> activeImageOfProductVariant(@PathVariable("productVariantId") Integer productVariantId, @PathVariable("imageId") Integer imageId) {
         try {
-            if (!super.validateModuleProduct.updateImage(true)) {
+            if (!super.vldModuleProduct.updateImage(true)) {
                 return null;
             }
             if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
@@ -353,7 +353,7 @@ public class ProductController extends BaseController {
     @PostMapping(value = "/change-image/{imageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<FileStorage> changeFile(@RequestParam("file") MultipartFile fileUpload, @PathVariable("imageId") Integer imageId) {
         try {
-            if (!super.validateModuleProduct.updateImage(true)) {
+            if (!super.vldModuleProduct.updateImage(true)) {
                 return null;
             }
             if (imageId <= 0 || fileStorageService.findById(imageId) == null) {
@@ -372,7 +372,7 @@ public class ProductController extends BaseController {
     @PostMapping(value = "/variant/{productVariantId}/price/create")
     public ApiResponse<Price> createPrice(@RequestBody Price price, @PathVariable("productVariantId") Integer productVariantId) {
         try {
-            if (!super.validateModuleProduct.priceManagement(true)) {
+            if (!super.vldModuleProduct.priceManagement(true)) {
                 return null;
             }
             if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
@@ -390,7 +390,7 @@ public class ProductController extends BaseController {
                                           @PathVariable("productVariantId") Integer productVariantId,
                                           @PathVariable("priceId") Integer priceId) {
         try {
-            if (!super.validateModuleProduct.priceManagement(true)) {
+            if (!super.vldModuleProduct.priceManagement(true)) {
                 return null;
             }
             if (price == null || productVariantId <= 0 || productService.findProductVariantById(productVariantId) == null) {
@@ -406,7 +406,7 @@ public class ProductController extends BaseController {
     @GetMapping(value = "/{productId}/history")
     public ApiResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
         try {
-            if (!super.validateModuleProduct.readProduct(true)) {
+            if (!super.vldModuleProduct.readProduct(true)) {
                 return null;
             }
             if (ObjectUtils.isEmpty(productService.findProductById(productId))) {
@@ -423,7 +423,7 @@ public class ProductController extends BaseController {
     @GetMapping("{productId}/images")
     public ApiResponse<List<FileDTO>> getImagesOfProduct(@PathVariable("productId") Integer productId) {
         try {
-            if (!super.validateModuleProduct.readProduct(true)) {
+            if (!super.vldModuleProduct.readProduct(true)) {
                 return null;
             }
             List<FileStorage> images = fileStorageService.getImageOfSanPham(productId);
@@ -438,7 +438,7 @@ public class ProductController extends BaseController {
     @GetMapping("/images/all")
     public ApiResponse<List<FileStorage>> viewGallery() {
         try {
-            if (!super.validateModuleProduct.readGallery(true)) {
+            if (!super.vldModuleProduct.readGallery(true)) {
                 return null;
             }
             return ApiResponse.ok(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name()));

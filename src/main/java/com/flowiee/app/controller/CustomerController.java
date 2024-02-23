@@ -34,7 +34,7 @@ public class CustomerController extends BaseController {
     public ApiResponse<List<CustomerDTO>> findCustomers(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                         @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
-            if (!super.validateModuleProduct.readCustomer(true)) {
+            if (!super.vldModuleProduct.readCustomer(true)) {
                 return null;
             }
             if (pageSize != null && pageNum != null) {
@@ -63,7 +63,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Create customer")
     @PostMapping("/insert")
     public ApiResponse<String> createCustomer(@RequestBody CustomerDTO customer) {
-        if (!super.validateModuleProduct.insertCustomer(true)) {
+        if (!super.vldModuleProduct.insertCustomer(true)) {
             return null;
         }
         try {
@@ -80,7 +80,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Update customer")
     @PutMapping("/update/{customerId}")
     public ApiResponse<String> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
-        if (!super.validateModuleProduct.updateCustomer(true)) {
+        if (!super.vldModuleProduct.updateCustomer(true)) {
             return null;
         }
         try {
@@ -97,7 +97,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Delete customer")
     @DeleteMapping("/delete/{customerId}")
     public ApiResponse<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
-        if (!super.validateModuleProduct.deleteCustomer(true)) {
+        if (!super.vldModuleProduct.deleteCustomer(true)) {
             return null;
         }
         try {
@@ -113,7 +113,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Find contacts of customer")
     @GetMapping("/{customerId}/contact")
     public ApiResponse<List<CustomerContact>> findContactsOfCustomer(@PathVariable("customerId") Integer customerId) {
-        if (!super.validateModuleProduct.readCustomer(true)) {
+        if (!super.vldModuleProduct.readCustomer(true)) {
             return null;
         }
         try {
@@ -141,7 +141,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Create contact")
     @PostMapping("/contact/insert")
     public ApiResponse<CustomerContact> insertContact(@RequestBody CustomerContact customerContact) {
-        if (!super.validateModuleProduct.updateCustomer(true)) {
+        if (!super.vldModuleProduct.updateCustomer(true)) {
             return null;
         }
         try {
@@ -157,7 +157,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Update contact")
     @PutMapping("/contact/update/{contactId}")
     public ApiResponse<CustomerContact> updateContact(@RequestBody CustomerContact customerContact, @PathVariable("contactId") Integer contactId) {
-        if (!super.validateModuleProduct.updateCustomer(true)) {
+        if (!super.vldModuleProduct.updateCustomer(true)) {
             return null;
         }
         try {
@@ -173,7 +173,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Delete contact")
     @DeleteMapping("/contact/delete/{contactId}")
     public ApiResponse<String> deleteContact(@PathVariable("contactId") Integer contactId) {
-        if (!super.validateModuleProduct.updateCustomer(true)) {
+        if (!super.vldModuleProduct.updateCustomer(true)) {
             return null;
         }
         try {
@@ -192,7 +192,7 @@ public class CustomerController extends BaseController {
     public ApiResponse<CustomerContact> setContactUseDefault(@RequestParam("customerId") Integer customerId,
                                                              @RequestParam("contactCode") String contactCode,
                                                              @PathVariable("contactId") Integer contactId) {
-        if (!super.validateModuleProduct.updateCustomer(true)) {
+        if (!super.vldModuleProduct.updateCustomer(true)) {
             return null;
         }
         try {
@@ -208,7 +208,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Update contact un-use default")
     @PatchMapping("/contact/undefault/{contactId}")
     public ApiResponse<CustomerContact> setContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
-        if (!super.validateModuleProduct.updateCustomer(true)) {
+        if (!super.vldModuleProduct.updateCustomer(true)) {
             return null;
         }
         try {

@@ -20,10 +20,10 @@ public class BaseController {
 	protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
 	@Autowired protected AccountService accountService;
-	@Autowired protected ValidateModuleProduct validateModuleProduct;
-	@Autowired protected ValidateModuleSystem validateModuleSystem;
-	@Autowired protected ValidateModuleCategory validateModuleCategory;
-	@Autowired protected ValidateModuleStorage validateModuleStorage;
+	@Autowired protected ValidateModuleProduct vldModuleProduct;
+	@Autowired protected ValidateModuleSystem vldModuleSystem;
+	@Autowired protected ValidateModuleCategory vldModuleCategory;
+	@Autowired protected ValidateModuleStorage vldModuleStorage;
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtils.getCurrentAccountUsername()));

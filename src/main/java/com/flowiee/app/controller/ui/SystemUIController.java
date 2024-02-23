@@ -1,18 +1,14 @@
 package com.flowiee.app.controller.ui;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.entity.Category;
 import com.flowiee.app.entity.SystemConfig;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.*;
-import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.PagesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @Controller
 @RequestMapping
@@ -29,13 +25,13 @@ public class SystemUIController extends BaseController {
 
     @GetMapping("/sys/log")
     public ModelAndView showPageLog() {
-        validateModuleSystem.readLog(true);
+        vldModuleSystem.readLog(true);
         return baseView(new ModelAndView(PagesUtils.SYS_LOG));
     }
 
     @GetMapping("/sys/config")
     public ModelAndView showConfig() {
-        validateModuleSystem.setupConfig(true);
+        vldModuleSystem.setupConfig(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_CONFIG);
         modelAndView.addObject("listConfig", configService.findAll());
         return baseView(modelAndView);
@@ -43,7 +39,7 @@ public class SystemUIController extends BaseController {
 
     @PostMapping("/sys/config/update/{id}")
     public ModelAndView update(@ModelAttribute("config") SystemConfig config, @PathVariable("id") Integer configId) {
-        validateModuleSystem.setupConfig(true);
+        vldModuleSystem.setupConfig(true);
         if (configId <= 0 || configService.findById(configId) == null) {
             throw new NotFoundException("Config not found!");
         }
@@ -53,7 +49,7 @@ public class SystemUIController extends BaseController {
 
     @GetMapping("/sys/role")
     public ModelAndView readRole() {
-        validateModuleSystem.readPermission(true);
+        vldModuleSystem.readPermission(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ROLE);
         modelAndView.addObject("listRole", roleService.findAllRole());
         return baseView(modelAndView);

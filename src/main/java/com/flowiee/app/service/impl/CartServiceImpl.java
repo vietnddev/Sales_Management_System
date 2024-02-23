@@ -2,6 +2,7 @@ package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.Items;
 import com.flowiee.app.entity.OrderCart;
+import com.flowiee.app.entity.Price;
 import com.flowiee.app.entity.SystemLog;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.ItemsRepository;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -40,7 +42,12 @@ public class CartServiceImpl implements CartService {
         List<OrderCart> listCart = cartRepository.findByAccountId(accountId);
         for (OrderCart cart : listCart) {
             for (Items item : cart.getListItems()) {
-                item.setPrice(priceService.findGiaHienTai(item.getProductVariant().getId()).getGiaBan());
+                BigDecimal price = new BigDecimal("0");
+                Price priceEntity = priceService.findGiaHienTai(item.getProductVariant().getId());
+                if (priceEntity != null) {
+                    price = priceEntity.getGiaBan();
+                }
+                item.setPrice(price);
             }
         }
         return listCart;

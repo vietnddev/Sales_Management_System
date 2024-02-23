@@ -28,7 +28,7 @@ public class TicketImportController extends BaseController {
     @GetMapping("/all")
     public ApiResponse<List<TicketImportDTO>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
         try {
-            if (!super.validateModuleStorage.importGoods(true)) {
+            if (!super.vldModuleStorage.importGoods(true)) {
                 return null;
             }
             Page<TicketImport> ticketImports = ticketImportService.findAll(pageSize, pageNum - 1);
@@ -42,7 +42,7 @@ public class TicketImportController extends BaseController {
     @GetMapping("/{id}")
     public ApiResponse<TicketImportDTO> findDetail(@PathVariable("id") Integer ticketImportId) {
         try {
-            if (!super.validateModuleStorage.importGoods(true)) {
+            if (!super.vldModuleStorage.importGoods(true)) {
                 return null;
             }
             return ApiResponse.ok(TicketImportDTO.fromTicketImport(ticketImportService.findById(ticketImportId)));
@@ -54,7 +54,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Thêm mới phiếu nhập hàng")
     @PostMapping("/create-draft")
     public ApiResponse<TicketImport> createDraftImport(@RequestBody TicketImport ticketImport) {
-        if (!super.validateModuleStorage.importGoods(true)) {
+        if (!super.vldModuleStorage.importGoods(true)) {
             return null;
         }
         try {
@@ -68,7 +68,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Cập nhật phiếu nhập hàng")
     @PutMapping("/update/{id}")
     public ApiResponse<TicketImportDTO> updateTicket(@RequestBody TicketImportDTO ticketImportDTO, @PathVariable("id") Integer ticketImportId) {
-        if (!super.validateModuleStorage.importGoods(true)) {
+        if (!super.vldModuleStorage.importGoods(true)) {
             return null;
         }
         try {
@@ -82,7 +82,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Xóa phiếu nhập hàng")
     @DeleteMapping("/delete/{id}")
     public ApiResponse<String> deleteTicket(@PathVariable("id") Integer ticketImportId) {
-        if (!super.validateModuleStorage.importGoods(true)) {
+        if (!super.vldModuleStorage.importGoods(true)) {
             return null;
         }
         try {
@@ -97,7 +97,7 @@ public class TicketImportController extends BaseController {
     @PostMapping("/{id}/add-product")
     public ApiResponse<List<ProductVariantTemp>> addProductVariantToTicket(@PathVariable("id") Integer ticketImportId,
                                                                            @RequestBody List<Integer> productVariantIds) {
-        if (!super.validateModuleStorage.importGoods(true)) {
+        if (!super.vldModuleStorage.importGoods(true)) {
             throw new BadRequestException();
         }
         if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId) == null) {
@@ -115,7 +115,7 @@ public class TicketImportController extends BaseController {
     @PostMapping("/{id}/add-material")
     public ApiResponse<List<MaterialTemp>> addMaterialToTicket(@PathVariable("id") Integer ticketImportId,
                                                                @RequestBody List<Integer> materialIds) {
-        if (!super.validateModuleStorage.importGoods(true)) {
+        if (!super.vldModuleStorage.importGoods(true)) {
             throw new BadRequestException();
         }
         if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId) == null) {

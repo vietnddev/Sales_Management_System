@@ -36,7 +36,7 @@ public class ProductUIController extends BaseController {
 
     @GetMapping
     public ModelAndView loadProductPage() {
-        validateModuleProduct.readProduct(true);
+        vldModuleProduct.readProduct(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT);
         modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
         return baseView(modelAndView);
@@ -45,7 +45,7 @@ public class ProductUIController extends BaseController {
     @GetMapping(value = "/{id}")
     public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
         try {
-            validateModuleProduct.readProduct(true);
+            vldModuleProduct.readProduct(true);
             if (productId <= 0 || productService.findProductById(productId) == null) {
                 throw new NotFoundException("Product not found!");
             }
@@ -61,7 +61,7 @@ public class ProductUIController extends BaseController {
 
     @GetMapping(value = "/variant/{id}")
     public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
-        validateModuleProduct.readProduct(true);
+        vldModuleProduct.readProduct(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_VARIANT);
         modelAndView.addObject("listThuocTinh", productService.findAllAttributes(variantId));
         modelAndView.addObject("bienTheSanPhamId", variantId);
@@ -77,7 +77,7 @@ public class ProductUIController extends BaseController {
 
     @PostMapping("/attribute/insert")
     public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
-        validateModuleProduct.updateProduct(true);
+        vldModuleProduct.updateProduct(true);
         productService.saveProductAttribute(productAttribute);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -86,7 +86,7 @@ public class ProductUIController extends BaseController {
     public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
                                                @PathVariable("id") Integer attributeId,
                                                HttpServletRequest request) {
-        validateModuleProduct.updateProduct(true);
+        vldModuleProduct.updateProduct(true);
         if (attributeId <= 0 || productService.findProductAttributeById(attributeId) == null) {
             throw new NotFoundException("Product attribute not found!");
         }
@@ -97,7 +97,7 @@ public class ProductUIController extends BaseController {
 
     @DeleteMapping(value = "/attribute/delete/{id}")
     public ResponseEntity<String> deleteAttribute(@PathVariable("id") Integer attributeId) {
-        validateModuleProduct.updateProduct(true);
+        vldModuleProduct.updateProduct(true);
         if (productService.findProductAttributeById(attributeId) == null) {
             throw new NotFoundException("Product attribute not found!");
         }
@@ -108,7 +108,7 @@ public class ProductUIController extends BaseController {
     public ModelAndView activeImageOfProductVariant(HttpServletRequest request,
                                                     @PathVariable("sanPhamBienTheId") Integer productVariantId,
                                                     @RequestParam("imageId") Integer imageId) {
-        validateModuleProduct.updateImage(true);
+        vldModuleProduct.updateImage(true);
         if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
             throw new NotFoundException("Product variant or image not found!");
         }
@@ -118,7 +118,7 @@ public class ProductUIController extends BaseController {
 
     @GetMapping("/export")
     public ResponseEntity<?> exportData() {
-        validateModuleProduct.readProduct(true);
+        vldModuleProduct.readProduct(true);
         byte[] dataExport = productService.exportData(null);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));
@@ -128,13 +128,13 @@ public class ProductUIController extends BaseController {
 
     @GetMapping("/voucher")
     public ModelAndView viewVouchers() {
-        validateModuleProduct.readVoucher(true);
+        vldModuleProduct.readVoucher(true);
         return baseView(new ModelAndView(PagesUtils.PRO_VOUCHER));
     }
 
     @GetMapping("/voucher/detail/{id}")
     public ModelAndView viewVoucherDetail(@PathVariable("id") Integer voucherInfoId) {
-        validateModuleProduct.readVoucher(true);
+        vldModuleProduct.readVoucher(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER_DETAIL);
         modelAndView.addObject("voucherInfoId", voucherInfoId);
         return baseView(modelAndView);
@@ -142,7 +142,7 @@ public class ProductUIController extends BaseController {
 
     @PostMapping("/voucher/update/{id}")
     public ModelAndView deleteVoucher(@ModelAttribute("voucherInfo") VoucherInfo voucherInfo, @PathVariable("id") Integer voucherInfoId) {
-        validateModuleProduct.updateVoucher(true);
+        vldModuleProduct.updateVoucher(true);
         if (voucherInfo == null) {
             throw new BadRequestException("Voucher to update not null!");
         }
@@ -155,7 +155,7 @@ public class ProductUIController extends BaseController {
 
     @PostMapping("/voucher/delete/{id}")
     public ModelAndView deleteVoucher(@PathVariable("id") Integer voucherInfoId) {
-        validateModuleProduct.deleteVoucher(true);
+        vldModuleProduct.deleteVoucher(true);
         voucherService.deteleVoucher(voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");
     }

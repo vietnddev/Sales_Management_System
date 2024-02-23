@@ -142,7 +142,7 @@
         });
 
         function init() {
-            loadDocument s(mvPageSizeDefault, 1);
+            loadDocuments(mvPageSizeDefault, 1);
             updateTableContentWhenOnClickPagination(loadDocuments);
             setupSearchTool(mvSearchTool);
         }
@@ -228,7 +228,8 @@
                 formData.append("isFolder", "N");
                 formData.append("name", mvName.val());
                 formData.append("description", mvDes.val());
-                formData.append("fileUpload", $("#fileField")[0].files[0]);
+                formData.append("docTypeId", mvDocType.val());
+                formData.append("fileUpload", $("#fileField")[0].files[0]); //input có type là file
                 $.ajax({
                     url: apiURL,
                     type: "POST",

@@ -28,7 +28,7 @@ public class SystemController extends BaseController {
     @GetMapping("/log/all")
     public ApiResponse<List<SystemLog>> findLogs(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
         try {
-            if (!super.validateModuleSystem.readLog(true)) {
+            if (!super.vldModuleSystem.readLog(true)) {
                 return null;
             }
             Page<SystemLog> logPage = logService.findAll(pageSize, pageNum - 1);
@@ -42,7 +42,7 @@ public class SystemController extends BaseController {
     @GetMapping("/config/all")
     public ApiResponse<List<SystemConfig>> findConfigs() {
         try {
-            if (!super.validateModuleSystem.setupConfig(true)) {
+            if (!super.vldModuleSystem.setupConfig(true)) {
                 return null;
             }
             return ApiResponse.ok(configService.findAll());
@@ -56,7 +56,7 @@ public class SystemController extends BaseController {
     @PutMapping("/config/update/{id}")
     public ApiResponse<SystemConfig> updateConfig(@RequestBody SystemConfig config, @PathVariable("id") Integer configId) {
         try {
-            if (!super.validateModuleSystem.setupConfig(true)) {
+            if (!super.vldModuleSystem.setupConfig(true)) {
                 return null;
             }
             if (configId <= 0 || configService.findById(configId) == null) {

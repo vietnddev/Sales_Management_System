@@ -48,7 +48,7 @@ public class DocumentController extends BaseController {
     @GetMapping("/root")
     public ApiResponse<List<DocumentDTO>> getAllDocuments(@RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum) {
         try {
-            if (!super.validateModuleStorage.readDoc(true)) {
+            if (!super.vldModuleStorage.readDoc(true)) {
                 return null;
             }
             Page<Document> documents = documentService.findRootDocument(pageSize, pageNum - 1);
@@ -61,11 +61,23 @@ public class DocumentController extends BaseController {
 
     @Operation(summary = "Create new document")
     @PostMapping(value = "/document/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<DocumentDTO> insertNewDoc(@RequestBody DocumentDTO document) {
+    public ApiResponse<DocumentDTO> insertNewDoc(@RequestParam("fileUpload") MultipartFile fileUpload,
+                                                 @RequestParam("name") String name,
+                                                 @RequestParam("description") String description,
+                                                 @RequestParam("isFolder") String isFolder,
+                                                 @RequestParam("docTypeId") Integer docTypeId
+                                                 //,@RequestBody DocumentDTO document
+                                                 ) {
         try {
-            if (!super.validateModuleStorage.insertDoc(true)) {
+            if (!super.vldModuleStorage.insertDoc(true)) {
                 return null;
             }
+            DocumentDTO document = new DocumentDTO();
+            document.setName(name);
+            document.setDescription(description);
+            document.setIsFolder(isFolder);
+            document.setDocTypeId(docTypeId);
+            document.setFileUpload(fileUpload);
             return ApiResponse.ok(documentService.save(document));
         } catch (RuntimeException ex) {
             logger.error(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "document"), ex);
@@ -79,7 +91,7 @@ public class DocumentController extends BaseController {
     //Dashboard
     @GetMapping("/dashboard")
     public ModelAndView showDashboardOfSTG() {
-        validateModuleStorage.dashboard(true);
+        vldModuleStorage.dashboard(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DASHBOARD);
         //Loại tài liệu
         List<Category> listLoaiTaiLieu = categoryService.findSubCategory(AppConstants.CATEGORY.DOCUMENT_TYPE.getName(), null);
@@ -97,7 +109,7 @@ public class DocumentController extends BaseController {
     //Màn hình root
     @GetMapping("/document")
     public ModelAndView getRootDocument() {
-        validateModuleStorage.readDoc(true);
+        vldModuleStorage.readDoc(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
         List<Document> listRootDocument = documentService.findRootDocument(null, null).getContent();
         for (int i = 0; i < listRootDocument.size(); i++) {
@@ -117,13 +129,13 @@ public class DocumentController extends BaseController {
         modelAndView.addObject("listFolder", listFolder);
         //Parent name
         modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
-        if (validateModuleStorage.insertDoc(false)) {
+        if (vldModuleStorage.insertDoc(false)) {
             modelAndView.addObject("action_create", "enable");
         }
-        if (validateModuleStorage.updateDoc(false)) {
+        if (vldModuleStorage.updateDoc(false)) {
             modelAndView.addObject("action_update", "enable");
         }
-        if (validateModuleStorage.deleteDoc(false)) {
+        if (vldModuleStorage.deleteDoc(false)) {
             modelAndView.addObject("action_delete", "enable");
         }
         return baseView(modelAndView);
@@ -131,7 +143,7 @@ public class DocumentController extends BaseController {
 
     @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
-        validateModuleStorage.readDoc(true);
+        vldModuleStorage.readDoc(true);
         String aliasName = CommonUtils.getAliasNameFromAliasPath(aliasPath);
         int documentId = CommonUtils.getIdFromAliasPath(aliasPath);
         Document document = documentService.findById(documentId);
@@ -154,10 +166,10 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
             //Cây thư mục
             //modelAndView.addObject("folders", list);
-            if (validateModuleStorage.updateDoc(false)) {
+            if (vldModuleStorage.updateDoc(false)) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (validateModuleStorage.deleteDoc(false)) {
+            if (vldModuleStorage.deleteDoc(false)) {
                 modelAndView.addObject("action_delete", "enable");
             }
             return baseView(modelAndView);
@@ -179,13 +191,13 @@ public class DocumentController extends BaseController {
             modelAndView.addObject("listFolder", listFolder);
             //Parent name
             modelAndView.addObject("documentParentName", document.getName().toUpperCase());
-            if (validateModuleStorage.insertDoc(false)) {
+            if (vldModuleStorage.insertDoc(false)) {
                 modelAndView.addObject("action_create", "enable");
             }
-            if (validateModuleStorage.updateDoc(false)) {
+            if (vldModuleStorage.updateDoc(false)) {
                 modelAndView.addObject("action_update", "enable");
             }
-            if (validateModuleStorage.deleteDoc(false)) {
+            if (vldModuleStorage.deleteDoc(false)) {
                 modelAndView.addObject("action_delete", "enable");
             }
 
@@ -199,7 +211,7 @@ public class DocumentController extends BaseController {
     public ModelAndView changeFile(@RequestParam("file") MultipartFile file,
                                    @PathVariable("id") Integer documentId,
                                    HttpServletRequest request) throws IOException {
-        validateModuleStorage.updateDoc(true);
+        vldModuleStorage.updateDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -210,7 +222,7 @@ public class DocumentController extends BaseController {
     @PostMapping("/document/update/{id}")
     public ModelAndView update(@ModelAttribute("document") Document document,
                                @PathVariable("id") Integer documentId, HttpServletRequest request) {
-        validateModuleStorage.updateDoc(true);
+        vldModuleStorage.updateDoc(true);
         if (document == null || documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -223,7 +235,7 @@ public class DocumentController extends BaseController {
                                        @PathVariable("id") Integer documentId,
                                        @RequestParam("docDataId") Integer[] docDataIds,
                                        @RequestParam("docDataValue") String[] docDataValues) {
-        validateModuleStorage.updateDoc(true);
+        vldModuleStorage.updateDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -233,7 +245,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/delete/{id}")
     public ModelAndView deleteDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
-        validateModuleStorage.deleteDoc(true);
+        vldModuleStorage.deleteDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -243,7 +255,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/move/{id}")
     public ModelAndView moveDocument(@PathVariable("id") Integer documentId, HttpServletRequest request) {
-        validateModuleStorage.moveDoc(true);
+        vldModuleStorage.moveDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -252,7 +264,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/document/share/{id}")
     public ModelAndView share(@PathVariable("id") Integer documentId, HttpServletRequest request) {
-        validateModuleStorage.shareDoc(true);
+        vldModuleStorage.shareDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
@@ -261,7 +273,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/docfield/insert")
     public ModelAndView insertDocfield(DocField docField, HttpServletRequest request) {
-        validateModuleStorage.updateDoc(true);
+        vldModuleStorage.updateDoc(true);
         docField.setTrangThai(false);
         docFieldService.save(docField);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -271,7 +283,7 @@ public class DocumentController extends BaseController {
     public ModelAndView updateDocfield(HttpServletRequest request,
                                        @ModelAttribute("docField") DocField docField,
                                        @PathVariable("id") Integer docFieldId) {
-        validateModuleStorage.updateDoc(true);
+        vldModuleStorage.updateDoc(true);
         if (docFieldId <= 0 || documentService.findById(docFieldId) == null) {
             throw new NotFoundException("Docfield not found!");
         }
@@ -281,7 +293,7 @@ public class DocumentController extends BaseController {
 
     @PostMapping("/docfield/delete/{id}")
     public ModelAndView deleteDocfield(@PathVariable("id") Integer docfiledId, HttpServletRequest request) {
-        validateModuleStorage.deleteDoc(true);
+        vldModuleStorage.deleteDoc(true);
         if (docFieldService.findById(docfiledId) == null) {
             throw new NotFoundException("Docfield not found!");
         }

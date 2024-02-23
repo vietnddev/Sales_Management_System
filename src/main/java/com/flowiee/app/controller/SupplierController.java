@@ -27,7 +27,7 @@ public class SupplierController extends BaseController {
     public ApiResponse<List<Supplier>> findAll(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
-            if (!super.validateModuleProduct.readSupplier(true)) {
+            if (!super.vldModuleProduct.readSupplier(true)) {
                 return null;
             }
             if (pageSize != null && pageNum != null) {
@@ -47,7 +47,7 @@ public class SupplierController extends BaseController {
     @PostMapping("/create")
     public ApiResponse<Supplier> createNewSupplier(@RequestBody Supplier supplier) {
         try {
-            if (!super.validateModuleProduct.insertSupplier(true)) {
+            if (!super.vldModuleProduct.insertSupplier(true)) {
                 return null;
             }
             return ApiResponse.ok(supplierService.save(supplier));
@@ -61,7 +61,7 @@ public class SupplierController extends BaseController {
     @PutMapping("/update/{id}")
     public ApiResponse<Supplier> updateSupplier(@RequestBody Supplier supplier, @PathVariable("id") Integer supplierId) {
         try {
-            if (!super.validateModuleProduct.updateSupplier(true)) {
+            if (!super.vldModuleProduct.updateSupplier(true)) {
                 return null;
             }
             if (ObjectUtils.isEmpty(supplierService.findById(supplierId))) {
@@ -78,7 +78,7 @@ public class SupplierController extends BaseController {
     @DeleteMapping("/delete/{id}")
     public ApiResponse<String> deleteSupplier(@PathVariable("id") Integer supplierId) {
         try {
-            if (!super.validateModuleProduct.updateSupplier(true)) {
+            if (!super.vldModuleProduct.updateSupplier(true)) {
                 return null;
             }
             if (ObjectUtils.isEmpty(supplierService.findById(supplierId))) {

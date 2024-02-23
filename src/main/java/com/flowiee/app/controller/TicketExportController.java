@@ -27,7 +27,8 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Find all tickets")
     @GetMapping("/all")
     public ApiResponse<List<TicketExport>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
-        validateModuleStorage.exportGoods(true);
+        vldModuleStorage.exportGoods(true);
+
         Page<TicketExport> ticketExports = ticketExportService.findAll(pageSize, pageNum - 1);
         return ApiResponse.ok(ticketExports.getContent(), pageNum, pageSize, ticketExports.getTotalPages(), ticketExports.getTotalElements());
     }
@@ -35,7 +36,7 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Find detail")
     @GetMapping("/{id}")
     public ApiResponse<TicketExportDTO> findDetail(@PathVariable("id") Integer ticketExportId) {
-        validateModuleStorage.exportGoods(true);
+        vldModuleStorage.exportGoods(true);
         return ApiResponse.ok(TicketExportDTO.fromTicketExport(ticketExportService.findById(ticketExportId)));
     }
 
@@ -43,7 +44,7 @@ public class TicketExportController extends BaseController {
     @PostMapping("/create-draft")
     public ApiResponse<TicketExport> createDraftTicket(@RequestBody(required = false) OrderDTO order) {
         try {
-            if (!super.validateModuleStorage.exportGoods(true)) {
+            if (!super.vldModuleStorage.exportGoods(true)) {
                 return null;
             }
             return ApiResponse.ok(ticketExportService.save(order));
@@ -56,7 +57,7 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Update ticket")
     @PutMapping("/update/{id}")
     public ApiResponse<TicketExportDTO> updateTicketExport(@RequestBody TicketExport ticketExport, @PathVariable("id") Integer ticketExportId) {
-    	validateModuleStorage.exportGoods(true);
+    	vldModuleStorage.exportGoods(true);
         if (ObjectUtils.isEmpty(ticketExportService.findById(ticketExportId))) {
             throw new BadRequestException();
         }
@@ -66,7 +67,7 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Delete ticket")
     @DeleteMapping("/delete/{id}")
     public ApiResponse<String> deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
-        validateModuleStorage.exportGoods(true);
+        vldModuleStorage.exportGoods(true);
         TicketExport ticketExportToDelete = ticketExportService.findById(ticketExportId);
         if (ObjectUtils.isEmpty(ticketExportToDelete)) {
             throw new BadRequestException();

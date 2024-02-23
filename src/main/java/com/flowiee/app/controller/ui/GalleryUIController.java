@@ -23,7 +23,7 @@ public class GalleryUIController extends BaseController {
 
     @GetMapping
     public ModelAndView viewGallery() {
-        validateModuleProduct.readGallery(true);
+        vldModuleProduct.readGallery(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_GALLERY);
         modelAndView.addObject("listImages", FileDTO.fromFileStorages(fileStorageService.getAllImageSanPham(AppConstants.SYSTEM_MODULE.PRODUCT.name())));
         modelAndView.addObject("listProducts", productService.findProductsIdAndProductName());

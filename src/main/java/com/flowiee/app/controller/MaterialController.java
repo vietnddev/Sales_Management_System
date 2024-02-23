@@ -26,7 +26,7 @@ public class MaterialController extends BaseController {
     public ApiResponse<List<Material>> findAll(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
-            if (!super.validateModuleStorage.readMaterial(true)) {
+            if (!super.vldModuleStorage.readMaterial(true)) {
                 return null;
             }
             if (pageSize != null && pageNum != null) {
@@ -46,7 +46,7 @@ public class MaterialController extends BaseController {
     @PostMapping("/create")
     public ApiResponse<MaterialDTO> insert(@RequestBody MaterialDTO materialDTO) {
         try {
-            if (!super.validateModuleStorage.insertMaterial(true)) {
+            if (!super.vldModuleStorage.insertMaterial(true)) {
                 return null;
             }
             return ApiResponse.ok(MaterialDTO.fromMaterial(materialService.save(Material.fromMaterialDTO(materialDTO))));

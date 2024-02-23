@@ -38,7 +38,7 @@ public class OrderController extends BaseController {
     @GetMapping("/all")
     public ApiResponse<List<OrderDTO>> findAllOrders(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
         try {
-            if (!super.validateModuleProduct.readOrder(true)) {
+            if (!super.vldModuleProduct.readOrder(true)) {
                 return null;
             }
             Page<Order> orderPage = orderService.findAllOrder(pageSize, pageNum - 1);
@@ -52,7 +52,7 @@ public class OrderController extends BaseController {
     @Operation(summary = "Find detail order")
     @GetMapping("/{orderId}")
     public ApiResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Integer orderId) {
-        if (!super.validateModuleProduct.readOrder(true)) {
+        if (!super.vldModuleProduct.readOrder(true)) {
             return null;
         }
         try {
@@ -79,7 +79,7 @@ public class OrderController extends BaseController {
 
     @PutMapping("/update/{orderId}")
     public ApiResponse<String> update(@RequestBody Order order, @PathVariable("orderId") Integer orderId) {
-        if (!super.validateModuleProduct.updateOrder(true)) {
+        if (!super.vldModuleProduct.updateOrder(true)) {
             return null;
         }
         try {
@@ -96,7 +96,7 @@ public class OrderController extends BaseController {
 
     @DeleteMapping("/delete/{orderId}")
     public ApiResponse<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
-        if (!super.validateModuleProduct.deleteOrder(true)) {
+        if (!super.vldModuleProduct.deleteOrder(true)) {
             return null;
         }
         try {
@@ -110,7 +110,7 @@ public class OrderController extends BaseController {
 
     @PostMapping("/cart/{cartId}/item/add")
     public ApiResponse<List<Items>> addItemsToCart(@RequestBody String[] bienTheSanPhamId, @PathVariable("cartId") Integer cartId) {
-        if (!super.validateModuleProduct.insertOrder(true)) {
+        if (!super.vldModuleProduct.insertOrder(true)) {
             return null;
         }
         try {
@@ -141,7 +141,7 @@ public class OrderController extends BaseController {
     public ApiResponse<Items> updateItemsOfCart(@RequestBody Items items,
                                                 @PathVariable("cartId") Integer cartId,
                                                 @PathVariable("itemId") Integer itemId) {
-        if (!super.validateModuleProduct.insertOrder(true)) {
+        if (!super.vldModuleProduct.insertOrder(true)) {
             return null;
         }
         try {
@@ -166,7 +166,7 @@ public class OrderController extends BaseController {
 
     @DeleteMapping("/cart/{cartId}/item/delete/{itemId}")
     public ApiResponse<String> deleteItemsOfCart(@PathVariable("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
-        if (!super.validateModuleProduct.insertOrder(true)) {
+        if (!super.vldModuleProduct.insertOrder(true)) {
             return null;
         }
         try {
@@ -181,7 +181,7 @@ public class OrderController extends BaseController {
 
     @PostMapping("/cart/add-voucher/{code}")
     public ApiResponse<VoucherInfo> addVoucherToCart(@PathVariable("code") String voucherCode) {
-        if (!super.validateModuleProduct.readVoucher(true)) {
+        if (!super.vldModuleProduct.readVoucher(true)) {
             return null;
         }
         try {
@@ -201,7 +201,7 @@ public class OrderController extends BaseController {
                                           @RequestParam("paymentMethod") Integer paymentMethod,
                                           @RequestParam("paymentAmount") Float paymentAmount,
                                           @RequestParam(value = "paymentNote", required = false) String paymentNote) {
-        if (!super.validateModuleProduct.updateOrder(true)) {
+        if (!super.vldModuleProduct.updateOrder(true)) {
             return null;
         }
         try {
@@ -222,7 +222,7 @@ public class OrderController extends BaseController {
 
     @GetMapping("/export")
     public ResponseEntity<?> exportOrders() {
-        if (!super.validateModuleProduct.readOrder(true)) {
+        if (!super.vldModuleProduct.readOrder(true)) {
             return null;
         }
         try {

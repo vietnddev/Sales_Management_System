@@ -7,6 +7,7 @@ import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.model.ApiResponse;
+import com.flowiee.app.repository.VoucherInfoRepository;
 import com.flowiee.app.service.VoucherService;
 import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,12 +23,13 @@ import java.util.List;
 @Tag(name = "Voucher API", description = "Quản lý voucher")
 public class VoucherController extends BaseController {
     @Autowired private VoucherService voucherService;
+    @Autowired private VoucherInfoRepository voucherInfoRepository;
 
     @Operation(summary = "Find all voucher")
     @GetMapping("/all")
     public ApiResponse<List<VoucherInfoDTO>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
         try {
-            if (!super.validateModuleProduct.readVoucher(true)) {
+            if (!super.vldModuleProduct.readVoucher(true)) {
                 throw new BadRequestException();
             }
             Page<VoucherInfoDTO> voucherInfos = voucherService.findAllVouchers(null, null, null, null, pageSize, pageNum - 1);
@@ -42,7 +44,7 @@ public class VoucherController extends BaseController {
     @GetMapping("/{voucherInfoId}")
     public ApiResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
         try {
-            if (!super.validateModuleProduct.readVoucher(true)) {
+            if (!super.vldModuleProduct.readVoucher(true)) {
                 throw new BadRequestException();
             }
             return ApiResponse.ok(voucherService.findVoucherDetail(voucherInfoId));
@@ -55,7 +57,7 @@ public class VoucherController extends BaseController {
     @PostMapping("/create")
     public ApiResponse<VoucherInfo> createVoucher(@RequestBody VoucherInfoDTO voucherInfoDTO) {
         try {
-            if (!super.validateModuleProduct.insertVoucher(true)) {
+            if (!super.vldModuleProduct.insertVoucher(true)) {
                 throw new BadRequestException();
             }
             if (voucherInfoDTO.getApplicableProducts().isEmpty()) {
@@ -71,7 +73,7 @@ public class VoucherController extends BaseController {
     @PutMapping("/update/{voucherInfoId}")
     public ApiResponse<VoucherInfo> updateVoucher(@RequestBody VoucherInfo voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
         try {
-            if (!super.validateModuleProduct.updateVoucher(true)) {
+            if (!super.vldModuleProduct.updateVoucher(true)) {
                 throw new BadRequestException();
             }
             if (voucherInfo == null || voucherService.findVoucherDetail(voucherInfoId) == null) {
@@ -87,7 +89,7 @@ public class VoucherController extends BaseController {
     @PostMapping("/delete/{voucherInfoId}")
     public ApiResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
         try {
-            if(!super.validateModuleProduct.deleteVoucher(true)) {
+            if(!super.vldModuleProduct.deleteVoucher(true)) {
                 throw new BadRequestException();
             }
             return ApiResponse.ok(voucherService.deteleVoucher(voucherInfoId));
@@ -100,7 +102,7 @@ public class VoucherController extends BaseController {
     @GetMapping("/check/{voucherCode}")
     public ApiResponse<VoucherInfoDTO> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
         try {
-            if(!super.validateModuleProduct.readVoucher(true)) {
+            if(!super.vldModuleProduct.readVoucher(true)) {
                 throw new BadRequestException();
             }
             return ApiResponse.ok(voucherService.isAvailable(voucherCode));
@@ -115,7 +117,7 @@ public class VoucherController extends BaseController {
                                                                     @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                     @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
-            if (!super.validateModuleProduct.readVoucher(true)) {
+            if (!super.vldModuleProduct.readVoucher(true)) {
                 throw new BadRequestException();
             }
             if (pageSize != null && pageNum != null) {

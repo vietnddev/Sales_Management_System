@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
 
+import javax.persistence.Column;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,23 +27,50 @@ public class VoucherInfoDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "id")
     private Integer id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "applicable_objects")
     private String applicableObjects;
+
+    @Column(name = "type")
     private String voucherType;
+
+    @Column(name = "quantity")
     private Integer quantity;
+
     private Integer length;
+
+    @Column(name = "discount")
     private Integer discount;
+
     private BigDecimal discountPrice;
+
+    @Column(name = "discount_price_max")
     private BigDecimal discountPriceMax;
+
     @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
+    @Column(name = "start_time")
     private Date startTime;
+
     @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
+    @Column(name = "end_time")
     private Date endTime;
+
     private String status;
+
+    @Column(name = "created_at")
     private Date createdAt;
+
+    @Column(name = "created_by")
     private Integer createdBy;
+
     private List<VoucherTicket> listVoucherTicket;
     private List<ProductDTO> applicableProducts;
 

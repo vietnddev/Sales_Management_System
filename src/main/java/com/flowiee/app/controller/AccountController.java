@@ -28,7 +28,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Find all accounts")
     @GetMapping("/all")
     public ApiResponse<List<Account>> findAllAccounts() {
-        if (!super.validateModuleSystem.readAccount(true)) {
+        if (!super.vldModuleSystem.readAccount(true)) {
             return null;
         }
         try {
@@ -41,7 +41,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Find detail account")
     @GetMapping("/{accountId}")
     public ApiResponse<Account> findDetailAccount(@PathVariable("accountId") Integer accountId) {
-        if (!super.validateModuleSystem.readAccount(true)) {
+        if (!super.vldModuleSystem.readAccount(true)) {
             return null;
         }
         try {
@@ -54,7 +54,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Create account")
     @PostMapping(value = "/create")
     public ApiResponse<Account> save(@RequestBody Account account) {
-        if (!super.validateModuleSystem.insertAccount(true)) {
+        if (!super.vldModuleSystem.insertAccount(true)) {
             return null;
         }
         try {
@@ -73,7 +73,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Update account")
     @PutMapping(value = "/update/{accountId}")
     public ApiResponse<Account> update(@RequestBody Account account, @PathVariable("accountId") Integer accountId) {
-        if (!super.validateModuleSystem.updateAccount(true)) {
+        if (!super.vldModuleSystem.updateAccount(true)) {
             return null;
         }
         try {
@@ -88,7 +88,7 @@ public class AccountController extends BaseController {
 
     @PutMapping("/update-permission/{accountId}")
     public ApiResponse<List<FlowieeRole>> updatePermission(@RequestBody String[] actions, @PathVariable("accountId") Integer accountId) {
-        if (!super.validateModuleSystem.updateAccount(true)) {
+        if (!super.vldModuleSystem.updateAccount(true)) {
             return null;
         }
         try {
@@ -115,7 +115,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Delete account")
     @DeleteMapping(value = "/delete/{accountId}")
     public ApiResponse<String> deleteAccount(@PathVariable("accountId") Integer accountId) {
-        if (!super.validateModuleSystem.deleteAccount(true)) {
+        if (!super.vldModuleSystem.deleteAccount(true)) {
             return null;
         }
         try {
@@ -131,7 +131,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Find roles of account")
     @GetMapping("/{accountId}/role")
     public ApiResponse<List<FlowieeRole>> findRolesOfAccount(@PathVariable("accountId") Integer accountId) {
-        if (!super.validateModuleSystem.readAccount(true)) {
+        if (!super.vldModuleSystem.readAccount(true)) {
             return null;
         }
         try {
