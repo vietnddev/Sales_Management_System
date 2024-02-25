@@ -27,7 +27,7 @@ mvTicketExportStatus["COMPLETED"] = "Hoàn thành";
 mvTicketExportStatus["CANCEL"] = "Hủy";
 
 //Pagination
-const mvPageSizeDefault = 5;
+const mvPageSizeDefault = 10;
 function updatePaginationUI(pageNum, pageSize, totalPage, totalElements) {
     $('#paginationInfo').attr("pageNum", pageNum);
     $('#paginationInfo').attr("pageSize", pageSize);

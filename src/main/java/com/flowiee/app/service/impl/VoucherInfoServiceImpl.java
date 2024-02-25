@@ -259,7 +259,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
     private Page<VoucherInfoDTO> findData(Integer voucherId, List<Integer> voucherIds, String status, Date startTime, Date endTime, String title, Pageable pageable) {
         try {
             List<VoucherInfoDTO> listVoucherInfoDTO = new ArrayList<>();
-            String strSQL2 = "SELECT v.ID as ID_0, " +
+            String strSQL = "SELECT v.ID as ID_0, " +
                             "v.TITLE as TITLE_1, " +
                             "v.DESCRIPTION as DESCRIPTION_2, " +
                             "v.APPLICABLE_OBJECTS as APPLICABLE_TO_3, " +
@@ -274,7 +274,6 @@ public class VoucherInfoServiceImpl implements VoucherService {
                             "v.CREATED_BY as CREATED_BY_12 " +
                             "FROM PRO_VOUCHER_INFO_VIEW v " +
                             "WHERE 1=1 ";
-            String strSQL = "SELECT DISTINCT * FROM PRO_VOUCHER_INFO_VIEW v WHERE 1=1 ";
             if (voucherId != null) {
                 strSQL += "AND v.ID = " + voucherId + " ";
             }
@@ -299,44 +298,40 @@ public class VoucherInfoServiceImpl implements VoucherService {
                                      .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                                      .setMaxResults(pageable.getPageSize());
             }
-            List<VoucherInfoDTO> test = query.getResultList();
-//            for (VoucherInfoDTO t : test) {
-//                System.out.println(t.getTitle());
-//            }
-//            List<Object[]> rawData = query.getResultList();
-//            for (Object[] data : rawData) {
-//                VoucherInfoDTO dto = new VoucherInfoDTO();
-//                dto.setId(Integer.parseInt(String.valueOf(data[0])));
-//                dto.setTitle(String.valueOf(data[1]));
-//                dto.setDescription(String.valueOf(data[2]));
-//                dto.setApplicableObjects(String.valueOf(data[3]));
-//                dto.setDiscount(Integer.parseInt(String.valueOf(data[4])));
-//                dto.setDiscountPriceMax(new BigDecimal(String.valueOf(data[5])));
-//                dto.setQuantity(Integer.parseInt(String.valueOf(data[6])));
-//                dto.setVoucherType(String.valueOf(data[7]));
-//                dto.setStartTime(DateUtils.convertStringToDate(data[8].toString(), "yyyy-MM-dd HH:mm:ss.S"));
-//                dto.setEndTime(DateUtils.convertStringToDate(data[9].toString(), "yyyy-MM-dd HH:mm:ss.S"));
-//                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(String.valueOf(data[10]))) {
-//                    dto.setStatus(AppConstants.VOUCHER_STATUS.ACTIVE.getLabel());
-//                } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(String.valueOf(data[10]))) {
-//                    dto.setStatus(AppConstants.VOUCHER_STATUS.INACTIVE.getLabel());
-//                }
-//                dto.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[11]), "yyyy-MM-dd"));
-//                dto.setCreatedBy(Integer.parseInt(String.valueOf(data[12])));
-//                dto.setListVoucherTicket(null);
-//
-//                List<VoucherApply> listVoucherApply = voucherApplyService.findByVoucherId(dto.getId());
-//                List<Product> listSanPhamApDung = new ArrayList<>();
-//                for (VoucherApply vSanPham : listVoucherApply) {
-//                    Product productApplied = productService.findProductById(vSanPham.getSanPhamId());
-//                    if (productApplied != null) {
-//                        listSanPhamApDung.add(productApplied);
-//                    }
-//                }
-//                dto.setApplicableProducts(ProductDTO.fromProducts(listSanPhamApDung));
-//
-//                listVoucherInfoDTO.add(dto);
-//            }
+            List<Object[]> rawData = query.getResultList();
+            for (Object[] data : rawData) {
+                VoucherInfoDTO dto = new VoucherInfoDTO();
+                dto.setId(Integer.parseInt(String.valueOf(data[0])));
+                dto.setTitle(String.valueOf(data[1]));
+                dto.setDescription(String.valueOf(data[2]));
+                dto.setApplicableObjects(String.valueOf(data[3]));
+                dto.setDiscount(Integer.parseInt(String.valueOf(data[4])));
+                dto.setDiscountPriceMax(new BigDecimal(String.valueOf(data[5])));
+                dto.setQuantity(Integer.parseInt(String.valueOf(data[6])));
+                dto.setVoucherType(String.valueOf(data[7]));
+                dto.setStartTime(DateUtils.convertStringToDate(data[8].toString(), "yyyy-MM-dd HH:mm:ss.S"));
+                dto.setEndTime(DateUtils.convertStringToDate(data[9].toString(), "yyyy-MM-dd HH:mm:ss.S"));
+                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(String.valueOf(data[10]))) {
+                    dto.setStatus(AppConstants.VOUCHER_STATUS.ACTIVE.getLabel());
+                } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(String.valueOf(data[10]))) {
+                    dto.setStatus(AppConstants.VOUCHER_STATUS.INACTIVE.getLabel());
+                }
+                dto.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[11]), "yyyy-MM-dd"));
+                dto.setCreatedBy(Integer.parseInt(String.valueOf(data[12])));
+                dto.setListVoucherTicket(null);
+
+                List<VoucherApply> listVoucherApply = voucherApplyService.findByVoucherId(dto.getId());
+                List<Product> listSanPhamApDung = new ArrayList<>();
+                for (VoucherApply vSanPham : listVoucherApply) {
+                    Product productApplied = productService.findProductById(vSanPham.getSanPhamId());
+                    if (productApplied != null) {
+                        listSanPhamApDung.add(productApplied);
+                    }
+                }
+                dto.setApplicableProducts(ProductDTO.fromProducts(listSanPhamApDung));
+
+                listVoucherInfoDTO.add(dto);
+            }
 
             // Đếm tổng số lượng bản ghi
             String countQueryString = "SELECT COUNT(*) FROM PRO_VOUCHER_INFO_VIEW";

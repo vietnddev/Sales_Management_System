@@ -10,9 +10,7 @@ import javax.print.Doc;
 import java.util.List;
 
 public interface DocumentService extends BaseService<Document> {
-    Page<Document> findRootDocument(Integer pageSize, Integer pageNum);
-
-    Page<Document> findSubDocument(Integer pageSize, Integer pageNum, Integer parentId);
+    Page<Document> findDocuments(Integer pageSize, Integer pageNum, Integer parentId);
 
     List<Document> findDocumentByParentId(Integer parentId);
 
@@ -31,4 +29,8 @@ public interface DocumentService extends BaseService<Document> {
     DocumentDTO save(DocumentDTO documentDTO);
 
     DocumentDTO update(DocumentDTO documentDTO, Integer documentId);
+
+    List<DocumentDTO> findHierarchyOfDocument(Integer documentId, Integer parentId);
+
+    List<DocumentDTO> generateFolderTree();
 }

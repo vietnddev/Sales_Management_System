@@ -12,9 +12,10 @@
         <div th:fragment="pagination" th:remove="tag">
             <nav class="row" style="display: flex; align-items: center">
                 <select class="custom-select col-1 justify-content-end" id="selectPageSize">
-                    <option name="selectPageSizeOp" value="5">5</option>
-                    <option id="selectPageSizeOp" value="10">10</option>
+                    <option name="selectPageSizeOp" value="10">10</option>
+                    <option name="selectPageSizeOp" value="30">30</option>
                     <option name="selectPageSizeOp" value="50">50</option>
+                    <option name="selectPageSizeOp" value="100">100</option>
                 </select>
                 <span class="col-3" id="paginationInfo">Showing ... to ... of ... entries</span>
                 <ul class="pagination col-4 justify-content-center mt-0 mb-0">
@@ -33,24 +34,20 @@
         </div>
 
         <div th:fragment="searchTool(brandCTG, productTypeCTG, colorCTG, sizeCTG, unitCTG, isDiscount, productStatus)" th:remove="tag">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row col-8 input-group">
-                        <input class="form-control col-8 mr-1" id="txtFilter"/>
-                        <a class="btn btn-outline-secondary col-2 mr-1" data-toggle="collapse" href="#collapseExample" id="btnOpenSearchAdvance"
-                           role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa-solid fa-caret-down mr-2"></i>Nâng cao</a>
-                        <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm kiếm</button>
-                    </div>
-                    <div class="row col-12 collapse w-100 mt-3" id="collapseExample">
-                        <select class="form-control custom-select col mr-1" id="brandFilter"         th:if="${brandCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="productTypeFilter"   th:if="${productTypeCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="colorFilter"         th:if="${colorCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="sizeFilter"          th:if="${sizeCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="unitFilter"          th:if="${unitCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col mr-1" id="discountFilter"      th:if="${isDiscountCTG == 'Y'}"></select>
-                        <select class="form-control custom-select col"      id="productStatusFilter" th:if="${productStatus == 'Y'}"></select>
-                    </div>
-                </div>
+            <div class="row col-10 input-group mb-2">
+                <input class="form-control col-8 mr-1" id="txtFilter"/>
+                <a class="btn btn-outline-secondary col-2 mr-1" data-toggle="collapse" href="#collapseExample" id="btnOpenSearchAdvance"
+                   role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa-solid fa-caret-down mr-2"></i>Nâng cao</a>
+                <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm kiếm</button>
+            </div>
+            <div class="row col-12 collapse w-100 mt-2 mb-2" id="collapseExample">
+                <select class="form-control custom-select col mr-1" id="brandFilter"         th:if="${brandCTG == 'Y'}"></select>
+                <select class="form-control custom-select col mr-1" id="productTypeFilter"   th:if="${productTypeCTG == 'Y'}"></select>
+                <select class="form-control custom-select col mr-1" id="colorFilter"         th:if="${colorCTG == 'Y'}"></select>
+                <select class="form-control custom-select col mr-1" id="sizeFilter"          th:if="${sizeCTG == 'Y'}"></select>
+                <select class="form-control custom-select col mr-1" id="unitFilter"          th:if="${unitCTG == 'Y'}"></select>
+                <select class="form-control custom-select col mr-1" id="discountFilter"      th:if="${isDiscountCTG == 'Y'}"></select>
+                <select class="form-control custom-select col"      id="productStatusFilter" th:if="${productStatus == 'Y'}"></select>
             </div>
         </div>
 

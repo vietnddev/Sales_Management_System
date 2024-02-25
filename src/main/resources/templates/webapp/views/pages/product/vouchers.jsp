@@ -277,7 +277,7 @@
                     $.each(mvVouchers, function (index, d) {
                         let productApplyBlock = '';
                         $.each(d.applicableProducts, function (applyIndex, applyInfo) {
-                            productApplyBlock += `<span class="mr-2">${applyIndex + 1}</span><a href="/san-pham/${applyInfo.id}"><span>${applyInfo.tenSanPham}</span></a><br>`;
+                            productApplyBlock += `<span class="mr-2">${applyIndex + 1}</span><a href="/san-pham/${applyInfo.productId}"><span>${applyInfo.productName}</span></a><br>`;
                         });
 
                         contentTable.append(`

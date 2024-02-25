@@ -68,12 +68,15 @@ public class Document extends BaseEntity implements Serializable {
     public static Document fromDocumentDTO(DocumentDTO dto) {
         Document document = new Document();
         document.setId(dto.getId());
+        document.setParentId(dto.getParentId());
         document.setIsFolder(dto.getIsFolder());
         document.setName(dto.getName());
         document.setAsName(dto.getAliasName());
         document.setParentId(dto.getParentId());
         document.setDescription(dto.getDescription());
-        document.setLoaiTaiLieu(new Category(dto.getDocTypeId(), dto.getDocTypeName()));
+        if (dto.getDocTypeId() != null) {
+            document.setLoaiTaiLieu(new Category(dto.getDocTypeId(), dto.getDocTypeName()));
+        }
         return document;
     }
 

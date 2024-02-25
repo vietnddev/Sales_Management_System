@@ -19,13 +19,45 @@
         <div th:replace="header :: header"></div>
         <!-- /.navbar (header)-->
 
-        <!-- Main Sidebar Container -->
-        <div th:replace="sidebar :: sidebar"></div>
+        <div class="row">
+            <div class="main-sidebar sidebar-dark-primary elevation-4">
+                <div class="sidebar">
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <li class="nav-item" th:each="ft : ${folderTree}">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon far fa-envelope"></i>
+                                    <p>
+                                        [[${ft.name}]]
+                                        <i class="fas fa-angle-left right" th:if="${ft.hasSubFolder == 'Y'}"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview" style="display: none;" th:if="${ft.hasSubFolder == 'Y'}">
+                                    <li class="nav-item" th:each="sf : ${ft.subFolders}">
+                                        <a href="pages/mailbox/mailbox.html" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p th:text="${sf.name}"></p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
             <section class="content">
                 <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <ol class="breadcrumb p-0" style="background-color: transparent; margin-bottom: 10px">
+                                <li class="breadcrumb-item border-bottom" th:each="b : ${docBreadcrumb}"><a th:href="@{'/storage/document/' + ${b.aliasName}}" th:text="${b.name}"></a></li>
+                            </ol>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-12">
                             <!--Search tool-->
@@ -34,7 +66,7 @@
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row justify-content-between">
-                                        <div class="col-4" style="display: flex; align-items: center">
+                                        <div class="col-8" style="display: flex; align-items: center">
                                             <h3 class="card-title"><strong th:text="${documentParentName}"></strong></h3>
                                         </div>
                                         <div class="col-4 text-right">
@@ -43,7 +75,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body align-items-center">
+                                <div class="card-body align-items-center p-0">
                                     <table class="table table-bordered table-striped align-items-center">
                                         <thead class="align-self-center">
                                             <tr class="align-self-center">
@@ -77,16 +109,7 @@
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="form-group">
-                                                                <label>Thuộc thư mục</label>
-                                                                <select class="custom-select" name="parentId">
-                                                                    <option th:each="list : ${listFolder}"
-                                                                            th:value="${list.id}"
-                                                                            th:text="${list.ten}">
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
+                                                            <div class="form-group" id="docTypeBlock">
                                                                 <label for="docTypeField">Loại tài liệu</label>
                                                                 <select class="custom-select" id="docTypeField"></select>
                                                             </div>
@@ -98,9 +121,9 @@
                                                                 <label for="desField">Mô tả</label>
                                                                 <textarea class="form-control" rows="5" placeholder="Mô tả" id="desField"></textarea>
                                                             </div>
-                                                            <div class="form-group">
+                                                            <div class="form-group" id="fileBlock">
                                                                 <label for="fileField">File</label>
-                                                                <input class="form-control" type="file" id="fileField" required/>
+                                                                <input class="form-control" type="file" id="fileField"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -130,11 +153,12 @@
     </div>
 
     <script type="text/javascript">
+        let mvParentId = [[${parentId}]];
         let mvSearchTool = ["BRAND", "PRODUCT_TYPE", "COLOR", "SIZE", "UNIT", "DISCOUNT", "PRODUCT_STATUS", "DOCUMENT_TYPE"];
         let mvDocuments = [];
         let mvDocType = $("#docTypeField");
         let mvName = $("#nameField");
-        let mvDes = $("#descriptionField");
+        let mvDes = $("#desField");
 
         $(document).ready(function () {
             init();
@@ -148,10 +172,11 @@
         }
 
         function loadDocuments(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + '/storage/root';
+            let apiURL = mvHostURLCallApi + "/storage/all";
             let params = {
                 pageSize: pageSize,
                 pageNum: pageNum,
+                parentId: mvParentId
             }
             $.get(apiURL, params, function (response) {
                 if (response.status === "OK") {
@@ -165,10 +190,8 @@
                     $.each(data, function (index, d) {
                         mvDocuments[d.id] = d;
                         let iconDoc = "/dist/icon/pdf.png";
-                        let urlDoc = ""
                         if (d.isFolder === "Y") {
                             iconDoc = "/dist/icon/folder.png";
-                            urlDoc = "";
                         }
                         contentTable.append(`
                             <tr>
@@ -176,7 +199,7 @@
                                 <td><img src="${iconDoc}"></td>
                                 <td>${d.createdAt}</td>
                                 <td style="max-width: 300px">
-                                    <a href="${urlDoc}">${d.name}</a>
+                                    <a href="/storage/document/${d.aliasName}-${d.id}">${d.name}</a>
                                 </td>
                                 <td>${d.docTypeName}</td>
                                 <td>${d.description}</td>
@@ -214,10 +237,16 @@
             $("#btnInsertFile").on("click", function () {
                 mvDocType.empty();
                 loadProductTypeCategory();
+                $("#docTypeBlock").show();
+                $("#fileBlock").show();
+                $("#btnSubmit").attr("isFolder", "N");
                 $("#modalInsertOrUpdate").modal();
             })
 
             $("#btnInsertFolder").on("click", function () {
+                $("#docTypeBlock").hide();
+                $("#fileBlock").hide();
+                $("#btnSubmit").attr("isFolder", "Y");
                 $("#modalInsertOrUpdate").modal();
             })
 
@@ -225,11 +254,15 @@
                 e.preventDefault();
                 let apiURL = mvHostURLCallApi + "/storage/document/create";
                 let formData = new FormData();
-                formData.append("isFolder", "N");
+                let isFolder = $("#btnSubmit").attr("isFolder");
+                formData.append("parentId", mvParentId);
+                formData.append("isFolder", isFolder);
                 formData.append("name", mvName.val());
                 formData.append("description", mvDes.val());
-                formData.append("docTypeId", mvDocType.val());
-                formData.append("fileUpload", $("#fileField")[0].files[0]); //input có type là file
+                if (isFolder === "N") {
+                    formData.append("docTypeId", mvDocType.val());
+                    formData.append("fileUpload", $("#fileField")[0].files[0]); //input có type là file
+                }
                 $.ajax({
                     url: apiURL,
                     type: "POST",

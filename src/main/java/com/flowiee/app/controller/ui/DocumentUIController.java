@@ -1,5 +1,7 @@
 package com.flowiee.app.controller.ui;
 
+import com.flowiee.app.dto.DocumentDTO;
+import com.flowiee.app.dto.FileDTO;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.exception.ForbiddenException;
 import com.flowiee.app.service.CategoryService;
@@ -29,16 +31,15 @@ import java.util.*;
 public class DocumentUIController extends BaseController {
     private final DocumentService documentService;
     private final DocFieldService docFieldService;
-    private final DocDataService docDataService;
     private final FileStorageService fileStorageService;
     private final DocShareService docShareService;
     private final CategoryService categoryService;
 
     @Autowired
-    public DocumentUIController(DocumentService documentService, DocFieldService docFieldService, DocDataService docDataService, FileStorageService fileStorageService, DocShareService docShareService, CategoryService categoryService) {
+    public DocumentUIController(DocumentService documentService, DocFieldService docFieldService, FileStorageService fileStorageService,
+                                DocShareService docShareService, CategoryService categoryService) {
         this.documentService = documentService;
         this.docFieldService = docFieldService;
-        this.docDataService = docDataService;
         this.fileStorageService = fileStorageService;
         this.docShareService = docShareService;
         this.categoryService = categoryService;
@@ -64,106 +65,42 @@ public class DocumentUIController extends BaseController {
 
     //Root screen
     @GetMapping("/document")
-    public ModelAndView getRootDocument() {
+    public ModelAndView viewRootDocuments() {
         vldModuleStorage.readDoc(true);
-        return baseView(new ModelAndView(PagesUtils.STG_DOCUMENT));
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
+        modelAndView.addObject("parentId", 0);
+        modelAndView.addObject("folderTree", documentService.generateFolderTree());
+        return baseView(modelAndView);
     }
 
     @GetMapping("/document/{aliasPath}")
-    public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
+    public ModelAndView viewSubDocuments(@PathVariable("aliasPath") String aliasPath) {
         vldModuleStorage.readDoc(true);
         String aliasName = CommonUtils.getAliasNameFromAliasPath(aliasPath);
         int documentId = CommonUtils.getIdFromAliasPath(aliasPath);
         Document document = documentService.findById(documentId);
-        if (!(aliasName + "-" + documentId).equals(document.getAsName() + "-" + document.getId())) {
+        if (document == null || !(aliasName + "-" + documentId).equals(document.getAsName() + "-" + document.getId())) {
             throw new NotFoundException("Document not found!");
         }
         if (!docShareService.isShared(documentId)) {
             throw new ForbiddenException(MessageUtils.ERROR_FORBIDDEN);
         }
-        if (document.getIsFolder().equals(AppConstants.DOCUMENT_TYPE.FI.name())) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT_DETAIL);
-            modelAndView.addObject("docDetail", document);
-            modelAndView.addObject("document", new Document());
-            //load metadata
-            List<DocMetaDTO> docMetaDTO = documentService.getMetadata(documentId);
-            modelAndView.addObject("listDocDataInfo", docMetaDTO);
-            //Load file active
-            modelAndView.addObject("fileActiveOfDocument", fileStorageService.findFileIsActiveOfDocument(documentId));
-            //Load các version khác của document
-            modelAndView.addObject("listFileOfDocument", fileStorageService.getFileOfDocument(documentId));
-            //Cây thư mục
-            //modelAndView.addObject("folders", list);
-            if (vldModuleStorage.updateDoc(false)) {
-                modelAndView.addObject("action_update", "enable");
-            }
-            if (vldModuleStorage.deleteDoc(false)) {
-                modelAndView.addObject("action_delete", "enable");
-            }
-            return baseView(modelAndView);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("docBreadcrumb", documentService.findHierarchyOfDocument(document.getId(), document.getParentId()));
+        modelAndView.addObject("folderTree", documentService.generateFolderTree());
+        modelAndView.addObject("documentParentName", document.getName());
+        if (document.getIsFolder().equals("Y")) {
+            modelAndView.setViewName(PagesUtils.STG_DOCUMENT);
+            modelAndView.addObject("parentId", document.getId());
         }
-
-        if (document.getIsFolder().equals(AppConstants.DOCUMENT_TYPE.FO.name())) {
-            ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
-            modelAndView.addObject("document", new Document());
-            modelAndView.addObject("listDocument", documentService.findDocumentByParentId(documentId));
-            //select-option danh loại tài liệu
-            List<Category> listLoaiTaiLieu = new ArrayList<>();
-            listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
-            listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
-            modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
-            //select-option danh sách thư mục
-            List<Document> listFolder = new ArrayList<>();
-            listFolder.add(documentService.findById(documentId));
-            listFolder.addAll(documentService.findAllFolder());
-            modelAndView.addObject("listFolder", listFolder);
-            //Parent name
-            modelAndView.addObject("documentParentName", document.getName().toUpperCase());
-            if (vldModuleStorage.insertDoc(false)) {
-                modelAndView.addObject("action_create", "enable");
-            }
-            if (vldModuleStorage.updateDoc(false)) {
-                modelAndView.addObject("action_update", "enable");
-            }
-            if (vldModuleStorage.deleteDoc(false)) {
-                modelAndView.addObject("action_delete", "enable");
-            }
-
-            return baseView(modelAndView);
+        if (document.getIsFolder().equals("N")) {
+            modelAndView.setViewName(PagesUtils.STG_DOCUMENT_DETAIL);
+            DocumentDTO docDTO = DocumentDTO.fromDocument(document);
+            docDTO.setFile(FileDTO.fromFileStorage(fileStorageService.findFileIsActiveOfDocument(document.getId())));
+            modelAndView.addObject("docDetail", docDTO);
         }
-
-        return new ModelAndView();
+        return baseView(modelAndView);
     }
-
-    //Insert FILE và FOLDER
-//    @PostMapping("/document/insert")
-//    public ModelAndView insert(HttpServletRequest request,
-//                               @ModelAttribute("document") Document document,
-//                               @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
-//        validateModuleStorage.insertDoc(true);
-//        document.setAsName(CommonUtils.generateAliasName(document.getName()));
-//        document.setCreatedBy(CommonUtils.getCurrentAccountId());
-//        if (document.getParentId() == null) {
-//            document.setParentId(0);
-//        }
-//        Document documentSaved = documentService.saveReturnEntity(document);
-//        //Trường hợp document được tạo mới là file upload
-//        if (document.getIsFolder().equals(AppConstants.DOCUMENT_TYPE.FI.name()) && file != null) {
-//            //Lưu file đính kèm vào thư mục chứ file upload
-//            fileStorageService.saveFileOfDocument(file, documentSaved.getId());
-//
-//            //Lưu giá trị default vào DocData
-//            List<DocField> listDocField = docFieldService.findByDocTypeId(document.getLoaiTaiLieu().getId());
-//            for (DocField docField : listDocField) {
-//                DocData docData = DocData.builder()
-//                        .docField(new DocField(docField.getId()))
-//                        .document(new Document(document.getId()))
-//                        .noiDung("").build();
-//                docDataService.save(docData);
-//            }
-//        }
-//        return new ModelAndView("redirect:" + request.getHeader("referer"));
-//    }
 
     @PostMapping("/document/change-file/{id}")
     public ModelAndView changeFile(@RequestParam("file") MultipartFile file,

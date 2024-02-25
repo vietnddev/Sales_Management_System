@@ -74,14 +74,16 @@ public class TicketImportServiceImpl implements TicketImportService {
         }
         ticketImport.setId(entityId);
         TicketImport ticketImportUpdated = ticketImportRepo.save(ticketImport);
-        if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemp())) {
-            for (ProductVariantTemp p : ticketImport.getListProductVariantTemp()) {
-                productService.updateProductVariantQuantity(p.getQuantity(), p.getProductVariantId(), "I");
+        if ("COMPLETED".equals(ticketImportUpdated.getStatus())) {
+            if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemp())) {
+                for (ProductVariantTemp p : ticketImport.getListProductVariantTemp()) {
+                    productService.updateProductVariantQuantity(p.getQuantity(), p.getProductVariantId(), "I");
+                }
             }
-        }
-        if (ObjectUtils.isNotEmpty(ticketImport.getListMaterialTemp())) {
-            for (MaterialTemp m : ticketImport.getListMaterialTemp()) {
-                materialService.updateQuantity(m.getQuantity(), m.getMaterialId(), "I");
+            if (ObjectUtils.isNotEmpty(ticketImport.getListMaterialTemp())) {
+                for (MaterialTemp m : ticketImport.getListMaterialTemp()) {
+                    materialService.updateQuantity(m.getQuantity(), m.getMaterialId(), "I");
+                }
             }
         }
         return ticketImportUpdated;

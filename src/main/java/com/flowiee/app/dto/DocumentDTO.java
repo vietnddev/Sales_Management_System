@@ -32,7 +32,8 @@ public class DocumentDTO implements Serializable {
     private FileDTO file;
     @JsonIgnore
     private MultipartFile fileUpload;
-    //private List<DocField> fields;
+    private String hasSubFolder;
+    private List<DocumentDTO> subFolders;
 
     public static DocumentDTO fromDocument(Document document) {
         DocumentDTO dto = new DocumentDTO();

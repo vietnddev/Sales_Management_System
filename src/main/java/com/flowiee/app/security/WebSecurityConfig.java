@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity
 				.cors().and()
 				.csrf().disable()
+				.headers().frameOptions().sameOrigin().and() //Cấu hình phần này để có thể nhúng URL vào các thẻ như iframe,..
 				.authorizeRequests()
 				.antMatchers(EndPointUtil.SYS_CONFIG, EndPointUtil.SYS_ACCOUNT, EndPointUtil.SYS_LOG).hasRole("ADMIN")
 				.antMatchers("/build/**", "/dist/**", "/js/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**").permitAll()

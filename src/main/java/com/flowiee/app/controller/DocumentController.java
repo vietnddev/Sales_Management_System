@@ -45,13 +45,15 @@ public class DocumentController extends BaseController {
     }
 
     @Operation(summary = "Find all documents")
-    @GetMapping("/root")
-    public ApiResponse<List<DocumentDTO>> getAllDocuments(@RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum) {
+    @GetMapping("/all")
+    public ApiResponse<List<DocumentDTO>> getAllDocuments(@RequestParam("pageSize") Integer pageSize,
+                                                          @RequestParam("pageNum") Integer pageNum,
+                                                          @RequestParam("parentId") Integer parentId) {
         try {
             if (!super.vldModuleStorage.readDoc(true)) {
                 return null;
             }
-            Page<Document> documents = documentService.findRootDocument(pageSize, pageNum - 1);
+            Page<Document> documents = documentService.findDocuments(pageSize, pageNum - 1, parentId);
             return ApiResponse.ok(DocumentDTO.fromDocuments(documents.getContent()), pageNum, pageSize, documents.getTotalPages(), documents.getTotalElements());
         } catch (RuntimeException ex) {
             logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "documents"), ex);
@@ -60,19 +62,19 @@ public class DocumentController extends BaseController {
     }
 
     @Operation(summary = "Create new document")
-    @PostMapping(value = "/document/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<DocumentDTO> insertNewDoc(@RequestParam("fileUpload") MultipartFile fileUpload,
-                                                 @RequestParam("name") String name,
-                                                 @RequestParam("description") String description,
-                                                 @RequestParam("isFolder") String isFolder,
-                                                 @RequestParam("docTypeId") Integer docTypeId
-                                                 //,@RequestBody DocumentDTO document
-                                                 ) {
+    @PostMapping("/document/create")
+    public ApiResponse<DocumentDTO> insertNewDoc(@RequestParam(value = "fileUpload", required = false) MultipartFile fileUpload,
+                                                 @RequestParam(value = "docTypeId", required = false) Integer docTypeId,
+                                                 @RequestParam(value = "name") String name,
+                                                 @RequestParam(value = "description", required = false) String description,
+                                                 @RequestParam(value = "isFolder") String isFolder,
+                                                 @RequestParam(value = "parentId") Integer parentId) {
         try {
             if (!super.vldModuleStorage.insertDoc(true)) {
                 return null;
             }
             DocumentDTO document = new DocumentDTO();
+            document.setParentId(parentId);
             document.setName(name);
             document.setDescription(description);
             document.setIsFolder(isFolder);
@@ -107,39 +109,39 @@ public class DocumentController extends BaseController {
     }
 
     //Màn hình root
-    @GetMapping("/document")
-    public ModelAndView getRootDocument() {
-        vldModuleStorage.readDoc(true);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
-        List<Document> listRootDocument = documentService.findRootDocument(null, null).getContent();
-        for (int i = 0; i < listRootDocument.size(); i++) {
-            listRootDocument.get(i).setCreatedAt(listRootDocument.get(i).getCreatedAt());
-        }
-        modelAndView.addObject("listDocument", listRootDocument);
-        modelAndView.addObject("document", new Document());
-        //select-option danh sách loại tài liệu
-        List<Category> listLoaiTaiLieu = new ArrayList<>();
-        listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
-        listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
-        modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
-        //select-option danh sách thư mục
-        List<Document> listFolder = new ArrayList<>();
-        listFolder.add(new Document(0, "--Chọn thư mục--"));
-        listFolder.addAll(documentService.findAllFolder());
-        modelAndView.addObject("listFolder", listFolder);
-        //Parent name
-        modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
-        if (vldModuleStorage.insertDoc(false)) {
-            modelAndView.addObject("action_create", "enable");
-        }
-        if (vldModuleStorage.updateDoc(false)) {
-            modelAndView.addObject("action_update", "enable");
-        }
-        if (vldModuleStorage.deleteDoc(false)) {
-            modelAndView.addObject("action_delete", "enable");
-        }
-        return baseView(modelAndView);
-    }
+//    @GetMapping("/document")
+//    public ModelAndView getRootDocument() {
+//        vldModuleStorage.readDoc(true);
+//        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
+//        List<Document> listRootDocument = documentService.findRootDocument(null, null).getContent();
+//        for (int i = 0; i < listRootDocument.size(); i++) {
+//            listRootDocument.get(i).setCreatedAt(listRootDocument.get(i).getCreatedAt());
+//        }
+//        modelAndView.addObject("listDocument", listRootDocument);
+//        modelAndView.addObject("document", new Document());
+//        //select-option danh sách loại tài liệu
+//        List<Category> listLoaiTaiLieu = new ArrayList<>();
+//        listLoaiTaiLieu.add(categoryService.findSubCategoryDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
+//        listLoaiTaiLieu.addAll(categoryService.findSubCategoryUnDefault(AppConstants.CATEGORY.DOCUMENT_TYPE.getName()));
+//        modelAndView.addObject("listLoaiTaiLieu", listLoaiTaiLieu);
+//        //select-option danh sách thư mục
+//        List<Document> listFolder = new ArrayList<>();
+//        listFolder.add(new Document(0, "--Chọn thư mục--"));
+//        listFolder.addAll(documentService.findAllFolder());
+//        modelAndView.addObject("listFolder", listFolder);
+//        //Parent name
+//        modelAndView.addObject("documentParentName", "KHO TÀI LIỆU");
+//        if (vldModuleStorage.insertDoc(false)) {
+//            modelAndView.addObject("action_create", "enable");
+//        }
+//        if (vldModuleStorage.updateDoc(false)) {
+//            modelAndView.addObject("action_update", "enable");
+//        }
+//        if (vldModuleStorage.deleteDoc(false)) {
+//            modelAndView.addObject("action_delete", "enable");
+//        }
+//        return baseView(modelAndView);
+//    }
 
     @GetMapping("/document/{aliasPath}")
     public ModelAndView getListDocument(@PathVariable("aliasPath") String aliasPath) {
