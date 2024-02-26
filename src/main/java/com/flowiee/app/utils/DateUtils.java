@@ -3,6 +3,8 @@ package com.flowiee.app.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtils {
@@ -45,5 +47,23 @@ public class DateUtils {
             System.out.println("Error occurred while parsing date: " + e.getMessage());
         }
         return date;
+    }
+    
+    public static String getNamHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static String getThangHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
+    }
+
+    public static String getNgayHienTai() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd");
+        LocalDateTime now = LocalDateTime.now();
+        return dateTimeFormatter.format(now);
     }
 }

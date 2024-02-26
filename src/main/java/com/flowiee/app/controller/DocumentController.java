@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("${app.api.prefix}/storage")
+@RequestMapping("${app.api.prefix}/stg")
 public class DocumentController extends BaseController {
     private final DocumentService documentService;
     private final DocFieldService docFieldService;
@@ -45,7 +45,7 @@ public class DocumentController extends BaseController {
     }
 
     @Operation(summary = "Find all documents")
-    @GetMapping("/all")
+    @GetMapping("/doc/all")
     public ApiResponse<List<DocumentDTO>> getAllDocuments(@RequestParam("pageSize") Integer pageSize,
                                                           @RequestParam("pageNum") Integer pageNum,
                                                           @RequestParam("parentId") Integer parentId) {
@@ -62,7 +62,7 @@ public class DocumentController extends BaseController {
     }
 
     @Operation(summary = "Create new document")
-    @PostMapping("/document/create")
+    @PostMapping("/doc/create")
     public ApiResponse<DocumentDTO> insertNewDoc(@RequestParam(value = "fileUpload", required = false) MultipartFile fileUpload,
                                                  @RequestParam(value = "docTypeId", required = false) Integer docTypeId,
                                                  @RequestParam(value = "name") String name,
@@ -301,5 +301,10 @@ public class DocumentController extends BaseController {
         }
         docFieldService.delete(docfiledId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
+    }
+    
+    @DeleteMapping("/doc/delete/{id}")
+    public ApiResponse<String> deleteDocField(@PathVariable("id") Integer docfiledId) {
+    	return null;
     }
 }

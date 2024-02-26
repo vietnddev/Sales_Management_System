@@ -172,7 +172,7 @@
         }
 
         function loadDocuments(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + "/storage/all";
+            let apiURL = mvHostURLCallApi + "/stg/doc/all";
             let params = {
                 pageSize: pageSize,
                 pageNum: pageNum,
@@ -252,7 +252,7 @@
 
             $("#formInsertOrUpdate").submit(function (e) {
                 e.preventDefault();
-                let apiURL = mvHostURLCallApi + "/storage/document/create";
+                let apiURL = mvHostURLCallApi + "/stg/doc/create";
                 let formData = new FormData();
                 let isFolder = $("#btnSubmit").attr("isFolder");
                 formData.append("parentId", mvParentId);

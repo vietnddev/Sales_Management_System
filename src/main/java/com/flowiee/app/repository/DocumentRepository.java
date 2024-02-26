@@ -17,10 +17,10 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     @Query("from Document d where d.parentId =:parentId order by d.isFolder desc")
     List<Document> findListDocumentByParentId(@Param("parentId") Integer parentId);
 
-    @Query("from Document d where d.parentId =:parentId and d.isFolder = 'FOLDER' order by d.isFolder desc")
+    @Query("from Document d where d.parentId =:parentId and d.isFolder = 'Y' order by d.isFolder desc")
     List<Document> findListFolderByParentId(@Param("parentId") Integer parentId);
 
-    @Query("from Document d where d.parentId =:parentId and d.isFolder = 'FILE' order by d.isFolder desc")
+    @Query("from Document d where d.parentId =:parentId and d.isFolder = 'N' order by d.isFolder desc")
     List<Document> findListFileByParentId(@Param("parentId") Integer parentId);
 
     @Query("from Document d where d.isFolder=:isThuMuc")
@@ -28,29 +28,4 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
 
     @Query("from Document d where d.loaiTaiLieu.id=:docTypeId")
     List<Document> findDocumentByDocTypeId(@Param("docTypeId") Integer docTypeId);
-
-//    @Query(value = "WITH DocumentHierarchy(ID, NAME, AS_NAME, PARENT_ID, H_LEVEL) AS ( " +
-//                   "    SELECT ID, NAME, AS_NAME, PARENT_ID, 1 " +
-//                   "    FROM STG_DOCUMENT " +
-//                   "    WHERE id =:documentId " +
-//                   "    UNION ALL " +
-//                   "    SELECT d.ID, d.NAME, d.AS_NAME ,d.PARENT_ID, dh.H_LEVEL + 1 " +
-//                   "    FROM STG_DOCUMENT d " +
-//                   "    INNER JOIN DocumentHierarchy dh ON dh.PARENT_ID = d.id " +
-//                   "), " +
-//                   "DocumentToFindParent(ID, NAME, AS_NAME, PARENT_ID, H_LEVEL) AS ( " +
-//                   "    SELECT ID, NAME, AS_NAME, PARENT_ID, NULL AS H_LEVEL " +
-//                   "    FROM STG_DOCUMENT " +
-//                   "    WHERE ID =:documentId " +
-//                   ") " +
-//                   "SELECT ID, NAME, CONCAT(CONCAT(AS_NAME, '-'), ID) AS AS_NAME, PARENT_ID, H_LEVEL " +
-//                   "FROM DocumentHierarchy " +
-//                   "UNION ALL " +
-//                   "SELECT ID, NAME, CONCAT(CONCAT(AS_NAME, '-'), ID) AS AS_NAME, PARENT_ID, H_LEVEL " +
-//                   "FROM DocumentToFindParent " +
-//                   "START WITH ID =:parentId " +
-//                   "CONNECT BY PRIOR PARENT_ID = ID " +
-//                   "ORDER BY H_LEVEL DESC",
-//            nativeQuery = true)
-//    List<Object[]> findBreadcrumbItems(@Param("documentId") Integer documentId, @Param("parentId") Integer parentId);
 }

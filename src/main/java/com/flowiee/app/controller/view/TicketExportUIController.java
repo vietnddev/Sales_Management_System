@@ -1,17 +1,13 @@
-package com.flowiee.app.controller.ui;
+package com.flowiee.app.controller.view;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.entity.TicketExport;
 import com.flowiee.app.security.ValidateModuleStorage;
-import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.service.TicketExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 

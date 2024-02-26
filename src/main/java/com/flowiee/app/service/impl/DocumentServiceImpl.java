@@ -12,6 +12,7 @@ import com.flowiee.app.service.*;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,21 +113,20 @@ public class DocumentServiceImpl implements DocumentService {
         }
         systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_UPDATE.name(), "Update metadata: " + document.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Update metadata " + document.toString());
-        return "OK";
+        return MessageUtils.UPDATE_SUCCESS;
     }
 
     @Transactional
     @Override
     public String delete(Integer documentId) {
         Document document = this.findById(documentId);
-        if (document != null) {
-            documentRepo.deleteById(documentId);
-            systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DELETE.name(), "Xóa tài liệu: " + document.toString());
-            logger.info(DocumentServiceImpl.class.getName() + ": Xóa tài liệu " + document.toString());
-            return "OK";
-        } else {
-            return "NOK";
+        if (document == null) {
+            throw new BadRequestException();
         }
+        documentRepo.deleteById(documentId);
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DELETE.name(), "Xóa tài liệu: " + document.toString());
+        logger.info(DocumentServiceImpl.class.getName() + ": Xóa tài liệu " + document.toString());
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override
@@ -220,6 +220,7 @@ public class DocumentServiceImpl implements DocumentService {
                         "START WITH ID = ? " +
                         "CONNECT BY PRIOR PARENT_ID = ID " +
                         "ORDER BY H_LEVEL DESC";
+        logger.info("Load hierarchy of document (breadcrumb)");
         Query query = entityManager.createNativeQuery(strSQL);
         query.setParameter(1, documentId);
         query.setParameter(2, documentId);
@@ -245,7 +246,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<DocumentDTO> generateFolderTree() {
         List<DocumentDTO> folderTree = new ArrayList<>();
-        String strSQL = "WITH DocumentHierarchy (ID, NAME, AS_NAME, PARENT_ID, IS_FOLDER, Path, HierarchyLevel) AS ( " +
+        String strSQL = "WITH DocumentHierarchy(ID, NAME, AS_NAME, PARENT_ID, IS_FOLDER, Path, HierarchyLevel) AS ( " +
                         "    SELECT ID, NAME, AS_NAME, PARENT_ID, IS_FOLDER, CAST(NAME AS VARCHAR2(4000)) AS Path, 0 AS HierarchyLevel " +
                         "    FROM STG_DOCUMENT " +
                         "    WHERE PARENT_ID = 0 AND IS_FOLDER = 'Y' " +
@@ -280,6 +281,7 @@ public class DocumentServiceImpl implements DocumentService {
                         "ORDER BY rh.Path";
         //HierarchyLevel: Thư mục ở cấp thứ mấy
         //RowNumm: Thư mục số mấy của cấp HierarchyLevel
+        logger.info("Generate folder tree");
         Query query = entityManager.createNativeQuery(strSQL);
         @SuppressWarnings("unchecked")
         List<Object[]> list = query.getResultList();

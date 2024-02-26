@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.ui;
+package com.flowiee.app.controller.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flowiee.app.dto.OrderDTO;

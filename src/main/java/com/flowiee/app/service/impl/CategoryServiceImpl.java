@@ -294,7 +294,7 @@ public class CategoryServiceImpl implements CategoryService {
 
             Notification notification = new Notification();
             notification.setTitle(resultOfFlowieeImport);
-            notification.setSend(CommonUtils.SYS_NOTI_ID);
+            notification.setSend(0);
             notification.setReceive(CommonUtils.getCurrentAccountId());
             //notification.setType(MessagesUtil.NOTI_TYPE_IMPORT);
             notification.setContent(resultOfFlowieeImport);

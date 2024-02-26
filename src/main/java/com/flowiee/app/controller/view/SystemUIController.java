@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.ui;
+package com.flowiee.app.controller.view;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.entity.SystemConfig;

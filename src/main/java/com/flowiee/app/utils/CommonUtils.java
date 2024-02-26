@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 public class CommonUtils {
     public static String rootPath = "src/main/resources/static";
     public static String fileUploadPath = rootPath + "/uploads/";
-    public static Integer SYS_NOTI_ID = 0;
     public static String ADMINISTRATOR = "admin";
     public static String PATH_TEMPLATE_EXCEL = rootPath + "/templates/excel";
     public static Date START_APP_TIME = null;
@@ -55,32 +54,6 @@ public class CommonUtils {
         }
 
         return result.toString();
-    }
-
-    public static String getNamHienTai() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy");
-        LocalDateTime now = LocalDateTime.now();
-        return dateTimeFormatter.format(now);
-    }
-
-    public static String getThangHienTai() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM");
-        LocalDateTime now = LocalDateTime.now();
-        return dateTimeFormatter.format(now);
-    }
-
-    public static String getNgayHienTai() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd");
-        LocalDateTime now = LocalDateTime.now();
-        return dateTimeFormatter.format(now);
-    }
-
-    public static Map<String, String> getPaymentStatusCategory() {
-        Map<String, String> paymentStatus = new HashMap<>();
-        paymentStatus.put("UNPAID","Chưa thanh toán");
-        paymentStatus.put("PARTLY-PAID","Thanh toán một phần");
-        paymentStatus.put("PAID","Đã thanh toán");
-        return paymentStatus;
     }
 
     public static String now(String format) {
@@ -125,9 +98,9 @@ public class CommonUtils {
                 	path.append("system");
                 	break;
             }
-            path.append("/" + CommonUtils.getNamHienTai());
-            path.append("/" + CommonUtils.getThangHienTai());
-            path.append("/" + CommonUtils.getNgayHienTai());
+            path.append("/" + DateUtils.getNamHienTai());
+            path.append("/" + DateUtils.getThangHienTai());
+            path.append("/" + DateUtils.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -151,9 +124,9 @@ public class CommonUtils {
             } else if (AppConstants.SYSTEM_MODULE.CATEGORY.name().equals(systemModule)) {
                 path.append("category");
             }
-            path.append("/" + CommonUtils.getNamHienTai());
-            path.append("/" + CommonUtils.getThangHienTai());
-            path.append("/" + CommonUtils.getNgayHienTai());
+            path.append("/" + DateUtils.getNamHienTai());
+            path.append("/" + DateUtils.getThangHienTai());
+            path.append("/" + DateUtils.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -171,9 +144,9 @@ public class CommonUtils {
         try {
             StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
             path.append("/import");
-            path.append("/" + CommonUtils.getNamHienTai());
-            path.append("/" + CommonUtils.getThangHienTai());
-            path.append("/" + CommonUtils.getNgayHienTai());
+            path.append("/" + DateUtils.getNamHienTai());
+            path.append("/" + DateUtils.getThangHienTai());
+            path.append("/" + DateUtils.getNgayHienTai());
             File folder = new File(path.toString());
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -282,14 +255,6 @@ public class CommonUtils {
             }
         }
         return details != null ? details.getRemoteAddress() : "unknown";
-    }
-
-    public static Map<String, String> getVoucherType() {
-        Map<String, String> voucherTypes = new HashMap<>();
-        voucherTypes.put(AppConstants.VOUCHER_TYPE.BOTH.name(), AppConstants.VOUCHER_TYPE.BOTH.getLabel());
-        voucherTypes.put(AppConstants.VOUCHER_TYPE.NUMBER.name(), AppConstants.VOUCHER_TYPE.NUMBER.getLabel());
-        voucherTypes.put(AppConstants.VOUCHER_TYPE.TEXT.name(), AppConstants.VOUCHER_TYPE.TEXT.getLabel());
-        return voucherTypes;
     }
 
     public static Integer getIdFromRequestParam(String param) {

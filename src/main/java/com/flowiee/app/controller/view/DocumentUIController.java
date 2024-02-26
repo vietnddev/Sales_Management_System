@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.ui;
+package com.flowiee.app.controller.view;
 
 import com.flowiee.app.dto.DocumentDTO;
 import com.flowiee.app.dto.FileDTO;
@@ -7,8 +7,6 @@ import com.flowiee.app.exception.ForbiddenException;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.entity.Document;
-import com.flowiee.app.dto.DocMetaDTO;
-import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocFieldService;
 import com.flowiee.app.service.DocShareService;
 import com.flowiee.app.service.DocumentService;

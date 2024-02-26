@@ -1,4 +1,4 @@
-package com.flowiee.app.controller.ui;
+package com.flowiee.app.controller.view;
 
 import com.flowiee.app.entity.TicketImport;
 import com.flowiee.app.exception.BadRequestException;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller

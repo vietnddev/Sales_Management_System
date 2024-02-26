@@ -1,6 +1,8 @@
 # Flowiee System
 Flowiee System is...
 
+Main functions of the system: ...
+
 Some technologies are used:
 + Java, Javascript
 + Spring Boot, Spring Security, Spring Data JPA

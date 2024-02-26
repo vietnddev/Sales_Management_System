@@ -61,7 +61,7 @@ public class FileStorage extends BaseEntity implements Serializable {
     private String directoryPath;
 
     @Column(name = "sort")
-    private int sort;
+    private Integer sort;
 
     @Column(name = "status", nullable = false)
     private boolean status;

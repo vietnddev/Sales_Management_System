@@ -54,14 +54,14 @@ public class GlobalExceptionHandler extends BaseController {
         return ApiResponse.fail(ex.getMessage(), ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler
-    public ModelAndView exceptionHandler(Exception ex) {
-        logger.error("Exception", ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
-        modelAndView.addObject("error", error);
-        return baseView(modelAndView);
-    }
+//    @ExceptionHandler
+//    public ModelAndView exceptionHandler(Exception ex) {
+//        logger.error("Exception2", ex);
+//        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+//        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
+//        modelAndView.addObject("error", error);
+//        return baseView(modelAndView);
+//    }
 
     @ExceptionHandler
     public ApiResponse<?> exceptionHandler(RuntimeException ex) {

@@ -1,7 +1,6 @@
 package com.flowiee;
 
-import com.flowiee.app.base.StartUp;
-
+import com.flowiee.app.config.StartUp;
 import com.google.zxing.WriterException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
