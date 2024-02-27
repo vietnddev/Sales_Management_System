@@ -31,8 +31,8 @@ public class WebConfig implements WebMvcConfigurer {
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
         slr.setDefaultLocale(new Locale("vi"));
-        slr.setLocaleAttributeName("session.current.locale");
-        slr.setTimeZoneAttributeName("session.current.timezone");
+        //slr.setLocaleAttributeName("session.current.locale");
+        //slr.setTimeZoneAttributeName("session.current.timezone");
         return slr;
     }
 

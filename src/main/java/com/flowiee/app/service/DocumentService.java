@@ -14,7 +14,7 @@ public interface DocumentService extends BaseService<Document> {
 
     List<Document> findDocumentByParentId(Integer parentId);
 
-    List<Document> findFolderByParentId(Integer parentId);
+    List<DocumentDTO> findFolderByParentId(Integer parentId);
 
     List<Document> findFileByParentId(Integer parentId);
 
@@ -32,5 +32,5 @@ public interface DocumentService extends BaseService<Document> {
 
     List<DocumentDTO> findHierarchyOfDocument(Integer documentId, Integer parentId);
 
-    List<DocumentDTO> generateFolderTree();
+    List<DocumentDTO> generateFolderTree(Integer parentId);
 }

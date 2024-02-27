@@ -64,8 +64,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> findFolderByParentId(Integer parentId) {
-        return documentRepo.findListFolderByParentId(parentId);
+    public List<DocumentDTO> findFolderByParentId(Integer parentId) {
+        return this.generateFolderTree(parentId);
     }
 
     @Override
@@ -244,7 +244,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocumentDTO> generateFolderTree() {
+    public List<DocumentDTO> generateFolderTree(Integer parentId) {
         List<DocumentDTO> folderTree = new ArrayList<>();
         String strSQL = "WITH DocumentHierarchy(ID, NAME, AS_NAME, PARENT_ID, IS_FOLDER, Path, HierarchyLevel) AS ( " +
                         "    SELECT ID, NAME, AS_NAME, PARENT_ID, IS_FOLDER, CAST(NAME AS VARCHAR2(4000)) AS Path, 0 AS HierarchyLevel " +
@@ -278,11 +278,13 @@ public class DocumentServiceImpl implements DocumentService {
                         "       RTRIM(rh.Path) " +
                         "FROM RecursiveHierarchy rh " +
                         "LEFT JOIN SubFolderList sf ON rh.ID = sf.Parent_ID " +
+                        "WHERE rh.PARENT_ID = ? " +
                         "ORDER BY rh.Path";
         //HierarchyLevel: Thư mục ở cấp thứ mấy
         //RowNumm: Thư mục số mấy của cấp HierarchyLevel
         logger.info("Generate folder tree");
         Query query = entityManager.createNativeQuery(strSQL);
+        query.setParameter(1, parentId);
         @SuppressWarnings("unchecked")
         List<Object[]> list = query.getResultList();
         for (Object[] doc : list) {

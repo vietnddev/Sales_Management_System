@@ -7,23 +7,31 @@ import com.flowiee.app.repository.FlowieeConfigRepository;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.service.ConfigService;
 
+import com.flowiee.app.service.LanguageService;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 @Service
 public class ConfigServiceImpl implements ConfigService {
     private final FlowieeConfigRepository sysConfigRepo;
     private final CategoryService categoryService;
+    private final LanguageService languageService;
 
     @Autowired
-    public ConfigServiceImpl(FlowieeConfigRepository sysConfigRepo, CategoryService categoryService) {
+    public ConfigServiceImpl(FlowieeConfigRepository sysConfigRepo, CategoryService categoryService, LanguageService languageService) {
         this.sysConfigRepo = sysConfigRepo;
         this.categoryService = categoryService;
+        this.languageService = languageService;
     }
 
     @Override
@@ -62,12 +70,16 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public String refreshApp() {
         try {
+            //
             List<Category> rootCategories = categoryService.findRootCategory();
             for (Category c : rootCategories) {
                 if (c.getType() != null && !c.getType().trim().isEmpty()) {
                     AppConstants.CATEGORY.valueOf(c.getType()).setLabel(c.getName());
                 }
             }
+            //
+            languageService.reloadMessage("vi");
+            languageService.reloadMessage("en");
             return "Completed";
         } catch (RuntimeException ex) {
             logger.error("An error occurred while refresh app", ex);

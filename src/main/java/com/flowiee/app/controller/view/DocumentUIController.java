@@ -67,7 +67,7 @@ public class DocumentUIController extends BaseController {
         vldModuleStorage.readDoc(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
         modelAndView.addObject("parentId", 0);
-        modelAndView.addObject("folderTree", documentService.generateFolderTree());
+        modelAndView.addObject("folderTree", documentService.findFolderByParentId(0));
         return baseView(modelAndView);
     }
 
@@ -85,7 +85,7 @@ public class DocumentUIController extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("docBreadcrumb", documentService.findHierarchyOfDocument(document.getId(), document.getParentId()));
-        modelAndView.addObject("folderTree", documentService.generateFolderTree());
+        modelAndView.addObject("folderTree", documentService.findFolderByParentId(0));
         modelAndView.addObject("documentParentName", document.getName());
         if (document.getIsFolder().equals("Y")) {
             modelAndView.setViewName(PagesUtils.STG_DOCUMENT);

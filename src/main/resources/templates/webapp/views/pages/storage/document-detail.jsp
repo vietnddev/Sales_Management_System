@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-12">
                         <ol class="breadcrumb p-0" style="background-color: transparent; margin-bottom: 10px">
-                            <li class="breadcrumb-item" th:each="b : ${docBreadcrumb}"><a th:href="@{'/storage/document/' + ${b.aliasName}}" th:text="${b.name}"></a></li>
+                            <li class="breadcrumb-item border-bottom" th:each="b : ${docBreadcrumb}"><a th:href="@{'/storage/document/' + ${b.aliasName}}" th:text="${b.name}"></a></li>
                         </ol>
                     </div>
                 </div>

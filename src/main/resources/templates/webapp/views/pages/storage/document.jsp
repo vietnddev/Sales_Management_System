@@ -24,22 +24,11 @@
                 <div class="sidebar">
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <li class="nav-item" th:each="ft : ${folderTree}">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon far fa-envelope"></i>
-                                    <p>
-                                        [[${ft.name}]]
-                                        <i class="fas fa-angle-left right" th:if="${ft.hasSubFolder == 'Y'}"></i>
-                                    </p>
+                            <li class="nav-item" th:each="ft : ${folderTree}" th:id="'nav-item-' + ${ft.id}" th:margin="0">
+                                <a href="#" th:class="'nav-link folder-' + ${ft.id}">
+                                    <p>[[${ft.name}]] <i class="fas fa-angle-left right" th:if="${ft.hasSubFolder == 'Y'}"></i></p>
                                 </a>
-                                <ul class="nav nav-treeview" style="display: none;" th:if="${ft.hasSubFolder == 'Y'}">
-                                    <li class="nav-item" th:each="sf : ${ft.subFolders}">
-                                        <a href="pages/mailbox/mailbox.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p th:text="${sf.name}"></p>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <ul class="nav nav-treeview" th:id="'sub-folders-' + ${ft.id}" style="display: none;"></ul>
                             </li>
                         </ul>
                     </nav>
@@ -163,6 +152,7 @@
         $(document).ready(function () {
             init();
             createDocument();
+            loadFolders();
         });
 
         function init() {
@@ -230,6 +220,41 @@
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
+            });
+        }
+
+        function loadFolders() {
+            // Bắt sự kiện click cho các button có class bắt đầu bằng "folder-"
+            $(document).on('click', 'a[class^="nav-link folder-"]',function(){
+                let aClass = $(this).attr('class');
+                let folderId = aClass.split('-')[2];
+                let margin = parseInt($('#nav-item-' + folderId).attr("margin"));
+
+                // Sử dụng thuộc tính dữ liệu để chọn danh sách thư mục con tương ứng
+                let subFolders = $('#sub-folders-' + folderId);
+                subFolders.empty();
+                $.get(mvHostURLCallApi + '/stg/doc/folders', {parentId: folderId}, function (response) {
+                    let subFoldersData = response.data;
+                    margin = margin + 15;
+                    console.log("margin " + margin)
+                    $.each(subFoldersData, function (index, d) { // Thêm tham số index để truy cập vào dữ liệu
+                        let iconDropdownList = ``;
+                        if (d.hasSubFolder === "Y") {
+                            iconDropdownList = `<i class="fas fa-angle-left right"></i>`;
+                        }
+                        subFolders.append(`
+                            <li class="nav-item" style="margin-left: ${margin}px" id="nav-item-${d.id}" margin="${margin}">
+                                <a href="#" class="nav-link folder-${d.id}">
+                                    <p>${d.name} ${iconDropdownList}</p>
+                                </a>
+                                <ul class="nav nav-treeview" id="sub-folders-${d.id}"></ul>
+                            </li>
+                        `);
+                    })
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+
             });
         }
 

@@ -87,6 +87,20 @@ public class DocumentController extends BaseController {
         }
     }
 
+    @Operation(summary = "Find all folders")
+    @GetMapping("/doc/folders")
+    public ApiResponse<List<DocumentDTO>> getAllFolders(@RequestParam(value = "parentId", required = false) Integer parentId) {
+        try {
+            if (!super.vldModuleStorage.readDoc(true)) {
+                return null;
+            }
+            return ApiResponse.ok(documentService.findFolderByParentId(parentId));
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "folders"), ex);
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "folders"));
+        }
+    }
+
     /* ****************** */
 
 
