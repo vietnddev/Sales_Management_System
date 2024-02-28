@@ -294,6 +294,10 @@
                     contentTable.empty();
                     $.each(data, function (index, d) {
                         mvCategories[d.id] = d;
+                        let iconConfig = "";
+                        if (d.type === "DOCUMENT_TYPE") {
+                            iconConfig = `<a class="btn btn-secondary btn-sm" href="/stg/doc/doc-type/${d.id}"><i class="fa-solid fa-gear"></i></a>`;
+                        }
                         contentTable.append(`
                             <tr>
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
@@ -307,6 +311,7 @@
                                 <td>
                                     <button class="btn btn-info   btn-sm btn-update mr-1" id="${d.id}"><i class="fa-solid fa-pencil"></i></button>
                                     <button class="btn btn-danger btn-sm btn-delete"      id="${d.id}"><i class="fa-solid fa-trash"></i></button>
+                                    ${iconConfig}
                                 </td>
                             </tr>
                         `);

@@ -25,8 +25,8 @@ public class DocData extends BaseEntity implements Serializable {
     @Serial
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "noi_dung", length = 2000)
-    private String noiDung;
+	@Column(name = "value", length = 2000)
+    private String value;
 
     @JsonIgnoreProperties("listDocData")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,14 +43,14 @@ public class DocData extends BaseEntity implements Serializable {
 
     public Map<String, String> compareTo(DocData entityToCompare) {
         Map<String, String> map = new HashMap<>();
-        if (!this.getNoiDung().equals(entityToCompare.getNoiDung())) {
-            map.put("DocData - " + this.getDocField().getTenField(), this.getNoiDung() + "#" + entityToCompare.getNoiDung());
+        if (!this.getValue().equals(entityToCompare.getValue())) {
+            map.put("DocData - " + this.getDocField().getName(), this.getValue() + "#" + entityToCompare.getValue());
         }
         return map;
     }
 
 	@Override
 	public String toString() {
-		return "DocData [id=" + super.id + ", noiDung=" + noiDung + ", docField=" + docField + ", document=" + document + "]";
+		return "DocData [id=" + super.id + ", noiDung=" + value + ", docField=" + docField + ", document=" + document + "]";
 	}        
 }

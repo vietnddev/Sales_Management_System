@@ -28,4 +28,18 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
 
     @Query("from Document d where d.loaiTaiLieu.id=:docTypeId")
     List<Document> findDocumentByDocTypeId(@Param("docTypeId") Integer docTypeId);
+
+    @Query(value = "select f.id as field_Id_0, " +
+                   "       f.name as field_name_1, " +
+                   "       d.id as data_id_2, " +
+                   "       d.value as data_value_3, " +
+                   "       f.type as field_type_4, " +
+                   "       f.required as field_required_5 " +
+                   "from stg_doc_field f " +
+                   "left join stg_doc_data d on d.doc_field_id = f.id and d.document_id = :documentId " +
+                   "left join stg_document dc on dc.doc_type_id = f.doc_type_id and dc.id = :documentId " +
+                   "where f.doc_type_id = dc.doc_type_id " +
+                   "order by f.sort",
+           nativeQuery = true)
+    List<Object[]> findMetadata(@Param("documentId") Integer documentId);
 }

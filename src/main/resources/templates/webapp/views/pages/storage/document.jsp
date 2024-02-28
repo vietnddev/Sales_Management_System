@@ -19,34 +19,16 @@
         <div th:replace="header :: header"></div>
         <!-- /.navbar (header)-->
 
-        <div class="row">
-            <div class="main-sidebar sidebar-dark-primary elevation-4">
-                <div class="sidebar">
-                    <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <li class="nav-item" th:each="ft : ${folderTree}" th:id="'nav-item-' + ${ft.id}" th:margin="0">
-                                <a href="#" th:class="'nav-link folder-' + ${ft.id}">
-                                    <p>[[${ft.name}]] <i class="fas fa-angle-left right" th:if="${ft.hasSubFolder == 'Y'}"></i></p>
-                                </a>
-                                <ul class="nav nav-treeview" th:id="'sub-folders-' + ${ft.id}" style="display: none;"></ul>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
+        <!-- Folder tree -->
+        <div th:replace="fragments :: folderTree"></div>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
             <section class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <ol class="breadcrumb p-0" style="background-color: transparent; margin-bottom: 10px">
-                                <li class="breadcrumb-item border-bottom" th:each="b : ${docBreadcrumb}"><a th:href="@{'/storage/document/' + ${b.aliasName}}" th:text="${b.name}"></a></li>
-                            </ol>
-                        </div>
-                    </div>
+                    <!--Breadcrumb-->
+                    <div th:replace="fragments :: breadcrumb"></div>
+
                     <div class="row">
                         <div class="col-12">
                             <!--Search tool-->
@@ -152,7 +134,7 @@
         $(document).ready(function () {
             init();
             createDocument();
-            loadFolders();
+            loadFolderTree();
         });
 
         function init() {
@@ -189,7 +171,7 @@
                                 <td><img src="${iconDoc}"></td>
                                 <td>${d.createdAt}</td>
                                 <td style="max-width: 300px">
-                                    <a href="/storage/document/${d.aliasName}-${d.id}">${d.name}</a>
+                                    <a href="/stg/doc/${d.aliasName}-${d.id}">${d.name}</a>
                                 </td>
                                 <td>${d.docTypeName}</td>
                                 <td>${d.description}</td>
@@ -220,41 +202,6 @@
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
-            });
-        }
-
-        function loadFolders() {
-            // Bắt sự kiện click cho các button có class bắt đầu bằng "folder-"
-            $(document).on('click', 'a[class^="nav-link folder-"]',function(){
-                let aClass = $(this).attr('class');
-                let folderId = aClass.split('-')[2];
-                let margin = parseInt($('#nav-item-' + folderId).attr("margin"));
-
-                // Sử dụng thuộc tính dữ liệu để chọn danh sách thư mục con tương ứng
-                let subFolders = $('#sub-folders-' + folderId);
-                subFolders.empty();
-                $.get(mvHostURLCallApi + '/stg/doc/folders', {parentId: folderId}, function (response) {
-                    let subFoldersData = response.data;
-                    margin = margin + 15;
-                    console.log("margin " + margin)
-                    $.each(subFoldersData, function (index, d) { // Thêm tham số index để truy cập vào dữ liệu
-                        let iconDropdownList = ``;
-                        if (d.hasSubFolder === "Y") {
-                            iconDropdownList = `<i class="fas fa-angle-left right"></i>`;
-                        }
-                        subFolders.append(`
-                            <li class="nav-item" style="margin-left: ${margin}px" id="nav-item-${d.id}" margin="${margin}">
-                                <a href="#" class="nav-link folder-${d.id}">
-                                    <p>${d.name} ${iconDropdownList}</p>
-                                </a>
-                                <ul class="nav nav-treeview" id="sub-folders-${d.id}"></ul>
-                            </li>
-                        `);
-                    })
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");
-                });
-
             });
         }
 

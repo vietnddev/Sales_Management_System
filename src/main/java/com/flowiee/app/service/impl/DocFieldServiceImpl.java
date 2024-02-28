@@ -1,9 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.exception.DataInUseException;
-import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.DocField;
-import com.flowiee.app.entity.Document;
 import com.flowiee.app.repository.DocFieldRepository;
 import com.flowiee.app.service.DocDataService;
 import com.flowiee.app.service.DocFieldService;
@@ -21,15 +19,18 @@ import java.util.List;
 
 @Service
 public class DocFieldServiceImpl implements DocFieldService {
-    public static final Logger logger = LoggerFactory.getLogger(DocFieldServiceImpl.class);
     private static final String module = AppConstants.SYSTEM_MODULE.STORAGE.name();
 
+    private final DocFieldRepository docFieldRepository;
+    private final DocDataService docDataService;
+    private final SystemLogService systemLogService;
+
     @Autowired
-    private DocFieldRepository docFieldRepository;
-    @Autowired
-    private DocDataService docDataService;
-    @Autowired
-    private SystemLogService systemLogService;
+    public DocFieldServiceImpl(DocFieldRepository docFieldRepository, DocDataService docDataService, SystemLogService systemLogService) {
+        this.docFieldRepository = docFieldRepository;
+        this.docDataService = docDataService;
+        this.systemLogService = systemLogService;
+    }
 
     @Override
     public List<DocField> findAll() {
@@ -50,15 +51,15 @@ public class DocFieldServiceImpl implements DocFieldService {
     @Override
     public DocField save(DocField docField) {
         DocField docFieldSaved = docFieldRepository.save(docField);
-        List<Document> listDocumentInUsed = docField.getLoaiTaiLieu().getListDocument();
-        for (Document document : listDocumentInUsed) {
-            DocData docData = new DocData();
-            docData.setId(0);
-            docData.setDocField(docField);
-            docData.setNoiDung(null);
-            docData.setDocument(document);
-            docDataService.save(docData);
-        }
+//        List<Document> listDocumentInUsed = docField.getDocType().getListDocument();
+//        for (Document document : listDocumentInUsed) {
+//            DocData docData = new DocData();
+//            docData.setId(0);
+//            docData.setDocField(docField);
+//            docData.setValue(null);
+//            docData.setDocument(document);
+//            docDataService.save(docData);
+//        }
         systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Thêm mới doc_field: " + docField.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới doc_field " + docField.toString());
         return docFieldSaved;
@@ -75,14 +76,13 @@ public class DocFieldServiceImpl implements DocFieldService {
 
     @Transactional
     @Override
-    public DocField delete(Integer id) {
-        DocField docFieldToDelete = findById(id);
+    public String delete(Integer id) {
         if (!docDataService.findByDocField(id).isEmpty()) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         docFieldRepository.deleteById(id);
-        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field: " + docFieldToDelete.toString());
-        logger.info(DocumentServiceImpl.class.getName() + ": Xóa doc_field " + docFieldToDelete.toString());
-        return docFieldToDelete;
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Xóa doc_field id=" + id);
+        logger.info(DocumentServiceImpl.class.getName() + ": Xóa doc_field id=" + id);
+        return MessageUtils.DELETE_SUCCESS;
     }
 }

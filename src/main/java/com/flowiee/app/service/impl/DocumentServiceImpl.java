@@ -102,17 +102,22 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public String updateMetadata(Integer[] docDataIds, String[] docDataValues, Integer documentId) {
-        Document document = this.findById(documentId);
-        for (int i = 0; i < docDataIds.length; i++) {
-            DocData docData = docDataService.findById(docDataIds[i]);
+    public String updateMetadata(List<DocMetaDTO> metaDTOs, Integer documentId) {
+        for (int i = 0; i < metaDTOs.size(); i++) {
+            DocData docData = docDataService.findByFieldIdAndDocId(metaDTOs.get(i).getFieldId(), documentId);
             if (docData != null) {
-                docData.setNoiDung(docDataValues[i]);
+                docData.setValue(metaDTOs.get(i).getDataValue());
+                docDataService.update(docData, docData.getId());
+            } else {
+                docData = new DocData();
+                docData.setDocField(new DocField(metaDTOs.get(i).getFieldId()));
+                docData.setDocument(new Document(documentId));
+                docData.setValue(metaDTOs.get(i).getDataValue());
                 docDataService.save(docData);
             }
         }
-        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_UPDATE.name(), "Update metadata: " + document.toString());
-        logger.info(DocumentServiceImpl.class.getName() + ": Update metadata " + document.toString());
+        systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_UPDATE.name(), "Update metadata: docId=" + documentId);
+        logger.info(DocumentServiceImpl.class.getName() + ": Update metadata docId=" + documentId);
         return MessageUtils.UPDATE_SUCCESS;
     }
 
@@ -130,28 +135,25 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocMetaDTO> getMetadata(Integer documentId) {
+    public List<DocMetaDTO> findMetadata(Integer documentId) {
         List<DocMetaDTO> listReturn = new ArrayList<>();
-
-        Query result = entityManager.createQuery("SELECT d.id, d.noiDung, f.tenField, f.loaiField, f.batBuocNhap " +
-                                                        "FROM DocField f " +
-                                                        "LEFT JOIN DocData d ON f.id = d.docField.id " +
-                                                        "WHERE d.document.id = " + documentId);
-        @SuppressWarnings("unchecked")
-		List<Object[]> listData = result.getResultList();
-
-        if (!listData.isEmpty()) {
-            for (Object[] data : listData) {
-                DocMetaDTO metadata = new DocMetaDTO();
-                metadata.setDocDataId(Integer.parseInt(String.valueOf(data[0])));
-                metadata.setDocDataValue(data[1] != null ? String.valueOf(data[1]) : "");
-                metadata.setDocFieldName(String.valueOf(data[2]));
-                metadata.setDocFieldTypeInput(String.valueOf(data[3]));
-                metadata.setDocFieldRequired(String.valueOf(data[4]).equals("1") ? true : false);
-                listReturn.add(metadata);
+        try {
+            List<Object[]> listData = documentRepo.findMetadata(documentId);
+            if (!listData.isEmpty()) {
+                for (Object[] data : listData) {
+                    DocMetaDTO metadata = new DocMetaDTO();
+                    metadata.setFieldId(Integer.parseInt(String.valueOf(data[0])));
+                    metadata.setFieldName(String.valueOf(data[1]));
+                    metadata.setDataId(data[2] != null ? Integer.parseInt(String.valueOf(data[2])) : null);
+                    metadata.setDataValue(String.valueOf(data[3]));
+                    metadata.setFieldType(String.valueOf(data[4]));
+                    metadata.setFieldRequired(String.valueOf(data[5]).equals("1"));
+                    listReturn.add(metadata);
+                }
             }
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "metadata of document"), ex);
         }
-
         return listReturn;
     }
 
@@ -171,16 +173,16 @@ public class DocumentServiceImpl implements DocumentService {
             Document documentSaved = documentRepo.save(document);
             if ("N".equals(document.getIsFolder()) && documentDTO.getFileUpload() != null) {
                 fileService.saveFileOfDocument(documentDTO.getFileUpload(), documentSaved.getId());
-                //Default docData
-                if (documentSaved.getLoaiTaiLieu() != null) {
-                    for (DocField docField : docFieldService.findByDocTypeId(document.getLoaiTaiLieu().getId())) {
-                        DocData docData = DocData.builder()
-                                                 .docField(new DocField(docField.getId()))
-                                                 .document(new Document(documentSaved.getId()))
-                                                 .noiDung("").build();
-                        docDataService.save(docData);
-                    }
-                }
+//                //Default docData
+//                if (documentSaved.getLoaiTaiLieu() != null) {
+//                    for (DocField docField : docFieldService.findByDocTypeId(document.getLoaiTaiLieu().getId())) {
+//                        DocData docData = DocData.builder()
+//                                                 .docField(new DocField(docField.getId()))
+//                                                 .document(new Document(documentSaved.getId()))
+//                                                 .value("").build();
+//                        docDataService.save(docData);
+//                    }
+//                }
             }
             systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_CREATE.name(), "Thêm mới tài liệu: " + document.toString());
             logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới tài liệu " + document.toString());
@@ -271,11 +273,11 @@ public class DocumentServiceImpl implements DocumentService {
                         "       rh.NAME, " +
                         "       rh.AS_NAME, " +
                         "       rh.PARENT_ID, " +
-                        "       CASE WHEN EXISTS (SELECT 1 FROM STG_DOCUMENT sub WHERE sub.PARENT_ID = rh.ID) THEN 'Y' ELSE 'N' END AS Has_SubFolders, " +
+                        "       CASE WHEN EXISTS (SELECT 1 FROM STG_DOCUMENT sub WHERE sub.PARENT_ID = rh.ID AND sub.IS_FOLDER = 'Y') THEN 'Y' ELSE 'N' END AS Has_SubFolders, " +
                         "       sf.SubFoldersId, " +
                         "       rh.HierarchyLevel, " +
                         "       rh.RowNumm, " +
-                        "       RTRIM(rh.Path) " +
+                        "       RTRIM(rh.Path) as Path " +
                         "FROM RecursiveHierarchy rh " +
                         "LEFT JOIN SubFolderList sf ON rh.ID = sf.Parent_ID " +
                         "WHERE rh.PARENT_ID = ? " +

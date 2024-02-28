@@ -51,6 +51,37 @@
             </div>
         </div>
 
+        <div th:fragment="breadcrumb">
+            <div class="row">
+                <div class="col-12">
+                    <ol class="breadcrumb p-0" style="background-color: transparent; margin-bottom: 10px">
+                        <li class="breadcrumb-item border-bottom" th:each="b, iterStat : ${docBreadcrumb}">
+                            <a th:if="${iterStat.first}" href="/storage/document">
+                                <i class="text-primary fa-solid fa-house"></i>
+                            </a>
+                            <a th:if="${iterStat.last}" class="text-secondary" th:text="${b.name}"></a>
+                            <a th:unless="${iterStat.last}" th:href="@{'/stg/doc/' + ${b.aliasName}}" th:text="${b.name}"></a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div th:fragment="folderTree">
+            <div class="main-sidebar sidebar-dark-primary elevation-4">
+                <nav class="sidebar mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item" th:each="ft : ${folderTree}">
+                            <a href="#" th:class="'nav-link folder-' + ${ft.id}" th:hasSubFolder="${ft.hasSubFolder}" th:collapse="N">
+                                <p>[[${ft.name}]] <i class="fas fa-angle-left right" th:if="${ft.hasSubFolder == 'Y'}"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview" th:id="'sub-folders-' + ${ft.id}" style="margin-left: 15px"></ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
         <div th:fragment="format_currency(amount)" th:remove="tag">
             <span>$ </span>[[${#numbers.formatDecimal(amount, 1, 'COMMA', 2, 'POINT')}]]
         </div>
