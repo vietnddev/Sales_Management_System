@@ -41,12 +41,9 @@
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT_SUPPLIER}}" class="nav-link"><i class="fa-solid fa-user-tag mr-2"></i><p>Nhà cung cấp</p></a>
                             </li>
-                            <li class="nav-item">
-                                <a th:href="@{${URL_PRODUCT_GALLERY}}" class="nav-link"><i class="fa-solid fa-image nav-icon mr-2"></i><p>Thư viện</p></a>
-                            </li>
 
                             <li class="nav-header">
-                                <hr class="mt-0 mb-3" style="border-color: darkgrey"><strong>KHO TÀI LIỆU</strong>
+                                <hr class="mt-0 mb-3" style="border-color: darkgrey"><strong>KHO</strong>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{/storage/dashboard}" class="nav-link"><i class="fa-solid fa-chart-pie nav-icon mr-2"></i><p>Tổng quan</p></a>
@@ -60,18 +57,12 @@
                             <li class="nav-item">
                                 <a th:href="@{${URL_STORAGE_MATERIAL}}" class="nav-link"><i class="fa-solid fa-scroll nav-icon mr-2"></i><p>Nguyên vật liệu</p></a>
                             </li>
-                            <li class="nav-item">
-                                <a th:href="@{${URL_STORAGE_DOCUMENT}}" class="nav-link"><i class="fa-solid fa-file-pdf nav-icon mr-2"></i><p>Danh sách tài liệu</p></a>
-                            </li>
 
                             <li class="nav-header">
                                 <hr class="mt-0 mb-3" style="border-color: darkgrey"><strong>QUẢN TRỊ HỆ THỐNG</strong>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_SYSTEM_CONFIG}}" class="nav-link"><i class="fa-solid fa-gear nav-icon mr-2"></i><p>Cấu hình</p></a>
-                            </li>
-                            <li class="nav-item">
-                                <a th:href="@{${URL_CATEGORY}}" class="nav-link"><i class="fa-solid fa-list nav-icon mr-2"></i><p>Danh mục hệ thống</p></a>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_SYSTEM_ROLE}}" class="nav-link"><i class="fa-solid fa-user-gear nav-icon mr-2"></i><p>Nhóm quyền</p></a>

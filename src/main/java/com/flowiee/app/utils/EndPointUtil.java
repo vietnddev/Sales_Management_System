@@ -22,8 +22,8 @@ public class EndPointUtil {
     public static final String PRO_SUPPLIER = PRO_PRODUCT + "/supplier";
     public static final String PRO_GALLERY = "/gallery";
 
-    public static final String STORAGE = "/storage";
-    public static final String STORAGE_DOCUMENT = STORAGE + "/document";
+    public static final String STORAGE = "/stg";
+    public static final String STORAGE_DOCUMENT = STORAGE + "/doc";
     public static final String STORAGE_MATERIAL = STORAGE + "/material";
     public static final String STORAGE_MATERIAL_TEMPLATE = STORAGE_MATERIAL + "/template";
     public static final String STORAGE_MATERIAL_IMPORT = STORAGE_MATERIAL + "/import";

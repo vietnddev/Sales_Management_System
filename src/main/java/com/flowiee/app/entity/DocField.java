@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,39 +17,40 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DocField extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
-    @Column(name = "loai_field", nullable = false)
-    private String loaiField;
+    @Column(name = "type", nullable = false)
+    private String type;
 
-    @Column(name = "ten_field", nullable = false)
-    private String tenField;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "min_length", nullable = false)
-    private int minLength;
+    private Integer minLength;
 
     @Column(name = "max_length", nullable = false)
-    private int maxLength;
+    private Integer maxLength;
 
     @Column(name = "min_number", nullable = false)
-    private int minNumber;
+    private Integer minNumber;
 
     @Column(name = "max_number", nullable = false)
-    private int maxNumber;
+    private Integer maxNumber;
 
-    @Column(name = "bat_buoc_nhap", nullable = false)
-    private boolean batBuocNhap;
+    @Column(name = "required", nullable = false)
+    private Boolean required;
 
-    @Column(name = "sap_xep")
-    private int sapXep;
+    @Column(name = "sort")
+    private Integer sort;
 
-    @Column(name = "trang_thai", nullable = false)
-    private boolean trangThai;
+    @Column(name = "status", nullable = false)
+    private Boolean status;
 
     @JsonIgnoreProperties("listDocField")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loai_tai_lieu_id", nullable = false)
-    private Category loaiTaiLieu;
+    @JoinColumn(name = "doc_type_id", nullable = false)
+    private Category docType;
 
     @JsonIgnoreProperties("docField")
     @OneToMany(mappedBy = "docField", fetch = FetchType.LAZY)
@@ -57,12 +59,4 @@ public class DocField extends BaseEntity implements Serializable {
     public DocField(Integer id) {
     	super.id = id;
     }
-
-	@Override
-	public String toString() {
-		return "DocField [id=" + super.id + ", loaiField=" + loaiField + ", tenField=" + tenField + ", minLength=" + minLength
-				+ ", maxLength=" + maxLength + ", minNumber=" + minNumber + ", maxNumber=" + maxNumber
-				+ ", batBuocNhap=" + batBuocNhap + ", sapXep=" + sapXep + ", trangThai=" + trangThai + ", loaiTaiLieu="
-				+ loaiTaiLieu + "]";
-	}  
 }

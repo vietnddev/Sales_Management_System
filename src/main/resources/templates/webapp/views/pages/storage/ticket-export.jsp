@@ -82,7 +82,7 @@
         });
 
         function loadTicketExport(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + '/storage/ticket-export/all';
+            let apiURL = mvHostURLCallApi + '/stg/ticket-export/all';
             let params = {pageSize: pageSize, pageNum: pageNum}
             $.get(apiURL, params, function (response) {
                 if (response.status === "OK") {
@@ -97,7 +97,7 @@
                         contentTable.append(`
                             <tr>
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                <td><a href="/storage/ticket-export/${d.id}">${d.title}</a></td>
+                                <td><a href="/stg/ticket-export/${d.id}">${d.title}</a></td>
                                 <td>Sản phẩm (test)</td>
                                 <td>Quần ...,áo ... (test)</td>
                                 <td>${d.exporter}</td>

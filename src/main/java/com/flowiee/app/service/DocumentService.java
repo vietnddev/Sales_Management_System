@@ -6,7 +6,6 @@ import com.flowiee.app.entity.Document;
 import com.flowiee.app.dto.DocMetaDTO;
 import org.springframework.data.domain.Page;
 
-import javax.print.Doc;
 import java.util.List;
 
 public interface DocumentService extends BaseService<Document> {
@@ -20,9 +19,9 @@ public interface DocumentService extends BaseService<Document> {
 
     List<Document> findAllFolder();
 
-    String updateMetadata(Integer[] docDataIds, String[] docDataValues, Integer documentId);
+    String updateMetadata(List<DocMetaDTO> metaDTOs, Integer documentId);
 
-    List<DocMetaDTO> getMetadata(Integer documentId);
+    List<DocMetaDTO> findMetadata(Integer documentId);
 
     List<Document> findByDoctype(Integer docType);
 

@@ -8,15 +8,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DocMetaDTO {
-    private int docDataId;
-    private String docDataValue;
-    private String docFieldName;
-    private String docFieldTypeInput;
-    private boolean docFieldRequired;
+	private Integer fieldId;
+	private String fieldName;
+    private Integer dataId;
+    private String dataValue;
+    private String fieldType;
+    private Boolean fieldRequired;
+	private Integer docId;
+
 	@Override
 	public String toString() {
-		return "DocMetaDTO [docDataId=" + docDataId + ", docDataValue=" + docDataValue + ", docFieldName="
-				+ docFieldName + ", docFieldTypeInput=" + docFieldTypeInput + ", docFieldRequired=" + docFieldRequired
+		return "DocMetaDTO [docDataId=" + dataId + ", docDataValue=" + dataValue + ", docFieldName="
+				+ fieldName + ", docFieldTypeInput=" + fieldType + ", docFieldRequired=" + fieldRequired
 				+ "]";
 	}
 }

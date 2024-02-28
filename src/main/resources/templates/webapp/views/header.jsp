@@ -58,9 +58,27 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block border mr-2"
-            style="border-radius: 20px; font-weight: bold; background-color: aliceblue">
+            style="border-radius: 15px; font-weight: bold; background-color: aliceblue">
           <a th:href="@{/}" class="nav-link"><i class="fa-solid fa-chart-pie nav-icon"></i>
             Dashboard
+          </a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block border mr-2"
+            style="border-radius: 15px; font-weight: bold; background-color: aliceblue">
+          <a th:href="@{${URL_PRODUCT_GALLERY}}" class="nav-link"><i class="fa-solid fa-image nav-icon"></i>
+            Kho hình ảnh
+          </a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block border mr-2"
+            style="border-radius: 15px; font-weight: bold; background-color: aliceblue">
+          <a th:href="@{${URL_STORAGE_DOCUMENT}}" class="nav-link"><i class="fa-solid fa-file-pdf nav-icon"></i>
+            Kho tài liệu
+          </a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block border mr-2"
+            style="border-radius: 15px; font-weight: bold; background-color: aliceblue">
+          <a th:href="@{${URL_CATEGORY}}" class="nav-link"><i class="fa-solid fa-list nav-icon"></i>
+            Danh mục hệ thống
           </a>
         </li>
       </ul>

@@ -112,7 +112,7 @@
         });
 
         function loadTicketExportDetail() {
-            let apiURL = mvHostURLCallApi + '/storage/ticket-export/' + [[${ticketExportId}]];
+            let apiURL = mvHostURLCallApi + '/stg/ticket-export/' + [[${ticketExportId}]];
             $.get(apiURL, function (response) {//dùng Ajax JQuery để gọi xuống controller
                 if (response.status === "OK") {
                     let data = response.data;
@@ -161,7 +161,7 @@
             $("#yesButton").on("click", function (e) {
                 e.preventDefault();
                 if ($(this).attr("actionType") === "update") {
-                    let apiURL = mvHostURLCallApi + "/storage/ticket-export/update/" + mvId;
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-export/update/" + mvId;
                     let lvExportTime = moment(mvExportTime.val(), "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss.SSS");
                     let body = {title : mvTitle.val(), exporter : mvExporter.val(), exportTime : lvExportTime, note : mvNote.val(), status : mvStatus.val()}
                     $.ajax({
@@ -180,14 +180,14 @@
                         }
                     });
                 } else if ($(this).attr("actionType") === "delete") {
-                    let apiURL = mvHostURLCallApi + "/storage/ticket-export/delete/" + mvId;
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-export/delete/" + mvId;
                     $.ajax({
                         url: apiURL,
                         type: 'DELETE',
                         success: function (response) {
                             if (response.status === "OK") {
                                 alert("Delete successfully!");
-                                window.location = mvHostURL + "/storage/ticket-export";
+                                window.location = mvHostURL + "/stg/ticket-export";
                             }
                         },
                         error: function (xhr) {

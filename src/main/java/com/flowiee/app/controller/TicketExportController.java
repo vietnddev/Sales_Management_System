@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("${app.api.prefix}/storage/ticket-export")
+@RequestMapping("${app.api.prefix}/stg/ticket-export")
 @Tag(name = "Ticket export API", description = "Quản lý xuất hàng")
 public class TicketExportController extends BaseController {
     @Autowired private TicketExportService ticketExportService;

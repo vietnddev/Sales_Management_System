@@ -90,7 +90,6 @@ function updateTableContentWhenOnClickPagination(loadNewDataMethod) {
     });
 }
 
-
 //Search tool
 function setupSearchTool(keySearch) {
     let brandFilter = $('#brandFilter');
@@ -186,6 +185,44 @@ function setupSearchTool(keySearch) {
             }
         })
     })
+}
+
+function loadFolderTree() {
+    // Bắt sự kiện click cho các button có class bắt đầu bằng "nav-link folder-"
+    $(document).on('click', 'a[class^="nav-link folder-"]', function() {
+        if ($(this).attr("hasSubFolder") === "N") {
+            return;
+        }
+        if ($(this).attr("collapse") === "Y") {
+            return;
+        }
+        let aClass = $(this).attr('class');
+        let folderId = aClass.split('-')[2];
+
+        let subFolders = $('#sub-folders-' + folderId);
+        subFolders.empty();
+
+        $.get(mvHostURLCallApi + '/stg/doc/folders', {parentId: folderId}, function (response) {
+            let subFoldersData = response.data;
+            $.each(subFoldersData, function (index, d) {
+                let iconDropdownList = ``;
+                if (d.hasSubFolder === "Y") {
+                    iconDropdownList = `<i class="fas fa-angle-left right"></i>`;
+                }
+                subFolders.append(`
+                    <li class="nav-item">
+                        <a href="#" class="nav-link folder-${d.id}" hasSubFolder="${d.hasSubFolder}" collapse="N">
+                            <p>${d.name} ${iconDropdownList}</p>
+                        </a>
+                        <ul class="nav nav-treeview" id="sub-folders-${d.id}" style="margin-left: 15px"></ul>
+                    </li>
+                `);
+            })
+        }).fail(function () {
+            showErrorModal("Could not connect to the server");
+        });
+        $(this).attr("collapse", "Y");
+    });
 }
 
 let convertDateT1 = (dateInput) => {

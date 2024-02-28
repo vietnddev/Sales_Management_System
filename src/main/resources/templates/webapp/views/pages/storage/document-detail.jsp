@@ -15,20 +15,15 @@
         <div th:replace="header :: header"></div>
         <!-- /.navbar (header)-->
 
-        <!-- Main Sidebar Container -->
-        <div th:replace="sidebar :: sidebar"></div>
+        <!-- Folder tree -->
+        <div th:replace="fragments :: folderTree"></div>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
             <!-- Main content -->
             <div class="content" style="padding-left: 20px; padding-right: 20px">
-                <div class="row">
-                    <div class="col-12">
-                        <ol class="breadcrumb p-0" style="background-color: transparent; margin-bottom: 10px">
-                            <li class="breadcrumb-item border-bottom" th:each="b : ${docBreadcrumb}"><a th:href="@{'/storage/document/' + ${b.aliasName}}" th:text="${b.name}"></a></li>
-                        </ol>
-                    </div>
-                </div>
+                <!--Breadcrumb-->
+                <div th:replace="fragments :: breadcrumb"></div>
 
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
@@ -134,37 +129,25 @@
                                             <div class="tab-content">
                                                 <!--Tab metadata-->
                                                 <div class="active tab-pane" id="docData">
-                                                    <form class="form-horizontal" method="GET"
-                                                          th:action="@{/kho-tai-lieu/document/update-metadata/{id}(id=${docDetail.id})}">
-                                                        <div class="form-group row"
-                                                             th:each="list : ${listDocDataInfo}">
-                                                            <label th:for="${list.docDataId}"
-                                                                   class="col-sm-4 col-form-label"
-                                                                   th:text="${list.docFieldName}">
-                                                            </label>
+                                                    <form class="form-horizontal" method="GET" th:action="@{/stg/doc/update-metadata/{id}(id=${docDetail.id})}">
+                                                        <div class="form-group row" th:each="list : ${docMeta}">
+                                                            <label class="col-sm-4 col-form-label" th:text="${list.fieldName}"></label>
                                                             <div class="col-sm-8">
-                                                                <input type="hidden" name="docDataId"
-                                                                       th:value="${list.docDataId}">
+                                                                <input type="hidden" name="fieldId" th:value="${list.fieldId}">
+                                                                <input type="hidden" name="dataId" th:value="${list.dataId}">
                                                                 <input class="form-control"
-                                                                       name="docDataValue"
-                                                                       th:type="${list.docFieldTypeInput}"
-                                                                       th:placeholder="${list.docFieldName}"
-                                                                       th:value="${list.docDataValue}"
-                                                                       th:if="${list.docFieldRequired}" required>
+                                                                       name="dataValue"
+                                                                       th:type="${list.fieldType}" th:placeholder="${list.fieldName}" th:value="${list.dataValue}"
+                                                                       th:if="${list.fieldRequired}" required>
                                                                 <input class="form-control"
-                                                                       name="docDataValue"
-                                                                       th:type="${list.docFieldTypeInput}"
-                                                                       th:placeholder="${list.docFieldName}"
-                                                                       th:value="${list.docDataValue}"
-                                                                       th:if="!${list.docFieldRequired}">
+                                                                       name="dataValue"
+                                                                       th:type="${list.fieldType}" th:placeholder="${list.fieldName}" th:value="${list.dataValue}"
+                                                                       th:if="!${list.fieldRequired}">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <div class="offset-sm-4 col-sm-9">
-                                                                <button class="btn btn-sm btn-primary"
-                                                                        style="font-weight: bold;">
-                                                                    Lưu
-                                                                </button>
+                                                                <button class="btn btn-sm btn-primary" style="font-weight: bold;">Lưu</button>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -231,5 +214,11 @@
         </div>
 
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadFolderTree();
+        });
+    </script>
 </body>
 </html>

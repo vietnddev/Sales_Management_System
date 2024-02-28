@@ -1,5 +1,6 @@
 package com.flowiee.app.controller.view;
 
+import com.flowiee.app.dto.DocMetaDTO;
 import com.flowiee.app.dto.DocumentDTO;
 import com.flowiee.app.dto.FileDTO;
 import com.flowiee.app.entity.Category;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@RequestMapping("/storage")
+@RequestMapping("/stg")
 public class DocumentUIController extends BaseController {
     private final DocumentService documentService;
     private final DocFieldService docFieldService;
@@ -43,7 +44,6 @@ public class DocumentUIController extends BaseController {
         this.categoryService = categoryService;
     }
 
-    //Dashboard
     @GetMapping("/dashboard")
     public ModelAndView showDashboardOfSTG() {
         vldModuleStorage.dashboard(true);
@@ -61,8 +61,7 @@ public class DocumentUIController extends BaseController {
         return baseView(modelAndView);
     }
 
-    //Root screen
-    @GetMapping("/document")
+    @GetMapping("/doc")
     public ModelAndView viewRootDocuments() {
         vldModuleStorage.readDoc(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCUMENT);
@@ -71,7 +70,7 @@ public class DocumentUIController extends BaseController {
         return baseView(modelAndView);
     }
 
-    @GetMapping("/document/{aliasPath}")
+    @GetMapping("/doc/{aliasPath}")
     public ModelAndView viewSubDocuments(@PathVariable("aliasPath") String aliasPath) {
         vldModuleStorage.readDoc(true);
         String aliasName = CommonUtils.getAliasNameFromAliasPath(aliasPath);
@@ -92,11 +91,25 @@ public class DocumentUIController extends BaseController {
             modelAndView.addObject("parentId", document.getId());
         }
         if (document.getIsFolder().equals("N")) {
-            modelAndView.setViewName(PagesUtils.STG_DOCUMENT_DETAIL);
             DocumentDTO docDTO = DocumentDTO.fromDocument(document);
             docDTO.setFile(FileDTO.fromFileStorage(fileStorageService.findFileIsActiveOfDocument(document.getId())));
+            modelAndView.setViewName(PagesUtils.STG_DOCUMENT_DETAIL);
             modelAndView.addObject("docDetail", docDTO);
+            modelAndView.addObject("docMeta", documentService.findMetadata(document.getId()));
         }
+        return baseView(modelAndView);
+    }
+
+    @GetMapping("/doc/doc-type/{id}")
+    public ModelAndView viewDocTypeDetail(@PathVariable("id") Integer docTypeId) {
+        vldModuleStorage.updateDoc(true);
+        Category docType = categoryService.findById(docTypeId);
+        if (docType == null) {
+            throw new NotFoundException("Document type not found!");
+        }
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_DOCTYPE_DETAIL);
+        modelAndView.addObject("docTypeId", docTypeId);
+        modelAndView.addObject("docFields", docFieldService.findByDocTypeId(docTypeId));
         return baseView(modelAndView);
     }
 
@@ -123,16 +136,26 @@ public class DocumentUIController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @GetMapping("/document/update-metadata/{id}")
+    @GetMapping("/doc/update-metadata/{id}")
     public ModelAndView updateMetadata(HttpServletRequest request,
                                        @PathVariable("id") Integer documentId,
-                                       @RequestParam("docDataId") Integer[] docDataIds,
-                                       @RequestParam("docDataValue") String[] docDataValues) {
+                                       @RequestParam("fieldId") Integer[] fieldId,
+                                       @RequestParam("dataId") Integer[] dataId,
+                                       @RequestParam("dataValue") String[] dataValue) {
         vldModuleStorage.updateDoc(true);
         if (documentId <= 0 || documentService.findById(documentId) == null) {
             throw new NotFoundException("Document not found!");
         }
-        documentService.updateMetadata(docDataIds, docDataValues, documentId);
+        List<DocMetaDTO> metaDTOs = new ArrayList<>();
+        for (int i = 0; i <fieldId.length; i++) {
+            DocMetaDTO dto = new DocMetaDTO();
+            dto.setFieldId(fieldId[i]);
+            dto.setDataId(dataId[i]);
+            dto.setDataValue(dataValue[i]);
+            metaDTOs.add(dto);
+            //System.out.println("fieldId " + fieldId[i] + ", data " + dataId[i] + ", value " + dataValue[i]);
+        }
+        documentService.updateMetadata(metaDTOs, documentId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -164,33 +187,23 @@ public class DocumentUIController extends BaseController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping("/docfield/insert")
-    public ModelAndView insertDocfield(DocField docField, HttpServletRequest request) {
+    @PostMapping("/doc/doc-field/create")
+    public ModelAndView createDocField(DocField docField, HttpServletRequest request) {
         vldModuleStorage.updateDoc(true);
-        docField.setTrangThai(false);
+        docField.setRequired(docField.getRequired() != null ? docField.getRequired() : false);
+        docField.setStatus(false);
         docFieldService.save(docField);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @PostMapping(value = "/docfield/update/{id}", params = "update")
-    public ModelAndView updateDocfield(HttpServletRequest request,
-                                       @ModelAttribute("docField") DocField docField,
-                                       @PathVariable("id") Integer docFieldId) {
+    @PostMapping(value = "/doc/doc-field/update/{id}", params = "update")
+    public ModelAndView updateDocField(HttpServletRequest request, @ModelAttribute("docField") DocField docField, @PathVariable("id") Integer docFieldId) {
         vldModuleStorage.updateDoc(true);
-        if (docFieldId <= 0 || documentService.findById(docFieldId) == null) {
-            throw new NotFoundException("Docfield not found!");
+        if (docFieldId <= 0 || docFieldService.findById(docFieldId) == null) {
+            throw new NotFoundException("DocField not found!");
         }
+        docField.setRequired(docField.getRequired() != null ? docField.getRequired() : false);
         docFieldService.update(docField, docFieldId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
-    }
-
-    @PostMapping("/docfield/delete/{id}")
-    public ModelAndView deleteDocfield(@PathVariable("id") Integer docfiledId, HttpServletRequest request) {
-        vldModuleStorage.deleteDoc(true);
-        if (docFieldService.findById(docfiledId) == null) {
-            throw new NotFoundException("Docfield not found!");
-        }
-        docFieldService.delete(docfiledId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 }
