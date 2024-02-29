@@ -275,7 +275,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-6">
                                                 Tổng tiền hàng
-                                                <span class="badge badge-info"
+                                                <span class="badge badge-info" id="totalAmountWithoutDiscountField"
                                                       th:if="${cart.listItems.size() > 0}"
                                                       th:text="${cart.listItems.size()}"></span>
                                             </label>
@@ -291,13 +291,12 @@
                                         <hr class="w-75">
                                         <div class="form-group row">
                                             <label class="col-sm-6">Khuyến mãi</label>
-                                            <span class="col-sm-6 text-right"
-                                                  th:text="${#numbers.formatDecimal (amountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></span>
+                                            <span class="col-sm-6 text-right" id="amountDiscountField" th:text="0"></span>
                                         </div>
                                         <hr class="w-75">
                                         <div class="form-group row">
                                             <label class="col-sm-6">Phải thu</label>
-                                            <label class="col-sm-6 text-right"
+                                            <label class="col-sm-6 text-right" id="totalAmountDiscountField"
                                                    th:text="${#numbers.formatDecimal (totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ'"></label>
                                         </div>
                                         <hr class="w-75">
@@ -406,6 +405,12 @@
     })
 
     let mvCustomers = {};
+    let mvVoucherDetail= {};
+    let mvVoucherStatus = "NOK";
+    let mvVoucherCode = "";
+    let mvTotalAmountWithoutDiscount = [[${totalAmountWithoutDiscount}]];//$("#totalAmountWithoutDiscountField");
+    let mvAmountDiscount = 0;// $("#amountDiscountField");
+    let mvTotalAmountDiscount = [[${totalAmountWithoutDiscount}]];//$("#totalAmountDiscountField");
     $('#isUseVoucherBlock').hide();
 
     $(document).ready(function () {
@@ -418,6 +423,7 @@
         loadReceiveInformationToForm();
         createOrder();
         checkVoucherIsAvailable();
+        useVoucher();
     });
 
     async function loadProducts() {
@@ -525,23 +531,51 @@
             let apiURL = mvHostURLCallApi + '/voucher/check/' + codeInput;
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
-                    let data = response.data;
-                    $('#voucherTitleField').text("Tên đợt khuyến mãi: " + data.title);
-                    $('#voucherStatusField').text("Trạng thái: " + data.status);
-                    $('#voucherPercentField').text("Phần trăm giảm: " + data.discount);
-                    $('#voucherMaxPriceField').text("Tối đa giảm được: " + data.discountPriceMax);
-                    $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + data.applicableObjects);
-
-                    if (data.status === 'Đang áp dụng') {
-                        $('#isUseVoucherBlock').show();
-                    } else {
-                        $('#isUseVoucherBlock').hide();
+                    mvVoucherDetail = response.data;
+                    if (mvVoucherDetail.id != null) {
+                        $('#voucherTitleField').text("Tên đợt khuyến mãi: " + mvVoucherDetail.title);
+                        $('#voucherStatusField').text("Trạng thái: " + mvVoucherDetail.status);
+                        $('#voucherPercentField').text("Phần trăm giảm: " + mvVoucherDetail.discount + " %");
+                        $('#voucherMaxPriceField').text("Tối đa giảm được: " + formatCurrency(mvVoucherDetail.discountPriceMax));
+                        $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + mvVoucherDetail.applicableObjects);
+                        if (mvVoucherDetail.status === 'Đang áp dụng') {
+                            $('#isUseVoucherBlock').show();
+                        } else {
+                            $('#isUseVoucherBlock').hide();
+                        }
+                        if (mvVoucherDetail.id > 0) {
+                            mvVoucherStatus = "OK";
+                            mvVoucherCode = codeInput;
+                        }
                     }
+                    console.log("mvVoucherDetail " + mvVoucherDetail)
+                } else {
+                    mvVoucherStatus = "NOK";
+                    mvVoucherCode = "";
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
             });
         });
+    }
+    
+    function useVoucher() {
+        $("#isUseVoucherField").on("change", function () {
+            if($(this).is(':checked')) {
+                if (mvVoucherStatus === "OK") {
+                    mvAmountDiscount = Math.round(mvTotalAmountWithoutDiscount * mvVoucherDetail.discount / 100);
+                    if (mvAmountDiscount > mvVoucherDetail.discountPriceMax) {
+                        mvAmountDiscount = mvVoucherDetail.discountPriceMax;
+                    }
+                    $("#amountDiscountField").text(formatCurrency(mvAmountDiscount));
+                    mvTotalAmountDiscount = mvTotalAmountWithoutDiscount - mvAmountDiscount;
+                    $("#totalAmountDiscountField").text(formatCurrency(mvTotalAmountDiscount));
+                }
+            } else {
+                $("#amountDiscountField").text("0 đ");
+                $("#totalAmountDiscountField").text(formatCurrency(mvTotalAmountWithoutDiscount));
+            }
+        })
     }
     
     async function createOrder() {
@@ -567,19 +601,22 @@
             let receiveAddress = $('#receiveAddressField').val()
 
             let apiURL = mvHostURLCallApi + '/order/insert'
-            let params = {customerId: customerId,
-                          cashierId : accountId,
-                          salesChannelId: salesChannelId,
-                          paymentMethodId: paymentMethodId,
-                          orderStatusId : orderStatusId,
-                          note : note,
-                          orderTimeStr : orderTime,
-                          cartId : cartId,
-                          receiveName : receiveName,
-                          receivePhone : receivePhoneNumber,
-                          receiveEmail : receiveEmail,
-                          receiveAddress: receiveAddress}
-
+            let params = {
+                customerId: customerId,
+                cashierId : accountId,
+                salesChannelId: salesChannelId,
+                paymentMethodId: paymentMethodId,
+                orderStatusId : orderStatusId,
+                note : note,
+                orderTimeStr : orderTime,
+                cartId : cartId,
+                receiveName : receiveName,
+                receivePhone : receivePhoneNumber,
+                receiveEmail : receiveEmail,
+                receiveAddress : receiveAddress,
+                voucherUsedCode : mvVoucherCode,
+                amountDiscount : mvAmountDiscount
+            }
             let response = await fetch(apiURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},

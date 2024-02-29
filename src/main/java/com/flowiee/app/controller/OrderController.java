@@ -41,8 +41,8 @@ public class OrderController extends BaseController {
             if (!super.vldModuleProduct.readOrder(true)) {
                 return null;
             }
-            Page<Order> orderPage = orderService.findAllOrder(pageSize, pageNum - 1);
-            return ApiResponse.ok(OrderDTO.fromOrders(orderPage.getContent()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
+            Page<OrderDTO> orderPage = orderService.findAllOrder(pageSize, pageNum - 1);
+            return ApiResponse.ok(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"), ex);
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"));

@@ -54,7 +54,7 @@ public class DocumentController extends BaseController {
         try {
             if (!super.vldModuleStorage.insertDoc(true)) {
                 return null;
-            }
+             }
             DocumentDTO document = new DocumentDTO();
             document.setParentId(parentId);
             document.setName(name);

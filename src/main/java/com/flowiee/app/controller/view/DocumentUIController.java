@@ -4,6 +4,7 @@ import com.flowiee.app.dto.DocMetaDTO;
 import com.flowiee.app.dto.DocumentDTO;
 import com.flowiee.app.dto.FileDTO;
 import com.flowiee.app.entity.Category;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.ForbiddenException;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.entity.DocField;
@@ -72,32 +73,37 @@ public class DocumentUIController extends BaseController {
 
     @GetMapping("/doc/{aliasPath}")
     public ModelAndView viewSubDocuments(@PathVariable("aliasPath") String aliasPath) {
-        vldModuleStorage.readDoc(true);
-        String aliasName = CommonUtils.getAliasNameFromAliasPath(aliasPath);
-        int documentId = CommonUtils.getIdFromAliasPath(aliasPath);
-        Document document = documentService.findById(documentId);
-        if (document == null || !(aliasName + "-" + documentId).equals(document.getAsName() + "-" + document.getId())) {
-            throw new NotFoundException("Document not found!");
+        try {
+            vldModuleStorage.readDoc(true);
+            String aliasName = CommonUtils.getAliasNameFromAliasPath(aliasPath);
+            int documentId = CommonUtils.getIdFromAliasPath(aliasPath);
+            Document document = documentService.findById(documentId);
+            if (document == null || !(aliasName + "-" + documentId).equals(document.getAsName() + "-" + document.getId())) {
+                throw new NotFoundException("Document not found!");
+            }
+            if (!docShareService.isShared(documentId)) {
+                throw new ForbiddenException(MessageUtils.ERROR_FORBIDDEN);
+            }
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.addObject("docBreadcrumb", documentService.findHierarchyOfDocument(document.getId(), document.getParentId()));
+            modelAndView.addObject("folderTree", documentService.findFolderByParentId(0));
+            modelAndView.addObject("documentParentName", document.getName());
+            if (document.getIsFolder().equals("Y")) {
+                modelAndView.setViewName(PagesUtils.STG_DOCUMENT);
+                modelAndView.addObject("parentId", document.getId());
+            }
+            if (document.getIsFolder().equals("N")) {
+                DocumentDTO docDTO = DocumentDTO.fromDocument(document);
+                docDTO.setFile(FileDTO.fromFileStorage(fileStorageService.findFileIsActiveOfDocument(document.getId())));
+                modelAndView.setViewName(PagesUtils.STG_DOCUMENT_DETAIL);
+                modelAndView.addObject("docDetail", docDTO);
+                modelAndView.addObject("docMeta", documentService.findMetadata(document.getId()));
+            }
+            return baseView(modelAndView);
+        } catch (RuntimeException ex) {
+            logger.error(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "subDocs/ docDetail"));
+            throw new AppException();
         }
-        if (!docShareService.isShared(documentId)) {
-            throw new ForbiddenException(MessageUtils.ERROR_FORBIDDEN);
-        }
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("docBreadcrumb", documentService.findHierarchyOfDocument(document.getId(), document.getParentId()));
-        modelAndView.addObject("folderTree", documentService.findFolderByParentId(0));
-        modelAndView.addObject("documentParentName", document.getName());
-        if (document.getIsFolder().equals("Y")) {
-            modelAndView.setViewName(PagesUtils.STG_DOCUMENT);
-            modelAndView.addObject("parentId", document.getId());
-        }
-        if (document.getIsFolder().equals("N")) {
-            DocumentDTO docDTO = DocumentDTO.fromDocument(document);
-            docDTO.setFile(FileDTO.fromFileStorage(fileStorageService.findFileIsActiveOfDocument(document.getId())));
-            modelAndView.setViewName(PagesUtils.STG_DOCUMENT_DETAIL);
-            modelAndView.addObject("docDetail", docDTO);
-            modelAndView.addObject("docMeta", documentService.findMetadata(document.getId()));
-        }
-        return baseView(modelAndView);
     }
 
     @GetMapping("/doc/doc-type/{id}")
@@ -148,12 +154,7 @@ public class DocumentUIController extends BaseController {
         }
         List<DocMetaDTO> metaDTOs = new ArrayList<>();
         for (int i = 0; i <fieldId.length; i++) {
-            DocMetaDTO dto = new DocMetaDTO();
-            dto.setFieldId(fieldId[i]);
-            dto.setDataId(dataId[i]);
-            dto.setDataValue(dataValue[i]);
-            metaDTOs.add(dto);
-            //System.out.println("fieldId " + fieldId[i] + ", data " + dataId[i] + ", value " + dataValue[i]);
+            metaDTOs.add(new DocMetaDTO(fieldId[i], null, dataId[i], dataValue[i], null, null, documentId));
         }
         documentService.updateMetadata(metaDTOs, documentId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));

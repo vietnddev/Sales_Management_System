@@ -208,7 +208,7 @@
                     return;
                 }
                 let applicableProducts = [];
-                $.each(mvApplicableProductIds.val(), function (d) {
+                $.each(mvApplicableProductIds.val(), function (index, d) {
                     applicableProducts.push({productId : d});
                 })
                 let apiURL = mvHostURLCallApi + "/voucher/create";

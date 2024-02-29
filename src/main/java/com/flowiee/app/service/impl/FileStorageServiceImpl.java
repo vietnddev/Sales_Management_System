@@ -62,11 +62,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public FileStorage findFileIsActiveOfDocument(int documentId) {
-        FileStorage fileReturn = fileRepository.findFileIsActiveOfDocument(documentId, true);
-        if (fileReturn != null) {
-            return fileReturn;
-        }
-        return new FileStorage();
+        return fileRepository.findFileIsActiveOfDocument(documentId, true);
     }
 
     @Override

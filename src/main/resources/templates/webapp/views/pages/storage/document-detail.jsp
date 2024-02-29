@@ -39,24 +39,27 @@
                             <!-- modal-content (Thêm mới loại sản phẩm)-->
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body"
-                             style="padding-left: 5px; padding-top: 3px; padding-right: 5px; padding-bottom: 5px">
+                        <div class="card-body" style="padding-left: 5px; padding-top: 3px; padding-right: 5px; padding-bottom: 5px">
                             <div class="row mt-2 mb-1">
                                 <div class="col-sm-12 text-center" style="margin-bottom: 5px">
-                                    <button type="button" class="btn btn-sm btn-secondary" style="width: 90px"
+                                    <button type="button" class="btn btn-sm btn-secondary" style="width: 110px"
                                             data-toggle="modal" data-target="#modalChangeFile">
+                                        <i class="fa-solid fa-arrows-rotate mr-1"></i>
                                         Thay file
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-success" style="width: 90px"
+                                    <button type="button" class="btn btn-sm btn-success" style="width: 110px"
                                             data-toggle="modal" data-target="#modalCopy">
+                                        <i class="fa-solid fa-copy mr-1"></i>
                                         Sao chép
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-info" style="width: 90px"
+                                    <button type="button" class="btn btn-sm btn-info" style="width: 110px"
                                             data-toggle="modal" data-target="#modalMove">
+                                        <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
                                         Di chuyển
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-warning" style="width: 90px"
+                                    <button type="button" class="btn btn-sm btn-warning" style="width: 115px"
                                             data-toggle="modal" data-target="#modelShare">
+                                        <i class="fa-solid fa-user-gear mr-1"></i>
                                         Phân quyền
                                     </button>
 
@@ -69,8 +72,7 @@
                                                       enctype="multipart/form-data" method="post">
                                                     <div class="modal-header">
                                                         <strong class="modal-title">Thay file đính kèm</strong>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
@@ -78,15 +80,12 @@
                                                         <div class="row">
                                                             <div class="form-group w-100">
                                                                 <label>Chọn file mới</label>
-                                                                <input class="form-control" type="file" name="file"
-                                                                       required>
+                                                                <input class="form-control" type="file" name="file" required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer justify-content-end">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">Hủy
-                                                        </button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
                                                         <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </form>
@@ -103,25 +102,15 @@
                                 <div class="col-sm-4">
                                     <div class="card">
                                         <div class="card-header p-2">
-                                            <ul class="nav nav-pills"
-                                                style="font-size: 13px">
+                                            <ul class="nav nav-pills" style="font-size: 13px">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active"
-                                                       href="#docData"
-                                                       data-toggle="tab"> THÔNG TIN TÀI LIỆU
-                                                    </a>
+                                                    <a class="nav-link active" href="#docData" data-toggle="tab"> THÔNG TIN TÀI LIỆU</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link"
-                                                       href="#docRelated"
-                                                       data-toggle="tab"> TÀI LIỆU LIÊN QUAN
-                                                    </a>
+                                                    <a class="nav-link" href="#docRelated" data-toggle="tab"> TÀI LIỆU LIÊN QUAN</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link"
-                                                       href="#version"
-                                                       data-toggle="tab"> PHIÊN BẢN
-                                                    </a>
+                                                    <a class="nav-link" href="#version" data-toggle="tab"> PHIÊN BẢN</a>
                                                 </li>
                                             </ul>
                                         </div><!-- /.card-header -->
@@ -177,8 +166,7 @@
                                                             <td th:text="${list.tenFileGoc}">Tên</td>
                                                             <td th:text="${list.isActive}"></td>
                                                             <td>
-                                                                <button type="submit"
-                                                                        style="border: none; background: none">
+                                                                <button type="submit" style="border: none; background: none">
                                                                     <img th:src="@{/dist/icon/restore.png}">
                                                                 </button>
                                                             </td>
@@ -186,7 +174,6 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <!-- End Tab version -->
                                             </div>
                                         </div>
                                     </div>
@@ -196,23 +183,13 @@
                     </div>
                 </div>
             </div>
-            <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
-
-        <div th:replace="footer :: footer">
-            <!-- Nhúng các file JavaScript vào -->
         </div>
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
+        <div th:replace="footer :: footer"></div>
 
-        <div th:replace="header :: scripts">
-            <!-- Nhúng các file JavaScript vào -->
-        </div>
+        <aside class="control-sidebar control-sidebar-dark"></aside>
 
+        <div th:replace="header :: scripts"></div>
     </div>
 
     <script type="text/javascript">

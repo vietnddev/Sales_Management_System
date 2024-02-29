@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,7 +21,8 @@
 
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <li class="nav-header"><strong>QUẢN LÝ BÁN HÀNG</strong></li>
+                            <li class="nav-header">
+                                <strong>QUẢN LÝ BÁN HÀNG</strong></li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT}}" class="nav-link"><i class="fa-solid fa-shirt nav-icon mr-2"></i><p>Sản phẩm</p></a>
                             </li>
@@ -43,7 +43,8 @@
                             </li>
 
                             <li class="nav-header">
-                                <hr class="mt-0 mb-3" style="border-color: darkgrey"><strong>KHO</strong>
+                                <hr class="mt-0 mb-3" style="border-color: darkgrey">
+                                <strong>KHO</strong>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{/storage/dashboard}" class="nav-link"><i class="fa-solid fa-chart-pie nav-icon mr-2"></i><p>Tổng quan</p></a>
@@ -59,7 +60,8 @@
                             </li>
 
                             <li class="nav-header">
-                                <hr class="mt-0 mb-3" style="border-color: darkgrey"><strong>QUẢN TRỊ HỆ THỐNG</strong>
+                                <hr class="mt-0 mb-3" style="border-color: darkgrey">
+                                <strong>QUẢN TRỊ HỆ THỐNG</strong>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_SYSTEM_CONFIG}}" class="nav-link"><i class="fa-solid fa-gear nav-icon mr-2"></i><p>Cấu hình</p></a>

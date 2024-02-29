@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderService {
     List<OrderDTO> findAllOrder();
 
-    Page<Order> findAllOrder(int pageSize, int pageNum);
+    Page<OrderDTO> findAllOrder(int pageSize, int pageNum);
 
     List<OrderDTO> findAllOrder(Integer orderId);
 

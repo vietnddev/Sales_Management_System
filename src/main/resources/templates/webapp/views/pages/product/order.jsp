@@ -103,11 +103,11 @@
                                <tr>
                                     <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
                                     <td><a href="/don-hang/${d.orderId}">${d.orderCode}</a></td>
-                                    <td>${d.orderTimeStr}</td>
+                                    <td>${d.orderTime}</td>
                                     <td>${d.receiveAddress}</td>
                                     <td>${d.customerName}</td>
                                     <td>${d.receivePhone}</td>
-                                    <td>${d.totalAmount}</td>
+                                    <td>${formatCurrency(d.totalAmountDiscount)}</td>
                                     <td>${d.salesChannelName}</td>
                                     <td>${d.note}</td>
                                     <td>${d.orderStatusName}</td>

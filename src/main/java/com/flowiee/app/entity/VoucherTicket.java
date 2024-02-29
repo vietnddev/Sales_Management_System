@@ -1,10 +1,12 @@
 package com.flowiee.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,6 +19,7 @@ import java.util.Date;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class VoucherTicket extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -29,6 +32,7 @@ public class VoucherTicket extends BaseEntity implements Serializable {
     @Column(name = "length", nullable = false)
     private Integer length;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @Column(name = "active_time")
     private Date activeTime;
 

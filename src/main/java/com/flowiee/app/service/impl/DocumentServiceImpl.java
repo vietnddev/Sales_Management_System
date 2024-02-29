@@ -36,20 +36,18 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentRepository documentRepo;
     private final DocDataService docDataService;
-    private final DocFieldService docFieldService;
     private final EntityManager entityManager;
     private final SystemLogService systemLogService;
     private final FileStorageService fileService;
 
     @Autowired
     public DocumentServiceImpl(DocumentRepository documentRepo, DocDataService docDataService, EntityManager entityManager,
-                               SystemLogService systemLogService, FileStorageService fileService, DocFieldService docFieldService) {
+                               SystemLogService systemLogService, FileStorageService fileService) {
         this.documentRepo = documentRepo;
         this.docDataService = docDataService;
         this.entityManager = entityManager;
         this.systemLogService = systemLogService;
         this.fileService = fileService;
-        this.docFieldService = docFieldService;
     }
 
     @Override
@@ -103,16 +101,19 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public String updateMetadata(List<DocMetaDTO> metaDTOs, Integer documentId) {
-        for (int i = 0; i < metaDTOs.size(); i++) {
-            DocData docData = docDataService.findByFieldIdAndDocId(metaDTOs.get(i).getFieldId(), documentId);
+        for (DocMetaDTO metaDTO : metaDTOs) {
+            if (ObjectUtils.isEmpty(metaDTO.getDataValue())) {
+                continue;
+            }
+            DocData docData = docDataService.findByFieldIdAndDocId(metaDTO.getFieldId(), documentId);
             if (docData != null) {
-                docData.setValue(metaDTOs.get(i).getDataValue());
+                docData.setValue(metaDTO.getDataValue());
                 docDataService.update(docData, docData.getId());
             } else {
                 docData = new DocData();
-                docData.setDocField(new DocField(metaDTOs.get(i).getFieldId()));
+                docData.setDocField(new DocField(metaDTO.getFieldId()));
                 docData.setDocument(new Document(documentId));
-                docData.setValue(metaDTOs.get(i).getDataValue());
+                docData.setValue(metaDTO.getDataValue());
                 docDataService.save(docData);
             }
         }
@@ -144,8 +145,8 @@ public class DocumentServiceImpl implements DocumentService {
                     DocMetaDTO metadata = new DocMetaDTO();
                     metadata.setFieldId(Integer.parseInt(String.valueOf(data[0])));
                     metadata.setFieldName(String.valueOf(data[1]));
-                    metadata.setDataId(data[2] != null ? Integer.parseInt(String.valueOf(data[2])) : null);
-                    metadata.setDataValue(String.valueOf(data[3]));
+                    metadata.setDataId(ObjectUtils.isNotEmpty(data[2]) ? Integer.parseInt(String.valueOf(data[2])) : null);
+                    metadata.setDataValue(ObjectUtils.isNotEmpty(data[3]) ? String.valueOf(data[3]) : null);
                     metadata.setFieldType(String.valueOf(data[4]));
                     metadata.setFieldRequired(String.valueOf(data[5]).equals("1"));
                     listReturn.add(metadata);

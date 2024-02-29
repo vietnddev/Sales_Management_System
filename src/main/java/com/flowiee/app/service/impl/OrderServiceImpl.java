@@ -16,6 +16,7 @@ import com.flowiee.app.service.SystemLogService;
 import com.flowiee.app.utils.DateUtils;
 
 import com.flowiee.app.utils.MessageUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -23,10 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -77,9 +75,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<Order> findAllOrder(int pageSize, int pageNum) {
+    public Page<OrderDTO> findAllOrder(int pageSize, int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("thoiGianDatHang").descending());
-        return orderRepo.findAll((Integer) null,null, pageable);
+        Page<Order> orders = orderRepo.findAll((Integer) null,null, pageable);
+        return new PageImpl<>(OrderDTO.fromOrders(orders.getContent()), pageable, orders.getTotalElements());
     }
 
     @Override
@@ -113,6 +112,7 @@ public class OrderServiceImpl implements OrderService {
         return orders.get(0);
     }
 
+    @Transactional
     @Override
     public String saveOrder(OrderDTO request) {
         try {
@@ -138,6 +138,13 @@ public class OrderServiceImpl implements OrderService {
             }
             order.setPaymentStatus(false);
 
+            if (ObjectUtils.isNotEmpty(request.getVoucherUsedCode())) {
+                order.setVoucherUsedCode(request.getVoucherUsedCode());
+            }
+            if (ObjectUtils.isNotEmpty(request.getAmountDiscount())) {
+                order.setAmountDiscount(request.getAmountDiscount());
+            }
+
             Order orderSaved = orderRepo.save(order);
 
             //QRCode
@@ -161,18 +168,17 @@ public class OrderServiceImpl implements OrderService {
             //Update voucher ticket status
             VoucherTicket voucherTicket = voucherService.findTicketByCode((request.getVoucherUsedCode()));
             if (voucherTicket != null) {
-                String statusCode = voucherService.checkTicketToUse(request.getVoucherUsedCode());
-                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(statusCode)) {
-                    orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
-                    orderSaved.setAmountDiscount(request.getAmountDiscount());
-                }
-
+//                String statusCode = voucherService.checkTicketToUse(request.getVoucherUsedCode());
+//                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(statusCode)) {
+//                    orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
+//                    orderSaved.setAmountDiscount(request.getAmountDiscount());
+//                }
                 voucherTicket.setCustomer(orderSaved.getCustomer());
                 voucherTicket.setActiveTime(new Date());
                 voucherTicket.setStatus(true);
                 voucherService.updateTicket(voucherTicket, voucherTicket.getId());
             }
-            orderRepo.save(orderSaved);
+            //orderRepo.save(orderSaved);
 
             //Sau khi đã lưu đơn hàng thì xóa all items
             cartService.deleteAllItems();

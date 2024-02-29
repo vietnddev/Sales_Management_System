@@ -232,6 +232,10 @@
                 formData.append("name", mvName.val());
                 formData.append("description", mvDes.val());
                 if (isFolder === "N") {
+                    if ($("#fileField").val() === "") {
+                        alert("File attach is required!")
+                        return;
+                    }
                     formData.append("docTypeId", mvDocType.val());
                     formData.append("fileUpload", $("#fileField")[0].files[0]); //input có type là file
                 }

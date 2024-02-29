@@ -1,5 +1,6 @@
 package com.flowiee.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.app.entity.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class OrderDTO implements Serializable {
 
     private Integer orderId;
     private String orderCode;
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date orderTime;
     private String orderTimeStr;
     private String receiveAddress;
@@ -86,9 +88,16 @@ public class OrderDTO implements Serializable {
 		dto.setCreatedAt(order.getCreatedAt());
 		//dto.setCreatedAtStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getCreatedAt()));
 		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : 0);
-		dto.setTotalAmount(null);
-		dto.setTotalAmountDiscount(null);
-		dto.setTotalProduct(null);
+		//dto.setTotalAmount(null);
+		if (order.getListOrderDetail() != null) {
+			double totalAmtDiscount = 0;
+			for (OrderDetail d : order.getListOrderDetail()) {
+				totalAmtDiscount += d.getPrice();
+			}
+			dto.setTotalAmountDiscount(totalAmtDiscount - dto.getAmountDiscount());
+		}
+		//dto.setTotalAmountDiscount(null);
+		//dto.setTotalProduct(null);
 		if (!order.getListImageQR().isEmpty() && order.getListImageQR().get(0) != null) {
 			FileStorage imageQRCode = order.getListImageQR().get(0);
 			dto.setQrCode(imageQRCode.getDirectoryPath() + "/" + imageQRCode.getTenFileKhiLuu());

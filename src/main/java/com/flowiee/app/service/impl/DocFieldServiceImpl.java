@@ -9,8 +9,6 @@ import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.MessageUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,15 +49,7 @@ public class DocFieldServiceImpl implements DocFieldService {
     @Override
     public DocField save(DocField docField) {
         DocField docFieldSaved = docFieldRepository.save(docField);
-//        List<Document> listDocumentInUsed = docField.getDocType().getListDocument();
-//        for (Document document : listDocumentInUsed) {
-//            DocData docData = new DocData();
-//            docData.setId(0);
-//            docData.setDocField(docField);
-//            docData.setValue(null);
-//            docData.setDocument(document);
-//            docDataService.save(docData);
-//        }
+
         systemLogService.writeLog(module, AppConstants.STORAGE_ACTION.STG_DOC_DOCTYPE_CONFIG.name(), "Thêm mới doc_field: " + docField.toString());
         logger.info(DocumentServiceImpl.class.getName() + ": Thêm mới doc_field " + docField.toString());
         return docFieldSaved;

@@ -93,7 +93,7 @@ public class OrderUIController extends BaseController {
         double amountDiscount = 0;
         double totalAmountDiscount = totalAmountWithoutDiscount - amountDiscount;
         modelAndView.addObject("totalAmountWithoutDiscount", totalAmountWithoutDiscount);
-        modelAndView.addObject("amountDiscount", amountDiscount);
+        //modelAndView.addObject("amountDiscount", amountDiscount);
         modelAndView.addObject("totalAmountDiscount", totalAmountDiscount);
         return baseView(modelAndView);
     }
