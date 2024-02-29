@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/storage/ticket-export")
+@RequestMapping("/stg/ticket-export")
 public class TicketExportUIController extends BaseController {
     @Autowired private TicketExportService   ticketExportService;
     @Autowired private ValidateModuleStorage validateModuleStorage;

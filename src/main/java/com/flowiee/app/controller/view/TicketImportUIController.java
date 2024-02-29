@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.*;
 
 @Controller
-@RequestMapping("/storage/ticket-import")
+@RequestMapping("/stg/ticket-import")
 public class TicketImportUIController extends BaseController {
     @Autowired private TicketImportService ticketImportService;
     @Autowired private ProductService productService;

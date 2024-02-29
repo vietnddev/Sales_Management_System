@@ -167,7 +167,7 @@
         }
 
         function findTickImportDetail() {
-            let apiURL = mvHostURLCallApi + "/storage/ticket-import/" + [[${ticketImportId}]];
+            let apiURL = mvHostURLCallApi + "/stg/ticket-import/" + [[${ticketImportId}]];
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     mvTicketImportDetail = response.data;
@@ -208,7 +208,7 @@
         }
 
         function loadMaterialsToSelect() {
-            let apiURL = mvHostURLCallApi + "/storage/material/all";
+            let apiURL = mvHostURLCallApi + "/stg/material/all";
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
@@ -309,7 +309,7 @@
                 if ($.isEmptyObject(productVariantIds)) {
                     alert("Vui lòng chọn sản phẩm!");
                 } else {
-                    let apiURL = mvHostURLCallApi + "/storage/ticket-import/" + mvTicketImportDetail.id + "/add-product";
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-import/" + mvTicketImportDetail.id + "/add-product";
                     $.ajax({
                         url: apiURL,
                         type: "POST",
@@ -341,7 +341,7 @@
                 if ($.isEmptyObject(materialIds)) {
                     alert("Vui lòng chọn nguyên vật liệu!");
                 } else {
-                    let apiURL = mvHostURLCallApi + "/storage/ticket-import/" + mvTicketImportDetail.id + "/add-material";
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-import/" + mvTicketImportDetail.id + "/add-material";
                     $.ajax({
                         url: apiURL,
                         type: "POST",
@@ -370,7 +370,7 @@
             })
 
             $("#yesButton").on("click", function () {
-                let apiURL = mvHostURLCallApi + "/storage/ticket-import/update/" + mvTicketImportDetail.id;
+                let apiURL = mvHostURLCallApi + "/stg/ticket-import/update/" + mvTicketImportDetail.id;
                 let body = {
                     title : mvTitle.val(),
                     importTime : $("#importTimeField").val(),

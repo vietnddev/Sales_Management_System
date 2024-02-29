@@ -107,7 +107,7 @@
     function init() {}
 
     function loadTickImports(pageSize, pageNum) {
-        let apiURL = mvHostURLCallApi + "/storage/ticket-import/all";
+        let apiURL = mvHostURLCallApi + "/stg/ticket-import/all";
         let params = {pageSize: pageSize, pageNum: pageNum}
         $.get(apiURL, params, function (response) {
             if (response.status === "OK") {
@@ -122,7 +122,7 @@
                     contentTable.append(`
                         <tr>
                             <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                            <td><a href="/storage/ticket-import/${d.id}">${d.title}</td>
+                            <td><a href="/stg/ticket-import/${d.id}">${d.title}</td>
                             <td>${d.importer}</td>
                             <td>${d.importTime}</td>
                             <td>${d.note}</td>
@@ -142,7 +142,7 @@
             if (title === null || title.trim() === "") {
                 alert("Title is can not allow null value");
             } else {
-                let apiURL = mvHostURLCallApi + "/storage/ticket-import/create-draft";
+                let apiURL = mvHostURLCallApi + "/stg/ticket-import/create-draft";
                 let body = {title : title}
                 $.ajax({
                     url: apiURL,

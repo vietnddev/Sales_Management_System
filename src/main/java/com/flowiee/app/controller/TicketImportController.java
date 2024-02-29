@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("${app.api.prefix}/storage/ticket-import")
+@RequestMapping("${app.api.prefix}/stg/ticket-import")
 @Tag(name = "Ticket import API", description = "Quản lý nhập hàng")
 public class TicketImportController extends BaseController {
     @Autowired private TicketImportService ticketImportService;

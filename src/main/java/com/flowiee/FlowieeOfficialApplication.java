@@ -18,7 +18,7 @@ public class FlowieeOfficialApplication {
 
     public static void main(String[] args) throws WriterException, IOException {
         SpringApplication.run(FlowieeOfficialApplication.class, args);
-        new StartUp();
+//        new StartUp();
 //        String data = "https://viblo.asia/p/tao-ma-qr-code-trong-java-voi-zxing-4P856grLKY3";
 //        QRCodeWriter qrCodeWriter = new QRCodeWriter();
 //        BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 200, 200);
