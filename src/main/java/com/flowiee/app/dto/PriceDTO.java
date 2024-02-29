@@ -1,11 +1,13 @@
 package com.flowiee.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.entity.Price;
 import com.flowiee.app.entity.ProductVariant;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 public class PriceDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Integer id;
@@ -24,6 +27,7 @@ public class PriceDTO implements Serializable {
     private BigDecimal original;
     private BigDecimal discount;
     private String status;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date createdAt;
     private Integer createdBy;
 

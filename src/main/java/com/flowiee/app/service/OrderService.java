@@ -7,6 +7,7 @@ import com.flowiee.app.entity.OrderDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -56,4 +57,6 @@ public interface OrderService {
     ResponseEntity<?> exportDanhSachDonHang();
 
     List<OrderDTO> convertObjectsToDTO(List<Object[]> objects);
+
+    void exportToPDF(OrderDTO dto, HttpServletResponse response);
 }

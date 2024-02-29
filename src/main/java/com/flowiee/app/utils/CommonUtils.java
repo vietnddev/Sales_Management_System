@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 public class CommonUtils {
     public static String rootPath = "src/main/resources/static";
     public static String fileUploadPath = rootPath + "/uploads/";
+    public static String pathReport = rootPath + "/report";
     public static String ADMINISTRATOR = "admin";
     public static String PATH_TEMPLATE_EXCEL = rootPath + "/templates/excel";
     public static Date START_APP_TIME = null;
@@ -274,5 +275,9 @@ public class CommonUtils {
             str = new StringBuilder(str.substring(0, str.length() - 1));
         }
         return str.toString();
+    }
+
+    public static File getReportTemplate(String reportName) {
+        return new File(Path.of(pathReport + "/" + reportName + ".jasper").toUri());
     }
 }

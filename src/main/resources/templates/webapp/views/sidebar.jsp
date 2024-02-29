@@ -47,9 +47,6 @@
                                 <strong>KHO</strong>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{/storage/dashboard}" class="nav-link"><i class="fa-solid fa-chart-pie nav-icon mr-2"></i><p>Tổng quan</p></a>
-                            </li>
-                            <li class="nav-item">
                                 <a th:href="@{${URL_STORAGE_TICKET_IMPORT}}" class="nav-link"><i class="fa-solid fa-cloud-arrow-up fa-rotate-90 mr-2"></i><p>Nhập hàng</p></a>
                             </li>
                             <li class="nav-item">

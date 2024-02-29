@@ -43,6 +43,7 @@
                                                 <th>Kênh bán hàng</th>
                                                 <th>Ghi chú</th>
                                                 <th>Trạng thái</th>
+                                                <th>Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody id="contentTable"></tbody>
@@ -82,8 +83,8 @@
 
             $(document).ready(function () {
                 loadOrders(mvPageSizeDefault, 1);
-                loadCategories();
-                updateTableContentWhenOnClickPagination(loadOrders)
+                updateTableContentWhenOnClickPagination(loadOrders);
+                printReport();
             });
 
             function loadOrders(pageSize, pageNum) {
@@ -111,6 +112,7 @@
                                     <td>${d.salesChannelName}</td>
                                     <td>${d.note}</td>
                                     <td>${d.orderStatusName}</td>
+                                    <td><a class="btn btn-sm btn-info btn-print-report" href="/don-hang/export/pdf/${d.orderId}" orderId="${d.orderId}"><i class="fa-solid fa-print"></i></a></td>
                                 </tr>
                             `);
                         });
@@ -120,9 +122,11 @@
                 });
             }
 
-            function loadCategories() {
-
-
+            function printReport() {
+                $(document).on("click", ".btn-print-report", function (e) {
+                    e.preventDefault();
+                    window.open(mvHostURL + "/don-hang/export/pdf/" + parseInt($(this).attr("orderId")), "_blank");
+                })
             }
         </script>
     </div>

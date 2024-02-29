@@ -363,7 +363,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-4">Giá điều chỉnh</label>
-                                            <input class="col-sm-8 form-control" type="number" id="orgPriceToUpdateFieldFUP" name="giaBan">
+                                            <input class="col-sm-8 form-control" type="text" id="orgPriceToUpdateFieldFUP" name="giaBan">
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-4">Giá khuyến mãi</label>
@@ -371,7 +371,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-4">Giá điều chỉnh</label>
-                                            <input class="col-sm-8 form-control" type="number" id="promoPriceToUpdateFieldFUP" name="giaBan">
+                                            <input class="col-sm-8 form-control" type="text" id="promoPriceToUpdateFieldFUP" name="giaBan">
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-4">Ghi chú</label>
@@ -523,6 +523,14 @@
                 $(this).val(inputValue);
             });
             $("#promotionPriceField").on("change", function () {
+                let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                $(this).val(inputValue);
+            });
+            $("#orgPriceToUpdateFieldFUP").on("change", function () {
+                let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                $(this).val(inputValue);
+            });
+            $("#promoPriceToUpdateFieldFUP").on("change", function () {
                 let inputValue = $(this).val().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 $(this).val(inputValue);
             });
@@ -814,8 +822,8 @@
                     productVariant : {id: $(this).attr("productVariantId")},
                     name : mvProductVariantNameField.val(),
                     type : "S",
-                    giaBan : $("#orgPriceToUpdateFieldFUP").val(),
-                    discount : $("#promoPriceToUpdateFieldFUP").val()
+                    giaBan : $("#orgPriceToUpdateFieldFUP").val().replaceAll(',', ''),
+                    discount : $("#promoPriceToUpdateFieldFUP").val().replaceAll(',', '')
                 };
                 $.ajax({
                     url: apiURL,

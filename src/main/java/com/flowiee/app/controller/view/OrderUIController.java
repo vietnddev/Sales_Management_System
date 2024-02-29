@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,9 +69,7 @@ public class OrderUIController extends BaseController {
         modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail);
         modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetailDTO());
-        modelAndView.addObject("ticketExportDetail", ticketExportDetail);
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
-        modelAndView.addObject("listNhanVienBanHang", accountService.findAll());
         modelAndView.addObject("donHang", new Order());
         //modelAndView.addObject("donHangThanhToan", new OrderPay());
         return baseView(modelAndView);
@@ -177,5 +177,15 @@ public class OrderUIController extends BaseController {
     @GetMapping("/abc")
     public ModelAndView getOrderInfoByScanQRCode() {
         return null;
+    }
+
+    @GetMapping("/export/pdf/{id}")
+    public void exportToPDF(@PathVariable("id") Integer orderId, HttpServletResponse response) throws IOException {
+        try {
+            orderService.exportToPDF(orderService.findOrderById(orderId) , response);
+        } catch (RuntimeException ex) {
+            // TODO Auto-generated catch block
+            //e.printStackTrace();
+        }
     }
 }

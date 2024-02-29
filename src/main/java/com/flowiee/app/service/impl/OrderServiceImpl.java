@@ -16,7 +16,12 @@ import com.flowiee.app.service.SystemLogService;
 import com.flowiee.app.utils.DateUtils;
 
 import com.flowiee.app.utils.MessageUtils;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.pdfbox.util.PDFMergerUtility;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,17 +36,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -391,5 +395,68 @@ public class OrderServiceImpl implements OrderService {
 //            dataResponse.add(order);
 //        }
         return dataResponse;
+    }
+
+    @Override
+    public void exportToPDF(OrderDTO dto, HttpServletResponse response) {
+        boolean checkBatch = false;
+
+        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        PDFMergerUtility mergePdf = new PDFMergerUtility();
+        //Barcode_Image.createImage(order.getId().toString() + ".png", order.getId().toString());
+        HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+        parameterMap.put("customerName", dto.getCustomerName());
+        parameterMap.put("customerAddress", dto.getReceiveAddress());
+        parameterMap.put("customerPhone", dto.getReceivePhone());
+        parameterMap.put("customerEmail", dto.getReceiveEmail());
+//        parameterMap.put("totalSubtotal","$ " +  order.getSubtotal());
+//        parameterMap.put("totalShippingCost","$ " +  order.getShippingCost());
+//        parameterMap.put("totalTax","$ " +  order.getTax());
+        parameterMap.put("totalPayment", dto.getTotalAmountDiscount());
+//        parameterMap.put("paymentMethod", order.getPaymentMethod());
+        parameterMap.put("invoiceNumber", dto.getOrderCode());
+//        parameterMap.put("orderDate", order.getOrderTime());
+//        parameterMap.put("nowDate", this.getDate());
+//        parameterMap.put("barcode",
+//                "C:\\Users\\PhuocLuu\\Desktop\\ShoppingCart\\ShoppingCart\\shoppingcart-webparent\\shoppingcart-backend\\barcode\\"
+//                        + order.getId() + ".png");
+
+        // orderDetails
+//        int index = 1;
+        Map<String, String> listDetail = new HashMap<>();
+        listDetail.put("productName", "Con chim");
+
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ServletOutputStream servletOutputStream = response.getOutputStream();
+            try {
+//				JRPropertiesUtil.getInstance(context).setProperty("net.sf.jasperreports.default.pdf.font.name", "false");
+//				JRPropertiesUtil.getInstance(context).setProperty("net.sf.jasperreports.default.pdf.encoding", "UTF-8");
+//				JRPropertiesUtil.getInstance(context).setProperty("net.sf.jasperreports.default.pdf.embedded", "true");
+                response.setContentType("application/pdf");
+                response.setHeader("Content-Disposition", " inline; filename=deliveryNote" + dto.getOrderId() + ".pdf");
+                InputStream reportStream = new FileInputStream(CommonUtils.getReportTemplate("Invoice"));
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameterMap, new JRBeanCollectionDataSource(List.of(listDetail)));
+                JasperExportManager.exportReportToPdfStream(jasperPrint, (checkBatch) ? byteArrayOutputStream : servletOutputStream);
+                if (checkBatch) {
+                    byteArrayOutputStream.flush();
+                    byteArrayOutputStream.close();
+                } else {
+                    servletOutputStream.flush();
+                    servletOutputStream.close();
+                }
+            } catch (Exception e) {
+                // display stack trace in the browser
+                StringWriter stringWriter = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(stringWriter);
+                e.printStackTrace(printWriter);
+                response.setContentType("text/plain");
+                response.getOutputStream().print(stringWriter.toString());
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Exception print PDF: " + e.getMessage());
+        }
     }
 }
