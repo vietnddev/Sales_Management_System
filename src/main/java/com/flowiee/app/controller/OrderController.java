@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.model.dto.OrderDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
@@ -68,7 +68,7 @@ public class OrderController extends BaseController {
 
     @Operation(summary = "Create new order")
     @PostMapping("/insert")
-    public ApiResponse<String> createOrder(@RequestBody OrderDTO orderDTO) {
+    public ApiResponse<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         try {
             return ApiResponse.ok(orderService.saveOrder(orderDTO));
         } catch (RuntimeException ex) {
@@ -121,13 +121,13 @@ public class OrderController extends BaseController {
             for (String productVariantId : Arrays.stream(bienTheSanPhamId).toList()) {
                 if (cartService.isItemExistsInCart(cartId, Integer.parseInt(productVariantId))) {
                     Items items = cartService.findItemByCartAndProductVariant(cartId, Integer.parseInt(productVariantId));
-                    cartService.increaseItemQtyInCart(items.getId(), items.getSoLuong() + 1);
+                    cartService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
                 } else {
                     Items items = new Items();
                     items.setOrderCart(new OrderCart(cartId));
                     items.setProductVariant(new ProductVariant(Integer.parseInt(productVariantId)));
-                    items.setSoLuong(1);
-                    items.setGhiChu("");
+                    items.setQuantity(1);
+                    items.setNote("");
                     cartService.saveItem(items);
                 }
             }
@@ -153,7 +153,7 @@ public class OrderController extends BaseController {
             }
             items.setId(itemId);
             items.setOrderCart(cartService.findCartById(cartId));
-            if (items.getSoLuong() > 0) {
+            if (items.getQuantity() > 0) {
                 cartService.saveItem(items);
             } else {
                 cartService.deleteItem(items.getId());

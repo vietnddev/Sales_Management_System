@@ -15,17 +15,17 @@ public interface ItemsRepository extends JpaRepository<Items, Integer> {
     @Query("from Items i where i.orderCart.id=:idCart")
     List<Items> findByCartId(@Param("idCart") Integer idCart);
 
-    @Query("select i.soLuong from Items i where i.orderCart.id=:cartId and i.productVariant.id=:productVariantId")
+    @Query("select i.quantity from Items i where i.orderCart.id=:cartId and i.productVariant.id=:productVariantId")
     Integer findSoLuongByBienTheSanPhamId(@Param("cartId") Integer cartId, @Param("productVariantId") Integer productVariantId);
 
     @Query("from Items i where i.orderCart.id=:cartId and i.productVariant.id=:productVariantId")
     Items findByCartAndProductVariant(@Param("cartId") Integer cartId, @Param("productVariantId") Integer productVariantId);
 
-    @Query("select nvl(sum(p.giaBan * i.soLuong), 0) from Items i left join Price p on p.productVariant.id = i.productVariant.id where p.status = 'ACTIVE' and i.orderCart.id=:cartId")
+    @Query("select nvl(sum((case when p.discount is not null then p.discount else p.giaBan end) * i.quantity), 0) from Items i left join Price p on p.productVariant.id = i.productVariant.id where p.status = 'ACTIVE' and i.orderCart.id=:cartId")
     Double calTotalAmountWithoutDiscount(@Param("cartId") int cartId);
 
     @Modifying
-    @Query("update Items i set i.soLuong=:quantity where i.id=:itemId")
+    @Query("update Items i set i.quantity=:quantity where i.id=:itemId")
     void updateItemQty(@Param("itemId") Integer itemId, @Param("quantity") Integer quantity);
 
     @Modifying

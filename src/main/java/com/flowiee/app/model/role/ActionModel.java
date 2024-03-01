@@ -5,16 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ActionOfModule {
+public class ActionModel {
     private String actionKey;
     private String actionLabel;
     private String moduleKey;
+
+    public ActionModel() {}
     
-    public ActionOfModule() {
-    	
-    }
-    
-    public ActionOfModule(String actionKey, String actionLabel, String moduleKey) {
+    public ActionModel(String actionKey, String actionLabel, String moduleKey) {
     	this.actionKey = actionKey;
     	this.actionLabel = actionLabel;
     	this.moduleKey = moduleKey;

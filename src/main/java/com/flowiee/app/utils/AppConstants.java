@@ -8,19 +8,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class AppConstants {
-    public static String PRODUCT = "PRODUCT";
     public static String TEMPLATE_IE_DM_CATEGORY = "Template_IE_DM_Category";
     public static String TEMPLATE_IE_DM_LOAIDONVITINH = "Template_IE_DM_LoaiDonViTinh";
     public static String TEMPLATE_I_SANPHAM = "Template_I_DanhSachSanPham";
     public static String TEMPLATE_E_SANPHAM = "Template_E_DanhSachSanPham";
 
-    public static final String SERVICE_RESPONSE_SUCCESS = "OK";
-    public static final String SERVICE_RESPONSE_FAIL = "NOK";
-
     @Getter
     public enum PRODUCT_STATUS {
-        ACTIVE("Đang kinh doanh"),
-        INACTIVE("Ngừng kinh doanh");
+        A("Đang kinh doanh"),
+        I("Ngừng kinh doanh");
         private final String label;
 
         PRODUCT_STATUS(String label) {
@@ -30,22 +26,11 @@ public class AppConstants {
 
     @Getter
     public enum PRICE_STATUS {
-        ACTIVE("Đang áp dụng"),
-        INACTIVE("Đang không áp dụng");
+        A("Đang áp dụng"),
+        I("Đang không áp dụng");
         private final String label;
 
         PRICE_STATUS(String label) {
-            this.label = label;
-        }
-    }
-
-    @Getter
-    public enum DOCUMENT_TYPE {
-        FI("File"),
-        FO("Folder");
-        private final String label;
-
-        DOCUMENT_TYPE(String label) {
             this.label = label;
         }
     }
@@ -64,8 +49,8 @@ public class AppConstants {
 
     @Getter
     public enum VOUCHER_STATUS {
-        ACTIVE("Đang áp dụng"),
-        INACTIVE("Đang không áp dụng");
+        A("Đang áp dụng"),
+        I("Đang không áp dụng");
         private final String label;
 
         VOUCHER_STATUS(String label) {

@@ -1,12 +1,12 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.DocumentDTO;
+import com.flowiee.app.model.dto.DocumentDTO;
 import com.flowiee.app.entity.DocField;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.entity.DocData;
 import com.flowiee.app.entity.Document;
-import com.flowiee.app.dto.DocMetaDTO;
+import com.flowiee.app.model.dto.DocMetaDTO;
 import com.flowiee.app.repository.DocumentRepository;
 import com.flowiee.app.service.*;
 
@@ -69,11 +69,6 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<Document> findFileByParentId(Integer parentId) {
         return documentRepo.findListFileByParentId(parentId);
-    }
-
-    @Override
-    public List<Document> findAllFolder() {
-        return documentRepo.findAllFolder(AppConstants.DOCUMENT_TYPE.FO.name());
     }
 
     @Override

@@ -1,8 +1,11 @@
-package com.flowiee.app.security;
+package com.flowiee.app.config;
 
 import com.flowiee.app.entity.Account;
+import com.flowiee.app.entity.AccountRole;
 import com.flowiee.app.entity.SystemLog;
+import com.flowiee.app.model.role.FlowieeRole;
 import com.flowiee.app.service.AccountService;
+import com.flowiee.app.service.RoleService;
 import com.flowiee.app.service.SystemLogService;
 
 import com.flowiee.app.utils.AppConstants;
@@ -24,9 +27,10 @@ import java.util.List;
 public class AccountDetailService implements UserDetailsService {
 	@Autowired
 	AccountService accountService;
-
 	@Autowired
 	SystemLogService systemLogService;
+	@Autowired
+	RoleService roleService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -38,6 +42,11 @@ public class AccountDetailService implements UserDetailsService {
 			List<GrantedAuthority> grantlist = new ArrayList<GrantedAuthority>();
 			GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + accountEntity.getRole());
 			grantlist.add(authority);
+
+			for (AccountRole rights : roleService.findByAccountId(accountEntity.getId())) {
+				GrantedAuthority rightsAction = new SimpleGrantedAuthority(rights.getAction());
+				grantlist.add(rightsAction);
+			}
 
 			userDetails = new org.springframework.security.core.userdetails.User(accountEntity.getUsername() + "_" + accountEntity.getId(), accountEntity.getPassword(), grantlist);
 			WebAuthenticationDetails details = null;

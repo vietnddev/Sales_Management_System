@@ -42,7 +42,6 @@ public class CategoryHistory extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "CategoryHistory [id=" + super.id + ", category=" + category + ", title=" + title + ", fieldName=" + fieldName + ", oldValue="
-				+ oldValue + ", newValue=" + newValue + "]";
+		return "CategoryHistory [id=" + super.id + ", category=" + category + ", title=" + title + ", fieldName=" + fieldName + ", oldValue=" + oldValue + ", newValue=" + newValue + "]";
 	}
 }

@@ -64,9 +64,6 @@
                                 <a th:href="@{${URL_SYSTEM_CONFIG}}" class="nav-link"><i class="fa-solid fa-gear nav-icon mr-2"></i><p>Cấu hình</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_SYSTEM_ROLE}}" class="nav-link"><i class="fa-solid fa-user-gear nav-icon mr-2"></i><p>Nhóm quyền</p></a>
-                            </li>
-                            <li class="nav-item">
                                 <a th:href="@{${URL_SYSTEM_ACCOUNT}}" class="nav-link"><i class="fa-solid fa-users nav-icon mr-2"></i><p>Tài khoản hệ thống</p></a>
                             </li>
                             <li class="nav-item">

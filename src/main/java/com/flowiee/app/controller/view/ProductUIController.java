@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.view;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.ProductDTO;
+import com.flowiee.app.model.dto.ProductDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
@@ -63,7 +63,7 @@ public class ProductUIController extends BaseController {
     public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
         vldModuleProduct.readProduct(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_VARIANT);
-        modelAndView.addObject("listThuocTinh", productService.findAllAttributes(variantId));
+        modelAndView.addObject("listAttributes", productService.findAllAttributes(variantId));
         modelAndView.addObject("bienTheSanPhamId", variantId);
         modelAndView.addObject("bienTheSanPham", productService.findProductVariantById(variantId));
         modelAndView.addObject("listImageOfSanPhamBienThe", fileStorageService.getImageOfSanPhamBienThe(variantId));

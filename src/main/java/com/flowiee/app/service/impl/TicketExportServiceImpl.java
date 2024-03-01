@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.model.dto.OrderDTO;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.OrderDetail;
 import com.flowiee.app.entity.ProductHistory;
@@ -100,17 +100,17 @@ public class TicketExportServiceImpl implements TicketExportService {
         if (AppConstants.TICKET_EX_STATUS.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
             Order order = orderRepository.findByTicketExport(ticketExportUpdated.getId());
             for (OrderDetail orderDetail : order.getListOrderDetail()) {
-                int soldQtyInOrder = orderDetail.getSoLuong();
+                int soldQtyInOrder = orderDetail.getQuantity();
                 int productVariantId = orderDetail.getProductVariant().getId();
                 productService.updateProductVariantQuantity(soldQtyInOrder, productVariantId, "D");
 
                 //Save log
-                int storageQty = orderDetail.getProductVariant().getSoLuongKho();
-                int soldQty = orderDetail.getProductVariant().getSoLuongDaBan();
+                int storageQty = orderDetail.getProductVariant().getStorageQty();
+                int soldQty = orderDetail.getProductVariant().getSoldQty();
                 ProductHistory productHistory = new ProductHistory();
                 productHistory.setProduct(orderDetail.getProductVariant().getProduct());
                 productHistory.setProductVariant(orderDetail.getProductVariant());
-                productHistory.setTitle("Cập nhật số lượng cho [" + orderDetail.getProductVariant().getTenBienThe() + "] - " + ticket.getTitle());
+                productHistory.setTitle("Cập nhật số lượng cho [" + orderDetail.getProductVariant().getVariantName() + "] - " + ticket.getTitle());
                 productHistory.setFieldName("Storage Qty | Sold Qty");
                 productHistory.setOldValue(storageQty + " | " + soldQty);
                 productHistory.setNewValue((storageQty - soldQtyInOrder) +  " | " + (soldQty + soldQtyInOrder));

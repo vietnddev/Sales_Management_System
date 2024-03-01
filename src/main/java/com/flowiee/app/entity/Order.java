@@ -117,8 +117,8 @@ public class Order extends BaseEntity implements Serializable {
 		if (!this.getReceiverEmail().equals(compare.getReceiverEmail())) {
 			map.put("Receiver email", this.getReceiverEmail() + "#" + compare.getReceiverEmail());
 		}
-		if (!this.getCustomer().getTenKhachHang().equals(compare.getCustomer().getTenKhachHang())) {
-			map.put("Customer", this.getCustomer().getTenKhachHang() + "#" + compare.getCustomer().getTenKhachHang());
+		if (!this.getCustomer().getCustomerName().equals(compare.getCustomer().getCustomerName())) {
+			map.put("Customer", this.getCustomer().getCustomerName() + "#" + compare.getCustomer().getCustomerName());
 		}
 		if (!this.getGhiChu().equals(compare.getGhiChu())) {
 			map.put("Note", this.getGhiChu() + "#" + compare.getGhiChu());

@@ -1,6 +1,5 @@
 package com.flowiee.app.controller.view;
 
-import com.flowiee.app.base.BaseAuthorize;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
@@ -28,11 +27,9 @@ import java.util.Objects;
 @RequestMapping
 public class ProfileUIController extends BaseController {
 	@Autowired private OrderService orderService;
-	@Autowired private BaseAuthorize baseAuthorize;
 
 	@GetMapping(EndPointUtil.SYS_PROFILE)
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
-		baseAuthorize.isAuthenticated();
 		ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", accountService.findCurrentAccount());
@@ -41,9 +38,7 @@ public class ProfileUIController extends BaseController {
 	}
 
 	@PostMapping(EndPointUtil.SYS_PROFILE_UPDATE)
-	public ModelAndView updateProfile(@AuthenticationPrincipal UserDetails userDetails,
-			@ModelAttribute("account") Account accountEntity) {
-		baseAuthorize.isAuthenticated();
+	public ModelAndView updateProfile(@AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("account") Account accountEntity) {
 		String username = userDetails.getUsername();
 		String password = accountService.findByUsername(username).getPassword();
 		int accountID = accountService.findByUsername(username).getId();
@@ -51,7 +46,7 @@ public class ProfileUIController extends BaseController {
 		accountEntity.setId(accountID);
 		accountEntity.setUsername(username);
 		accountEntity.setPassword(password);
-		accountEntity.setTrangThai(true);
+		accountEntity.setStatus(true);
 		accountService.save(accountEntity);
 
 		return new ModelAndView("redirect:/profile");
@@ -61,7 +56,6 @@ public class ProfileUIController extends BaseController {
 	public ModelAndView changePassword(HttpServletRequest request,
 									   @ModelAttribute("account") Account accountEntity,
 									   RedirectAttributes redirectAttributes) {
-		baseAuthorize.isAuthenticated();
 		String password_old = request.getParameter("password_old");
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");
@@ -74,9 +68,9 @@ public class ProfileUIController extends BaseController {
 			if (password_new.equals(password_renew)) {
 				accountEntity.setId(accountService.findByUsername(profile.getUsername()).getId());
 				accountEntity.setUsername(profile.getUsername());
-				accountEntity.setHoTen(accountService.findByUsername(profile.getUsername()).getHoTen());
+				accountEntity.setFullName(accountService.findByUsername(profile.getUsername()).getFullName());
 				accountEntity.setPassword(bCrypt.encode(password_new));
-				accountEntity.setTrangThai(true);
+				accountEntity.setStatus(true);
 				accountService.save(accountEntity);
 
 				redirectAttributes.addAttribute("message", "Cập nhật thành công!");

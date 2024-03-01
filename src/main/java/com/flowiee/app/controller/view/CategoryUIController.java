@@ -7,7 +7,7 @@ import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.PagesUtils;
-import com.flowiee.app.security.ValidateModuleCategory;
+import com.flowiee.app.base.vld.ValidateModuleCategory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;

@@ -6,6 +6,7 @@ import com.flowiee.app.repository.FlowieeImportRepository;
 import com.flowiee.app.service.ImportService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,14 +51,11 @@ public class ImportServiceImpl implements ImportService {
 
     @Override
     public String delete(Integer entityId) {
-        if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
         FlowieeImport flowieeImport = this.findById(entityId);
         if (flowieeImport == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         flowieeImportRepository.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 }

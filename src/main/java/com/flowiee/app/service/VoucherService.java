@@ -1,7 +1,7 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.entity.VoucherInfo;
-import com.flowiee.app.dto.VoucherInfoDTO;
+import com.flowiee.app.model.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.VoucherTicket;
 import org.springframework.data.domain.Page;
 
@@ -19,7 +19,7 @@ public interface VoucherService {
 
     VoucherInfoDTO findVoucherDetail(Integer voucherId);
 
-    VoucherInfoDTO isAvailable(String voucherTicketCode);
+    VoucherTicket isAvailable(String voucherTicketCode);
 
     VoucherInfo saveVoucher(VoucherInfoDTO voucherInfo);
 

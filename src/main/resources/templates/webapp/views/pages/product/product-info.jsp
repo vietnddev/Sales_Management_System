@@ -601,12 +601,12 @@
             });
 
             mvStatusField.empty();
-            if (mvProductDetail.productStatus === "ACTIVE") {
-                mvStatusField.append(`<option value="ACTIVE">${mvProductStatus["ACTIVE"]}</option>`);
-                mvStatusField.append(`<option value="INACTIVE">${mvProductStatus["INACTIVE"]}</option>`);
-            } else if (mvProductDetail.productStatus === "INACTIVE") {
-                mvStatusField.append(`<option value="INACTIVE">${mvProductStatus["INACTIVE"]}</option>`);
-                mvStatusField.append(`<option value="ACTIVE">${mvProductStatus["ACTIVE"]}</option>`);
+            if (mvProductDetail.productStatus === "A") {
+                mvStatusField.append(`<option value="A">${mvProductStatus["A"]}</option>`);
+                mvStatusField.append(`<option value="I">${mvProductStatus["I"]}</option>`);
+            } else if (mvProductDetail.productStatus === "I") {
+                mvStatusField.append(`<option value="I">${mvProductStatus["I"]}</option>`);
+                mvStatusField.append(`<option value="A">${mvProductStatus["A"]}</option>`);
             }
         }
 
@@ -700,7 +700,7 @@
                 $(this).attr("entity", "image");
                 $(this).attr("entityId", image.id);
                 $(this).attr("actionType", "delete");
-                showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + image.tenFileCustomize);
+                showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + image.customizeName);
             })
 
             $('#yesButton').on("click", function () {
@@ -850,11 +850,11 @@
                     let apiURL = mvHostURLCallApi + "/product/update/" + mvProductId;
                     let body = {
                         id : mvProductId,
-                        tenSanPham : mvProductNameField.val(),
+                        productName : mvProductNameField.val(),
                         brand : {id: mvBrandField.val()},
                         productType : {id: mvProductTypeField.val()},
                         unit : {id: mvUnitField.val()},
-                        moTaSanPham : $("#describes_virtual").val(),
+                        description : $("#describes_virtual").val(),
                         status : mvStatusField.val()
                     };
                     $.ajax({

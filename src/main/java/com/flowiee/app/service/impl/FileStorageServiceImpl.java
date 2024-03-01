@@ -115,9 +115,9 @@ public class FileStorageServiceImpl implements FileStorageService {
         String imageQRCodeName = "qrcode_" + orderId + ".png";
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.PRODUCT.name());
-        fileInfo.setTenFileGoc(imageQRCodeName);
-        fileInfo.setTenFileCustomize(imageQRCodeName);
-        fileInfo.setTenFileKhiLuu(currentTime + "_" + imageQRCodeName);
+        fileInfo.setOriginalName(imageQRCodeName);
+        fileInfo.setCustomizeName(imageQRCodeName);
+        fileInfo.setStorageName(currentTime + "_" + imageQRCodeName);
         //fileInfo.setKichThuocFile();
         fileInfo.setExtension(AppConstants.FILE_EXTENSION.PNG.getLabel());
         fileInfo.setContentType(null);
@@ -170,10 +170,10 @@ public class FileStorageServiceImpl implements FileStorageService {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.PRODUCT.name());
-        fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
-        fileInfo.setKichThuocFile(fileUpload.getSize());
+        fileInfo.setOriginalName(fileUpload.getOriginalFilename());
+        fileInfo.setCustomizeName(fileUpload.getOriginalFilename());
+        fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setFileSize(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.PRODUCT).indexOf("uploads")));
@@ -194,10 +194,10 @@ public class FileStorageServiceImpl implements FileStorageService {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.PRODUCT.name());
-        fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
-        fileInfo.setKichThuocFile(fileUpload.getSize());
+        fileInfo.setOriginalName(fileUpload.getOriginalFilename());
+        fileInfo.setCustomizeName(fileUpload.getOriginalFilename());
+        fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setFileSize(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.PRODUCT).indexOf("uploads")));
@@ -220,10 +220,10 @@ public class FileStorageServiceImpl implements FileStorageService {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.STORAGE.name());
-        fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
-        fileInfo.setKichThuocFile(fileUpload.getSize());
+        fileInfo.setOriginalName(fileUpload.getOriginalFilename());
+        fileInfo.setCustomizeName(fileUpload.getOriginalFilename());
+        fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setFileSize(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.STORAGE).substring(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.STORAGE).indexOf("uploads")));
@@ -241,8 +241,8 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String saveFileOfImport(MultipartFile fileImport, FileStorage fileInfo) throws IOException {
         fileRepository.save(fileInfo);
-        fileInfo.setTenFileKhiLuu("I_" + fileInfo.getTenFileKhiLuu());
-        fileImport.transferTo(Paths.get(CommonUtils.getPathDirectory(fileInfo.getModule()) + "/" + fileInfo.getTenFileKhiLuu()));
+        fileInfo.setStorageName("I_" + fileInfo.getStorageName());
+        fileImport.transferTo(Paths.get(CommonUtils.getPathDirectory(fileInfo.getModule()) + "/" + fileInfo.getStorageName()));
         return "OK";
     }
 
@@ -259,10 +259,10 @@ public class FileStorageServiceImpl implements FileStorageService {
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage();
         fileInfo.setModule(AppConstants.SYSTEM_MODULE.STORAGE.name());
-        fileInfo.setTenFileGoc(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileCustomize(fileUpload.getOriginalFilename());
-        fileInfo.setTenFileKhiLuu(currentTime + "_" + fileUpload.getOriginalFilename());
-        fileInfo.setKichThuocFile(fileUpload.getSize());
+        fileInfo.setOriginalName(fileUpload.getOriginalFilename());
+        fileInfo.setCustomizeName(fileUpload.getOriginalFilename());
+        fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setFileSize(fileUpload.getSize());
         fileInfo.setExtension(CommonUtils.getExtension(fileUpload.getOriginalFilename()));
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.STORAGE).substring(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.STORAGE).indexOf("uploads")));
@@ -284,7 +284,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         FileStorage fileToChange = this.findById(fileId);
         //Delete file vật lý cũ
         try {
-            File file = new File(CommonUtils.rootPath + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getTenFileKhiLuu());
+            File file = new File(CommonUtils.rootPath + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getStorageName());
             if (file.exists()) {
                 file.delete();
             }
@@ -292,10 +292,10 @@ public class FileStorageServiceImpl implements FileStorageService {
             logger.error("File not found!", e);
         }
         //Update thông tin file mới
-        fileToChange.setTenFileGoc(fileAttached.getOriginalFilename());
-        fileToChange.setTenFileCustomize(fileAttached.getOriginalFilename());
-        fileToChange.setTenFileKhiLuu(currentTime + "_" + fileAttached.getOriginalFilename());
-        fileToChange.setKichThuocFile(fileAttached.getSize());
+        fileToChange.setOriginalName(fileAttached.getOriginalFilename());
+        fileToChange.setCustomizeName(fileAttached.getOriginalFilename());
+        fileToChange.setStorageName(currentTime + "_" + fileAttached.getOriginalFilename());
+        fileToChange.setFileSize(fileAttached.getSize());
         fileToChange.setExtension(CommonUtils.getExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(AppConstants.SYSTEM_MODULE.PRODUCT).indexOf("uploads")));
@@ -317,10 +317,10 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String delete(Integer fileId) {
         FileStorage fileStorage = fileRepository.findById(fileId).orElse(null);
         fileRepository.deleteById(fileId);
-        File file = new File(CommonUtils.rootPath + "/" + fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
+        File file = new File(CommonUtils.rootPath + "/" + fileStorage.getDirectoryPath() + "/" + fileStorage.getStorageName());
         if (file.exists() && file.delete()) {
             return MessageUtils.DELETE_SUCCESS;
         }
-        return AppConstants.SERVICE_RESPONSE_FAIL;
+        return String.format(MessageUtils.DELETE_ERROR_OCCURRED, "file");
     }
 }

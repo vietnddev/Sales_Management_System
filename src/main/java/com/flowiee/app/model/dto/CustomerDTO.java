@@ -1,4 +1,4 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.utils.DateUtils;
@@ -28,8 +28,8 @@ public class CustomerDTO implements Serializable {
     public static CustomerDTO fromCustomer(Customer customer) {
         CustomerDTO dto = new CustomerDTO();
         dto.setId(customer.getId());
-        dto.setName(customer.getTenKhachHang());
-        if (customer.isGioiTinh()) {
+        dto.setName(customer.getCustomerName());
+        if (customer.isSex()) {
             dto.setSex("Nam");
         } else {
             dto.setSex("Nữ");

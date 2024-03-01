@@ -45,6 +45,6 @@ public class SystemConfig extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FlowieeConfig [id=" + super.id + ", code=" + code + ", name=" + name + ", value=" + value + ", sort=" + sort + "]";
+		return "SystemConfig [id=" + super.id + ", code=" + code + ", name=" + name + ", value=" + value + ", sort=" + sort + "]";
 	}
 }

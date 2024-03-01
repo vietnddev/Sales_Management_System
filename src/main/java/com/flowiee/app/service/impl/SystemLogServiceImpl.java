@@ -39,8 +39,8 @@ public class SystemLogServiceImpl implements SystemLogService {
             systemLog.setId(Integer.parseInt(String.valueOf(data[0])));
             systemLog.setModule(String.valueOf(data[1]));
             systemLog.setAction(String.valueOf(data[2]));
-            systemLog.setNoiDung(String.valueOf(data[3]));
-            systemLog.setNoiDungCapNhat(String.valueOf(data[4]));
+            systemLog.setContent(String.valueOf(data[3]));
+            systemLog.setContentChange(String.valueOf(data[4]));
             systemLog.setIp(String.valueOf(data[5]));
             systemLog.setUsername(String.valueOf(data[6]));
             dataReturn.add(systemLog);
@@ -54,24 +54,24 @@ public class SystemLogServiceImpl implements SystemLogService {
     }
 
     @Override
-    public SystemLog writeLog(String module, String action, String noiDung) {
+    public SystemLog writeLog(String module, String action, String content) {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setAction(action);
-        systemLog.setNoiDung(noiDung);
-        systemLog.setNoiDungCapNhat(null);
+        systemLog.setContent(content);
+        systemLog.setContentChange(null);
         systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
         systemLog.setIp(CommonUtils.getCurrentAccountIp());
         return systemLogRepo.save(systemLog);
     }
 
     @Override
-    public SystemLog writeLog(String module, String action, String noiDung, String noiDungCapNhat) {
+    public SystemLog writeLog(String module, String action, String content, String contentChange) {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setAction(action);
-        systemLog.setNoiDung(noiDung);
-        systemLog.setNoiDungCapNhat(noiDungCapNhat);
+        systemLog.setContent(content);
+        systemLog.setContentChange(contentChange);
         systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
         systemLog.setIp(CommonUtils.getCurrentAccountIp());
         return systemLogRepo.save(systemLog);

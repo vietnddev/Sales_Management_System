@@ -1,10 +1,10 @@
 package com.flowiee.app.base;
 
-import com.flowiee.app.security.ValidateModuleCategory;
-import com.flowiee.app.security.ValidateModuleStorage;
-import com.flowiee.app.security.ValidateModuleSystem;
+import com.flowiee.app.base.vld.ValidateModuleCategory;
+import com.flowiee.app.base.vld.ValidateModuleStorage;
+import com.flowiee.app.base.vld.ValidateModuleSystem;
 import com.flowiee.app.utils.EndPointUtil;
-import com.flowiee.app.security.ValidateModuleProduct;
+import com.flowiee.app.base.vld.ValidateModuleProduct;
 import com.flowiee.app.service.AccountService;
 import com.flowiee.app.utils.CommonUtils;
 import org.slf4j.Logger;
@@ -24,6 +24,7 @@ public class BaseController {
 	@Autowired protected ValidateModuleSystem vldModuleSystem;
 	@Autowired protected ValidateModuleCategory vldModuleCategory;
 	@Autowired protected ValidateModuleStorage vldModuleStorage;
+	@Autowired protected BaseAuthorize baseAuthorize;
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtils.getCurrentAccountUsername()));
@@ -50,7 +51,6 @@ public class BaseController {
 		modelAndView.addObject("URL_STORAGE_TICKET_IMPORT", EndPointUtil.STORAGE_TICKET_IMPORT);
 		modelAndView.addObject("URL_STORAGE_TICKET_EXPORT", EndPointUtil.STORAGE_TICKET_EXPORT);
 		modelAndView.addObject("URL_SYSTEM_CONFIG", EndPointUtil.SYS_CONFIG);
-		modelAndView.addObject("URL_SYSTEM_ROLE", EndPointUtil.SYS_ROLE);
 		modelAndView.addObject("URL_SYSTEM_LOG", EndPointUtil.SYS_LOG);
 		modelAndView.addObject("URL_SYSTEM_ACCOUNT", EndPointUtil.SYS_ACCOUNT);
 	}

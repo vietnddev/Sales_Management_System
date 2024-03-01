@@ -1,12 +1,11 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.VoucherApplyDTO;
+import com.flowiee.app.model.dto.VoucherApplyDTO;
 import com.flowiee.app.entity.VoucherApply;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.repository.VoucherApplyRepository;
 import com.flowiee.app.service.VoucherApplyService;
 
-import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

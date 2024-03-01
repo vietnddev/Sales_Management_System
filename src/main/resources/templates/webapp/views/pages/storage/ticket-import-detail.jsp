@@ -199,7 +199,7 @@
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
-                        $('#productVariantField').append(`<option value="${d.id}">${d.product.tenSanPham + ' - ' + d.tenBienThe + ' - ' + d.soLuongKho}</option>`);
+                        $('#productVariantField').append(`<option value="${d.id}">${d.product.productName + ' - ' + d.variantName + ' - ' + d.storageQty}</option>`);
                     });
                 }
             }).fail(function () {

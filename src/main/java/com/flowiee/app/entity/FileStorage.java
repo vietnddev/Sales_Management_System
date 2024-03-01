@@ -34,16 +34,16 @@ public class FileStorage extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "customize_name")
-    private String tenFileCustomize;
+    private String customizeName;
 
     @Column(name = "saved_name", nullable = false)
-    private String tenFileKhiLuu;
+    private String storageName;
 
     @Column(name = "original_name", nullable = false)
-    private String tenFileGoc;
+    private String originalName;
 
-    @Column(name = "ghi_chu")
-    private String ghiChu;
+    @Column(name = "note")
+    private String note;
 
     @Column(name = "extension", length = 10)
     private String extension;
@@ -52,10 +52,10 @@ public class FileStorage extends BaseEntity implements Serializable {
     private String contentType;
 
     @Column(name = "file_size")
-    private long kichThuocFile;
+    private long fileSize;
 
     @Column(name = "content")
-    private byte[] noiDung;
+    private byte[] content;
 
     @Column(name = "directory_path", length = 500)
     private String directoryPath;
@@ -102,9 +102,9 @@ public class FileStorage extends BaseEntity implements Serializable {
     public FileStorage(MultipartFile file, String pModule) {
         try {
             this.module = pModule;
-            this.tenFileGoc = file.getOriginalFilename();
-            this.tenFileKhiLuu = Instant.now(Clock.systemUTC()).toEpochMilli() + "_" + file.getOriginalFilename();
-            this.kichThuocFile = file.getSize();
+            this.originalName = file.getOriginalFilename();
+            this.storageName = Instant.now(Clock.systemUTC()).toEpochMilli() + "_" + file.getOriginalFilename();
+            this.fileSize = file.getSize();
             this.extension = CommonUtils.getExtension(file.getOriginalFilename());
             this.contentType = file.getContentType();
             this.directoryPath = CommonUtils.getPathDirectory(pModule).substring(CommonUtils.getPathDirectory(pModule).indexOf("uploads"));
@@ -116,9 +116,9 @@ public class FileStorage extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FileStorage [id=" + super.id + ", tenFileCustomize=" + tenFileCustomize + ", tenFileKhiLuu=" + tenFileKhiLuu
-				+ ", tenFileGoc=" + tenFileGoc + ", ghiChu=" + ghiChu + ", extension=" + extension + ", contentType="
-				+ contentType + ", kichThuocFile=" + kichThuocFile + ", noiDung=" + Arrays.toString(noiDung)
+		return "FileStorage [id=" + super.id + ", customizeName=" + customizeName + ", storageName=" + storageName
+				+ ", originalName=" + originalName + ", ghiChu=" + note + ", extension=" + extension + ", contentType="
+				+ contentType + ", fileSize=" + fileSize + ", content=" + Arrays.toString(content)
 				+ ", directoryPath=" + directoryPath + ", sort=" + sort + ", status=" + status + ", module=" + module
 				+ ", product=" + product + ", productVariant=" + productVariant + ", document=" + document
 				+ ", account=" + account + ", isActive=" + isActive + "]";

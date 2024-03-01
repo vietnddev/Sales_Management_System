@@ -1,4 +1,4 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,9 +42,9 @@ public class DocumentDTO implements Serializable {
         dto.setAliasName(document.getAsName());
         dto.setDescription(document.getDescription());
         dto.setParentId(document.getParentId());
-        if (document.getLoaiTaiLieu() != null) {
-            dto.setDocTypeId(document.getLoaiTaiLieu().getId());
-            dto.setDocTypeName(document.getLoaiTaiLieu().getName());
+        if (document.getDocType() != null) {
+            dto.setDocTypeId(document.getDocType().getId());
+            dto.setDocTypeName(document.getDocType().getName());
         }
         dto.setIsFolder(document.getIsFolder());
         dto.setCreatedAt(document.getCreatedAt());

@@ -27,9 +27,6 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
 
 	@Column(name = "product_variant_id", nullable = false)
 	private Integer productVariantId;
-    
-    @Column(name = "name", nullable = false)
-    private String name;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;

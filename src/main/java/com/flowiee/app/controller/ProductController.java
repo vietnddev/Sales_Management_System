@@ -1,9 +1,9 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.FileDTO;
-import com.flowiee.app.dto.ProductDTO;
-import com.flowiee.app.dto.ProductVariantDTO;
+import com.flowiee.app.model.dto.FileDTO;
+import com.flowiee.app.model.dto.ProductDTO;
+import com.flowiee.app.model.dto.ProductVariantDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;

@@ -1,7 +1,7 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.base.BaseService;
-import com.flowiee.app.dto.VoucherApplyDTO;
+import com.flowiee.app.model.dto.VoucherApplyDTO;
 import com.flowiee.app.entity.VoucherApply;
 
 import java.util.List;

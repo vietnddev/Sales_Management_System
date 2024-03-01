@@ -26,10 +26,10 @@ import java.util.regex.Pattern;
 
 public class CommonUtils {
     public static String rootPath = "src/main/resources/static";
-    public static String fileUploadPath = rootPath + "/uploads/";
-    public static String pathReport = rootPath + "/report";
+    public static String filePath = rootPath + "/uploads/";
+    public static String reportTemplatePath = rootPath + "/report";
+    public static String excelTemplatePath = rootPath + "/templates/excel";
     public static String ADMINISTRATOR = "admin";
-    public static String PATH_TEMPLATE_EXCEL = rootPath + "/templates/excel";
     public static Date START_APP_TIME = null;
 
     public static String formatToVND(Object currency) {
@@ -42,7 +42,7 @@ public class CommonUtils {
         return "F" + CommonUtils.now("yyMMddHHmmss");
     }
 
-    public static String getMaDanhMuc(String categoryName) {
+    public static String genCategoryCodeByName(String categoryName) {
         String normalized = Normalizer.normalize(categoryName, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("[^\\p{ASCII}]");
         String strTemp = pattern.matcher(normalized).replaceAll("").replaceAll(" ", "").toUpperCase();
@@ -84,7 +84,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(AppConstants.SYSTEM_MODULE systemModule) {
         try {
-            StringBuilder path = new StringBuilder(fileUploadPath);
+            StringBuilder path = new StringBuilder(filePath);
             switch (systemModule) {
                 case STORAGE:
                     path.append("storage");
@@ -117,7 +117,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(String systemModule) {
         try {
-            StringBuilder path = new StringBuilder(fileUploadPath);
+            StringBuilder path = new StringBuilder(filePath);
             if (AppConstants.SYSTEM_MODULE.STORAGE.name().equals(systemModule)) {
                 path.append("storage");
             } else if (AppConstants.SYSTEM_MODULE.PRODUCT.name().equals(systemModule)) {
@@ -125,26 +125,6 @@ public class CommonUtils {
             } else if (AppConstants.SYSTEM_MODULE.CATEGORY.name().equals(systemModule)) {
                 path.append("category");
             }
-            path.append("/" + DateUtils.getNamHienTai());
-            path.append("/" + DateUtils.getThangHienTai());
-            path.append("/" + DateUtils.getNgayHienTai());
-            File folder = new File(path.toString());
-            if (!folder.exists()) {
-                if (folder.mkdirs()) {
-                    System.out.println("mkdirs OK");
-                }
-            }
-            return path.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e.getMessage();
-        }
-    }
-
-    public static String getPathDirectotyForImport() {
-        try {
-            StringBuilder path = new StringBuilder("src/main/resources/static/uploads");
-            path.append("/import");
             path.append("/" + DateUtils.getNamHienTai());
             path.append("/" + DateUtils.getThangHienTai());
             path.append("/" + DateUtils.getNgayHienTai());
@@ -193,8 +173,8 @@ public class CommonUtils {
 
     public static byte[] exportTemplate(String templateName) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + templateName + ".xlsx";
-        String filePathTemp = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtils.excelTemplatePath + "/" + templateName + ".xlsx";
+        String filePathTemp = CommonUtils.excelTemplatePath + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = null;
         try {
             fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
@@ -258,14 +238,6 @@ public class CommonUtils {
         return details != null ? details.getRemoteAddress() : "unknown";
     }
 
-    public static Integer getIdFromRequestParam(String param) {
-        return param != null ? Integer.parseInt(param.substring(0, param.indexOf("#"))) : null;
-    }
-
-    public static String getNameFromRequestParam(String param) {
-        return param != null ? param.substring(param.indexOf("#") + 1) : null;
-    }
-
     public static String convertListIntToStr(List<Integer> listId) {
         StringBuilder str = new StringBuilder();
         for (int id : listId) {
@@ -275,9 +247,5 @@ public class CommonUtils {
             str = new StringBuilder(str.substring(0, str.length() - 1));
         }
         return str.toString();
-    }
-
-    public static File getReportTemplate(String reportName) {
-        return new File(Path.of(pathReport + "/" + reportName + ".jasper").toUri());
     }
 }

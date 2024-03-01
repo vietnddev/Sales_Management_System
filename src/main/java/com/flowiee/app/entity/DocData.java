@@ -51,6 +51,6 @@ public class DocData extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DocData [id=" + super.id + ", noiDung=" + value + ", docField=" + docField + ", document=" + document + "]";
+		return "DocData [id=" + super.id + ", content=" + value + ", docField=" + docField + ", document=" + document + "]";
 	}        
 }

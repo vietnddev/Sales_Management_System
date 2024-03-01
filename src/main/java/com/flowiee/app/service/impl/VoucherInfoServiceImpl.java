@@ -1,8 +1,8 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.ProductDTO;
+import com.flowiee.app.model.dto.ProductDTO;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.dto.VoucherInfoDTO;
+import com.flowiee.app.model.dto.VoucherInfoDTO;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
@@ -86,7 +86,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
             for (ProductDTO product : voucherInfo.getApplicableProducts()) {
                 VoucherApply voucherApply = new VoucherApply();
                 voucherApply.setVoucherId(voucherSaved.getId());
-                voucherApply.setSanPhamId(product.getProductId());
+                voucherApply.setProductId(product.getProductId());
                 voucherApplyService.save(voucherApply);
             }
             //Gen list voucher detail
@@ -187,12 +187,8 @@ public class VoucherInfoServiceImpl implements VoucherService {
     }
 
     @Override
-    public VoucherInfoDTO isAvailable(String voucherTicketCode) {
-        VoucherTicket voucherTicket = voucherTicketRepo.findByCode(voucherTicketCode);
-        if (voucherTicket != null) {
-            return this.findData(voucherTicket.getVoucherInfo().getId(), null, null, null, null, null, Pageable.unpaged()).getContent().get(0);
-        }
-        return new VoucherInfoDTO();
+    public VoucherTicket isAvailable(String voucherTicketCode) {
+        return voucherTicketRepo.findByCode(voucherTicketCode);
     }
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {
@@ -280,10 +276,10 @@ public class VoucherInfoServiceImpl implements VoucherService {
             if (voucherIds != null) {
                 strSQL += "AND v.ID IN (" + CommonUtils.convertListIntToStr(voucherIds) + ") ";
             }
-            if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(status)) {
-                strSQL += "AND v.STATUS = '" + AppConstants.VOUCHER_STATUS.ACTIVE.name() + "' ";
-            } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(status)) {
-                strSQL += "AND v.STATUS = '" + AppConstants.VOUCHER_STATUS.INACTIVE.name() + "' ";
+            if (AppConstants.VOUCHER_STATUS.A.name().equals(status)) {
+                strSQL += "AND v.STATUS = '" + AppConstants.VOUCHER_STATUS.A.name() + "' ";
+            } else if (AppConstants.VOUCHER_STATUS.I.name().equals(status)) {
+                strSQL += "AND v.STATUS = '" + AppConstants.VOUCHER_STATUS.I.name() + "' ";
             }
             if (title != null) {
                 strSQL += "AND v.TITLE LIKE '%" + title + "%' ";
@@ -311,10 +307,10 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 dto.setVoucherType(String.valueOf(data[7]));
                 dto.setStartTime(DateUtils.convertStringToDate(data[8].toString(), "yyyy-MM-dd HH:mm:ss.S"));
                 dto.setEndTime(DateUtils.convertStringToDate(data[9].toString(), "yyyy-MM-dd HH:mm:ss.S"));
-                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(String.valueOf(data[10]))) {
-                    dto.setStatus(AppConstants.VOUCHER_STATUS.ACTIVE.getLabel());
-                } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(String.valueOf(data[10]))) {
-                    dto.setStatus(AppConstants.VOUCHER_STATUS.INACTIVE.getLabel());
+                if (AppConstants.VOUCHER_STATUS.A.name().equals(String.valueOf(data[10]))) {
+                    dto.setStatus(AppConstants.VOUCHER_STATUS.A.getLabel());
+                } else if (AppConstants.VOUCHER_STATUS.I.name().equals(String.valueOf(data[10]))) {
+                    dto.setStatus(AppConstants.VOUCHER_STATUS.I.getLabel());
                 }
                 dto.setCreatedAt(DateUtils.convertStringToDate(String.valueOf(data[11]), "yyyy-MM-dd"));
                 dto.setCreatedBy(Integer.parseInt(String.valueOf(data[12])));
@@ -323,7 +319,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
                 List<VoucherApply> listVoucherApply = voucherApplyService.findByVoucherId(dto.getId());
                 List<Product> listSanPhamApDung = new ArrayList<>();
                 for (VoucherApply vSanPham : listVoucherApply) {
-                    Product productApplied = productService.findProductById(vSanPham.getSanPhamId());
+                    Product productApplied = productService.findProductById(vSanPham.getProductId());
                     if (productApplied != null) {
                         listSanPhamApDung.add(productApplied);
                     }
@@ -349,10 +345,10 @@ public class VoucherInfoServiceImpl implements VoucherService {
         VoucherTicket ticket = voucherTicketRepo.findByCode(code);
         if (ticket != null) {
             VoucherInfoDTO voucherInfo = this.findVoucherDetail(ticket.getId());
-            if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(voucherInfo.getStatus())) {
-                statusTicket = AppConstants.VOUCHER_STATUS.ACTIVE.getLabel();
-            } else if (AppConstants.VOUCHER_STATUS.INACTIVE.name().equals(voucherInfo.getStatus())) {
-                statusTicket = AppConstants.VOUCHER_STATUS.INACTIVE.getLabel();
+            if (AppConstants.VOUCHER_STATUS.A.name().equals(voucherInfo.getStatus())) {
+                statusTicket = AppConstants.VOUCHER_STATUS.A.getLabel();
+            } else if (AppConstants.VOUCHER_STATUS.I.name().equals(voucherInfo.getStatus())) {
+                statusTicket = AppConstants.VOUCHER_STATUS.I.getLabel();
             }
         } else {
             statusTicket = "Invalid!";

@@ -1,9 +1,9 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.base.BaseService;
-import com.flowiee.app.dto.DocumentDTO;
+import com.flowiee.app.model.dto.DocumentDTO;
 import com.flowiee.app.entity.Document;
-import com.flowiee.app.dto.DocMetaDTO;
+import com.flowiee.app.model.dto.DocMetaDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -16,8 +16,6 @@ public interface DocumentService extends BaseService<Document> {
     List<DocumentDTO> findFolderByParentId(Integer parentId);
 
     List<Document> findFileByParentId(Integer parentId);
-
-    List<Document> findAllFolder();
 
     String updateMetadata(List<DocMetaDTO> metaDTOs, Integer documentId);
 

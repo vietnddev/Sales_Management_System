@@ -1,7 +1,7 @@
 package com.flowiee.app.service;
 
 import com.flowiee.app.base.BaseService;
-import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.model.dto.OrderDTO;
 import com.flowiee.app.entity.TicketExport;
 import org.springframework.data.domain.Page;
 

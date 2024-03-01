@@ -12,7 +12,7 @@ public interface SystemLogService {
 
     SystemLog writeLog(SystemLog log);
 
-    SystemLog writeLog(String module, String action, String noiDung);
+    SystemLog writeLog(String module, String action, String content);
 
-    SystemLog writeLog(String module, String action, String noiDung, String noiDungCapNhat);
+    SystemLog writeLog(String module, String action, String content, String contentChange);
 }

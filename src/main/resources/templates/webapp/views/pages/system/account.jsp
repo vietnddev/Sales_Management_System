@@ -49,16 +49,11 @@
                                             <div class="card-body pt-0">
                                                 <div class="row">
                                                     <div class="col-7">
-                                                        <h2 class="lead"><b th:text="${list.hoTen}"></b></h2>
+                                                        <h2 class="lead"><b th:text="${list.fullName}"></b></h2>
                                                         <p class="text-muted text-sm"><b>About: </b> Software Engineer </p>
                                                         <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                            <li class="small"><span class="fa-li"><i
-                                                                    class="fas fa-lg fa-building"></i></span><span
-                                                                    th:text="'Address: ' + ${list.diaChi}"></span></li>
-                                                            <li class="small"><span class="fa-li"><i
-                                                                    class="fas fa-lg fa-phone"></i></span><span
-                                                                    th:text="'Phone: ' + ${list.soDienThoai}"></span>
-                                                            </li>
+                                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span><span th:text="'Address: ' + ${list.diaChi}"></span></li>
+                                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span><span th:text="'Phone: ' + ${list.phoneNumber}"></span></li>
                                                         </ul>
                                                     </div>
                                                     <div class="col-5 text-center">
@@ -172,7 +167,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="card-body">
-                                                                Tài khoản <strong class="badge text-bg-info" th:text="${list.hoTen}" style="font-size: 16px;"></strong>sẽ bị khóa!
+                                                                Tài khoản <strong class="badge text-bg-info" th:text="${list.fullName}" style="font-size: 16px;"></strong>sẽ bị khóa!
                                                             </div>
                                                             <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
@@ -207,20 +202,18 @@
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Họ tên</label>
-                                                                        <input type="text" class="form-control" placeholder="Họ tên" name="hoTen" th:value="${list.hoTen}"/>
+                                                                        <input type="text" class="form-control" placeholder="Họ tên" name="fullName" th:value="${list.fullName}"/>
                                                                     </div>
-                                                                    <div class="form-group"
-                                                                         th:if="${list.gioiTinh}">
+                                                                    <div class="form-group" th:if="${list.sex}">
                                                                         <label>Giới tính</label>
-                                                                        <select class="custom-select" name="gioiTinh">
+                                                                        <select class="custom-select" name="sex">
                                                                             <option value="true" selected>Nam</option>
                                                                             <option value="false">Nữ</option>
                                                                         </select>
                                                                     </div>
-                                                                    <div class="form-group"
-                                                                         th:if="not ${list.gioiTinh}">
+                                                                    <div class="form-group" th:if="not ${list.sex}">
                                                                         <label>Giới tính</label>
-                                                                        <select class="custom-select" name="gioiTinh">
+                                                                        <select class="custom-select" name="sex">
                                                                             <option value="true">Nam</option>
                                                                             <option value="false" selected>Nữ
                                                                             </option>
@@ -228,24 +221,24 @@
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Số điện thoại</label>
-                                                                        <input type="text" class="form-control" placeholder="Số điện thoại" name="soDienThoai" th:value="${list.soDienThoai}"/>
+                                                                        <input type="text" class="form-control" placeholder="Số điện thoại" name="phoneNumber" th:value="${list.phoneNumber}"/>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label>Email</label>
                                                                         <input type="email" class="form-control" placeholder="Email" name="email" th:value="${list.email}"/>
                                                                     </div>
                                                                     <div class="form-group"
-                                                                         th:if="${list.trangThai}">
+                                                                         th:if="${list.status}">
                                                                         <label>Trạng thái</label>
-                                                                        <select class="custom-select" name="trangThai">
+                                                                        <select class="custom-select" name="status">
                                                                             <option value="true" selected>Kích hoạt</option>
                                                                             <option value="false">Khóa</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="form-group"
-                                                                         th:if="not ${list.trangThai}">
+                                                                         th:if="not ${list.status}">
                                                                         <label>Trạng thái</label>
-                                                                        <select class="custom-select" name="trangThai">
+                                                                        <select class="custom-select" name="status">
                                                                             <option value="true">Khóa</option>
                                                                             <option value="false" selected>Hoạt động</option>
                                                                         </select>
@@ -283,39 +276,34 @@
                                                     <div class="col-12">
                                                         <div class="form-group">
                                                             <label>Tên đăng nhập</label>
-                                                            <input type="text" class="form-control"
-                                                                   placeholder="Tên đăng nhập" name="username">
+                                                            <input type="text" class="form-control" placeholder="Tên đăng nhập" name="username">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Mật khẩu</label>
-                                                            <input type="text" class="form-control"
-                                                                   placeholder="Mật khẩu" name="password">
+                                                            <input type="text" class="form-control" placeholder="Mật khẩu" name="password">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Họ tên</label>
-                                                            <input type="text" class="form-control"
-                                                                   placeholder="Họ tên" name="hoTen">
+                                                            <input type="text" class="form-control" placeholder="Họ tên" name="fullName">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Giới tính</label>
-                                                            <select class="custom-select" name="gioiTinh">
+                                                            <select class="custom-select" name="sex">
                                                                 <option value="true" selected>Nam</option>
                                                                 <option value="false">Nữ</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Số điện thoại</label>
-                                                            <input type="text" class="form-control"
-                                                                   placeholder="Số điện thoại" name="soDienThoai">
+                                                            <input type="text" class="form-control" placeholder="Số điện thoại" name="phoneNumber">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Email</label>
-                                                            <input type="email" class="form-control"
-                                                                   placeholder="Email" name="email">
+                                                            <input type="email" class="form-control" placeholder="Email" name="email">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Trạng thái</label>
-                                                            <select class="custom-select" name="trangThai">
+                                                            <select class="custom-select" name="status">
                                                                 <option value="true" selected>Kích hoạt</option>
                                                                 <option value="false">Khóa</option>
                                                             </select>

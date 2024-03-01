@@ -207,7 +207,7 @@
                         contentTable.append(`
                             <tr>
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                <td class="text-center"><img src="/${p.imageActive.directoryPath}/${p.imageActive.tenFileKhiLuu}" style="width: 60px; height: 60px; border-radius: 5px"></td>
+                                <td class="text-center"><img src="/${p.imageActive.directoryPath}/${p.imageActive.storageName}" style="width: 60px; height: 60px; border-radius: 5px"></td>
                                 <td><a href="/san-pham/${p.productId}">${p.productName}</a></td>
                                 <td>${p.productTypeName}</td>
                                 <td>${variantBlock}</td>

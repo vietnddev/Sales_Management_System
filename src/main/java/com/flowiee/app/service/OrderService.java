@@ -1,6 +1,6 @@
 package com.flowiee.app.service;
 
-import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.model.dto.OrderDTO;
 import com.flowiee.app.entity.Order;
 import com.flowiee.app.entity.OrderDetail;
 
@@ -22,9 +22,9 @@ public interface OrderService {
 
     OrderDTO findOrderById(Integer orderId);
 
-    String saveOrder(OrderDTO orderRequest);
+    OrderDTO saveOrder(OrderDTO orderRequest);
 
-    String saveOrderDetail(OrderDetail orderDetail);
+    OrderDetail saveOrderDetail(OrderDetail orderDetail);
 
     String updateOrder(Order order, Integer orderId);
 

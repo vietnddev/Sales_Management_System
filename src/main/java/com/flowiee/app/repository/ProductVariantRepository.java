@@ -14,18 +14,18 @@ import java.util.List;
 public interface ProductVariantRepository extends JpaRepository <ProductVariant, Integer>{
     @Query("select " +
            "nvl(p.id, 0) as product_id_0, " +
-           "p.tenSanPham as product_name_1, " +
+           "p.productName as product_name_1, " +
            "nvl(v.id, 0) as product_variant_id_2, " +
-           "v.maSanPham as product_variant_code_3, " +
-           "v.tenBienThe as product_variant_name_4, " +
+           "v.variantCode as product_variant_code_3, " +
+           "v.variantName as product_variant_name_4, " +
            "nvl(c.id, 0) as color_id_5, " +
            "c.name as color_name_6, " +
            "nvl(s.id, 0) as size_id_7, " +
            "s.name as size_name_8, " +
            "nvl(f.id, 0) as fabric_type_id_9, " +
            "f.name as fabric_type_name_10, " +
-           "v.soLuongKho as qty_storage_11, " +
-           "v.soLuongDaBan as qty_sold_12, " +
+           "v.storageQty as qty_storage_11, " +
+           "v.soldQty as qty_sold_12, " +
            "nvl(g.id, 0) as garment_factory_id_13, " +
            "g.name as garment_factory_name_14, " +
            "nvl(sp.id, 0) as supplier_id_15, " +
@@ -34,12 +34,12 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
            "ti.title as ticket_import_title_18," +
            "nvl(pr.id, 0) as price_id_19," +
            "pr.giaBan as price_sold_20," +
-           "v.trangThai as product_variant_status_21 " +
+           "v.status as product_variant_status_21 " +
            "from ProductVariant v " +
            "left join Product p on p.id = v.product.id " +
            "left join GarmentFactory g on g.id = v.garmentFactory.id " +
            "left join Supplier sp on sp.id = v.supplier.id " +
-           "left join Price pr on pr.productVariant.id = v.id and pr.status = 'ACTIVE' " +
+           "left join Price pr on pr.productVariant.id = v.id and pr.status = 'A' " +
            "left join TicketImport ti on ti.id = v.ticketImport.id " +
            "left join Category c on c.id = v.color.id and c.type = 'COLOR' " +
            "left join Category s on s.id = v.size.id and s.type = 'SIZE' " +
@@ -69,20 +69,20 @@ public interface ProductVariantRepository extends JpaRepository <ProductVariant,
     @Query("from ProductVariant p where p.size.id=:sizeId")
     List<ProductVariant> findBySize(@Param("sizeId") Integer sizeId);
 
-    @Query("select nvl(p.soLuongKho, 0) from ProductVariant p where p.product.id=:productId and p.color.id=:colorId and p.size.id=:sizeId")
+    @Query("select nvl(p.storageQty, 0) from ProductVariant p where p.product.id=:productId and p.color.id=:colorId and p.size.id=:sizeId")
     Integer findQuantityBySizeOfEachColor(@Param("productId") Integer productId, @Param("colorId") Integer colorId, @Param("sizeId") Integer sizeId);
 
-    @Query("select SUM(nvl(p.soLuongDaBan, 0)) as totalQtySell from ProductVariant p where p.product.id=:productId")
+    @Query("select SUM(nvl(p.soldQty, 0)) as totalQtySell from ProductVariant p where p.product.id=:productId")
     Integer findTotalQtySell(@Param("productId") Integer productId);
 
     @Modifying
-    @Query("update ProductVariant p set p.soLuongKho = (p.soLuongKho + :soldQty) where p.id=:productVariantId")
+    @Query("update ProductVariant p set p.storageQty = (p.storageQty + :soldQty) where p.id=:productVariantId")
     void updateQuantityIncrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
 
     @Modifying
-    @Query("update ProductVariant p set p.soLuongKho = (p.soLuongKho - :soldQty), p.soLuongDaBan = (p.soLuongDaBan + :soldQty) where p.id=:productVariantId")
+    @Query("update ProductVariant p set p.storageQty = (p.storageQty - :soldQty), p.soldQty = (p.soldQty + :soldQty) where p.id=:productVariantId")
     void updateQuantityDecrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
 
-    @Query("select sum(p.soLuongKho) from ProductVariant p where p.trangThai = 'ACTIVE'")
+    @Query("select sum(p.storageQty) from ProductVariant p where p.status = 'A'")
     Integer countTotalQuantity();
 }

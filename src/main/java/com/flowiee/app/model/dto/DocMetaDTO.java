@@ -1,4 +1,4 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

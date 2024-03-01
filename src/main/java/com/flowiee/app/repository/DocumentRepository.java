@@ -26,7 +26,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     @Query("from Document d where d.isFolder=:isThuMuc")
     List<Document> findAllFolder(@Param("isThuMuc") String isThuMuc);
 
-    @Query("from Document d where d.loaiTaiLieu.id=:docTypeId")
+    @Query("from Document d where d.docType.id=:docTypeId")
     List<Document> findDocumentByDocTypeId(@Param("docTypeId") Integer docTypeId);
 
     @Query(value = "select f.id as field_Id_0, " +

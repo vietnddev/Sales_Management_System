@@ -6,6 +6,7 @@ import com.flowiee.app.repository.GarmentFactoryRepository;
 import com.flowiee.app.service.GarmentFactoryService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,14 +46,11 @@ public class GarmentFactoryServiceImpl implements GarmentFactoryService {
 
     @Override
     public String delete(Integer entityId) {
-        if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
         GarmentFactory garmentFactory = this.findById(entityId);
         if (garmentFactory == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         garmentFactoryRepo.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 }

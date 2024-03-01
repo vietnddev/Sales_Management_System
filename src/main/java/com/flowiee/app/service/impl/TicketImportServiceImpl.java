@@ -13,8 +13,6 @@ import com.flowiee.app.service.TicketImportService;
 
 import com.flowiee.app.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -75,13 +73,13 @@ public class TicketImportServiceImpl implements TicketImportService {
         ticketImport.setId(entityId);
         TicketImport ticketImportUpdated = ticketImportRepo.save(ticketImport);
         if ("COMPLETED".equals(ticketImportUpdated.getStatus())) {
-            if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemp())) {
-                for (ProductVariantTemp p : ticketImport.getListProductVariantTemp()) {
+            if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemps())) {
+                for (ProductVariantTemp p : ticketImport.getListProductVariantTemps()) {
                     productService.updateProductVariantQuantity(p.getQuantity(), p.getProductVariantId(), "I");
                 }
             }
-            if (ObjectUtils.isNotEmpty(ticketImport.getListMaterialTemp())) {
-                for (MaterialTemp m : ticketImport.getListMaterialTemp()) {
+            if (ObjectUtils.isNotEmpty(ticketImport.getListMaterialTemps())) {
+                for (MaterialTemp m : ticketImport.getListMaterialTemps()) {
                     materialService.updateQuantity(m.getQuantity(), m.getMaterialId(), "I");
                 }
             }
@@ -203,7 +201,6 @@ public class TicketImportServiceImpl implements TicketImportService {
                 ProductVariantTemp productVariantTemp = new ProductVariantTemp();
                 productVariantTemp.setTicketImport(new TicketImport(ticketImportId));
                 productVariantTemp.setProductVariantId(productVariantId);
-                productVariantTemp.setName(productVariant.getTenBienThe());
                 productVariantTemp.setQuantity(1);
                 productVariantTemp.setNote(null);
                 ProductVariantTemp productVariantTempAdded = productVariantTempRepo.save(productVariantTemp);
@@ -228,7 +225,6 @@ public class TicketImportServiceImpl implements TicketImportService {
                 MaterialTemp materialTemp = new MaterialTemp();
                 materialTemp.setTicketImport(new TicketImport(ticketImportId));
                 materialTemp.setMaterialId(materialId);
-                materialTemp.setName(material.getName());
                 materialTemp.setQuantity(1);
                 materialTemp.setNote(null);
                 MaterialTemp materialTempAdded = materialTempRepo.save(materialTemp);

@@ -6,6 +6,7 @@ import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MaterialHistory extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)

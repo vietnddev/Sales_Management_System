@@ -47,7 +47,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     @Override
     public String delete(Integer entityId) {
         if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         materialHistoryRepo.deleteById(entityId);
         return MessageUtils.DELETE_SUCCESS;

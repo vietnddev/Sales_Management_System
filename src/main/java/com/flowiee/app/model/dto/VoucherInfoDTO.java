@@ -1,7 +1,6 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.utils.AppConstants;
@@ -93,9 +92,9 @@ public class VoucherInfoDTO implements Serializable {
             Date endDate = DateUtils.convertStringToDate(String.valueOf(voucherInfo.getEndTime()).substring(0, 10), "yyyy-MM-dd");
             Date currentDate = DateUtils.convertStringToDate(formatter.format(new Date()), "yyyy-MM-dd");
             if ((startDate.before(currentDate) || startDate.equals(currentDate)) && (endDate.after(currentDate) || endDate.equals(currentDate))) {
-                voucherInfoDTO.setStatus(AppConstants.VOUCHER_STATUS.ACTIVE.getLabel());
+                voucherInfoDTO.setStatus(AppConstants.VOUCHER_STATUS.A.getLabel());
             } else {
-                voucherInfoDTO.setStatus(AppConstants.VOUCHER_STATUS.INACTIVE.getLabel());
+                voucherInfoDTO.setStatus(AppConstants.VOUCHER_STATUS.I.getLabel());
             }
             voucherInfoDTO.setListVoucherTicket(voucherInfo.getListVoucherTicket());
 

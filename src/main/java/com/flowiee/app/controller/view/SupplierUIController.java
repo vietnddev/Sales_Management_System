@@ -1,6 +1,6 @@
 package com.flowiee.app.controller.view;
 
-import com.flowiee.app.security.ValidateModuleProduct;
+import com.flowiee.app.base.vld.ValidateModuleProduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

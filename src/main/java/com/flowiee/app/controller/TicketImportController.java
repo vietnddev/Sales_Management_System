@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.TicketImportDTO;
+import com.flowiee.app.model.dto.TicketImportDTO;
 import com.flowiee.app.entity.MaterialTemp;
 import com.flowiee.app.entity.ProductVariantTemp;
 import com.flowiee.app.entity.TicketImport;

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.dto.ProductDTO;
-import com.flowiee.app.dto.VoucherInfoDTO;
+import com.flowiee.app.model.dto.ProductDTO;
+import com.flowiee.app.model.dto.VoucherInfoDTO;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -38,7 +38,7 @@ public class Product extends BaseEntity implements Serializable {
     private Category brand;
 
     @Column(name = "product_name", nullable = false)
-    private String tenSanPham;
+    private String productName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id", nullable = false)
@@ -46,7 +46,7 @@ public class Product extends BaseEntity implements Serializable {
 
     @Lob
     @Column(name = "description", length = 30000, columnDefinition = "CLOB")
-    private String moTaSanPham;
+    private String description;
 
     @Column(name = "status", nullable = false, length = 10)
     private String status;
@@ -54,18 +54,18 @@ public class Product extends BaseEntity implements Serializable {
     @JsonIgnore
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<ProductVariant> listBienThe;
+    private List<ProductVariant> listVariants;
 
     @JsonIgnore
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<FileStorage> listFileStorage;
+    private List<FileStorage> listImages;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<ProductHistory> listProductHistory;
+    private List<ProductHistory> listProductHistories;
 
     @JsonIgnore
     @Transient
@@ -81,7 +81,7 @@ public class Product extends BaseEntity implements Serializable {
 
     public Product(Integer id, String name) {
         super.id = id;
-        this.tenSanPham = name;
+        this.productName = name;
     }
 
     public static Product fromProductDTO(ProductDTO dto) {
@@ -89,9 +89,9 @@ public class Product extends BaseEntity implements Serializable {
         p.setId(dto.getProductId());
         p.setProductType(new Category(dto.getProductTypeId(), dto.getProductTypeName()));
         p.setBrand(new Category(dto.getBrandId(), dto.getBrandName()));
-        p.setTenSanPham(dto.getProductName());
+        p.setProductName(dto.getProductName());
         p.setUnit(new Category(dto.getUnitId(), dto.getUnitName()));
-        p.setMoTaSanPham(dto.getProductDes());
+        p.setDescription(dto.getProductDes());
         p.setStatus(dto.getProductStatus());
         return p;
     }
@@ -107,13 +107,13 @@ public class Product extends BaseEntity implements Serializable {
         if (!this.unit.getName().equals(productToCompare.getUnit().getName())) {
             map.put("Unit name", this.unit.getName() + "#" + productToCompare.getUnit().getName());
         }
-        if (!this.tenSanPham.equals(productToCompare.getTenSanPham())) {
-            map.put("Product name", this.tenSanPham + "#" + productToCompare.getTenSanPham());
+        if (!this.productName.equals(productToCompare.getProductName())) {
+            map.put("Product name", this.productName + "#" + productToCompare.getProductName());
         }
-        if (this.getMoTaSanPham() == null) this.setMoTaSanPham("-");      
-        if (!this.moTaSanPham.equals(productToCompare.getMoTaSanPham())) {
-            String descriptionOld = this.moTaSanPham.length() > 9999 ? this.moTaSanPham.substring(0, 9999) : this.moTaSanPham;
-            String descriptionNew = productToCompare.getMoTaSanPham().length() > 9999 ? productToCompare.getMoTaSanPham().substring(0, 9999) : productToCompare.getMoTaSanPham();
+        if (this.getDescription() == null) this.setDescription("-");
+        if (!this.description.equals(productToCompare.getDescription())) {
+            String descriptionOld = this.description.length() > 9999 ? this.description.substring(0, 9999) : this.description;
+            String descriptionNew = productToCompare.getDescription().length() > 9999 ? productToCompare.getDescription().substring(0, 9999) : productToCompare.getDescription();
             map.put("Product description", descriptionOld + "#" + descriptionNew);
         }
         if (!this.status.equals(productToCompare.getStatus())) {
@@ -122,7 +122,7 @@ public class Product extends BaseEntity implements Serializable {
         if ((this.imageActive != null && productToCompare.getImageActive() != null) && !this.imageActive.getId().equals(productToCompare.getImageActive().getId())) {
             map.put("Image active", this.imageActive.getId() + "#" + productToCompare.getId());
         }
-        if ((this.listBienThe != null && productToCompare.getListBienThe() != null) && this.listBienThe.size() < productToCompare.getListBienThe().size()) {
+        if ((this.listVariants != null && productToCompare.getListVariants() != null) && this.listVariants.size() < productToCompare.getListVariants().size()) {
             map.put("Insert new product variant", "#");
         }
         return map;
@@ -130,7 +130,7 @@ public class Product extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + super.id + ", productType=" + productType + ", brand=" + brand + ", tenSanPham=" + tenSanPham + ", unit="
-				+ unit + ", moTaSanPham=" + moTaSanPham + ", status=" + status + "]";
+		return "Product [id=" + super.id + ", productType=" + productType + ", brand=" + brand + ", productName=" + productName + ", unit="
+				+ unit + ", description=" + description + ", status=" + status + "]";
 	}
 }

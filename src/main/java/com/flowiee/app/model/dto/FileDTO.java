@@ -1,4 +1,4 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.app.entity.*;
@@ -57,19 +57,19 @@ public class FileDTO implements Serializable {
                 dto.setOrderId(fileStorage.getOrder().getId());
             }
             dto.setSort(fileStorage.getSort());
-            dto.setName(fileStorage.getTenFileCustomize());
-            dto.setStorageName(fileStorage.getTenFileKhiLuu());
-            dto.setOriginalName(fileStorage.getTenFileGoc());
+            dto.setName(fileStorage.getCustomizeName());
+            dto.setStorageName(fileStorage.getStorageName());
+            dto.setOriginalName(fileStorage.getOriginalName());
             dto.setExtension(fileStorage.getExtension());
             dto.setContentType(fileStorage.getContentType());
             dto.setModule(fileStorage.getModule());
-            dto.setNote(fileStorage.getGhiChu());
+            dto.setNote(fileStorage.getNote());
             dto.setUploadBy(fileStorage.getAccount().getUsername());
-            dto.setSrc(fileStorage.getDirectoryPath() + "/" + fileStorage.getTenFileKhiLuu());
+            dto.setSrc(fileStorage.getDirectoryPath() + "/" + fileStorage.getStorageName());
             dto.setIsActive(fileStorage.isActive());
             dto.setStatus(fileStorage.isStatus());
-            dto.setSize(fileStorage.getKichThuocFile());
-            dto.setContent(fileStorage.getNoiDung());
+            dto.setSize(fileStorage.getFileSize());
+            dto.setContent(fileStorage.getContent());
             dto.setUploadAt(fileStorage.getCreatedAt());
         }
         return dto;

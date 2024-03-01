@@ -4,7 +4,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.model.ApiResponse;
-import com.flowiee.app.security.ValidateModuleProduct;
+import com.flowiee.app.base.vld.ValidateModuleProduct;
 import com.flowiee.app.service.FileStorageService;
 import com.flowiee.app.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;

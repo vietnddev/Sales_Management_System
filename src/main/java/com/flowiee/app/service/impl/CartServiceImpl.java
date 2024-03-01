@@ -45,7 +45,11 @@ public class CartServiceImpl implements CartService {
                 BigDecimal price = new BigDecimal("0");
                 Price priceEntity = priceService.findGiaHienTai(item.getProductVariant().getId());
                 if (priceEntity != null) {
-                    price = priceEntity.getGiaBan();
+                    if (priceEntity.getDiscount() != null) {
+                        price = priceEntity.getDiscount();
+                    } else {
+                        price = priceEntity.getGiaBan();
+                    }
                 }
                 item.setPrice(price);
             }
@@ -95,7 +99,7 @@ public class CartServiceImpl implements CartService {
         systemLog.setAction("DELETE_CART");
         systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
         systemLog.setIp(CommonUtils.getCurrentAccountIp());
-        systemLog.setNoiDung("DELETE CART");
+        systemLog.setContent("DELETE CART");
         systemLogService.writeLog(systemLog);
         return "OK";
     }
@@ -119,12 +123,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public String deleteItem(Integer itemId) {
-        if (itemId == null || itemId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
         Items items = this.findItemById(itemId);
         if (items == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         itemsRepository.deleteById(itemId);
         return MessageUtils.DELETE_SUCCESS;

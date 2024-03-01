@@ -66,7 +66,7 @@
                     <div class="col-sm-12">
                         <h3 class="text-center">
                             <b style="text-transform: uppercase;"
-                               th:text="${bienTheSanPham != null} ? ${bienTheSanPham.tenBienThe} : ''"></b>
+                               th:text="${bienTheSanPham != null} ? ${bienTheSanPham.variantName} : ''"></b>
                         </h3>
                     </div>
                     <!--./ END TÊN SẢN PHẨM-->
@@ -74,7 +74,7 @@
                     <!--Image chính-->
                     <div class="col-sm-5">
                         <div class="row">
-                            <img th:src="@{'/' + ${imageActive.directoryPath} + '/' + ${imageActive.tenFileKhiLuu}}"
+                            <img th:src="@{'/' + ${imageActive.directoryPath} + '/' + ${imageActive.storageName}}"
                                  class="product-image" alt="Product Image"
                                  style="width: 100%; border-radius: 5px; margin: auto">
                         </div>
@@ -205,7 +205,7 @@
                              th:class="(${list.isActive} ? 'col-sm-3 row mb-2 border border-primary' : 'col-sm-3 row mb-2 border')"
                              th:style="(${list.isActive} ? 'border-radius: 10px; margin: 3px; max-width: 24%; background-color:aliceblue' : 'border-radius: 10px; margin: 3px; max-width: 24%')">
                             <div class="row col-sm-12 product-image-thumb" style="margin: auto">
-                                <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.tenFileKhiLuu}}"
+                                <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.storageName}}"
                                      alt="Product Image">
                             </div>
                             <div class="row col-sm-12 mb-2">
@@ -285,7 +285,7 @@
                                    style="cursor: pointer"
                                    data-toggle="modal"
                                    th:entityId="${list.id}"
-                                   th:entityName="${list.tenFileGoc}"
+                                   th:entityName="${list.originalName}"
                                    th:entityType="'image'">
                                 </i>
                                 <!--End modal DELETE hình ảnh-->
@@ -326,22 +326,15 @@
                                                                    th:value="${bienTheSanPhamId}"/>
                                                             <div class="form-group">
                                                                 <label>Tên thuộc tính</label>
-                                                                <input type="text" class="form-control"
-                                                                       placeholder="Tên thuộc tính" required
-                                                                       name="tenThuocTinh"/>
+                                                                <input type="text" class="form-control" placeholder="Tên thuộc tính" required name="attributeName"/>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Giá trị</label>
-                                                                <input type="text" class="form-control"
-                                                                       placeholder="Giá trị" required
-                                                                       name="giaTriThuocTinh"/>
+                                                                <input type="text" class="form-control" placeholder="Giá trị" required name="attributeValue"/>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Sắp xếp hiển thị</label>
-                                                                <input type="number" class="form-control"
-                                                                       placeholder="0"
-                                                                       required name="sort"
-                                                                       min="0"/>
+                                                                <input type="number" class="form-control" placeholder="0" required name="sort" min="0"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -369,52 +362,42 @@
                                     <th>Thao tác</th>
                                 </thead>
                                 <tbody>
-                                <tr th:each="list, index : ${listThuocTinh}">
-                                    <form th:action="@{/san-pham/attribute/update/{id}(id=${list.id})}"
-                                          method="post">
-                                        <td th:text="${index.index + 1}"></td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Tên thuộc tính"
-                                                   name="tenThuocTinh" required
-                                                   th:value="${list.tenThuocTinh}">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Giá trị"
-                                                   name="giaTriThuocTinh" required
-                                                   th:value="${list.giaTriThuocTinh}">
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" placeholder="0"
-                                                   name="sort" required
-                                                   th:value="${list.sort}">
-                                        </td>
-                                        <td>
-                                            <select class="custom-select" name="trangThai"
-                                                    th:if="${list.trangThai}">
-                                                <option value="true" selected>Sử dụng</option>
-                                                <option value="false">Không sử dụng</option>
-                                            </select>
-                                            <select class="custom-select" name="trangThai"
-                                                    th:if="not ${list.trangThai}">
-                                                <option value="true">Sử dụng</option>
-                                                <option value="false" selected>Không sử dụng</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="hidden" name="id" th:value="${list.id}">
-                                            <input type="hidden" name="bienTheSanPham"
-                                                   th:value="${list.productVariant.id}">
-                                            <button type="submit" class="btn btn-sm btn-info">Cập nhật
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger link-delete"
-                                                    data-toggle="modal"
-                                                    th:entityId="${list.id}"
-                                                    th:entityName="${list.tenThuocTinh}"
-                                                    th:entityType="'productAttribute'"> Xóa
-                                            </button>
-                                        </td>
-                                    </form>
-                                </tr>
+                                    <tr th:each="list, index : ${listAttributes}">
+                                        <form th:action="@{/san-pham/attribute/update/{id}(id=${list.id})}"
+                                              method="post">
+                                            <td th:text="${index.index + 1}"></td>
+                                            <td>
+                                                <input type="text" class="form-control" placeholder="Tên thuộc tính" name="attributeName" required th:value="${list.attributeName}">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" placeholder="Giá trị" name="attributeValue" required th:value="${list.attributeValue}">
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" placeholder="0" name="sort" required th:value="${list.sort}">
+                                            </td>
+                                            <td>
+                                                <select class="custom-select" name="status" th:if="${list.status}">
+                                                    <option value="true" selected>Sử dụng</option>
+                                                    <option value="false">Không sử dụng</option>
+                                                </select>
+                                                <select class="custom-select" name="status" th:if="not ${list.status}">
+                                                    <option value="true">Sử dụng</option>
+                                                    <option value="false" selected>Không sử dụng</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="id" th:value="${list.id}">
+                                                <input type="hidden" name="bienTheSanPham" th:value="${list.productVariant.id}">
+                                                <button type="submit" class="btn btn-sm btn-info">Cập nhật</button>
+                                                <button type="button" class="btn btn-sm btn-danger link-delete"
+                                                        data-toggle="modal"
+                                                        th:entityId="${list.id}"
+                                                        th:entityName="${list.attributeName}"
+                                                        th:entityType="'productAttribute'"> Xóa
+                                                </button>
+                                            </td>
+                                        </form>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

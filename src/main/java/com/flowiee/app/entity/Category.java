@@ -97,7 +97,7 @@ public class Category extends BaseEntity implements Serializable {
 	private List<Order> listTrangThaiDonHang;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "loaiTaiLieu", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "docType", fetch = FetchType.LAZY)
 	private List<Document> listDocument;
 
 	@JsonIgnore

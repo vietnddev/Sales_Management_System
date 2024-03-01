@@ -59,11 +59,11 @@
                                             <div class="card-body">
                                                 <div class="row mb-2">
                                                     <span class="col-sm-2"><b>Họ tên: </b></span>
-                                                    <span class="col-sm-4">[[${customerDetail.tenKhachHang}]]</span>
+                                                    <span class="col-sm-4">[[${customerDetail.customerName}]]</span>
                                                 </div>
                                                 <div class="row mb-2">
                                                     <span class="col-sm-2"><b>Giới tính: </b></span>
-                                                    <span class="col-sm-4">[[${customerDetail.gioiTinh}]]</span>
+                                                    <span class="col-sm-4">[[${customerDetail.sex}]]</span>
                                                 </div>
                                                 <div class="row justify-content-between mb-2">
                                                     <span class="col-sm-2"><b>Thông tin liên hệ: </b></span>

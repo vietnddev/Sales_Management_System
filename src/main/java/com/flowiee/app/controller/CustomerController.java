@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.CustomerDTO;
+import com.flowiee.app.model.dto.CustomerDTO;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.CustomerContact;
 import com.flowiee.app.exception.AppException;

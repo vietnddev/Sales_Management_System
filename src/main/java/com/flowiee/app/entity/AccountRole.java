@@ -9,15 +9,16 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serial;
 
 @Entity
 @Table (name = "sys_account_role")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AccountRole extends BaseEntity implements java.io.Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name = "module", nullable = false)
@@ -31,6 +32,12 @@ public class AccountRole extends BaseEntity implements java.io.Serializable {
 	@Column(name = "account_id", nullable = false)
 	@NotNull
 	private Integer accountId;
+
+	public AccountRole(String module, String action, Integer accountId) {
+		this.module = module;
+		this.action = action;
+		this.accountId = accountId;
+	}
 
 	@Override
 	public String toString() {

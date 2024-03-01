@@ -1,4 +1,4 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.flowiee.app.entity.MaterialTemp;
 import com.flowiee.app.entity.ProductVariantTemp;
@@ -49,10 +49,10 @@ public class TicketImportDTO implements Serializable {
         dto.setImportTime(ticketImport.getImportTime());
         dto.setNote(ticketImport.getNote());
         dto.setStatus(ticketImport.getStatus());
-        dto.setListProductDTO(ProductVariantDTO.fromProductVariants(ticketImport.getListProductVariant()));
-        dto.setListProductVariantTemp(ticketImport.getListProductVariantTemp());
-        dto.setListMaterialDTO(MaterialDTO.fromMaterials(ticketImport.getListMaterial()));
-        dto.setListMaterialTemp(ticketImport.getListMaterialTemp());
+        dto.setListProductDTO(ProductVariantDTO.fromProductVariants(ticketImport.getListProductVariants()));
+        dto.setListProductVariantTemp(ticketImport.getListProductVariantTemps());
+        dto.setListMaterialDTO(MaterialDTO.fromMaterials(ticketImport.getListMaterials()));
+        dto.setListMaterialTemp(ticketImport.getListMaterialTemps());
         return dto;
     }
 

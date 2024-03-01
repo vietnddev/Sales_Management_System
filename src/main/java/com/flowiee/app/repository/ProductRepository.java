@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	@Query("from Product p " +
            //"left join ProductVariant pv on pv.product.id = p.id " +
            "where 1=1 " +
-           "and (:txtSearch is null or p.tenSanPham like %:txtSearch%) " +
+           "and (:txtSearch is null or p.productName like %:txtSearch%) " +
            //"and (:productTypeId = 0 or p.productType.id=:productTypeId) " +
            //"and (:brandId is null or p.brand.id=:brandId) " +
            //"and (:colorId = 0 or pv.color.id=:colorId) " +
@@ -39,6 +39,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("from Product p where p.brand.id=:brandId")
     List<Product> findByBrand(@Param("brandId") Integer brandId);
 
-    @Query("select p.id, p.tenSanPham from Product p where p.status=:status")
+    @Query("select p.id, p.productName from Product p where p.status=:status")
     List<Object[]> findIdAndName(@Param("status") String status);
 }

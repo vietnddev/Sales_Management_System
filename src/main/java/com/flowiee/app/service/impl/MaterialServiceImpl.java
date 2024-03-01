@@ -10,6 +10,7 @@ import com.flowiee.app.service.MaterialHistoryService;
 import com.flowiee.app.service.MaterialService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -75,11 +76,11 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public String delete(Integer entityId) {
-        if (entityId == null || entityId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+        if (this.findById(entityId) == null) {
+            throw new BadRequestException();
         }
         materialRepository.deleteById(entityId);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override

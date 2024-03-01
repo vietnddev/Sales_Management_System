@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.DocumentDTO;
+import com.flowiee.app.model.dto.DocumentDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.NotFoundException;

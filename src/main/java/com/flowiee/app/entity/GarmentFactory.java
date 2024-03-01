@@ -5,6 +5,7 @@ import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GarmentFactory extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "name", nullable = false)

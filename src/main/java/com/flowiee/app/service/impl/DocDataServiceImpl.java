@@ -5,6 +5,7 @@ import com.flowiee.app.repository.DocDataRepository;
 import com.flowiee.app.service.DocDataService;
 
 import com.flowiee.app.utils.AppConstants;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class DocDataServiceImpl implements DocDataService {
 
     public String delete(Integer id) {
         docDataRepository.deleteById(id);
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override

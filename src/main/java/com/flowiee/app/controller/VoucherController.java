@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.VoucherInfoDTO;
+import com.flowiee.app.model.dto.VoucherInfoDTO;
 import com.flowiee.app.entity.VoucherInfo;
 import com.flowiee.app.entity.VoucherTicket;
 import com.flowiee.app.exception.AppException;
@@ -100,7 +100,7 @@ public class VoucherController extends BaseController {
 
     @Operation(summary = "Check the voucher is available")
     @GetMapping("/check/{voucherCode}")
-    public ApiResponse<VoucherInfoDTO> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
+    public ApiResponse<VoucherTicket> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
         try {
             if(!super.vldModuleProduct.readVoucher(true)) {
                 throw new BadRequestException();

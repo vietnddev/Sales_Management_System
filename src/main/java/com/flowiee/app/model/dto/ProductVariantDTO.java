@@ -1,4 +1,4 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.flowiee.app.entity.*;
 import com.flowiee.app.utils.AppConstants;
@@ -57,12 +57,12 @@ public class ProductVariantDTO implements Serializable {
         ProductVariantDTO dto = new ProductVariantDTO();
         dto.setProductVariantId(input.getId());
         dto.setProductId(input.getProduct().getId());
-        dto.setCode(input.getMaSanPham());
-        dto.setName(input.getTenBienThe());
-        dto.setStorageQty(input.getSoLuongKho());
-        dto.setSoldQty(input.getSoLuongDaBan());
-        dto.setDescription(input.getMaSanPham());
-        dto.setStatus(input.getTrangThai());
+        dto.setCode(input.getVariantCode());
+        dto.setName(input.getVariantName());
+        dto.setStorageQty(input.getStorageQty());
+        dto.setSoldQty(input.getSoldQty());
+        dto.setDescription(input.getVariantCode());
+        dto.setStatus(input.getStatus());
         if (ObjectUtils.isNotEmpty(input.getProduct().getProductType())) {
             dto.setProductTypeId(input.getProduct().getProductType().getId());
             dto.setProductTypeName(input.getProduct().getProductType().getName());
@@ -98,10 +98,10 @@ public class ProductVariantDTO implements Serializable {
         dto.setPriceAfterDiscount(null);
         dto.setUnitCurrency(null);
         dto.setListPrices(null);
-        if (AppConstants.PRODUCT_STATUS.ACTIVE.name().equals(input.getTrangThai())) {
-            dto.setStatus(AppConstants.PRODUCT_STATUS.ACTIVE.getLabel());
-        } else if (AppConstants.PRODUCT_STATUS.INACTIVE.name().equals(input.getTrangThai())) {
-            dto.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.getLabel());
+        if (AppConstants.PRODUCT_STATUS.A.name().equals(input.getStatus())) {
+            dto.setStatus(AppConstants.PRODUCT_STATUS.A.getLabel());
+        } else if (AppConstants.PRODUCT_STATUS.I.name().equals(input.getStatus())) {
+            dto.setStatus(AppConstants.PRODUCT_STATUS.I.getLabel());
         }
         return dto;
     }

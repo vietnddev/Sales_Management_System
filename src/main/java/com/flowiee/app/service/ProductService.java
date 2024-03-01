@@ -1,7 +1,7 @@
 package com.flowiee.app.service;
 
-import com.flowiee.app.dto.ProductDTO;
-import com.flowiee.app.dto.ProductVariantDTO;
+import com.flowiee.app.model.dto.ProductDTO;
+import com.flowiee.app.model.dto.ProductVariantDTO;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductAttribute;
 import com.flowiee.app.entity.ProductVariant;

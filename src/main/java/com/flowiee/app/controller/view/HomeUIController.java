@@ -20,11 +20,11 @@ public class HomeUIController {
             Account account = new Account();
             account.setUsername("admin");
             account.setPassword("$2a$12$UGPx1eE9SzfvCDniYtwoZuQRzVdjHKkjbZcDKXO4.1Z/uGpOsFFVu");
-            account.setHoTen("Quản trị hệ thống");
+            account.setFullName("Quản trị hệ thống");
             account.setEmail("nguyenducviet0684@gmail.com");
-            account.setSoDienThoai("0706820684");
-            account.setGioiTinh(true);
-            account.setTrangThai(true);
+            account.setPhoneNumber("0706820684");
+            account.setSex(true);
+            account.setStatus(true);
             account.setCreatedBy(0);
             account.setRole("ADMIN");
             accountService.save(account);

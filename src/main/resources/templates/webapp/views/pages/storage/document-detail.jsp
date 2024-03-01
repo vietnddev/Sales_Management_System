@@ -163,7 +163,7 @@
                                                             th:each="list, index : ${listFileOfDocument}">
                                                             <td th:text="${index.index + 1}"></td>
                                                             <td th:text="${list.createdAt}"></td>
-                                                            <td th:text="${list.tenFileGoc}">Tên</td>
+                                                            <td th:text="${list.originalName}">Tên</td>
                                                             <td th:text="${list.isActive}"></td>
                                                             <td>
                                                                 <button type="submit" style="border: none; background: none">

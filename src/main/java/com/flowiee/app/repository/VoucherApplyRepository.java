@@ -16,12 +16,12 @@ public interface VoucherApplyRepository extends JpaRepository<VoucherApply, Inte
            "vi.id as voucher_info_id_1, " +
            "vi.title as voucher_info_title_2, " +
            "p.id as product_id_3, " +
-           "p.tenSanPham as product_name_4, " +
+           "p.productName as product_name_4, " +
            "va.createdAt as applied_at_5, " +
            "va.createdBy as applied_by_6 " +
            "from VoucherApply va " +
            "left join VoucherInfo vi on vi.id = va.voucherId " +
-           "left join Product p on p.id = va.sanPhamId " +
+           "left join Product p on p.id = va.productId " +
            "where (:productId is null or p.id=:productId) ")
     List<Object[]> findAll(@Param("productId") Integer productId);
 

@@ -1,4 +1,4 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.app.entity.*;
@@ -72,7 +72,7 @@ public class OrderDTO implements Serializable {
 		dto.setReceiveEmail(order.getReceiverEmail());
 		dto.setReceiveName(order.getReceiverName());
 		dto.setCustomerId(order.getCustomer().getId());
-		dto.setCustomerName(order.getCustomer().getTenKhachHang());
+		dto.setCustomerName(order.getCustomer().getCustomerName());
 		dto.setSalesChannelId(order.getKenhBanHang().getId());
 		dto.setSalesChannelName(order.getKenhBanHang().getName());
 		dto.setOrderStatusId(order.getTrangThaiDonHang().getId());
@@ -82,7 +82,7 @@ public class OrderDTO implements Serializable {
 			dto.setPayMethodName(order.getPaymentMethod().getName());
 		}
 		dto.setCashierId(order.getNhanVienBanHang().getId());
-		dto.setCashierName(order.getNhanVienBanHang().getHoTen());
+		dto.setCashierName(order.getNhanVienBanHang().getFullName());
 		dto.setCreatedById(order.getCreatedBy());
 		dto.setCreatedByName(null);
 		dto.setCreatedAt(order.getCreatedAt());
@@ -100,7 +100,7 @@ public class OrderDTO implements Serializable {
 		//dto.setTotalProduct(null);
 		if (!order.getListImageQR().isEmpty() && order.getListImageQR().get(0) != null) {
 			FileStorage imageQRCode = order.getListImageQR().get(0);
-			dto.setQrCode(imageQRCode.getDirectoryPath() + "/" + imageQRCode.getTenFileKhiLuu());
+			dto.setQrCode(imageQRCode.getDirectoryPath() + "/" + imageQRCode.getStorageName());
 		}
 		dto.setVoucherUsedCode(order.getVoucherUsedCode());
 		dto.setPaymentStatus((order.getPaymentStatus() == null || !order.getPaymentStatus()) ? false : true);

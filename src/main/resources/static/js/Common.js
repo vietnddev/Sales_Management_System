@@ -11,8 +11,8 @@ const mvCurrentAccountUsername = '';
 
 //Config product status
 const mvProductStatus = {};
-mvProductStatus["ACTIVE"] = "Đang kinh doanh";
-mvProductStatus["INACTIVE"] = "Ngừng kinh doanh";
+mvProductStatus["A"] = "Đang kinh doanh";
+mvProductStatus["I"] = "Ngừng kinh doanh";
 
 //Config ticket import status
 const mvTicketImportStatus = {};

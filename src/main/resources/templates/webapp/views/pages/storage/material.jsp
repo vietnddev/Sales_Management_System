@@ -149,7 +149,7 @@
                                                                  th:if="${list.status}">
                                                                 <label>Trạng thái</label>
                                                                 <select class="custom-select"
-                                                                        name="trangThai">
+                                                                        name="status">
                                                                     <option value="true" selected>Sử
                                                                         dụng
                                                                     </option>
@@ -162,7 +162,7 @@
                                                                  th:if="not ${list.status}">
                                                                 <label>Trạng thái</label>
                                                                 <select class="custom-select"
-                                                                        name="trangThai">
+                                                                        name="status">
                                                                     <option value="true">Sử dụng
                                                                     </option>
                                                                     <option value="false" selected>Không

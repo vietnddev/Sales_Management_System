@@ -3,7 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.dto.MaterialDTO;
+import com.flowiee.app.model.dto.MaterialDTO;
 import lombok.*;
 
 import javax.persistence.*;

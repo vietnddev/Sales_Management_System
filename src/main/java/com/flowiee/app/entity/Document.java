@@ -3,7 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.dto.DocumentDTO;
+import com.flowiee.app.model.dto.DocumentDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,7 +43,7 @@ public class Document extends BaseEntity implements Serializable {
     @JsonIgnoreProperties("listDocument")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doc_type_id")
-    private Category loaiTaiLieu;
+    private Category docType;
 
     @OneToMany(mappedBy = "document", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocData> listDocData;
@@ -75,7 +75,7 @@ public class Document extends BaseEntity implements Serializable {
         document.setParentId(dto.getParentId());
         document.setDescription(dto.getDescription());
         if (dto.getDocTypeId() != null) {
-            document.setLoaiTaiLieu(new Category(dto.getDocTypeId(), dto.getDocTypeName()));
+            document.setDocType(new Category(dto.getDocTypeId(), dto.getDocTypeName()));
         }
         return document;
     }
@@ -88,8 +88,8 @@ public class Document extends BaseEntity implements Serializable {
         if (!this.getName().equals(documentToCompare.getName())) {
             map.put("Document name", this.getName() + "#" + documentToCompare.getName());
         }
-        if (!this.getLoaiTaiLieu().getName().equals(documentToCompare.getLoaiTaiLieu().getName())) {
-            map.put("Document type", this.getLoaiTaiLieu().getName() + "#" + documentToCompare.getLoaiTaiLieu().getName());
+        if (!this.getDocType().getName().equals(documentToCompare.getDocType().getName())) {
+            map.put("Document type", this.getDocType().getName() + "#" + documentToCompare.getDocType().getName());
         }
         if (!this.getDescription().equals(documentToCompare.getDescription())) {
             String descriptionOld = this.getDescription().length() > 9999 ? this.getDescription().substring(0, 9999) : this.getDescription();
@@ -102,6 +102,6 @@ public class Document extends BaseEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Document [id=" + super.id + ", parentId=" + parentId + ", loai=" + isFolder + ", ten=" + name + ", aliasName=" + asName
-				+ ", moTa=" + description + ", loaiTaiLieu=" + loaiTaiLieu + "]";
+				+ ", moTa=" + description + ", loaiTaiLieu=" + docType + "]";
 	}        
 }

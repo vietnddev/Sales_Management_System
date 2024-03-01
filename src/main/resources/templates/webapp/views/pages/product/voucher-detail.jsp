@@ -101,7 +101,7 @@
                     $.each(mvTickets, function (index, d) {
                         let customerName = "";
                         if (d.customer != null) {
-                            customerName = d.customer.tenKhachHang;
+                            customerName = d.customer.customerName;
                         }
                         let status = "Chưa sử dụng";
                         if (d.status === true) {

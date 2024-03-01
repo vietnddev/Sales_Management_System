@@ -99,8 +99,8 @@
                                 '<td>' + d.username + '</td>' +
                                 '<td>' + d.module + '</td>' +
                                 '<td style="max-width: 100px">' + d.action + '</td>' +
-                                '<td style="max-width: 250px">' + d.noiDung + '</td>' +
-                                '<td style="max-width: 250px">' + d.noiDungCapNhat + '</td>' +
+                                '<td style="max-width: 250px">' + d.content + '</td>' +
+                                '<td style="max-width: 250px">' + d.contentChange + '</td>' +
                                 '<td>' + d.createdAt + '</td>' +
                                 '<td>' + d.ip + '</td>' +
                             '</tr>'

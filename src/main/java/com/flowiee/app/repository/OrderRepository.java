@@ -23,7 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 //           "o.receiverPhone as receiver_phone_4, " +
 //           "o.receiverName as receiver_name_5, " +
 //           "nvl(c.id, 0) as order_by_id_6, " +
-//           "c.tenKhachHang as order_by_name_7, " +
+//           "c.customerName as order_by_name_7, " +
 //           "o.amountDiscount as amount_discount_8, " +
 //           "nvl(sc.id, 0) as sales_channel_id_9, " +
 //           "sc.name as sales_channel_name_10, " +
@@ -38,7 +38,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 //           //"'' as cashier_name_19, " +
 //           "nvl(o.createdBy, 0) as created_by_id_16, " +
 //           "o.createdAt as created_at_17, " +
-//           "case when f.order.id is not null then concat(concat(f.directoryPath, '/'), f.tenFileKhiLuu) else '' end as qrcode_file_name_18, " +
+//           "case when f.order.id is not null then concat(concat(f.directoryPath, '/'), f.storageName) else '' end as qrcode_file_name_18, " +
 //           "o.receiverEmail as receiver_email_19, " +
 //           "o.voucherUsedCode as voucher_used_code_20, " +
 //           "o.paymentStatus as payment_status_21, " +

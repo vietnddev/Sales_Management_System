@@ -1,6 +1,6 @@
 package com.flowiee.app.service;
 
-import com.flowiee.app.dto.CustomerDTO;
+import com.flowiee.app.model.dto.CustomerDTO;
 import com.flowiee.app.entity.Customer;
 import com.flowiee.app.entity.CustomerContact;
 import org.springframework.data.domain.Page;

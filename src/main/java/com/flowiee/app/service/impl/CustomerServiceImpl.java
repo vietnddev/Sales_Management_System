@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.CustomerDTO;
+import com.flowiee.app.model.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
@@ -53,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (pageSize == null || pageNum == null) {
             pageable = Pageable.unpaged();
         } else {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("tenKhachHang").descending());
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by("customerName").descending());
         }
         return customerRepository.findAll(pageable);
     }
@@ -215,25 +215,22 @@ public class CustomerServiceImpl implements CustomerService {
     public String deleteCustomer(Integer id) {
         Customer customer = this.findCustomerById(id);
         if (id <= 0 || customer == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         if (!orderService.findOrdersByCustomerId(id).isEmpty()) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.getTenKhachHang());
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng: " + customer.getCustomerName());
         logger.info(ProductServiceImpl.class.getName() + ": Xóa khách hàng " + customer.toString());
         return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override
     public String deleteContact(Integer contactId) {
-        if (contactId == null || contactId <= 0) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
-        }
         CustomerContact customerContact = this.findContactById(contactId);
         if (customerContact == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         customerContactRepository.deleteById(contactId);
         return MessageUtils.DELETE_SUCCESS;

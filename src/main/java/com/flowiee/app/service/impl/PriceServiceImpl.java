@@ -1,6 +1,6 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.PriceDTO;
+import com.flowiee.app.model.dto.PriceDTO;
 import com.flowiee.app.entity.Product;
 import com.flowiee.app.entity.ProductHistory;
 import com.flowiee.app.entity.ProductVariant;
@@ -16,8 +16,7 @@ import com.flowiee.app.service.SystemLogService;
 import com.flowiee.app.utils.AppConstants;
 import com.flowiee.app.utils.CommonUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.flowiee.app.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,11 +46,11 @@ public class PriceServiceImpl implements PriceService {
         List<PriceDTO> listPrice = PriceDTO.fromPrices(priceRepo.findPriceByProductVariant(productVariantId));
         if (!listPrice.isEmpty()) {
             for (PriceDTO p : listPrice) {
-                if (AppConstants.PRICE_STATUS.ACTIVE.name().equals(p.getStatus())) {
-                    p.setStatus(AppConstants.PRICE_STATUS.ACTIVE.getLabel());
+                if (AppConstants.PRICE_STATUS.A.name().equals(p.getStatus())) {
+                    p.setStatus(AppConstants.PRICE_STATUS.A.getLabel());
                 }
-                if (AppConstants.PRICE_STATUS.INACTIVE.name().equals(p.getStatus())) {
-                    p.setStatus(AppConstants.PRICE_STATUS.INACTIVE.getLabel());
+                if (AppConstants.PRICE_STATUS.I.name().equals(p.getStatus())) {
+                    p.setStatus(AppConstants.PRICE_STATUS.I.getLabel());
                 }
             }
         }
@@ -62,11 +61,11 @@ public class PriceServiceImpl implements PriceService {
     public Price findById(Integer priceId) {
         Price p = priceRepo.findById(priceId).orElse(null);
         if (p != null) {
-            if (AppConstants.PRICE_STATUS.ACTIVE.name().equals(p.getStatus())) {
-                p.setStatus(AppConstants.PRICE_STATUS.ACTIVE.getLabel());
+            if (AppConstants.PRICE_STATUS.A.name().equals(p.getStatus())) {
+                p.setStatus(AppConstants.PRICE_STATUS.A.getLabel());
             }
-            if (AppConstants.PRICE_STATUS.INACTIVE.name().equals(p.getStatus())) {
-                p.setStatus(AppConstants.PRICE_STATUS.INACTIVE.getLabel());
+            if (AppConstants.PRICE_STATUS.I.name().equals(p.getStatus())) {
+                p.setStatus(AppConstants.PRICE_STATUS.I.getLabel());
             }
         }
         return p;
@@ -74,7 +73,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Price findGiaHienTai(int bienTheSanPhamId) {
-        return priceRepo.findGiaBanHienTai(productService.findProductVariantById(bienTheSanPhamId), AppConstants.PRICE_STATUS.ACTIVE.name());
+        return priceRepo.findGiaBanHienTai(productService.findProductVariantById(bienTheSanPhamId), AppConstants.PRICE_STATUS.A.name());
     }
 
     @Override
@@ -106,7 +105,7 @@ public class PriceServiceImpl implements PriceService {
         Price disableGiaCu = null;
         if (priceId > 0) {
             disableGiaCu = this.findById(priceId);
-            disableGiaCu.setStatus(AppConstants.PRICE_STATUS.INACTIVE.name());
+            disableGiaCu.setStatus(AppConstants.PRICE_STATUS.I.name());
             priceRepo.save(disableGiaCu);
         }
         //Thêm giá mới
@@ -114,26 +113,26 @@ public class PriceServiceImpl implements PriceService {
         price.setId(0);
         price.setProductVariant(productVariant);
         price.setType("S");
-        price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
+        price.setStatus(AppConstants.PRICE_STATUS.A.name());
         Price priceUpdated = priceRepo.save(price);
         //
         ProductHistory productHistory = new ProductHistory();
         productHistory.setTitle("Cập nhật giá bán");
         productHistory.setProduct(new Product(productVariant.getProduct().getId()));
         productHistory.setProductVariant(productVariant);
-        productHistory.setFieldName(productVariant.getTenBienThe());
+        productHistory.setFieldName(productVariant.getVariantName());
         productHistory.setOldValue(disableGiaCu != null ? disableGiaCu.getGiaBan().toString() : "-");
         productHistory.setNewValue(price.getGiaBan().toString());
         productHistoryService.save(productHistory);
         //Lưu log
-        String noiDung = "";
+        String content = "";
         if (disableGiaCu != null) {
-            noiDung = "Giá cũ:  " + disableGiaCu.getGiaBan();
+            content = "Giá cũ:  " + disableGiaCu.getGiaBan();
         } else {
-            noiDung = "Giá cũ:  -";
+            content = "Giá cũ:  -";
         }
-        String noiDungCapNhat = "Giá mới: " + price.getGiaBan();
-        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + noiDung, "Giá sau khi cập nhật: " + noiDungCapNhat);
+        String contentChange = "Giá mới: " + price.getGiaBan();
+        systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Cập nhật giá sản phẩm: " + content, "Giá sau khi cập nhật: " + contentChange);
         logger.info("Update price success! updateBy=" + CommonUtils.getCurrentAccountUsername());
         return priceUpdated;
     }
@@ -145,10 +144,10 @@ public class PriceServiceImpl implements PriceService {
             priceRepo.deleteById(priceId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_PRICE.name(), "Xóa giá sản phẩm: " + price.toString());
             logger.info("Delete price success! deleteBy=" + CommonUtils.getCurrentAccountUsername());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return MessageUtils.DELETE_SUCCESS;
         } catch (Exception e) {
             logger.error("Delete price fail! priceId=" + priceId, e);
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new AppException();
         }
     }
 }

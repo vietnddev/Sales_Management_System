@@ -1,8 +1,8 @@
 package com.flowiee.app.controller.view;
 
-import com.flowiee.app.dto.DocMetaDTO;
-import com.flowiee.app.dto.DocumentDTO;
-import com.flowiee.app.dto.FileDTO;
+import com.flowiee.app.model.dto.DocMetaDTO;
+import com.flowiee.app.model.dto.DocumentDTO;
+import com.flowiee.app.model.dto.FileDTO;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.ForbiddenException;

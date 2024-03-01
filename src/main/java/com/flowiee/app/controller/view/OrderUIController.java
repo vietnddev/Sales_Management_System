@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.model.dto.OrderDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.utils.*;
@@ -9,7 +9,7 @@ import com.flowiee.app.base.BaseController;
 import com.flowiee.app.service.CategoryService;
 import com.flowiee.app.exception.NotFoundException;
 import com.flowiee.app.service.*;
-import com.flowiee.app.security.ValidateModuleProduct;
+import com.flowiee.app.base.vld.ValidateModuleProduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -99,8 +99,7 @@ public class OrderUIController extends BaseController {
     }
 
     @PostMapping("/ban-hang/cart/item/add")
-    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId,
-                                       @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
+    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
         validateModuleProduct.insertOrder(true);
         if (cartId <= 0 || cartService.findCartById(cartId) == null) {
             throw new NotFoundException("Cart not found!");
@@ -109,13 +108,13 @@ public class OrderUIController extends BaseController {
         for (String productVariantId : listProductVariantId) {
             if (cartService.isItemExistsInCart(cartId, Integer.parseInt(productVariantId))) {
                 Items items = cartService.findItemByCartAndProductVariant(cartId, Integer.parseInt(productVariantId));
-                cartService.increaseItemQtyInCart(items.getId(), items.getSoLuong() + 1);
+                cartService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
             } else {
                 Items items = new Items();
                 items.setOrderCart(new OrderCart(cartId));
                 items.setProductVariant(new ProductVariant(Integer.parseInt(productVariantId)));
-                items.setSoLuong(1);
-                items.setGhiChu("");
+                items.setQuantity(1);
+                items.setNote("");
                 cartService.saveItem(items);
             }
         }
@@ -132,7 +131,7 @@ public class OrderUIController extends BaseController {
         }
         items.setId(itemId);
         items.setOrderCart(cartService.findCartById(cartId));
-        if (items.getSoLuong() > 0) {
+        if (items.getQuantity() > 0) {
             cartService.saveItem(items);
         } else {
             cartService.deleteItem(items.getId());
@@ -185,7 +184,7 @@ public class OrderUIController extends BaseController {
             orderService.exportToPDF(orderService.findOrderById(orderId) , response);
         } catch (RuntimeException ex) {
             // TODO Auto-generated catch block
-            //e.printStackTrace();
+            ex.printStackTrace();
         }
     }
 }

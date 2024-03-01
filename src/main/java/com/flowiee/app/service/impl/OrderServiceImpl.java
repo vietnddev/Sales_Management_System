@@ -1,21 +1,19 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.OrderDetailDTO;
+import com.flowiee.app.exception.AppException;
+import com.flowiee.app.model.dto.OrderDetailDTO;
 import com.flowiee.app.entity.*;
-import com.flowiee.app.dto.OrderDTO;
+import com.flowiee.app.model.dto.OrderDTO;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.exception.NotFoundException;
+import com.flowiee.app.model.OrderDetailRpt;
 import com.flowiee.app.repository.OrderDetailRepository;
-import com.flowiee.app.utils.AppConstants;
-import com.flowiee.app.utils.CommonUtils;
+import com.flowiee.app.utils.*;
 import com.flowiee.app.entity.Category;
 import com.flowiee.app.repository.OrderRepository;
 import com.flowiee.app.service.*;
 import com.flowiee.app.service.SystemLogService;
 
-import com.flowiee.app.utils.DateUtils;
-
-import com.flowiee.app.utils.MessageUtils;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -105,8 +103,8 @@ public class OrderServiceImpl implements OrderService {
         int totalProduct = 0;
         double totalAmount = 0;
         for (OrderDetail d : listOrderDetail) {
-            totalProduct += d.getSoLuong();
-            totalAmount += d.getPrice() * d.getSoLuong();
+            totalProduct += d.getQuantity();
+            totalAmount += d.getPrice() * d.getQuantity();
         }
         OrderDTO dto = orders.get(0);
         dto.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(listOrderDetail));
@@ -118,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public String saveOrder(OrderDTO request) {
+    public OrderDTO saveOrder(OrderDTO request) {
         try {
             //Insert order
             Order order = new Order();
@@ -133,6 +131,9 @@ public class OrderServiceImpl implements OrderService {
             order.setReceiverPhone(request.getReceivePhone());
             order.setReceiverEmail(request.getReceiveEmail());
             order.setReceiverAddress(request.getReceiveAddress());
+            if (request.getPayMethodId() != null) {
+                order.setPaymentMethod(new Category(request.getPayMethodId(), null));
+            }
 
             if (request.getOrderTimeStr() != null) {
                 Date orderTime = DateUtils.convertStringToDate("dd/MM/yyyy hh:mm a", "dd/MM/yyyy HH:mm:ss", request.getOrderTimeStr());
@@ -161,10 +162,10 @@ public class OrderServiceImpl implements OrderService {
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrder(orderSaved);
                 orderDetail.setProductVariant(productVariant);
-                orderDetail.setSoLuong(cartService.findSoLuongByBienTheSanPhamId(items.getOrderCart().getId() , productVariant.getId()));
-                orderDetail.setTrangThai(true);
-                orderDetail.setGhiChu(items.getGhiChu());
-                orderDetail.setPrice(price != null ? Float.parseFloat(String.valueOf(price.getGiaBan())) : 0);
+                orderDetail.setQuantity(cartService.findSoLuongByBienTheSanPhamId(items.getOrderCart().getId() , productVariant.getId()));
+                orderDetail.setStatus(true);
+                orderDetail.setGhiChu(items.getNote());
+                orderDetail.setPrice(price != null ? Float.parseFloat(String.valueOf(price.getDiscount())) : 0);
                 orderDetail.setPriceOriginal(price != null ? Float.parseFloat(String.valueOf(price.getGiaBan())) : 0);
                 this.saveOrderDetail(orderDetail);
             }
@@ -191,23 +192,23 @@ public class OrderServiceImpl implements OrderService {
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
             logger.info("Insert new order success! insertBy=" + CommonUtils.getCurrentAccountUsername());
 
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return OrderDTO.fromOrder(orderSaved);
         } catch (Exception e) {
             logger.error("Insert new order fail! order=" + request, e);
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new AppException();
         }
     }
 
     @Override
-    public String saveOrderDetail(OrderDetail orderDetail) {
+    public OrderDetail saveOrderDetail(OrderDetail orderDetail) {
         try {
-            orderDetailRepo.save(orderDetail);
+            OrderDetail orderDetailSaved = orderDetailRepo.save(orderDetail);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + orderDetail.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return orderDetailSaved;
         } catch (Exception e) {
             e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new AppException();
         }
     }
 
@@ -217,7 +218,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepo.save(order);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + order.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.UPDATE_SUCCESS;
     }
 
     @Override
@@ -227,10 +228,10 @@ public class OrderServiceImpl implements OrderService {
             orderDetailRepo.save(orderDetail);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + orderDetail.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            return MessageUtils.UPDATE_SUCCESS;
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            throw new AppException(ex);
         }
     }
 
@@ -243,7 +244,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepo.deleteById(id);
         systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
-        return AppConstants.SERVICE_RESPONSE_SUCCESS;
+        return MessageUtils.DELETE_SUCCESS;
     }
 
     @Override
@@ -253,10 +254,10 @@ public class OrderServiceImpl implements OrderService {
             orderDetailRepo.deleteById(orderDetailId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Xóa item of đơn hàng " + orderDetail.toString());
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            return MessageUtils.DELETE_SUCCESS;
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            throw new AppException(ex);
         }
     }
 
@@ -405,26 +406,32 @@ public class OrderServiceImpl implements OrderService {
         PDFMergerUtility mergePdf = new PDFMergerUtility();
         //Barcode_Image.createImage(order.getId().toString() + ".png", order.getId().toString());
         HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-        parameterMap.put("customerName", dto.getCustomerName());
+        parameterMap.put("customerName", dto.getReceiveName());
         parameterMap.put("customerAddress", dto.getReceiveAddress());
         parameterMap.put("customerPhone", dto.getReceivePhone());
         parameterMap.put("customerEmail", dto.getReceiveEmail());
-//        parameterMap.put("totalSubtotal","$ " +  order.getSubtotal());
-//        parameterMap.put("totalShippingCost","$ " +  order.getShippingCost());
-//        parameterMap.put("totalTax","$ " +  order.getTax());
+        parameterMap.put("totalSubtotal","$ 0");
+        parameterMap.put("totalShippingCost","$ 0");
+        parameterMap.put("discount","$ " + dto.getAmountDiscount());
         parameterMap.put("totalPayment", dto.getTotalAmountDiscount());
-//        parameterMap.put("paymentMethod", order.getPaymentMethod());
+        parameterMap.put("paymentMethod", dto.getPayMethodName());
         parameterMap.put("invoiceNumber", dto.getOrderCode());
-//        parameterMap.put("orderDate", order.getOrderTime());
-//        parameterMap.put("nowDate", this.getDate());
-//        parameterMap.put("barcode",
-//                "C:\\Users\\PhuocLuu\\Desktop\\ShoppingCart\\ShoppingCart\\shoppingcart-webparent\\shoppingcart-backend\\barcode\\"
-//                        + order.getId() + ".png");
+        parameterMap.put("orderDate", dto.getOrderTime());
+        parameterMap.put("nowDate", new Date());
+        FileStorage f = fileStorageService.findQRCodeOfOrder(dto.getOrderId());
+        parameterMap.put("barcode", Path.of(CommonUtils.rootPath + "/" + f.getDirectoryPath() + "/" + f.getStorageName()));
 
         // orderDetails
-//        int index = 1;
-        Map<String, String> listDetail = new HashMap<>();
-        listDetail.put("productName", "Con chim");
+        List<OrderDetailRpt> listDetail = new ArrayList<>();
+        for (OrderDetailDTO detailDTO : dto.getListOrderDetailDTO()) {
+            OrderDetailRpt rpt = new OrderDetailRpt();
+            rpt.setProductName(detailDTO.getProductVariantDTO().getName());
+            rpt.setUnitPrice(detailDTO.getUnitPrice());
+            rpt.setQuantity(detailDTO.getQuantity());
+            rpt.setSubTotal(detailDTO.getUnitPrice() * detailDTO.getQuantity());
+            rpt.setNote(detailDTO.getNote());
+            listDetail.add(rpt);
+        }
 
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -435,8 +442,8 @@ public class OrderServiceImpl implements OrderService {
 //				JRPropertiesUtil.getInstance(context).setProperty("net.sf.jasperreports.default.pdf.embedded", "true");
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", " inline; filename=deliveryNote" + dto.getOrderId() + ".pdf");
-                InputStream reportStream = new FileInputStream(CommonUtils.getReportTemplate("Invoice"));
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameterMap, new JRBeanCollectionDataSource(List.of(listDetail)));
+                InputStream reportStream = new FileInputStream(ReportUtils.getReportTemplate("Invoice"));
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameterMap, new JRBeanCollectionDataSource(listDetail));
                 JasperExportManager.exportReportToPdfStream(jasperPrint, (checkBatch) ? byteArrayOutputStream : servletOutputStream);
                 if (checkBatch) {
                     byteArrayOutputStream.flush();

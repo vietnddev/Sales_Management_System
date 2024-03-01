@@ -36,7 +36,6 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> findAll() {
         List<Account> listAccountReturn = new ArrayList<>();
         for (Account account : accountRepo.findAll()) {
-            account.setListRole(roleService.findAllRole());
             for (Role role : account.getListRole()) {
                 String module = role.getModule().keySet().toString().replaceAll("\\[|\\]", "").replaceAll("\"", "");
                 if (role.getAction() != null) {

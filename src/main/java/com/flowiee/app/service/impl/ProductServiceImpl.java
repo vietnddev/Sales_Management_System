@@ -1,8 +1,8 @@
 package com.flowiee.app.service.impl;
 
-import com.flowiee.app.dto.PriceDTO;
-import com.flowiee.app.dto.ProductDTO;
-import com.flowiee.app.dto.ProductVariantDTO;
+import com.flowiee.app.model.dto.PriceDTO;
+import com.flowiee.app.model.dto.ProductDTO;
+import com.flowiee.app.model.dto.ProductVariantDTO;
 import com.flowiee.app.entity.*;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.DataInUseException;
@@ -96,10 +96,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findProductsIdAndProductName() {
         List<Product> products = new ArrayList<>();
-        productsRepo.findIdAndName(AppConstants.PRODUCT_STATUS.ACTIVE.name()).forEach(objects -> {
+        productsRepo.findIdAndName(AppConstants.PRODUCT_STATUS.A.name()).forEach(objects -> {
             Product p = new Product();
             p.setId(Integer.parseInt(String.valueOf(objects[0])));
-            p.setTenSanPham(String.valueOf(objects[1]));
+            p.setProductName(String.valueOf(objects[1]));
             products.add(p);
         });
         return products;
@@ -227,8 +227,8 @@ public class ProductServiceImpl implements ProductService {
     public Product saveProduct(Product product) {
         try {
             product.setCreatedBy(CommonUtils.getCurrentAccountId());
-            product.setMoTaSanPham(product.getMoTaSanPham() != null ? product.getMoTaSanPham() : "");
-            product.setStatus(AppConstants.PRODUCT_STATUS.INACTIVE.name());
+            product.setDescription(product.getDescription() != null ? product.getDescription() : "");
+            product.setStatus(AppConstants.PRODUCT_STATUS.I.name());
             Product pSaved = productsRepo.save(product);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product);
             logger.info("Insert product success! " + product);
@@ -243,8 +243,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product updateProduct(Product productToUpdate, Integer productId) {
         Product productBefore = null;
-        if (productToUpdate.getMoTaSanPham().isEmpty()) {
-            productToUpdate.setMoTaSanPham("-");
+        if (productToUpdate.getDescription().isEmpty()) {
+            productToUpdate.setDescription("-");
         }
         productBefore = this.findProductById(productId);
         productBefore.compareTo(productToUpdate).forEach((key, value) -> {
@@ -288,10 +288,10 @@ public class ProductServiceImpl implements ProductService {
             productsRepo.deleteById(id);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
             logger.info("Delete product success! productId=" + id);
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
-        } catch (Exception e) {
-            logger.error("Delete product fail! productId=" + id, e);
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            return MessageUtils.DELETE_SUCCESS;
+        } catch (RuntimeException ex) {
+            logger.error("Delete product fail! productId=" + id, ex);
+            throw new AppException(ex);
         }
     }
 
@@ -299,8 +299,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductVariant saveProductVariant(ProductVariantDTO productVariantDTO) {
         try {
             ProductVariant productVariant = ProductVariant.fromProductVariantDTO(productVariantDTO);
-            productVariant.setTrangThai(AppConstants.PRODUCT_STATUS.ACTIVE.name());
-            productVariant.setMaSanPham(CommonUtils.now("yyyyMMddHHmmss"));
+            productVariant.setStatus(AppConstants.PRODUCT_STATUS.A.name());
+            productVariant.setVariantCode(CommonUtils.now("yyyyMMddHHmmss"));
             ProductVariant productVariantSaved = productVariantRepo.save(productVariant);
 
             if (ObjectUtils.isNotEmpty(productVariantDTO.getPriceSellValue())) {
@@ -308,7 +308,7 @@ public class ProductServiceImpl implements ProductService {
                 price.setProductVariant(productVariantSaved);
                 price.setType("S");
                 price.setGiaBan(BigDecimal.valueOf(productVariantDTO.getPriceSellValue()));
-                price.setStatus(AppConstants.PRICE_STATUS.ACTIVE.name());
+                price.setStatus(AppConstants.PRICE_STATUS.A.name());
                 if (ObjectUtils.isNotEmpty(productVariantDTO.getPromotionPriceValue())) {
                     price.setDiscount(BigDecimal.valueOf(productVariantDTO.getPromotionPriceValue()));
                 }
@@ -348,11 +348,10 @@ public class ProductServiceImpl implements ProductService {
             productVariantRepo.deleteById(productVariantId);
             systemLogService.writeLog(module, AppConstants.PRODUCT_ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productVariantToDelete.toString());
             logger.info("Delete productVariant success! " + productVariantToDelete);
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
-        } catch (Exception e) {
-            logger.error("Delete productVariant fail! " + productVariantToDelete.toString(), e);
-            e.printStackTrace();
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            return MessageUtils.DELETE_SUCCESS;
+        } catch (Exception ex) {
+            logger.error("Delete productVariant fail! " + productVariantToDelete.toString(), ex);
+            throw new AppException(ex);
         }
     }
 
@@ -444,7 +443,7 @@ public class ProductServiceImpl implements ProductService {
                 listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
             });
             if (!listVoucherInfoId.isEmpty()) {
-                p.setListVoucherInfoApply(voucherInfoService.findAllVouchers(listVoucherInfoId, AppConstants.VOUCHER_STATUS.ACTIVE.name()));
+                p.setListVoucherInfoApply(voucherInfoService.findAllVouchers(listVoucherInfoId, AppConstants.VOUCHER_STATUS.A.name()));
             }
         }
         return products;
@@ -456,20 +455,20 @@ public class ProductServiceImpl implements ProductService {
             ProductVariant productVariant = new ProductVariant();
             productVariant.setProduct(new Product(Integer.parseInt(String.valueOf(data[0])), String.valueOf(data[1])));
             productVariant.setId(Integer.parseInt(String.valueOf(data[2])));
-            productVariant.setMaSanPham(String.valueOf(data[3]));
-            productVariant.setTenBienThe(String.valueOf(data[4]));
+            productVariant.setVariantCode(String.valueOf(data[3]));
+            productVariant.setVariantName(String.valueOf(data[4]));
             productVariant.setColor(new Category(Integer.parseInt(String.valueOf(data[5])), String.valueOf(data[6])));
             productVariant.setSize(new Category(Integer.parseInt(String.valueOf(data[7])), String.valueOf(data[8])));
             productVariant.setFabricType(new Category(Integer.parseInt(String.valueOf(data[9])), String.valueOf(data[10])));
-            productVariant.setSoLuongKho(Integer.parseInt(String.valueOf(data[11])));
-            productVariant.setSoLuongDaBan(Integer.parseInt(String.valueOf(data[12])));
+            productVariant.setStorageQty(Integer.parseInt(String.valueOf(data[11])));
+            productVariant.setSoldQty(Integer.parseInt(String.valueOf(data[12])));
             productVariant.setGarmentFactory(new GarmentFactory(Integer.parseInt(String.valueOf(data[13])), String.valueOf(data[14])));
             productVariant.setSupplier(new Supplier(Integer.parseInt(String.valueOf(data[15])), String.valueOf(data[16])));
             productVariant.setTicketImport(new TicketImport(Integer.parseInt(String.valueOf(data[17])), String.valueOf(data[18])));
             Integer priceId = data[19] != null ? Integer.parseInt(String.valueOf(data[19])) : null;
             BigDecimal priceSellValue = data[20] != null ? new BigDecimal(String.valueOf(data[20])) : null;
             productVariant.setPrice(new Price(priceId, priceSellValue));
-            productVariant.setTrangThai(String.valueOf(data[21]));
+            productVariant.setStatus(String.valueOf(data[21]));
             dataResponse.add(productVariant);
         }
         return dataResponse;
@@ -497,8 +496,8 @@ public class ProductServiceImpl implements ProductService {
         List<Object[]> listData = result.getResultList();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
-        String filePathTemp = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx";
+        String filePathTemp = CommonUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_E_SANPHAM + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),

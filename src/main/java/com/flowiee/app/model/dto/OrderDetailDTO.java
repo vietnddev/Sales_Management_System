@@ -1,7 +1,6 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.flowiee.app.entity.OrderDetail;
-import com.flowiee.app.entity.ProductVariant;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,8 +20,8 @@ public class OrderDetailDTO implements Serializable {
     private Integer orderId;
     private ProductVariantDTO productVariantDTO;
     private Integer quantity;
-    private Float price;
-    private Float priceOriginal;
+    private Float unitPrice; //price
+    private Float unitPriceOriginal; //priceOriginal
     private String note;
     private Boolean status;
 
@@ -31,11 +30,11 @@ public class OrderDetailDTO implements Serializable {
         dto.setId(d.getId());
         dto.setOrderId(d.getOrder().getId());
         dto.setProductVariantDTO(ProductVariantDTO.fromProductVariant(d.getProductVariant()));
-        dto.setQuantity(d.getSoLuong());
-        dto.setPrice(d.getPrice());
-        dto.setPriceOriginal(d.getPriceOriginal());
+        dto.setQuantity(d.getQuantity());
+        dto.setUnitPrice(d.getPrice());
+        dto.setUnitPriceOriginal(d.getPriceOriginal());
         dto.setNote(ObjectUtils.isNotEmpty(d.getGhiChu()) ? d.getGhiChu() : "");
-        dto.setStatus(d.isTrangThai());
+        dto.setStatus(d.isStatus());
         return dto;
     }
 

@@ -3,13 +3,9 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.dto.TicketImportDTO;
+import com.flowiee.app.model.dto.TicketImportDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -64,19 +60,19 @@ public class TicketImport extends BaseEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<Material> listMaterial;
+    private List<Material> listMaterials;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<ProductVariant> listProductVariant;
+    private List<ProductVariant> listProductVariants;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<MaterialTemp> listMaterialTemp;
+    private List<MaterialTemp> listMaterialTemps;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<ProductVariantTemp> listProductVariantTemp;
+    private List<ProductVariantTemp> listProductVariantTemps;
 
     public TicketImport(Integer id) {
         super.id = id;
@@ -95,8 +91,8 @@ public class TicketImport extends BaseEntity implements Serializable {
         ticketImport.setImportTime(dto.getImportTime());
         ticketImport.setNote(dto.getNote());
         ticketImport.setStatus(dto.getStatus());
-        ticketImport.setListProductVariantTemp(dto.getListProductVariantTemp());
-        ticketImport.setListMaterialTemp(dto.getListMaterialTemp());
+        ticketImport.setListProductVariantTemps(dto.getListProductVariantTemp());
+        ticketImport.setListMaterialTemps(dto.getListMaterialTemp());
         return ticketImport;
     }
 

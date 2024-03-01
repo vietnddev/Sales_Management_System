@@ -62,14 +62,13 @@
                                                     <td th:text="${itemIndex.index + 1}"></td>
                                                     <td class="text-left">
                                                         <input type="hidden" id="productVariantIdField" th:value="${item.productVariant.Id}"/>
-                                                        <a th:text="${item.productVariant.tenBienThe}"
+                                                        <a th:text="${item.productVariant.variantName}"
                                                            th:href="@{/san-pham/variant/{id}(id=${item.productVariant.id})}"></a>
-                                                        <input class="form-control form-control-sm" name="ghiChu"
-                                                               th:value="${item.ghiChu}" readonly>
+                                                        <input class="form-control form-control-sm" name="note" th:value="${item.note}" readonly>
                                                     </td>
                                                     <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
-                                                    <td th:text="${item.soLuong}"></td>
-                                                    <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.soLuong, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                    <td th:text="${item.quantity}"></td>
+                                                    <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                     <td>
                                                         <!--UPDATE ITEMS-->
                                                         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${item.id}">Cập nhật</button>
@@ -91,14 +90,14 @@
                                                                             <div class="form-group row" style="display: flex; align-items: center; margin: 0 0 15px 0">
                                                                                 <label class="col-sm-4 text-left">Số lượng</label>
                                                                                 <input class="col-sm-8 form-control"
-                                                                                       type="number" name="soLuong"
+                                                                                       type="number" name="quantity"
                                                                                        min="1"
-                                                                                       max="[[${item.productVariant.soLuongKho}]]"
-                                                                                       th:value="${item.soLuong}"/>
+                                                                                       max="[[${item.productVariant.quantity}]]"
+                                                                                       th:value="${item.quantity}"/>
                                                                             </div>
                                                                             <div class="form-group row" style="display: flex; align-items: center; margin: 0">
                                                                                 <label class="col-sm-4 text-left">Ghi chú</label>
-                                                                                <textarea class="col-sm-8 form-control" id="ghiChu" name="ghiChu" th:text="${item.ghiChu}"></textarea>
+                                                                                <textarea class="col-sm-8 form-control" id="note" name="note" th:text="${item.note}"></textarea>
                                                                             </div>
                                                                         </div>
                                                                         <div class="modal-footer justify-content-end">
@@ -123,7 +122,7 @@
                                                                             <input type="hidden" name="cartId" th:value="${cart.id}">
                                                                             <input type="hidden" name="itemId" th:value="${item.id}">
                                                                             Xác nhận xóa sản phẩm
-                                                                            <span class="badge badge-info" th:text="${item.productVariant.tenBienThe}"></span>
+                                                                            <span class="badge badge-info" th:text="${item.productVariant.variantName}"></span>
                                                                             khỏi giỏ hàng!
                                                                         </div>
                                                                         <div class="modal-footer justify-content-end">
@@ -205,7 +204,7 @@
                                                                         <div class="col-12">
                                                                             <div class="form-group">
                                                                                 <label>Tên khách hàng</label>
-                                                                                <input type="text" class="form-control" required name="tenKhachHang"/>
+                                                                                <input type="text" class="form-control" required name="customerName"/>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Số điện thoại</label>
@@ -405,7 +404,7 @@
     })
 
     let mvCustomers = {};
-    let mvVoucherDetail= {};
+    let mvVoucherTicketDetail= {};
     let mvVoucherStatus = "NOK";
     let mvVoucherCode = "";
     let mvTotalAmountWithoutDiscount = [[${totalAmountWithoutDiscount}]];//$("#totalAmountWithoutDiscountField");
@@ -433,7 +432,7 @@
         if (response.ok) {
             let data = (await response.json()).data
             $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.product.tenSanPham + ' - ' + d.tenBienThe + ' - ' + d.soLuongKho + '</option>');
+                selectElement.append('<option value=' + d.id + '>' + d.product.productName + ' - ' + d.variantName + ' - ' + d.storageQty + '</option>');
             });
         } else {
             alert('Call API fail!')
@@ -464,7 +463,7 @@
             let data = (await response.json()).data
             selectElement.append('<option>Chọn nhân viên bán hàng</option>');
             $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.hoTen + '</option>');
+                selectElement.append('<option value=' + d.id + '>' + d.fullName + '</option>');
             });
         } else {
             alert('Call API fail!')
@@ -531,24 +530,29 @@
             let apiURL = mvHostURLCallApi + '/voucher/check/' + codeInput;
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
-                    mvVoucherDetail = response.data;
-                    if (mvVoucherDetail.id != null) {
-                        $('#voucherTitleField').text("Tên đợt khuyến mãi: " + mvVoucherDetail.title);
-                        $('#voucherStatusField').text("Trạng thái: " + mvVoucherDetail.status);
-                        $('#voucherPercentField').text("Phần trăm giảm: " + mvVoucherDetail.discount + " %");
-                        $('#voucherMaxPriceField').text("Tối đa giảm được: " + formatCurrency(mvVoucherDetail.discountPriceMax));
-                        $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + mvVoucherDetail.applicableObjects);
-                        if (mvVoucherDetail.status === 'Đang áp dụng') {
+                    mvVoucherTicketDetail = response.data;
+                    if (mvVoucherTicketDetail.id != null) {
+                        let lvVoucherStt = mvVoucherTicketDetail.status; //false is not use, true is used
+                        $('#voucherTitleField').text("Tên đợt khuyến mãi: " + mvVoucherTicketDetail.voucherInfo.title);
+                        if (lvVoucherStt === false) {
+                            $('#voucherStatusField').text("Trạng thái: Khả dụng");
+                        } else {
+                            $('#voucherStatusField').text("Trạng thái: Không khả dụng");
+                        }
+                        $('#voucherPercentField').text("Phần trăm giảm: " + mvVoucherTicketDetail.voucherInfo.discount + " %");
+                        $('#voucherMaxPriceField').text("Tối đa giảm được: " + formatCurrency(mvVoucherTicketDetail.voucherInfo.maxPriceDiscount));
+                        $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + mvVoucherTicketDetail.voucherInfo.applicableObjects);
+                        if (lvVoucherStt === false) {
                             $('#isUseVoucherBlock').show();
                         } else {
                             $('#isUseVoucherBlock').hide();
                         }
-                        if (mvVoucherDetail.id > 0) {
+                        if (mvVoucherTicketDetail.id > 0) {
                             mvVoucherStatus = "OK";
                             mvVoucherCode = codeInput;
                         }
                     }
-                    console.log("mvVoucherDetail " + mvVoucherDetail)
+                    console.log("mvVoucherDetail " + mvVoucherTicketDetail)
                 } else {
                     mvVoucherStatus = "NOK";
                     mvVoucherCode = "";
@@ -563,9 +567,9 @@
         $("#isUseVoucherField").on("change", function () {
             if($(this).is(':checked')) {
                 if (mvVoucherStatus === "OK") {
-                    mvAmountDiscount = Math.round(mvTotalAmountWithoutDiscount * mvVoucherDetail.discount / 100);
-                    if (mvAmountDiscount > mvVoucherDetail.discountPriceMax) {
-                        mvAmountDiscount = mvVoucherDetail.discountPriceMax;
+                    mvAmountDiscount = Math.round(mvTotalAmountWithoutDiscount * mvVoucherTicketDetail.voucherInfo.discount / 100);
+                    if (mvAmountDiscount > mvVoucherTicketDetail.voucherInfo.maxPriceDiscount) {
+                        mvAmountDiscount = mvVoucherTicketDetail.voucherInfo.maxPriceDiscount;
                     }
                     $("#amountDiscountField").text(formatCurrency(mvAmountDiscount));
                     mvTotalAmountDiscount = mvTotalAmountWithoutDiscount - mvAmountDiscount;
@@ -605,7 +609,7 @@
                 customerId: customerId,
                 cashierId : accountId,
                 salesChannelId: salesChannelId,
-                paymentMethodId: paymentMethodId,
+                payMethodId: paymentMethodId,
                 orderStatusId : orderStatusId,
                 note : note,
                 orderTimeStr : orderTime,

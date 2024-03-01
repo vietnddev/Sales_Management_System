@@ -1,6 +1,7 @@
 package com.flowiee.app.service.impl;
 
 import com.flowiee.app.entity.*;
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;
 import com.flowiee.app.exception.DataInUseException;
 import com.flowiee.app.repository.CategoryRepository;
@@ -108,7 +109,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String delete(Integer entityId) {
         if (entityId == null || entityId <= 0 || this.findById(entityId) == null) {
-            return AppConstants.SERVICE_RESPONSE_FAIL;
+            throw new BadRequestException();
         }
         if (categoryInUse(entityId)) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
@@ -244,7 +245,7 @@ public class CategoryServiceImpl implements CategoryService {
 
                     Category category = new Category();
                     category.setType(categoryType);
-                    category.setCode(!categoryCode.isEmpty() ? categoryCode : CommonUtils.getMaDanhMuc(categoryName));
+                    category.setCode(!categoryCode.isEmpty() ? categoryCode : CommonUtils.genCategoryCodeByName(categoryName));
                     category.setName(categoryName);
                     category.setNote(categoryNote);
 
@@ -272,7 +273,7 @@ public class CategoryServiceImpl implements CategoryService {
             }
             //Save file attach to storage
             FileStorage fileStorage = new FileStorage(fileImport, AppConstants.SYSTEM_MODULE.CATEGORY.name());
-            fileStorage.setGhiChu("IMPORT");
+            fileStorage.setNote("IMPORT");
             fileStorage.setStatus(false);
             fileStorage.setActive(false);
             fileStorage.setAccount(accountService.findCurrentAccount());
@@ -302,11 +303,11 @@ public class CategoryServiceImpl implements CategoryService {
             notification.setImportId(flowieeImportRepo.findByStartTime(flowieeImport.getStartTime()).getId());
             notificationService.save(notification);
 
-            return AppConstants.SERVICE_RESPONSE_SUCCESS;
+            return MessageUtils.CREATE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
+            throw new AppException();
         }
-        return AppConstants.SERVICE_RESPONSE_FAIL;
 	}
 
 	@Override
@@ -317,8 +318,8 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public byte[] exportData(String categoryType) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
-        String filePathTemp = CommonUtils.PATH_TEMPLATE_EXCEL + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = CommonUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
+        String filePathTemp = CommonUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),

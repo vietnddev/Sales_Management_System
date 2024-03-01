@@ -1,11 +1,11 @@
 package com.flowiee.app.controller.view;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.CustomerDTO;
+import com.flowiee.app.model.dto.CustomerDTO;
 import com.flowiee.app.entity.CustomerContact;
 import com.flowiee.app.utils.*;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.security.ValidateModuleProduct;
+import com.flowiee.app.base.vld.ValidateModuleProduct;
 import com.flowiee.app.service.CustomerService;
 import com.flowiee.app.service.OrderService;
 import com.flowiee.app.entity.Customer;

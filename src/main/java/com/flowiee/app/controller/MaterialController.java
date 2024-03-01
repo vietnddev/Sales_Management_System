@@ -1,7 +1,7 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.MaterialDTO;
+import com.flowiee.app.model.dto.MaterialDTO;
 import com.flowiee.app.entity.Material;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.model.ApiResponse;

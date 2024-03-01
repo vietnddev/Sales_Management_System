@@ -30,9 +30,6 @@ public class MaterialTemp extends BaseEntity implements Serializable {
 	@Column(name = "material_id", nullable = false)
 	private Integer materialId;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 

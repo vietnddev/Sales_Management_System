@@ -3,7 +3,7 @@ package com.flowiee.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
-import com.flowiee.app.dto.CustomerDTO;
+import com.flowiee.app.model.dto.CustomerDTO;
 
 import com.flowiee.app.utils.DateUtils;
 import lombok.*;
@@ -28,14 +28,14 @@ public class Customer extends BaseEntity implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ten_khach_hang", length = 100, nullable = false)
-	private String tenKhachHang;
+	@Column(name = "customer_name", length = 100, nullable = false)
+	private String customerName;
 
 	@Column(name = "birthday")
 	private Date birthday;
 
-	@Column(name = "gioi_tinh", nullable = false)
-	private boolean gioiTinh;
+	@Column(name = "sex", nullable = false)
+	private boolean sex;
 
 	@Transient
 	private String phoneDefault;
@@ -62,16 +62,16 @@ public class Customer extends BaseEntity implements Serializable {
 
 	public Customer(int id, String customerName) {
 		super.id = id;
-		this.tenKhachHang = customerName;
+		this.customerName = customerName;
 	}
 
 	public static Customer fromCustomerDTO(CustomerDTO dto) {
 		Customer customer = new Customer();
 		customer.setId(dto.getId());
-		customer.setTenKhachHang(dto.getName());
+		customer.setCustomerName(dto.getName());
 		customer.setBirthday(DateUtils.convertStringToDate(dto.getBirthday(), "YYYY-MM-dd"));
 		if (dto.getSex() != null) {
-			customer.setGioiTinh("M".equals(dto.getSex()));
+			customer.setSex("M".equals(dto.getSex()));
 		}
 		customer.setPhoneDefault(dto.getPhoneDefault());
 		customer.setEmailDefault(dto.getEmailDefault());
@@ -81,7 +81,7 @@ public class Customer extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + super.id + ", tenKhachHang=" + tenKhachHang + ", birthday=" + birthday + ", gioiTinh=" + gioiTinh
+		return "Customer [id=" + super.id + ", customerName=" + customerName + ", birthday=" + birthday + ", sex=" + sex
 				+ ", phoneDefault=" + phoneDefault + ", emailDefault=" + emailDefault + ", addressDefault="
 				+ addressDefault + "]";
 	}

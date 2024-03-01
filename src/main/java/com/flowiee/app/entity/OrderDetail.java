@@ -29,7 +29,7 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	private ProductVariant productVariant;
 
 	@Column(name = "quantity", nullable = false)
-	private int soLuong;
+	private int quantity;
 
 	@Column(name = "price", nullable = false)
 	private Float price;
@@ -41,14 +41,14 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	private String ghiChu;
 
 	@Column(name = "status", nullable = false)
-	private boolean trangThai;
+	private boolean status;
 
 	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY)
 	private List<OrderHistory> listOrderHistory;
 
 	@Override
 	public String toString() {
-		return "OrderDetail [id=" + super.id + ", order=" + order + ", productVariant=" + productVariant + ", soLuong=" + soLuong
-				+ ", ghiChu=" + ghiChu + ", trangThai=" + trangThai + ", listOrderHistory=" + listOrderHistory + "]";
+		return "OrderDetail [id=" + super.id + ", order=" + order + ", productVariant=" + productVariant + ", soLuong=" + quantity
+				+ ", ghiChu=" + ghiChu + ", status=" + status + ", listOrderHistory=" + listOrderHistory + "]";
 	}
 }

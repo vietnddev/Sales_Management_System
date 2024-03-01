@@ -5,9 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Flowiee Official | Thông tin cá nhân</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style>
         .row {
             margin-left: 0px;
@@ -48,11 +46,9 @@
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center">
-                                <img class="profile-user-img img-fluid img-circle"
-                                     src="../../dist/img/user4-128x128.jpg"
-                                     alt="User profile picture">
+                                <img class="profile-user-img img-fluid img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
                             </div>
-                            <h3 class="profile-username text-center" th:text="${profile.hoTen}"></h3>
+                            <h3 class="profile-username text-center" th:text="${profile.fullName}"></h3>
                             <p class="text-muted text-center">Software Engineer</p>
                         </div>
                         <!-- /.card-body -->
@@ -65,13 +61,9 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#THONG_TIN_CHUNG"
-                                                        data-toggle="tab">Thông tin</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#DOI_MAT_KHAU" data-toggle="tab">Đổi
-                                    mật khẩu</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="#LICH_SU_BAN_HANG" data-toggle="tab">Lịch
-                                    sử bán hàng</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="#THONG_TIN_CHUNG" data-toggle="tab">Thông tin</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#DOI_MAT_KHAU" data-toggle="tab">Đổi mật khẩu</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#LICH_SU_BAN_HANG" data-toggle="tab">Lịch sử bán hàng</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -82,37 +74,29 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Họ tên</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" placeholder="Họ tên"
-                                                       name="hoTen"
-                                                       th:value="${profile.hoTen}"/>
+                                                <input type="text" class="form-control" placeholder="Họ tên" name="fullName" th:value="${profile.fullName}"/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-10">
-                                                <input type="email" class="form-control" placeholder="Email"
-                                                       name="email"
-                                                       th:value="${profile.email}"/>
+                                                <input type="email" class="form-control" placeholder="Email" name="email" th:value="${profile.email}"/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Số điện thoại</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" placeholder="Số điện thoại"
-                                                       name="soDienThoai"
-                                                       th:value="${profile.soDienThoai}"/>
+                                                <input type="text" class="form-control" placeholder="Số điện thoại" name="phoneNumber" th:value="${profile.phoneNumber}"/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Giới tính</label>
                                             <div class="col-sm-10">
-                                                <select class="custom-select" name="gioiTinh"
-                                                        th:if="${profile.gioiTinh == true}">
+                                                <select class="custom-select" name="sex" th:if="${profile.sex == true}">
                                                     <option value="true" selected>Nam</option>
                                                     <option value="false">Nữ</option>
                                                 </select>
-                                                <select class="custom-select" name="gioiTinh"
-                                                        th:if="${profile.gioiTinh == false}">
+                                                <select class="custom-select" name="sex" th:if="${profile.sex == false}">
                                                     <option value="true">Nam</option>
                                                     <option value="false" selected>Nữ</option>
                                                 </select>
@@ -164,15 +148,15 @@
                                     <div class="row w-100" style="max-height: 565px; overflow: scroll">
                                         <table class="table table-bordered table-striped align-items-center">
                                             <thead class="align-self-center">
-                                            <tr class="align-self-center">
-                                                <th>STT</th>
-                                                <th>Mã đơn hàng</th>
-                                                <th>Thời gian đặt hàng</th>
-                                                <th>Địa chỉ giao hàng</th>
-                                                <th>Khách hàng</th>
-                                                <th>Kênh bán hàng</th>
-                                                <th>Trạng thái</th>
-                                            </tr>
+                                                <tr class="align-self-center">
+                                                    <th>STT</th>
+                                                    <th>Mã đơn hàng</th>
+                                                    <th>Thời gian đặt hàng</th>
+                                                    <th>Địa chỉ giao hàng</th>
+                                                    <th>Khách hàng</th>
+                                                    <th>Kênh bán hàng</th>
+                                                    <th>Trạng thái</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                             <tr th:each="list, index : ${listDonHangDaBan}">
@@ -182,10 +166,10 @@
                                                        th:text="${list.maDonHang}"></a>
                                                 </td>
                                                 <td th:text="${list.thoiGianDatHang}"></td>
-                                                <td th:text="${list.khachHang.diaChi}"></td>
-                                                <td th:text="${list.khachHang.tenKhachHang}"></td>
-                                                <td th:text="${list.kenhBanHang.tenLoai}"></td>
-                                                <td th:text="${list.trangThaiDonHang.ten}"></td>
+                                                <td th:text="${list.receiverAddress}"></td>
+                                                <td th:text="${list.receiverName}"></td>
+                                                <td th:text="${list.kenhBanHang.name}"></td>
+                                                <td th:text="${list.trangThaiDonHang.name}"></td>
                                             </tr>
                                             </tbody>
                                         </table>

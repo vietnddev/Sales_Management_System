@@ -2,7 +2,7 @@ package com.flowiee.app.controller.view;
 
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.exception.NotFoundException;
-import com.flowiee.app.security.ValidateModuleProduct;
+import com.flowiee.app.base.vld.ValidateModuleProduct;
 import com.flowiee.app.service.ProductService;
 import com.flowiee.app.service.FileStorageService;
 

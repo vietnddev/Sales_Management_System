@@ -1,5 +1,6 @@
 package com.flowiee.app.service.impl;
 
+import com.flowiee.app.exception.AppException;
 import com.flowiee.app.service.MailService;
 
 import com.flowiee.app.utils.AppConstants;
@@ -30,8 +31,9 @@ public class MailServiceImpl implements MailService {
                 return MessageUtils.DELETE_SUCCESS;
             } catch (MessagingException exception) {
                 exception.printStackTrace();
+                throw new AppException();
             }
         }
-        return AppConstants.SERVICE_RESPONSE_FAIL;
+        throw new AppException();
     }
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.flowiee.app.base.BaseEntity;
 
-import com.flowiee.app.dto.ProductVariantDTO;
+import com.flowiee.app.model.dto.ProductVariantDTO;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -32,19 +32,19 @@ public class ProductVariant extends BaseEntity implements Serializable {
     private Product product;
     
     @Column(name = "variant_code", length = 50, nullable = false)
-    private String maSanPham;
+    private String variantCode;
     
     @Column(name = "variant_name")
-    private String tenBienThe;
+    private String variantName;
 
     @Column(name = "quantity_stg", nullable = false)
-    private int soLuongKho;
+    private int storageQty;
 
     @Column(name = "quantity_sell", nullable = false)
-    private int soLuongDaBan;
+    private int soldQty;
 
     @Column(name = "status", nullable = false)
-    private String trangThai;
+    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id", nullable = false)
@@ -76,22 +76,20 @@ public class ProductVariant extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<ProductAttribute> listThuocTinh;
+    private List<ProductAttribute> listAttributes;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Price> listGiaBan;
-
+    private List<Price> listPrices;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
     private List<OrderDetail> listOrderDetail;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<FileStorage> listFileStorage;
+    private List<FileStorage> listImages;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -101,7 +99,7 @@ public class ProductVariant extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<ProductHistory> listProductHistory;
+    private List<ProductHistory> listProductHistories;
 
     public ProductVariant (int id) {
         super.id = id;
@@ -111,7 +109,7 @@ public class ProductVariant extends BaseEntity implements Serializable {
         ProductVariant p = new ProductVariant();
         p.setId(dto.getProductVariantId());
         p.setProduct(new Product(dto.getProductId()));
-        p.setTenBienThe(dto.getName());
+        p.setVariantName(dto.getName());
         p.setFabricType(new Category(dto.getFabricTypeId(), dto.getFabricTypeName()));
         p.setColor(new Category(dto.getColorId(), dto.getColorName()));
         p.setSize(new Category(dto.getSizeId(), dto.getSizeName()));
@@ -120,11 +118,11 @@ public class ProductVariant extends BaseEntity implements Serializable {
 
     public Map<String, String> compareTo(ProductVariant entityToCompare) {
         Map<String, String> map = new HashMap<>();
-        if (!this.getMaSanPham().equals(entityToCompare.getMaSanPham())) {
-            map.put("Product code", this.getMaSanPham() + "#" + entityToCompare.getMaSanPham());
+        if (!this.getVariantCode().equals(entityToCompare.getVariantCode())) {
+            map.put("Product code", this.getVariantCode() + "#" + entityToCompare.getVariantCode());
         }
-        if (!this.getTenBienThe().equals(entityToCompare.getTenBienThe())) {
-            map.put("Product name", this.getTenBienThe() + "#" + entityToCompare.getTenBienThe());
+        if (!this.getVariantName().equals(entityToCompare.getVariantName())) {
+            map.put("Product name", this.getVariantName() + "#" + entityToCompare.getVariantName());
         }
         if (!this.getColor().getName().equals(entityToCompare.getColor().getName())) {
             map.put("Product color", this.getColor().getName() + "#" + entityToCompare.getColor().getName());
@@ -140,8 +138,8 @@ public class ProductVariant extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ProductVariant [id=" + super.id + ", product=" + product + ", maSanPham=" + maSanPham + ", tenBienThe=" + tenBienThe
-				+ ", soLuongKho=" + soLuongKho + ", soLuongDaBan=" + soLuongDaBan + ", trangThai=" + trangThai
+		return "ProductVariant [id=" + super.id + ", product=" + product + ", maSanPham=" + variantCode + ", tenBienThe=" + variantName
+				+ ", soLuongKho=" + storageQty + ", soLuongDaBan=" + soldQty + ", trangThai=" + status
 				+ ", color=" + color + ", size=" + size + ", fabricType=" + fabricType + ", garmentFactory="
 				+ garmentFactory + ", supplier=" + supplier + ", ticketImportGoods=" + ticketImport + ", price="
 				+ price + "]";

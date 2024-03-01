@@ -37,7 +37,7 @@
                                                 <th th:text="#{pro.order.code}"></th>
                                                 <th>Thời gian đặt hàng</th>
                                                 <th>Địa chỉ giao hàng</th>
-                                                <th>Khách hàng</th>
+                                                <th>Người nhận</th>
                                                 <th>SĐT nhận hàng</th>
                                                 <th>Số tiền</th>
                                                 <th>Kênh bán hàng</th>
@@ -106,7 +106,7 @@
                                     <td><a href="/don-hang/${d.orderId}">${d.orderCode}</a></td>
                                     <td>${d.orderTime}</td>
                                     <td>${d.receiveAddress}</td>
-                                    <td>${d.customerName}</td>
+                                    <td>${d.receiveName}</td>
                                     <td>${d.receivePhone}</td>
                                     <td>${formatCurrency(d.totalAmountDiscount)}</td>
                                     <td>${d.salesChannelName}</td>

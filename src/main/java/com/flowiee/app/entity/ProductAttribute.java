@@ -26,10 +26,10 @@ public class ProductAttribute extends BaseEntity implements Serializable {
     private ProductVariant productVariant;
 
     @Column(name = "attribute_name", nullable = false)
-    private String tenThuocTinh;
+    private String attributeName;
 
     @Column(name = "attribute_value", length = 500)
-    private String giaTriThuocTinh;
+    private String attributeValue;
 
     @Column(name = "sort", nullable = false)
     private int sort;
@@ -42,18 +42,18 @@ public class ProductAttribute extends BaseEntity implements Serializable {
 
     public Map<String, String> compareTo(ProductAttribute entityToCompare) {
         Map<String, String> map = new HashMap<>();
-        if (!this.getTenThuocTinh().equals(entityToCompare.getTenThuocTinh())) {
-            map.put("Product attribute name", this.getTenThuocTinh() + "#" + entityToCompare.getTenThuocTinh());
+        if (!this.getAttributeName().equals(entityToCompare.getAttributeName())) {
+            map.put("Product attribute name", this.getAttributeName() + "#" + entityToCompare.getAttributeName());
         }
-        if (!this.getGiaTriThuocTinh().equals(entityToCompare.getGiaTriThuocTinh())) {
-            map.put("Product attribute value", this.getGiaTriThuocTinh() + "#" + entityToCompare.getGiaTriThuocTinh());
+        if (!this.getAttributeValue().equals(entityToCompare.getAttributeValue())) {
+            map.put("Product attribute value", this.getAttributeValue() + "#" + entityToCompare.getAttributeValue());
         }
         return map;
     }
 
 	@Override
 	public String toString() {
-		return "ProductAttribute [id=" + super.id + ", productVariant=" + productVariant + ", tenThuocTinh=" + tenThuocTinh
-				+ ", giaTriThuocTinh=" + giaTriThuocTinh + ", sort=" + sort + ", trangThai=" + trangThai + "]";
+		return "ProductAttribute [id=" + super.id + ", productVariant=" + productVariant + ", tenThuocTinh=" + attributeName
+				+ ", giaTriThuocTinh=" + attributeValue + ", sort=" + sort + ", trangThai=" + trangThai + "]";
 	}    
 }

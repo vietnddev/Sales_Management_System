@@ -7,10 +7,10 @@ import com.flowiee.app.utils.CommonUtils;
 import com.flowiee.app.utils.EndPointUtil;
 import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.entity.Account;
-import com.flowiee.app.model.role.ActionOfModule;
+import com.flowiee.app.model.role.ActionModel;
 import com.flowiee.app.model.role.FlowieeRole;
 import com.flowiee.app.model.role.Role;
-import com.flowiee.app.security.ValidateModuleSystem;
+import com.flowiee.app.base.vld.ValidateModuleSystem;
 import com.flowiee.app.service.RoleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ public class AccountUIController extends BaseController {
             throw new NotFoundException("Account not found!");
         }
         Account account = accountService.findById(accountId);
-        account.setTrangThai(false);
+        account.setStatus(false);
         accountService.save(account);
         return new ModelAndView("redirect:/sys/tai-khoan");
     }
@@ -101,8 +101,8 @@ public class AccountUIController extends BaseController {
             throw new NotFoundException("Account not found!");
         }
         roleService.deleteAllRole(accountId);
-        List<ActionOfModule> listAction = roleService.findAllAction();
-        for (ActionOfModule sysAction : listAction) {
+        List<ActionModel> listAction = roleService.findAllAction();
+        for (ActionModel sysAction : listAction) {
             String clientActionKey = request.getParameter(sysAction.getActionKey());
             if (clientActionKey != null) {
                 boolean isAuthorSelected = clientActionKey.equals("on");

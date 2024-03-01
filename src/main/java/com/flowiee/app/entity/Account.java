@@ -27,17 +27,18 @@ public class Account extends BaseEntity implements Serializable {
 	@Column(name = "username", nullable = false)
 	private String username;
 
+	@JsonIgnore
 	@Column(name = "password", nullable = false)
 	private String password;
 
 	@Column(name = "fullname", nullable = false)
-	private String hoTen;
+	private String fullName;
 
 	@Column(name = "sex", nullable = false)
-	private boolean gioiTinh;
+	private boolean sex;
 
-	@Column(name = "phonenumber")
-	private String soDienThoai;
+	@Column(name = "phone_number")
+	private String phoneNumber;
 
 	@Column(name = "email")
 	private String email;
@@ -49,13 +50,13 @@ public class Account extends BaseEntity implements Serializable {
 	private String avatar;
 
 	@Column(name = "remark")
-	private String ghiChu;
+	private String remark;
 
 	@Column(name = "role")
 	private String role;
 
 	@Column(name = "status")
-	private boolean trangThai;
+	private boolean status;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
@@ -87,10 +88,10 @@ public class Account extends BaseEntity implements Serializable {
 		super.id = id;
 	}
 
-	public Account(Integer id, String username, String hoTen) {
+	public Account(Integer id, String username, String fullName) {
 		super.id = id;
 		this.username = username;
-		this.hoTen = hoTen;
+		this.fullName = fullName;
 	}
 
 	@Override
@@ -98,26 +99,24 @@ public class Account extends BaseEntity implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Account [username=");
 		builder.append(username);
-		builder.append(", password=");
-		builder.append(password);
-		builder.append(", hoTen=");
-		builder.append(hoTen);
-		builder.append(", gioiTinh=");
-		builder.append(gioiTinh);
-		builder.append(", soDienThoai=");
-		builder.append(soDienThoai);
+		builder.append(", fullName=");
+		builder.append(fullName);
+		builder.append(", sex=");
+		builder.append(sex);
+		builder.append(", phoneNumber=");
+		builder.append(phoneNumber);
 		builder.append(", email=");
 		builder.append(email);
 		builder.append(", diaChi=");
 		builder.append(diaChi);
 		builder.append(", avatar=");
 		builder.append(avatar);
-		builder.append(", ghiChu=");
-		builder.append(ghiChu);
-		builder.append(", role=");
+		builder.append(", remark=");
+		builder.append(remark);
+		builder.append(", remark=");
 		builder.append(role);
 		builder.append(", trangThai=");
-		builder.append(trangThai);
+		builder.append(status);
 		builder.append(", ip=");
 		builder.append(ip);
 		builder.append("]");

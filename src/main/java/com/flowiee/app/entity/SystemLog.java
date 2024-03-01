@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.app.base.BaseEntity;
 import lombok.*;
 import javax.persistence.*;
+import java.io.Serial;
 
 @Builder
 @Entity
@@ -14,19 +15,23 @@ import javax.persistence.*;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SystemLog extends BaseEntity implements java.io.Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "module", length = 50, nullable = false)
 	private String module;
 
-	@Column(name = "action",nullable = false)
+	@Column(name = "action_type")
+	private String actionType;
+
+	@Column(name = "action", nullable = false)
 	private String action;
 
-	@Column(name = "noi_dung", length = 4000, nullable = false)
-	private String noiDung;
+	@Column(name = "content", length = 4000, nullable = false)
+	private String content;
 
-	@Column(name = "noi_dung_cap_nhat", length = 4000)
-	private String noiDungCapNhat;
+	@Column(name = "content_change", length = 4000)
+	private String contentChange;
 
 	@Column(name = "ip", length = 20)
 	private String ip;
@@ -37,15 +42,14 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	public SystemLog (String module, String action, String value, String newValue, Integer createdBy, String ip) {
 		this.module = module;
 		this.action = action;
-		this.noiDung = value;
-		this.noiDungCapNhat = newValue;
+		this.content = value;
+		this.contentChange = newValue;
 		super.createdBy = createdBy;
 		this.ip = ip;
 	}
 
 	@Override
 	public String toString() {
-		return "SystemLog [id=" + super.id + ", module=" + module + ", action=" + action + ", noiDung=" + noiDung + ", noiDungCapNhat="
-				+ noiDungCapNhat + ", ip=" + ip + ", username=" + username + "]";
+		return "SystemLog [id=" + super.id + ", module=" + module + ", action=" + action + ", content=" + content + ", contentChange=" + contentChange + ", ip=" + ip + ", username=" + username + "]";
 	}
 }

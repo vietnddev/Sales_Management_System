@@ -1,8 +1,8 @@
 package com.flowiee.app.controller;
 
 import com.flowiee.app.base.BaseController;
-import com.flowiee.app.dto.OrderDTO;
-import com.flowiee.app.dto.TicketExportDTO;
+import com.flowiee.app.model.dto.OrderDTO;
+import com.flowiee.app.model.dto.TicketExportDTO;
 import com.flowiee.app.entity.TicketExport;
 import com.flowiee.app.exception.AppException;
 import com.flowiee.app.exception.BadRequestException;

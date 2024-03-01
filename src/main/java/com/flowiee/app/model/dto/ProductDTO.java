@@ -1,8 +1,7 @@
-package com.flowiee.app.dto;
+package com.flowiee.app.model.dto;
 
 import com.flowiee.app.entity.FileStorage;
 import com.flowiee.app.entity.Product;
-import com.flowiee.app.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
@@ -58,12 +57,12 @@ public class ProductDTO implements Serializable {
                 dto.setBrandId(product.getBrand().getId());
                 dto.setBrandName(product.getBrand().getName());
             }
-            dto.setProductName(product.getTenSanPham());
+            dto.setProductName(product.getProductName());
             if (ObjectUtils.isNotEmpty(product.getUnit())) {
                 dto.setUnitId(product.getUnit().getId());
                 dto.setUnitName(product.getUnit().getName());
             }
-            dto.setProductDes(product.getMoTaSanPham());
+            dto.setProductDes(product.getDescription());
             dto.setProductStatus(product.getStatus());
             dto.setImageActiveId(product.getImageActive() != null ? product.getImageActive().getId() : null);
             dto.setImageActive(product.getImageActive());
@@ -71,8 +70,8 @@ public class ProductDTO implements Serializable {
 //      dto.setVoucherApplyTitle(null);
 //      dto.setDiscountPercent(null);
 //      dto.setDiscountMaxPrice(null);
-            if (ObjectUtils.isNotEmpty(product.getListBienThe())) {
-                dto.setProductVariantQty(product.getListBienThe().size());
+            if (ObjectUtils.isNotEmpty(product.getListVariants())) {
+                dto.setProductVariantQty(product.getListVariants().size());
             }
             dto.setSoldQty(null);
             dto.setCreatedAt(product.getCreatedAt());

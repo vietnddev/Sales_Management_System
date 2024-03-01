@@ -1,7 +1,7 @@
 package com.flowiee.app.controller.view;
 
 import com.flowiee.app.model.DashboardModel;
-import com.flowiee.app.security.ValidateModuleProduct;
+import com.flowiee.app.base.vld.ValidateModuleProduct;
 import com.flowiee.app.base.BaseController;
 import com.flowiee.app.utils.PagesUtils;
 import com.flowiee.app.service.DashboardService;
@@ -13,16 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping()
+@RequestMapping
 public class DashboardUIController extends BaseController {
-    @Autowired
-    private ValidateModuleProduct validateModuleProduct;
-    @Autowired
-    private DashboardService dashboardService;
+    @Autowired private DashboardService dashboardService;
 
     @GetMapping
     public ModelAndView reportDoanhThu() {
-        validateModuleProduct.readDashboard(true);
+        vldModuleProduct.readDashboard(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_DASHBOARD);
 
         DashboardModel dashboard = dashboardService.loadDashboard();

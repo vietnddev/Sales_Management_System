@@ -44,7 +44,7 @@
                                 <div>
                                     <div class="btn-group w-100 mb-2">
                                         <a class="btn btn-info active" href="javascript:void(0)" data-filter="all">Tất cả</a>
-                                        <a class="btn btn-info" href="javascript:void(0)" th:data-filter="${p.id}" th:each="p : ${listProducts}" th:text="${p.tenSanPham}"></a>
+                                        <a class="btn btn-info" href="javascript:void(0)" th:data-filter="${p.id}" th:each="p : ${listProducts}" th:text="${p.productName}"></a>
                                     </div>
                                     <div class="mb-2">
                                         <a class="btn btn-secondary" href="javascript:void(0)" data-shuffle> Shuffle items </a>
