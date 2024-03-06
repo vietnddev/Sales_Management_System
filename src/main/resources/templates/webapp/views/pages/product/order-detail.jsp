@@ -75,7 +75,7 @@
                                                             <td th:text="${index.index + 1}" style="font-weight: bold"></td>
                                                             <td>
                                                                 <a th:text="${list.productVariantDTO.name}"
-                                                                   th:href="@{/san-pham/variant/{id}(id=${list.productVariantDTO.productVariantId})}"></a>
+                                                                   th:href="@{/san-pham/variant/{id}(id=${list.productVariantDTO.productDetailId})}"></a>
                                                             </td>
                                                             <td th:text="${list.productVariantDTO.unitName}"></td>
                                                             <td th:text="${list.quantity}" class="text-right"></td>
@@ -111,19 +111,19 @@
                                                     <tbody>
                                                         <tr>
                                                             <th>Khách hàng</th>
-                                                            <td th:text="${orderDetail.receiveName}"></td>
+                                                            <td th:text="${orderDetail.receiverName}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Số điện thoại</th>
-                                                            <td th:text="${orderDetail.receivePhone}"></td>
+                                                            <td th:text="${orderDetail.receiverPhone}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Email</th>
-                                                            <td th:text="${orderDetail.receiveEmail}"></td>
+                                                            <td th:text="${orderDetail.receiverEmail}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Địa chỉ nhận hàng</th>
-                                                            <td th:text="${orderDetail.receiveAddress}"></td>
+                                                            <td th:text="${orderDetail.receiverAddress}"></td>
                                                         </tr>
                                                         <tr>
                                                             <th>Thời gian đặt hàng</th>
@@ -230,7 +230,7 @@
                                                                     </div>
                                                                     <div class="modal-footer justify-content-end">
                                                                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                                                                        <button type="button" class="btn btn-sm btn-primary" id="btnDoPaySubmit" th:orderId="${orderDetail.orderId}">Đồng ý</button>
+                                                                        <button type="button" class="btn btn-sm btn-primary" id="btnDoPaySubmit" th:orderId="${orderDetail.id}">Đồng ý</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -388,7 +388,7 @@
 
             $("#yesButton").on("click", function () {
                 let apiURL = mvHostURLCallApi + "/storage/ticket-export/create-draft";
-                let body = {orderId : mvOrderDetail.orderId, orderCode : mvOrderDetail.orderCode};
+                let body = {orderId : mvOrderDetail.id, code : mvOrderDetail.code};
                 $.ajax({
                     url: apiURL,
                     type: "POST",

@@ -68,7 +68,7 @@
                                     <div class="modal fade" id="modalChangeFile">
                                         <div class="modal-dialog">
                                             <div class="modal-content text-left">
-                                                <form th:action="@{/kho-tai-lieu/document/change-file/{id}(id=${docDetail.id})}"
+                                                <form th:action="@{/stg/doc/change-file/{id}(id=${docDetail.id})}"
                                                       enctype="multipart/form-data" method="post">
                                                     <div class="modal-header">
                                                         <strong class="modal-title">Thay file đính kèm</strong>
@@ -104,13 +104,13 @@
                                         <div class="card-header p-2">
                                             <ul class="nav nav-pills" style="font-size: 13px">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" href="#docData" data-toggle="tab"> THÔNG TIN TÀI LIỆU</a>
+                                                    <a class="nav-link active" href="#docData" data-toggle="tab">THÔNG TIN CHUNG</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="#docRelated" data-toggle="tab"> TÀI LIỆU LIÊN QUAN</a>
+                                                    <a class="nav-link" href="#docDetail" data-toggle="tab">CHI TIẾT</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="#version" data-toggle="tab"> PHIÊN BẢN</a>
+                                                    <a class="nav-link" href="#version" data-toggle="tab" id="fileVersionTab">PHIÊN BẢN</a>
                                                 </li>
                                             </ul>
                                         </div><!-- /.card-header -->
@@ -144,7 +144,7 @@
                                                 <!--End Tab metadata-->
 
                                                 <!-- Tab tài liệu liên quan -->
-                                                <div class="tab-pane" id="docRelated" style="font-size: 15px">
+                                                <div class="tab-pane" id="docDetail" style="font-size: 15px">
                                                     <div class="row mb-2">
                                                         <div class="col-sm-8">
                                                             <a href="#">Quyết định bổ nhiệm...</a>
@@ -158,20 +158,7 @@
                                                 <!-- Tab version -->
                                                 <div class="tab-pane" id="version" style="font-size: 15px;">
                                                     <table class="table table-hover table-responsive p-0">
-                                                        <tbody class="align-self-center">
-                                                        <tr class="align-self-center"
-                                                            th:each="list, index : ${listFileOfDocument}">
-                                                            <td th:text="${index.index + 1}"></td>
-                                                            <td th:text="${list.createdAt}"></td>
-                                                            <td th:text="${list.originalName}">Tên</td>
-                                                            <td th:text="${list.isActive}"></td>
-                                                            <td>
-                                                                <button type="submit" style="border: none; background: none">
-                                                                    <img th:src="@{/dist/icon/restore.png}">
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
+                                                        <tbody class="align-self-center" id="tableVersion"></tbody>
                                                     </table>
                                                 </div>
                                             </div>
@@ -193,9 +180,38 @@
     </div>
 
     <script type="text/javascript">
+        let mvDocId = [[${documentId}]];
+
         $(document).ready(function () {
             loadFolderTree();
+            loadFileVersion();
         });
+
+        function loadFileVersion() {
+            $("#fileVersionTab").on("click", function () {
+                $.get(mvHostURLCallApi + '/stg/doc/files/' + mvDocId, function (response) {
+                    if (response.status === "OK") {
+                        $.each(response.data, function (index, d) {
+                            $("#tableVersion").append(`
+                                <tr class="align-self-center">
+                                <td>${index + 1}</td>
+                                <td>${d.uploadAt}</td>
+                                <td>${d.originalName}</td>
+                                <td>${d.isActive}</td>
+                                <td>
+                                    <button type="submit" style="border: none; background: none">
+                                        <img src="/dist/icon/restore.png">
+                                    </button>
+                                </td>
+                            </tr>
+                            `);
+                        });
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+            })
+        }
     </script>
 </body>
 </html>

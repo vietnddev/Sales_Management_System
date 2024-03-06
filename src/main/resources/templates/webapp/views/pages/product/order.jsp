@@ -103,16 +103,16 @@
                             contentTable.append(`
                                <tr>
                                     <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                    <td><a href="/don-hang/${d.orderId}">${d.orderCode}</a></td>
+                                    <td><a href="/don-hang/${d.id}">${d.code}</a></td>
                                     <td>${d.orderTime}</td>
-                                    <td>${d.receiveAddress}</td>
-                                    <td>${d.receiveName}</td>
-                                    <td>${d.receivePhone}</td>
+                                    <td>${d.receiverAddress}</td>
+                                    <td>${d.receiverName}</td>
+                                    <td>${d.receiverPhone}</td>
                                     <td>${formatCurrency(d.totalAmountDiscount)}</td>
                                     <td>${d.salesChannelName}</td>
                                     <td>${d.note}</td>
                                     <td>${d.orderStatusName}</td>
-                                    <td><a class="btn btn-sm btn-info btn-print-report" href="/don-hang/export/pdf/${d.orderId}" orderId="${d.orderId}"><i class="fa-solid fa-print"></i></a></td>
+                                    <td><a class="btn btn-sm btn-info btn-print-report" href="/don-hang/export/pdf/${d.id}" orderId="${d.id}"><i class="fa-solid fa-print"></i></a></td>
                                 </tr>
                             `);
                         });

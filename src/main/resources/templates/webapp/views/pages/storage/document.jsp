@@ -171,7 +171,7 @@
                                 <td><img src="${iconDoc}"></td>
                                 <td>${d.createdAt}</td>
                                 <td style="max-width: 300px">
-                                    <a href="/stg/doc/${d.aliasName}-${d.id}">${d.name}</a>
+                                    <a href="/stg/doc/${d.asName}-${d.id}">${d.name}</a>
                                 </td>
                                 <td>${d.docTypeName}</td>
                                 <td>${d.description}</td>

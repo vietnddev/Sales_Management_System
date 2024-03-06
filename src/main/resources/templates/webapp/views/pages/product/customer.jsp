@@ -38,7 +38,7 @@
                                             <div class="modal fade" id="modelAddKhachHang">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content text-left">
-                                                        <form th:action="@{/customer/insert}" th:object="${customer}" method="post">
+                                                        <form th:action="@{/customer/insert}" method="post">
                                                             <div class="modal-header">
                                                                 <strong class="modal-title">Thêm mới khách hàng</strong>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -48,13 +48,13 @@
                                                                     <div class="col-12">
                                                                         <div class="form-group">
                                                                             <label>Tên khách hàng</label>
-                                                                            <input type="text" class="form-control" required name="name"/>
+                                                                            <input type="text" class="form-control" required name="customerName"/>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label>Giới tính</label>
                                                                             <select class="custom-select col-sm" name="sex" data-placeholder="Chọn giới tính">
-                                                                                <option selected value="M">Nam</option>
-                                                                                <option selected value="F">Nữ</option>
+                                                                                <option selected value="1">Nam</option>
+                                                                                <option selected value="0">Nữ</option>
                                                                             </select>
                                                                         </div>
                                                                         <div class="form-group">
@@ -121,7 +121,7 @@
                                                         <div class="col-12">
                                                             <div class="form-group">
                                                                 <label>Tên khách hàng</label>
-                                                                <input type="text" class="form-control" required name="name" th:value="${list.name}"/>
+                                                                <input type="text" class="form-control" required name="name" th:value="${list.customerName}"/>
                                                             </div>
                                                             <div class="form-group" th:if="${list.sex} == 'Nam'">
                                                                 <label>Giới tính</label>
@@ -196,11 +196,15 @@
                     let contentTable = $('#contentTable');
                     contentTable.empty();
                     $.each(mvCustomers, function (index, d) {
+                        let sex = "Nam";
+                        if (d.sex === false) {
+                            sex = "Nữ";
+                        }
                         contentTable.append(`
                             <tr>
                                 <td class="vertical-center">${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                <td class="vertical-center"><a href="/customer/${d.id}">${d.name}</a></td>
-                                <td class="vertical-center">${d.sex}</td>
+                                <td class="vertical-center"><a href="/customer/${d.id}">${d.customerName}</a></td>
+                                <td class="vertical-center">${sex}</td>
                                 <td class="vertical-center">${d.birthday}</td>
                                 <td class="vertical-center">${d.phoneDefault}</td>
                                 <td class="vertical-center">${d.emailDefault}</td>

@@ -61,9 +61,9 @@
                                                 <tr th:each="item, itemIndex : ${cart.listItems}">
                                                     <td th:text="${itemIndex.index + 1}"></td>
                                                     <td class="text-left">
-                                                        <input type="hidden" id="productVariantIdField" th:value="${item.productVariant.Id}"/>
-                                                        <a th:text="${item.productVariant.variantName}"
-                                                           th:href="@{/san-pham/variant/{id}(id=${item.productVariant.id})}"></a>
+                                                        <input type="hidden" id="productVariantIdField" th:value="${item.productDetail.Id}"/>
+                                                        <a th:text="${item.productDetail.variantName}"
+                                                           th:href="@{/san-pham/variant/{id}(id=${item.productDetail.id})}"></a>
                                                         <input class="form-control form-control-sm" name="note" th:value="${item.note}" readonly>
                                                     </td>
                                                     <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
@@ -86,13 +86,13 @@
                                                                         <div class="modal-body">
                                                                             <input type="hidden" name="cartId" th:value="${cart.id}">
                                                                             <input type="hidden" name="id"     th:value="${item.id}">
-                                                                            <input type="hidden" name="productVariant" th:value="${item.productVariant.id}">
+                                                                            <input type="hidden" name="productDetail" th:value="${item.productDetail.id}">
                                                                             <div class="form-group row" style="display: flex; align-items: center; margin: 0 0 15px 0">
                                                                                 <label class="col-sm-4 text-left">Số lượng</label>
                                                                                 <input class="col-sm-8 form-control"
                                                                                        type="number" name="quantity"
                                                                                        min="1"
-                                                                                       max="[[${item.productVariant.quantity}]]"
+                                                                                       max="[[${item.productDetail.quantity}]]"
                                                                                        th:value="${item.quantity}"/>
                                                                             </div>
                                                                             <div class="form-group row" style="display: flex; align-items: center; margin: 0">
@@ -122,7 +122,7 @@
                                                                             <input type="hidden" name="cartId" th:value="${cart.id}">
                                                                             <input type="hidden" name="itemId" th:value="${item.id}">
                                                                             Xác nhận xóa sản phẩm
-                                                                            <span class="badge badge-info" th:text="${item.productVariant.variantName}"></span>
+                                                                            <span class="badge badge-info" th:text="${item.productDetail.variantName}"></span>
                                                                             khỏi giỏ hàng!
                                                                         </div>
                                                                         <div class="modal-footer justify-content-end">
@@ -540,7 +540,7 @@
                             $('#voucherStatusField').text("Trạng thái: Không khả dụng");
                         }
                         $('#voucherPercentField').text("Phần trăm giảm: " + mvVoucherTicketDetail.voucherInfo.discount + " %");
-                        $('#voucherMaxPriceField').text("Tối đa giảm được: " + formatCurrency(mvVoucherTicketDetail.voucherInfo.maxPriceDiscount));
+                        $('#voucherMaxPriceField').text("Tối đa giảm được: " + formatCurrency(mvVoucherTicketDetail.voucherInfo.discountPriceMax));
                         $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + mvVoucherTicketDetail.voucherInfo.applicableObjects);
                         if (lvVoucherStt === false) {
                             $('#isUseVoucherBlock').show();
@@ -568,8 +568,8 @@
             if($(this).is(':checked')) {
                 if (mvVoucherStatus === "OK") {
                     mvAmountDiscount = Math.round(mvTotalAmountWithoutDiscount * mvVoucherTicketDetail.voucherInfo.discount / 100);
-                    if (mvAmountDiscount > mvVoucherTicketDetail.voucherInfo.maxPriceDiscount) {
-                        mvAmountDiscount = mvVoucherTicketDetail.voucherInfo.maxPriceDiscount;
+                    if (mvAmountDiscount > mvVoucherTicketDetail.voucherInfo.discountPriceMax) {
+                        mvAmountDiscount = mvVoucherTicketDetail.voucherInfo.discountPriceMax;
                     }
                     $("#amountDiscountField").text(formatCurrency(mvAmountDiscount));
                     mvTotalAmountDiscount = mvTotalAmountWithoutDiscount - mvAmountDiscount;
@@ -614,10 +614,10 @@
                 note : note,
                 orderTimeStr : orderTime,
                 cartId : cartId,
-                receiveName : receiveName,
-                receivePhone : receivePhoneNumber,
-                receiveEmail : receiveEmail,
-                receiveAddress : receiveAddress,
+                receiverName : receiveName,
+                receiverPhone : receivePhoneNumber,
+                receiverEmail : receiveEmail,
+                receiverAddress : receiveAddress,
                 voucherUsedCode : mvVoucherCode,
                 amountDiscount : mvAmountDiscount
             }

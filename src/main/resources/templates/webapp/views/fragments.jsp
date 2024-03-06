@@ -60,7 +60,7 @@
                                 <i class="text-primary fa-solid fa-house"></i>
                             </a>
                             <a th:if="${iterStat.last}" class="text-secondary" th:text="${b.name}"></a>
-                            <a th:unless="${iterStat.last}" th:href="@{'/stg/doc/' + ${b.aliasName}}" th:text="${b.name}"></a>
+                            <a th:unless="${iterStat.last}" th:href="@{'/stg/doc/' + ${b.asName}}" th:text="${b.name}"></a>
                         </li>
                     </ol>
                 </div>

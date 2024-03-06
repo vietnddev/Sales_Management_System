@@ -262,8 +262,8 @@
             });
         }
 
-        function setProductSelectedTableInfo(productVariants) {
-            $.each(productVariants, function (index, d) {
+        function setProductSelectedTableInfo(productDetails) {
+            $.each(productDetails, function (index, d) {
                 console.log("4")
                 $("#productContentTable").append(`
                     <tr>

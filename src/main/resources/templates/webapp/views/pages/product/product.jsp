@@ -207,8 +207,8 @@
                         contentTable.append(`
                             <tr>
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                <td class="text-center"><img src="/${p.imageActive.directoryPath}/${p.imageActive.storageName}" style="width: 60px; height: 60px; border-radius: 5px"></td>
-                                <td><a href="/san-pham/${p.productId}">${p.productName}</a></td>
+                                <td class="text-center"><img src="${p.imageActive}" style="width: 60px; height: 60px; border-radius: 5px"></td>
+                                <td><a href="/san-pham/${p.id}">${p.productName}</a></td>
                                 <td>${p.productTypeName}</td>
                                 <td>${variantBlock}</td>
                                 <td>
@@ -217,7 +217,7 @@
                                 </td>
                                 <td>${p.unitName}</td>
                                 <td>${voucherBlock}</td>
-                                <td>${mvProductStatus[p.productStatus]}</td>
+                                <td>${mvProductStatus[p.status]}</td>
                             </tr>
                         `);
                     });

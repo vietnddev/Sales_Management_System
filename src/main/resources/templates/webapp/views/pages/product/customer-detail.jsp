@@ -346,11 +346,11 @@
                                                         <tr th:each="donHang, index : ${listDonHang}">
                                                             <td th:text="${index.index + 1}"></td>
                                                             <td>
-                                                                <a th:href="@{/don-hang/{id}(id=${donHang.orderId})}"
-                                                                   th:text="${donHang.orderCode}"></a>
+                                                                <a th:href="@{/don-hang/{id}(id=${donHang.id})}"
+                                                                   th:text="${donHang.code}"></a>
                                                             </td>
                                                             <td th:text="${donHang.orderTime}"></td>
-                                                            <td th:text="${donHang.receiveAddress}"></td>
+                                                            <td th:text="${donHang.receiverAddress}"></td>
                                                             <td th:text="${donHang.totalAmountDiscount}"></td>
                                                             <td th:text="${donHang.salesChannelName}"></td>
                                                             <td></td>

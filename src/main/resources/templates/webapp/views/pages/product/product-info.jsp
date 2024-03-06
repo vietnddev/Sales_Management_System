@@ -60,7 +60,7 @@
                                 <button class="btn btn-danger link-delete" type="button" name="delete"
                                         title="Xóa biến thể sản phẩm"
                                         th:entity="'product'"
-                                        th:entityId="${detailProducts.productId}"
+                                        th:entityId="${detailProducts.id}"
                                         th:entityName="${detailProducts.productName}"
                                         th:actionType="'delete'">
                                     <i class="fa-solid fa-trash"></i>
@@ -88,7 +88,7 @@
                                         <div class="tab-pane fade active show" id="custom-tabs-three-general" role="tabpanel" aria-labelledby="custom-tabs-three-general-tab">
                                             <div class="row">
                                                 <div class="col-9" style="padding-top: 25px">
-                                                    <textarea id="summernote" th:text="${detailProducts.productDes}"></textarea>
+                                                    <textarea id="summernote" th:text="${detailProducts.description}"></textarea>
                                                 </div>
                                                 <!--THÔNG TIN SẢN PHẨM GỐC-->
                                                 <div class="col-3" style="background-color: #fff; border-radius: 15px; padding: 15px;">
@@ -112,7 +112,7 @@
                                                         <label>Trạng thái</label>
                                                         <select class="custom-select" name="status" id="statusField"></select>
                                                     </div>
-                                                    <input type="hidden" id="describes_virtual" th:value="${detailProducts.productDes}"/>
+                                                    <input type="hidden" id="describes_virtual" th:value="${detailProducts.description}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -398,11 +398,11 @@
                                         <table class="table table-bordered" style="margin-bottom: 0">
                                             <thead>
                                                 <tr>
-                                                    <td>STT</td>
-                                                    <td>Giá gốc</td>
-                                                    <td>Giá khuyến mãi</td>
-                                                    <td>Thời gian cập nhật</td>
-                                                    <td>Trạng thái</td>
+                                                    <th>STT</th>
+                                                    <th>Tên</th>
+                                                    <th>Giá cũ</th>
+                                                    <th>Giá mới</th>
+                                                    <th>Thời gian cập nhật</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="tablePriceHistory"></tbody>
@@ -601,10 +601,10 @@
             });
 
             mvStatusField.empty();
-            if (mvProductDetail.productStatus === "A") {
+            if (mvProductDetail.status === "A") {
                 mvStatusField.append(`<option value="A">${mvProductStatus["A"]}</option>`);
                 mvStatusField.append(`<option value="I">${mvProductStatus["I"]}</option>`);
-            } else if (mvProductDetail.productStatus === "I") {
+            } else if (mvProductDetail.status === "I") {
                 mvStatusField.append(`<option value="I">${mvProductStatus["I"]}</option>`);
                 mvStatusField.append(`<option value="A">${mvProductStatus["A"]}</option>`);
             }
@@ -644,8 +644,8 @@
                     productId : mvProductId,
                     colorId : mvColorField.val(),
                     sizeId : mvSizeField.val(),
-                    priceSellValue : $("#originalPriceField").val(),
-                    promotionPriceValue : $("#promotionPriceField").val()
+                    originalPrice : $("#originalPriceField").val(),
+                    discountPrice : $("#promotionPriceField").val()
                 }
                 $.get(mvHostURLCallApi + "/product/variant/exists", paramsCheckExists, function (response) {
                     if (response.data === true) {
@@ -658,8 +658,8 @@
                             fabricTypeId : $("#fabricTypeField").val(),
                             colorId : $("#colorField").val(),
                             sizeId : $("#sizeField").val(),
-                            priceSellValue : $("#originalPriceField").val().replaceAll(',', ''),
-                            promotionPriceValue : $("#promotionPriceField").val().replaceAll(',', '')
+                            originalPrice : $("#originalPriceField").val().replaceAll(',', ''),
+                            discountPrice : $("#promotionPriceField").val().replaceAll(',', '')
                         };
                         $.ajax({
                             url: apiURL,
@@ -688,11 +688,11 @@
             });
 
             $(document).on("click", ".btn-delete-variant", function () {
-                let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
-                $(this).attr("entity", "productVariant");
-                $(this).attr("entityId", productVariant.productVariantId);
+                let productDetail = mvProductVariantList[$(this).attr("productDetailId")];
+                $(this).attr("entity", "productDetail");
+                $(this).attr("entityId", productDetail.id);
                 $(this).attr("actionType", "delete");
-                showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + productVariant.name);
+                showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + productDetail.variantName);
             })
 
             $(document).on("click", ".btn-delete-image", function () {
@@ -716,7 +716,7 @@
                     if (entity === 'product') {
                         apiURL += '/product/delete/' + entityId
                     }
-                    if (entity === 'productVariant') {
+                    if (entity === 'productDetail') {
                         apiURL += '/product/variant/delete/' + entityId
                     }
                 }
@@ -742,7 +742,7 @@
                             <tr>
                                 <td>${index + 1}</td>
                                 <td>${d.title}</td>
-                                <td>${d.fieldName}</td>
+                                <td>${d.field}</td>
                                 <td>${d.oldValue}</td>
                                 <td>${d.newValue}</td>
                                 <td>${d.createdBy}</td>
@@ -759,42 +759,50 @@
 
         function loadPriceHistoryOfProduct() {
             $(document).on("click", ".btn-view-price-history", function () {
-                let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
-                let pricesOfProduct = productVariant.listPrices;
-                $("#tablePriceHistory").empty();
-                $.each(pricesOfProduct, function (index, d) {
-                    let originalPrice = d.original;
-                    let promotionPrice = d.discount;
-                    if ($.isNumeric(originalPrice)) {
-                        originalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice);
-                    } else {
-                        originalPrice = '-';
+                let productDetail = mvProductVariantList[$(this).attr("productDetailId")];
+                let pricesOfProduct = [];
+                let apiURL = mvHostURLCallApi + '/product/variant/price/history/' + productDetail.id;
+                $.get(apiURL, function (response) {
+                    if (response.status === "OK") {
+                        pricesOfProduct = response.data;
+                        $("#tablePriceHistory").empty();
+                        $.each(pricesOfProduct, function (index, d) {
+                            let oldValue = d.oldValue;
+                            let newValue = d.newValue;
+                            if ($.isNumeric(oldValue)) {
+                                oldValue = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(oldValue);
+                            } else {
+                                oldValue = '-';
+                            }
+                            if ($.isNumeric(newValue)) {
+                                newValue = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(newValue);
+                            } else {
+                                newValue = '-';
+                            }
+                            $("#tablePriceHistory").append(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${d.title}</td>
+                                    <td>${oldValue}</td>
+                                    <td>${newValue}</td>
+                                    <td>${d.createdAt}</td>
+                                </tr>
+                            `);
+                        })
                     }
-                    if ($.isNumeric(promotionPrice)) {
-                        promotionPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(promotionPrice);
-                    } else {
-                        promotionPrice = '-';
-                    }
-                    $("#tablePriceHistory").append(`
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td><span>${originalPrice}</span></td>
-                            <td><span>${promotionPrice}</span></td>
-                            <td>${d.createdAt}</td>
-                            <td>${d.status}</td>
-                        </tr>
-                  `);
-                })
-                $("#modalPriceHistoryTitle").text("Lịch sử giá bán của [${productVariant.name}]")
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+                $("#modalPriceHistoryTitle").text("Lịch sử cập nhật giá bán")
                 $("#modalPriceHistory").modal();
             })
         }
 
         function updatePrice() {
             $(document).on("click", ".btn-update-price", function () {
-                let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
-                let originalPrice = productVariant.priceSellValue;
-                let promotionPrice = productVariant.priceAfterDiscount;
+                let productDetail = mvProductVariantList[$(this).attr("productDetailId")];
+                let originalPrice = productDetail.originalPrice;
+                let promotionPrice = productDetail.discountPrice;
                 if ($.isNumeric(originalPrice)) {
                     originalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice);
                 } else {
@@ -808,28 +816,25 @@
                 $("#orgPriceFieldFUP").val(originalPrice);
                 $("#promoPriceFieldFUP").val(promotionPrice);
                 let btnSubmitUpdate = $("#btnUpdatePriceSubmit");
-                btnSubmitUpdate.attr("productVariantId", $(this).attr("productVariantId"));
-                btnSubmitUpdate.attr("priceId", productVariant.priceSellId);
+                btnSubmitUpdate.attr("productDetailId", $(this).attr("productDetailId"));
+                btnSubmitUpdate.attr("priceId", productDetail.priceSellId);
                 $("#modalUpdatePrice").modal();
             })
 
             $("#btnUpdatePriceSubmit").on("click", function () {
-                if ($("#orgPriceToUpdateFieldFUP").val() === "") {
-                    return;
-                }
-                let apiURL = mvHostURLCallApi + "/product/variant/" + $(this).attr("productVariantId") + "/price/update/" + $(this).attr("priceId");
+                // if ($("#orgPriceToUpdateFieldFUP").val() === "") {
+                //     return;
+                // }
+                let apiURL = mvHostURLCallApi + "/product/variant/price/update/" + $(this).attr("productDetailId");
                 let body = {
-                    productVariant : {id: $(this).attr("productVariantId")},
-                    name : mvProductVariantNameField.val(),
-                    type : "S",
-                    giaBan : $("#orgPriceToUpdateFieldFUP").val().replaceAll(',', ''),
-                    discount : $("#promoPriceToUpdateFieldFUP").val().replaceAll(',', '')
-                };
+                    originalPrice: $("#orgPriceToUpdateFieldFUP").val().replaceAll(',', ''),
+                    discountPrice : $("#promoPriceToUpdateFieldFUP").val().replaceAll(',', '')
+                }
                 $.ajax({
                     url: apiURL,
                     type: "PUT",
-                    contentType: "application/json",
-                    data: JSON.stringify(body),
+                    //contentType: "application/json",
+                    data: body,
                     success: function (response) {
                         if (response.status === "OK") {
                             alert("Update successfully!");
@@ -886,9 +891,9 @@
                         contentTable.empty();
                         mvProductVariantList = [];
                         $.each(data, function (index, d) {
-                            mvProductVariantList[d.productVariantId] = d;
-                            let originalPrice = d.priceSellValue;
-                            let promotionPrice = d.priceAfterDiscount;
+                            mvProductVariantList[d.id] = d;
+                            let originalPrice = d.originalPrice;
+                            let promotionPrice = d.discountPrice;
                             if ($.isNumeric(originalPrice)) {
                                 originalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice);
                             } else {
@@ -902,23 +907,23 @@
                             contentTable.append(`
                                 <tr>
                                     <td>${index + 1}</td>
-                                    <td><a href="/san-pham/variant/${d.productVariantId}">${d.name}</a></td>
+                                    <td><a href="/san-pham/variant/${d.id}">${d.variantName}</a></td>
                                     <td>${d.colorName}</td>
                                     <td>${d.sizeName}</td>
                                     <td>${d.fabricTypeName}</td>
                                     <td>${d.storageQty}</td>
                                     <td>${d.soldQty}</td>
                                     <td>
-                                        <span class="btn-view-price-history" productVariantId="${d.productVariantId}" style="color: #007bff; cursor: pointer">${originalPrice}</span>
+                                        <span class="btn-view-price-history" productDetailId="${d.id}" style="color: #007bff; cursor: pointer">${originalPrice}</span>
                                     </td>
                                     <td>
-                                        <span class="btn-view-price-history" productVariantId="${d.productVariantId}" style="color: #007bff; cursor: pointer">${promotionPrice}</span>
+                                        <span class="btn-view-price-history" productDetailId="${d.id}" style="color: #007bff; cursor: pointer">${promotionPrice}</span>
                                     </td>
                                     <td>${d.status}</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-info btn-update-variant" title="Cập nhật biến thể sản phẩm"><i class="fa-solid fa-circle-check"></i></button>
-                                        <button type="button" class="btn btn-sm btn-primary btn-update-price" title="Cập nhật giá sản phẩm" productVariantId="${d.productVariantId}"><i class="fa-solid fa-dollar-sign"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger btn-delete-variant" title="Xóa biến thể sản phẩm" productVariantId="${d.productVariantId}"><i class="fa-solid fa-trash"></i></button>
+                                        <button type="button" class="btn btn-sm btn-primary btn-update-price" title="Cập nhật giá sản phẩm" productDetailId="${d.id}"><i class="fa-solid fa-dollar-sign"></i></button>
+                                        <button type="button" class="btn btn-sm btn-danger btn-delete-variant" title="Xóa biến thể sản phẩm" productDetailId="${d.id}"><i class="fa-solid fa-trash"></i></button>
                                     </td>
                                 </tr>
                             `);
@@ -1062,7 +1067,7 @@
     previewNode.parentNode.removeChild(previewNode)
 
     var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-        url: "/uploads/san-pham/[[${detailProducts.productId}]]", // Gọi tới API trong spring để xử lý file
+        url: "/uploads/san-pham/[[${detailProducts.id}]]", // Gọi tới API trong spring để xử lý file
         thumbnailWidth: 80,
         thumbnailHeight: 80,
         parallelUploads: 20,

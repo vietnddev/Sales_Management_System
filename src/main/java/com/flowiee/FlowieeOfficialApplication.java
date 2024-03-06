@@ -1,7 +1,8 @@
 package com.flowiee;
 
-import com.flowiee.app.config.StartUp;
+import com.flowiee.sms.service.MailService;
 import com.google.zxing.WriterException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -13,8 +14,8 @@ import java.io.IOException;
 @EnableScheduling
 @SpringBootApplication
 public class FlowieeOfficialApplication {
-//    @Autowired
-//    private MailService mailService;
+    @Autowired
+    private MailService mailService;
 
     public static void main(String[] args) throws WriterException, IOException {
         SpringApplication.run(FlowieeOfficialApplication.class, args);
@@ -29,11 +30,11 @@ public class FlowieeOfficialApplication {
 //        MatrixToImageWriter.writeToPath(matrix, "PNG", path);
     }
 
-    //Auto gửi email báo cáo doanh thu hàng ngày
+//    Auto gửi email báo cáo doanh thu hàng ngày
 //    @Scheduled(cron = "0 0 20 * * ?")
 //    public void sendReportDaily() {
 //        try {
-//            String subject = "Email subject";
+//            String subject = "Flowiee report daily";
 //            String to = "nguyenducviet0684@gmail.com";
 //            String content = "Email content";
 //            mailService.sendMail(subject, to, content);

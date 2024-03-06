@@ -163,9 +163,9 @@
                                                 <td th:text="${index.index + 1}"></td>
                                                 <td>
                                                     <a th:href="@{/don-hang/{id}(id=${list.id})}"
-                                                       th:text="${list.maDonHang}"></a>
+                                                       th:text="${list.code}"></a>
                                                 </td>
-                                                <td th:text="${list.thoiGianDatHang}"></td>
+                                                <td th:text="${list.orderTime}"></td>
                                                 <td th:text="${list.receiverAddress}"></td>
                                                 <td th:text="${list.receiverName}"></td>
                                                 <td th:text="${list.kenhBanHang.name}"></td>

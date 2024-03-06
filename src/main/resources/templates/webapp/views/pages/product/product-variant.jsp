@@ -322,7 +322,7 @@
                                                 <div class="modal-body">
                                                     <div class="row text-left">
                                                         <div class="col-12">
-                                                            <input type="hidden" name="productVariant"
+                                                            <input type="hidden" name="productDetail"
                                                                    th:value="${bienTheSanPhamId}"/>
                                                             <div class="form-group">
                                                                 <label>Tên thuộc tính</label>
@@ -387,7 +387,7 @@
                                             </td>
                                             <td>
                                                 <input type="hidden" name="id" th:value="${list.id}">
-                                                <input type="hidden" name="bienTheSanPham" th:value="${list.productVariant.id}">
+                                                <input type="hidden" name="bienTheSanPham" th:value="${list.productDetail.id}">
                                                 <button type="submit" class="btn btn-sm btn-info">Cập nhật</button>
                                                 <button type="button" class="btn btn-sm btn-danger link-delete"
                                                         data-toggle="modal"
