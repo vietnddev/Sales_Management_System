@@ -60,8 +60,8 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setAction(action);
         systemLog.setContent(content);
         systemLog.setContentChange(null);
-        systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
-        systemLog.setIp(CommonUtils.getCurrentAccountIp());
+        systemLog.setCreatedBy(CommonUtils.getUserPrincipal().getId());
+        systemLog.setIp(CommonUtils.getUserPrincipal().getIp());
         return systemLogRepo.save(systemLog);
     }
 
@@ -72,8 +72,8 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setAction(action);
         systemLog.setContent(content);
         systemLog.setContentChange(contentChange);
-        systemLog.setCreatedBy(CommonUtils.getCurrentAccountId());
-        systemLog.setIp(CommonUtils.getCurrentAccountIp());
+        systemLog.setCreatedBy(CommonUtils.getUserPrincipal().getId());
+        systemLog.setIp(CommonUtils.getUserPrincipal().getIp());
         return systemLogRepo.save(systemLog);
     }
 }

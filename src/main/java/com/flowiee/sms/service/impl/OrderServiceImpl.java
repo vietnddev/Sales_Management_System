@@ -53,7 +53,6 @@ import java.util.*;
 @Service
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
-    private static final String module = MODULE.PRODUCT.name();
 
     private final OrderRepository orderRepo;
     private final OrderDetailRepository orderDetailRepo;
@@ -127,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             //Insert order
             Order order = new Order();
-            order.setCode(CommonUtils.getMaDonHang());
+            order.setCode("F" + CommonUtils.now("yyMMddHHmmss"));
             order.setCustomer(new Customer(request.getCustomerId()));
             order.setKenhBanHang(new Category(request.getSalesChannelId(), null));
             order.setNhanVienBanHang(new Account(request.getCashierId()));
@@ -192,8 +191,8 @@ public class OrderServiceImpl implements OrderService {
             cartService.deleteAllItems();
 
             //Log
-            systemLogService.writeLog(module, ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
-            logger.info("Insert new order success! insertBy=" + CommonUtils.getCurrentAccountUsername());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
+            logger.info("Insert new order success! insertBy=" + CommonUtils.getUserPrincipal().getUsername());
 
             return OrderDTO.fromOrder(orderSaved);
         } catch (Exception e) {
@@ -206,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDetail saveOrderDetail(OrderDetail orderDetail) {
         try {
             OrderDetail orderDetailSaved = orderDetailRepo.save(orderDetail);
-            systemLogService.writeLog(module, ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + orderDetail.toString());
             return orderDetailSaved;
         } catch (Exception e) {
@@ -228,7 +227,7 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setId(id);
         orderRepo.save(order);
-        systemLogService.writeLog(module, ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + order.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + order.toString());
         return MessageUtils.UPDATE_SUCCESS;
     }
@@ -238,7 +237,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderDetail.setId(orderDetailId);
             orderDetailRepo.save(orderDetail);
-            systemLogService.writeLog(module, ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + orderDetail.toString());
             return MessageUtils.UPDATE_SUCCESS;
         } catch (RuntimeException ex) {
@@ -254,7 +253,7 @@ public class OrderServiceImpl implements OrderService {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         orderRepo.deleteById(id);
-        systemLogService.writeLog(module, ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
         return MessageUtils.DELETE_SUCCESS;
     }
@@ -264,7 +263,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDetail orderDetail = this.findOrderDetailById(orderDetailId);
         try {
             orderDetailRepo.deleteById(orderDetailId);
-            systemLogService.writeLog(module, ACTION.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Xóa item of đơn hàng " + orderDetail.toString());
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {

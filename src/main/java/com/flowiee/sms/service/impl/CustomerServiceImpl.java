@@ -13,7 +13,6 @@ import com.flowiee.sms.service.CustomerService;
 import com.flowiee.sms.service.OrderService;
 import com.flowiee.sms.service.SystemLogService;
 
-import com.flowiee.sms.utils.AppConstants;
 import com.flowiee.sms.utils.CommonUtils;
 import com.flowiee.sms.utils.MessageUtils;
 import org.slf4j.Logger;
@@ -90,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO saveCustomer(CustomerDTO dto) {
         Customer customer = Customer.fromCustomerDTO(dto);
-        customer.setCreatedBy(CommonUtils.getCurrentAccountId());
+        customer.setCreatedBy(CommonUtils.getUserPrincipal().getId());
         Customer customerInserted = customerRepository.save(customer);
         if (dto.getPhoneDefault() != null) {
             CustomerContact customerContact = new CustomerContact();

@@ -112,7 +112,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")));
         fileInfo.setProduct(null);
         fileInfo.setOrder(new Order(orderId));
-        fileInfo.setAccount(new Account(CommonUtils.getCurrentAccountId()));
+        fileInfo.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
         fileInfo.setActive(false);
         fileRepository.save(fileInfo);
 
@@ -161,7 +161,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileInfo.setContentType(fileUpload.getContentType());
         fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")));
         fileInfo.setProduct(new Product(sanPhamId));
-        fileInfo.setAccount(new Account(CommonUtils.getCurrentAccountId()));
+        fileInfo.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
         fileInfo.setActive(false);
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
@@ -188,7 +188,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         ProductDetail productDetail = productService.findProductVariantById(bienTheId);
         fileInfo.setProductDetail(productDetail);
         fileInfo.setProduct(productDetail.getProduct());
-        fileInfo.setAccount(new Account(CommonUtils.getCurrentAccountId()));
+        fileInfo.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
         fileInfo.setActive(false);
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
@@ -228,7 +228,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         fileToChange.setExtension(CommonUtils.getExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")));
-        fileToChange.setAccount(new Account(CommonUtils.getCurrentAccountId()));
+        fileToChange.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
         FileStorage imageSaved = fileRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload

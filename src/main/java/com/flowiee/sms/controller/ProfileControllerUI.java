@@ -33,7 +33,7 @@ public class ProfileControllerUI extends BaseController {
 		ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_PROFILE);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", accountService.findCurrentAccount());
-		modelAndView.addObject("listDonHangDaBan", orderService.findByStaffId(Objects.requireNonNull(CommonUtils.getCurrentAccountId())));
+		modelAndView.addObject("listDonHangDaBan", orderService.findByStaffId(Objects.requireNonNull(CommonUtils.getUserPrincipal().getId())));
 		return baseView(modelAndView);
 	}
 

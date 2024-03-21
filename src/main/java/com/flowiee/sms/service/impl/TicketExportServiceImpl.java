@@ -72,7 +72,7 @@ public class TicketExportServiceImpl implements TicketExportService {
         }
         TicketExport ticketExport = new TicketExport();
         ticketExport.setTitle("Xuất hàng cho đơn " + orderDTO.getCode());
-        ticketExport.setExporter(CommonUtils.getCurrentAccountUsername());
+        ticketExport.setExporter(CommonUtils.getUserPrincipal().getUsername());
         ticketExport.setExportTime(new Date());
         ticketExport.setNote(null);
         ticketExport.setStatus("DRAFT");

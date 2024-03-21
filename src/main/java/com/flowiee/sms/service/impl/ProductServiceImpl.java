@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product saveProduct(Product product) {
         try {
-            product.setCreatedBy(CommonUtils.getCurrentAccountId());
+            product.setCreatedBy(CommonUtils.getUserPrincipal().getId());
             product.setDescription(product.getDescription() != null ? product.getDescription() : "");
             product.setStatus(AppConstants.PRODUCT_STATUS.I.name());
             Product pSaved = productsRepo.save(product);
@@ -153,7 +153,7 @@ public class ProductServiceImpl implements ProductService {
         });
 
         productToUpdate.setId(productId);
-        productToUpdate.setLastUpdatedBy(CommonUtils.getCurrentAccountUsername());
+        productToUpdate.setLastUpdatedBy(CommonUtils.getUserPrincipal().getUsername());
         Product productUpdated = productsRepo.save(productToUpdate);
         String noiDungLog = "";
         String noiDungLogUpdate = "";

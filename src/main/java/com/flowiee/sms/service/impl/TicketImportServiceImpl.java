@@ -27,9 +27,9 @@ import java.util.List;
 @Service
 public class TicketImportServiceImpl implements TicketImportService {
     @Autowired private TicketImportRepository ticketImportRepo;
-    @Autowired private ProductService              productService;
+    @Autowired private ProductService productService;
     @Autowired private ProductDetailTempRepository productVariantTempRepo;
-    @Autowired private MaterialService             materialService;
+    @Autowired private MaterialService materialService;
     @Autowired private MaterialTempRepository materialTempRepo;
 
     @Override
@@ -166,8 +166,8 @@ public class TicketImportServiceImpl implements TicketImportService {
         TicketImport ticketImport = new TicketImport();
         ticketImport.setTitle(title);
         ticketImport.setStatus("DRAFT");
-        ticketImport.setCreatedBy(CommonUtils.getCurrentAccountId());
-        ticketImport.setImporter(CommonUtils.getCurrentAccountUsername());
+        ticketImport.setCreatedBy(CommonUtils.getUserPrincipal().getId());
+        ticketImport.setImporter(CommonUtils.getUserPrincipal().getUsername());
         ticketImport.setImportTime(new Date());
         ticketImport = ticketImportRepo.save(ticketImport);
         return ticketImport;

@@ -41,7 +41,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findCurrentAccount() {
-        return this.findById(CommonUtils.getCurrentAccountId());
+        return this.findById(CommonUtils.getUserPrincipal().getId());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class AccountServiceImpl implements AccountService {
             String password = account.getPassword();
             account.setPassword(bCrypt.encode(password));
             Account accountSaved = accountRepo.save(account);
-        	SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
+        	SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
             systemLogService.writeLog(systemLog);
             logger.info("Insert account success! username=" + account.getUsername());
             return accountSaved;
@@ -76,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
             } else {
                 account.setRole("USER");
             }
-        	SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
+        	SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
             systemLogService.writeLog(systemLog);
             logger.info("Update account success! username=" + account.getUsername());
             return accountRepo.save(account);
@@ -94,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
             account = accountRepo.findById(accountId).orElse(null);
             if (account != null) {
                 accountRepo.delete(account);
-                SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtils.getCurrentAccountId(), CommonUtils.getCurrentAccountIp());
+                SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
                 systemLogService.writeLog(systemLog);
             }
             logger.info("Delete account success! username=" + account.getUsername());

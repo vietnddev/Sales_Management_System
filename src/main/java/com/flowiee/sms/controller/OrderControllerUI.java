@@ -79,14 +79,14 @@ public class OrderControllerUI extends BaseController {
     public ModelAndView showPageBanHang() {
         validateModuleProduct.insertOrder(true);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_SELL);
-        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
+        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
         if (orderCartCurrent.isEmpty()) {
             OrderCart orderCart = new OrderCart();
-            orderCart.setCreatedBy(CommonUtils.getCurrentAccountId());
+            orderCart.setCreatedBy(CommonUtils.getUserPrincipal().getId());
             cartService.saveCart(orderCart);
         }
 
-        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getCurrentAccountId());
+        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
         modelAndView.addObject("listCart", listOrderCart);
 
         double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());

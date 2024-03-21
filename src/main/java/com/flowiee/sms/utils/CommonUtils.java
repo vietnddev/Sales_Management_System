@@ -1,6 +1,8 @@
 package com.flowiee.sms.utils;
 
+import com.flowiee.sms.core.exception.AuthenticationException;
 import com.flowiee.sms.model.MODULE;
+import com.flowiee.sms.model.UserPrincipal;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -10,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,21 +27,17 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
-    public static String rootPath = "src/main/resources/static";
-    public static String fileUploadPath = rootPath + "/uploads/";
-    public static String reportTemplatePath = rootPath + "/report";
-    public static String excelTemplatePath = rootPath + "/templates/excel";
-    public static String ADMINISTRATOR = "admin";
+    public static final String rootPath = "src/main/resources/static";
+    public static final String fileUploadPath = rootPath + "/uploads/";
+    public static final String reportTemplatePath = rootPath + "/report";
+    public static final String excelTemplatePath = rootPath + "/templates/excel";
+    public static final String ADMINISTRATOR = "admin";
     public static Date START_APP_TIME = null;
 
     public static String formatToVND(Object currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         currencyFormat.setCurrency(Currency.getInstance("VND"));
         return currency != null ? currencyFormat.format(currency) : "0 VND";
-    }
-
-    public static String getMaDonHang() {
-        return "F" + CommonUtils.now("yyMMddHHmmss");
     }
 
     public static String genCategoryCodeByName(String categoryName) {
@@ -137,36 +134,6 @@ public class CommonUtils {
         }
     }
 
-    public static String generateAliasName(String text) {
-        String transformedText = "";
-        if (text != null) {
-            // Loại bỏ dấu tiếng Việt và ký tự đặc biệt
-            String normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD);
-            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-            String textWithoutAccents = pattern.matcher(normalizedText).replaceAll("");
-            String cleanedText = textWithoutAccents.replaceAll("[^a-zA-Z0-9 ]", "");
-
-            // Chuyển đổi thành chữ thường (lowercase)
-            String lowercaseText = cleanedText.toLowerCase();
-
-            // Thay thế khoảng trắng bằng dấu gạch ngang ("-")
-            transformedText = lowercaseText.replace(" ", "-");
-
-            if (transformedText.endsWith("-")) {
-                transformedText = transformedText.substring(0, transformedText.length() - 1);
-            }
-        }
-        return transformedText;
-    }
-
-    public static int getIdFromAliasPath(String alias) {
-        return Integer.parseInt(alias.substring(alias.lastIndexOf("-") + 1));
-    }
-
-    public static String getAliasNameFromAliasPath(String alias) {
-        return alias.substring(0, alias.lastIndexOf("-"));
-    }
-
     public static byte[] exportTemplate(String templateName) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String filePathOriginal = CommonUtils.excelTemplatePath + "/" + templateName + ".xlsx";
@@ -206,32 +173,12 @@ public class CommonUtils {
         return cellStyle;
     }
 
-    public static Integer getCurrentAccountId() {
+    public static UserPrincipal getUserPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            return Integer.parseInt(authentication.getName().substring(authentication.getName().indexOf("_") + 1));
+            return (UserPrincipal) authentication.getPrincipal();
         }
-        return null;
-    }
-
-    public static String getCurrentAccountUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            return authentication.getName().substring(0, authentication.getName().indexOf("_"));
-        }
-        return null;
-    }
-
-    public static String getCurrentAccountIp() {
-        WebAuthenticationDetails details = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Object authDetails = authentication.getDetails();
-            if (authDetails instanceof WebAuthenticationDetails) {
-                details = (WebAuthenticationDetails) authDetails;
-            }
-        }
-        return details != null ? details.getRemoteAddress() : "unknown";
+        throw new AuthenticationException();
     }
 
     public static String convertListIntToStr(List<Integer> listId) {
