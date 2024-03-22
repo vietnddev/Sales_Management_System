@@ -120,7 +120,7 @@
                                                             <div class="col-12">
                                                                 <div class="form-group">
                                                                     <label>Địa chỉ</label>
-                                                                    <textarea class="form-control" name="diaChi" th:text="${accountInfo.diaChi}"></textarea>
+                                                                    <textarea class="form-control" name="address" th:text="${accountInfo.address}"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>

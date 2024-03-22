@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Flowiee | Đơn hàng chi tiết</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style rel="stylesheet">
         .table td,
         th {
@@ -74,8 +72,8 @@
                                                         <tr th:each="list, index : ${listOrderDetail}">
                                                             <td th:text="${index.index + 1}" style="font-weight: bold"></td>
                                                             <td>
-                                                                <a th:text="${list.productVariantDTO.name}"
-                                                                   th:href="@{/san-pham/variant/{id}(id=${list.productVariantDTO.productDetailId})}"></a>
+                                                                <a th:text="${list.productVariantDTO.variantName}"
+                                                                   th:href="@{/san-pham/variant/{id}(id=${list.productVariantDTO.id})}"></a>
                                                             </td>
                                                             <td th:text="${list.productVariantDTO.unitName}"></td>
                                                             <td th:text="${list.quantity}" class="text-right"></td>
@@ -348,6 +346,7 @@
                 if (mvOrderDetail.paymentStatus === true) {
                     showModalDialog("Thông báo", "Đơn hàng này đã được thanh toán!");
                 } else {
+                    $('#paymentAmountField_DoPay').val(mvOrderDetail.totalAmountDiscount);
                     $("#modalThanhToan").modal();
                 }
             })
@@ -366,6 +365,7 @@
                     data: params,
                     success: function (response) {
                         if (response.status === "OK") {
+                            alert("Payment success!")
                             window.location.reload();
                         }
                     },
@@ -387,8 +387,8 @@
             });
 
             $("#yesButton").on("click", function () {
-                let apiURL = mvHostURLCallApi + "/storage/ticket-export/create-draft";
-                let body = {orderId : mvOrderDetail.id, code : mvOrderDetail.code};
+                let apiURL = mvHostURLCallApi + "/stg/ticket-export/create-draft";
+                let body = {id : mvOrderDetail.id, code : mvOrderDetail.code};
                 $.ajax({
                     url: apiURL,
                     type: "POST",
@@ -413,7 +413,7 @@
             mvTicketExportTable.empty();
             mvTicketExportTable.append(
                 '<tr>' +
-                    '<td><a href="/storage/ticket-export/' + data.id + '">' + data.title + '</a></td>' +
+                    '<td><a href="/stg/ticket-export/' + data.id + '">' + data.title + '</a></td>' +
                     '<td>' + data.exporter + '</td>' +
                     '<td>' + data.exportTime + '</td>' +
                     '<td>' + data.note + '</td>' +

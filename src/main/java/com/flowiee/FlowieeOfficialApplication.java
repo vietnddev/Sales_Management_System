@@ -1,6 +1,6 @@
 package com.flowiee;
 
-import com.flowiee.sms.service.MailService;
+import com.flowiee.pms.service.system.SendMailService;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +15,7 @@ import java.io.IOException;
 @SpringBootApplication
 public class FlowieeOfficialApplication {
     @Autowired
-    private MailService mailService;
+    private SendMailService sendMailService;
 
     public static void main(String[] args) throws WriterException, IOException {
         SpringApplication.run(FlowieeOfficialApplication.class, args);

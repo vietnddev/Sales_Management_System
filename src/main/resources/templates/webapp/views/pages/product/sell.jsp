@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Danh sách đơn hàng</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style rel="stylesheet">
         .table td, th {
             vertical-align: middle;
@@ -58,83 +56,83 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr th:each="item, itemIndex : ${cart.listItems}">
-                                                    <td th:text="${itemIndex.index + 1}"></td>
-                                                    <td class="text-left">
-                                                        <input type="hidden" id="productVariantIdField" th:value="${item.productDetail.Id}"/>
-                                                        <a th:text="${item.productDetail.variantName}"
-                                                           th:href="@{/san-pham/variant/{id}(id=${item.productDetail.id})}"></a>
-                                                        <input class="form-control form-control-sm" name="note" th:value="${item.note}" readonly>
-                                                    </td>
-                                                    <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
-                                                    <td th:text="${item.quantity}"></td>
-                                                    <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
-                                                    <td>
-                                                        <!--UPDATE ITEMS-->
-                                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${item.id}">Cập nhật</button>
-                                                        <div class="modal fade"
-                                                             th:id="'modalUpdateItems_' + ${item.id}">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/update/{itemId}(itemId=${item.id})}"
-                                                                          th:object="${items}" method="POST">
-                                                                        <div class="modal-header">
-                                                                            <strong class="modal-title">Cập nhật sản phẩm</strong>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <input type="hidden" name="cartId" th:value="${cart.id}">
-                                                                            <input type="hidden" name="id"     th:value="${item.id}">
-                                                                            <input type="hidden" name="productDetail" th:value="${item.productDetail.id}">
-                                                                            <div class="form-group row" style="display: flex; align-items: center; margin: 0 0 15px 0">
-                                                                                <label class="col-sm-4 text-left">Số lượng</label>
-                                                                                <input class="col-sm-8 form-control"
-                                                                                       type="number" name="quantity"
-                                                                                       min="1"
-                                                                                       max="[[${item.productDetail.quantity}]]"
-                                                                                       th:value="${item.quantity}"/>
+                                                    <tr th:each="item, itemIndex : ${cart.listItems}">
+                                                        <td th:text="${itemIndex.index + 1}"></td>
+                                                        <td class="text-left">
+                                                            <input type="hidden" id="productVariantIdField" th:value="${item.productDetail.Id}"/>
+                                                            <a th:text="${item.productDetail.variantName}"
+                                                               th:href="@{/san-pham/variant/{id}(id=${item.productDetail.id})}"></a>
+                                                            <input class="form-control form-control-sm" name="note" th:value="${item.note}" readonly>
+                                                        </td>
+                                                        <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                        <td th:text="${item.quantity}"></td>
+                                                        <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                        <td>
+                                                            <!--UPDATE ITEMS-->
+                                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${item.id}">Cập nhật</button>
+                                                            <div class="modal fade"
+                                                                 th:id="'modalUpdateItems_' + ${item.id}">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <form th:action="@{/don-hang/ban-hang/cart/item/update/{itemId}(itemId=${item.id})}"
+                                                                              th:object="${items}" method="POST">
+                                                                            <div class="modal-header">
+                                                                                <strong class="modal-title">Cập nhật sản phẩm</strong>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                                                </button>
                                                                             </div>
-                                                                            <div class="form-group row" style="display: flex; align-items: center; margin: 0">
-                                                                                <label class="col-sm-4 text-left">Ghi chú</label>
-                                                                                <textarea class="col-sm-8 form-control" id="note" name="note" th:text="${item.note}"></textarea>
+                                                                            <div class="modal-body">
+                                                                                <input type="hidden" name="cartId" th:value="${cart.id}">
+                                                                                <input type="hidden" name="id"     th:value="${item.id}">
+                                                                                <input type="hidden" name="productDetail" th:value="${item.productDetail.id}">
+                                                                                <div class="form-group row" style="display: flex; align-items: center; margin: 0 0 15px 0">
+                                                                                    <label class="col-sm-4 text-left">Số lượng</label>
+                                                                                    <input class="col-sm-8 form-control"
+                                                                                           type="number" name="quantity"
+                                                                                           min="1"
+                                                                                           max="[[${item.productDetail.quantity}]]"
+                                                                                           th:value="${item.quantity}"/>
+                                                                                </div>
+                                                                                <div class="form-group row" style="display: flex; align-items: center; margin: 0">
+                                                                                    <label class="col-sm-4 text-left">Ghi chú</label>
+                                                                                    <textarea class="col-sm-8 form-control" id="note" name="note" th:text="${item.note}"></textarea>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="modal-footer justify-content-end">
-                                                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                                                                            <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
-                                                                        </div>
-                                                                    </form>
+                                                                            <div class="modal-footer justify-content-end">
+                                                                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                                                                <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <!--DELETE ITEMS-->
-                                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa</button>
-                                                        <div class="modal fade" th:id="'modalDeleteItems_' + ${item.id}">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <form th:action="@{/don-hang/ban-hang/cart/item/delete/{itemId}(itemId=${item.id})}" method="POST">
-                                                                        <div class="modal-header">
-                                                                            <strong class="modal-title">Cập nhật giỏ hàng</strong>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <input type="hidden" name="cartId" th:value="${cart.id}">
-                                                                            <input type="hidden" name="itemId" th:value="${item.id}">
-                                                                            Xác nhận xóa sản phẩm
-                                                                            <span class="badge badge-info" th:text="${item.productDetail.variantName}"></span>
-                                                                            khỏi giỏ hàng!
-                                                                        </div>
-                                                                        <div class="modal-footer justify-content-end">
-                                                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                                                                            <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
-                                                                        </div>
-                                                                    </form>
+                                                            <!--DELETE ITEMS-->
+                                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa</button>
+                                                            <div class="modal fade" th:id="'modalDeleteItems_' + ${item.id}">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <form th:action="@{/don-hang/ban-hang/cart/item/delete/{itemId}(itemId=${item.id})}" method="POST">
+                                                                            <div class="modal-header">
+                                                                                <strong class="modal-title">Cập nhật giỏ hàng</strong>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <input type="hidden" name="cartId" th:value="${cart.id}">
+                                                                                <input type="hidden" name="itemId" th:value="${item.id}">
+                                                                                Xác nhận xóa sản phẩm
+                                                                                <span class="badge badge-info" th:text="${item.productDetail.variantName}"></span>
+                                                                                khỏi giỏ hàng!
+                                                                            </div>
+                                                                            <div class="modal-footer justify-content-end">
+                                                                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                                                                                <button type="submit" class="btn btn-sm btn-primary">Đồng ý</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                             <hr class="w-50 bg-info">
@@ -148,15 +146,17 @@
                                                         <span class="input-group-append"><button type="button" class="btn btn-info btn-flat" id="btnCheckVoucherIsAvailable">Kiểm tra</button></span>
                                                     </div>
                                                 </div>
-                                                <span class="row col-12 mt-2" id="voucherTitleField"></span>
-                                                <span class="row col-12 mt-2" id="voucherStatusField"></span>
-                                                <span class="row col-12 mt-2" id="voucherPercentField"></span>
-                                                <span class="row col-12 mt-2" id="voucherMaxPriceField"></span>
-                                                <span class="row col-12 mt-2" id="voucherDoiTuongApDungField"></span>
-                                                <div class="row col-12 mt-2 form-group" id="isUseVoucherBlock">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox" id="isUseVoucherField">
-                                                        <label for="isUseVoucherField" class="custom-control-label">Sử dụng</label>
+                                                <div id="ticketInfoBlock">
+                                                    <span class="row col-12 mt-2" id="voucherTitleField"></span>
+                                                    <span class="row col-12 mt-2" id="voucherStatusField"></span>
+                                                    <span class="row col-12 mt-2" id="voucherPercentField"></span>
+                                                    <span class="row col-12 mt-2" id="voucherMaxPriceField"></span>
+                                                    <span class="row col-12 mt-2" id="voucherDoiTuongApDungField"></span>
+                                                    <div class="row col-12 mt-2 form-group" id="isUseVoucherBlock">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox" id="isUseVoucherField">
+                                                            <label for="isUseVoucherField" class="custom-control-label">Sử dụng</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,7 +216,7 @@
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label>Địa chỉ</label>
-                                                                                <input type="text" class="form-control" required name="diaChi"/>
+                                                                                <input type="text" class="form-control" required name="address"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -432,7 +432,7 @@
         if (response.ok) {
             let data = (await response.json()).data
             $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.product.productName + ' - ' + d.variantName + ' - ' + d.storageQty + '</option>');
+                selectElement.append('<option value=' + d.id + '>' + d.variantName + ' - ' + d.storageQty + '</option>');
             });
         } else {
             alert('Call API fail!')
@@ -447,7 +447,7 @@
             let data = (await response.json()).data;
             selectElement.append('<option>Chọn khách hàng</option>');
             $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
+                selectElement.append('<option value=' + d.id + '>' + d.customerName + '</option>');
                 mvCustomers[d.id] = d; //Tương tự map trong Java, d.id là key, d là value
             });
         } else {
@@ -517,7 +517,7 @@
 
     function loadReceiveInformationToForm() {
         $('#customerField').on('click', function () {
-            $('#receiveNameField').val(mvCustomers[$(this).val()].name);
+            $('#receiveNameField').val(mvCustomers[$(this).val()].customerName);
             $('#receivePhoneNumberField').val(mvCustomers[$(this).val()].phoneDefault);
             $('#receiveEmailField').val(mvCustomers[$(this).val()].emailDefault);
             $('#receiveAddressField').val(mvCustomers[$(this).val()].addressDefault);
@@ -526,36 +526,32 @@
 
     function checkVoucherIsAvailable() {
         $('#btnCheckVoucherIsAvailable').on('click', function () {
+            $('#ticketInfoBlock').hide();
             let codeInput = $('#voucherCodeField').val();
             let apiURL = mvHostURLCallApi + '/voucher/check/' + codeInput;
             $.get(apiURL, function (response) {
-                if (response.status === "OK") {
+                if (response.status === "OK" && response.message === "OK") {
+                    $('#ticketInfoBlock').show();
                     mvVoucherTicketDetail = response.data;
-                    if (mvVoucherTicketDetail.id != null) {
-                        let lvVoucherStt = mvVoucherTicketDetail.status; //false is not use, true is used
-                        $('#voucherTitleField').text("Tên đợt khuyến mãi: " + mvVoucherTicketDetail.voucherInfo.title);
-                        if (lvVoucherStt === false) {
-                            $('#voucherStatusField').text("Trạng thái: Khả dụng");
-                        } else {
-                            $('#voucherStatusField').text("Trạng thái: Không khả dụng");
-                        }
-                        $('#voucherPercentField').text("Phần trăm giảm: " + mvVoucherTicketDetail.voucherInfo.discount + " %");
-                        $('#voucherMaxPriceField').text("Tối đa giảm được: " + formatCurrency(mvVoucherTicketDetail.voucherInfo.discountPriceMax));
-                        $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + mvVoucherTicketDetail.voucherInfo.applicableObjects);
-                        if (lvVoucherStt === false) {
-                            $('#isUseVoucherBlock').show();
-                        } else {
-                            $('#isUseVoucherBlock').hide();
-                        }
-                        if (mvVoucherTicketDetail.id > 0) {
-                            mvVoucherStatus = "OK";
-                            mvVoucherCode = codeInput;
-                        }
+                    let isAvailable = mvVoucherTicketDetail.available;
+                    let title = isAvailable === "Y" ? mvVoucherTicketDetail.voucherInfo.title : "";
+                    let discountPercent = isAvailable === "Y" ? mvVoucherTicketDetail.voucherInfo.discount : "";
+                    let maxPrice = isAvailable === "Y" ? formatCurrency(mvVoucherTicketDetail.voucherInfo.discountPriceMax) : "";
+                    let applicableObjects = isAvailable === "Y" ? mvVoucherTicketDetail.voucherInfo.applicableObjects : "";
+                    $('#voucherTitleField').text("Tên đợt khuyến mãi: " + title);
+                    $('#voucherPercentField').text("Phần trăm giảm: " + discountPercent + " %");
+                    $('#voucherMaxPriceField').text("Tối đa giảm được: " + maxPrice);
+                    $('#voucherDoiTuongApDungField').text("Đối tượng áp dụng: " + applicableObjects);
+                    if (isAvailable === "Y") {
+                        mvVoucherStatus = "OK";
+                        $('#voucherStatusField').text("Trạng thái: Khả dụng");
+                        $('#isUseVoucherBlock').show();
+                    } else {
+                        mvVoucherStatus = "NOK";
+                        $('#voucherStatusField').text("Trạng thái: Không khả dụng");
+                        $('#isUseVoucherBlock').hide();
                     }
-                    console.log("mvVoucherDetail " + mvVoucherTicketDetail)
-                } else {
-                    mvVoucherStatus = "NOK";
-                    mvVoucherCode = "";
+                    mvVoucherCode = codeInput;
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi

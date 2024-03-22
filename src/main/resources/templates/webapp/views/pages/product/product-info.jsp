@@ -644,6 +644,7 @@
                     productId : mvProductId,
                     colorId : mvColorField.val(),
                     sizeId : mvSizeField.val(),
+                    fabricTypeId : mvFabricTypeField.val(),
                     originalPrice : $("#originalPriceField").val(),
                     discountPrice : $("#promotionPriceField").val()
                 }
@@ -654,7 +655,7 @@
                         let apiURL = mvHostURLCallApi + "/product/variant/create";
                         let body = {
                             productId : mvProductId,
-                            name : mvProductVariantNameField.val(),
+                            variantName : mvProductVariantNameField.val(),
                             fabricTypeId : $("#fabricTypeField").val(),
                             colorId : $("#colorField").val(),
                             sizeId : $("#sizeField").val(),

@@ -117,7 +117,6 @@
                 if (response.status === "OK") {
                     let data = response.data;
                     let lvOrders = data.listOrderDTO;
-                    let lvOrderDetails = lvOrders[0].listOrderDetailDTO;
                     mvId = [[${ticketExportId}]];
 
                     mvTitle.val(data.title);
@@ -131,17 +130,20 @@
 
                     let contentTable = $('#contentTable');
                     contentTable.empty();
-                    $.each(lvOrderDetails, function (index, d) {
-                        contentTable.append(`
+                    if (lvOrders != null) {
+                        let lvOrderDetails = lvOrders[0].listOrderDetailDTO;
+                        $.each(lvOrderDetails, function (index, d) {
+                            contentTable.append(`
                             <tr>
                                 <td>${(index + 1)}</td>
                                 <td>${d.productVariantDTO.productTypeName}</td>
-                                <td>${d.productVariantDTO.name}</td>
+                                <td>${d.productVariantDTO.variantName}</td>
                                 <td>${d.quantity}</td>
                                 <td>${d.note}</td>
                             </tr>
                         `);
-                    });
+                        });
+                    }
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
