@@ -1,9 +1,11 @@
 package com.flowiee.pms.service.product;
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface ProductExportService {
-    byte[] exportToExcel(Integer pProductId, List<Integer> pProductIds, boolean isExportAll);
+    ResponseEntity<?> exportToExcel(Integer pProductId, List<Integer> pProductIds, boolean isExportAll);
 
     byte[] exportToCSV(Integer pProductId, List<Integer> pProductIds, boolean isExportAll);
 

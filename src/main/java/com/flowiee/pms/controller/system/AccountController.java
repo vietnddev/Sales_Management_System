@@ -5,8 +5,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
-import com.flowiee.pms.exception.NotFoundException;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
@@ -30,9 +29,9 @@ public class AccountController extends BaseController {
     @Operation(summary = "Find all accounts")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
-    public ApiResponse<List<Account>> findAllAccounts() {
+    public AppResponse<List<Account>> findAllAccounts() {
         try {
-            return ApiResponse.ok(accountService.findAll());
+            return success(accountService.findAll());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"), ex);
         }
@@ -41,13 +40,13 @@ public class AccountController extends BaseController {
     @Operation(summary = "Find detail account")
     @GetMapping("/{accountId}")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
-    public ApiResponse<Account> findDetailAccount(@PathVariable("accountId") Integer accountId) {
+    public AppResponse<Account> findDetailAccount(@PathVariable("accountId") Integer accountId) {
         try {
             Optional<Account> account = accountService.findById(accountId);
             if (account.isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(account.get());
+            return success(account.get());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"), ex);
         }
@@ -56,7 +55,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Create account")
     @PostMapping(value = "/create")
     @PreAuthorize("@vldModuleSystem.insertAccount(true)")
-    public ApiResponse<Account> save(@RequestBody Account account) {
+    public AppResponse<Account> save(@RequestBody Account account) {
         try {
             if (account == null) {
                 throw new BadRequestException();
@@ -64,7 +63,7 @@ public class AccountController extends BaseController {
             if (accountService.findByUsername(account.getUsername()) != null) {
                 throw new DataExistsException("Username exists!");
             }
-            return ApiResponse.ok(accountService.save(account));
+            return success(accountService.save(account));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"), ex);
         }
@@ -73,12 +72,12 @@ public class AccountController extends BaseController {
     @Operation(summary = "Update account")
     @PutMapping(value = "/update/{accountId}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
-    public ApiResponse<Account> update(@RequestBody Account account, @PathVariable("accountId") Integer accountId) {
+    public AppResponse<Account> update(@RequestBody Account account, @PathVariable("accountId") Integer accountId) {
         try {
             if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(accountService.update(account, accountId));
+            return success(accountService.update(account, accountId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"), ex);
         }
@@ -86,7 +85,7 @@ public class AccountController extends BaseController {
 
     @PutMapping("/update-permission/{accountId}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
-    public ApiResponse<List<RoleModel>> updatePermission(@RequestBody String[] actions, @PathVariable("accountId") Integer accountId) {
+    public AppResponse<List<RoleModel>> updatePermission(@RequestBody String[] actions, @PathVariable("accountId") Integer accountId) {
         try {
             if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
                 throw new BadRequestException();
@@ -102,7 +101,7 @@ public class AccountController extends BaseController {
 //                    }
 //                }
 //            }
-            return ApiResponse.ok(null);
+            return success(null);
         } catch (RuntimeException ex) {
             throw new AppException(ex);
         }
@@ -111,16 +110,16 @@ public class AccountController extends BaseController {
     @Operation(summary = "Delete account")
     @DeleteMapping(value = "/delete/{accountId}")
     @PreAuthorize("@vldModuleSystem.deleteAccount(true)")
-    public ApiResponse<String> deleteAccount(@PathVariable("accountId") Integer accountId) {
-        return ApiResponse.ok(accountService.delete(accountId));
+    public AppResponse<String> deleteAccount(@PathVariable("accountId") Integer accountId) {
+        return success(accountService.delete(accountId));
     }
 
     @Operation(summary = "Find roles of account")
     @GetMapping("/{accountId}/role")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
-    public ApiResponse<List<RoleModel>> findRolesOfAccount(@PathVariable("accountId") Integer accountId) {
+    public AppResponse<List<RoleModel>> findRolesOfAccount(@PathVariable("accountId") Integer accountId) {
         try {
-            return ApiResponse.ok(roleService.findAllRoleByAccountId(accountId));
+            return success(roleService.findAllRoleByAccountId(accountId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "role"), ex);
         }

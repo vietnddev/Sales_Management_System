@@ -1,7 +1,7 @@
 package com.flowiee.pms.controller.system;
 
 import com.flowiee.pms.base.BaseController;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.system.FileStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,7 @@ public class FileStorageController extends BaseController {
     @Operation(summary = "Xóa file", description = "Xóa theo id")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ApiResponse<String> delete(@PathVariable("id") Integer fileId) {
-        return ApiResponse.ok(fileService.delete(fileId));
+    public AppResponse<String> delete(@PathVariable("id") Integer fileId) {
+        return success(fileService.delete(fileId));
     }
 }

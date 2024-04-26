@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(EndPointUtil.PRO_ORDER)
+@RequestMapping("/don-hang")
 public class OrderControllerView extends BaseController {
     private final OrderService orderService;
     private final OrderExportService orderExportService;

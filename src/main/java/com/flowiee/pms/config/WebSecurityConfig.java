@@ -1,7 +1,7 @@
 package com.flowiee.pms.config;
 
 import com.flowiee.pms.service.system.impl.UserDetailsServiceImpl;
-import com.flowiee.pms.utils.EndPointUtil;
+import com.flowiee.pms.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,23 +60,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable()
 				.headers().frameOptions().sameOrigin().and() //Cấu hình phần này để có thể nhúng URL vào các thẻ như iframe,..
 				.authorizeRequests()
-				.antMatchers(EndPointUtil.SYS_CONFIG, EndPointUtil.SYS_ACCOUNT, EndPointUtil.SYS_LOG).hasRole("ADMIN")
+				.antMatchers(AppConstants.ENDPOINT.URL_SYS_CONFIG.getValue(),
+							 AppConstants.ENDPOINT.URL_SYS_ACCOUNT.getValue(),
+							 AppConstants.ENDPOINT.URL_SYS_LOG.getValue()).hasRole("ADMIN")
 				.antMatchers("/build/**", "/dist/**", "/js/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				//Page login
-				.formLogin().loginPage(EndPointUtil.SYS_LOGIN).permitAll()
+				.formLogin().loginPage(AppConstants.ENDPOINT.URL_LOGIN.getValue()).permitAll()
 				//Login OK thì redirect vào page danh sách sản phẩm
 				.defaultSuccessUrl("/")
-				.failureUrl(EndPointUtil.SYS_LOGIN + "?success=fail")
+				.failureUrl(AppConstants.ENDPOINT.URL_LOGIN.getValue() + "?success=fail")
 				.loginProcessingUrl("/j_spring_security_check")
 				.authenticationDetailsSource(authenticationDetailsSource())
 				.and()
 				.httpBasic()
 				.and()
 				.logout()
-				.logoutUrl(EndPointUtil.SYS_LOGOUT) // Endpoint cho đăng xuất
-				.logoutSuccessUrl(EndPointUtil.SYS_LOGIN) // Đường dẫn sau khi đăng xuất thành công
+				.logoutUrl(AppConstants.ENDPOINT.URL_LOGOUT.getValue()) // Endpoint cho đăng xuất
+				.logoutSuccessUrl(AppConstants.ENDPOINT.URL_LOGIN.getValue()) // Đường dẫn sau khi đăng xuất thành công
 				.deleteCookies("JSESSIONID") // Xóa cookies sau khi đăng xuất
 				.invalidateHttpSession(true) // Hủy phiên làm việc
 				.and()

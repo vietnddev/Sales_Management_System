@@ -5,7 +5,6 @@ import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.EndPointUtil;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.entity.system.Account;
 
@@ -32,7 +31,7 @@ public class ProfileControllerView extends BaseController {
 	@Autowired
 	private AccountService accountService;
 
-	@GetMapping(EndPointUtil.SYS_PROFILE)
+	@GetMapping("/sys/profile")
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
 		ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_PROFILE);
 		modelAndView.addObject("message", message);
@@ -41,7 +40,7 @@ public class ProfileControllerView extends BaseController {
 		return baseView(modelAndView);
 	}
 
-	@PostMapping(EndPointUtil.SYS_PROFILE_UPDATE)
+	@PostMapping( "/sys/profile/update")
 	public ModelAndView updateProfile(@AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("account") Account accountEntity) {
 		String username = userDetails.getUsername();
 		String password = accountService.findByUsername(username).getPassword();
@@ -56,7 +55,7 @@ public class ProfileControllerView extends BaseController {
 		return new ModelAndView("redirect:/profile");
 	}
 
-	@PostMapping(EndPointUtil.SYS_PROFILE_CHANGEPASS)
+	@PostMapping("/sys/profile/change-password")
 	public ModelAndView changePassword(HttpServletRequest request,
 									   @ModelAttribute("account") Account accountEntity,
 									   RedirectAttributes redirectAttributes) {

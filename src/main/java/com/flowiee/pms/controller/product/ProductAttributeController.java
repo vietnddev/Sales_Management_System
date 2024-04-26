@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.base.BaseController;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý thuộc tính mở rộng của sản phẩm")
-public class ProductAttributeController extends BaseController<ProductAttribute> {
+public class ProductAttributeController extends BaseController {
     @Autowired
     private ProductAttributeService productAttributeService;
 
     @Operation(summary = "Create product attribute")
     @PostMapping("/attribute/create")
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
-    public ApiResponse<ProductAttribute> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
+    public AppResponse<ProductAttribute> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
         try {
             return success(productAttributeService.save(productAttribute));
         } catch (RuntimeException ex) {
@@ -33,7 +33,7 @@ public class ProductAttributeController extends BaseController<ProductAttribute>
     @Operation(summary = "Update product attribute")
     @PutMapping("/attribute/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
-    public ApiResponse<ProductAttribute> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
+    public AppResponse<ProductAttribute> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
         try {
             return success(productAttributeService.update(productAttribute, productAttributeId));
         } catch (RuntimeException ex) {
@@ -44,7 +44,7 @@ public class ProductAttributeController extends BaseController<ProductAttribute>
     @Operation(summary = "Delete product attribute")
     @DeleteMapping("/attribute/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
-    public ApiResponse<String> deleteProductAttribute(@PathVariable("id") Integer productAttributeId) {
+    public AppResponse<String> deleteProductAttribute(@PathVariable("id") Integer productAttributeId) {
         try {
             return success(productAttributeService.delete(productAttributeId));
         } catch (RuntimeException ex) {

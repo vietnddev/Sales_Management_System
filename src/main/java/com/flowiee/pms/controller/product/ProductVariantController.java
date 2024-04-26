@@ -5,7 +5,7 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
@@ -36,9 +36,9 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Find all variants")
     @GetMapping("/variant/all")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<List<ProductVariantDTO>> findProductVariants() {
+    public AppResponse<List<ProductVariantDTO>> findProductVariants() {
         try {
-            return ApiResponse.ok(productVariantService.findAll());
+            return success(productVariantService.findAll());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"), ex);
         }
@@ -47,9 +47,9 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Find all variants of product")
     @GetMapping("/{productId}/variants")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
+    public AppResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
         try {
-            return ApiResponse.ok(productVariantService.findAll(-1, -1, productId, null, null, null, null).getContent());
+            return success(productVariantService.findAll(-1, -1, productId, null, null, null, null).getContent());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"), ex);
         }
@@ -58,13 +58,13 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Find detail product variant")
     @GetMapping("/variant/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Integer productVariantId) {
+    public AppResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Integer productVariantId) {
         try {
             Optional<ProductVariantDTO> productVariant = productVariantService.findById(productVariantId);
             if (productVariant.isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(productVariant.get());
+            return success(productVariant.get());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
         }
@@ -73,9 +73,9 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Create product variant")
     @PostMapping("/variant/create")
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
-    public ApiResponse<ProductDetail> createProductVariant(@RequestBody ProductVariantDTO productVariantDTO) {
+    public AppResponse<ProductDetail> createProductVariant(@RequestBody ProductVariantDTO productVariantDTO) {
         try {
-            return ApiResponse.ok(productVariantService.save(productVariantDTO));
+            return success(productVariantService.save(productVariantDTO));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "productVariant"), ex);
         }
@@ -84,9 +84,9 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Update product variant")
     @PutMapping("/variant/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
-    public ApiResponse<ProductDetail> updateProductVariant(@RequestBody ProductVariantDTO productVariant, @PathVariable("id") Integer productVariantId) {
+    public AppResponse<ProductDetail> updateProductVariant(@RequestBody ProductVariantDTO productVariant, @PathVariable("id") Integer productVariantId) {
         try {
-            return ApiResponse.ok(productVariantService.update(productVariant, productVariantId));
+            return success(productVariantService.update(productVariant, productVariantId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"), ex);
         }
@@ -95,9 +95,9 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Delete product variant")
     @DeleteMapping("/variant/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
-    public ApiResponse<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
+    public AppResponse<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
         try {
-            return ApiResponse.ok(productVariantService.delete(productVariantId));
+            return success(productVariantService.delete(productVariantId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"), ex);
         }
@@ -106,12 +106,12 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Get price history of product detail")
     @GetMapping(value = "/variant/price/history/{Id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<List<ProductHistory>> getHistoryPriceOfProductDetail(@PathVariable("Id") Integer productVariantId) {
+    public AppResponse<List<ProductHistory>> getHistoryPriceOfProductDetail(@PathVariable("Id") Integer productVariantId) {
         try {
             if (ObjectUtils.isEmpty(productVariantService.findById(productVariantId))) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(productHistoryService.findPriceChange(productVariantId));
+            return success(productHistoryService.findPriceChange(productVariantId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product history"), ex);
         }
@@ -120,14 +120,14 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Update price")
     @PutMapping(value = "/variant/price/update/{productVariantId}")
     @PreAuthorize("@vldModuleProduct.priceManagement(true)")
-    public ApiResponse<String> updatePrice(@PathVariable("productVariantId") Integer productVariantId,
+    public AppResponse<String> updatePrice(@PathVariable("productVariantId") Integer productVariantId,
                                            @RequestParam(value = "originalPrice", required = false) BigDecimal originalPrice,
                                            @RequestParam(value = "discountPrice", required = false) BigDecimal discountPrice) {
         try {
             if (productVariantService.findById(productVariantId).isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(productPriceService.updateProductPrice(productVariantId, originalPrice, discountPrice));
+            return success(productPriceService.updateProductPrice(productVariantId, originalPrice, discountPrice));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "price"), ex);
         }
@@ -136,12 +136,12 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Check product variant already exists")
     @GetMapping("/variant/exists")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<Boolean> checkProductVariantAlreadyExists(@RequestParam("productId") Integer productId,
+    public AppResponse<Boolean> checkProductVariantAlreadyExists(@RequestParam("productId") Integer productId,
                                                                  @RequestParam("colorId") Integer colorId,
                                                                  @RequestParam("sizeId") Integer sizeId,
                                                                  @RequestParam("fabricTypeId") Integer fabricTypeId) {
         try {
-            return ApiResponse.ok(productVariantService.isProductVariantExists(productId, colorId, sizeId, fabricTypeId));
+            return success(productVariantService.isProductVariantExists(productId, colorId, sizeId, fabricTypeId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
         }

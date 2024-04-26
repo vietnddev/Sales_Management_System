@@ -78,12 +78,12 @@ public class OrderDTO extends Order implements Serializable {
 		}
 		//dto.setTotalAmountDiscount(null);
 		//dto.setTotalProduct(null);
-		if (order.getListImageQR() != null && order.getListImageQR().get(0) != null) {
+		if (ObjectUtils.isNotEmpty(order.getListImageQR())) {
 			FileStorage imageQRCode = order.getListImageQR().get(0);
 			dto.setQrCode(imageQRCode.getDirectoryPath() + "/" + imageQRCode.getStorageName());
 		}
 		dto.setVoucherUsedCode(order.getVoucherUsedCode());
-		dto.setPaymentStatus((order.getPaymentStatus() == null || !order.getPaymentStatus()) ? false : true);
+		dto.setPaymentStatus(order.getPaymentStatus() != null && order.getPaymentStatus());
 		dto.setPaymentTime(order.getPaymentTime());
 		//dto.setPaymentTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getPaymentTime()));
 		dto.setPaymentAmount(order.getPaymentAmount());

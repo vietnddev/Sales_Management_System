@@ -1,10 +1,11 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.service.sales.OrderExportService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,16 +26,18 @@ import java.util.Optional;
 @Tag(name = "Order API", description = "Quản lý đơn hàng")
 public class OrderController extends BaseController {
     private final OrderService orderService;
+    private final OrderExportService orderExportService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderExportService orderExportService) {
         this.orderService = orderService;
+        this.orderExportService = orderExportService;
     }
 
     @Operation(summary = "Find all orders")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public ApiResponse<List<OrderDTO>> findAllOrders(@RequestParam(value = "orderId", required = false) Integer pOrderId,
+    public AppResponse<List<OrderDTO>> findAllOrders(@RequestParam(value = "orderId", required = false) Integer pOrderId,
                                                      @RequestParam(value = "paymentMethodId", required = false) Integer pPaymentMethodId,
                                                      @RequestParam(value = "orderStatusId", required = false) Integer pOrderStatusId,
                                                      @RequestParam(value = "salesChannelId", required = false) Integer pSalesChannelId,
@@ -45,7 +47,7 @@ public class OrderController extends BaseController {
                                                      @RequestParam("pageNum") int pageNum) {
         try {
             Page<OrderDTO> orderPage = orderService.findAll(pageSize, pageNum - 1, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId);
-            return ApiResponse.ok(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
+            return success(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"), ex);
         }
@@ -54,13 +56,13 @@ public class OrderController extends BaseController {
     @Operation(summary = "Find detail order")
     @GetMapping("/{orderId}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public ApiResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Integer orderId) {
+    public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Integer orderId) {
         try {
             Optional<OrderDTO> orderDTO = orderService.findById(orderId);
             if (orderDTO.isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(orderDTO.get());
+            return success(orderDTO.get());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "order"), ex);
         }
@@ -68,9 +70,9 @@ public class OrderController extends BaseController {
 
     @Operation(summary = "Create new order")
     @PostMapping("/insert")
-    public ApiResponse<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+    public AppResponse<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         try {
-            return ApiResponse.ok(orderService.save(orderDTO));
+            return success(orderService.save(orderDTO));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "order"), ex);
         }
@@ -78,13 +80,13 @@ public class OrderController extends BaseController {
 
     @PutMapping("/update/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public ApiResponse<String> update(@RequestBody OrderDTO order, @PathVariable("orderId") Integer orderId) {
+    public AppResponse<String> update(@RequestBody OrderDTO order, @PathVariable("orderId") Integer orderId) {
         try {
             if (orderId <= 0 || order == null || orderService.findById(orderId).isEmpty()) {
                 throw new BadRequestException();
             }
             orderService.update(order, orderId);
-            return ApiResponse.ok(MessageUtils.UPDATE_SUCCESS);
+            return success(MessageUtils.UPDATE_SUCCESS);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "order"), ex);
         }
@@ -92,10 +94,10 @@ public class OrderController extends BaseController {
 
     @DeleteMapping("/delete/{orderId}")
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
-    public ApiResponse<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
+    public AppResponse<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
         try {
             //Check them trang thai
-            return ApiResponse.ok(orderService.delete(orderId));
+            return success(orderService.delete(orderId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "order"), ex);
         }
@@ -103,7 +105,7 @@ public class OrderController extends BaseController {
 
     @PutMapping("/do-pay/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public ApiResponse<String> doPayOrder(@PathVariable("orderId") Integer orderId,
+    public AppResponse<String> doPayOrder(@PathVariable("orderId") Integer orderId,
                                           @RequestParam(value = "paymentTime", required = false) LocalDateTime paymentTime,
                                           @RequestParam("paymentMethod") Integer paymentMethod,
                                           @RequestParam("paymentAmount") Float paymentAmount,
@@ -118,7 +120,7 @@ public class OrderController extends BaseController {
             if (paymentMethod <= 0) {
                 throw new BadRequestException("Hình thức thanh toán không hợp lệ!");
             }
-            return ApiResponse.ok(orderService.doPay(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote));
+            return success(orderService.doPay(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "pay order"), ex);
         }
@@ -126,9 +128,9 @@ public class OrderController extends BaseController {
 
     @GetMapping("/export")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public ResponseEntity<?> exportOrders() {
+    public ResponseEntity<?> exportToExcel() {
         try {
-            return null;
+            return orderExportService.exportToExcel(null, null, true);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "export order"), ex);
         }

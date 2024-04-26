@@ -6,25 +6,26 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.OrderDetailRpt;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.OrderDetailDTO;
-import com.flowiee.pms.service.product.impl.ProductImageServiceImpl;
 import com.flowiee.pms.service.sales.OrderExportService;
 import com.flowiee.pms.service.sales.OrderQRCodeService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.ExcelUtils;
 import com.flowiee.pms.utils.ReportUtils;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.pdfbox.util.PDFMergerUtility;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
@@ -34,8 +35,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.Clock;
-import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -48,52 +48,52 @@ public class OrderExportServiceImpl implements OrderExportService {
     private OrderQRCodeService orderQRCodeService;
 
     @Override
-    public byte[] exportToExcel(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response) {
-        String rootPath = "src/main/resources/static/templates/excel/";
-        String filePathOriginal = rootPath + "Template_Export_DanhSachDonHang.xlsx";
-        String filePathTemp = rootPath + "Template_Export_DanhSachDonHang_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+    public ResponseEntity<?> exportToExcel(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll) {
+        long exportTime = System.currentTimeMillis();
+        String rootPath = CommonUtils.excelTemplatePath;
+        String templateName = "Template_E_Order.xlsx";
+        String fileNameReturn = exportTime + "_ListOfOrders.xlsx";
+        Path templateOriginal = Path.of(rootPath + "/" + templateName);
+        Path templateTarget = Path.of(rootPath + "/temp/" + exportTime + "_" + templateName);
+        XSSFWorkbook workbook = null;
         try {
-            XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal),
-                    Path.of(filePathTemp),
-                    StandardCopyOption.REPLACE_EXISTING).toFile());
+            File templateToExport = Files.copy(templateOriginal, templateTarget, StandardCopyOption.REPLACE_EXISTING).toFile();
+            workbook = new XSSFWorkbook(templateToExport);
             XSSFSheet sheet = workbook.getSheetAt(0);
+
             List<OrderDTO> listData = orderService.findAll();
             for (int i = 0; i < listData.size(); i++) {
                 XSSFRow row = sheet.createRow(i + 4);
                 row.createCell(0).setCellValue(i + 1);
                 row.createCell(1).setCellValue(listData.get(i).getCode());
-                row.createCell(2).setCellValue(listData.get(i).getOrderTime());
+                row.createCell(2).setCellValue(listData.get(i).getOrderTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 row.createCell(3).setCellValue(listData.get(i).getSalesChannelName());
                 row.createCell(4).setCellValue(String.valueOf(listData.get(i).getTotalAmountDiscount()));
-                row.createCell(5).setCellValue("");
-                row.createCell(6).setCellValue(listData.get(i).getCustomerName());
-                row.createCell(7).setCellValue("");//listData.get(i).getKhachHang().getAddress()
-                row.createCell(8).setCellValue(listData.get(i).getNote());
-                for (int j = 0; j <= 8; j++) {
-                    row.getCell(j).setCellStyle(CommonUtils.setBorder(workbook.createCellStyle()));
+                row.createCell(5).setCellValue(listData.get(i).getPayMethodName());
+                row.createCell(6).setCellValue(listData.get(i).getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán");
+                row.createCell(7).setCellValue(listData.get(i).getCustomerName());
+                row.createCell(8).setCellValue(listData.get(i).getReceiverPhone());
+                row.createCell(9).setCellValue(listData.get(i).getReceiverAddress());
+                row.createCell(10).setCellValue(listData.get(i).getOrderStatusName());
+                row.createCell(11).setCellValue(listData.get(i).getNote());
+                for (int j = 0; j <= 11; j++) {
+                    row.getCell(j).setCellStyle(ExcelUtils.setBorder(workbook.createCellStyle()));
                 }
             }
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            HttpHeaders header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Template_Export_DanhSachDonHang.xlsx.xlsx");
-            workbook.write(stream);
-            workbook.close();
-            //Xóa file temp
-            File fileToDelete = new File(Path.of(filePathTemp).toUri());
-            if (fileToDelete.exists()) {
-                fileToDelete.delete();
+            return new ResponseEntity<>(ExcelUtils.build(workbook), ExcelUtils.setHeaders(fileNameReturn), HttpStatus.OK);
+        } catch (IOException | InvalidFormatException ex) {
+            logger.error("An error when export list of orders!", ex);
+            throw new AppException(ex);
+        } finally {
+            try {
+                if (workbook != null) {
+                    workbook.close();
+                }
+                Files.deleteIfExists(templateTarget);
+            } catch (IOException e) {
+                logger.error("An error when delete template temp after exported data!", e);
             }
-            //return new ResponseEntity<>(new ByteArrayResource(stream.toByteArray()), header, HttpStatus.CREATED);
-        } catch (Exception e) {
-            File fileToDelete = new File(Path.of(filePathTemp).toUri());
-            if (fileToDelete.exists()) {
-                fileToDelete.delete();
-            }
-            throw new AppException(e);
-            //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("redirect:/don-hang");
         }
-        return new byte[0];
     }
 
     @Override

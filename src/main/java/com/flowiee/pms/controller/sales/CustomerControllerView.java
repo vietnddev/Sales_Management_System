@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(EndPointUtil.PRO_CUSTOMER)
+@RequestMapping("/customer")
 public class CustomerControllerView extends BaseController {
     @Autowired
     private OrderService orderService;

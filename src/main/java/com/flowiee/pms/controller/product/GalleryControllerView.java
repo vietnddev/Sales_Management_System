@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/gallery")
-public class GalleryControllerView extends BaseController<ModelAndView> {
+public class GalleryControllerView extends BaseController {
     private final ProductInfoService productInfoService;
     private final ProductImageService productImageService;
 

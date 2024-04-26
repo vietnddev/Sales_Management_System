@@ -27,7 +27,7 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
            "and (:sizeId is null or s.id=:sizeId) " +
            "and (:fabricTypeId is null or f.id=:fabricTypeId) " +
            "and (:ticketImportId is null or ti.id=:ticketImportId) " +
-           "order by c.name")
+           "order by v.variantName, s.name, c.name")
     List<ProductDetail> findAll(@Param("productId") Integer productId,
                            @Param("ticketImportId") Integer ticketImportId,
                            @Param("colorId") Integer colorId,

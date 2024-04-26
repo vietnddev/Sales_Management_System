@@ -4,7 +4,6 @@ import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.UserPrincipal;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -32,7 +31,9 @@ public class CommonUtils {
     public static final String reportTemplatePath = rootPath + "/report";
     public static final String excelTemplatePath = rootPath + "/templates/excel";
     public static final String ADMINISTRATOR = "admin";
-    public static Date START_APP_TIME = null;
+    public static LocalDateTime START_APP_TIME = null;
+    public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
+    public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
 
     public static String formatToVND(Object currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -154,15 +155,7 @@ public class CommonUtils {
         return stream.toByteArray();
     }
 
-    public static XSSFCellStyle setBorder(XSSFCellStyle cellStyle) {
-        cellStyle.setBorderTop(BorderStyle.THIN);
-        cellStyle.setBorderBottom(BorderStyle.THIN);
-        cellStyle.setBorderLeft(BorderStyle.THIN);
-        cellStyle.setBorderRight(BorderStyle.THIN);
-        return cellStyle;
-    }
-
-    public static XSSFCellStyle highlightDataImportEror(XSSFCellStyle cellStyle, XSSFFont fontStyle) {
+    public static XSSFCellStyle highlightDataImportError(XSSFCellStyle cellStyle, XSSFFont fontStyle) {
         cellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 

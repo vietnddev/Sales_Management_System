@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping
-public class DashboardControllerView extends BaseController<ModelAndView> {
+public class DashboardControllerView extends BaseController {
     @Autowired private DashboardService dashboardService;
 
     @GetMapping

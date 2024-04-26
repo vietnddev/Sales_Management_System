@@ -3,10 +3,10 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.base.BaseController;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ApiResponse;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,20 +24,22 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý sản phẩm")
-public class ProductController extends BaseController<ProductDTO> {
+public class ProductController extends BaseController {
     private final ProductInfoService productInfoService;
     private final ProductHistoryService productHistoryService;
+    private final ProductExportService productExportService;
 
     @Autowired
-    public ProductController(ProductInfoService productInfoService, ProductHistoryService productHistoryService) {
+    public ProductController(ProductInfoService productInfoService, ProductHistoryService productHistoryService, ProductExportService productExportService) {
         this.productInfoService = productInfoService;
         this.productHistoryService = productHistoryService;
+        this.productExportService = productExportService;
     }
 
     @Operation(summary = "Find all products")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<List<ProductDTO>> findProducts(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+    public AppResponse<List<ProductDTO>> findProducts(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                       @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                       @RequestParam(value = "txtSearch", required = false) String txtSearch,
                                                       @RequestParam(value = "brandId", required = false) Integer pBrand,
@@ -59,7 +62,7 @@ public class ProductController extends BaseController<ProductDTO> {
     @Operation(summary = "Find detail products")
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
+    public AppResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
         try {
             Optional<ProductDTO> product = productInfoService.findById(productId);
             if (product.isEmpty()) {
@@ -74,7 +77,7 @@ public class ProductController extends BaseController<ProductDTO> {
     @Operation(summary = "Create product")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
-    public ApiResponse<Product> createProduct(@RequestBody ProductDTO product) {
+    public AppResponse<Product> createProduct(@RequestBody ProductDTO product) {
         try {
             return success(productInfoService.save(product));
         } catch (RuntimeException ex) {
@@ -85,7 +88,7 @@ public class ProductController extends BaseController<ProductDTO> {
     @Operation(summary = "Update product")
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
-    public ApiResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Integer productId) {
+    public AppResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Integer productId) {
         try {
             return success(ProductDTO.fromProduct(productInfoService.update(product, productId)));
         } catch (RuntimeException ex) {
@@ -96,14 +99,14 @@ public class ProductController extends BaseController<ProductDTO> {
     @Operation(summary = "Delete product")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
-    public ApiResponse<String> deleteProduct(@PathVariable("id") Integer productId) {
+    public AppResponse<String> deleteProduct(@PathVariable("id") Integer productId) {
         return success(productInfoService.delete(productId));
     }
 
     @Operation(summary = "Get histories of product")
     @GetMapping(value = "/{productId}/history")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ApiResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
+    public AppResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
         try {
             if (ObjectUtils.isEmpty(productInfoService.findById(productId))) {
                 throw new BadRequestException();
@@ -112,5 +115,12 @@ public class ProductController extends BaseController<ProductDTO> {
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product history"), ex);
         }
+    }
+
+    @Operation(summary = "Export list of products")
+    @GetMapping("/export")
+    @PreAuthorize("@vldModuleProduct.readProduct(true)")
+    public ResponseEntity<?> exportData() {
+        return productExportService.exportToExcel(null, null, true);
     }
 }

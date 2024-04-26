@@ -1,11 +1,12 @@
 package com.flowiee.pms.controller.sales;
 
+import com.flowiee.pms.base.BaseController;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 import com.flowiee.pms.utils.MessageUtils;
@@ -20,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/order")
 @Tag(name = "Order API", description = "Quản lý giỏ hàng")
-public class CartController {
+public class CartController extends BaseController {
     @Autowired
     private CartService cartService;
     @Autowired
@@ -28,7 +29,7 @@ public class CartController {
 
     @PutMapping("/cart/{cartId}/item/update/{itemId}")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ApiResponse<Items> updateItemsOfCart(@RequestBody Items items,
+    public AppResponse<Items> updateItemsOfCart(@RequestBody Items items,
                                                 @PathVariable("cartId") Integer cartId,
                                                 @PathVariable("itemId") Integer itemId) {
         try {
@@ -45,7 +46,7 @@ public class CartController {
             } else {
                 cartItemsService.delete(items.getId());
             }
-            return ApiResponse.ok(null);
+            return success(null);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "items"), ex);
         }
@@ -53,7 +54,7 @@ public class CartController {
 
     @PostMapping("/cart/{cartId}/item/add")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ApiResponse<List<Items>> addItemsToCart(@RequestBody String[] bienTheSanPhamId, @PathVariable("cartId") Integer cartId) {
+    public AppResponse<List<Items>> addItemsToCart(@RequestBody String[] bienTheSanPhamId, @PathVariable("cartId") Integer cartId) {
         try {
             if (cartId <= 0 || cartService.findById(cartId).isEmpty()) {
                 throw new BadRequestException();
@@ -72,7 +73,7 @@ public class CartController {
                     cartItemsService.save(items);
                 }
             }
-            return ApiResponse.ok(null);
+            return success(null);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "items"), ex);
         }
@@ -80,12 +81,12 @@ public class CartController {
 
     @DeleteMapping("/cart/{cartId}/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ApiResponse<String> deleteItemsOfCart(@PathVariable("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
+    public AppResponse<String> deleteItemsOfCart(@PathVariable("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
         try {
             if (cartService.findById(cartId).isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(cartItemsService.delete(itemId));
+            return success(cartItemsService.delete(itemId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "items"), ex);
         }

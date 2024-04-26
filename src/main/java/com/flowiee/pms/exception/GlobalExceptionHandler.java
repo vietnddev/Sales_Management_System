@@ -1,7 +1,7 @@
 package com.flowiee.pms.exception;
 
 import com.flowiee.pms.base.BaseController;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.utils.PagesUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,15 +26,15 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ApiResponse<String> exceptionHandler(BadRequestException ex) {
+    public AppResponse<String> exceptionHandler(BadRequestException ex) {
         logger.error(ex.getMessage(), ex);
-        return ApiResponse.fail("Fail", HttpStatus.BAD_REQUEST);
+        return fail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler
-    public ApiResponse<?> exceptionHandler(DataExistsException ex) {
+    public AppResponse<?> exceptionHandler(DataExistsException ex) {
         logger.error(ex.getMessage(), ex);
-        return ApiResponse.fail(ex.getMessage(), HttpStatus.CONFLICT);
+        return fail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler
@@ -47,15 +47,15 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ApiResponse<?> exceptionHandler(DataInUseException ex) {
+    public AppResponse<?> exceptionHandler(DataInUseException ex) {
         logger.error(ex.getMessage(), ex);
-        return ApiResponse.fail(ex.getMessage(), HttpStatus.LOCKED);
+        return fail(HttpStatus.LOCKED, ex.getMessage());
     }
 
     @ExceptionHandler
-    public ApiResponse<?> exceptionHandler(AppException ex) {
+    public AppResponse<?> exceptionHandler(AppException ex) {
         logger.info(ex.getMessage(), ex);
-        return ApiResponse.fail(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return fail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
 //    @ExceptionHandler
@@ -68,14 +68,14 @@ public class GlobalExceptionHandler extends BaseController {
 //    }
 
     @ExceptionHandler
-    public ApiResponse<?> exceptionHandler(RuntimeException ex) {
+    public AppResponse<?> exceptionHandler(RuntimeException ex) {
         logger.error(ex.getMessage(), ex);
-        return ApiResponse.fail(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return fail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler
-    public ApiResponse<?> exceptionHandler(Exception ex) {
+    public AppResponse<?> exceptionHandler(Exception ex) {
         logger.error(ex.getMessage(), ex);
-        return ApiResponse.fail(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return fail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 }

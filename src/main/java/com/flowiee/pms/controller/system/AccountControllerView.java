@@ -6,7 +6,6 @@ import com.flowiee.pms.exception.DataExistsException;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.EndPointUtil;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.model.role.ActionModel;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(EndPointUtil.SYS_ACCOUNT)
+@RequestMapping("/sys/tai-khoan")
 public class AccountControllerView extends BaseController {
     @Autowired
     private AccountService accountService;

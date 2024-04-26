@@ -23,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 @CrossOrigin
 @RestController
 @RequestMapping("/system/category")
-public class CategoryControllerView extends BaseController<ModelAndView> {
+public class CategoryControllerView extends BaseController {
     @Autowired private CategoryService categoryService;
 
     @GetMapping

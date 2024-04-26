@@ -1,10 +1,10 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ApiResponse;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +32,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Find all customers")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
-    public ApiResponse<List<CustomerDTO>> findCustomers(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+    public AppResponse<List<CustomerDTO>> findCustomers(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                         @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                         @RequestParam(value = "name", required = false) String pName,
                                                         @RequestParam(value = "sex", required = false) String pSex,
@@ -44,7 +44,7 @@ public class CustomerController extends BaseController {
             if (pageSize == null) pageSize = -1;
             if (pageNum == null) pageNum = 1;
             Page<CustomerDTO> customers = customerService.findAll(pageSize, pageNum - 1, pName, pSex, pBirthday, pPhone, pEmail, pAddress);
-            return ApiResponse.ok(customers.getContent(), pageNum, pageSize, customers.getTotalPages(), customers.getTotalElements());
+            return success(customers.getContent(), pageNum, pageSize, customers.getTotalPages(), customers.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"), ex);
         }
@@ -53,13 +53,13 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Find detail customer")
     @GetMapping("/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
-    public ApiResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Integer customerId) {
+    public AppResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Integer customerId) {
         try {
             Optional<CustomerDTO> customer = customerService.findById(customerId);
             if (customer.isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(customer.get());
+            return success(customer.get());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"), ex);
         }
@@ -68,13 +68,13 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Create customer")
     @PostMapping("/insert")
     @PreAuthorize("@vldModuleSales.insertCustomer(true)")
-    public ApiResponse<String> createCustomer(@RequestBody CustomerDTO customer) {
+    public AppResponse<String> createCustomer(@RequestBody CustomerDTO customer) {
         try {
             if (customer == null) {
                 throw new BadRequestException();
             }
             customerService.save(customer);
-            return ApiResponse.ok(MessageUtils.CREATE_SUCCESS);
+            return success(MessageUtils.CREATE_SUCCESS);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "customer"), ex);
         }
@@ -83,13 +83,13 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Update customer")
     @PutMapping("/update/{customerId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public ApiResponse<String> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
+    public AppResponse<String> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
         try {
             if (customer == null || customerId <= 0 || customerService.findById(customerId).isEmpty()) {
                 throw new BadRequestException();
             }
             customerService.update(customer, customerId);
-            return ApiResponse.ok(MessageUtils.UPDATE_SUCCESS);
+            return success(MessageUtils.UPDATE_SUCCESS);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "customer"), ex);
         }
@@ -98,7 +98,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Delete customer")
     @DeleteMapping("/delete/{customerId}")
     @PreAuthorize("@vldModuleSales.deleteCustomer(true)")
-    public ApiResponse<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
-        return ApiResponse.ok(customerService.delete(customerId));
+    public AppResponse<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
+        return success(customerService.delete(customerId));
     }
 }

@@ -78,7 +78,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             productDetail.setId(productVariantId);
             ProductDetail productDetailUpdated = productVariantRepo.save(productDetail);
             systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productDetailBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productDetail);
-            logger.info("Update productVariant success! " + productDetail);
+            logger.info("Update productVariant success! {}", productDetail);
             return ProductVariantDTO.fromProductVariant(productDetailUpdated);
         } catch (Exception e) {
             throw new AppException("Update productVariant fail! " + productDetail.toString(), e);
@@ -94,7 +94,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         try {
             productVariantRepo.deleteById(productVariantId);
             systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productDetailToDelete.toString());
-            logger.info("Delete productVariant success! " + productDetailToDelete);
+            logger.info("Delete productVariant success! {}", productDetailToDelete);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {
             throw new AppException("Delete productVariant fail! id=" + productVariantId, ex);

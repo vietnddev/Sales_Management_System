@@ -4,7 +4,7 @@ import com.flowiee.pms.base.BaseController;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("${app.api.prefix}/category")
 @Tag(name = "Category API", description = "Quản lý danh mục hệ thống")
-public class CategoryController extends BaseController<Category> {
+public class CategoryController extends BaseController {
     private final CategoryService categoryService;
 
     @Autowired
@@ -30,7 +30,7 @@ public class CategoryController extends BaseController<Category> {
 
     @Operation(summary = "Find all category")
     @GetMapping("/all")
-    public ApiResponse<List<Category>> findAll() {
+    public AppResponse<List<Category>> findAll() {
         try {
             return success(categoryService.findRootCategory());
         } catch (RuntimeException ex) {
@@ -40,13 +40,13 @@ public class CategoryController extends BaseController<Category> {
 
     @Operation(summary = "Find by type")
     @GetMapping("/{type}")
-    public ApiResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
+    public AppResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
                                                   @RequestParam(value = "parentId", required = false) Integer parentId,
                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                   @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
             if (Objects.isNull(pageSize) || Objects.isNull(pageNum)) {
-                return ApiResponse.ok(categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId));
+                return success(categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId));
             }
             Page<Category> categories = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId, pageSize, pageNum - 1);
             return success(categories.getContent(), pageNum, pageSize, categories.getTotalPages(), categories.getTotalElements());
@@ -57,7 +57,7 @@ public class CategoryController extends BaseController<Category> {
 
     @Operation(summary = "Create category")
     @PostMapping("/create")
-    public ApiResponse<Category> createCategory(@RequestBody Category category) {
+    public AppResponse<Category> createCategory(@RequestBody Category category) {
         try {
             category.setType(CommonUtils.getCategoryType(category.getType()));
             return success(categoryService.save(category));
@@ -68,7 +68,7 @@ public class CategoryController extends BaseController<Category> {
 
     @Operation(summary = "Update category")
     @PutMapping("/update/{categoryId}")
-    public ApiResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
+    public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
         try {
             if (categoryService.findById(categoryId).isEmpty()) {
                 throw new BadRequestException();
@@ -91,7 +91,7 @@ public class CategoryController extends BaseController<Category> {
 
     @Operation(summary = "Delete category")
     @DeleteMapping("/delete/{categoryId}")
-    public ApiResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
+    public AppResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
         return success(categoryService.delete(categoryId));
     }
 }

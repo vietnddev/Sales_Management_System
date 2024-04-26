@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(EndPointUtil.PRO_PRODUCT)
-public class ProductControllerView extends BaseController<ModelAndView> {
+@RequestMapping("/san-pham")
+public class ProductControllerView extends BaseController {
     private final ProductInfoService productInfoService;
     private final ProductVariantService productVariantService;
     private final ProductAttributeService productAttributeService;
@@ -102,7 +102,7 @@ public class ProductControllerView extends BaseController<ModelAndView> {
     public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
                                                @PathVariable("id") Integer attributeId,
                                                HttpServletRequest request) {
-        if (attributeId <= 0 || productAttributeService.findById(attributeId).isEmpty()) {
+        if (productAttributeService.findById(attributeId).isEmpty()) {
             throw new NotFoundException("Product attribute not found!");
         }
         attribute.setId(attributeId);
@@ -131,10 +131,6 @@ public class ProductControllerView extends BaseController<ModelAndView> {
     @GetMapping("/export")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ResponseEntity<?> exportData() {
-        byte[] dataExport = productExportService.exportToExcel(null, null, true);
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_E_SANPHAM + ".xlsx");
-        return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
+        return productExportService.exportToExcel(null, null, true);
     }
 }

@@ -1,12 +1,12 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ApiResponse;
 import com.flowiee.pms.model.dto.VoucherTicketDTO;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
@@ -35,7 +35,7 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Find all voucher")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
-    public ApiResponse<List<VoucherInfoDTO>> findAll(@RequestParam("pageSize") int pageSize,
+    public AppResponse<List<VoucherInfoDTO>> findAll(@RequestParam("pageSize") int pageSize,
                                                      @RequestParam("pageNum") int pageNum,
                                                      @RequestParam(value = "title", required = false) String pTitle,
                                                      @RequestParam(value = "startTime", required = false)
@@ -45,7 +45,7 @@ public class VoucherController extends BaseController {
                                                      @RequestParam(value = "status", required = false) String pStatus) {
         try {
             Page<VoucherInfoDTO> voucherInfos = voucherService.findAll(pageSize, pageNum - 1, null, pTitle, pStartTime, pEndTime, pStatus);
-            return ApiResponse.ok(voucherInfos.getContent(), pageNum, pageSize, voucherInfos.getTotalPages(), voucherInfos.getTotalElements());
+            return success(voucherInfos.getContent(), pageNum, pageSize, voucherInfos.getTotalPages(), voucherInfos.getTotalElements());
         } catch (Exception ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"), ex);
         }
@@ -54,11 +54,11 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Find detail voucher")
     @GetMapping("/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
-    public ApiResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
+    public AppResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
         try {
             Optional<VoucherInfoDTO> voucherInfoDTO = voucherService.findById(voucherInfoId);
             if (voucherInfoDTO.isPresent()) {
-                return ApiResponse.ok(voucherInfoDTO.get());   
+                return success(voucherInfoDTO.get());
             }
             throw new BadRequestException();
         } catch (RuntimeException ex) {
@@ -69,12 +69,12 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Create voucher")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleSales.insertVoucher(true)")
-    public ApiResponse<VoucherInfo> createVoucher(@RequestBody VoucherInfoDTO voucherInfoDTO) {
+    public AppResponse<VoucherInfo> createVoucher(@RequestBody VoucherInfoDTO voucherInfoDTO) {
         try {
             if (voucherInfoDTO.getApplicableProducts().isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(voucherService.save(voucherInfoDTO));
+            return success(voucherService.save(voucherInfoDTO));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "voucher"), ex);
         }
@@ -83,12 +83,12 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Update voucher")
     @PutMapping("/update/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.updateVoucher(true)")
-    public ApiResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfoDTO voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
+    public AppResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfoDTO voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
         try {
             if (voucherInfo == null || voucherService.findById(voucherInfoId).isEmpty()) {
                 throw new BadRequestException();
             }
-            return ApiResponse.ok(voucherService.update(voucherInfo ,voucherInfoId));
+            return success(voucherService.update(voucherInfo ,voucherInfoId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "voucher"), ex);
         }
@@ -97,20 +97,22 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Delete voucher")
     @DeleteMapping("/delete/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.deleteVoucher(true)")
-    public ApiResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
-        return ApiResponse.ok(voucherService.delete(voucherInfoId));
+    public AppResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
+        return success(voucherService.delete(voucherInfoId));
     }
 
     @Operation(summary = "Check the voucher is available")
     @GetMapping("/check/{voucherCode}")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
-    public ApiResponse<VoucherTicketDTO> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
+    public AppResponse<VoucherTicketDTO> isAvailableVoucher(@PathVariable("voucherCode") String voucherCode) {
         try {
             VoucherTicket voucherTicket = voucherTicketService.isAvailable(voucherCode);
             if (voucherTicket == null) {
-                return ApiResponse.ok("NOK", new VoucherTicketDTO());
+                VoucherTicketDTO dto = new VoucherTicketDTO();
+                dto.setAvailable("N");
+                return success(dto);
             }
-            return ApiResponse.ok(voucherTicketService.isAvailable(voucherCode));
+            return success(voucherTicketService.isAvailable(voucherCode));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"), ex);
         }
@@ -119,15 +121,15 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Get tickets of voucher by voucherId")
     @GetMapping("/{voucherInfoId}/tickets")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
-    public ApiResponse<List<VoucherTicket>> getTicketsByVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId,
+    public AppResponse<List<VoucherTicket>> getTicketsByVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId,
                                                                     @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                     @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
             if (pageSize != null && pageNum != null) {
                 Page<VoucherTicket> voucherTickets = voucherTicketService.findAll(pageSize, pageNum - 1, voucherInfoId);
-                return ApiResponse.ok(voucherTickets.getContent(), pageNum, pageSize, voucherTickets.getTotalPages(), voucherTickets.getTotalElements());
+                return success(voucherTickets.getContent(), pageNum, pageSize, voucherTickets.getTotalPages(), voucherTickets.getTotalElements());
             }
-            return ApiResponse.ok(voucherTicketService.findByVoucherId(voucherInfoId));
+            return success(voucherTicketService.findByVoucherId(voucherInfoId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher ticket"), ex);
         }

@@ -1,7 +1,7 @@
 package com.flowiee.pms.controller.product;
 
 import com.flowiee.pms.entity.product.Material;
-import com.flowiee.pms.utils.EndPointUtil;
+import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.base.BaseController;
 import com.flowiee.pms.exception.NotFoundException;
@@ -17,8 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(EndPointUtil.STORAGE_MATERIAL)
-public class MaterialControllerView extends BaseController<ModelAndView> {
+@RequestMapping("/stg/material")
+public class MaterialControllerView extends BaseController {
     @Autowired private MaterialService  materialService;
 
     @GetMapping
@@ -26,9 +26,9 @@ public class MaterialControllerView extends BaseController<ModelAndView> {
     public ModelAndView viewMaterials() {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_MATERIAL);
         modelAndView.addObject("templateImportName", "Name");
-        modelAndView.addObject("url_template", EndPointUtil.STORAGE_MATERIAL_TEMPLATE);
-        modelAndView.addObject("url_import", EndPointUtil.STORAGE_MATERIAL_IMPORT);
-        modelAndView.addObject("url_export", EndPointUtil.STORAGE_MATERIAL_EXPORT);
+        modelAndView.addObject("url_template", AppConstants.ENDPOINT.URL_STG_MATERIAL_IMPORT_TEMPLATE.getValue());
+        modelAndView.addObject("url_import", AppConstants.ENDPOINT.URL_STG_MATERIAL_IMPORT.getValue());
+        modelAndView.addObject("url_export", AppConstants.ENDPOINT.URL_STG_MATERIAL_EXPORT.getValue());
         return baseView(modelAndView);
     }
 
@@ -65,7 +65,7 @@ public class MaterialControllerView extends BaseController<ModelAndView> {
         return null;
     }
 
-    @PostMapping(EndPointUtil.STORAGE_MATERIAL_IMPORT)
+    @PostMapping("/import")
     @PreAuthorize("@vldModuleProduct.insertMaterial(true)")
     public ModelAndView importData(@RequestParam("file") MultipartFile file) {
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {
@@ -77,7 +77,7 @@ public class MaterialControllerView extends BaseController<ModelAndView> {
         return null;
     }
 
-    @GetMapping(EndPointUtil.STORAGE_MATERIAL_EXPORT)
+    @GetMapping("/export")
     @PreAuthorize("@vldModuleProduct.readMaterial(true)")
     public ResponseEntity<?> exportData() {
 //        if (kiemTraQuyenModule.kiemTraQuyenExport()) {

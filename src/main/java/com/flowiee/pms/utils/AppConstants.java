@@ -139,4 +139,39 @@ public class AppConstants {
 
         private final String label;
     }
+
+    @Getter
+    public enum ENDPOINT {
+        URL_PROFILE("/sys/profile", "HEADER"),
+        URL_LOGIN("/sys/login", "HEADER"),
+        URL_LOGOUT("/sys/logout", "HEADER"),
+        URL_NOTIFICATION("/sys/notification", "HEADER"),
+
+        URL_CATEGORY("/system/category", "SIDEBAR"),
+        URL_PRODUCT("/san-pham", "SIDEBAR"),
+        URL_PRODUCT_ORDER("/don-hang", "SIDEBAR"),
+        URL_PRODUCT_CUSTOMER("/customer", "SIDEBAR"),
+        URL_PRODUCT_SUPPLIER("/san-pham/supplier", "SIDEBAR"),
+        URL_PRODUCT_GALLERY("/gallery", "SIDEBAR"),
+        URL_STG_DASHBOARD("/stg", "SIDEBAR"),
+        URL_STG_DOCUMENT("/stg/doc", "SIDEBAR"),
+        URL_STG_MATERIAL("/stg/material", "SIDEBAR"),
+        URL_STG_TICKET_IMPORT("/stg/ticket-import", "SIDEBAR"),
+        URL_STG_TICKET_EXPORT("/stg/ticket-export", "SIDEBAR"),
+        URL_SYS_CONFIG("/sys/config", "SIDEBAR"),
+        URL_SYS_LOG("/sys/log", "SIDEBAR"),
+        URL_SYS_ACCOUNT("/sys/tai-khoan", "SIDEBAR"),
+
+        URL_STG_MATERIAL_IMPORT("/stg/material/import", "MAIN"),
+        URL_STG_MATERIAL_IMPORT_TEMPLATE( "/stg/material/template", "MAIN"),
+        URL_STG_MATERIAL_EXPORT("/stg/material/export", "MAIN");
+
+        private final String value;
+        private final String type;
+
+        ENDPOINT(String value, String type) {
+            this.value = value;
+            this.type = type;
+        }
+    }
 }

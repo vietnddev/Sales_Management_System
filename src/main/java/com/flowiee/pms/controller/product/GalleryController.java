@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.base.BaseController;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.model.ApiResponse;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,14 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Gallery API", description = "Gallery management")
-public class GalleryController extends BaseController<FileStorage> {
+public class GalleryController extends BaseController {
     @Autowired
     private ProductImageService productImageService;
 
     @Operation(summary = "Find images of all products")
     @GetMapping("/images/all")
     @PreAuthorize("@vldModuleProduct.readGallery(true)")
-    public ApiResponse<List<FileStorage>> viewGallery() {
+    public AppResponse<List<FileStorage>> viewGallery() {
         try {
             return success(productImageService.getImageOfProduct(null));
         } catch (RuntimeException ex) {
