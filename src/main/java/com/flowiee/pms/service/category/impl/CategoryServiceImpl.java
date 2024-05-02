@@ -63,7 +63,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final FileStorageRepository fileStorageRepo;
     private final MaterialService materialService;
 
-
     @Autowired
     public CategoryServiceImpl(ImportService importService, CategoryRepository categoryRepo, ProductInfoService productInfoService,
                                MaterialService materialService, NotificationService notificationService, AppImportRepository appImportRepo,
@@ -120,7 +119,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public String delete(Integer entityId) {
-        if (entityId == null || entityId <= 0 || this.findById(entityId).isEmpty()) {
+        if (entityId == null || this.findById(entityId).isEmpty()) {
             throw new BadRequestException();
         }
         if (categoryInUse(entityId)) {
@@ -235,9 +234,9 @@ public class CategoryServiceImpl implements CategoryService {
                     if (categoryName == null || categoryName.isEmpty()) {
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
                         continue;
                     }
 
@@ -251,9 +250,9 @@ public class CategoryServiceImpl implements CategoryService {
                         isImportSuccess = false;
                         XSSFCellStyle cellStyle = workbook.createCellStyle();
                         XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportEror(cellStyle, fontStyle));
+                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
+                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
+                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
                     } else {
                         importSuccess++;
                     }
@@ -330,7 +329,7 @@ public class CategoryServiceImpl implements CategoryService {
                 row.createCell(2).setCellValue(listData.get(i).getName());
                 row.createCell(3).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 3; j++) {
-                    row.getCell(j).setCellStyle(CommonUtils.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(ExcelUtils.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);
