@@ -5,6 +5,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.system.AccountService;
+import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.entity.system.Account;
@@ -29,6 +30,8 @@ public class AccountControllerView extends BaseController {
     private AccountService accountService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private GroupAccountService groupAccountService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
@@ -36,6 +39,7 @@ public class AccountControllerView extends BaseController {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ACCOUNT);
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
+        modelAndView.addObject("groupAccount", groupAccountService.findAll());
         return baseView(modelAndView);
     }
 

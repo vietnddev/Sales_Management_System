@@ -41,7 +41,7 @@ public class OrderItemsServiceImpl implements OrderItemsService {
     public OrderDetail save(OrderDetail orderDetail) {
         try {
             OrderDetail orderDetailSaved = orderDetailRepo.save(orderDetail);
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), "Thêm mới item vào đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Thêm mới item vào đơn hàng " + orderDetail.toString());
             return orderDetailSaved;
         } catch (RuntimeException ex) {
@@ -54,7 +54,7 @@ public class OrderItemsServiceImpl implements OrderItemsService {
         try {
             orderDetail.setId(orderDetailId);
             OrderDetail orderItemUpdated = orderDetailRepo.save(orderDetail);
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), "Cập nhật item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Cập nhật item of đơn hàng " + orderDetail.toString());
             return orderItemUpdated;
         } catch (RuntimeException ex) {
@@ -70,7 +70,7 @@ public class OrderItemsServiceImpl implements OrderItemsService {
         }
         try {
             orderDetailRepo.deleteById(orderDetailId);
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_DELETE.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), "Xóa item of đơn hàng: " + orderDetail.toString());
             logger.info(OrderServiceImpl.class.getName() + ": Xóa item of đơn hàng " + orderDetail.toString());
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {

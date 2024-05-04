@@ -48,6 +48,7 @@
                                                 <th>#</th>
                                                 <th>Code</th>
                                                 <th>Name</th>
+                                                <th>Color</th>
                                                 <th>Note</th>
                                                 <th>In use</th>
                                                 <th>Status</th>
@@ -62,6 +63,7 @@
                                                 <th>#</th>
                                                 <th>Code</th>
                                                 <th>Name</th>
+                                                <th>Color</th>
                                                 <th>Note</th>
                                                 <th>In use</th>
                                                 <th>Status</th>
@@ -303,6 +305,7 @@
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
                                 <td>${d.code}</td>
                                 <td>${d.name}</td>
+                                <td style="background-color: ${d.color}"></td>
                                 <td>${d.note}</td>
                                 <td></td>
                                 <td></td>

@@ -29,10 +29,14 @@ import java.util.*;
 
 @Service
 public class VoucherInfoServiceImpl implements VoucherService {
-    @Autowired private VoucherInfoRepository voucherInfoRepo;
-    @Autowired private VoucherApplyService voucherApplyService;
-    @Autowired private VoucherTicketService voucherTicketService;
-    @Autowired private ModelMapper modelMapper;
+    @Autowired
+    private VoucherInfoRepository voucherInfoRepo;
+    @Autowired
+    private VoucherApplyService voucherApplyService;
+    @Autowired
+    private VoucherTicketService voucherTicketService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public List<VoucherInfoDTO> findAll() {
@@ -122,7 +126,7 @@ public class VoucherInfoServiceImpl implements VoucherService {
     @Override
     public VoucherInfoDTO update(VoucherInfoDTO voucherInfo, Integer voucherId) {
         try {
-            if (voucherInfo == null || voucherId == null || voucherId <= 0) {
+            if (voucherInfo == null || voucherId == null || this.findById(voucherId).isEmpty()) {
                 throw new BadRequestException();
             }
             voucherInfo.setId(voucherId);

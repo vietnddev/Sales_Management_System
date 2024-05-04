@@ -121,19 +121,6 @@ public class ProductDetail extends BaseEntity implements Serializable {
         super.id = id;
     }
 
-    public static ProductDetail fromProductVariantDTO(ProductVariantDTO dto) {
-        ProductDetail p = new ProductDetail();
-        p.setId(dto.getId());
-        p.setProduct(new Product(dto.getProductId()));
-        p.setVariantName(dto.getVariantName());
-        p.setFabricType(new Category(dto.getFabricTypeId(), dto.getFabricTypeName()));
-        p.setColor(new Category(dto.getColorId(), dto.getColorName()));
-        p.setSize(new Category(dto.getSizeId(), dto.getSizeName()));
-        p.setOriginalPrice(dto.getOriginalPrice());
-        p.setDiscountPrice(dto.getDiscountPrice());
-        return p;
-    }
-
     public Map<String, String> compareTo(ProductDetail entityToCompare) {
         Map<String, String> map = new HashMap<>();
         if (!this.getVariantCode().equals(entityToCompare.getVariantCode())) {

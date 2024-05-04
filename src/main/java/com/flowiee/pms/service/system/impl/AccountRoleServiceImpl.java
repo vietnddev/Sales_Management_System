@@ -60,6 +60,11 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<AccountRole> findByGroupId(Integer accountId) {
+        return accountRoleRepo.findByGroupId(accountId);
+    }
+
+    @Override
     public String updatePermission(String moduleKey, String actionKey, Integer accountId) {
         accountRoleRepo.save(new AccountRole(moduleKey, actionKey, accountId));
         return MessageUtils.UPDATE_SUCCESS;

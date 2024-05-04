@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -42,10 +41,10 @@ public class StartUp {
 		CommonUtils.mvEndPointHeaderConfig.clear();
 		CommonUtils.mvEndPointSideBarConfig.clear();
 		for (AppConstants.ENDPOINT e : AppConstants.ENDPOINT.values()) {
-			if (e.getType().equals("HEADER")) {
+			if (e.getType().equals("HEADER") && e.isStatus()) {
 				CommonUtils.mvEndPointHeaderConfig.put(e.name(), e.getValue());
 			}
-			 if (e.getType().equals("SIDEBAR")) {
+			 if (e.getType().equals("SIDEBAR") && e.isStatus()) {
 				CommonUtils.mvEndPointSideBarConfig.put(e.name(), e.getValue());
 			}
 		}

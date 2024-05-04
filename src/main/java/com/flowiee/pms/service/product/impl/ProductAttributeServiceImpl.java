@@ -52,7 +52,7 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     @Override
     public ProductAttribute save(ProductAttribute productAttribute) {
         ProductAttribute productAttributeSaved = productAttributeRepo.save(productAttribute);
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới thuộc tính sản phẩm");
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Thêm mới thuộc tính sản phẩm");
         return productAttributeSaved;
     }
 
@@ -60,7 +60,7 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     public ProductAttribute update(ProductAttribute attribute, Integer attributeId) {
         attribute.setId(attributeId);
         ProductAttribute productAttributeUpdated = productAttributeRepo.save(attribute);
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật thuộc tính sản phẩm");
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Cập nhật thuộc tính sản phẩm");
         return productAttributeUpdated;
     }
 
@@ -70,7 +70,7 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
             throw new NotFoundException("Product attribute not found!");
         }
         productAttributeRepo.deleteById(attributeId);
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa thuộc tính sản phẩm");
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Xóa thuộc tính sản phẩm");
         return MessageUtils.DELETE_SUCCESS;
     }
 }

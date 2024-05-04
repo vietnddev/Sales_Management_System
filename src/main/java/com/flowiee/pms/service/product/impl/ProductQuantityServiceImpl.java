@@ -37,7 +37,7 @@ public class ProductQuantityServiceImpl implements ProductQuantityService {
             } else if ("D".equals(type)) {
                 productVariantRepo.updateQuantityDecrease(quantity, productVariantId);
             }
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRODUCT_UPDATE.name(), "Update product quantity");
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), "Update product quantity");
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product quantity"), ex);
         }

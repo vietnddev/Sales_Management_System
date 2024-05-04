@@ -169,8 +169,8 @@ public class OrderServiceImpl implements OrderService {
             cartItemsService.deleteAllItems();
 
             //Log
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_CREATE.name(), "Thêm mới đơn hàng: " + order.toString());
-            logger.info("Insert new order success! insertBy=" + CommonUtils.getUserPrincipal().getUsername());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), "Thêm mới đơn hàng: " + order.toString());
+            logger.info("Insert new order success! insertBy={}", CommonUtils.getUserPrincipal().getUsername());
 
             return OrderDTO.fromOrder(orderSaved);
         } catch (RuntimeException ex) {
@@ -196,7 +196,7 @@ public class OrderServiceImpl implements OrderService {
         orderToUpdate.setPaymentMethod(dto.getPaymentMethod());
         orderToUpdate.setPaymentStatus(dto.getPaymentStatus());
         orderRepo.save(orderToUpdate);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_UPDATE.name(), "Cập nhật đơn hàng: " + dto.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), "Cập nhật đơn hàng: " + dto.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + dto.toString());
         return OrderDTO.fromOrder(orderToUpdate);
     }
@@ -208,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         orderRepo.deleteById(id);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORDERS_DELETE.name(), "Xóa đơn hàng: " + order.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), "Xóa đơn hàng: " + order.toString());
         logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
         return MessageUtils.DELETE_SUCCESS;
     }

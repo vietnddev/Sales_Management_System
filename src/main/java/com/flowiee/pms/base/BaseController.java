@@ -17,7 +17,7 @@ public class BaseController {
 	protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
-		modelAndView.addObject("USERNAME_LOGIN", Objects.requireNonNull(CommonUtils.getUserPrincipal().getUsername()));
+		modelAndView.addObject("USERNAME_LOGIN", CommonUtils.getUserPrincipal().getUsername());
 		setURLHeader(modelAndView);
 		setURLSidebar(modelAndView);
 		return modelAndView;

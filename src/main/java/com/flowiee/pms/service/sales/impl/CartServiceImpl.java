@@ -67,12 +67,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public OrderCart update(OrderCart cart, Integer cartId) {
+        if (this.findById(cartId).isEmpty()) {
+            throw new BadRequestException();
+        }
         cart.setId(cartId);
         return cartRepository.save(cart);
     }
 
     @Override
     public String delete(Integer id) {
+        if (this.findById(id).isEmpty()) {
+            throw new BadRequestException();
+        }
         cartRepository.deleteById(id);
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(MODULE.PRODUCT.name());

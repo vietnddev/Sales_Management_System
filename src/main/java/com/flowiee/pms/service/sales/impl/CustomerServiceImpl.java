@@ -110,7 +110,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerContact.setStatus(true);
             customerContactService.save(customerContact);
         }
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUSTOMER_CREATE.name(), "Thêm mới khách hàng: " + customer.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_C.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info("Create customer {}", customer.toString());
         return CustomerDTO.fromCustomer(customerInserted);
     }
@@ -184,7 +184,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customerContactService.save(addressDefault);
             }
         }
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUSTOMER_UPDATE.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_U.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
         logger.info("Update customer info {}", customer.toString());
         return CustomerDTO.fromCustomer(customerUpdated);
     }
@@ -198,7 +198,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUSTOMER_DELETE.name(), "Xóa khách hàng id=" + id);
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_D.name(), "Xóa khách hàng id=" + id);
         logger.info("Deleted customer id={}", id);
         return MessageUtils.DELETE_SUCCESS;
     }

@@ -17,8 +17,7 @@ import java.util.Optional;
 @Service
 public class VoucherApplyServiceImpl implements VoucherApplyService {
     @Autowired
-    private
-    VoucherApplyRepository voucherApplyRepo;
+    private VoucherApplyRepository voucherApplyRepo;
 
     @Override
     public List<VoucherApplyDTO> findAll(Integer voucherInfoId , Integer productId) {

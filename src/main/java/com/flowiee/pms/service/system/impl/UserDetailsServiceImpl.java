@@ -27,9 +27,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService, AccountService {
@@ -44,12 +42,15 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 		if (accountEntity != null) {
 			userPrincipal = new UserPrincipal(accountEntity);
 
-			List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-			GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + accountEntity.getRole());
-			grantedAuthorities.add(authority);
-			for (AccountRole rights : roleService.findByAccountId(accountEntity.getId())) {
-				GrantedAuthority rightsAction = new SimpleGrantedAuthority(rights.getAction());
-				grantedAuthorities.add(rightsAction);
+			Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+			grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + accountEntity.getRole()));
+			for (AccountRole right : roleService.findByAccountId(accountEntity.getId())) {
+				grantedAuthorities.add(new SimpleGrantedAuthority(right.getAction()));
+			}
+			if (accountEntity.getGroupAccount() != null) {
+				for (AccountRole right : roleService.findByGroupId(accountEntity.getId())) {
+					grantedAuthorities.add(new SimpleGrantedAuthority(right.getAction()));
+				}
 			}
 			userPrincipal.setAuthorities(grantedAuthorities);
 
@@ -90,7 +91,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 			String password = account.getPassword();
 			account.setPassword(bCrypt.encode(password));
 			Account accountSaved = accountRepo.save(account);
-			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_CREATE.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
+			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_C.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
 			systemLogService.writeLog(systemLog);
 			logger.info("Insert account success! username=" + account.getUsername());
 			return accountSaved;
@@ -109,7 +110,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 			} else {
 				account.setRole("USER");
 			}
-			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_UPDATE.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
+			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_U.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
 			systemLogService.writeLog(systemLog);
 			logger.info("Update account success! username=" + account.getUsername());
 			return accountRepo.save(account);
@@ -125,7 +126,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 			Optional<Account> account = accountRepo.findById(accountId);
 			if (account.isPresent()) {
 				accountRepo.delete(account.get());
-				SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACCOUNT_DELETE.name(), "Xóa account " + account.get().getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
+				SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_D.name(), "Xóa account " + account.get().getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
 				systemLogService.writeLog(systemLog);
 				logger.info("Delete account success! username=" + account.get().getUsername());
 			}

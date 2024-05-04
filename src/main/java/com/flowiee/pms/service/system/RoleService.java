@@ -15,6 +15,8 @@ public interface RoleService {
 
     List<AccountRole> findByAccountId(Integer accountId);
 
+    List<AccountRole> findByGroupId(Integer accountId);
+
     String updatePermission(String moduleKey, String actionKey, Integer accountId);
 
     boolean isAuthorized(int accountId, String module, String action);

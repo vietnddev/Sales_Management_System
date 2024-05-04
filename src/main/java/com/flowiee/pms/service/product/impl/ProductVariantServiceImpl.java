@@ -13,6 +13,7 @@ import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,6 +30,8 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     private ProductDetailRepository productVariantRepo;
     @Autowired
     private SystemLogService systemLogService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public List<ProductVariantDTO> findAll() {
@@ -54,14 +57,14 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public ProductVariantDTO save(ProductVariantDTO productVariantDTO) {
         try {
-            ProductDetail pVariant = ProductDetail.fromProductVariantDTO(productVariantDTO);
+            ProductDetail pVariant = modelMapper.map(productVariantDTO, ProductDetail.class);
             pVariant.setStorageQty(0);
             pVariant.setSoldQty(0);
             pVariant.setStatus(AppConstants.PRODUCT_STATUS.A.name());
             pVariant.setVariantCode(CommonUtils.now("yyyyMMddHHmmss"));
             ProductDetail productDetailSaved = productVariantRepo.save(pVariant);
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRODUCT_UPDATE.name(), "Thêm mới biến thể sản phẩm: " + pVariant);
-            logger.info("Insert productVariant success! " + pVariant);
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), "Thêm mới biến thể sản phẩm: " + pVariant);
+            logger.info("Insert productVariant success! {}", pVariant);
             return ProductVariantDTO.fromProductVariant(productDetailSaved);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product variant"), ex);
@@ -77,7 +80,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         try {
             productDetail.setId(productVariantId);
             ProductDetail productDetailUpdated = productVariantRepo.save(productDetail);
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật biến thể sản phẩm: " + productDetailBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productDetail);
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), "Cập nhật biến thể sản phẩm: " + productDetailBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productDetail);
             logger.info("Update productVariant success! {}", productDetail);
             return ProductVariantDTO.fromProductVariant(productDetailUpdated);
         } catch (Exception e) {
@@ -93,7 +96,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         }
         try {
             productVariantRepo.deleteById(productVariantId);
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRODUCT_UPDATE.name(), "Xóa biến thể sản phẩm: " + productDetailToDelete.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), "Xóa biến thể sản phẩm: " + productDetailToDelete.toString());
             logger.info("Delete productVariant success! {}", productDetailToDelete);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {

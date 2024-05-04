@@ -30,10 +30,10 @@
                                 <a th:href="@{${URL_PRODUCT_ORDER}}" class="nav-link"><i class="fa-solid fa-cart-shopping nav-icon mr-2"></i><p>Đơn hàng</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{/don-hang/ban-hang}" class="nav-link"><i class="fa-solid fa-file-invoice-dollar mr-2"></i><p>Bán hàng</p></a>
+                                <a th:href="@{${URL_PRODUCT_CREATE_ORDER}}" class="nav-link"><i class="fa-solid fa-file-invoice-dollar mr-2"></i><p>Bán hàng</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{/san-pham/voucher}" class="nav-link"><i class="fa-solid fa-gifts mr-2"></i><p>Voucher</p></a>
+                                <a th:href="@{${URL_PRODUCT_VOUCHER}}" class="nav-link"><i class="fa-solid fa-gifts mr-2"></i><p>Voucher</p></a>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT_CUSTOMER}}" class="nav-link"><i class="fa-solid fa-user-tag mr-2"></i><p>Khách hàng</p></a>
@@ -47,13 +47,13 @@
                                 <strong>KHO</strong>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_STORAGE_TICKET_IMPORT}}" class="nav-link"><i class="fa-solid fa-cloud-arrow-up fa-rotate-90 mr-2"></i><p>Nhập hàng</p></a>
+                                <a th:href="@{${URL_STG_TICKET_IMPORT}}" class="nav-link"><i class="fa-solid fa-cloud-arrow-up fa-rotate-90 mr-2"></i><p>Nhập hàng</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_STORAGE_TICKET_EXPORT}}" class="nav-link"><i class="fa-solid fa-cloud-arrow-up fa-rotate-270 mr-2"></i><p>Xuất hàng</p></a>
+                                <a th:href="@{${URL_STG_TICKET_EXPORT}}" class="nav-link"><i class="fa-solid fa-cloud-arrow-up fa-rotate-270 mr-2"></i><p>Xuất hàng</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_STORAGE_MATERIAL}}" class="nav-link"><i class="fa-solid fa-scroll nav-icon mr-2"></i><p>Nguyên vật liệu</p></a>
+                                <a th:href="@{${URL_STG_MATERIAL}}" class="nav-link"><i class="fa-solid fa-scroll nav-icon mr-2"></i><p>Nguyên vật liệu</p></a>
                             </li>
 
                             <li class="nav-header">
@@ -61,13 +61,16 @@
                                 <strong>QUẢN TRỊ HỆ THỐNG</strong>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_SYSTEM_CONFIG}}" class="nav-link"><i class="fa-solid fa-gear nav-icon mr-2"></i><p>Cấu hình</p></a>
+                                <a th:href="@{${URL_SYS_CONFIG}}" class="nav-link"><i class="fa-solid fa-gear nav-icon mr-2"></i><p>Cấu hình</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_SYSTEM_ACCOUNT}}" class="nav-link"><i class="fa-solid fa-users nav-icon mr-2"></i><p>Tài khoản hệ thống</p></a>
+                                <a th:href="@{${URL_SYS_GR_ACCOUNT}}" class="nav-link"><i class="fa-solid fa-users nav-icon mr-2"></i><p>Nhóm người dùng</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_SYSTEM_LOG}}" class="nav-link"><i class="fa-solid fa-clock nav-icon mr-2"></i><p>Nhật ký hệ thống</p></a>
+                                <a th:href="@{${URL_SYS_ACCOUNT}}" class="nav-link"><i class="fa-solid fa-user nav-icon mr-2"></i><p>Người dùng</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{${URL_SYS_LOG}}" class="nav-link"><i class="fa-solid fa-clock nav-icon mr-2"></i><p>Nhật ký hệ thống</p></a>
                             </li>
                         </ul>
                     </nav>

@@ -16,6 +16,8 @@ import java.util.List;
 public interface AccountRoleRepository extends JpaRepository<AccountRole, Integer> {
     List<AccountRole> findByAccountId(Integer accountId);
 
+    List<AccountRole> findByGroupId(Integer accountId);
+
     @Query("from AccountRole where accountId=:accountId and module=:module and action=:action")
     AccountRole isAuthorized(@Param("accountId") Integer accountId, @Param("module") String module, @Param("action") String action);
 

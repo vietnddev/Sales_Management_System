@@ -29,10 +29,14 @@ import java.util.Optional;
 
 @Service
 public class TicketExportServiceImpl implements TicketExportService {
-    @Autowired private TicketExportRepository ticketExportRepo;
-    @Autowired private OrderRepository orderRepository;
-    @Autowired private ProductQuantityService productQuantityService;
-    @Autowired private ProductHistoryService productHistoryService;
+    @Autowired
+    private TicketExportRepository ticketExportRepo;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private ProductQuantityService productQuantityService;
+    @Autowired
+    private ProductHistoryService productHistoryService;
 
     @Override
     public List<TicketExport> findAll() {

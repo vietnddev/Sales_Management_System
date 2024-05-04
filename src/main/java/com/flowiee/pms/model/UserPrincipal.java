@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,7 +20,7 @@ public class UserPrincipal extends Account implements UserDetails {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
-    private List<GrantedAuthority> grantedAuthorities;
+    private Set<GrantedAuthority> grantedAuthorities;
 
     public UserPrincipal(Account account) {
         this.id = account.getId();
@@ -32,7 +32,7 @@ public class UserPrincipal extends Account implements UserDetails {
         this.isEnabled = true;
     }
 
-    public void setAuthorities(List<GrantedAuthority> grantedAuthorities) {
+    public void setAuthorities(Set<GrantedAuthority> grantedAuthorities) {
         this.grantedAuthorities = grantedAuthorities;
     }
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serial;
 
 @Entity
-@Table (name = "account_role")
+@Table (name = "role")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -28,9 +28,11 @@ public class AccountRole extends BaseEntity implements java.io.Serializable {
 	@NotNull
 	private String action;
 
-	@Column(name = "account_id", nullable = false)
-	@NotNull
+	@Column(name = "account_id")
 	private Integer accountId;
+
+	@Column(name = "group_id")
+	private Integer groupId;
 
 	public AccountRole(String module, String action, Integer accountId) {
 		this.module = module;

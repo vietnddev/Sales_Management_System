@@ -142,36 +142,41 @@ public class AppConstants {
 
     @Getter
     public enum ENDPOINT {
-        URL_PROFILE("/sys/profile", "HEADER"),
-        URL_LOGIN("/sys/login", "HEADER"),
-        URL_LOGOUT("/sys/logout", "HEADER"),
-        URL_NOTIFICATION("/sys/notification", "HEADER"),
+        URL_PROFILE("/sys/profile", "HEADER", true),
+        URL_LOGIN("/sys/login", "HEADER", true),
+        URL_LOGOUT("/sys/logout", "HEADER", true),
+        URL_NOTIFICATION("/sys/notification", "HEADER", true),
 
-        URL_CATEGORY("/system/category", "SIDEBAR"),
-        URL_PRODUCT("/san-pham", "SIDEBAR"),
-        URL_PRODUCT_ORDER("/don-hang", "SIDEBAR"),
-        URL_PRODUCT_CUSTOMER("/customer", "SIDEBAR"),
-        URL_PRODUCT_SUPPLIER("/san-pham/supplier", "SIDEBAR"),
-        URL_PRODUCT_GALLERY("/gallery", "SIDEBAR"),
-        URL_STG_DASHBOARD("/stg", "SIDEBAR"),
-        URL_STG_DOCUMENT("/stg/doc", "SIDEBAR"),
-        URL_STG_MATERIAL("/stg/material", "SIDEBAR"),
-        URL_STG_TICKET_IMPORT("/stg/ticket-import", "SIDEBAR"),
-        URL_STG_TICKET_EXPORT("/stg/ticket-export", "SIDEBAR"),
-        URL_SYS_CONFIG("/sys/config", "SIDEBAR"),
-        URL_SYS_LOG("/sys/log", "SIDEBAR"),
-        URL_SYS_ACCOUNT("/sys/tai-khoan", "SIDEBAR"),
+        URL_CATEGORY("/system/category", "SIDEBAR", true),
+        URL_PRODUCT("/san-pham", "SIDEBAR", true),
+        URL_PRODUCT_ORDER("/don-hang", "SIDEBAR", true),
+        URL_PRODUCT_CREATE_ORDER("/don-hang/ban-hang", "SIDEBAR", true),
+        URL_PRODUCT_CUSTOMER("/customer", "SIDEBAR", true),
+        URL_PRODUCT_SUPPLIER("/san-pham/supplier", "SIDEBAR", true),
+        URL_PRODUCT_GALLERY("/gallery", "SIDEBAR", true),
+        URL_PRODUCT_VOUCHER("/san-pham/voucher", "SIDEBAR", true),
+        URL_STG_DASHBOARD("/stg", "SIDEBAR", true),
+        URL_STG_DOCUMENT("/stg/doc", "SIDEBAR", true),
+        URL_STG_MATERIAL("/stg/material", "SIDEBAR", true),
+        URL_STG_TICKET_IMPORT("/stg/ticket-import", "SIDEBAR", true),
+        URL_STG_TICKET_EXPORT("/stg/ticket-export", "SIDEBAR", true),
+        URL_SYS_CONFIG("/sys/config", "SIDEBAR", true),
+        URL_SYS_LOG("/sys/log", "SIDEBAR", true),
+        URL_SYS_GR_ACCOUNT("/sys/group-account", "SIDEBAR", true),
+        URL_SYS_ACCOUNT("/sys/tai-khoan", "SIDEBAR", true),
 
-        URL_STG_MATERIAL_IMPORT("/stg/material/import", "MAIN"),
-        URL_STG_MATERIAL_IMPORT_TEMPLATE( "/stg/material/template", "MAIN"),
-        URL_STG_MATERIAL_EXPORT("/stg/material/export", "MAIN");
+        URL_STG_MATERIAL_IMPORT("/stg/material/import", "MAIN", true),
+        URL_STG_MATERIAL_IMPORT_TEMPLATE( "/stg/material/template", "MAIN", true),
+        URL_STG_MATERIAL_EXPORT("/stg/material/export", "MAIN", true);
 
         private final String value;
         private final String type;
+        private final boolean status;
 
-        ENDPOINT(String value, String type) {
+        ENDPOINT(String value, String type, boolean status) {
             this.value = value;
             this.type = type;
+            this.status = status;
         }
     }
 }

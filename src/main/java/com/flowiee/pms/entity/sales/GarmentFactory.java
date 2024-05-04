@@ -42,14 +42,8 @@ public class GarmentFactory extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "garmentFactory", fetch = FetchType.LAZY)
     private List<ProductDetail> listProductDetail;
 
-    public GarmentFactory(Integer id, String name) {
-        super.id = id;
-        this.name = name;
-    }
-
 	@Override
 	public String toString() {
-		return "GarmentFactory [id=" + super.id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", address=" + address
-				+ ", note=" + note + ", status=" + status + "]";
+		return "GarmentFactory [id=" + super.id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", address=" + address + ", note=" + note + ", status=" + status + "]";
 	}        
 }

@@ -9,7 +9,6 @@ import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.DataInUseException;
-import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.product.ProductRepository;
@@ -97,7 +96,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             product.setDescription(product.getDescription() != null ? product.getDescription() : "");
             product.setStatus(AppConstants.PRODUCT_STATUS.I.name());
             Product productSaved = productsRepo.save(product);
-            systemLogService.writeLog(mvModule, ACTION.PRO_PRODUCT_CREATE.name(), "Thêm mới sản phẩm: " + product);
+            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_C.name(), "Thêm mới sản phẩm: " + product);
             logger.info("Insert product success! {}", product);
             return ProductDTO.fromProduct(productSaved);
         } catch (RuntimeException ex) {
@@ -140,7 +139,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         } else {
             noiDungLogUpdate = productToUpdate.toString();
         }
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRODUCT_UPDATE.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
         logger.info("Update product success! productId={}", productId);
         return ProductDTO.fromProduct(productUpdated);
     }
@@ -157,7 +156,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
             }
             productsRepo.deleteById(id);
-            systemLogService.writeLog(mvModule, ACTION.PRO_PRODUCT_DELETE.name(), "Xóa sản phẩm: " + productToDelete.toString());
+            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_D.name(), "Xóa sản phẩm: " + productToDelete.toString());
             logger.info("Delete product success! productId={}", id);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {

@@ -23,8 +23,10 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/system/account")
 @Tag(name = "Account system API", description = "Quản lý tài khoản hệ thống")
 public class AccountController extends BaseController {
-    @Autowired private AccountService accountService;
-    @Autowired private RoleService roleService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private RoleService roleService;
 
     @Operation(summary = "Find all accounts")
     @GetMapping("/all")

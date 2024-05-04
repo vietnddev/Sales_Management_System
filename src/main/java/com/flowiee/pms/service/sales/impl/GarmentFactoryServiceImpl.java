@@ -37,7 +37,7 @@ public class GarmentFactoryServiceImpl implements GarmentFactoryService {
 
     @Override
     public GarmentFactory update(GarmentFactory entity, Integer entityId) {
-        if (entity == null || entityId == null || entityId <= 0) {
+        if (this.findById(entityId).isEmpty()) {
             throw new BadRequestException();
         }
         entity.setId(entityId);
