@@ -123,6 +123,16 @@
                                                                     <textarea class="form-control" name="address" th:text="${accountInfo.address}"></textarea>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label>Nhóm người dùng</label>
+                                                                    <select class="custom-select" name="groupAccount">
+                                                                        <option th:if="${accountInfo.groupAccount != null}" th:value="${accountInfo.groupAccount.id}" th:text="${accountInfo.groupAccount.groupName}" selected></option>
+                                                                        <option th:if="${accountInfo.groupAccount == null}" value="" selected>-</option>
+                                                                        <option th:each="gr : ${groupAccount}" th:value="${gr.id}" th:text="${gr.groupName}"></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="row">
                                                             <button class="btn btn-sm btn-info w-25" type="submit" style="margin: 0 auto">Save info</button>
@@ -162,14 +172,19 @@
 
                                 <!--PHÂN QUYỀN-->
                                 <div class="col-sm-6" style="font-size: 16px">
-                                    <form th:action="@{/sys/tai-khoan/update-permission/{id}(id=${accountInfo.id})}"
-                                          method="POST">
+                                    <form th:action="@{/sys/tai-khoan/update-permission/{id}(id=${accountInfo.id})}" method="POST">
                                         <div class="row">
                                             <div class="card w-100">
-                                                <div class="card-header text-center" style="font-weight: bold">Bảng phân quyền</div>
+                                                <div class="card-header text-center" style="font-weight: bold">Bảng phân quyền mở rộng</div>
                                                 <div class="card-body p-0" style="max-height: 467px; overflow: overlay">
                                                     <table class="table table-bordered">
                                                         <tbody>
+                                                            <tr class="font-weight-bold">
+                                                                <td>STT</td>
+                                                                <td>Module</td>
+                                                                <td>Function</td>
+                                                                <td>Allowed</td>
+                                                            </tr>
                                                             <tr th:each="role, rowSTT : ${listRole}">
                                                                 <td th:text="${rowSTT.index + 1}"></td>
                                                                 <td th:text="${role.module.moduleLabel}"></td>

@@ -18,9 +18,18 @@ public interface AccountRoleRepository extends JpaRepository<AccountRole, Intege
 
     List<AccountRole> findByGroupId(Integer accountId);
 
-    @Query("from AccountRole where accountId=:accountId and module=:module and action=:action")
-    AccountRole isAuthorized(@Param("accountId") Integer accountId, @Param("module") String module, @Param("action") String action);
+    @Query("from AccountRole " +
+           "where 1=1 " +
+           "and (:groupId is null or groupId=:groupId) " +
+           "and (:accountId is null or accountId=:accountId) " +
+           "and module=:module " +
+           "and action=:action")
+    AccountRole isAuthorized(@Param("groupId") Integer groupId,
+                             @Param("accountId") Integer accountId,
+                             @Param("module") String module,
+                             @Param("action") String action);
 
     @Modifying
-    void deleteByAccountId(Integer accountId);
+    @Query("delete from AccountRole where 1=1 and (:groupId is null or groupId=:groupId) and (:accountId is null or groupId=:accountId)")
+    void deleteAll(Integer groupId, Integer accountId);
 }

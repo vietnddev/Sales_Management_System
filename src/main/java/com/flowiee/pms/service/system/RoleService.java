@@ -9,6 +9,8 @@ import java.util.List;
 public interface RoleService {
     List<RoleModel> findAllRoleByAccountId(Integer accountId);
 
+    List<RoleModel> findAllRoleByGroupId(Integer groupId);
+
     List<ActionModel> findAllAction();
 
     AccountRole findById(Integer id);
@@ -21,5 +23,7 @@ public interface RoleService {
 
     boolean isAuthorized(int accountId, String module, String action);
 
-    String deleteAllRole(Integer accountId);
+    String deleteAllRole(Integer groupId, Integer accountId);
+
+    List<RoleModel> updateRightsOfGroup(List<RoleModel> rights, Integer groupId);
 }

@@ -5,7 +5,9 @@ import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.GroupAccountService;
+import com.flowiee.pms.service.system.RoleService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +25,8 @@ import java.util.Optional;
 public class GroupAccountController extends BaseController {
     @Autowired
     private GroupAccountService groupAccountService;
+    @Autowired
+    private RoleService roleService;
 
     @Operation(summary = "Find all group account")
     @GetMapping("/all")
@@ -84,5 +88,30 @@ public class GroupAccountController extends BaseController {
     @PreAuthorize("@vldModuleSystem.deleteGroupAccount(true)")
     public AppResponse<String> delete(@PathVariable("groupId") Integer groupId) {
         return success(groupAccountService.delete(groupId));
+    }
+
+    @Operation(summary = "Find rights of group")
+    @GetMapping("/{groupId}/rights")
+    @PreAuthorize("@vldModuleSystem.readGroupAccount(true)")
+    public AppResponse<List<RoleModel>> findRights(@PathVariable("groupId") Integer groupId) {
+        try {
+            return success(roleService.findAllRoleByGroupId(groupId));
+        } catch (RuntimeException ex) {
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "rights of group account"), ex);
+        }
+    }
+
+    @Operation(summary = "Grant rights to group")
+    @PutMapping(value = "/grant-rights/{groupId}")
+    @PreAuthorize("@vldModuleSystem.updateGroupAccount(true)")
+    public AppResponse<List<RoleModel>> update(@RequestBody List<RoleModel> rights, @PathVariable("groupId") Integer groupId) {
+        try {
+            if (groupAccountService.findById(groupId).isEmpty()) {
+                throw new BadRequestException("Group not found");
+            }
+            return success(roleService.updateRightsOfGroup(rights, groupId));
+        } catch (RuntimeException ex) {
+            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "group account"), ex);
+        }
     }
 }

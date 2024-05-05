@@ -54,6 +54,7 @@ public class AccountControllerView extends BaseController {
         List<RoleModel> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
         modelAndView.addObject("listRole", roleOfAccount);
         modelAndView.addObject("accountInfo", account.get());
+        modelAndView.addObject("groupAccount", groupAccountService.findAll());
         return baseView(modelAndView);
     }
 
@@ -108,7 +109,7 @@ public class AccountControllerView extends BaseController {
         if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
             throw new NotFoundException("Account not found!");
         }
-        roleService.deleteAllRole(accountId);
+        roleService.deleteAllRole(null, accountId);
         List<ActionModel> listAction = roleService.findAllAction();
         for (ActionModel sysAction : listAction) {
             String clientActionKey = request.getParameter(sysAction.getActionKey());

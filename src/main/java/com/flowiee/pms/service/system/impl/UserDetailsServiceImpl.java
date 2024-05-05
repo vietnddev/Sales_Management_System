@@ -48,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 				grantedAuthorities.add(new SimpleGrantedAuthority(right.getAction()));
 			}
 			if (accountEntity.getGroupAccount() != null) {
-				for (AccountRole right : roleService.findByGroupId(accountEntity.getId())) {
+				for (AccountRole right : roleService.findByGroupId(accountEntity.getGroupAccount().getId())) {
 					grantedAuthorities.add(new SimpleGrantedAuthority(right.getAction()));
 				}
 			}

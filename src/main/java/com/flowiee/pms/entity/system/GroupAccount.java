@@ -21,6 +21,9 @@ public class GroupAccount extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "group_code")
+    private String groupCode;
+
     @Column(name = "group_name", nullable = false)
     private String groupName;
 
