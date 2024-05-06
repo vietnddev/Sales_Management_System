@@ -3,13 +3,16 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.entity.sales.CustomerContact;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.entity.sales.Customer;
+import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
+import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
@@ -22,6 +25,9 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +44,8 @@ public class CustomerServiceImpl implements CustomerService {
     private SystemLogService systemLogService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Override
     public List<CustomerDTO> findAll() {
@@ -212,5 +220,28 @@ public class CustomerServiceImpl implements CustomerService {
             c.setEmailDefault(emailDefault != null ? emailDefault.getValue() : "");
             c.setAddressDefault(addressDefault != null ? addressDefault.getValue() : "");
         }
+    }
+
+    @Override
+    public List<PurchaseHistory> findPurchaseHistory(Integer customerId, Integer year, Integer month) {
+        List<PurchaseHistory> purchaseHistories = new ArrayList<>();
+        if (year == null) {
+            year = LocalDateTime.now().getYear();
+        }
+        List<Object[]> purchaseHistoriesRawValue = orderRepository.findPurchaseHistory(customerId, year, month);
+        //col 0 -> year
+        //col 1 -> month
+        //col 2 -> purchase qty
+        //col 3 -> average value
+        for (Object[] data : purchaseHistoriesRawValue) {
+            PurchaseHistory ph = new PurchaseHistory();
+            ph.setCustomerId(customerId);
+            ph.setYear(year);
+            ph.setMonth(Integer.parseInt(String.valueOf(data[1])));
+            ph.setPurchaseQty(Integer.parseInt(String.valueOf(data[2])));
+            ph.setOrderAvgValue(new BigDecimal(String.valueOf(data[3])));
+            purchaseHistories.add(ph);
+        }
+        return purchaseHistories;
     }
 }

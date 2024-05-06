@@ -179,4 +179,17 @@ public class AppConstants {
             this.status = status;
         }
     }
+
+    @Getter
+    public enum CUSTOMER_GROUP {
+        G1("Khách mua hàng vãng lai"),
+        G2("khách hàng thân thiết"),
+        G3("Khách hàng VIP");
+
+        CUSTOMER_GROUP(String label) {
+            this.label = label;
+        }
+
+        private final String label;
+    }
 }

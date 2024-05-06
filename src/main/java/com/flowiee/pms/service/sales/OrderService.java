@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderService extends BaseService<OrderDTO> {
-    Page<OrderDTO> findAll(int pageSize, int pageNum, Integer pOrderId, Integer pPaymentMethodId, Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId);
+    Page<OrderDTO> findAll(int pageSize, int pageNum, Integer pOrderId, Integer pPaymentMethodId, Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy);
 
     Optional<OrderDTO> findById(Integer orderId);
 

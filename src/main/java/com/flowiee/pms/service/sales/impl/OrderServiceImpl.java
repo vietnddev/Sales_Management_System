@@ -19,8 +19,6 @@ import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.service.system.SystemLogService;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -32,9 +30,7 @@ import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
-
-    private final OrderRepository orderRepo;
+    private final OrderRepository orderRepository;
     private final ProductVariantService productVariantService;
     private final SystemLogService systemLogService;
     private final CartService cartService;
@@ -45,10 +41,10 @@ public class OrderServiceImpl implements OrderService {
     private final VoucherTicketService voucherTicketService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepo, SystemLogService systemLogService, CartService cartService,
+    public OrderServiceImpl(OrderRepository orderRepository, SystemLogService systemLogService, CartService cartService,
                             CartItemsService cartItemsService, OrderHistoryRepository orderHistoryRepo, ProductVariantService productVariantService,
                             OrderQRCodeService orderQRCodeService, VoucherTicketService voucherTicketService, OrderItemsService orderItemsService) {
-        this.orderRepo = orderRepo;
+        this.orderRepository = orderRepository;
         this.systemLogService = systemLogService;
         this.cartService = cartService;
         this.cartItemsService = cartItemsService;
@@ -61,23 +57,30 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null, null).getContent();
+        return this.findAll(-1, -1, null, null, null, null, null, null, null, null, null).getContent();
     }
 
     @Override
-    public Page<OrderDTO> findAll(int pageSize, int pageNum, Integer pOrderId, Integer pPaymentMethodId,
-                                  Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId) {
+    public Page<OrderDTO> findAll(int pPageSize, int pPageNum, Integer pOrderId, Integer pPaymentMethodId,
+                                  Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId,
+                                  LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
         Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("orderTime").descending());
+        if (pPageSize >= 0 && pPageNum >= 0) {
+            pageable = PageRequest.of(pPageNum, pPageSize, Sort.by(pSortBy != null ? pSortBy : "orderTime").descending());
         }
-        Page<Order> orders = orderRepo.findAll(pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pageable);
+        if (pOrderTimeFrom == null) {
+            pOrderTimeFrom = LocalDateTime.of(1900, 1, 1, 0, 0, 0);
+        }
+        if (pOrderTimeTo == null) {
+            pOrderTimeTo = LocalDateTime.of(2100, 12, 1, 0, 0, 0);
+        }
+        Page<Order> orders = orderRepository.findAll(pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pOrderTimeFrom, pOrderTimeTo, pageable);
         return new PageImpl<>(OrderDTO.fromOrders(orders.getContent()), pageable, orders.getTotalElements());
     }
 
     @Override
     public Optional<OrderDTO> findById(Integer orderId) {
-        OrderDTO order = OrderDTO.fromOrder(Objects.requireNonNull(orderRepo.findById(orderId).orElse(null)));
+        OrderDTO order = OrderDTO.fromOrder(Objects.requireNonNull(orderRepository.findById(orderId).orElse(null)));
         List<OrderDetail> listOrderDetail = orderItemsService.findByOrderId(orderId);
         int totalProduct = 0;
         BigDecimal totalAmount = new BigDecimal(0);
@@ -126,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setAmountDiscount(request.getAmountDiscount());
             }
 
-            Order orderSaved = orderRepo.save(order);
+            Order orderSaved = orderRepository.save(order);
 
             //QRCode
             orderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
@@ -180,7 +183,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO update(OrderDTO dto, Integer id) {
-        Order orderToUpdate = orderRepo.findById(id).orElse(null);
+        Order orderToUpdate = orderRepository.findById(id).orElse(null);
         if (orderToUpdate == null) {
             throw new BadRequestException();
         }
@@ -195,9 +198,9 @@ public class OrderServiceImpl implements OrderService {
         orderToUpdate.setKenhBanHang(dto.getKenhBanHang());
         orderToUpdate.setPaymentMethod(dto.getPaymentMethod());
         orderToUpdate.setPaymentStatus(dto.getPaymentStatus());
-        orderRepo.save(orderToUpdate);
+        orderRepository.save(orderToUpdate);
         systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), "Cập nhật đơn hàng: " + dto.toString());
-        logger.info(OrderServiceImpl.class.getName() + ": Cập nhật đơn hàng " + dto.toString());
+        logger.info("Cập nhật đơn hàng {}", dto.toString());
         return OrderDTO.fromOrder(orderToUpdate);
     }
 
@@ -207,21 +210,21 @@ public class OrderServiceImpl implements OrderService {
         if (order.isEmpty() || order.get().getPaymentStatus()) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
-        orderRepo.deleteById(id);
+        orderRepository.deleteById(id);
         systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), "Xóa đơn hàng: " + order.toString());
-        logger.info(OrderServiceImpl.class.getName() + ": Xóa đơn hàng " + order.toString());
+        logger.info("Xóa đơn hàng orderId={}", id);
         return MessageUtils.DELETE_SUCCESS;
     }
 
     @Transactional
     @Override
     public String doPay(Integer orderId, LocalDateTime paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote) {
-        orderRepo.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
+        orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
         return "Thanh toán thành công!";
     }
 
     @Override
     public List<Order> findOrdersToday() {
-        return orderRepo.findOrdersToday();
+        return orderRepository.findOrdersToday();
     }
 }

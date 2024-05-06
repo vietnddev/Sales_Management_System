@@ -2,6 +2,7 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.base.BaseController;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -100,5 +102,19 @@ public class CustomerController extends BaseController {
     @PreAuthorize("@vldModuleSales.deleteCustomer(true)")
     public AppResponse<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
         return success(customerService.delete(customerId));
+    }
+
+    @Operation(summary = "Find the number of purchase of customer per month")
+    @GetMapping("/purchase-history/{customerId}")
+    @PreAuthorize("@vldModuleSales.readCustomer(true)")
+    public AppResponse<List<PurchaseHistory>> findPurchaseHistory(@PathVariable("customerId") Integer customerId, @RequestParam(value = "year", required = false) Integer year) {
+        try {
+            if (customerService.findById(customerId).isEmpty()) {
+                throw new BadRequestException("Customer not found");
+            }
+            return success(customerService.findPurchaseHistory(customerId, year, null));
+        } catch (RuntimeException ex) {
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "purchase history of customer"), ex);
+        }
     }
 }

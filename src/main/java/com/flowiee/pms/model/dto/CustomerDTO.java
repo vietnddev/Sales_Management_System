@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class CustomerDTO extends Customer implements Serializable {
     private String phoneDefault;
     private String emailDefault;
     private String addressDefault;
+    private BigDecimal orderAvgValue;
+    private String customerGroup;
 
     public static CustomerDTO fromCustomer(Customer customer) {
         CustomerDTO dto = new CustomerDTO();
