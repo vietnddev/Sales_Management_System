@@ -55,6 +55,17 @@ public class AppConstants {
     }
 
     @Getter
+    public enum PROMOTION_STATUS {
+        A("Đang áp dụng"),
+        I("Đang không áp dụng");
+        private final String label;
+
+        PROMOTION_STATUS(String label) {
+            this.label = label;
+        }
+    }
+
+    @Getter
     public enum TICKET_EX_STATUS {
         DRAFT("Lưu nháp"),
         COMPLETED("Hoàn thành"),

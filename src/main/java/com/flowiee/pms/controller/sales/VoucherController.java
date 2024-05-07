@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/voucher")
-@Tag(name = "Voucher API", description = "Quản lý voucher")
+@Tag(name = "Voucher API", description = "Quản lý voucher, voucher will be deducted from the value of the order")
 public class VoucherController extends BaseController {
     @Autowired
     private VoucherService voucherService;
