@@ -2,6 +2,7 @@ package com.flowiee.pms.utils;
 
 import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.model.UserPrincipal;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -34,6 +35,7 @@ public class CommonUtils {
     public static LocalDateTime START_APP_TIME = null;
     public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
+    public static ShopInfo mvShopInfo;
 
     public static String formatToVND(Object currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));

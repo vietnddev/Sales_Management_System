@@ -76,9 +76,16 @@ public class ConfigServiceImpl implements ConfigService {
             //
             languageService.reloadMessage("vi");
             languageService.reloadMessage("en");
+            //Reload shopInfo
+
             return "Completed";
         } catch (RuntimeException ex) {
             throw new AppException("An error occurred while refresh app", ex);
         }
+    }
+
+    @Override
+    public List<SystemConfig> getSystemConfigs(String[] configCodes) {
+        return List.of();
     }
 }

@@ -1,10 +1,13 @@
 package com.flowiee.pms.config;
 
+import com.flowiee.pms.model.ShopInfo;
+import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.service.system.LanguageService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,9 +20,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class StartUp {
 	private final LanguageService languageService;
+	private final ConfigService configService;
 
-	public StartUp(LanguageService languageService) {
+	public StartUp(LanguageService languageService, ConfigService configService) {
 		this.languageService = languageService;
+		this.configService = configService;
 	}
 	
     @Bean
@@ -28,6 +33,7 @@ public class StartUp {
             CommonUtils.START_APP_TIME = LocalDateTime.now();
             loadLanguageMessages("en");
             loadLanguageMessages("vi");
+			loadShopInfo();
             initEndPointConfig();
 			initReportConfig();
         };
@@ -37,7 +43,18 @@ public class StartUp {
         languageService.reloadMessage(langCode);
     }
 
-    public void initEndPointConfig() {
+	private void loadShopInfo() {
+		configService.getSystemConfigs(new String[] {});
+		//Load info from database
+		ShopInfo shopInfo = new ShopInfo();
+		shopInfo.setName("");
+		shopInfo.setEmail("");
+		shopInfo.setPhoneNumber("");
+		shopInfo.setAddress("");
+		CommonUtils.mvShopInfo = shopInfo;
+	}
+
+	private void initEndPointConfig() {
 		CommonUtils.mvEndPointHeaderConfig.clear();
 		CommonUtils.mvEndPointSideBarConfig.clear();
 		for (AppConstants.ENDPOINT e : AppConstants.ENDPOINT.values()) {
@@ -50,7 +67,7 @@ public class StartUp {
 		}
     }
 
-	public void initReportConfig() {
+	private void initReportConfig() {
 		String templateExportTempStr = CommonUtils.excelTemplatePath + "/temp";
 		Path templateExportTempPath = Paths.get(templateExportTempStr);
 		if (!Files.exists(templateExportTempPath)) {
