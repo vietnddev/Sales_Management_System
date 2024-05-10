@@ -321,7 +321,7 @@
                                 <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
                                 <td>${materialType}</td>
                                 <td>${d.name}</td>
-                                <td>${d.unit.name}</td>
+                                <td>${d.unitName}</td>
                                 <td>${d.quantity}</td>
                                 <td>${d.location}</td>
                                 <td>${d.note}</td>

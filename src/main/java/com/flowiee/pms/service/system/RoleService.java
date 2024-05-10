@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.system;
 
 import com.flowiee.pms.entity.system.AccountRole;
+import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.role.ActionModel;
 import com.flowiee.pms.model.role.RoleModel;
 
@@ -26,4 +27,6 @@ public interface RoleService {
     String deleteAllRole(Integer groupId, Integer accountId);
 
     List<RoleModel> updateRightsOfGroup(List<RoleModel> rights, Integer groupId);
+
+    List<AccountRole> findByAction(ACTION action);
 }

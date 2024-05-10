@@ -60,8 +60,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             ProductDetail pVariant = modelMapper.map(productVariantDTO, ProductDetail.class);
             pVariant.setStorageQty(0);
             pVariant.setSoldQty(0);
+            pVariant.setDefectiveQty(0);
             pVariant.setStatus(AppConstants.PRODUCT_STATUS.A.name());
-            pVariant.setVariantCode(CommonUtils.now("yyyyMMddHHmmss"));
+            pVariant.setVariantCode(CommonUtils.genProductCode());
             ProductDetail productDetailSaved = productVariantRepo.save(pVariant);
             systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), "Thêm mới biến thể sản phẩm: " + pVariant);
             logger.info("Insert productVariant success! {}", pVariant);

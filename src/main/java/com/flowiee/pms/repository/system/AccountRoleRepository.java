@@ -32,4 +32,10 @@ public interface AccountRoleRepository extends JpaRepository<AccountRole, Intege
     @Modifying
     @Query("delete from AccountRole where 1=1 and (:groupId is null or groupId=:groupId) and (:accountId is null or groupId=:accountId)")
     void deleteAll(Integer groupId, Integer accountId);
+
+    @Query("from AccountRole r " +
+           "where 1=1 " +
+           "and (:module is null or r.module=:module) " +
+           "and (:action is null or r.action=:action)")
+    List<AccountRole> findByModuleAndAction(@Param("module") String module, @Param("action") String action);
 }

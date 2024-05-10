@@ -175,4 +175,8 @@ public class CommonUtils {
         }
         throw new AuthenticationException();
     }
+
+    public static String genProductCode() {
+        return CommonUtils.now("yyyyMMddHHmmss");
+    }
 }

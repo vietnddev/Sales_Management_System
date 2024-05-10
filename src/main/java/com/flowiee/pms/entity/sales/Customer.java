@@ -38,6 +38,12 @@ public class Customer extends BaseEntity implements Serializable {
 	@Column(name = "sex", nullable = false)
 	private boolean sex;
 
+	@Column(name = "black_list")
+	private String isBlackList;
+
+	@Column(name = "black_list_reason")
+	private String blackListReason;
+
 	@JsonIgnore
 	@JsonIgnoreProperties("customer")
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)

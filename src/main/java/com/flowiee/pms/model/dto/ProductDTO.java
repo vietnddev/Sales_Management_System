@@ -27,6 +27,8 @@ public class ProductDTO extends Product implements Serializable {
     private String imageActive;
     private Integer totalQtySell;
     private Integer totalQtyStorage;
+    private Integer totalDefective;
+    private Integer totalQtyAvailableSales;
     private Integer productVariantQty;
     private Integer soldQty;
     private List<VoucherInfoDTO> listVoucherInfoApply;

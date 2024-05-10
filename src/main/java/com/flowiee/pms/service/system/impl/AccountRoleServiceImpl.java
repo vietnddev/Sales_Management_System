@@ -124,6 +124,11 @@ public class AccountRoleServiceImpl implements RoleService {
         return list;
     }
 
+    @Override
+    public List<AccountRole> findByAction(ACTION action) {
+        return accountRoleRepo.findByModuleAndAction(action.getModuleKey(), action.getActionKey());
+    }
+
     private RoleModel initRole(Integer pGroupId, Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
         RoleModel roleModel = new RoleModel();
 

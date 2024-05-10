@@ -48,12 +48,6 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @Column(name = "variant_name")
     private String variantName;
 
-    @Column(name = "quantity_stg", nullable = false)
-    private Integer storageQty;
-
-    @Column(name = "quantity_sell", nullable = false)
-    private Integer soldQty;
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id", nullable = false)
@@ -84,11 +78,41 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @JoinColumn(name = "ticket_import_id")
     private TicketImport ticketImport;
 
+    @Column(name = "quantity_stg", nullable = false)
+    private Integer storageQty;
+
+    @Column(name = "quantity_sold", nullable = false)
+    private Integer soldQty;
+
+    @Column(name = "quantity_defective", nullable = false)
+    private Integer defectiveQty;
+
     @Column(name = "original_price", nullable = false)
-    private BigDecimal originalPrice;
+    private BigDecimal originalPrice;//Remove in future
 
     @Column(name = "discount_price", nullable = false)
-    private BigDecimal discountPrice;
+    private BigDecimal discountPrice;//Remove in future
+
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice;
+
+    @Column(name = "cost_price")
+    private BigDecimal costPrice;
+
+    @Column(name = "retail_price", nullable = false)
+    private BigDecimal retailPrice;
+
+    @Column(name = "retail_price_discount")
+    private BigDecimal retailPriceDiscount;
+
+    @Column(name = "wholesale_price", nullable = false)
+    private BigDecimal wholesalePrice;
+
+    @Column(name = "wholesale_price_discount")
+    private BigDecimal wholesalePriceDiscount;
+
+    @Column(name = "weight")
+    private String weight;
 
     @Column(name = "status", nullable = false)
     private String status;

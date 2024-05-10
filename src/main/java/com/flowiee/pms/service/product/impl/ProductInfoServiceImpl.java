@@ -206,12 +206,13 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                         }
                         totalQtyStorage += qtyStorage;
                     }
-                    variantInfo.put(color.getName(), sizeName.toString());
+                    variantInfo.put(color.getName(), sizeName.toString());//Đen: S (5)
                 }
                 p.setProductVariantInfo(variantInfo);
-
                 p.setTotalQtyStorage(totalQtyStorage);
                 p.setTotalQtySell(productStatisticsService.findProductVariantTotalQtySell(p.getId()));
+                int totalDefective = 0;
+                p.setTotalQtyAvailableSales(totalQtyStorage - totalDefective);
             }
         }
     }

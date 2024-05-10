@@ -19,7 +19,7 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
            "and (:code is null or m.code=:code) " +
            "and (:name is null or m.name like %:name%) " +
            "and (:location is null or m.location like %:location%) " +
-           "and (:statuc is null or m.status=:status)")
+           "and (:status is null or m.status=:status)")
     Page<Material> findAll(@Param("ticketImportId") Integer ticketImportId,
                            @Param("supplierId") Integer supplierId,
                            @Param("unitId") Integer unitId,
