@@ -116,11 +116,14 @@ public class AppConstants {
         COLOR("color", "COLOR", "Màu sắc"),
         UNIT("unit", "UNIT", "Đơn vị tính"),
         BRAND("brand", "BRAND", "Thương hiệu"),
+        ORDER_TYPE("order-type", "ORDER_TYPE", "Loại đơn hàng"),
         FABRIC_TYPE("fabric-type", "FABRIC_TYPE", "Chất liệu vải"),
         PRODUCT_TYPE("product-type", "PRODUCT_TYPE", "Loại sản phẩm"),
         DOCUMENT_TYPE("document-type", "DOCUMENT_TYPE", "Loại tài liệu"),
         SALES_CHANNEL("sales-channel", "SALES_CHANNEL", "Kênh bán hàng"),
+        SHIP_METHOD("ship-method", "SHIP_METHOD", "Hình thức vận chuyển"),
         ORDER_STATUS("order-status", "ORDER_STATUS", "Trạng thái đơn hàng"),
+        GROUP_CUSTOMER("group-customer", "GROUP_CUSTOMER", "Nhóm khách hàng"),
         PAYMENT_METHOD("payment-method", "PAYMENT_METHOD", "Hình thức thanh toán"),
         PAYMENT_STATUS("payment-status", "PAYMENT_STATUS", "Trạng thái thanh toán"),
         COMMUNE("commune", "COMMUNE", "Xã"),
@@ -202,5 +205,16 @@ public class AppConstants {
         }
 
         private final String label;
+    }
+
+    @Getter
+    public enum STORAGE_STATUS {
+        A("Đang được sử dụng"),
+        I("Không sử dụng");
+        private final String label;
+
+        STORAGE_STATUS(String label) {
+            this.label = label;
+        }
     }
 }

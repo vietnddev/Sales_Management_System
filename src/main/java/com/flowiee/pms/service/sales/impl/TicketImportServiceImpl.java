@@ -4,13 +4,23 @@ import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.MaterialTemp;
 import com.flowiee.pms.entity.sales.TicketImport;
+import com.flowiee.pms.entity.storage.Storage;
+import com.flowiee.pms.entity.system.Account;
+import com.flowiee.pms.entity.system.AccountRole;
+import com.flowiee.pms.entity.system.GroupAccount;
+import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.MaterialTempRepository;
 import com.flowiee.pms.repository.product.ProductDetailTempRepository;
 import com.flowiee.pms.service.product.MaterialService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.service.system.AccountService;
+import com.flowiee.pms.service.system.GroupAccountService;
+import com.flowiee.pms.service.system.NotificationService;
+import com.flowiee.pms.service.system.RoleService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.repository.sales.TicketImportRepository;
 import com.flowiee.pms.service.sales.TicketImportService;
@@ -24,10 +34,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TicketImportServiceImpl implements TicketImportService {
@@ -43,6 +50,14 @@ public class TicketImportServiceImpl implements TicketImportService {
     private MaterialTempRepository materialTempRepo;
     @Autowired
     private ProductQuantityService productQuantityService;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private GroupAccountService groupAccountService;
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public List<TicketImport> findAll() {
@@ -68,7 +83,50 @@ public class TicketImportServiceImpl implements TicketImportService {
         if (entity == null) {
             throw new BadRequestException();
         }
-        return ticketImportRepo.save(entity);
+        TicketImport ticketImportSaved = ticketImportRepo.save(entity);
+        Storage storage = ticketImportSaved.getStorage();
+        if (storage.getHoldableQty() != null && storage.getHoldWarningPercent() != null) {
+            int productQty = 0;
+            int materialQty = 0;
+            if (ObjectUtils.isNotEmpty(ticketImportSaved.getListProductVariantTemps())) {
+                productQty = ticketImportSaved.getListProductVariantTemps().size();
+            }
+            if (ObjectUtils.isNotEmpty(ticketImportSaved.getListMaterialTemps())) {
+                materialQty = ticketImportSaved.getListMaterialTemps().size();
+            }
+            int totalGoodsImport = productQty + materialQty;
+            int totalGoodsHolding = 0;
+            if ((totalGoodsImport + totalGoodsHolding) / storage.getHoldableQty() * 100 >= storage.getHoldWarningPercent()) {
+                List<AccountRole> listOfStorageManagersRight = roleService.findByAction(ACTION.STG_STORAGE);
+                if (ObjectUtils.isNotEmpty(listOfStorageManagersRight)) {
+                    Set<Account> stgManagersReceiveNtfs = new HashSet<>();
+                    for (AccountRole storageManagerRight : listOfStorageManagersRight) {
+                        Optional<GroupAccount> groupAccount = groupAccountService.findById(storageManagerRight.getGroupId());
+                        if (groupAccount.isPresent()) {
+                            for (Account acc : groupAccount.get().getListAccount()) {
+                                stgManagersReceiveNtfs.add(acc);
+                            }
+                        }
+                        Optional<Account> account = accountService.findById(storageManagerRight.getAccountId());
+                        if (account.isPresent()) {
+                            stgManagersReceiveNtfs.add(account.get());
+                        }
+                    }
+                    for (Account a : stgManagersReceiveNtfs) {
+                        Notification ntf = new Notification();
+                        ntf.setSend(0);
+                        ntf.setReceive(a.getId());
+                        ntf.setType("WARNING");
+                        ntf.setTitle("Sức chứa của kho " + storage.getName() + " đã chạm mốc cảnh báo!");
+                        ntf.setContent("Số lượng hàng hóa hiện tại " + totalGoodsHolding + ", Số lượng nhập thêm: " + totalGoodsImport + ", Số lượng sau khi nhập: " + totalGoodsImport + totalGoodsHolding + "/" + storage.getHoldableQty());
+                        ntf.setReaded(false);
+                        ntf.setImportId(ticketImportSaved.getId());
+                        notificationService.save(ntf);
+                    }
+                }
+            }
+        }
+        return ticketImportSaved;
     }
 
     @Override
@@ -106,64 +164,6 @@ public class TicketImportServiceImpl implements TicketImportService {
         return MessageUtils.DELETE_SUCCESS;
     }
 
-//    @Override
-//    public List<TicketImportGoods> search(String text, Integer supplierId, Integer paymentMethod, String payStatus, String importStatus) {
-//        List<TicketImportGoods> listData = new ArrayList<>();
-//        StringBuilder sql = new StringBuilder();
-//        sql.append("SELECT i.ID, i.TITLE, s.NAME as SUPPLIER_NAME, pm.TEN_LOAI as PAYMENT_METHOD_NAME, i.PAY_STATUS, a.FULLNAME as RECEIVED_NAME, i.STATUS, ");
-//        sql.append("       s.ID as SUPPLIER_ID, pm.ID as PAYMENT_METHOD_ID, a.ID as RECEIVED_ID, ");
-//        sql.append("       i.ORDER_TIME, i.RECEIVED_TIME ");
-//        sql.append("FROM goods_import i ");
-//        sql.append("LEFT JOIN supplier s ON s.ID = i.SUPPLIER_ID ");
-//        sql.append("LEFT JOIN dm_hinh_thuc_thanh_toan pm ON pm.ID = i.PAYMENT_METHOD ");
-//        sql.append("LEFT JOIN account a ON a.ID = i.RECEIVED_BY ");
-//        sql.append("WHERE i.TITLE LIKE '%").append(text != null ? text : "").append("%' ");
-//        if (supplierId != null) {
-//            sql.append("AND s.ID = ? ");
-//        }
-//        if (paymentMethod != null) {
-//            sql.append("AND pm.ID = ? ");
-//        }
-//        if (payStatus != null) {
-//            sql.append("i.PAY_STATUS = ? ");
-//        }
-//        if (importStatus != null) {
-//            sql.append("i.STATUS = ?");
-//        }
-//        System.out.println(sql.toString());
-//        Query query = entityManager.createNativeQuery(sql.toString());
-//        int i = 1;
-//        if (supplierId != null) {
-//            query.setParameter(i++, supplierId);
-//        }
-//        if (paymentMethod != null) {
-//            query.setParameter(i++, paymentMethod);
-//        }
-//        if (payStatus != null) {
-//            query.setParameter(i++, payStatus);
-//        }
-//        if (importStatus != null) {
-//            query.setParameter(i++, importStatus);
-//        }
-//        @SuppressWarnings("unchecked")
-//		List<Object[]> data = query.getResultList();
-//        for (Object[] o : data) {
-//            TicketImportGoods ticketImportGoods = new TicketImportGoods();
-//            ticketImportGoods.setId(Integer.parseInt(o[0].toString()));
-//            ticketImportGoods.setTitle(String.valueOf(o[1]));
-//            ticketImportGoods.setSupplier(new Supplier(Integer.parseInt(String.valueOf(o[7])), String.valueOf(o[2])));
-//            ticketImportGoods.setPaymentMethod(new Category(Integer.parseInt(String.valueOf(o[8])), String.valueOf(o[3])));
-//            ticketImportGoods.setPaidStatus(String.valueOf(o[4]));
-//            ticketImportGoods.setReceivedBy(new Account(Integer.parseInt(String.valueOf(o[9])), null, String.valueOf(o[5])));
-//            ticketImportGoods.setStatus(String.valueOf(o[6]));
-//            ticketImportGoods.setOrderTime(CommonUtil.convertStringToDate(String.valueOf(o[10])));
-//            ticketImportGoods.setReceivedTime(CommonUtil.convertStringToDate(String.valueOf(o[11])));
-//            listData.add(ticketImportGoods);
-//        }
-//        entityManager.close();
-//        return listData;
-//    }
-
     @Override
     public TicketImport findDraftImportPresent(Integer createdBy) {
         return ticketImportRepo.findDraftGoodsImportPresent("DRAFT", createdBy);
@@ -177,8 +177,7 @@ public class TicketImportServiceImpl implements TicketImportService {
         ticketImport.setCreatedBy(CommonUtils.getUserPrincipal().getId());
         ticketImport.setImporter(CommonUtils.getUserPrincipal().getUsername());
         ticketImport.setImportTime(new Date());
-        ticketImport = ticketImportRepo.save(ticketImport);
-        return ticketImport;
+        return this.save(ticketImport);
     }
 
     @Override

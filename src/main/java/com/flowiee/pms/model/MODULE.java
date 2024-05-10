@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum MODULE {
     PRODUCT("Quản lý sản phẩm"),
     SYSTEM("Quản trị hệ thống"),
-    CATEGORY("Danh mục hệ thống");
+    CATEGORY("Danh mục hệ thống"),
+    STORAGE("Kho");
 
     private final String label;
 

@@ -6,6 +6,7 @@ import com.flowiee.pms.base.BaseEntity;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductDetail;
+import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.utils.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -83,6 +84,10 @@ public class FileStorage extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "upload_by", nullable = false)
     private Account account;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_import_id")
+    private TicketImport ticketImport;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;

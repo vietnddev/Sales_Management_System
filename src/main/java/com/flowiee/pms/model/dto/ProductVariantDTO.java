@@ -20,8 +20,6 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer productId;
-    private Integer storageQty;
-    private Integer soldQty;
     private Integer productTypeId;
     private String productTypeName;
     private Integer unitId;
@@ -43,6 +41,7 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
     private Float priceMaxDiscount;
     private Float priceAfterDiscount;
     private String unitCurrency;
+    private Integer availableSalesQty;
     private List<ProductHistory> listPrices;
 
     public static ProductVariantDTO fromProductVariant(ProductDetail input) {
@@ -93,6 +92,7 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
         } else if (AppConstants.PRODUCT_STATUS.I.name().equals(input.getStatus())) {
             dto.setStatus(AppConstants.PRODUCT_STATUS.I.getLabel());
         }
+        dto.setAvailableSalesQty(dto.getStorageQty() - dto.getDefectiveQty());
         return dto;
     }
 
@@ -109,7 +109,7 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
 	@Override
 	public String toString() {
 		return "ProductVariantDTO [id=" + id + ", code=" + getVariantCode() + ", name=" + getVariantName()
-                + ", storageQty=" + storageQty + ", soldQty=" + soldQty + ", status=" + getStatus() + ", colorId=" + colorId + ", sizeId=" + sizeId
+                + ", storageQty=" + getStorageQty() + ", soldQty=" + getSoldQty() + ", status=" + getStatus() + ", colorId=" + colorId + ", sizeId=" + sizeId
                 + ", fabricTypeId=" + fabricTypeId + ", garmentFactoryId=" + garmentFactoryId + ", supplierId=" + supplierId
 				+ ", ticketImportGoodsId=" + ticketImportGoodsId + "]";
 	}        

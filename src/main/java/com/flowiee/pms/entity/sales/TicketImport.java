@@ -10,10 +10,13 @@ import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.MaterialTemp;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.storage.Storage;
+import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TicketImport extends BaseEntity implements Serializable {
+    @Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "title", nullable = false)
@@ -57,6 +61,10 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Column(name = "import_time")
     private Date importTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "storage_id", nullable = false)
+    private Storage storage;
+
     @Column(name = "note")
     private String note;
 
@@ -78,6 +86,10 @@ public class TicketImport extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<ProductVariantTemp> listProductVariantTemps;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
+    private List<FileStorage> listImages;
 
     public TicketImport(Integer id) {
         super.id = id;
