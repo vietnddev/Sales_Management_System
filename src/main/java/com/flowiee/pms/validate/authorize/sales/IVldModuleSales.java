@@ -38,4 +38,12 @@ public interface IVldModuleSales {
     boolean updateSupplier(boolean throwException);
 
     boolean deleteSupplier(boolean throwException);
+
+    boolean readPromotion(boolean throwException);
+
+    boolean insertPromotion(boolean throwException);
+
+    boolean updatePromotion(boolean throwException);
+
+    boolean deletePromotion(boolean throwException);
 }

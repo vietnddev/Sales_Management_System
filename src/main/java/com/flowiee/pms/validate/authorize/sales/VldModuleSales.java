@@ -100,4 +100,24 @@ public class VldModuleSales extends BaseAuthorize implements IVldModuleSales {
     public boolean deleteSupplier(boolean throwException) {
         return super.isAuthorized(ACTION.PRO_SUP_D.name(), throwException);
     }
+
+    @Override
+    public boolean readPromotion(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_PROMO_R.name(), throwException);
+    }
+
+    @Override
+    public boolean insertPromotion(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_PROMO_C.name(), throwException);
+    }
+
+    @Override
+    public boolean updatePromotion(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_PROMO_U.name(), throwException);
+    }
+
+    @Override
+    public boolean deletePromotion(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_PROMO_D.name(), throwException);
+    }
 }

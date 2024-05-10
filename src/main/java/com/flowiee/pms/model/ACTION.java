@@ -33,6 +33,10 @@ public enum ACTION {
     PRO_VOU_C("Create voucher", "PRODUCT"),
     PRO_VOU_U("Update voucher", "PRODUCT"),
     PRO_VOU_D("Delete voucher", "PRODUCT"),
+    PRO_PROMO_R("View list of promotions", "PRODUCT"),
+    PRO_PROMO_C("Create promotion", "PRODUCT"),
+    PRO_PROMO_U("Update promotion", "PRODUCT"),
+    PRO_PROMO_D("Delete promotion", "PRODUCT"),
     PRO_GAL_R("Gallery", "PRODUCT"),
 
     STG_DASHBOARD("Xem dashboard STG", "PRODUCT"),
@@ -42,6 +46,8 @@ public enum ACTION {
     STG_MAT_D("Delete material", "PRODUCT"),
     STG_TICKET_IM("Import goods into storage", "PRODUCT"),
     STG_TICKET_EX("Export goods", "PRODUCT"),
+
+    STG_STORAGE("Storage management", "STORAGE"),
 
     SYS_LOGIN("Login", "SYSTEM"),
     SYS_ROLE_R("View list of system rights", "SYSTEM"),
