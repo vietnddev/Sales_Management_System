@@ -12,6 +12,8 @@ import java.util.List;
 @Getter
 @Setter
 public class PromotionInfoDTO extends PromotionInfo implements Serializable {
+    private String startTimeStr;
+    private String endTimeStr;
     private String status;
     private List<ProductDTO> applicableProducts;
 }

@@ -6,6 +6,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.OrderDetailRpt;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.OrderDetailDTO;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderExportService;
 import com.flowiee.pms.service.sales.OrderQRCodeService;
 import com.flowiee.pms.service.sales.OrderService;
@@ -21,8 +22,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +38,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
-public class OrderExportServiceImpl implements OrderExportService {
-    Logger logger = LoggerFactory.getLogger(OrderExportServiceImpl.class);
-
+public class OrderExportServiceImpl extends BaseService implements OrderExportService {
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -135,9 +132,9 @@ public class OrderExportServiceImpl implements OrderExportService {
         for (OrderDetailDTO detailDTO : dto.getListOrderDetailDTO()) {
             OrderDetailRpt rpt = new OrderDetailRpt();
             rpt.setProductName(detailDTO.getProductVariantDTO().getVariantName());
-            rpt.setUnitPrice(detailDTO.getUnitPrice());
+            rpt.setUnitPrice(detailDTO.getPrice());
             rpt.setQuantity(detailDTO.getQuantity());
-            rpt.setSubTotal(detailDTO.getUnitPrice().multiply(BigDecimal.valueOf(detailDTO.getQuantity())));
+            rpt.setSubTotal(detailDTO.getPrice().multiply(BigDecimal.valueOf(detailDTO.getQuantity())));
             rpt.setNote(detailDTO.getNote());
             listDetail.add(rpt);
         }

@@ -1,4 +1,4 @@
-package com.flowiee.pms.base;
+package com.flowiee.pms.entity;
 
 import lombok.Getter;
 import lombok.Setter;

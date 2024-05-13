@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.repository.system.FileStorageRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderQRCodeService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
@@ -22,7 +23,7 @@ import java.time.Clock;
 import java.time.Instant;
 
 @Service
-public class OrderQRCodeServiceImpl implements OrderQRCodeService {
+public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeService {
     @Autowired
     private FileStorageRepository fileRepository;
 

@@ -8,6 +8,7 @@ import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
 import com.flowiee.pms.service.system.SystemLogService;
@@ -30,10 +31,13 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService, AccountService {
-	@Autowired private AccountRepository accountRepo;
-	@Autowired private SystemLogService systemLogService;
-	@Autowired private RoleService roleService;
+public class UserDetailsServiceImpl extends BaseService implements UserDetailsService, AccountService {
+	@Autowired
+	private AccountRepository accountRepo;
+	@Autowired
+	private SystemLogService systemLogService;
+	@Autowired
+	private RoleService roleService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -64,7 +68,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 			}
 			userPrincipal.setIp(details != null ? details.getRemoteAddress() : "unknown");
 
-			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_LOGIN.name(), "LOGIN", null, accountEntity.getId(), details != null ? details.getRemoteAddress() : "unknown");
+			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_LOGIN.name(), "LOGIN", null);
 			systemLog.setCreatedBy(accountEntity.getId());
 			systemLog.setLastUpdatedBy(accountEntity.getUsername());
 			systemLogService.writeLog(systemLog);
@@ -91,9 +95,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 			String password = account.getPassword();
 			account.setPassword(bCrypt.encode(password));
 			Account accountSaved = accountRepo.save(account);
-			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_C.name(), "Thêm mới account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
+			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_C.name(), "Thêm mới account: " + account.getUsername(), null);
 			systemLogService.writeLog(systemLog);
-			logger.info("Insert account success! username=" + account.getUsername());
+            logger.info("Insert account success! username={}", account.getUsername());
 			return accountSaved;
 		} catch (RuntimeException ex) {
 			throw new AppException("Insert account fail! username=" + account.getUsername(), ex);
@@ -110,7 +114,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 			} else {
 				account.setRole("USER");
 			}
-			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_U.name(), "Cập nhật account: " + account.getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
+			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_U.name(), "Cập nhật account: " + account.getUsername(), null);
 			systemLogService.writeLog(systemLog);
 			logger.info("Update account success! username=" + account.getUsername());
 			return accountRepo.save(account);
@@ -126,7 +130,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, AccountServic
 			Optional<Account> account = accountRepo.findById(accountId);
 			if (account.isPresent()) {
 				accountRepo.delete(account.get());
-				SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_D.name(), "Xóa account " + account.get().getUsername(), null, CommonUtils.getUserPrincipal().getId(), CommonUtils.getUserPrincipal().getIp());
+				SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_D.name(), "Xóa account " + account.get().getUsername(), null);
 				systemLogService.writeLog(systemLog);
 				logger.info("Delete account success! username=" + account.get().getUsername());
 			}

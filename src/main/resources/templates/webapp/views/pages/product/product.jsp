@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Danh sách sản phẩm</title>
-    <div th:replace="header :: stylesheets">
-        <!--Nhúng các file css, icon,...-->
-    </div>
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style rel="stylesheet">
         .table td,
         th {
@@ -26,7 +24,7 @@
                     <div class="row">
                         <div class="col-12">
                             <!--Search tool-->
-                            <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+                            <div th:replace="fragments :: searchTool('Y', 'Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
 
                             <div class="card">
                                 <div class="card-header">

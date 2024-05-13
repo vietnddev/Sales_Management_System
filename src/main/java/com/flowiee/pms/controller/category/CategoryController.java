@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.category;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class CategoryController extends BaseController {
 
     @Operation(summary = "Find all category")
     @GetMapping("/all")
+    @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public AppResponse<List<Category>> findAll() {
         try {
             return success(categoryService.findRootCategory());
@@ -40,6 +42,7 @@ public class CategoryController extends BaseController {
 
     @Operation(summary = "Find by type")
     @GetMapping("/{type}")
+    @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public AppResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
                                                   @RequestParam(value = "parentId", required = false) Integer parentId,
                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -57,6 +60,7 @@ public class CategoryController extends BaseController {
 
     @Operation(summary = "Create category")
     @PostMapping("/create")
+    @PreAuthorize("@vldModuleCategory.insertCategory(true)")
     public AppResponse<Category> createCategory(@RequestBody Category category) {
         try {
             category.setType(CommonUtils.getCategoryType(category.getType()));
@@ -68,6 +72,7 @@ public class CategoryController extends BaseController {
 
     @Operation(summary = "Update category")
     @PutMapping("/update/{categoryId}")
+    @PreAuthorize("@vldModuleCategory.updateCategory(true)")
     public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
         try {
             if (categoryService.findById(categoryId).isEmpty()) {
@@ -91,6 +96,7 @@ public class CategoryController extends BaseController {
 
     @Operation(summary = "Delete category")
     @DeleteMapping("/delete/{categoryId}")
+    @PreAuthorize("@vldModuleCategory.deleteCategory(true)")
     public AppResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
         return success(categoryService.delete(categoryId));
     }

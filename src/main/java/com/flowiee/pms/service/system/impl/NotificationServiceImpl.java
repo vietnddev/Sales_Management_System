@@ -3,6 +3,7 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.system.NotificationRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.NotificationService;
 
 import com.flowiee.pms.utils.MessageUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationServiceImpl extends BaseService implements NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 

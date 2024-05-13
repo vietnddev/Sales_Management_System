@@ -1,14 +1,9 @@
-package com.flowiee.pms.base;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.flowiee.pms.service;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BaseService<T> {
-    Logger logger = LoggerFactory.getLogger(BaseService.class);
-
+public interface CrudService<T> {
     List<T> findAll();
 
     Optional<T> findById(Integer entityId);

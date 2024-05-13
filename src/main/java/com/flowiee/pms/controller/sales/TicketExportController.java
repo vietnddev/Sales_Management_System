@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.TicketExportDTO;
@@ -29,8 +29,10 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Find all tickets")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
-    public AppResponse<List<TicketExport>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
-        Page<TicketExport> ticketExports = ticketExportService.findAll(pageSize, pageNum - 1);
+    public AppResponse<List<TicketExport>> findAll(@RequestParam("pageSize") int pageSize,
+                                                   @RequestParam("pageNum") int pageNum,
+                                                   @RequestParam(value = "storageId", required = false) Integer storageId) {
+        Page<TicketExport> ticketExports = ticketExportService.findAll(pageSize, pageNum - 1, storageId);
         return success(ticketExports.getContent(), pageNum, pageSize, ticketExports.getTotalPages(), ticketExports.getTotalElements());
     }
 

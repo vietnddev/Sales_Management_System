@@ -77,9 +77,9 @@
                                                             </td>
                                                             <td th:text="${list.productVariantDTO.unitName}"></td>
                                                             <td th:text="${list.quantity}" class="text-right"></td>
-                                                            <td th:text="${list.unitPriceOriginal != null} ? ${#numbers.formatDecimal (list.unitPriceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
-                                                            <td th:text="${list.unitPrice != null} ? ${#numbers.formatDecimal (list.unitPrice, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
-                                                            <td th:text="${list.unitPrice != null} ? ${#numbers.formatDecimal (list.unitPrice * list.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${list.priceOriginal != null} ? ${#numbers.formatDecimal (list.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
                                                             <td th:text="${list.note}"></td>
                                                         </tr>
                                                         <tr>

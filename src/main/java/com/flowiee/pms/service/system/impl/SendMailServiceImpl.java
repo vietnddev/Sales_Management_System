@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.SendMailService;
 
 import com.flowiee.pms.utils.MessageUtils;
@@ -12,10 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Objects;
 
 @Service
-public class SendMailServiceImpl implements SendMailService {
+public class SendMailServiceImpl extends BaseService implements SendMailService {
     @Autowired
     private JavaMailSender javaMailSender;
 

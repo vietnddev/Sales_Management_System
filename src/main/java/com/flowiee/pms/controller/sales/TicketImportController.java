@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.entity.product.MaterialTemp;
@@ -30,9 +30,11 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Find all phiếu nhập")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<List<TicketImportDTO>> findAll(@RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
+    public AppResponse<List<TicketImportDTO>> findAll(@RequestParam("pageSize") int pageSize,
+                                                      @RequestParam("pageNum") int pageNum,
+                                                      @RequestParam(value = "storageId", required = false) Integer storageId) {
         try {
-            Page<TicketImport> ticketImports = ticketImportService.findAll(pageSize, pageNum - 1, null, null, null, null, null);
+            Page<TicketImport> ticketImports = ticketImportService.findAll(pageSize, pageNum - 1, null, null, null, null, null, storageId);
             return success(TicketImportDTO.fromTicketImports(ticketImports.getContent()), pageNum, pageSize, ticketImports.getTotalPages(), ticketImports.getTotalElements());
         } catch (Exception ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "ticket import"), ex);
@@ -59,7 +61,7 @@ public class TicketImportController extends BaseController {
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public AppResponse<TicketImport> createDraftImport(@RequestBody TicketImport ticketImport) {
         try {
-            return success(ticketImportService.createDraftTicketImport(ticketImport.getTitle()));
+            return success(ticketImportService.createDraftTicketImport(ticketImport));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "ticket import"), ex);
         }

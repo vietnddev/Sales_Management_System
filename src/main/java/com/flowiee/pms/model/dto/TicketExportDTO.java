@@ -1,5 +1,6 @@
 package com.flowiee.pms.model.dto;
 
+import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class TicketExportDTO extends TicketExport implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private List<OrderDTO> listOrderDTO;
+    private List<ProductVariantTemp> listProductTemp;
 
     public static TicketExportDTO fromTicketExport(TicketExport t) {
         TicketExportDTO dto = new TicketExportDTO();

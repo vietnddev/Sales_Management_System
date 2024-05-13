@@ -5,6 +5,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.utils.MessageUtils;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomerContactServiceImpl implements CustomerContactService {
+public class CustomerContactServiceImpl extends BaseService implements CustomerContactService {
     @Autowired
     private CustomerContactRepository customerContactRepo;
     @Autowired

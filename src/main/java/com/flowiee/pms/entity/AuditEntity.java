@@ -1,4 +1,4 @@
-package com.flowiee.pms.base;
+package com.flowiee.pms.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +15,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -55,10 +54,10 @@ public class AuditEntity {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
-        if (createdBy == null) {
+        if (createdBy == null && CommonUtils.mvInitData) {
             createdBy = CommonUtils.getUserPrincipal().getId();
         }
-        if (lastUpdatedBy == null) {
+        if (lastUpdatedBy == null && CommonUtils.mvInitData) {
             lastUpdatedBy = CommonUtils.getUserPrincipal().getUsername();
         }
     }

@@ -6,6 +6,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.system.FileStorageRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.CommonUtils;
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductImageServiceImpl implements ProductImageService {
+public class ProductImageServiceImpl extends BaseService implements ProductImageService {
     Logger logger = LoggerFactory.getLogger(ProductImageServiceImpl.class);
 
     @Autowired

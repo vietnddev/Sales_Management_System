@@ -5,6 +5,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
@@ -19,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
-public class ProductPriceServiceImpl implements ProductPriceService {
+public class ProductPriceServiceImpl extends BaseService implements ProductPriceService {
     Logger logger = LoggerFactory.getLogger(ProductPriceServiceImpl.class);
 
     @Autowired
@@ -31,28 +32,30 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 
     @Transactional
     @Override
-    public String updateProductPrice(Integer variantId, BigDecimal originalPrice, BigDecimal discountPrice) {
+    public String updateProductPrice(Integer variantId, BigDecimal pOriginalPrice, BigDecimal pDiscountPrice) {
         try {
             Optional<ProductVariantDTO> productDetail = productVariantService.findById(variantId);
             if (productDetail.isEmpty()) {
                 throw new BadRequestException();
             }
-            if (originalPrice == null) {
-                originalPrice = productDetail.get().getOriginalPrice();
-            }
-            if (discountPrice == null) {
-                discountPrice = productDetail.get().getDiscountPrice();
-            }
-            productVariantRepo.updatePrice(originalPrice, discountPrice, variantId);
+            productVariantRepo.updatePrice(pOriginalPrice != null ? pOriginalPrice : productDetail.get().getOriginalPrice(),
+                                           pDiscountPrice != null ? pDiscountPrice : productDetail.get().getDiscountPrice(),
+                                           productDetail.get().getRetailPrice(),
+                                           productDetail.get().getRetailPriceDiscount(),
+                                           productDetail.get().getWholesalePrice(),
+                                           productDetail.get().getWholesalePriceDiscount(),
+                                           productDetail.get().getPurchasePrice(),
+                                           productDetail.get().getCostPrice(),
+                                           variantId);
             //Log history change
             Integer productId = productDetail.get().getProductId();
             String title = "Cập nhật giá bán - giá %s";
             String oldValue = String.valueOf(productDetail.get().getOriginalPrice());
-            String newValue = String.valueOf(originalPrice);
-            if (originalPrice != null) {
+            String newValue = String.valueOf(pOriginalPrice);
+            if (pOriginalPrice != null) {
                 productHistoryService.save(new ProductHistory(productId, variantId, null, String.format(title, "gốc"), "PRICE", oldValue, newValue));
             }
-            if (originalPrice != null) {
+            if (pOriginalPrice != null) {
                 productHistoryService.save(new ProductHistory(productId, variantId, null, String.format(title, "giảm"), "PRICE", oldValue, newValue));
             }
             return MessageUtils.UPDATE_SUCCESS;

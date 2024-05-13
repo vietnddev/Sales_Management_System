@@ -2,13 +2,15 @@ package com.flowiee.pms.entity.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.sales.Supplier;
-import com.flowiee.pms.entity.sales.TicketImport;
+import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.model.dto.MaterialDTO;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,9 +29,9 @@ public class Material extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     @JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_import_id")
-    private TicketImport ticketImport;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Category brand;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +49,7 @@ public class Material extends BaseEntity implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "unit", nullable = false)
+    @JoinColumn(name = "unit_id")
     private Category unit;
 
     @Column(name = "location")
@@ -62,6 +64,18 @@ public class Material extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
     private List<MaterialHistory> listMaterialHistory;
+
+    @JsonIgnore
+    @JsonIgnoreProperties("material")
+    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<FileStorage> listImages;
+
+    @JsonIgnore
+    @JsonIgnoreProperties("material")
+    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<MaterialTemp> listMaterialTemp;
 
     public Material(int id) {
         super.id = id;
@@ -116,8 +130,8 @@ public class Material extends BaseEntity implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Material [id=");
 		builder.append(super.id);
-		builder.append(", ticketImportGoods=");
-		builder.append(ticketImport);
+		//builder.append(", ticketImportGoods=");
+		//builder.append(ticketImport);
 		builder.append(", supplier=");
 		builder.append(supplier);
 		builder.append(", code=");

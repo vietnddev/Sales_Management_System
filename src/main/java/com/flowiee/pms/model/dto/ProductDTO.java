@@ -3,14 +3,13 @@ package com.flowiee.pms.model.dto;
 import com.flowiee.pms.entity.product.Product;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.data.domain.Page;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -34,53 +33,36 @@ public class ProductDTO extends Product implements Serializable {
     private List<VoucherInfoDTO> listVoucherInfoApply;
     private LinkedHashMap<String, String> productVariantInfo;
 
-    public static ProductDTO fromProduct(Product product) {
-        ProductDTO dto = new ProductDTO();
-        if (product != null) {
-            dto.setId(product.getId());
-            if (ObjectUtils.isNotEmpty(product.getProductType())) {
-                dto.setProductTypeId(product.getProductType().getId());
-                dto.setProductTypeName(product.getProductType().getName());
-            }
-            if (ObjectUtils.isNotEmpty(product.getBrand())) {
-                dto.setBrandId(product.getBrand().getId());
-                dto.setBrandName(product.getBrand().getName());
-            }
-            dto.setProductName(product.getProductName());
-            if (ObjectUtils.isNotEmpty(product.getUnit())) {
-                dto.setUnitId(product.getUnit().getId());
-                dto.setUnitName(product.getUnit().getName());
-            }
-            dto.setDescription(product.getDescription());
-            dto.setStatus(product.getStatus());
-            if (ObjectUtils.isNotEmpty(product.getListVariants())) {
-                dto.setProductVariantQty(product.getListVariants().size());
-            }
-            dto.setSoldQty(null);
-            dto.setCreatedAt(product.getCreatedAt());
-            dto.setCreatedBy(product.getCreatedBy());
+    public Map<String, String> compareTo(ProductDTO productToCompare) {
+        Map<String, String> map = new HashMap<>();
+        if (!getProductType().getName().equals(productToCompare.getProductTypeName())) {
+            map.put("Product type", getProductType().getName() + "#" + productToCompare.getProductType().getName());
         }
-        return dto;
-    }
-
-    public static List<ProductDTO> fromProducts(Page<Product> products) {
-        List<ProductDTO> list = new ArrayList<>();
-        if (products != null) {
-            for (Product p : products.getContent()) {
-                list.add(ProductDTO.fromProduct(p));
-            }
+        if (!getBrand().getName().equals(productToCompare.getBrand().getName())) {
+            map.put("Brand name", getBrand().getName() + "#" + productToCompare.getBrand().getName());
         }
-        return list;
-    }
-
-    public static List<ProductDTO> fromProducts(List<Product> listProduct) {
-        List<ProductDTO> dataResponse = new ArrayList<>();
-        if (listProduct != null) {
-            for (Product p : listProduct) {
-                dataResponse.add(ProductDTO.fromProduct(p));
-            }
+        if (!getUnit().getName().equals(productToCompare.getUnit().getName())) {
+            map.put("Unit name", getUnit().getName() + "#" + productToCompare.getUnit().getName());
         }
-        return dataResponse;
+        if (!getProductName().equals(productToCompare.getProductName())) {
+            map.put("Product name", getProductName() + "#" + productToCompare.getProductName());
+        }
+        if (getDescription() == null) this.setDescription("-");
+        if (!getDescription().equals(productToCompare.getDescription())) {
+            String descriptionOld = getDescription().length() > 9999 ? getDescription().substring(0, 9999) : getDescription();
+            String descriptionNew = productToCompare.getDescription().length() > 9999 ? productToCompare.getDescription().substring(0, 9999) : productToCompare.getDescription();
+            map.put("Product description", descriptionOld + "#" + descriptionNew);
+        }
+        if (!getStatus().equals(productToCompare.getStatus())) {
+            map.put("Product status", getStatus() + "#" + productToCompare.getStatus());
+        }
+//        if ((this.imageActive != null && productToCompare.getImageActive() != null) && !this.imageActive.getId().equals(productToCompare.getImageActive().getId())) {
+//            map.put("Image active", this.imageActive.getId() + "#" + productToCompare.getId());
+//        }
+        if ((getListVariants() != null && productToCompare.getListVariants() != null) && getListVariants().size() < productToCompare.getListVariants().size()) {
+            map.put("Insert new product variant", "#");
+        }
+        return map;
     }
 
 	@Override

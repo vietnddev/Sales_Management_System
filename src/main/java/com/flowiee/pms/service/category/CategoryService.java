@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.category;
 
-import com.flowiee.pms.base.BaseService;
+import com.flowiee.pms.service.CrudService;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import com.flowiee.pms.entity.category.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface CategoryService extends BaseService<Category> {
+public interface CategoryService extends CrudService<Category> {
     List<Category> findRootCategory();
 
     List<Category> findSubCategory(String categoryType, Integer parentId);

@@ -3,6 +3,7 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.system.FlowieeImport;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.system.AppImportRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.ImportService;
 
 import com.flowiee.pms.utils.MessageUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ImportServiceImpl implements ImportService {
+public class ImportServiceImpl extends BaseService implements ImportService {
     @Autowired
     private AppImportRepository appImportRepository;
 

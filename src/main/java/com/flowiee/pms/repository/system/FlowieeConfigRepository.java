@@ -14,4 +14,7 @@ public interface FlowieeConfigRepository extends JpaRepository<SystemConfig, Int
     List<SystemConfig> findAll();
 
     SystemConfig findByCode(String code);
+
+    @Query("from SystemConfig where code in :listCode")
+    List<SystemConfig> findByCode(List<String> listCode);
 }

@@ -3,8 +3,9 @@ package com.flowiee.pms.controller.sales;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.sales.TicketImportService;
+import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.*;
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,12 +18,16 @@ import java.util.*;
 @Controller
 @RequestMapping("/stg/ticket-import")
 public class TicketImportControllerView extends BaseController {
-    @Autowired private TicketImportService ticketImportService;
+    @Autowired
+    private TicketImportService ticketImportService;
+    @Autowired
+    private StorageService storageService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public ModelAndView viewTickets() {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT);
+        modelAndView.addObject("listStorages", storageService.findAll());
         return baseView(modelAndView);
     }
 

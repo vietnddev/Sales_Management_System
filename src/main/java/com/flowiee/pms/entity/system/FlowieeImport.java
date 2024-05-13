@@ -1,6 +1,6 @@
 package com.flowiee.pms.entity.system;
 
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

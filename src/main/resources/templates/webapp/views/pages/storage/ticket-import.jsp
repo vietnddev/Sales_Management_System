@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý phiếu nhập hàng</title>
-    <div th:replace="header :: stylesheets"></div>
-
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style>
         .table td.vertical-center {
             vertical-align: middle;
@@ -26,7 +25,7 @@
                 <div class="row">
                     <div class="col-12">
                         <!--Search tool-->
-                        <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+                        <div th:replace="fragments :: searchTool('Y', 'Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
 
                         <div class="card">
                             <div class="card-header">
@@ -49,6 +48,12 @@
                                                                 <div class="form-group">
                                                                     <label for="titleField">Tên phiếu nhập</label>
                                                                     <input type="text" class="form-control" id="titleField" required/>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="titleField">Nhập vào kho</label>
+                                                                    <select class="custom-select" id="storageField" required>
+                                                                        <option th:each="s : ${listStorages}" th:value="${s.id}" th:text="${s.name}">
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -139,11 +144,12 @@
     function createNewDraft() {
         $("#btnNewDraftSubmit").on("click", function () {
             let title = $("#titleField").val();
+            let storage = {id : $("#storageField").val()};
             if (title === null || title.trim() === "") {
                 alert("Title is can not allow null value");
             } else {
                 let apiURL = mvHostURLCallApi + "/stg/ticket-import/create-draft";
-                let body = {title : title}
+                let body = {title : title, storage : storage}
                 $.ajax({
                     url: apiURL,
                     type: "POST",

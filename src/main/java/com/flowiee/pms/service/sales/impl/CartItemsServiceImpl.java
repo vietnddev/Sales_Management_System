@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.sales.ItemsRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CartItemsServiceImpl implements CartItemsService {
+public class CartItemsServiceImpl extends BaseService implements CartItemsService {
     @Autowired
     private ItemsRepository itemsRepository;
 

@@ -4,17 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Phiếu nhập hàng</title>
-    <div th:replace="header :: stylesheets"></div>
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style rel="stylesheet">
         .table td, th {
             vertical-align: middle;
         }
     </style>
-    <!-- Select2 -->
-    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
-    <link rel="stylesheet" th:href="@{/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
-    <!-- Bootstrap4 Duallistbox -->
-    <link rel="stylesheet" th:href="@{/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -62,7 +57,19 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="productContentTable"></tbody>
+                                    <tbody>
+                                        <tr th:each="list, index : ${ticketImportDetail.listProductVariantTemps}">
+                                            <td th:text="${index.index + 1}"></td>
+                                            <td th:text="${list.productVariant.variantName}"></td>
+                                            <td th:text="${list.quantity}"></td>
+                                            <td th:text="${list.note}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="'#modalUpdateItems_' + ${list.id}">Cập nhật</button>
+                                                <button type="button" class="btn btn-sm btn-danger"  data-toggle="modal" data-target="'#modalDeleteItems_' + ${list.id}">Xóa</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <!--<tbody id="productContentTable"></tbody>-->
                                 </table>
                             </div>
                         </div>
@@ -91,7 +98,19 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="materialContentTable"></tbody>
+                                    <tbody>
+                                        <tr th:each="list, index : ${ticketImportDetail.listMaterialTemps}">
+                                            <td th:text="${index.index + 1}"></td>
+                                            <td th:text="${list.material.name}"></td>
+                                            <td th:text="${list.quantity}"></td>
+                                            <td th:text="${list.note}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="'#modalUpdateItems_' + ${list.id}">Cập nhật</button>
+                                                <button type="button" class="btn btn-sm btn-danger"  data-toggle="modal" data-target="'#modalDeleteItems_' + ${list.id}">Xóa</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <!--<tbody id="materialContentTable"></tbody>-->
                                 </table>
                             </div>
                         </div>
@@ -136,11 +155,6 @@
     <aside class="control-sidebar control-sidebar-dark"></aside>
 
     <div th:replace="header :: scripts"></div>
-
-    <!-- Select2 -->
-    <script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
-    <!-- Bootstrap4 Duallistbox -->
-    <script th:src="@{/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js}"></script>
 
     <script>
         let mvTicketImportDetail = {};
@@ -199,7 +213,7 @@
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
-                        $('#productVariantField').append(`<option value="${d.id}">${d.product.productName + ' - ' + d.variantName + ' - ' + d.storageQty}</option>`);
+                        $('#productVariantField').append(`<option value="${d.id}">${d.variantName + ' - ' + d.storageQty}</option>`);
                     });
                 }
             }).fail(function () {
@@ -208,7 +222,7 @@
         }
 
         function loadMaterialsToSelect() {
-            let apiURL = mvHostURLCallApi + "/stg/material/all";
+            let apiURL = mvHostURLCallApi + "/storage/material/all";
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     $.each(response.data, function (index, d) {
@@ -269,7 +283,7 @@
                     <tr>
                         <td>${index + 1}</td>
                         <td className="text-left text-wrap" style="max-width: 200px">
-                            <a href="/san-pham/variant/${d.id}">${d.name}</a>
+                            <a href="/san-pham/variant/${d.id}">${d.id}</a>
                         </td>
                         <td>${d.quantity}</td>
                         <td></td>
@@ -303,7 +317,6 @@
         }
         
         function addProduct() {
-            let productAdded = [];
             $("#btnAddProduct").on("click", function () {
                 let productVariantIds = $("#productVariantField").val();
                 if ($.isEmptyObject(productVariantIds)) {
@@ -317,7 +330,8 @@
                         data: JSON.stringify(productVariantIds),
                         success: function (response, textStatus, jqXHR) {
                             if (response.status === "OK") {
-                                productAdded = response.data;
+                                alert('Added successfully!')
+                                window.location.reload();
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -326,13 +340,6 @@
                     });
                 }
             })
-            if (productAdded != null) {
-                $.each(productAdded, function (d) {
-                    mvProductVariantSelected.push(d);
-                })
-                $("#productContentTable").empty();
-                setProductSelectedTableInfo(mvProductVariantSelected);
-            }
         }
 
         function addMaterial() {
@@ -349,10 +356,8 @@
                         data: JSON.stringify(materialIds),
                         success: function (response, textStatus, jqXHR) {
                             if (response.status === "OK") {
-                                let materialAdded = response.data;
-                                mvMaterialSelected.push(materialAdded);
-                                $("#materialContentTable").empty();
-                                setMaterialSelectedTableInfo(mvMaterialSelected);
+                                alert('Added successfully!')
+                                window.location.reload();
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {

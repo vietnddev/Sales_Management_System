@@ -1,7 +1,8 @@
 package com.flowiee.pms.entity.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.utils.CommonUtils;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serial;
@@ -39,13 +40,21 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Transient
 	private String username;
 
-	public SystemLog (String module, String action, String value, String newValue, Integer createdBy, String ip) {
+	public SystemLog (String module, String action, String value, String newValue) {
 		this.module = module;
 		this.action = action;
 		this.content = value;
 		this.contentChange = newValue;
-		super.createdBy = createdBy;
-		this.ip = ip;
+		this.ip = "unknown";
+	}
+
+	@PreUpdate
+	public void updateAudit() {
+		if (ip == null && CommonUtils.mvInitData) {
+			ip = CommonUtils.getUserPrincipal().getIp();
+		} else {
+			ip = "unknown";
+		}
 	}
 
 	@Override

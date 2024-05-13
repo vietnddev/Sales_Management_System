@@ -8,6 +8,8 @@ import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import com.flowiee.pms.repository.sales.PromotionInfoRepository;
+import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.sales.PromotionApplyService;
 import com.flowiee.pms.service.sales.PromotionService;
 import com.flowiee.pms.utils.AppConstants;
@@ -21,17 +23,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PromotionInfoServiceImpl implements PromotionService {
+public class PromotionInfoServiceImpl extends BaseService implements PromotionService {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
     private PromotionInfoRepository promotionInfoRepository;
     @Autowired
     private PromotionApplyService promotionApplyService;
+    @Autowired
+    private ProductInfoService productInfoService;
 
     @Override
     public List<PromotionInfoDTO> findAll() {
@@ -57,6 +62,12 @@ public class PromotionInfoServiceImpl implements PromotionService {
         List<PromotionInfoDTO> promotionInfoDTOs = modelMapper.map(pagePromotionInfos.getContent(), listType);
 
         for (PromotionInfoDTO p : promotionInfoDTOs) {
+            List<ProductDTO> productDTOs = new ArrayList<>();
+            for (PromotionApplyDTO promotionApplyDTO : promotionApplyService.findByPromotionId(p.getId())) {
+                Optional<ProductDTO> productDTOOptional = productInfoService.findById(promotionApplyDTO.getProductId());
+                productDTOOptional.ifPresent(productDTOs::add);
+            }
+            p.setApplicableProducts(productDTOs);
             p.setStatus(genPromotionStatus(p.getStartTime(), p.getEndTime()));
         }
 
@@ -77,11 +88,15 @@ public class PromotionInfoServiceImpl implements PromotionService {
     @Transactional
     @Override
     public PromotionInfoDTO save(PromotionInfoDTO promotionInfoDTO) {
+        if (promotionInfoDTO == null) {
+            throw new BadRequestException();
+        }
         try {
-            if (promotionInfoDTO == null) {
-                throw new BadRequestException();
-            }
-            PromotionInfo promotionInfoSaved = promotionInfoRepository.save(promotionInfoDTO);
+            PromotionInfo promotionInfo = PromotionInfo.fromDTO(promotionInfoDTO);
+            promotionInfo.setStartTime(LocalDateTime.parse(promotionInfoDTO.getStartTimeStr() + "T00:00"));
+            promotionInfo.setEndTime(LocalDateTime.parse(promotionInfoDTO.getEndTimeStr() + "T00:00"));
+
+            PromotionInfo promotionInfoSaved = promotionInfoRepository.save(promotionInfo);
             for (ProductDTO product : promotionInfoDTO.getApplicableProducts()) {
                 PromotionApplyDTO promotionApply = new PromotionApplyDTO();
                 promotionApply.setPromotionId(promotionInfoSaved.getId());
@@ -97,13 +112,17 @@ public class PromotionInfoServiceImpl implements PromotionService {
     }
 
     @Override
-    public PromotionInfoDTO update(PromotionInfoDTO promotionInfo, Integer promotionId) {
+    public PromotionInfoDTO update(PromotionInfoDTO inputDTO, Integer promotionId) {
         try {
-            if (promotionInfo == null || promotionId == null || this.findById(promotionId).isEmpty()) {
+            if (inputDTO == null || promotionId == null || this.findById(promotionId).isEmpty()) {
                 throw new BadRequestException();
             }
+            PromotionInfo promotionInfo = PromotionInfo.fromDTO(inputDTO);
+            promotionInfo.setStartTime(LocalDateTime.parse(inputDTO.getStartTimeStr() + "T00:00"));
+            promotionInfo.setEndTime(LocalDateTime.parse(inputDTO.getEndTimeStr() + "T00:00"));
             promotionInfo.setId(promotionId);
-            return promotionInfoRepository.save(promotionInfo);
+            PromotionInfo promotionInfoSaved = promotionInfoRepository.save(promotionInfo);
+            return modelMapper.map(promotionInfoSaved, PromotionInfoDTO.class);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "promotion"), ex);
         }

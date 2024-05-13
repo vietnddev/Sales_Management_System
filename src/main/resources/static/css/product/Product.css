@@ -1,0 +1,17 @@
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+img {
+    border-radius: 5px;
+}
+.product-image-thumb {
+    border: none;
+    box-shadow: none;
+    max-width: 7rem;
+    margin-right: 0rem;
+}
+.productVariantNameRowTbl{
+    color: #138496;
+    cursor: pointer;
+}

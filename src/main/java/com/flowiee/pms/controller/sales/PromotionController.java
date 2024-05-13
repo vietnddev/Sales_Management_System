@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.PromotionInfo;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
@@ -29,7 +29,7 @@ public class PromotionController extends BaseController {
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
     public AppResponse<List<PromotionInfoDTO>> findPromotions(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                                         @RequestParam(value = "pageNum", required = false) Integer pageNum) {
+                                                              @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
             Page<PromotionInfoDTO> promotionPage = promotionService.findAll(pageSize, pageNum - 1, null, null, null, null);
             return success(promotionPage.getContent(), pageNum, pageSize, promotionPage.getTotalPages(), promotionPage.getTotalElements());

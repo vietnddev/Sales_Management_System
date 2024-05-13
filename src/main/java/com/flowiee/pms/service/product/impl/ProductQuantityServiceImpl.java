@@ -4,6 +4,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.MessageUtils;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ProductQuantityServiceImpl implements ProductQuantityService {
+public class ProductQuantityServiceImpl extends BaseService implements ProductQuantityService {
     @Autowired
     private ProductDetailRepository productVariantRepo;
     @Autowired

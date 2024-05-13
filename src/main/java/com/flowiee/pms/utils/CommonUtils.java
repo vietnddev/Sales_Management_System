@@ -31,11 +31,13 @@ public class CommonUtils {
     public static final String fileUploadPath = rootPath + "/uploads/";
     public static final String reportTemplatePath = rootPath + "/report";
     public static final String excelTemplatePath = rootPath + "/templates/excel";
+    public static final String initCsvDataPath = rootPath + "/data/csv";
     public static final String ADMINISTRATOR = "admin";
     public static LocalDateTime START_APP_TIME = null;
     public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
     public static ShopInfo mvShopInfo;
+    public static Boolean mvInitData = false;
 
     public static String formatToVND(Object currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -173,7 +175,8 @@ public class CommonUtils {
         if (authentication != null) {
             return (UserPrincipal) authentication.getPrincipal();
         }
-        throw new AuthenticationException();
+        //throw new AuthenticationException();
+        return null;
     }
 
     public static String genProductCode() {

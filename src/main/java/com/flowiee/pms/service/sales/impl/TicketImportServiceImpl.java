@@ -14,6 +14,7 @@ import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.MaterialTempRepository;
 import com.flowiee.pms.repository.product.ProductDetailTempRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.MaterialService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.product.ProductVariantService;
@@ -28,19 +29,21 @@ import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class TicketImportServiceImpl implements TicketImportService {
+public class TicketImportServiceImpl extends BaseService implements TicketImportService {
     @Autowired
     private TicketImportRepository ticketImportRepo;
-    @Autowired
+    @Autowired @Lazy
     private ProductVariantService productVariantService;
     @Autowired
     private ProductDetailTempRepository productVariantTempRepo;
@@ -61,16 +64,16 @@ public class TicketImportServiceImpl implements TicketImportService {
 
     @Override
     public List<TicketImport> findAll() {
-        return this.findAll(-1, -1, null, null, null,null, null).getContent();
+        return this.findAll(-1, -1, null, null, null,null, null, null).getContent();
     }
 
     @Override
-    public Page<TicketImport> findAll(int pageSize, int pageNum, String pText, Integer pSupplierId, Integer pPaymentMethod, String pPayStatus, String pImportStatus) {
+    public Page<TicketImport> findAll(int pageSize, int pageNum, String pText, Integer pSupplierId, Integer pPaymentMethod, String pPayStatus, String pImportStatus, Integer pStorageId) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        return ticketImportRepo.findAll(pText, pSupplierId, pPaymentMethod, pPayStatus, pImportStatus, pageable);
+        return ticketImportRepo.findAll(pText, pSupplierId, pPaymentMethod, pPayStatus, pImportStatus, pStorageId, pageable);
     }
 
     @Override
@@ -85,43 +88,45 @@ public class TicketImportServiceImpl implements TicketImportService {
         }
         TicketImport ticketImportSaved = ticketImportRepo.save(entity);
         Storage storage = ticketImportSaved.getStorage();
-        if (storage.getHoldableQty() != null && storage.getHoldWarningPercent() != null) {
-            int productQty = 0;
-            int materialQty = 0;
-            if (ObjectUtils.isNotEmpty(ticketImportSaved.getListProductVariantTemps())) {
-                productQty = ticketImportSaved.getListProductVariantTemps().size();
-            }
-            if (ObjectUtils.isNotEmpty(ticketImportSaved.getListMaterialTemps())) {
-                materialQty = ticketImportSaved.getListMaterialTemps().size();
-            }
-            int totalGoodsImport = productQty + materialQty;
-            int totalGoodsHolding = 0;
-            if ((totalGoodsImport + totalGoodsHolding) / storage.getHoldableQty() * 100 >= storage.getHoldWarningPercent()) {
-                List<AccountRole> listOfStorageManagersRight = roleService.findByAction(ACTION.STG_STORAGE);
-                if (ObjectUtils.isNotEmpty(listOfStorageManagersRight)) {
-                    Set<Account> stgManagersReceiveNtfs = new HashSet<>();
-                    for (AccountRole storageManagerRight : listOfStorageManagersRight) {
-                        Optional<GroupAccount> groupAccount = groupAccountService.findById(storageManagerRight.getGroupId());
-                        if (groupAccount.isPresent()) {
-                            for (Account acc : groupAccount.get().getListAccount()) {
-                                stgManagersReceiveNtfs.add(acc);
+        if (storage != null) {
+            if (storage.getHoldableQty() != null && storage.getHoldWarningPercent() != null) {
+                int productQty = 0;
+                int materialQty = 0;
+                if (ObjectUtils.isNotEmpty(ticketImportSaved.getListProductVariantTemps())) {
+                    productQty = ticketImportSaved.getListProductVariantTemps().size();
+                }
+                if (ObjectUtils.isNotEmpty(ticketImportSaved.getListMaterialTemps())) {
+                    materialQty = ticketImportSaved.getListMaterialTemps().size();
+                }
+                int totalGoodsImport = productQty + materialQty;
+                int totalGoodsHolding = 0;
+                if ((totalGoodsImport + totalGoodsHolding) / storage.getHoldableQty() * 100 >= storage.getHoldWarningPercent()) {
+                    List<AccountRole> listOfStorageManagersRight = roleService.findByAction(ACTION.STG_STORAGE);
+                    if (ObjectUtils.isNotEmpty(listOfStorageManagersRight)) {
+                        Set<Account> stgManagersReceiveNtfs = new HashSet<>();
+                        for (AccountRole storageManagerRight : listOfStorageManagersRight) {
+                            Optional<GroupAccount> groupAccount = groupAccountService.findById(storageManagerRight.getGroupId());
+                            if (groupAccount.isPresent()) {
+                                for (Account acc : groupAccount.get().getListAccount()) {
+                                    stgManagersReceiveNtfs.add(acc);
+                                }
+                            }
+                            Optional<Account> account = accountService.findById(storageManagerRight.getAccountId());
+                            if (account.isPresent()) {
+                                stgManagersReceiveNtfs.add(account.get());
                             }
                         }
-                        Optional<Account> account = accountService.findById(storageManagerRight.getAccountId());
-                        if (account.isPresent()) {
-                            stgManagersReceiveNtfs.add(account.get());
+                        for (Account a : stgManagersReceiveNtfs) {
+                            Notification ntf = new Notification();
+                            ntf.setSend(0);
+                            ntf.setReceive(a.getId());
+                            ntf.setType("WARNING");
+                            ntf.setTitle("Sức chứa của kho " + storage.getName() + " đã chạm mốc cảnh báo!");
+                            ntf.setContent("Số lượng hàng hóa hiện tại " + totalGoodsHolding + ", Số lượng nhập thêm: " + totalGoodsImport + ", Số lượng sau khi nhập: " + totalGoodsImport + totalGoodsHolding + "/" + storage.getHoldableQty());
+                            ntf.setReaded(false);
+                            ntf.setImportId(ticketImportSaved.getId());
+                            notificationService.save(ntf);
                         }
-                    }
-                    for (Account a : stgManagersReceiveNtfs) {
-                        Notification ntf = new Notification();
-                        ntf.setSend(0);
-                        ntf.setReceive(a.getId());
-                        ntf.setType("WARNING");
-                        ntf.setTitle("Sức chứa của kho " + storage.getName() + " đã chạm mốc cảnh báo!");
-                        ntf.setContent("Số lượng hàng hóa hiện tại " + totalGoodsHolding + ", Số lượng nhập thêm: " + totalGoodsImport + ", Số lượng sau khi nhập: " + totalGoodsImport + totalGoodsHolding + "/" + storage.getHoldableQty());
-                        ntf.setReaded(false);
-                        ntf.setImportId(ticketImportSaved.getId());
-                        notificationService.save(ntf);
                     }
                 }
             }
@@ -143,12 +148,12 @@ public class TicketImportServiceImpl implements TicketImportService {
         if ("COMPLETED".equals(ticketImportUpdated.getStatus())) {
             if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemps())) {
                 for (ProductVariantTemp p : ticketImport.getListProductVariantTemps()) {
-                    productQuantityService.updateProductVariantQuantityIncrease(p.getQuantity(), p.getProductVariantId());
+                    productQuantityService.updateProductVariantQuantityIncrease(p.getQuantity(), p.getProductVariant().getId());
                 }
             }
-            if (ObjectUtils.isNotEmpty(ticketImport.getListMaterialTemps())) {
+            if (ObjectUtils.isNotEmpty(ticketImportUpdated.getListMaterialTemps())) {
                 for (MaterialTemp m : ticketImport.getListMaterialTemps()) {
-                    materialService.updateQuantity(m.getQuantity(), m.getMaterialId(), "I");
+                    materialService.updateQuantity(m.getQuantity(), m.getMaterial().getId(), "I");
                 }
             }
         }
@@ -170,13 +175,14 @@ public class TicketImportServiceImpl implements TicketImportService {
     }
 
     @Override
-    public TicketImport createDraftTicketImport(String title) {
+    public TicketImport createDraftTicketImport(TicketImport ticketImportInput) {
         TicketImport ticketImport = new TicketImport();
-        ticketImport.setTitle(title);
+        ticketImport.setTitle(ticketImportInput.getTitle());
         ticketImport.setStatus("DRAFT");
         ticketImport.setCreatedBy(CommonUtils.getUserPrincipal().getId());
         ticketImport.setImporter(CommonUtils.getUserPrincipal().getUsername());
-        ticketImport.setImportTime(new Date());
+        ticketImport.setImportTime(LocalDateTime.now());
+        ticketImport.setStorage(ticketImportInput.getStorage());
         return this.save(ticketImport);
     }
 
@@ -207,7 +213,7 @@ public class TicketImportServiceImpl implements TicketImportService {
             } else {
                 ProductVariantTemp productVariantTemp = new ProductVariantTemp();
                 productVariantTemp.setTicketImport(new TicketImport(ticketImportId));
-                productVariantTemp.setProductVariantId(productVariantId);
+                productVariantTemp.setProductVariant(productDetail.get());
                 productVariantTemp.setQuantity(1);
                 productVariantTemp.setNote(null);
                 ProductVariantTemp productVariantTempAdded = productVariantTempRepo.save(productVariantTemp);
@@ -231,7 +237,7 @@ public class TicketImportServiceImpl implements TicketImportService {
             } else {
                 MaterialTemp materialTemp = new MaterialTemp();
                 materialTemp.setTicketImport(new TicketImport(ticketImportId));
-                materialTemp.setMaterialId(materialId);
+                materialTemp.setMaterial(material.get());
                 materialTemp.setQuantity(1);
                 materialTemp.setNote(null);
                 MaterialTemp materialTempAdded = materialTempRepo.save(materialTemp);

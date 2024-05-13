@@ -1,7 +1,8 @@
 package com.flowiee.pms.entity.sales;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductDetail;
 import lombok.*;
 
@@ -20,11 +21,13 @@ import java.util.List;
 public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_id", nullable = false)
 	private Order order;
 
+	@JsonIgnore
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_variant_id", nullable = false)
@@ -39,8 +42,11 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@Column(name = "price_original", nullable = false)
 	private BigDecimal priceOriginal;
 
+	@Column(name = "extra_discount")
+	private BigDecimal extraDiscount;
+
 	@Column(name = "note", length = 500)
-	private String ghiChu;
+	private String note;
 
 	@Column(name = "status", nullable = false)
 	private boolean status;
@@ -55,6 +61,6 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "OrderDetail [id=" + super.id + ", order=" + order + ", productVariant=" + productDetail + ", soLuong=" + quantity
-				+ ", ghiChu=" + ghiChu + ", status=" + status + ", listOrderHistory=" + listOrderHistory + "]";
+				+ ", ghiChu=" + note + ", status=" + status + ", listOrderHistory=" + listOrderHistory + "]";
 	}
 }

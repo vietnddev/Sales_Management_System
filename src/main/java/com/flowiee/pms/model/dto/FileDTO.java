@@ -14,28 +14,18 @@ import java.util.List;
 
 @Getter
 @Setter
-public class FileDTO implements Serializable{
+public class FileDTO extends FileStorage implements Serializable{
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
     private Integer productId;
     private Integer productVariantId;
     private Integer orderId;
-    private Integer sort;
     private String name;
-    private String storageName;
-    private String originalName;
-    private String extension;
-    private String contentType;
-    private String module;
-    private String note;
     private String uploadBy;
     private String src;
-    private Boolean isActive;
     private Boolean status;
     private long size;
-    private byte[] content;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime uploadAt;
 
@@ -62,7 +52,7 @@ public class FileDTO implements Serializable{
             dto.setNote(fileStorage.getNote());
             dto.setUploadBy(fileStorage.getAccount().getUsername());
             dto.setSrc(fileStorage.getDirectoryPath() + "/" + fileStorage.getStorageName());
-            dto.setIsActive(fileStorage.isActive());
+            //dto.setIsActive(fileStorage.isActive());
             dto.setStatus(fileStorage.isStatus());
             dto.setSize(fileStorage.getFileSize());
             dto.setContent(fileStorage.getContent());

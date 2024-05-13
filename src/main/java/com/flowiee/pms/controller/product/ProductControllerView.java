@@ -1,8 +1,7 @@
 package com.flowiee.pms.controller.product;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductAttribute;
-import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.dto.ProductDTO;
@@ -13,10 +12,6 @@ import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

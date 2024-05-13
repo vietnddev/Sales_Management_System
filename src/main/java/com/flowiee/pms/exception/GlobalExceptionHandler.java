@@ -1,6 +1,6 @@
 package com.flowiee.pms.exception;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.utils.PagesUtils;
 import org.springframework.http.HttpStatus;

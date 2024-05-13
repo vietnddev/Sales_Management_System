@@ -1,4 +1,6 @@
 package com.flowiee.pms.service.category.impl;
 
-public class CategoryExportServiceImpl {
+import com.flowiee.pms.service.BaseService;
+
+public class CategoryExportServiceImpl  extends BaseService {
 }

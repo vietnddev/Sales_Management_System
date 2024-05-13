@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.utils.PagesUtils;
@@ -25,7 +25,7 @@ public class TicketExportControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public ModelAndView viewAllTicketExport() {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_EXPORT);
-        modelAndView.addObject("listTicketExport", ticketExportService.findAll(-1, -1));
+        modelAndView.addObject("listTicketExport", ticketExportService.findAll(-1, -1, null));
         return baseView(modelAndView);
     }
 

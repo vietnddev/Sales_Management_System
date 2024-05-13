@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +20,17 @@ public class CustomerDTO extends Customer implements Serializable {
     private String addressDefault;
     private BigDecimal orderAvgValue;
     private String customerGroup;
+    private String profilePictureUrl;
+    private LocalDate lastPurchaseDate;
+    private BigDecimal totalSpent;
 
     public static CustomerDTO fromCustomer(Customer customer) {
         CustomerDTO dto = new CustomerDTO();
         dto.setId(customer.getId());
         dto.setCustomerName(customer.getCustomerName());
         dto.setSex(customer.isSex());
-        if (customer.getBirthday() != null) {
-            dto.setBirthday(customer.getBirthday());
+        if (customer.getDateOfBirth() != null) {
+            dto.setDateOfBirth(customer.getDateOfBirth());
         }
         dto.setCreatedAt(customer.getCreatedAt());
         dto.setCreatedBy(customer.getCreatedBy());

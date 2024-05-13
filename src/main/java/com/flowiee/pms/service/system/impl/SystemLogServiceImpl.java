@@ -2,6 +2,7 @@ package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.repository.system.SystemLogRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.SystemLogService;
 
 import com.flowiee.pms.utils.CommonUtils;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SystemLogServiceImpl implements SystemLogService {
+public class SystemLogServiceImpl extends BaseService implements SystemLogService {
     @Autowired private SystemLogRepository systemLogRepo;
     @Autowired private EntityManager entityManager;
 
@@ -60,8 +61,8 @@ public class SystemLogServiceImpl implements SystemLogService {
         systemLog.setAction(action);
         systemLog.setContent(content);
         systemLog.setContentChange(null);
-        systemLog.setCreatedBy(CommonUtils.getUserPrincipal().getId());
-        systemLog.setIp(CommonUtils.getUserPrincipal().getIp());
+        systemLog.setCreatedBy(CommonUtils.getUserPrincipal() != null ? CommonUtils.getUserPrincipal().getId() : null);
+        systemLog.setIp(CommonUtils.getUserPrincipal() != null ? CommonUtils.getUserPrincipal().getIp() : null);
         return systemLogRepo.save(systemLog);
     }
 

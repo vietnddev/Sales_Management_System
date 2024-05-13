@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.Supplier;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.sales.SupplierRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.SupplierService;
 
 import com.flowiee.pms.utils.MessageUtils;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SupplierServiceImpl implements SupplierService {
+public class SupplierServiceImpl extends BaseService implements SupplierService {
     @Autowired
     private SupplierRepository supplierRepo;
 
@@ -29,7 +30,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public Page<Supplier> findAll(Integer pageSize, Integer pageNum) {
         Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 || pageNum >= 0) {
+        if ((pageSize != null && pageSize >= 0) || (pageNum != null && pageNum >= 0)) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
         }
         return supplierRepo.findAll(pageable);

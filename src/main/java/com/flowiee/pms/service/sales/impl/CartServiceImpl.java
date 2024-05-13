@@ -8,6 +8,7 @@ import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.ItemsRepository;
 import com.flowiee.pms.repository.sales.OrderCartRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartService;
 import com.flowiee.pms.service.system.SystemLogService;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CartServiceImpl implements CartService {
+public class CartServiceImpl extends BaseService implements CartService {
     @Autowired
     private OrderCartRepository cartRepository;
     @Autowired

@@ -2,14 +2,16 @@ package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.model.dto.TicketExportDTO;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -23,6 +25,11 @@ public class TicketExport extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "storage_id", nullable = false)
+    private Storage storage;
+
     @Column(name = "title")
     private String title;
 
@@ -30,7 +37,7 @@ public class TicketExport extends BaseEntity implements Serializable {
     private String exporter;
 
     @Column(name = "export_time", nullable = false)
-    private Date exportTime;
+    private LocalDateTime exportTime;
 
     @Column(name = "note", length = 500)
     private String note;
@@ -41,6 +48,10 @@ public class TicketExport extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
     private List<Order> listOrders;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
+    private List<ProductVariantTemp> listProductVariantTemp;
 
     public static TicketExport fromTicketExportDTO(TicketExportDTO dto) {
         TicketExport ticketExport = new TicketExport();

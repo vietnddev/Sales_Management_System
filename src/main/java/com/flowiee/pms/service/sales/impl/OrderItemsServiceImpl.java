@@ -6,6 +6,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.repository.sales.OrderDetailRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderItemsService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.MessageUtils;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrderItemsServiceImpl implements OrderItemsService {
+public class OrderItemsServiceImpl extends BaseService implements OrderItemsService {
     @Autowired
     private OrderDetailRepository orderDetailRepo;
     @Autowired

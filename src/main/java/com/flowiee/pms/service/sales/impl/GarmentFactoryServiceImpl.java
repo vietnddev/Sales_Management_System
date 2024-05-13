@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.GarmentFactory;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.sales.GarmentFactoryRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.GarmentFactoryService;
 
 import com.flowiee.pms.utils.MessageUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GarmentFactoryServiceImpl implements GarmentFactoryService {
+public class GarmentFactoryServiceImpl extends BaseService implements GarmentFactoryService {
     @Autowired
     private GarmentFactoryRepository garmentFactoryRepo;
 

@@ -1,12 +1,13 @@
 package com.flowiee.pms.controller.product;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.MaterialDTO;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.product.MaterialService;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.converter.MaterialConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class MaterialController extends BaseController {
         try {
             if (pageSize == null) pageSize = -1;
             if (pageNum == null) pageNum = 1;
-            Page<Material> materials = materialService.findAll(pageSize, pageNum - 1, null, null, null, null, null, null, null);
+            Page<Material> materials = materialService.findAll(pageSize, pageNum - 1, null, null, null, null, null, null);
             return success(materials.getContent(), pageNum, pageSize, materials.getTotalPages(), materials.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "material"), ex);
@@ -43,7 +44,7 @@ public class MaterialController extends BaseController {
     @PreAuthorize("@vldModuleProduct.insertMaterial(true)")
     public AppResponse<MaterialDTO> insert(@RequestBody MaterialDTO materialDTO) {
         try {
-            return success(MaterialDTO.fromMaterial(materialService.save(Material.fromMaterialDTO(materialDTO))));
+            return success(MaterialConvert.convertToDTO(materialService.save(Material.fromMaterialDTO(materialDTO))));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "material"), ex);
         }

@@ -31,8 +31,6 @@ public class OrderDTO extends Order implements Serializable {
     private String payMethodName;
     private Integer cashierId;
     private String cashierName;
-    private Integer createdById;
-    private String createdByName;
 	private BigDecimal totalAmount;
 	private BigDecimal totalAmountDiscount;
 	private Integer totalProduct;
@@ -63,8 +61,6 @@ public class OrderDTO extends Order implements Serializable {
 		}
 		dto.setCashierId(order.getNhanVienBanHang().getId());
 		dto.setCashierName(order.getNhanVienBanHang().getFullName());
-		dto.setCreatedById(order.getCreatedBy());
-		dto.setCreatedByName(null);
 		dto.setCreatedAt(order.getCreatedAt());
 		//dto.setCreatedAtStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getCreatedAt()));
 		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : new BigDecimal(0));

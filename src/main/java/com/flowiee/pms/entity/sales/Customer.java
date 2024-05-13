@@ -3,7 +3,7 @@ package com.flowiee.pms.entity.sales;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.model.dto.CustomerDTO;
 
 import lombok.*;
@@ -13,7 +13,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Builder
@@ -33,16 +34,31 @@ public class Customer extends BaseEntity implements Serializable {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "birthday")
-	private Date birthday;
+	private LocalDate dateOfBirth;
 
 	@Column(name = "sex", nullable = false)
 	private boolean sex;
+
+	@Column(name = "marital_status")
+	private String maritalStatus;
+
+	@Column(name = "referral_source")
+	private String referralSource;
 
 	@Column(name = "black_list")
 	private String isBlackList;
 
 	@Column(name = "black_list_reason")
 	private String blackListReason;
+
+	@Column(name = "loyalty_points")
+	private Integer loyaltyPoints;
+
+	@Column(name = "has_outstanding_balance")
+	private Boolean hasOutstandingBalance;
+
+	@Column(name = "outstanding_balance_amount")
+	private BigDecimal outstandingBalanceAmount;
 
 	@JsonIgnore
 	@JsonIgnoreProperties("customer")
@@ -67,13 +83,13 @@ public class Customer extends BaseEntity implements Serializable {
 		Customer customer = new Customer();
 		customer.setId(dto.getId());
 		customer.setCustomerName(dto.getCustomerName());
-		customer.setBirthday(dto.getBirthday());
+		customer.setDateOfBirth(dto.getDateOfBirth());
 		customer.setSex(dto.isSex());
 		return customer;
 	}
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + super.id + ", customerName=" + customerName + ", birthday=" + birthday + ", sex=" + sex  + "]";
+		return "Customer [id=" + super.id + ", customerName=" + customerName + ", birthday=" + dateOfBirth + ", sex=" + sex  + "]";
 	}
 }

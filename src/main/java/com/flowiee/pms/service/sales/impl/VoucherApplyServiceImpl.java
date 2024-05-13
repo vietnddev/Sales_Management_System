@@ -4,6 +4,7 @@ import com.flowiee.pms.model.dto.VoucherApplyDTO;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.sales.VoucherApplyRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 
 import com.flowiee.pms.utils.MessageUtils;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class VoucherApplyServiceImpl implements VoucherApplyService {
+public class VoucherApplyServiceImpl extends BaseService implements VoucherApplyService {
     @Autowired
     private VoucherApplyRepository voucherApplyRepo;
 

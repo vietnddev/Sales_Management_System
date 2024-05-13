@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.system;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
 import com.flowiee.pms.exception.NotFoundException;

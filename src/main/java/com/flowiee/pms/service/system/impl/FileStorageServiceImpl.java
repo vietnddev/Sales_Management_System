@@ -3,6 +3,7 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.system.FileStorageRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.FileStorageService;
 
 import com.flowiee.pms.utils.CommonUtils;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FileStorageServiceImpl implements FileStorageService {
+public class FileStorageServiceImpl extends BaseService implements FileStorageService {
     @Autowired
     private FileStorageRepository fileRepository;
 

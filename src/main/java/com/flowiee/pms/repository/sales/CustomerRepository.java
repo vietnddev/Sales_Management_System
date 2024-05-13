@@ -18,7 +18,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
            "left join CustomerContact cc on c.id = cc.customer.id " +
            "where (:name is null or c.customerName like %:name%) " +
            "and (:sex is null or c.sex=:sex) " +
-           "and (:birthday is null or c.birthday=:birthday) " +
+           "and (:birthday is null or c.dateOfBirth=:birthday) " +
            "and (:phone is null or (cc.code = 'P' and cc.isDefault = 'Y' and cc.status = true and cc.value=:phone)) " +
            "and (:email is null or (cc.code = 'E' and cc.isDefault = 'Y' and cc.status = true and cc.value=:email)) " +
            "and (:address is null or (cc.code = 'A' and cc.isDefault = 'Y' and cc.status = true and cc.value=:address))")

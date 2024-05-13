@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-//		httpSecurity.csrf().disable().cors();
+		httpSecurity.csrf().disable().cors();
 
 		//Cấu hình phần này để có thể nhúng URL vào các thẻ như iframe,..
 		//httpSecurity.headers().frameOptions().sameOrigin();

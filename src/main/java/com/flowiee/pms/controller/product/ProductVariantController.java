@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.product;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.AppException;

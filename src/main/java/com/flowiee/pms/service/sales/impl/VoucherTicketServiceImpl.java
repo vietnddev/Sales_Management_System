@@ -6,6 +6,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.model.dto.VoucherTicketDTO;
 import com.flowiee.pms.repository.sales.VoucherTicketRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.AppConstants;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class VoucherTicketServiceImpl implements VoucherTicketService {
+public class VoucherTicketServiceImpl extends BaseService implements VoucherTicketService {
     @Autowired
     private VoucherTicketRepository voucherTicketRepo;
     @Autowired

@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,12 +24,18 @@ public class Language extends BaseEntity implements Serializable {
     @Serial
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "code")
+    @Column(name = "module")
+    private String module;
+
+    @Column(name = "screen")
+    private String screen;
+
+	@Column(name = "code", nullable = false)
     private String code;
     
-    @Column(name = "key")
+    @Column(name = "key", nullable = false)
     private String key;
     
-    @Column(name = "value")
+    @Column(name = "value", nullable = false)
     private String value;
 }

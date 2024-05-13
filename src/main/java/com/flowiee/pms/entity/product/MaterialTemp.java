@@ -1,7 +1,7 @@
 package com.flowiee.pms.entity.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.sales.TicketImport;
 import lombok.AllArgsConstructor;
@@ -28,8 +28,9 @@ public class MaterialTemp extends BaseEntity implements Serializable {
     @JoinColumn(name = "goods_import_id", nullable = false)
     private TicketImport ticketImport;
 
-	@Column(name = "material_id", nullable = false)
-	private Integer materialId;
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "material_id", nullable = false)
+	private Material material;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;

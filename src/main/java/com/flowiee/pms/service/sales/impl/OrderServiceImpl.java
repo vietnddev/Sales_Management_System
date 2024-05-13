@@ -11,6 +11,7 @@ import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.OrderHistoryRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.*;
 import com.flowiee.pms.utils.*;
@@ -19,6 +20,7 @@ import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.service.system.SystemLogService;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl extends BaseService implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductVariantService productVariantService;
     private final SystemLogService systemLogService;
@@ -39,11 +41,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemsService orderItemsService;
     private final OrderQRCodeService orderQRCodeService;
     private final VoucherTicketService voucherTicketService;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, SystemLogService systemLogService, CartService cartService,
                             CartItemsService cartItemsService, OrderHistoryRepository orderHistoryRepo, ProductVariantService productVariantService,
-                            OrderQRCodeService orderQRCodeService, VoucherTicketService voucherTicketService, OrderItemsService orderItemsService) {
+                            OrderQRCodeService orderQRCodeService, VoucherTicketService voucherTicketService, OrderItemsService orderItemsService,
+                            ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
         this.systemLogService = systemLogService;
         this.cartService = cartService;
@@ -53,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
         this.productVariantService = productVariantService;
         this.orderQRCodeService = orderQRCodeService;
         this.voucherTicketService = voucherTicketService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -88,7 +93,8 @@ public class OrderServiceImpl implements OrderService {
             totalProduct += d.getQuantity();
             totalAmount = totalAmount.add(d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity())));
         }
-        order.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(listOrderDetail));
+        List<OrderDetailDTO> orderDetailDTOs = OrderDetailDTO.fromOrderDetails(listOrderDetail);;
+        order.setListOrderDetailDTO(orderDetailDTOs);
         order.setTotalProduct(totalProduct);
         order.setTotalAmount(totalAmount);
         order.setTotalAmountDiscount(order.getTotalAmount().subtract(order.getAmountDiscount()));
@@ -145,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
                         orderDetail.setProductDetail(productDetail.get());
                         orderDetail.setQuantity(cartItemsService.findQuantityOfItem(items.getOrderCart().getId() , productDetail.get().getId()));
                         orderDetail.setStatus(true);
-                        orderDetail.setGhiChu(items.getNote());
+                        orderDetail.setNote(items.getNote());
                         orderDetail.setPrice(productDetail.get().getDiscountPrice());
                         orderDetail.setPriceOriginal(productDetail.get().getOriginalPrice());
                         orderItemsService.save(orderDetail);

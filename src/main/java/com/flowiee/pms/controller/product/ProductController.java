@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.product;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.model.AppResponse;
@@ -9,6 +9,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.converter.ProductConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
@@ -50,7 +51,7 @@ public class ProductController extends BaseController {
                                                       @RequestParam(value = "fullInfo", required = false) Boolean fullInfo) {
         try {
             if (fullInfo != null && !fullInfo) {
-                return success(ProductDTO.fromProducts(productInfoService.findProductsIdAndProductName()));
+                return success(ProductConvert.convertToDTOs(productInfoService.findProductsIdAndProductName()));
             }
             Page<ProductDTO> productPage = productInfoService.findAll(pageSize, pageNum - 1, txtSearch, pBrand, pProductType, pColor, pSize, pUnit, null);
             return success(productPage.getContent(), pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
@@ -90,7 +91,7 @@ public class ProductController extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public AppResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Integer productId) {
         try {
-            return success(ProductDTO.fromProduct(productInfoService.update(product, productId)));
+            return success(ProductConvert.convertToDTO(productInfoService.update(product, productId)));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"), ex);
         }

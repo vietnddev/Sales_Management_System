@@ -4,18 +4,21 @@ import com.flowiee.pms.entity.sales.PromotionApply;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import com.flowiee.pms.repository.sales.PromotionApplyRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.PromotionApplyService;
 import com.flowiee.pms.utils.MessageUtils;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PromotionApplyServiceImpl implements PromotionApplyService {
+public class PromotionApplyServiceImpl extends BaseService implements PromotionApplyService {
     @Autowired
     private PromotionApplyRepository promotionApplyRepository;
     @Autowired
@@ -39,7 +42,8 @@ public class PromotionApplyServiceImpl implements PromotionApplyService {
     @Override
     public List<PromotionApplyDTO> findByPromotionId(Integer voucherId) {
         List<PromotionApply> promotionApply = promotionApplyRepository.findByPromotionId(voucherId);
-        return List.of();
+        Type listType = new TypeToken<List<PromotionApplyDTO>>() {}.getType();
+        return modelMapper.map(promotionApply, listType);
     }
 
     @Override
@@ -53,8 +57,10 @@ public class PromotionApplyServiceImpl implements PromotionApplyService {
     }
 
     @Override
-    public PromotionApplyDTO save(PromotionApplyDTO PromotionApplyDTO) {
-        return promotionApplyRepository.save(PromotionApplyDTO);
+    public PromotionApplyDTO save(PromotionApplyDTO promotionApplyDTO) {
+        PromotionApply promotionApply = PromotionApply.fromDTO(promotionApplyDTO);
+        PromotionApply promotionApplySaved = promotionApplyRepository.save(promotionApply);
+        return modelMapper.map(promotionApplySaved, PromotionApplyDTO.class);
     }
 
     @Override

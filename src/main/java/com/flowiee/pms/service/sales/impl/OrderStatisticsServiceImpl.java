@@ -1,12 +1,13 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.repository.sales.OrderRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderStatisticsServiceImpl implements OrderStatisticsService {
+public class OrderStatisticsServiceImpl extends BaseService implements OrderStatisticsService {
     @Autowired
     private OrderRepository orderRepository;
 

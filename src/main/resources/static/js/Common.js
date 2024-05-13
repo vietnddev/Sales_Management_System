@@ -50,6 +50,50 @@ function updatePaginationUI(pageNum, pageSize, totalPage, totalElements) {
     }
 }
 
+function updatePaginationUI2(pageNum, pageSize, totalPage, totalElements) {
+    $('#paginationInfo2').attr("pageNum", pageNum);
+    $('#paginationInfo2').attr("pageSize", pageSize);
+    $('#paginationInfo2').attr("totalPage", totalPage);
+    $('#paginationInfo2').attr("totalElements", totalElements);
+    $('#pageNum2').text(pageNum);
+
+    let startCount = (pageNum - 1) * pageSize + 1;
+    let endCount = startCount + pageSize - 1;
+    if (endCount > totalElements) {
+        endCount = totalElements;
+    }
+    $('#paginationInfo2').text("Showing " + startCount + " to " + endCount + " of " + totalElements + " entries");
+
+    $('#totalPages2').text("Total pages " + totalPage);
+
+    if(pageNum === 1) {
+        $('#firstPage2').attr("disable", "");
+        $('#previousPage2').attr("disable", "");
+    }
+}
+
+function updatePaginationUI3(pageNum, pageSize, totalPage, totalElements) {
+    $('#paginationInfo3').attr("pageNum", pageNum);
+    $('#paginationInfo3').attr("pageSize", pageSize);
+    $('#paginationInfo3').attr("totalPage", totalPage);
+    $('#paginationInfo3').attr("totalElements", totalElements);
+    $('#pageNum3').text(pageNum);
+
+    let startCount = (pageNum - 1) * pageSize + 1;
+    let endCount = startCount + pageSize - 1;
+    if (endCount > totalElements) {
+        endCount = totalElements;
+    }
+    $('#paginationInfo3').text("Showing " + startCount + " to " + endCount + " of " + totalElements + " entries");
+
+    $('#totalPages3').text("Total pages " + totalPage);
+
+    if(pageNum === 1) {
+        $('#firstPage3').attr("disable", "");
+        $('#previousPage3').attr("disable", "");
+    }
+}
+
 function updateTableContentWhenOnClickPagination(loadNewDataMethod) {
     let lvPageSize = $('#selectPageSize').val();
     $('#selectPageSize').on('click', function() {
@@ -87,6 +131,86 @@ function updateTableContentWhenOnClickPagination(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, $('#paginationInfo').attr("totalPage"));
+    });
+}
+
+function updateTableContentWhenOnClickPagination2(loadNewDataMethod) {
+    let lvPageSize = $('#selectPageSize2').val();
+    $('#selectPageSize2').on('click', function() {
+        console.log($(this).val())
+        if (lvPageSize === $(this).val()) {
+            return;
+        }
+        lvPageSize = $(this).val();
+        loadNewDataMethod($(this).val(), 1);
+    });
+
+    $('#firstPage2').on('click', function() {
+        if (parseInt($('#paginationInfo2').attr("pageNum")) === 1) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, 1);
+    });
+
+    $('#previousPage2').on('click', function() {
+        if (parseInt($('#paginationInfo2').attr("pageNum")) === 1) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, $('#paginationInfo2').attr("pageNum") - 1);
+    });
+
+    $('#nextPage2').on('click', function() {
+        if ($('#paginationInfo2').attr("pageNum") === $('#paginationInfo2').attr("totalPage")) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, parseInt($('#paginationInfo2').attr("pageNum")) + 1);
+    });
+
+    $('#lastPage2').on('click', function() {
+        if ($('#paginationInfo2').attr("pageNum") === $('#paginationInfo2').attr("totalPage")) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, $('#paginationInfo2').attr("totalPage"));
+    });
+}
+
+function updateTableContentWhenOnClickPagination3(loadNewDataMethod) {
+    let lvPageSize = $('#selectPageSize3').val();
+    $('#selectPageSize3').on('click', function() {
+        console.log($(this).val())
+        if (lvPageSize === $(this).val()) {
+            return;
+        }
+        lvPageSize = $(this).val();
+        loadNewDataMethod($(this).val(), 1);
+    });
+
+    $('#firstPage3').on('click', function() {
+        if (parseInt($('#paginationInfo3').attr("pageNum")) === 1) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, 1);
+    });
+
+    $('#previousPage3').on('click', function() {
+        if (parseInt($('#paginationInfo3').attr("pageNum")) === 1) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, $('#paginationInfo3').attr("pageNum") - 1);
+    });
+
+    $('#nextPage3').on('click', function() {
+        if ($('#paginationInfo3').attr("pageNum") === $('#paginationInfo3').attr("totalPage")) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, parseInt($('#paginationInfo3').attr("pageNum")) + 1);
+    });
+
+    $('#lastPage3').on('click', function() {
+        if ($('#paginationInfo3').attr("pageNum") === $('#paginationInfo3').attr("totalPage")) {
+            return;
+        }
+        loadNewDataMethod(lvPageSize, $('#paginationInfo3').attr("totalPage"));
     });
 }
 

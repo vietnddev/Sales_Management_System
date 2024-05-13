@@ -33,11 +33,59 @@
             </nav>
         </div>
 
-        <div th:fragment="searchTool(brandCTG, productTypeCTG, colorCTG, sizeCTG, unitCTG, isDiscount, productStatus)" th:remove="tag">
+        <div th:fragment="pagination2" th:remove="tag">
+            <nav class="row" style="display: flex; align-items: center">
+                <select class="custom-select col-1 justify-content-end" id="selectPageSize2">
+                    <option name="selectPageSizeOp" value="10">10</option>
+                    <option name="selectPageSizeOp" value="30">30</option>
+                    <option name="selectPageSizeOp" value="50">50</option>
+                    <option name="selectPageSizeOp" value="100">100</option>
+                </select>
+                <span class="col-3" id="paginationInfo2">Showing ... to ... of ... entries</span>
+                <ul class="pagination col-4 justify-content-center mt-0 mb-0">
+                    <li class="page-item" id="firstPage2" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward"></i></a></li>
+
+                    <li class="page-item" id="previousPage2" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left"></i></a></li>
+
+                    <li class="page-item disabled"><a class="page-link" id="pageNum2">?</a></li>
+
+                    <li class="page-item" id="nextPage2" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left fa-flip-horizontal"></i></a></li>
+
+                    <li class="page-item" id="lastPage2" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward fa-flip-horizontal"></i></a></li>
+                </ul>
+                <span class="col-4 text-right" id="totalPages2">Total pages ...</span>
+            </nav>
+        </div>
+
+        <div th:fragment="pagination3" th:remove="tag">
+            <nav class="row" style="display: flex; align-items: center">
+                <select class="custom-select col-1 justify-content-end" id="selectPageSize3">
+                    <option name="selectPageSizeOp" value="10">10</option>
+                    <option name="selectPageSizeOp" value="30">30</option>
+                    <option name="selectPageSizeOp" value="50">50</option>
+                    <option name="selectPageSizeOp" value="100">100</option>
+                </select>
+                <span class="col-3" id="paginationInfo3">Showing ... to ... of ... entries</span>
+                <ul class="pagination col-4 justify-content-center mt-0 mb-0">
+                    <li class="page-item" id="firstPage3" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward"></i></a></li>
+
+                    <li class="page-item" id="previousPage3" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left"></i></a></li>
+
+                    <li class="page-item disabled"><a class="page-link" id="pageNum3">?</a></li>
+
+                    <li class="page-item" id="nextPage3" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-caret-left fa-flip-horizontal"></i></a></li>
+
+                    <li class="page-item" id="lastPage3" style="cursor: pointer"><a class="page-link"><i class="fa-solid fa-backward fa-flip-horizontal"></i></a></li>
+                </ul>
+                <span class="col-4 text-right" id="totalPages3">Total pages ...</span>
+            </nav>
+        </div>
+
+        <div th:fragment="searchTool(isSearchAdvance, brandCTG, productTypeCTG, colorCTG, sizeCTG, unitCTG, isDiscount, productStatus)" th:remove="tag">
             <div class="row col-10 input-group mb-2">
                 <input class="form-control col-8 mr-1" id="txtFilter"/>
                 <a class="btn btn-outline-secondary col-2 mr-1" data-toggle="collapse" href="#collapseExample" id="btnOpenSearchAdvance"
-                   role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa-solid fa-caret-down mr-2"></i>Nâng cao</a>
+                   role="button" aria-expanded="false" aria-controls="collapseExample" th:if="${isSearchAdvance == 'Y'}"><i class="fa-solid fa-caret-down mr-2"></i>Nâng cao</a>
                 <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm kiếm</button>
             </div>
             <div class="row col-12 collapse w-100 mt-2 mb-2" id="collapseExample">

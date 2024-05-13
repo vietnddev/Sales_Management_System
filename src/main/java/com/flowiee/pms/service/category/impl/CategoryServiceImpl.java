@@ -16,6 +16,7 @@ import com.flowiee.pms.repository.category.CategoryHistoryRepository;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.system.AppImportRepository;
 import com.flowiee.pms.repository.system.FileStorageRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.MaterialService;
@@ -50,7 +51,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl extends BaseService implements CategoryService {
     private static final String mvModule = MODULE.CATEGORY.name();
 
     private final CategoryRepository categoryRepo;
@@ -165,7 +166,7 @@ public class CategoryServiceImpl implements CategoryService {
         switch (category.get().getType()) {
             case "UNIT":
                 List<ProductDTO> productByUnits = productInfoService.findAll(-1, -1, null, null, null, null, null, categoryId, null).getContent();
-                List<Material> materials = materialService.findAll(-1, -1, null, null, categoryId, null, null, null, null).getContent();
+                List<Material> materials = materialService.findAll(-1, -1, null, categoryId, null, null, null, null).getContent();
                 if (!productByUnits.isEmpty() || !materials.isEmpty()) {
                     return true;
                 }

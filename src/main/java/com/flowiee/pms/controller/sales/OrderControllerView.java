@@ -11,7 +11,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.sales.*;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.*;
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.exception.NotFoundException;
 

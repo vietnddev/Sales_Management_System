@@ -3,6 +3,7 @@ package com.flowiee.pms.service.dashboard.impl;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.model.*;
 import com.flowiee.pms.model.dto.CustomerDTO;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductStatisticsService;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.dashboard.DashboardService;
@@ -10,8 +11,6 @@ import com.flowiee.pms.service.dashboard.DashboardService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.service.sales.OrderStatisticsService;
 import com.flowiee.pms.utils.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +20,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class DashboardServiceImpl implements DashboardService {
-    private static final Logger logger = LoggerFactory.getLogger(DashboardServiceImpl.class);
-
+public class DashboardServiceImpl extends BaseService implements DashboardService {
     @Autowired
     private EntityManager entityManager;
     @Autowired
@@ -167,6 +164,9 @@ public class DashboardServiceImpl implements DashboardService {
         }
         entityManager.close();
 
+        //Revenue by products
+
+
         String revenueToday = CommonUtils.formatToVND(orderStatisticsService.findRevenueToday());
         String revenueThisMonth = CommonUtils.formatToVND(orderStatisticsService.findRevenueThisMonth());
         List<CustomerDTO> customersNew = customerService.findCustomerNewInMonth();
@@ -176,14 +176,14 @@ public class DashboardServiceImpl implements DashboardService {
         dashboard.setTotalProducts(productStatisticsService.countTotalProductsInStorage());
         dashboard.setRevenueToday(revenueToday);
         dashboard.setRevenueThisMonth(revenueThisMonth);
-        dashboard.setOrdersTodayQty(ordersToday.size());
+        dashboard.setOrdersNewTodayQty(ordersToday.size());
         dashboard.setListOrdersToday(ordersToday);
         dashboard.setCustomersNewInMonthQty(customersNew.size());
         dashboard.setListCustomersNewInMonth(customersNew);
         dashboard.setRevenueDayOfMonth(revenueDayOfMonth);
         dashboard.setRevenueMonthOfYear(revenueMonthOfYear);
         dashboard.setRevenueSalesChannel(revenueSalesChannel);
-        dashboard.setProductsTopSell(productsTopSell);
+        dashboard.setProductsTopSellQty(productsTopSell);
 
         logger.info("Finished loadDashboard(): " + CommonUtils.now("YYYY/MM/dd HH:mm:ss"));
         return dashboard;

@@ -3,6 +3,7 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.system.GroupAccountRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GroupAccountServiceImpl implements GroupAccountService {
+public class GroupAccountServiceImpl extends BaseService implements GroupAccountService {
     @Autowired
     private GroupAccountRepository groupAccountRepository;
 

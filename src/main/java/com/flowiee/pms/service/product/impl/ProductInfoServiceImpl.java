@@ -12,6 +12,7 @@ import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.product.ProductRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
@@ -19,6 +20,7 @@ import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.converter.ProductConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductInfoServiceImpl implements ProductInfoService {
+public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
     private static final Logger logger = LoggerFactory.getLogger(ProductInfoServiceImpl.class);
     private static final String mvModule = MODULE.PRODUCT.name();
 
@@ -68,7 +70,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
         Page<Product> products = productsRepo.findAll(pTxtSearch, pBrand, pProductType, pUnit, pStatus, pageable);
-        List<ProductDTO> productDTOs = ProductDTO.fromProducts(products);
+        List<ProductDTO> productDTOs = ProductConvert.convertToDTOs(products);
         this.setImageActiveAndLoadVoucherApply(productDTOs);
         this.setInfoVariantOfProduct(productDTOs);
         return new PageImpl<>(productDTOs, pageable, products.getTotalElements());
@@ -86,19 +88,20 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Override
     public Optional<ProductDTO> findById(Integer id) {
         Optional<Product> product = productsRepo.findById(id);
-        return product.map(p -> Optional.of(ProductDTO.fromProduct(p))).orElse(null);
+        return product.map(p -> Optional.of(ProductConvert.convertToDTO(p))).orElse(null);
     }
 
     @Override
     public ProductDTO save(ProductDTO product) {
         try {
-            product.setCreatedBy(CommonUtils.getUserPrincipal().getId());
-            product.setDescription(product.getDescription() != null ? product.getDescription() : "");
-            product.setStatus(AppConstants.PRODUCT_STATUS.I.name());
-            Product productSaved = productsRepo.save(product);
+            Product productToSave = ProductConvert.convertToEntity(product);
+            productToSave.setCreatedBy(CommonUtils.getUserPrincipal().getId());
+            productToSave.setDescription(product.getDescription() != null ? product.getDescription() : "");
+            productToSave.setStatus(AppConstants.PRODUCT_STATUS.I.name());
+            Product productSaved = productsRepo.save(productToSave);
             systemLogService.writeLog(mvModule, ACTION.PRO_PRD_C.name(), "Thêm mới sản phẩm: " + product);
             logger.info("Insert product success! {}", product);
-            return ProductDTO.fromProduct(productSaved);
+            return ProductConvert.convertToDTO(productSaved);
         } catch (RuntimeException ex) {
             throw new AppException("Insert product fail!", ex);
         }
@@ -106,7 +109,8 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Transactional
     @Override
-    public ProductDTO update(ProductDTO productToUpdate, Integer productId) {
+    public ProductDTO update(ProductDTO productDTO, Integer productId) {
+        Product productToUpdate = ProductConvert.convertToEntity(productDTO);
         if (productToUpdate.getDescription().isEmpty()) {
             productToUpdate.setDescription("-");
         }
@@ -114,15 +118,15 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         if (productBefore.isEmpty()) {
             throw new BadRequestException();
         }
-        productBefore.get().compareTo(productToUpdate).forEach((key, value) -> {
-            ProductHistory productHistory = new ProductHistory();
-            productHistory.setTitle("Update product");
-            productHistory.setProduct(new Product(productId));
-            productHistory.setField(key);
-            productHistory.setOldValue(value.substring(0, value.indexOf("#")));
-            productHistory.setNewValue(value.substring(value.indexOf("#") + 1));
-            productHistoryService.save(productHistory);
-        });
+//        productBefore.get().compareTo(productToUpdate).forEach((key, value) -> {
+//            ProductHistory productHistory = new ProductHistory();
+//            productHistory.setTitle("Update product");
+//            productHistory.setProduct(new Product(productId));
+//            productHistory.setField(key);
+//            productHistory.setOldValue(value.substring(0, value.indexOf("#")));
+//            productHistory.setNewValue(value.substring(value.indexOf("#") + 1));
+//            productHistoryService.save(productHistory);
+//        });
 
         productToUpdate.setId(productId);
         productToUpdate.setLastUpdatedBy(CommonUtils.getUserPrincipal().getUsername());
@@ -141,7 +145,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         }
         systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
         logger.info("Update product success! productId={}", productId);
-        return ProductDTO.fromProduct(productUpdated);
+        return ProductConvert.convertToDTO(productUpdated);
     }
 
     @Transactional

@@ -1,7 +1,7 @@
 package com.flowiee.pms.entity.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,12 +35,11 @@ public class SystemConfig extends BaseEntity implements Serializable {
 
 	@Column(name = "sort")
 	private Integer sort;
-	
-	public SystemConfig(Integer id, String key, String name, String value, Integer sort) {
-		super.id = id;
-		this.code = key;
+
+	public SystemConfig(String code, String name, String value) {
+		this.code = code;
+		this.name = name;
 		this.value = value;
-		this.sort = sort;
 	}
 
 	@Override

@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-12">
                             <!--Search tool-->
-                            <div th:replace="fragments :: searchTool('Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+                            <div th:replace="fragments :: searchTool('Y', 'Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
 
                             <div class="card">
                                 <div class="card-header">
@@ -205,7 +205,7 @@
                                 <td class="vertical-center">${(((pageNum - 1) * pageSize + 1) + index)}</td>
                                 <td class="vertical-center"><a href="/customer/${d.id}">${d.customerName}</a></td>
                                 <td class="vertical-center">${sex}</td>
-                                <td class="vertical-center">${d.birthday}</td>
+                                <td class="vertical-center">${d.dateOfBirth}</td>
                                 <td class="vertical-center">${d.phoneDefault}</td>
                                 <td class="vertical-center">${d.emailDefault}</td>
                                 <td class="vertical-center">${d.addressDefault}</td>

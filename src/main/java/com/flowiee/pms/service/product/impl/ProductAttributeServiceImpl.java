@@ -5,11 +5,10 @@ import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.repository.product.ProductAttributeRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.MessageUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductAttributeServiceImpl implements ProductAttributeService {
-    private static final Logger logger   = LoggerFactory.getLogger(ProductAttributeServiceImpl.class);
+public class ProductAttributeServiceImpl extends BaseService implements ProductAttributeService {
     private static final String mvModule = MODULE.PRODUCT.name();
 
     @Autowired

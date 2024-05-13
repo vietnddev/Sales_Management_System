@@ -31,6 +31,8 @@ public class PagesUtils {
     public static final String PRO_CUSTOMER = mdlPRODUCT + "/customer";
     public static final String PRO_CUSTOMER_DETAIL = mdlPRODUCT + "/customer-detail";
     public static final String PRO_SUPPLIER = mdlPRODUCT + "/supplier";
+    public static final String PRO_PROMOTION = mdlPRODUCT + "/promotion";
+    public static final String PRO_PROMOTION_DETAIL = mdlPRODUCT + "/promotion-detail";
 
     private static final String mdlSTORAGE = "/pages/storage";
     public static final String STG_DASHBOARD = mdlSTORAGE + "/dashboard";
@@ -42,4 +44,6 @@ public class PagesUtils {
     public static final String STG_TICKET_IMPORT_DETAIL = mdlSTORAGE + "/ticket-import-detail";
     public static final String STG_TICKET_EXPORT = mdlSTORAGE + "/ticket-export";
     public static final String STG_TICKET_EXPORT_DETAIL = mdlSTORAGE + "/ticket-export-detail";
+    public static final String STG_STORAGE = mdlSTORAGE + "/storage";
+    public static final String STG_STORAGE_DETAIL = mdlSTORAGE + "/storage-detail";
 }

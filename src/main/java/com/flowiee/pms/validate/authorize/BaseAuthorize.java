@@ -1,4 +1,4 @@
-package com.flowiee.pms.base;
+package com.flowiee.pms.validate.authorize;
 
 import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.exception.ForbiddenException;

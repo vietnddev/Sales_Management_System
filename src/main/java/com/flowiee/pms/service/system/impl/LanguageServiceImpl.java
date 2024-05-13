@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.*;
 
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import com.flowiee.pms.repository.system.LanguagesRepository;
 import com.flowiee.pms.service.system.LanguageService;
 
 @Service
-public class LanguageServiceImpl implements LanguageService {
+public class LanguageServiceImpl extends BaseService implements LanguageService {
 	private final LanguagesRepository languagesRepo;
 
 	@Autowired

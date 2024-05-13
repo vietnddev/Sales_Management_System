@@ -15,12 +15,14 @@ public interface TicketImportRepository extends JpaRepository<TicketImport, Inte
            "and (:supplierId is null or i.supplier.id=:supplierId) " +
            "and (:paymentMethod is null or i.paymentMethod.id=:paymentMethod) " +
            "and (:payStatus is null or i.paidStatus=:payStatus) " +
-           "and (:importStatus is null or i.status=:importStatus) ")
+           "and (:importStatus is null or i.status=:importStatus) " +
+           "and (:storageId is null or i.storage.id=:storageId)")
     Page<TicketImport> findAll(@Param("text") String text,
                                @Param("supplierId") Integer supplierId,
                                @Param("paymentMethod") Integer paymentMethod,
                                @Param("payStatus") String payStatus,
                                @Param("importStatus") String importStatus,
+                               @Param("storageId") Integer storageId,
                                Pageable pageable);
 
     @Query("from TicketImport i where i.status=:status and i.createdBy=:createdBy")

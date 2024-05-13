@@ -66,6 +66,19 @@ public class AppConstants {
     }
 
     @Getter
+    public enum TICKET_IM_STATUS {
+        DRAFT("Lưu nháp"),
+        COMPLETED("Hoàn thành"),
+        CANCEL("Hủy");
+
+        private final String label;
+
+        TICKET_IM_STATUS(String label) {
+            this.label = label;
+        }
+    }
+
+    @Getter
     public enum TICKET_EX_STATUS {
         DRAFT("Lưu nháp"),
         COMPLETED("Hoàn thành"),
@@ -169,6 +182,7 @@ public class AppConstants {
         URL_PRODUCT_SUPPLIER("/san-pham/supplier", "SIDEBAR", true),
         URL_PRODUCT_GALLERY("/gallery", "SIDEBAR", true),
         URL_PRODUCT_VOUCHER("/san-pham/voucher", "SIDEBAR", true),
+        URL_PRODUCT_PROMOTION("/promotion", "SIDEBAR", true),
         URL_STG_DASHBOARD("/stg", "SIDEBAR", true),
         URL_STG_DOCUMENT("/stg/doc", "SIDEBAR", true),
         URL_STG_MATERIAL("/stg/material", "SIDEBAR", true),
@@ -178,6 +192,7 @@ public class AppConstants {
         URL_SYS_LOG("/sys/log", "SIDEBAR", true),
         URL_SYS_GR_ACCOUNT("/sys/group-account", "SIDEBAR", true),
         URL_SYS_ACCOUNT("/sys/tai-khoan", "SIDEBAR", true),
+        URL_STG_STORAGE("/storage", "SIDEBAR", true),
 
         URL_STG_MATERIAL_IMPORT("/stg/material/import", "MAIN", true),
         URL_STG_MATERIAL_IMPORT_TEMPLATE( "/stg/material/template", "MAIN", true),

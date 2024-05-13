@@ -13,15 +13,14 @@ import com.flowiee.pms.entity.product.Material;
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query("from Material m " +
-           "where (:ticketImportId is null or m.ticketImport.id=:ticketImportId) " +
+           "where 1=1 " +
            "and (:supplierId is null or m.supplier.id=:supplierId) " +
            "and (:unitId is null or m.unit.id=:unitId) " +
            "and (:code is null or m.code=:code) " +
            "and (:name is null or m.name like %:name%) " +
            "and (:location is null or m.location like %:location%) " +
            "and (:status is null or m.status=:status)")
-    Page<Material> findAll(@Param("ticketImportId") Integer ticketImportId,
-                           @Param("supplierId") Integer supplierId,
+    Page<Material> findAll(@Param("supplierId") Integer supplierId,
                            @Param("unitId") Integer unitId,
                            @Param("code") String code,
                            @Param("name") String name,

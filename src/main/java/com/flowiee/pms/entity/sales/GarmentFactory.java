@@ -1,7 +1,7 @@
 package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductDetail;
 import lombok.*;
 
@@ -41,6 +41,10 @@ public class GarmentFactory extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "garmentFactory", fetch = FetchType.LAZY)
     private List<ProductDetail> listProductDetail;
+
+    public GarmentFactory(Integer id) {
+        this.id = id;
+    }
 
 	@Override
 	public String toString() {

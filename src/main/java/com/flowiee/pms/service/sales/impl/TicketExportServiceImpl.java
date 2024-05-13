@@ -8,6 +8,7 @@ import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.repository.sales.TicketExportRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.sales.TicketExportService;
@@ -23,12 +24,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TicketExportServiceImpl implements TicketExportService {
+public class TicketExportServiceImpl extends BaseService implements TicketExportService {
     @Autowired
     private TicketExportRepository ticketExportRepo;
     @Autowired
@@ -40,16 +41,16 @@ public class TicketExportServiceImpl implements TicketExportService {
 
     @Override
     public List<TicketExport> findAll() {
-        return this.findAll(-1, -1).getContent();
+        return this.findAll(-1, -1, null).getContent();
     }
 
     @Override
-    public Page<TicketExport> findAll(int pageSize, int pageNum) {
+    public Page<TicketExport> findAll(int pageSize, int pageNum, Integer storageId) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("exportTime").descending());
         }
-        return ticketExportRepo.findAll(pageable);
+        return ticketExportRepo.findAll(storageId, pageable);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class TicketExportServiceImpl implements TicketExportService {
 //        orderService.findOrderDetailsByOrderId(ticket.getOrderId()).forEach(d -> {
 //            productService.updateProductVariantQuantity(productService.findProductVariantById(d.getProductVariant().getId()).getSoLuongKho() - d.getSoLuong(), d.getProductVariant().getId());
 //        });
-        return null;
+        return ticketExportRepo.save(ticket);
     }
 
     @Transactional
@@ -84,7 +85,7 @@ public class TicketExportServiceImpl implements TicketExportService {
         TicketExport ticketExport = new TicketExport();
         ticketExport.setTitle("Xuất hàng cho đơn " + orderDTO.getCode());
         ticketExport.setExporter(CommonUtils.getUserPrincipal().getUsername());
-        ticketExport.setExportTime(new Date());
+        ticketExport.setExportTime(LocalDateTime.now());
         ticketExport.setNote(null);
         ticketExport.setStatus("DRAFT");
         TicketExport ticketExportSaved = ticketExportRepo.save(ticketExport);

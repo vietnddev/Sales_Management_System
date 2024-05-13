@@ -22,7 +22,8 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <li class="nav-header">
-                                <strong>QUẢN LÝ BÁN HÀNG</strong></li>
+                                <strong>QUẢN LÝ BÁN HÀNG</strong>
+                            </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT}}" class="nav-link"><i class="fa-solid fa-shirt nav-icon mr-2"></i><p>Sản phẩm</p></a>
                             </li>
@@ -33,13 +34,16 @@
                                 <a th:href="@{${URL_PRODUCT_CREATE_ORDER}}" class="nav-link"><i class="fa-solid fa-file-invoice-dollar mr-2"></i><p>Bán hàng</p></a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{${URL_PRODUCT_VOUCHER}}" class="nav-link"><i class="fa-solid fa-gifts mr-2"></i><p>Voucher</p></a>
+                                <a th:href="@{${URL_PRODUCT_VOUCHER}}" class="nav-link"><i class="fa-solid fa-ticket mr-2"></i><p>Voucher</p></a>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT_CUSTOMER}}" class="nav-link"><i class="fa-solid fa-user-tag mr-2"></i><p>Khách hàng</p></a>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT_SUPPLIER}}" class="nav-link"><i class="fa-solid fa-user-tag mr-2"></i><p>Nhà cung cấp</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{${URL_PRODUCT_PROMOTION}}" class="nav-link"><i class="fa-solid fa-percent mr-2"></i></i><p>Khuyến mãi</p></a>
                             </li>
 
                             <li class="nav-header">
@@ -54,6 +58,9 @@
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_STG_MATERIAL}}" class="nav-link"><i class="fa-solid fa-scroll nav-icon mr-2"></i><p>Nguyên vật liệu</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{${URL_STG_STORAGE}}" class="nav-link"><i class="fa-solid fa-warehouse nav-icon mr-2"></i><p>Kho</p></a>
                             </li>
 
                             <li class="nav-header">

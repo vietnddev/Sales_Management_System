@@ -14,23 +14,17 @@ import java.util.List;
 
 @Getter
 @Setter
-public class TicketImportDTO implements Serializable {
+public class TicketImportDTO extends TicketImport implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
-    private String title;
     private Integer supplierId;
     private String supplierName;
     private Integer paymentMethodId;
     private String paymentMethodName;
-    private String importer;
-    private Date importTime;
-    private String note;
-    private String status;
-    private List<ProductVariantDTO> listProductDTO;
+    //private List<ProductVariantDTO> listProductDTO;
     private List<ProductVariantTemp> listProductVariantTemp;
-    private List<MaterialDTO> listMaterialDTO;
+    //private List<MaterialDTO> listMaterialDTO;
     private List<MaterialTemp> listMaterialTemp;
 
     public static TicketImportDTO fromTicketImport(TicketImport ticketImport) {
@@ -49,9 +43,9 @@ public class TicketImportDTO implements Serializable {
         dto.setImportTime(ticketImport.getImportTime());
         dto.setNote(ticketImport.getNote());
         dto.setStatus(ticketImport.getStatus());
-        dto.setListProductDTO(ProductVariantDTO.fromProductVariants(ticketImport.getListProductDetails()));
+        //dto.setListProductDTO(ProductVariantDTO.fromProductVariants(ticketImport.getListProductDetails()));
         dto.setListProductVariantTemp(ticketImport.getListProductVariantTemps());
-        dto.setListMaterialDTO(MaterialDTO.fromMaterials(ticketImport.getListMaterials()));
+        //dto.setListMaterialDTO(MaterialDTO.fromMaterials(ticketImport.getListMaterials()));
         dto.setListMaterialTemp(ticketImport.getListMaterialTemps());
         return dto;
     }

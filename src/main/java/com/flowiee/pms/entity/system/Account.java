@@ -2,9 +2,8 @@ package com.flowiee.pms.entity.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
-import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.entity.sales.Order;
 import lombok.*;
@@ -61,6 +60,11 @@ public class Account extends BaseEntity implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_account")
 	private GroupAccount groupAccount;
+
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "branch_id", nullable = false)
+	private Branch branch;
 
 	@Column(name = "status")
 	private boolean status;

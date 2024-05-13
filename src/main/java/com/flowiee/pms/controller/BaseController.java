@@ -1,4 +1,4 @@
-package com.flowiee.pms.base;
+package com.flowiee.pms.controller;
 
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.utils.CommonUtils;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class BaseController {

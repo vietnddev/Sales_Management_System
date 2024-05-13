@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.repository.system.FlowieeConfigRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.system.ConfigService;
 
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ConfigServiceImpl implements ConfigService {
+public class ConfigServiceImpl extends BaseService implements ConfigService {
     private final FlowieeConfigRepository sysConfigRepo;
     private final CategoryService categoryService;
     private final LanguageService languageService;
@@ -48,7 +49,7 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public SystemConfig update(SystemConfig systemConfig, Integer id) {
         systemConfig.setId(id);
-        logger.info("Update config success! " + systemConfig.toString());
+        logger.info("Update config success! {}", systemConfig.toString());
         return sysConfigRepo.save(systemConfig);
     }
 
@@ -87,5 +88,15 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public List<SystemConfig> getSystemConfigs(String[] configCodes) {
         return List.of();
+    }
+
+    @Override
+    public SystemConfig getSystemConfig(String configCode) {
+        return sysConfigRepo.findByCode(configCode);
+    }
+
+    @Override
+    public List<SystemConfig> getSystemConfigs(List<String> configCodes) {
+        return sysConfigRepo.findByCode(configCodes);
     }
 }

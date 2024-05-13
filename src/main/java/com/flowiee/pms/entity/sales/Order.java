@@ -3,7 +3,7 @@ package com.flowiee.pms.entity.sales;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
@@ -59,6 +59,18 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "amount_discount")
 	private BigDecimal amountDiscount;
 
+	@Column(name = "shipping_cost")
+	private BigDecimal shippingCost;
+
+	@Column(name = "is_gift_wrapped")
+	private Boolean isGiftWrapped;
+
+	@Column(name = "gift_wrap_cost")
+	private BigDecimal giftWrapCost;
+
+	@Column(name = "packaging_cost")
+	private BigDecimal packagingCost;
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sales")
@@ -87,6 +99,9 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "payment_amount")
 	private Float paymentAmount;
 
+	@Column(name = "cod_fee")
+	private BigDecimal codFee;
+
 //	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 //	private List<OrderPay> listOrderPay;
 
@@ -99,6 +114,12 @@ public class Order extends BaseEntity implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status", nullable = false)
 	private Category trangThaiDonHang;
+
+	@Column(name = "cancellation_date")
+	private LocalDateTime cancellationDate;
+
+	@Column(name = "cancellation_reason")
+	private String cancellationReason;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)

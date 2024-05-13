@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.PagesUtils;
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
 

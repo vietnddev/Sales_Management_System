@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.system;
 
-import com.flowiee.pms.base.BaseController;
+import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.system.ConfigService;

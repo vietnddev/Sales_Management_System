@@ -9,10 +9,10 @@ import com.flowiee.pms.entity.sales.CustomerContact;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.entity.sales.Customer;
-import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.repository.sales.OrderRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl extends BaseService implements CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
@@ -89,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new NotFoundException("Customer not found!");
         }
         Customer customer = Customer.fromCustomerDTO(dto);
-        customer.setCreatedBy(CommonUtils.getUserPrincipal().getId());
+        customer.setCreatedBy(dto.getCreatedBy() != null ? dto.getCreatedBy() : CommonUtils.getUserPrincipal().getId());
         Customer customerInserted = customerRepository.save(customer);
         if (dto.getPhoneDefault() != null) {
             CustomerContact customerContact = new CustomerContact();

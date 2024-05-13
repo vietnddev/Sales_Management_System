@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.MaterialHistory;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.product.MaterialRepository;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.MaterialHistoryService;
 import com.flowiee.pms.service.product.MaterialService;
 
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MaterialServiceImpl implements MaterialService {
+public class MaterialServiceImpl extends BaseService implements MaterialService {
     @Autowired
     private MaterialRepository materialRepository;
     @Autowired
@@ -28,16 +29,16 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public List<Material> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null, null, null).getContent();
+        return this.findAll(-1, -1, null, null, null, null, null, null).getContent();
     }
 
     @Override
-    public Page<Material> findAll(int pageSize, int pageNum, Integer ticketImportId, Integer supplierId, Integer unitId, String code, String name, String location, String status) {
+    public Page<Material> findAll(int pageSize, int pageNum, Integer supplierId, Integer unitId, String code, String name, String location, String status) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
         }
-        return materialRepository.findAll(ticketImportId, supplierId, unitId, code, name, location, status, pageable);
+        return materialRepository.findAll(supplierId, unitId, code, name, location, status, pageable);
     }
 
     @Override

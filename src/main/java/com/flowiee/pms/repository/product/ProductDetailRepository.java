@@ -17,7 +17,6 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
            "left join Product p on p.id = v.product.id " +
            "left join GarmentFactory g on g.id = v.garmentFactory.id " +
            "left join Supplier sp on sp.id = v.supplier.id " +
-           "left join TicketImport ti on ti.id = v.ticketImport.id " +
            "left join Category c on c.id = v.color.id and c.type = 'COLOR' " +
            "left join Category s on s.id = v.size.id and s.type = 'SIZE' " +
            "left join Category f on f.id = v.fabricType.id and f.type = 'FABRIC_TYPE' " +
@@ -26,10 +25,8 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
            "and (:colorId is null or c.id=:colorId) " +
            "and (:sizeId is null or s.id=:sizeId) " +
            "and (:fabricTypeId is null or f.id=:fabricTypeId) " +
-           "and (:ticketImportId is null or ti.id=:ticketImportId) " +
            "order by v.variantName, s.name, c.name")
     List<ProductDetail> findAll(@Param("productId") Integer productId,
-                           @Param("ticketImportId") Integer ticketImportId,
                            @Param("colorId") Integer colorId,
                            @Param("sizeId") Integer sizeId,
                            @Param("fabricTypeId") Integer fabricTypeId,
@@ -38,10 +35,10 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
     @Query("from ProductDetail b where b.product.id=:productId and b.color.id=:colorId and b.size.id=:sizeId and b.fabricType.id=:fabricTypeId")
     ProductDetail findByColorAndSize(@Param("productId") Integer productId, @Param("colorId") Integer colorId, @Param("sizeId")  Integer sizeId, @Param("fabricTypeId")  Integer fabricTypeId);
 
-    @Query("select nvl(p.storageQty, 0) from ProductDetail p where p.product.id=:productId and p.color.id=:colorId and p.size.id=:sizeId")
+    @Query("select sum(nvl(p.storageQty, 0)) from ProductDetail p where p.product.id=:productId and p.color.id=:colorId and p.size.id=:sizeId")
     Integer findQuantityBySizeOfEachColor(@Param("productId") Integer productId, @Param("colorId") Integer colorId, @Param("sizeId") Integer sizeId);
 
-    @Query("select SUM(nvl(p.soldQty, 0)) as totalQtySell from ProductDetail p where p.product.id=:productId")
+    @Query("select sum(nvl(p.soldQty, 0)) as totalQtySell from ProductDetail p where p.product.id=:productId")
     Integer findTotalQtySell(@Param("productId") Integer productId);
 
     @Modifying
@@ -53,8 +50,25 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
     void updateQuantityDecrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
 
     @Modifying
-    @Query("update ProductDetail p set p.originalPrice=:originalPrice, p.discountPrice=:discountPrice where p.id=:productVariantId")
-    void updatePrice(@Param("originalPrice") BigDecimal originalPrice, @Param("discountPrice") BigDecimal discountPrice, @Param("productVariantId") Integer productVariantId);
+    @Query("update ProductDetail p set " +
+           "p.originalPrice=:originalPrice, " +
+           "p.discountPrice=:discountPrice, " +
+           "p.retailPrice=:retailPrice, " +
+           "p.retailPriceDiscount=:retailPriceDiscount, " +
+           "p.wholesalePrice=:wholesalePrice, " +
+           "p.wholesalePriceDiscount=:wholesalePriceDiscount, " +
+           "p.purchasePrice=:purchasePrice, " +
+           "p.costPrice=:costPrice " +
+           "where p.id=:productVariantId")
+    void updatePrice(@Param("originalPrice") BigDecimal originalPrice,
+                     @Param("discountPrice") BigDecimal discountPrice,
+                     @Param("retailPrice") BigDecimal retailPrice,
+                     @Param("retailPriceDiscount") BigDecimal retailPriceDiscount,
+                     @Param("wholesalePrice") BigDecimal wholesalePrice,
+                     @Param("wholesalePriceDiscount") BigDecimal wholesalePriceDiscount,
+                     @Param("purchasePrice") BigDecimal purchasePrice,
+                     @Param("costPrice") BigDecimal costPrice,
+                     @Param("productVariantId") Integer productVariantId);
 
     @Query("select sum(p.storageQty) from ProductDetail p where p.status = 'A'")
     Integer countTotalQuantity();

@@ -2,7 +2,12 @@ package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -39,11 +44,26 @@ public class PromotionInfo extends BaseEntity implements Serializable {
     @Column(name = "discount_price_max")
     private BigDecimal discountPriceMax;
 
-    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
+
+    public static PromotionInfo fromDTO(PromotionInfoDTO inputDTO) {
+        PromotionInfo promotionInfo = new PromotionInfo();
+        promotionInfo.setId(inputDTO.getId());
+        promotionInfo.setTitle(inputDTO.getTitle());
+        promotionInfo.setDescription(inputDTO.getDescription());
+        promotionInfo.setDiscountPercent(inputDTO.getDiscountPercent());
+        promotionInfo.setDiscountPrice(inputDTO.getDiscountPrice());
+        promotionInfo.setDiscountPriceMax(inputDTO.getDiscountPriceMax());
+        return promotionInfo;
+    }
 }

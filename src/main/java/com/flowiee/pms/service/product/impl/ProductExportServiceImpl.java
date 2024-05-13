@@ -2,6 +2,7 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductExportService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.impl.OrderExportServiceImpl;
@@ -26,7 +27,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
-public class ProductExportServiceImpl implements ProductExportService {
+public class ProductExportServiceImpl extends BaseService implements ProductExportService {
     Logger logger = LoggerFactory.getLogger(OrderExportServiceImpl.class);
 
     @Autowired

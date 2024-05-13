@@ -2,7 +2,7 @@ package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.ProductDetail;
@@ -72,6 +72,10 @@ public class Supplier extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private List<Material> listMaterial;
+
+    public Supplier(Integer id) {
+        this.id = id;
+    }
 
 	@Override
 	public String toString() {

@@ -10,6 +10,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.repository.sales.VoucherInfoRepository;
 
+import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class VoucherInfoServiceImpl implements VoucherService {
+public class VoucherInfoServiceImpl extends BaseService implements VoucherService {
     @Autowired
     private VoucherInfoRepository voucherInfoRepo;
     @Autowired

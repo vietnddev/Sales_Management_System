@@ -9,4 +9,7 @@ public class ShopInfo {
     private String phoneNumber;
     private String address;
     private String description;
+    private String returnPolicy;
+    private String refundPolicy;
+    private String logoUrl;
 }

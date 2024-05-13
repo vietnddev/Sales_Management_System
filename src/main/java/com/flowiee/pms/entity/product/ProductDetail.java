@@ -3,16 +3,14 @@ package com.flowiee.pms.entity.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.sales.Supplier;
 import com.flowiee.pms.entity.sales.GarmentFactory;
-import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.model.dto.ProductVariantDTO;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -21,6 +19,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,11 +72,6 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_import_id")
-    private TicketImport ticketImport;
-
     @Column(name = "quantity_stg", nullable = false)
     private Integer storageQty;
 
@@ -114,6 +108,33 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @Column(name = "weight")
     private String weight;
 
+    @Column(name = "dimensions")
+    private String dimensions;
+
+    @Column(name = "sku")
+    private String sku;
+
+    @Column(name = "warranty_period")
+    private Integer warrantyPeriod;
+
+    @Column(name = "sole_material")
+    private String soleMaterial;
+
+    @Column(name = "heel_height")
+    private String heelHeight;
+
+    @Column(name = "discontinued_date")
+    private LocalDate discontinuedDate;
+
+    @Column(name = "is_limited_edition")
+    private Boolean isLimitedEdition;
+
+    @Column(name = "pattern")
+    private String pattern;
+
+    @Column(name = "note")
+    private String note;
+
     @Column(name = "status", nullable = false)
     private String status;
 
@@ -140,6 +161,11 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "productDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProductHistory> listProductHistories;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<ProductVariantTemp> listProductVariantTemp;
 
     public ProductDetail(int id) {
         super.id = id;
@@ -168,5 +194,5 @@ public class ProductDetail extends BaseEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "ProductVariant [id=" + super.id + ", variantCode=" + variantCode + ", variantName=" + variantName + ", status=" + status;
-	}     
+	}
 }

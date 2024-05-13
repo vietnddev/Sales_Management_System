@@ -2,11 +2,10 @@ package com.flowiee.pms.entity.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.model.dto.ProductDTO;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,9 +14,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Builder
 @Entity
@@ -49,6 +46,24 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "product_name", nullable = false)
     private String productName;
 
+    @Column(name = "origin_country")
+    private String originCountry;
+
+    @Column(name = "release_date")
+    private LocalDate releaseDate;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "storage_instructions")
+    private String storageInstructions;
+
+    @Column(name = "uv_protection")
+    private String uvProtection;
+
+    @Column(name = "is_machine_washable")
+    private Boolean isMachineWashable;
+
     @Lob
     @Column(name = "description", length = 30000, columnDefinition = "CLOB")
     private String description;
@@ -79,38 +94,6 @@ public class Product extends BaseEntity implements Serializable {
     public Product(Integer id, String name) {
         super.id = id;
         this.productName = name;
-    }
-
-    public Map<String, String> compareTo(Product productToCompare) {
-        Map<String, String> map = new HashMap<>();
-        if (!this.productType.getName().equals(productToCompare.getProductType().getName())) {
-            map.put("Product type", this.productType.getName() + "#" + productToCompare.getProductType().getName());
-        }
-        if (!this.brand.getName().equals(productToCompare.getBrand().getName())) {
-            map.put("Brand name", this.brand.getName() + "#" + productToCompare.getBrand().getName());
-        }
-        if (!this.unit.getName().equals(productToCompare.getUnit().getName())) {
-            map.put("Unit name", this.unit.getName() + "#" + productToCompare.getUnit().getName());
-        }
-        if (!this.productName.equals(productToCompare.getProductName())) {
-            map.put("Product name", this.productName + "#" + productToCompare.getProductName());
-        }
-        if (this.getDescription() == null) this.setDescription("-");
-        if (!this.description.equals(productToCompare.getDescription())) {
-            String descriptionOld = this.description.length() > 9999 ? this.description.substring(0, 9999) : this.description;
-            String descriptionNew = productToCompare.getDescription().length() > 9999 ? productToCompare.getDescription().substring(0, 9999) : productToCompare.getDescription();
-            map.put("Product description", descriptionOld + "#" + descriptionNew);
-        }
-        if (!this.status.equals(productToCompare.getStatus())) {
-            map.put("Product status", this.status + "#" + productToCompare.getStatus());
-        }
-//        if ((this.imageActive != null && productToCompare.getImageActive() != null) && !this.imageActive.getId().equals(productToCompare.getImageActive().getId())) {
-//            map.put("Image active", this.imageActive.getId() + "#" + productToCompare.getId());
-//        }
-        if ((this.listVariants != null && productToCompare.getListVariants() != null) && this.listVariants.size() < productToCompare.getListVariants().size()) {
-            map.put("Insert new product variant", "#");
-        }
-        return map;
     }
 
 	@Override

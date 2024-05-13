@@ -3,12 +3,10 @@ package com.flowiee.pms.entity.sales;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.base.BaseEntity;
+import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.category.Category;
-import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.MaterialTemp;
-import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
@@ -18,7 +16,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -35,6 +33,7 @@ public class TicketImport extends BaseEntity implements Serializable {
 	@Column(name = "title", nullable = false)
     private String title;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
@@ -42,6 +41,7 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Column(name = "discount")
     private Float discount;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method")
     private Category paymentMethod;
@@ -59,8 +59,9 @@ public class TicketImport extends BaseEntity implements Serializable {
 //    @JsonSerialize(using = DateSerializer.class)
 //    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     @Column(name = "import_time")
-    private Date importTime;
+    private LocalDateTime importTime;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "storage_id", nullable = false)
     private Storage storage;
@@ -71,13 +72,13 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<Material> listMaterials;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "", fetch = FetchType.LAZY)
+//    private List<Material> listMaterials;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<ProductDetail> listProductDetails;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
+//    private List<ProductDetail> listProductDetails;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
