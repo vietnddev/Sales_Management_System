@@ -15,6 +15,18 @@ public interface CategoryService extends CrudService<Category> {
 
     Page<Category> findSubCategory(String categoryType, Integer parentId, int pageSize, int pageNum);
 
+    List<Category> findUnits();
+
+    List<Category> findColors();
+
+    List<Category> findSizes();
+
+    List<Category> findSalesChannels();
+
+    List<Category> findPaymentMethods();
+
+    List<Category> findOrderStatus();
+
     Boolean categoryInUse(Integer categoryId);
     
     String importData(MultipartFile fileImport, String categoryType);

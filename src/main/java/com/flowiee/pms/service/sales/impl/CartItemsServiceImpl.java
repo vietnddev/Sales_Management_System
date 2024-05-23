@@ -2,7 +2,7 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.repository.sales.ItemsRepository;
+import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.utils.MessageUtils;
@@ -16,26 +16,26 @@ import java.util.Optional;
 @Service
 public class CartItemsServiceImpl extends BaseService implements CartItemsService {
     @Autowired
-    private ItemsRepository itemsRepository;
+    private CartItemsRepository cartItemsRepository;
 
     @Override
     public List<Items> findAll() {
-        return itemsRepository.findAll();
+        return cartItemsRepository.findAll();
     }
 
     @Override
     public Optional<Items> findById(Integer itemId) {
-        return itemsRepository.findById(itemId);
+        return cartItemsRepository.findById(itemId);
     }
 
     @Override
     public Integer findQuantityOfItem(Integer cartId, Integer productVariantId) {
-        return itemsRepository.findQuantityByProductVariantId(cartId, productVariantId);
+        return cartItemsRepository.findQuantityByProductVariantId(cartId, productVariantId);
     }
 
     @Override
     public Items findItemByCartAndProductVariant(Integer cartId, Integer productVariantId) {
-        return itemsRepository.findByCartAndProductVariant(cartId, productVariantId);
+        return cartItemsRepository.findByCartAndProductVariant(cartId, productVariantId);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         if (items == null || items.getOrderCart() == null || items.getProductDetail() == null) {
             throw new BadRequestException();
         }
-        return itemsRepository.save(items);
+        return cartItemsRepository.save(items);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return itemsRepository.save(entity);
+        return cartItemsRepository.save(entity);
     }
 
     @Override
@@ -60,19 +60,19 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         if (this.findById(itemId).isEmpty()) {
             throw new BadRequestException();
         }
-        itemsRepository.deleteById(itemId);
+        cartItemsRepository.deleteById(itemId);
         return MessageUtils.DELETE_SUCCESS;
     }
 
     @Transactional
     @Override
     public void increaseItemQtyInCart(Integer itemId, int quantity) {
-        itemsRepository.updateItemQty(itemId, quantity);
+        cartItemsRepository.updateItemQty(itemId, quantity);
     }
 
     @Transactional
     @Override
     public void deleteAllItems() {
-        itemsRepository.deleteAllItems();
+        cartItemsRepository.deleteAllItems();
     }
 }

@@ -21,7 +21,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
            "and (:birthday is null or c.dateOfBirth=:birthday) " +
            "and (:phone is null or (cc.code = 'P' and cc.isDefault = 'Y' and cc.status = true and cc.value=:phone)) " +
            "and (:email is null or (cc.code = 'E' and cc.isDefault = 'Y' and cc.status = true and cc.value=:email)) " +
-           "and (:address is null or (cc.code = 'A' and cc.isDefault = 'Y' and cc.status = true and cc.value=:address))")
+           "and (:address is null or (cc.code = 'A' and cc.isDefault = 'Y' and cc.status = true and cc.value=:address)) " +
+           "order by c.customerName")
     Page<Customer> findAll(@Param("name") String name,
                            @Param("sex") String sex,
                            @Param("birthday") Date birthday,

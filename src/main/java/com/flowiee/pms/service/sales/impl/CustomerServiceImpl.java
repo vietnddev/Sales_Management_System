@@ -16,7 +16,6 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
-import com.flowiee.pms.service.system.SystemLogService;
 
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
@@ -40,8 +39,6 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     private CustomerContactRepository customerContactRepository;
     @Autowired
     private CustomerContactService customerContactService;
-    @Autowired
-    private SystemLogService systemLogService;
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -119,7 +116,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             customerContactService.save(customerContact);
         }
         systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_C.name(), "Thêm mới khách hàng: " + customer.toString());
-        logger.info("Create customer {}", customer.toString());
+        logger.info("Create customer: {}", customer.toString());
         return CustomerDTO.fromCustomer(customerInserted);
     }
 

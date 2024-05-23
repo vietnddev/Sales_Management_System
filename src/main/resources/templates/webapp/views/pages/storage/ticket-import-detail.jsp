@@ -22,12 +22,19 @@
             <div class="col-12" style="padding-left: 15px; padding-right: 8px; padding-bottom: 0px; margin-bottom: 0px">
                 <section class="card" style="height: 70px">
                     <div class="form-group row justify-content-between p-3">
-                        <div class="col row">
-                            <label class="col-2 font-weight-bold" for="titleField" style="display: flex; align-items: center">Tên phiếu</label>
-                            <input class="col-10 form-control" type="text" id="titleField"/>
+                        <div class="col-9">
+                            <div class="row">
+                                <label class="col-2 font-weight-bold" for="titleField" style="display: flex; align-items: center">Tên phiếu</label>
+                                <input class="col-10 form-control" type="text" id="titleField"/>
+                            </div>
                         </div>
-                        <div class="col row justify-content-end">
-                            <button type="button" class="col-3 justify-content-end btn btn-info" id="btnUpdateTicket"><i class="fa-solid fa-check mr-2"></i>Cập nhật</button>
+                        <div class="col-3 row justify-content-end">
+                            <div class="col-6">
+                                <button class="btn btn-info w-100" type="button" id="btnUpdateTicket"><i class="fa-solid fa-check mr-1"></i>Cập nhật</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-success w-100" type="button" data-toggle="modal" data-target="#modalUploadFile"><i class="fa-solid fa-upload"></i></button>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -40,7 +47,9 @@
                         <div class="card p-3" style="max-height: 350px; overflow: auto">
                             <div class="row">
                                 <div class="col-sm-10 form-group">
-                                    <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" id="productVariantField" required></select>
+                                    <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" id="productVariantField" required>
+                                        <option th:each="list : ${listProductVariant}" th:value="${list.id}" th:text="${list.variantName + ' - hiện còn: ' + list.storageQty}"></option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-2 form-group">
                                     <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px; font-weight: bold" id="btnAddProduct">Thêm</button>
@@ -52,7 +61,9 @@
                                         <tr>
                                             <th>#</th>
                                             <th class="text-left">Tên sản phẩm</th>
+                                            <th>Giá nhập</th>
                                             <th>Số lượng</th>
+                                            <th>Thành tiền</th>
                                             <th>Ghi chú</th>
                                             <th></th>
                                         </tr>
@@ -61,7 +72,9 @@
                                         <tr th:each="list, index : ${ticketImportDetail.listProductVariantTemps}">
                                             <td th:text="${index.index + 1}"></td>
                                             <td th:text="${list.productVariant.variantName}"></td>
+                                            <td th:text="${list.purchasePrice}"></td>
                                             <td th:text="${list.quantity}"></td>
+                                            <td th:text="${list.purchasePrice != null ? list.purchasePrice * list.quantity : ''}"></td>
                                             <td th:text="${list.note}"></td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="'#modalUpdateItems_' + ${list.id}">Cập nhật</button>
@@ -81,7 +94,9 @@
                         <div class="card p-3" style="min-height: 366px; max-height: 366px; overflow: auto">
                             <div class="row">
                                 <div class="col-sm-10 form-group">
-                                    <select class="form-control select2" multiple="multiple" data-placeholder="Chọn nguyên vật liệu" style="width: 100%;" id="materialField" required></select>
+                                    <select class="form-control select2" multiple="multiple" data-placeholder="Chọn nguyên vật liệu" style="width: 100%;" id="materialField" required>
+                                        <option th:each="list : ${listMaterial}" th:value="${list.id}" th:text="${list.name + ' - hiện còn: ' + list.quantity}"></option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-2 form-group">
                                     <button type="submit" class="btn btn-sm btn-primary w-100" style="height: 38px; font-weight: bold" id="btnAddMaterial">Thêm</button>
@@ -93,7 +108,9 @@
                                         <tr>
                                             <th>#</th>
                                             <th class="text-left">Tên nguyên vật liệu</th>
+                                            <th>Giá nhập</th>
                                             <th>Số lượng</th>
+                                            <th>Thành tiền</th>
                                             <th>Ghi chú</th>
                                             <th></th>
                                         </tr>
@@ -102,7 +119,9 @@
                                         <tr th:each="list, index : ${ticketImportDetail.listMaterialTemps}">
                                             <td th:text="${index.index + 1}"></td>
                                             <td th:text="${list.material.name}"></td>
+                                            <td th:text="${list.purchasePrice}"></td>
                                             <td th:text="${list.quantity}"></td>
+                                            <td th:text="${list.purchasePrice != null ? list.purchasePrice * list.quantity : ''}"></td>
                                             <td th:text="${list.note}"></td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="'#modalUpdateItems_' + ${list.id}">Cập nhật</button>
@@ -116,6 +135,26 @@
                         </div>
                     </section>
                     <!-- End section nguyên vật liệu -->
+
+                    <!-- Section image -->
+                    <section class="col-12">
+                        <div class="card p-3" style="min-height: 366px; max-height: 366px; overflow: auto">
+                            <div class="row">
+                                <div class="col-2 mb-2" th:each="list : ${ticketImportDetail.listImages}">
+                                    <div class="card border" style="height: 186px">
+                                        <div class="card-body product-image-thumb" style="margin: auto; border: none">
+                                            <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.storageName}}"
+                                                 th:imageId="${list.id}" style="border-radius: 5px" alt="Product Image" class="sub-image" >
+                                        </div>
+                                        <div class="card-footer row">
+                                            <i style="cursor: pointer" th:imageId="${list.id}" class="fa-solid fa-trash text-danger col btn-delete-image"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- End section image -->
                 </div>
 
                 <!-- Section form thông tin -->
@@ -131,7 +170,11 @@
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Người nhận hàng</span>
-                            <input class="col-7 form-control" id="importerField" disabled></input>
+                            <input class="col-7 form-control" id="importerField" disabled/>
+                        </div>
+                        <div class="form-group row" style="padding-right: 8px">
+                            <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Tổng giá trị</span>
+                            <input class="col-7 form-control" id="totalValueField" th:value="${ticketImportDetail.totalValue}" disabled/>
                         </div>
                         <div class="form-group">
                             <label for="noteField">Ghi chú</label>
@@ -151,6 +194,7 @@
     <div th:replace="footer :: footer"></div>
 
     <div th:replace="modal_fragments :: confirm_modal"></div>
+    <div th:replace="fragments :: uploadFileModal"></div>
 
     <aside class="control-sidebar control-sidebar-dark"></aside>
 
@@ -173,8 +217,6 @@
 
         function init() {
             findTickImportDetail();
-            loadProductVariantsToSelect();
-            loadMaterialsToSelect();
             loadSuppliers();
             loadPaymentMethods();
             loadPaymentStatuses();
@@ -202,32 +244,6 @@
                     } else {
                         $("#statusField").append(`<option value="DRAFT">Nháp</option><option value="COMPLETED">Hoàn thành</option><option value="CANCEL">Hủy</option>`);
                     }
-                }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");
-            });
-        }
-
-        function loadProductVariantsToSelect() {
-            let apiURL = mvHostURLCallApi + "/product/variant/all";
-            $.get(apiURL, function (response) {
-                if (response.status === "OK") {
-                    $.each(response.data, function (index, d) {
-                        $('#productVariantField').append(`<option value="${d.id}">${d.variantName + ' - ' + d.storageQty}</option>`);
-                    });
-                }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");
-            });
-        }
-
-        function loadMaterialsToSelect() {
-            let apiURL = mvHostURLCallApi + "/storage/material/all";
-            $.get(apiURL, function (response) {
-                if (response.status === "OK") {
-                    $.each(response.data, function (index, d) {
-                        $('#materialField').append(`<option value="${d.id}">${d.name}</option>`);
-                    });
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
@@ -431,6 +447,64 @@
             //Date range picker
             $('#reservation').daterangepicker()
         })
+    </script>
+
+    <script> // Upload file
+    // DropzoneJS Demo Code Start
+    Dropzone.autoDiscover = true
+
+    // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+    var previewNode = document.querySelector("#template")
+    previewNode.id = ""
+    var previewTemplate = previewNode.parentNode.innerHTML
+    previewNode.parentNode.removeChild(previewNode)
+
+    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+        url: "/uploads/ticket-import/[[${ticketImportId}]]", // Gọi tới API trong spring để xử lý file
+        thumbnailWidth: 80,
+        thumbnailHeight: 80,
+        parallelUploads: 20,
+        previewTemplate: previewTemplate,
+        autoQueue: false, // Make sure the files aren't queued until manually added
+        previewsContainer: "#previews", // Define the container to display the previews
+        clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+    })
+
+    myDropzone.on("addedfile", function (file) {
+        // Hookup the start button
+        file.previewElement.querySelector(".start").onclick = function () {
+            myDropzone.enqueueFile(file)
+        }
+    })
+
+    // Update the total progress bar
+    myDropzone.on("totaluploadprogress", function (progress) {
+        document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+    })
+
+    myDropzone.on("sending", function (file) {
+        // Show the total progress bar when upload starts
+        document.querySelector("#total-progress").style.opacity = "1"
+        // And disable the start button
+        file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+    })
+
+    // Hide the total progress bar when nothing's uploading anymore
+    myDropzone.on("queuecomplete", function (progress) {
+        document.querySelector("#total-progress").style.opacity = "0"
+    })
+
+    // Setup the buttons for all transfers
+    // The "add files" button doesn't need to be setup because the config
+    // `clickable` has already been specified.
+    document.querySelector("#actions .start").onclick = function () {
+        myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+    }
+    document.querySelector("#actions .cancel").onclick = function () {
+        myDropzone.removeAllFiles(true)
+    }
+    // DropzoneJS Demo Code End
+
     </script>
 </body>
 </html>

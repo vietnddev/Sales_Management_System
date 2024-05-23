@@ -33,10 +33,12 @@
                         <div class="card" style="min-height: 605px">
                             <div class="card-body">
                                 <div class="row" th:each="cart, cartIndex : ${listCart}">
-                                    <div class="col-sm-8 border">
+                                    <div class="col-sm-9 border">
                                         <form class="row mt-3" th:action="@{/don-hang/ban-hang/cart/item/add}" method="POST">
                                             <div class="col-sm-10 form-group">
-                                                <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" id="productVariantField" required></select>
+                                                <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" id="productVariantField" required>
+                                                    <option th:each="list : ${listProductVariant}" th:value="${list.id}" th:text="${list.variantName + ' - hiện còn: ' + list.storageQty}"></option>
+                                                </select>
                                             </div>
                                             <input type="hidden" name="cartId" th:value="${cart.id}">
                                             <div class="col-sm-2 form-group">
@@ -44,12 +46,15 @@
                                             </div>
                                         </form>
                                         <div class="row">
-                                            <table class="table table-head-fixed text-nowrap text-center align-items-center" id="itemsTable">
+                                            <table class="table table-responsive table-head-fixed text-nowrap text-center align-items-center" id="itemsTable">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
                                                         <th class="text-left">Tên sản phẩm</th>
-                                                        <th>Đơn giá</th>
+                                                        <th>Loại giá</th>
+                                                        <th>Giá gốc</th>
+                                                        <th>Giá giảm</th>
+                                                        <th>Giảm thêm</th>
                                                         <th>Số lượng</th>
                                                         <th>Thành tiền</th>
                                                         <th></th>
@@ -64,9 +69,12 @@
                                                                th:href="@{/san-pham/variant/{id}(id=${item.productDetail.id})}"></a>
                                                             <input class="form-control form-control-sm" name="note" th:value="${item.note}" readonly>
                                                         </td>
+                                                        <td th:text="${item.priceType == 'L' ? 'Giá bán lẻ' : 'Giá sỉ'}"></td>
+                                                        <td th:text="${item.priceOriginal != null} ? ${#numbers.formatDecimal (item.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                         <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                        <td th:text="${item.extraDiscount != null} ? ${#numbers.formatDecimal (item.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                         <td th:text="${item.quantity}"></td>
-                                                        <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                        <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.quantity - item.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                         <td>
                                                             <!--UPDATE ITEMS-->
                                                             <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${item.id}">Cập nhật</button>
@@ -78,8 +86,7 @@
                                                                               th:object="${items}" method="POST">
                                                                             <div class="modal-header">
                                                                                 <strong class="modal-title">Cập nhật sản phẩm</strong>
-                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                                                                                </button>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                                             </div>
                                                                             <div class="modal-body">
                                                                                 <input type="hidden" name="cartId" th:value="${cart.id}">
@@ -89,9 +96,23 @@
                                                                                     <label class="col-sm-4 text-left">Số lượng</label>
                                                                                     <input class="col-sm-8 form-control"
                                                                                            type="number" name="quantity"
-                                                                                           min="1"
-                                                                                           max="[[${item.productDetail.quantity}]]"
+                                                                                           min="1" max="[[${item.productDetail.quantity}]]"
                                                                                            th:value="${item.quantity}"/>
+                                                                                </div>
+                                                                                <div class="form-group row" style="display: flex; align-items: center; margin: 0 0 15px 0">
+                                                                                    <label class="col-sm-4 text-left">Giảm thêm</label>
+                                                                                    <input class="col-sm-8 form-control" name="extraDiscount" th:value="${item.extraDiscount}"/>
+                                                                                </div>
+                                                                                <div class="form-group row" style="display: flex; align-items: center; margin: 0 0 15px 0">
+                                                                                    <label class="col-sm-4 text-left">Loại giá</label>
+                                                                                    <select th:if="${item.priceType == 'L'}" class="col-8 custom-select" name="priceType" required>
+                                                                                        <option value="L">Giá lẻ</option>
+                                                                                        <option value="S">Giá sỉ</option>
+                                                                                    </select>
+                                                                                    <select th:if="${item.priceType == 'S'}" class="col-8 custom-select" name="priceType" required>
+                                                                                        <option value="S">Giá sỉ</option>
+                                                                                        <option value="L">Giá lẻ</option>
+                                                                                    </select>
                                                                                 </div>
                                                                                 <div class="form-group row" style="display: flex; align-items: center; margin: 0">
                                                                                     <label class="col-sm-4 text-left">Ghi chú</label>
@@ -183,58 +204,20 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 border">
+                                    <div class="col-sm-3 border">
                                         <div class="row mt-3">
-                                            <div class="form-group col-10 pr-0">
-                                                <select class="custom-select" id="customerField" required></select>
-                                            </div>
-                                            <div class="col-sm-2 form-group">
-                                                <button type="button" class="btn btn-sm btn-primary" style="height: 38px" data-target="#modalCreateKhachHang" data-toggle="modal">Thêm</button>
-                                                <div class="modal fade" id="modalCreateKhachHang">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <form th:action="@{/khach-hang/create}"
-                                                                  th:object="${khachHang}" method="post">
-                                                                <div class="modal-header">
-                                                                    <strong class="modal-title">Thêm mới khách hàng</strong>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="row">
-                                                                        <div class="col-12">
-                                                                            <div class="form-group">
-                                                                                <label>Tên khách hàng</label>
-                                                                                <input type="text" class="form-control" required name="customerName"/>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label>Số điện thoại</label>
-                                                                                <input type="text" class="form-control" required name="soDienThoai"/>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label>Email</label>
-                                                                                <input type="email" class="form-control" name="email"/>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label>Địa chỉ</label>
-                                                                                <input type="text" class="form-control" required name="address"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-end">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div class="form-group col-12">
+                                                <select class="custom-select" id="customerField" required>
+                                                    <!--<option th:each="list : ${listCustomer}" th:value="${list.id}" th:text="${list.customerName}"></option>-->
+                                                </select>
                                             </div>
                                         </div>
                                         <hr class="w-75 mt-0">
                                         <div class="row">
                                             <div class="form-group col-sm-6 pr-0">
-                                                <select class="custom-select" id="accountField" required></select>
+                                                <select class="custom-select" id="accountField" required>
+                                                    <option th:each="list : ${listAccount}" th:value="${list.id}" th:text="${list.fullName}"></option>
+                                                </select>
                                             </div>
                                             <div class="form-group col-sm-6">
                                                 <div class="input-group date" id="reservationdatetime"
@@ -255,20 +238,25 @@
                                         <!--KÊNH BÁN HÀNG-->
                                         <div class="form-group row" style="padding-right: 8px">
                                             <label class="col-sm-6" style="display: flex; align-items: center">Kênh bán hàng</label>
-                                            <select class="custom-select col-sm-6" id="salesChannelField" required></select>
+                                            <select class="custom-select col-sm-6" id="salesChannelField" required>
+                                                <option th:each="list : ${listSalesChannel}" th:value="${list.id}" th:text="${list.name}"></option>
+                                            </select>
                                         </div>
                                         <!--KÊNH BÁN HÀNG-->
                                         <!--HÌNH THỨC THANH TOÁN-->
                                         <div class="form-group row" style="padding-right: 8px">
                                             <label class="col-sm-6" style="display: flex; align-items: center">Hình thức thanh toán</label>
                                             <select class="custom-select col-sm-6" id="paymentMethodField" required>
+                                                <option th:each="list : ${listPaymentMethod}" th:value="${list.id}" th:text="${list.name}"></option>
                                             </select>
                                         </div>
                                         <!--HÌNH THỨC THANH TOÁN-->
                                         <!--TRẠNG THÁI ĐƠN HÀNG-->
                                         <div class="form-group row" style="padding-right: 8px">
                                             <label class="col-sm-6" style="display: flex; align-items: center">Trạng thái đơn hàng</label>
-                                            <select class="custom-select col-sm-6" id="orderStatusField" required></select>
+                                            <select class="custom-select col-sm-6" id="orderStatusField" required>
+                                                <option th:each="list : ${listOrderStatus}" th:value="${list.id}" th:text="${list.name}"></option>
+                                            </select>
                                         </div>
                                         <hr class="w-75 mt-0">
                                         <div class="form-group row">
@@ -319,20 +307,20 @@
                                             <div class="col-sm-4">
                                                 <button type="button" class="btn btn-danger w-100" style="padding-left: 3px;" data-toggle="modal"
                                                         id="preDeleteDonHang"
-                                                        th:data-target="'#modalDeleteCart_' + ${cart.id}">Clear all
+                                                        th:data-target="'#modalDeleteCart_' + ${cart.id}">Clear
                                                 </button>
                                             </div>
                                             <div class="modal fade" th:id="'modalDeleteCart_' + ${cart.id}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <form th:action="@{/don-hang/ban-hang/cart/delete/{id}(id=${cart.id})}"
+                                                        <form th:action="@{/don-hang/ban-hang/cart/{id}/reset(id=${cart.id})}"
                                                               method="POST">
                                                             <div class="modal-header">
                                                                 <strong class="modal-title">Thông báo xác nhận</strong>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <input type="hidden" name="id" th:value="${cart.id}">Xác nhận xóa giỏ hàng
+                                                                <input type="hidden" name="id" th:value="${cart.id}">Xác nhận reset giỏ hàng
                                                             </div>
                                                             <div class="modal-footer justify-content-end">
                                                                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
@@ -414,30 +402,11 @@
 
     $(document).ready(function () {
         loadCustomers();
-        loadAccounts();
-        loadSalesChannels();
-        loadPaymentMethods();
-        loadOrderStatuses();
-        loadProducts();
         loadReceiveInformationToForm();
         createOrder();
         checkVoucherIsAvailable();
         useVoucher();
     });
-
-    async function loadProducts() {
-        let selectElement = $('#productVariantField');
-        let apiURL = mvHostURLCallApi + '/product/variant/all'
-        let response = await fetch(apiURL)
-        if (response.ok) {
-            let data = (await response.json()).data
-            $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.variantName + ' - ' + d.storageQty + '</option>');
-            });
-        } else {
-            alert('Call API fail!')
-        }
-    }
 
     async function loadCustomers() {
         let selectElement = $('#customerField');
@@ -449,66 +418,6 @@
             $.each(data, function (index, d) {
                 selectElement.append('<option value=' + d.id + '>' + d.customerName + '</option>');
                 mvCustomers[d.id] = d; //Tương tự map trong Java, d.id là key, d là value
-            });
-        } else {
-            alert('Call API fail!')
-        }
-    }
-
-    async function loadAccounts() {
-        let selectElement = $('#accountField');
-        let apiURL = mvHostURLCallApi + '/system/account/all'
-        let response = await fetch(apiURL)
-        if (response.ok) {
-            let data = (await response.json()).data
-            selectElement.append('<option>Chọn nhân viên bán hàng</option>');
-            $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.fullName + '</option>');
-            });
-        } else {
-            alert('Call API fail!')
-        }
-    }
-
-    async function loadSalesChannels() {
-        let selectElement = $('#salesChannelField');
-        let apiURL = mvHostURLCallApi + '/category/sales-channel'
-        let response = await fetch(apiURL)
-        if (response.ok) {
-            let data = (await response.json()).data
-            selectElement.append('<option>Chọn kênh bán hàng</option>');
-            $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
-            });
-        } else {
-            alert('Call API fail!')
-        }
-    }
-
-    async function loadPaymentMethods() {
-        let selectElement = $('#paymentMethodField');
-        let apiURL = mvHostURLCallApi + '/category/payment-method'
-        let response = await fetch(apiURL)
-        if (response.ok) {
-            let data = (await response.json()).data
-            selectElement.append('<option>Chọn hình thức thanh toán</option>');
-            $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
-            });
-        } else {
-            alert('Call API fail!')
-        }
-    }
-
-    async function loadOrderStatuses() {
-        let selectElement = $('#orderStatusField');
-        let apiURL = mvHostURLCallApi + '/category/order-status'
-        let response = await fetch(apiURL)
-        if (response.ok) {
-            let data = (await response.json()).data
-            selectElement.append('<option>Chọn trạng thái đơn hàng</option>');
-            $.each(data, function (index, d) {
-                selectElement.append('<option value=' + d.id + '>' + d.name + '</option>');
             });
         } else {
             alert('Call API fail!')
@@ -631,7 +540,5 @@
         });
     }
 </script>
-
 </body>
-
 </html>

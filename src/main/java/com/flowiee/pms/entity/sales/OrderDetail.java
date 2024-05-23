@@ -33,8 +33,8 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@JoinColumn(name = "product_variant_id", nullable = false)
 	private ProductDetail productDetail;
 
-	@Column(name = "quantity", nullable = false)
-	private int quantity;
+	@Column(name = "price_type", nullable = false)
+	private String priceType;//S or L
 
 	@Column(name = "price", nullable = false)
 	private BigDecimal price;
@@ -44,6 +44,9 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 
 	@Column(name = "extra_discount")
 	private BigDecimal extraDiscount;
+
+	@Column(name = "quantity", nullable = false)
+	private int quantity;
 
 	@Column(name = "note", length = 500)
 	private String note;

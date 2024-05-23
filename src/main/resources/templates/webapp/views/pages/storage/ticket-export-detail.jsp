@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý phiếu xuất hàng</title>
-    <div th:replace="header :: stylesheets"></div>
-
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style>
         .table td.vertical-center {
             vertical-align: middle;
@@ -24,43 +23,63 @@
             <section class="content">
                 <div class="container-fluid vertical-center">
                     <div class="row">
-                        <div class="col-3"></div>
                         <div class="col-6">
                             <div class="card">
-                                <div class="card-body">
-                                    <div class="row text-center">
+                                <div class="card-body row">
+                                    <div class="text-center col-12">
                                         <span class="w-100 font-weight-bold text-uppercase mb-3">Thông tin chi tiết phiếu xuất hàng</span>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group col-12">
                                         <label for="titleField">Tên phiếu</label>
-                                        <input class="form-control" type="text" id="titleField" required>
+                                        <input class="form-control" type="text" id="titleField" th:value="${ticketExportDetail.title}" required>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group col-6">
                                         <label for="exporterField">Người xuất</label>
-                                        <input class="form-control" type="text" id="exporterField" disabled required>
+                                        <input class="form-control" type="text" id="exporterField" th:value="${ticketExportDetail.exporter}" required disabled>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group col-6">
                                         <label for="exportTimeField">Thời gian xuất</label>
-                                        <input class="form-control" type="text" id="exportTimeField" disabled required>
+                                        <input class="form-control" type="text" id="exportTimeField" th:value="${ticketExportDetail.exportTime}" required disabled>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group col-12">
+                                        <label for="noteField">Tổng giá trị</label>
+                                        <input class="form-control" type="text" id="totalValueField" th:value="${ticketExportDetail.totalValue}" disabled>
+                                    </div>
+                                    <div class="form-group col-12">
                                         <label for="noteField">Ghi chú</label>
-                                        <input class="form-control" type="text" id="noteField">
+                                        <input class="form-control" type="text" id="noteField" th:value="${ticketExportDetail.note}">
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group col-12">
                                         <label for="statusField">Trạng thái</label>
-                                        <select class="custom-select" id="statusField" required></select>
+                                        <select class="custom-select" id="statusField" required>
+                                            <option th:each="s : ${ticketExportStatus}" th:value="${s.key}" th:text="${s.value}">
+                                        </select>
                                     </div>
                                     <hr class="w-50">
-                                    <div class="row justify-content-center">
-                                        <button class="btn btn-sm btn-info      col-2 mr-1 link-confirm" type="button" id="btnSave" th:actionType="update">Cập nhật</button>
+                                    <div class="justify-content-center col-12 row">
+                                        <button class="btn btn-sm btn-info col-2 mr-1 link-confirm" type="button" id="btnSave" th:actionType="update">Cập nhật</button>
                                         <button class="btn btn-sm btn-secondary col-2 mr-1 link-confirm" type="button" id="btnPrint">In</button>
-                                        <button class="btn btn-sm btn-danger    col-2      link-confirm" type="button" id="btnDelete" th:actionType="delete">Xóa</button>
+                                        <button class="btn btn-sm btn-danger col-2 mr-1 link-confirm" type="button" id="btnDelete" th:actionType="delete">Xóa</button>
+                                        <button class="btn btn-sm btn-success col-2" type="button" data-toggle="modal" data-target="#modalUploadFile"><i class="fa-solid fa-upload"></i></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-3 mb-2" th:each="list : ${ticketExportDetail.listImages}">
+                                    <div class="card border" style="height: 186px">
+                                        <div class="card-body product-image-thumb" style="margin: auto; border: none">
+                                            <img th:src="@{'/' + ${list.directoryPath} + '/' + ${list.storageName}}"
+                                                 th:imageId="${list.id}" style="border-radius: 5px" alt="Product Image" class="sub-image" >
+                                        </div>
+                                        <div class="card-footer row">
+                                            <i style="cursor: pointer" th:imageId="${list.id}" class="fa-solid fa-trash text-danger col btn-delete-image"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -73,11 +92,23 @@
                                                 <th>STT</th>
                                                 <th>Loại sản phẩm</th>
                                                 <th>Tên sản phẩm</th>
+                                                <th>Giá lúc xuất</th>
                                                 <th>Số lượng</th>
+                                                <th>Thành tiền</th>
                                                 <th>Ghi chú</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="contentTable"></tbody>
+                                        <tbody>
+                                            <tr th:each="list, index : ${ticketExportDetail.listProductVariantTemp}">
+                                                <td th:text="${index.index + 1}"></td>
+                                                <td th:text="${list.productVariant.product.productType.name}"></td>
+                                                <td th:text="${list.productVariant.variantName}">/td>
+                                                <td th:text="${list.purchasePrice}"></td>
+                                                <td th:text="${list.quantity}"></td>
+                                                <td th:text="${list.purchasePrice != null ? list.purchasePrice * list.quantity : ''}"></td>
+                                                <td th:text="${list.note}"></td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -88,6 +119,7 @@
         </div>
 
         <div th:replace="modal_fragments :: confirm_modal"></div>
+        <div th:replace="fragments :: uploadFileModal"></div>
 
         <div th:replace="footer :: footer"></div>
 
@@ -97,7 +129,7 @@
     </div>
 
     <script type="text/javascript">
-        let mvId = 0;
+        let mvId = [[${ticketExportId}]];
         let mvTitle = $("#titleField");
         let mvExporter = $("#exporterField");
         let mvExportTime = $("#exportTimeField");
@@ -105,50 +137,8 @@
         let mvStatus = $("#statusField");
 
         $(document).ready(function() {
-            loadTicketExportDetail();
-            //updateTicketDetail();
-            //deleteTicketDetail();
             updateOrDelete();
         });
-
-        function loadTicketExportDetail() {
-            let apiURL = mvHostURLCallApi + '/stg/ticket-export/' + [[${ticketExportId}]];
-            $.get(apiURL, function (response) {//dùng Ajax JQuery để gọi xuống controller
-                if (response.status === "OK") {
-                    let data = response.data;
-                    let lvOrders = data.listOrderDTO;
-                    mvId = [[${ticketExportId}]];
-
-                    mvTitle.val(data.title);
-                    mvExporter.val(data.exporter);
-                    mvExportTime.val(moment(data.exportTime).format("DD/MM/YYYY HH:mm:ss"));
-                    mvNote.val(data.note);
-                    mvStatus.append('<option value=' + data.status + ' selected>' + mvTicketExportStatus[data.status] + '</option>');
-                    if (data.status === "DRAFT") {
-                        mvStatus.append("<option value='COMPLETED'>Hoàn thành</option><option value='CANCEL'>Hủy</option>");
-                    }
-
-                    let contentTable = $('#contentTable');
-                    contentTable.empty();
-                    if (lvOrders != null) {
-                        let lvOrderDetails = lvOrders[0].listOrderDetailDTO;
-                        $.each(lvOrderDetails, function (index, d) {
-                            contentTable.append(`
-                            <tr>
-                                <td>${(index + 1)}</td>
-                                <td>${d.productVariantDTO.productTypeName}</td>
-                                <td>${d.productVariantDTO.variantName}</td>
-                                <td>${d.quantity}</td>
-                                <td>${d.note}</td>
-                            </tr>
-                        `);
-                        });
-                    }
-                }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
-            });
-        }
 
         function updateOrDelete() {
             $(".link-confirm").on("click", function (e) {
@@ -164,7 +154,7 @@
                 e.preventDefault();
                 if ($(this).attr("actionType") === "update") {
                     let apiURL = mvHostURLCallApi + "/stg/ticket-export/update/" + mvId;
-                    let lvExportTime = moment(mvExportTime.val(), "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss.SSS");
+                    let lvExportTime = mvExportTime.val();
                     let body = {title : mvTitle.val(), exporter : mvExporter.val(), exportTime : lvExportTime, note : mvNote.val(), status : mvStatus.val()}
                     $.ajax({
                         url: apiURL,
@@ -199,6 +189,64 @@
                 }
             });
         }
+    </script>
+
+    <script> // Upload file
+    // DropzoneJS Demo Code Start
+    Dropzone.autoDiscover = true
+
+    // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+    var previewNode = document.querySelector("#template")
+    previewNode.id = ""
+    var previewTemplate = previewNode.parentNode.innerHTML
+    previewNode.parentNode.removeChild(previewNode)
+
+    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+        url: "/uploads/ticket-export/[[${ticketExportId}]]", // Gọi tới API trong spring để xử lý file
+        thumbnailWidth: 80,
+        thumbnailHeight: 80,
+        parallelUploads: 20,
+        previewTemplate: previewTemplate,
+        autoQueue: false, // Make sure the files aren't queued until manually added
+        previewsContainer: "#previews", // Define the container to display the previews
+        clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+    })
+
+    myDropzone.on("addedfile", function (file) {
+        // Hookup the start button
+        file.previewElement.querySelector(".start").onclick = function () {
+            myDropzone.enqueueFile(file)
+        }
+    })
+
+    // Update the total progress bar
+    myDropzone.on("totaluploadprogress", function (progress) {
+        document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+    })
+
+    myDropzone.on("sending", function (file) {
+        // Show the total progress bar when upload starts
+        document.querySelector("#total-progress").style.opacity = "1"
+        // And disable the start button
+        file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+    })
+
+    // Hide the total progress bar when nothing's uploading anymore
+    myDropzone.on("queuecomplete", function (progress) {
+        document.querySelector("#total-progress").style.opacity = "0"
+    })
+
+    // Setup the buttons for all transfers
+    // The "add files" button doesn't need to be setup because the config
+    // `clickable` has already been specified.
+    document.querySelector("#actions .start").onclick = function () {
+        myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+    }
+    document.querySelector("#actions .cancel").onclick = function () {
+        myDropzone.removeAllFiles(true)
+    }
+    // DropzoneJS Demo Code End
+
     </script>
 </body>
 </html>

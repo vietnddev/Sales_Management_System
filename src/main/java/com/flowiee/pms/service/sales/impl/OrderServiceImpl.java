@@ -17,7 +17,6 @@ import com.flowiee.pms.service.sales.*;
 import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
-import com.flowiee.pms.service.system.SystemLogService;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
@@ -34,7 +33,6 @@ import java.util.*;
 public class OrderServiceImpl extends BaseService implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductVariantService productVariantService;
-    private final SystemLogService systemLogService;
     private final CartService cartService;
     private final CartItemsService cartItemsService;
     private final OrderHistoryRepository orderHistoryRepo;
@@ -44,12 +42,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, SystemLogService systemLogService, CartService cartService,
-                            CartItemsService cartItemsService, OrderHistoryRepository orderHistoryRepo, ProductVariantService productVariantService,
-                            OrderQRCodeService orderQRCodeService, VoucherTicketService voucherTicketService, OrderItemsService orderItemsService,
-                            ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, CartService cartService, CartItemsService cartItemsService,
+                            OrderHistoryRepository orderHistoryRepo, ProductVariantService productVariantService,
+                            OrderQRCodeService orderQRCodeService, VoucherTicketService voucherTicketService,
+                            OrderItemsService orderItemsService, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
-        this.systemLogService = systemLogService;
         this.cartService = cartService;
         this.cartItemsService = cartItemsService;
         this.orderHistoryRepo = orderHistoryRepo;
@@ -105,10 +102,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Override
     public OrderDTO save(OrderDTO request) {
         try {
-            String orderCode = "F" + CommonUtils.now("yyMMddHHmmss");
             //Insert order
             Order order = new Order();
-            order.setCode(orderCode);
+            order.setCode(request.getCode() != null ? request.getCode() : CommonUtils.genOrderCode());
             order.setCustomer(new Customer(request.getCustomerId()));
             order.setKenhBanHang(new Category(request.getSalesChannelId(), null));
             order.setNhanVienBanHang(new Account(request.getCashierId()));
@@ -152,8 +148,10 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                         orderDetail.setQuantity(cartItemsService.findQuantityOfItem(items.getOrderCart().getId() , productDetail.get().getId()));
                         orderDetail.setStatus(true);
                         orderDetail.setNote(items.getNote());
-                        orderDetail.setPrice(productDetail.get().getDiscountPrice());
-                        orderDetail.setPriceOriginal(productDetail.get().getOriginalPrice());
+                        orderDetail.setPrice(items.getPrice());
+                        orderDetail.setPriceOriginal(items.getPriceOriginal());
+                        orderDetail.setExtraDiscount(items.getExtraDiscount());
+                        orderDetail.setPriceType(items.getPriceType());
                         orderItemsService.save(orderDetail);
                     }
                 }

@@ -1,7 +1,11 @@
 package com.flowiee.pms.controller.sales;
 
+import com.flowiee.pms.entity.product.MaterialTemp;
+import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.service.product.MaterialService;
+import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.*;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
@@ -22,6 +27,10 @@ public class TicketImportControllerView extends BaseController {
     private TicketImportService ticketImportService;
     @Autowired
     private StorageService storageService;
+    @Autowired
+    private ProductVariantService productVariantService;
+    @Autowired
+    private MaterialService materialService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.importGoods(true)")
@@ -38,9 +47,23 @@ public class TicketImportControllerView extends BaseController {
         if (ticketImport.isEmpty()) {
             throw new NotFoundException("Ticket import not found!");
         }
+        BigDecimal totalValue = BigDecimal.ZERO;
+        for (ProductVariantTemp p : ticketImport.get().getListProductVariantTemps()) {
+            if (p.getPurchasePrice() != null) {
+                totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
+            }
+        }
+        for (MaterialTemp m : ticketImport.get().getListMaterialTemps()) {
+            if (m.getPurchasePrice() != null) {
+                totalValue = totalValue.add(m.getPurchasePrice().multiply(new BigDecimal(m.getQuantity())));
+            }
+        }
+        ticketImport.get().setTotalValue(totalValue);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_DETAIL);
         modelAndView.addObject("ticketImportId", ticketImportId);
         modelAndView.addObject("ticketImportDetail", ticketImport.get());
+        modelAndView.addObject("listProductVariant", productVariantService.findAll());
+        modelAndView.addObject("listMaterial", materialService.findAll());
         return baseView(modelAndView);
     }
 

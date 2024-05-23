@@ -158,6 +158,36 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
+    public List<Category> findUnits() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.UNIT.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findColors() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.COLOR.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findSizes() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.SIZE.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findSalesChannels() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findPaymentMethods() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findOrderStatus() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
     public Boolean categoryInUse(Integer categoryId) {
         Optional<Category> category = this.findById(categoryId);
         if (category.isEmpty()) {

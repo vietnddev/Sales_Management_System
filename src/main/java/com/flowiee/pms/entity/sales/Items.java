@@ -35,8 +35,17 @@ public class Items extends BaseEntity implements Serializable {
     @JoinColumn(name = "cart_id", nullable = false)
     private OrderCart orderCart;
 
-    @Transient
+    @Column(name = "price_type", nullable = false)
+    private String priceType;//S or L
+
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
+
+    @Column(name = "price_original", nullable = false)
+    private BigDecimal priceOriginal;
+
+    @Column(name = "extra_discount")
+    private BigDecimal extraDiscount;
 
 	@Override
 	public String toString() {

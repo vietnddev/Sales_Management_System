@@ -16,6 +16,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -72,14 +73,6 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Column(name = "status", nullable = false)
     private String status;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "", fetch = FetchType.LAZY)
-//    private List<Material> listMaterials;
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-//    private List<ProductDetail> listProductDetails;
-
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<MaterialTemp> listMaterialTemps;
@@ -91,6 +84,9 @@ public class TicketImport extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
     private List<FileStorage> listImages;
+
+    @Transient
+    private BigDecimal totalValue;
 
     public TicketImport(Integer id) {
         super.id = id;

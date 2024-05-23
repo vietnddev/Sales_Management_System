@@ -11,7 +11,7 @@ import com.flowiee.pms.entity.sales.Items;
 import java.util.List;
 
 @Repository
-public interface ItemsRepository extends JpaRepository<Items, Integer> {
+public interface CartItemsRepository extends JpaRepository<Items, Integer> {
     @Query("from Items i where i.orderCart.id=:idCart")
     List<Items> findByCartId(@Param("idCart") Integer idCart);
 
@@ -31,4 +31,8 @@ public interface ItemsRepository extends JpaRepository<Items, Integer> {
     @Modifying
     @Query("delete Items")
     void deleteAllItems();
+
+    @Modifying
+    @Query("delete Items where orderCart.id=:cartId")
+    void deleteAllItems(@Param("cartId") Integer cartId);
 }

@@ -12,6 +12,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "material_temp")
@@ -34,6 +35,9 @@ public class MaterialTemp extends BaseEntity implements Serializable {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice;
 
     @Column(name = "note")
     private String note;

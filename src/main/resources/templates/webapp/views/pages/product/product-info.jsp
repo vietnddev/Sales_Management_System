@@ -111,19 +111,19 @@
                                                         </div>
                                                         <div class="form-group col-4">
                                                             <label>Mã biến thể</label>
-                                                            <input class="form-control" type="text" id="variantCodeF2">
+                                                            <input class="form-control" type="text" id="variantCodeF2" disabled>
                                                         </div>
                                                         <div class="form-group col-3">
                                                             <label>Chọn chất liệu vải</label>
-                                                            <select class="custom-select" id="fabricTypeF2"></select>
+                                                            <select class="custom-select" id="fabricTypeF2" disabled></select>
                                                         </div>
                                                         <div class="form-group col-3">
                                                             <label>Chọn màu sắc</label>
-                                                            <select class="custom-select" id="colorF2"></select>
+                                                            <select class="custom-select" id="colorF2" disabled></select>
                                                         </div>
                                                         <div class="form-group col-3">
                                                             <label>Chọn kích cỡ</label>
-                                                            <select class="custom-select" id="sizeF2"></select>
+                                                            <select class="custom-select" id="sizeF2" disabled></select>
                                                         </div>
                                                         <div class="form-group col-3">
                                                             <label>Trọng lượng</label>
@@ -147,7 +147,7 @@
                                                         </div>
                                                         <div class="form-group col-4">
                                                             <label>Số lượng tồn kho</label>
-                                                            <input class="form-control" type="number" id="storageQtyF2">
+                                                            <input class="form-control" type="number" id="storageQtyF2" disabled>
                                                         </div>
                                                         <div class="form-group col-4">
                                                             <label>Số lượng lỗi</label>
@@ -155,7 +155,7 @@
                                                         </div>
                                                         <div class="form-group col-4">
                                                             <label>Số lượng có thể bán</label>
-                                                            <input class="form-control" type="number" id="availableSalesQtyF2">
+                                                            <input class="form-control" type="number" id="availableSalesQtyF2" disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -272,7 +272,7 @@
         let mvImageActive = {};
 
         let mvBtnUpdateVariant = $("#btnUpdateVariant");
-        let mvBtnDeleteVariant = $("#btnUpdateVariant");
+        let mvBtnDeleteVariant = $("#btnDeleteVariant");
 
         let mvProductNameField = $("#productNameField");
         let mvProductVariantNameField = $("#productVariantNameField");
@@ -325,8 +325,7 @@
         $(document).ready(function () {
             init();
             createProductVariant();
-            updateProductVariant();
-            deleteAction();
+            updateDeleteAction();
             loadVariantsOfProduct();
             loadImagesOfProduct();
             loadHistoryOfProduct();

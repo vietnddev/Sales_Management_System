@@ -1,8 +1,10 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.service.sales.TicketExportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Controller
 @RequestMapping("/stg/ticket-export")
@@ -36,9 +39,23 @@ public class TicketExportControllerView extends BaseController {
         if (ticketExport.isEmpty()) {
             throw new NotFoundException("Ticket export not found!");
         }
+        LinkedHashMap<String, String> ticketExportStatus = new LinkedHashMap<>();
+        ticketExportStatus.put(ticketExport.get().getStatus(), AppConstants.TICKET_EX_STATUS.valueOf(ticketExport.get().getStatus()).getLabel());
+        if (ticketExport.get().getStatus().equals(AppConstants.TICKET_EX_STATUS.DRAFT.name())) {
+            ticketExportStatus.put(AppConstants.TICKET_EX_STATUS.COMPLETED.name(), AppConstants.TICKET_EX_STATUS.COMPLETED.getLabel());
+            ticketExportStatus.put(AppConstants.TICKET_EX_STATUS.CANCEL.name(), AppConstants.TICKET_EX_STATUS.CANCEL.getLabel());
+        }
+        BigDecimal totalValue = BigDecimal.ZERO;
+        for (ProductVariantTemp p : ticketExport.get().getListProductVariantTemp()) {
+            if (p.getPurchasePrice() != null) {
+                totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
+            }
+        }
+        ticketExport.get().setTotalValue(totalValue);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_EXPORT_DETAIL);
         modelAndView.addObject("ticketExportId", ticketExportId);
-        modelAndView.addObject("ticketExportDetail", ticketExport);
+        modelAndView.addObject("ticketExportStatus", ticketExportStatus);
+        modelAndView.addObject("ticketExportDetail", ticketExport.get());
         return baseView(modelAndView);
     }
 }

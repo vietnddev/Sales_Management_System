@@ -169,6 +169,11 @@
 
   </div>
   <div th:fragment="scripts">
+    <!--Js customize-->
+    <script th:src="@{/js/Common.js}"></script>
+    <script th:src="@{/js/APIHelper.js}"></script>
+    <script th:src="@{/js/Modal.js}"></script>
+    <script th:src="@{/js/Utils.js}"></script>
     <!--Lib support format time-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- jQuery -->
@@ -255,13 +260,6 @@
         });
       });
     </script>
-    <!--Js customize-->
-    <script th:src="@{/js/Common.js}"></script>
-    <script th:src="@{/js/APIHelper.js}"></script>
-    <script th:src="@{/js/Modal.js}"></script>
-    <script th:src="@{/js/Utils.js}"></script>
   </div>
-
 </body>
-
 </html>

@@ -115,18 +115,113 @@
             </div>
         </div>
 
-        <div th:fragment="folderTree">
-            <div class="main-sidebar sidebar-dark-primary elevation-4">
-                <nav class="sidebar mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item" th:each="ft : ${folderTree}">
-                            <a href="#" th:class="'nav-link folder-' + ${ft.id}" th:hasSubFolder="${ft.hasSubFolder}" th:collapse="N">
-                                <p>[[${ft.name}]] <i class="fas fa-angle-left right" th:if="${ft.hasSubFolder == 'Y'}"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview" th:id="'sub-folders-' + ${ft.id}" style="margin-left: 15px"></ul>
-                        </li>
-                    </ul>
-                </nav>
+        <div th:fragment="uploadFileModal">
+            <div class="modal fade" id="modalUploadFile">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <strong class="modal-title">Upload image sản phẩm</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" style="max-height: 520px; overflow: scroll">
+                                <div class="card col-sm-12">
+                                    <div class="card-body">
+                                        <div id="actions" class="row">
+                                            <div class="col-lg-7">
+                                                <div class="btn-group w-100">
+                                                                    <span class="btn btn-sm btn-success col fileinput-button"
+                                                                          title="Chọn file từ máy tính">
+                                                                        <i class="fas fa-plus"></i>
+                                                                        <span><!--Chọn file--></span>
+                                                                    </span>
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-primary col start">
+                                                        <i class="fas fa-upload"></i>
+                                                        <span><!--Tải lên SV--></span>
+                                                    </button>
+                                                    <button type="reset"
+                                                            class="btn btn-sm btn-warning col cancel">
+                                                        <i class="fas fa-times-circle"></i>
+                                                        <span><!--Hủy--></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5 d-flex align-items-center">
+                                                <div class="fileupload-process w-100">
+                                                    <div id="total-progress"
+                                                         class="progress progress-striped active"
+                                                         role="progressbar"
+                                                         aria-valuemin="0" aria-valuemax="100"
+                                                         aria-valuenow="0">
+                                                        <div class="progress-bar progress-bar-success"
+                                                             style="width:0%;"
+                                                             data-dz-uploadprogress>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table table-striped files" id="previews">
+                                            <div id="template" class="row mt-2">
+                                                <div class="col-auto">
+                                                                    <span class="preview"><img src="data:," alt=""
+                                                                                               data-dz-thumbnail/></span>
+                                                </div>
+                                                <div class="col d-flex align-items-center">
+                                                    <p class="mb-0">
+                                                        <span class="lead" data-dz-name></span>
+                                                        (<span data-dz-size></span>)
+                                                    </p>
+                                                    <strong class="error text-danger"
+                                                            data-dz-errormessage></strong>
+                                                </div>
+                                                <div class="col-3 d-flex align-items-center">
+                                                    <div class="progress progress-striped active w-100"
+                                                         role="progressbar"
+                                                         aria-valuemin="0"
+                                                         aria-valuemax="100" aria-valuenow="0">
+                                                        <div class="progress-bar progress-bar-success"
+                                                             style="width:0%;"
+                                                             data-dz-uploadprogress>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto d-flex align-items-center">
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-sm btn-primary start">
+                                                            <i class="fas fa-upload"></i>
+                                                            <span><!--Tải lên SV--></span>
+                                                        </button>
+                                                        <button data-dz-remove
+                                                                class="btn btn-sm btn-warning cancel">
+                                                            <i class="fas fa-times-circle"></i>
+                                                            <span><!--Hủy--></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <i>Lưu ý: Kích thước không được vượt quá 10MB cho mỗi file và
+                                            tổng dung lượng không
+                                            vượt 50MB cho
+                                            mỗi lượt.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-end">
+                            <button type="button" class="btn btn-sm btn-default"
+                                    data-dismiss="modal">Hủy
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -141,5 +236,64 @@
         <div th:fragment="format_time(dateTime)" th:remove="tag">
             <span th:text="${#dates.format(dateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
         </div>
+
+        <th:block th:fragment="uploadFileScript(urlUpload)">
+            <script>
+                // DropzoneJS Demo Code Start
+                Dropzone.autoDiscover = true
+
+                // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+                var previewNode = document.querySelector("#template")
+                previewNode.id = ""
+                var previewTemplate = previewNode.parentNode.innerHTML
+                previewNode.parentNode.removeChild(previewNode)
+                console.log("aaaaaaaaaaa" + ${urlUpload})
+                var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+                    url: ${urlUpload}, // Gọi tới API trong spring để xử lý file
+                    thumbnailWidth: 80,
+                    thumbnailHeight: 80,
+                    parallelUploads: 20,
+                    previewTemplate: previewTemplate,
+                    autoQueue: false, // Make sure the files aren't queued until manually added
+                    previewsContainer: "#previews", // Define the container to display the previews
+                    clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+                })
+
+                myDropzone.on("addedfile", function (file) {
+                    // Hookup the start button
+                    file.previewElement.querySelector(".start").onclick = function () {
+                        myDropzone.enqueueFile(file)
+                    }
+                })
+
+                // Update the total progress bar
+                myDropzone.on("totaluploadprogress", function (progress) {
+                    document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+                })
+
+                myDropzone.on("sending", function (file) {
+                    // Show the total progress bar when upload starts
+                    document.querySelector("#total-progress").style.opacity = "1"
+                    // And disable the start button
+                    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+                })
+
+                // Hide the total progress bar when nothing's uploading anymore
+                myDropzone.on("queuecomplete", function (progress) {
+                    document.querySelector("#total-progress").style.opacity = "0"
+                })
+
+                // Setup the buttons for all transfers
+                // The "add files" button doesn't need to be setup because the config
+                // `clickable` has already been specified.
+                document.querySelector("#actions .start").onclick = function () {
+                    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+                }
+                document.querySelector("#actions .cancel").onclick = function () {
+                    myDropzone.removeAllFiles(true)
+                }
+                // DropzoneJS Demo Code End
+            </script>
+        </th:block>
     </body>
 </html>

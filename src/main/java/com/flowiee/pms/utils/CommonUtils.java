@@ -1,5 +1,6 @@
 package com.flowiee.pms.utils;
 
+import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.ShopInfo;
@@ -12,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,6 +97,9 @@ public class CommonUtils {
                 case CATEGORY:
                     path.append("category");
                     break;
+                case STORAGE:
+                    path.append("storage");
+                    break;
                 default:
                 	path.append("system");
                 	break;
@@ -122,6 +127,8 @@ public class CommonUtils {
                 path.append("product");
             } else if (MODULE.CATEGORY.name().equals(systemModule)) {
                 path.append("category");
+            } else if (MODULE.STORAGE.name().equals(systemModule)) {
+                path.append("storage");
             }
             path.append("/" + LocalDateTime.now().getYear());
             path.append("/" + LocalDateTime.now().getMonth().getValue());
@@ -170,16 +177,24 @@ public class CommonUtils {
         return cellStyle;
     }
 
+    public static String encodePassword(String pwd) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder.encode(pwd);
+    }
+
     public static UserPrincipal getUserPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             return (UserPrincipal) authentication.getPrincipal();
         }
-        //throw new AuthenticationException();
-        return null;
+        throw new AuthenticationException();
     }
 
     public static String genProductCode() {
+        return CommonUtils.now("yyyyMMddHHmmss");
+    }
+
+    public static String genOrderCode() {
         return CommonUtils.now("yyyyMMddHHmmss");
     }
 }

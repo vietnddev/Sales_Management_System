@@ -41,8 +41,6 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Autowired
     private ProductRepository productsRepo;
     @Autowired
-    private SystemLogService systemLogService;
-    @Autowired
     private ProductHistoryService productHistoryService;
     @Autowired
     private VoucherService voucherInfoService;
@@ -170,7 +168,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public boolean productInUse(Integer productId) throws RuntimeException {
-        return !productVariantService.findAll().isEmpty();
+        return !productVariantService.findAll(-1, -1, productId, null, null, null, null).getContent().isEmpty();
     }
 
     private void setImageActiveAndLoadVoucherApply(List<ProductDTO> products) {

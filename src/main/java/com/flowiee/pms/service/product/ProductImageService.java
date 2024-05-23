@@ -15,6 +15,10 @@ public interface ProductImageService {
 
     FileStorage saveImageProductVariant(MultipartFile fileUpload, int pProductId) throws IOException;
 
+    FileStorage saveImageTicketImport(MultipartFile fileUpload, int ticketImportId) throws IOException;
+
+    FileStorage saveImageTicketExport(MultipartFile fileUpload, int ticketExportId) throws IOException;
+
     FileStorage setImageActiveOfProduct(Integer pProductId, Integer pImageId);
 
     FileStorage setImageActiveOfProductVariant(Integer pProductVariantId, Integer pImageId);

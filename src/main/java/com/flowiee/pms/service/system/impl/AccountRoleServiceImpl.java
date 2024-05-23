@@ -13,6 +13,7 @@ import com.flowiee.pms.service.system.RoleService;
 import com.flowiee.pms.utils.MessageUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class AccountRoleServiceImpl implements RoleService {
     private final GroupAccountService groupAccountService;
 
     @Autowired
-    public AccountRoleServiceImpl(AccountRoleRepository accountRoleRepo, AccountService accountService, GroupAccountService groupAccountService) {
+    public AccountRoleServiceImpl(AccountRoleRepository accountRoleRepo, @Lazy AccountService accountService, GroupAccountService groupAccountService) {
         this.accountRoleRepo = accountRoleRepo;
         this.accountService = accountService;
         this.groupAccountService = groupAccountService;

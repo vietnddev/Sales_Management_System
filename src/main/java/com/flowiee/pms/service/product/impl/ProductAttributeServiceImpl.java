@@ -7,7 +7,6 @@ import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.repository.product.ProductAttributeRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductAttributeService;
-import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,8 +24,6 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
 
     @Autowired
     private ProductAttributeRepository productAttributeRepo;
-    @Autowired
-    private SystemLogService systemLogService;
 
     @Override
     public List<ProductAttribute> findAll() {

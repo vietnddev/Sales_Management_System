@@ -1,4 +1,4 @@
-function deleteAction() {
+function updateDeleteAction() {
     $(".link-delete").on("click", function(e) {
         e.preventDefault();
         showConfirmModal($(this), null, "Bạn có chắc muốn xóa " + $(this).attr("entityName"));
@@ -33,8 +33,15 @@ function deleteAction() {
             if (entity === 'product') {
                 apiURL += '/product/delete/' + entityId
             }
-            if (entity === 'productDetail') {
+            if (entity === 'productVariant') {
                 apiURL += '/product/variant/delete/' + entityId
+                callApiDelete(apiURL);
+                return;
+            }
+        } else if (actionType === "update") {
+            if (entity === 'productVariant') {
+                updateProductVariant(entityId);
+                return;
             }
         }
 

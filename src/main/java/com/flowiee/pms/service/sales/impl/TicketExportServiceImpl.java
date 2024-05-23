@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
@@ -111,19 +112,16 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         TicketExport ticketExportUpdated = ticketExportRepo.save(ticketExportToUpdate);
 
         if (AppConstants.TICKET_EX_STATUS.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
-            Order order = orderRepository.findByTicketExport(ticketExportUpdated.getId());
-            for (OrderDetail orderDetail : order.getListOrderDetail()) {
-                int soldQtyInOrder = orderDetail.getQuantity();
-                int productVariantId = orderDetail.getProductDetail().getId();
-                productQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, productVariantId);
-
+            for (ProductVariantTemp productVariantTemp : ticketExportUpdated.getListProductVariantTemp()) {
+                int soldQtyInOrder = productVariantTemp.getQuantity();
+                productQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, productVariantTemp.getProductVariant().getId());
                 //Save log
-                int storageQty = orderDetail.getProductDetail().getStorageQty();
-                int soldQty = orderDetail.getProductDetail().getSoldQty();
+                int storageQty = productVariantTemp.getProductVariant().getStorageQty();
+                int soldQty = productVariantTemp.getProductVariant().getSoldQty();
                 ProductHistory productHistory = new ProductHistory();
-                productHistory.setProduct(orderDetail.getProductDetail().getProduct());
-                productHistory.setProductDetail(orderDetail.getProductDetail());
-                productHistory.setTitle("Cập nhật số lượng cho [" + orderDetail.getProductDetail().getVariantName() + "] - " + ticket.getTitle());
+                productHistory.setProduct(productVariantTemp.getProductVariant().getProduct());
+                productHistory.setProductDetail(productVariantTemp.getProductVariant());
+                productHistory.setTitle("Cập nhật số lượng cho [" + productVariantTemp.getProductVariant().getVariantName() + "] - " + ticket.getTitle());
                 productHistory.setField("Storage Qty | Sold Qty");
                 productHistory.setOldValue(storageQty + " | " + soldQty);
                 productHistory.setNewValue((storageQty - soldQtyInOrder) +  " | " + (soldQty + soldQtyInOrder));

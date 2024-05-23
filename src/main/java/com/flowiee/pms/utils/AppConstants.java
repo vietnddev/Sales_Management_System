@@ -129,6 +129,7 @@ public class AppConstants {
         COLOR("color", "COLOR", "Màu sắc"),
         UNIT("unit", "UNIT", "Đơn vị tính"),
         BRAND("brand", "BRAND", "Thương hiệu"),
+        COLLECTION("collection", "COLLECTION", "Bộ sưu tập"),
         ORDER_TYPE("order-type", "ORDER_TYPE", "Loại đơn hàng"),
         FABRIC_TYPE("fabric-type", "FABRIC_TYPE", "Chất liệu vải"),
         PRODUCT_TYPE("product-type", "PRODUCT_TYPE", "Loại sản phẩm"),
@@ -229,6 +230,17 @@ public class AppConstants {
         private final String label;
 
         STORAGE_STATUS(String label) {
+            this.label = label;
+        }
+    }
+
+    @Getter
+    public enum PRICE_TYPE {
+        L("Giá bán lẻ"),
+        S("Giá sỉ");
+        private final String label;
+
+        PRICE_TYPE(String label) {
             this.label = label;
         }
     }

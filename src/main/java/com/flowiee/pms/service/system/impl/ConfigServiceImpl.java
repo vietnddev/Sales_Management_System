@@ -3,7 +3,7 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.repository.system.FlowieeConfigRepository;
+import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.system.ConfigService;
@@ -20,12 +20,12 @@ import java.util.Optional;
 
 @Service
 public class ConfigServiceImpl extends BaseService implements ConfigService {
-    private final FlowieeConfigRepository sysConfigRepo;
-    private final CategoryService categoryService;
+    private final ConfigRepository sysConfigRepo;
+    private final CategoryService  categoryService;
     private final LanguageService languageService;
 
     @Autowired
-    public ConfigServiceImpl(FlowieeConfigRepository sysConfigRepo, CategoryService categoryService, LanguageService languageService) {
+    public ConfigServiceImpl(ConfigRepository sysConfigRepo, CategoryService categoryService, LanguageService languageService) {
         this.sysConfigRepo = sysConfigRepo;
         this.categoryService = categoryService;
         this.languageService = languageService;

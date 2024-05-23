@@ -10,7 +10,6 @@ import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.repository.storage.StorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
-import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.MessageUtils;
 import com.flowiee.pms.utils.converter.StorageConvert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +29,10 @@ import java.util.Optional;
 @Service
 public class StorageServiceImpl extends BaseService implements StorageService {
     private final StorageRepository storageRepository;
-    private final SystemLogService  systemLogService;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, SystemLogService systemLogService) {
+    public StorageServiceImpl(StorageRepository storageRepository) {
         this.storageRepository = storageRepository;
-        this.systemLogService = systemLogService;
     }
 
     @Override

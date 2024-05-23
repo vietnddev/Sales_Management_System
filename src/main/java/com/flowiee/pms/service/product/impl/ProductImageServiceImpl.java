@@ -1,5 +1,7 @@
 package com.flowiee.pms.service.product.impl;
 
+import com.flowiee.pms.entity.sales.TicketExport;
+import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
@@ -9,6 +11,8 @@ import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.service.sales.TicketExportService;
+import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -35,6 +39,10 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     private FileStorageRepository fileRepository;
     @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
+    private TicketExportService ticketExportService;
+    @Autowired
+    private TicketImportService ticketImportService;
 
     @Override
     public List<FileStorage> getImageOfProduct(Integer productId) {
@@ -77,6 +85,46 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        fileUpload.transferTo(path);
+
+        return imageSaved;
+    }
+
+    @Override
+    public FileStorage saveImageTicketImport(MultipartFile fileUpload, int ticketImportId) throws IOException {
+        Optional<TicketImport> ticketImport = ticketImportService.findById(ticketImportId);
+        if (ticketImport.isEmpty()) {
+            throw new BadRequestException();
+        }
+
+        long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
+        FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
+        fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setTicketImport(ticketImport.get());
+        fileInfo.setActive(false);
+        FileStorage imageSaved = fileRepository.save(fileInfo);
+
+        Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
+        fileUpload.transferTo(path);
+
+        return imageSaved;
+    }
+
+    @Override
+    public FileStorage saveImageTicketExport(MultipartFile fileUpload, int ticketExportId) throws IOException {
+        Optional<TicketExport> ticketExport = ticketExportService.findById(ticketExportId);
+        if (ticketExport.isEmpty()) {
+            throw new BadRequestException();
+        }
+
+        long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
+        FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
+        fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setTicketExport(ticketExport.get());
+        fileInfo.setActive(false);
+        FileStorage imageSaved = fileRepository.save(fileInfo);
+
+        Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
         fileUpload.transferTo(path);
 
         return imageSaved;

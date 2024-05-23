@@ -100,6 +100,24 @@ function setupListener() {
         let lvProductVariantId = $(this).attr("productVariantId");
         loadProductVariantInfoOnForm(lvProductVariantId);
     })
+    mvBtnUpdateVariant.on("click", function (e) {
+        e.preventDefault();
+        let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
+        $(this).attr("entity", 'productVariant');
+        $(this).attr("actionType", "update");
+        $(this).attr("entityId", productVariant.id);
+        $(this).attr("entityName", productVariant.variantName);
+        showConfirmModal($(this), "Cập nhật biến thể sản phẩm", $(this).attr("entityName"));
+    })
+    mvBtnDeleteVariant.on("click", function (e) {
+        e.preventDefault();
+        let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
+        $(this).attr("entity", 'productVariant');
+        $(this).attr("actionType", "delete");
+        $(this).attr("entityId", productVariant.id);
+        $(this).attr("entityName", productVariant.variantName);
+        showConfirmModal($(this), "Xóa biến thể sản phẩm", $(this).attr("entityName"));
+    })
 }
 
 function hideShowInitDaBanElement(type) {

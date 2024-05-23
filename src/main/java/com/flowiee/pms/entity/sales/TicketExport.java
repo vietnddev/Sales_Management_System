@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.storage.Storage;
+import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.model.dto.TicketExportDTO;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,6 +54,13 @@ public class TicketExport extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
     private List<ProductVariantTemp> listProductVariantTemp;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
+    private List<FileStorage> listImages;
+
+    @Transient
+    private BigDecimal totalValue;
 
     public static TicketExport fromTicketExportDTO(TicketExportDTO dto) {
         TicketExport ticketExport = new TicketExport();

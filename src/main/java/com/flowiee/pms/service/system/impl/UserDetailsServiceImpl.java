@@ -11,11 +11,11 @@ import com.flowiee.pms.repository.system.AccountRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
-import com.flowiee.pms.service.system.SystemLogService;
 
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,9 +34,7 @@ import java.util.*;
 public class UserDetailsServiceImpl extends BaseService implements UserDetailsService, AccountService {
 	@Autowired
 	private AccountRepository accountRepo;
-	@Autowired
-	private SystemLogService systemLogService;
-	@Autowired
+	@Autowired @Lazy
 	private RoleService roleService;
 
 	@Override
@@ -116,7 +114,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			}
 			SystemLog systemLog = new SystemLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_U.name(), "Cập nhật account: " + account.getUsername(), null);
 			systemLogService.writeLog(systemLog);
-			logger.info("Update account success! username=" + account.getUsername());
+			logger.info("Update account success! username={}", account.getUsername());
 			return accountRepo.save(account);
 		} catch (RuntimeException ex) {
 			throw new AppException("Update account fail! username=" + account.getUsername(), ex);

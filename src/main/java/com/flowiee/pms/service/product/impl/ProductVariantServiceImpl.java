@@ -29,6 +29,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;
@@ -132,18 +133,30 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         }
     }
 
+    @Transactional
     @Override
     public ProductVariantDTO update(ProductVariantDTO productDetail, Integer productVariantId) {
-        Optional<ProductVariantDTO> productDetailBefore = this.findById(productVariantId);
-        if (productDetailBefore.isEmpty()) {
+        Optional<ProductDetail> productDetailToUpdate = productVariantRepo.findById(productVariantId);
+        if (productDetailToUpdate.isEmpty()) {
             throw new BadRequestException();
         }
         try {
-            productDetail.setId(productVariantId);
-            ProductDetail productDetailUpdated = productVariantRepo.save(productDetail);
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), "Cập nhật biến thể sản phẩm: " + productDetailBefore.toString(), "Biến thể sản phẩm sau khi cập nhật: " + productDetail);
+            productDetailToUpdate.get().setVariantName(productDetail.getVariantName());
+            productDetailToUpdate.get().setPurchasePrice(productDetail.getPurchasePrice());
+            productDetailToUpdate.get().setCostPrice(productDetail.getCostPrice());
+            productDetailToUpdate.get().setRetailPrice(productDetail.getRetailPrice());
+            productDetailToUpdate.get().setRetailPriceDiscount(productDetail.getRetailPriceDiscount());
+            productDetailToUpdate.get().setWholesalePrice(productDetail.getWholesalePrice());
+            productDetailToUpdate.get().setWholesalePriceDiscount(productDetail.getWholesalePriceDiscount());
+            //productDetailToUpdate.get().setStorageQty(productDetail.getStorageQty());
+            //productDetailToUpdate.get().setSoldQty(productDetail.getSoldQty());
+            productDetailToUpdate.get().setDefectiveQty(productDetail.getDefectiveQty());
+            productDetailToUpdate.get().setWeight(productDetail.getWeight());
+            productDetailToUpdate.get().setNote(productDetail.getNote());
+            ProductDetail productVariantUpdated = productVariantRepo.save(productDetailToUpdate.get());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), "Update productVariant! variantName=" + productVariantUpdated.getVariantName());
             logger.info("Update productVariant success! {}", productDetail);
-            return ProductVariantConvert.entityToDTO(productDetailUpdated);
+            return ProductVariantConvert.entityToDTO(productVariantUpdated);
         } catch (Exception e) {
             throw new AppException("Update productVariant fail! " + productDetail.toString(), e);
         }
