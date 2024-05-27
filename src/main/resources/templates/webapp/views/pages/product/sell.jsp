@@ -34,7 +34,7 @@
                             <div class="card-body">
                                 <div class="row" th:each="cart, cartIndex : ${listCart}">
                                     <div class="col-sm-9 border">
-                                        <form class="row mt-3" th:action="@{/don-hang/ban-hang/cart/item/add}" method="POST">
+                                        <form class="row mt-3" th:action="@{/order/ban-hang/cart/item/add}" method="POST">
                                             <div class="col-sm-10 form-group">
                                                 <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" id="productVariantField" required>
                                                     <option th:each="list : ${listProductVariant}" th:value="${list.id}" th:text="${list.variantName + ' - hiện còn: ' + list.storageQty}"></option>
@@ -82,7 +82,7 @@
                                                                  th:id="'modalUpdateItems_' + ${item.id}">
                                                                 <div class="modal-dialog">
                                                                     <div class="modal-content">
-                                                                        <form th:action="@{/don-hang/ban-hang/cart/item/update/{itemId}(itemId=${item.id})}"
+                                                                        <form th:action="@{/order/ban-hang/cart/item/update/{itemId}(itemId=${item.id})}"
                                                                               th:object="${items}" method="POST">
                                                                             <div class="modal-header">
                                                                                 <strong class="modal-title">Cập nhật sản phẩm</strong>
@@ -132,7 +132,7 @@
                                                             <div class="modal fade" th:id="'modalDeleteItems_' + ${item.id}">
                                                                 <div class="modal-dialog">
                                                                     <div class="modal-content">
-                                                                        <form th:action="@{/don-hang/ban-hang/cart/item/delete/{itemId}(itemId=${item.id})}" method="POST">
+                                                                        <form th:action="@{/order/ban-hang/cart/item/delete/{itemId}(itemId=${item.id})}" method="POST">
                                                                             <div class="modal-header">
                                                                                 <strong class="modal-title">Cập nhật giỏ hàng</strong>
                                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -313,7 +313,7 @@
                                             <div class="modal fade" th:id="'modalDeleteCart_' + ${cart.id}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <form th:action="@{/don-hang/ban-hang/cart/{id}/reset(id=${cart.id})}"
+                                                        <form th:action="@{/order/ban-hang/cart/{id}/reset(id=${cart.id})}"
                                                               method="POST">
                                                             <div class="modal-header">
                                                                 <strong class="modal-title">Thông báo xác nhận</strong>
@@ -533,7 +533,7 @@
             });
             if (response.ok && ((await response.json()).status === 'OK')) {
                 alert('Create new order success!')
-                window.location =  mvHostURL + '/don-hang'
+                window.location =  mvHostURL + '/order'
             } else {
                 alert('Create fail!')
             }

@@ -32,6 +32,26 @@ public class VldModuleProduct extends BaseAuthorize implements IVldModuleProduct
     }
 
     @Override
+    public boolean readCombo(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_CBO_R.name(), throwException);
+    }
+
+    @Override
+    public boolean insertCombo(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_CBO_C.name(), throwException);
+    }
+
+    @Override
+    public boolean updateCombo(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_CBO_U.name(), throwException);
+    }
+
+    @Override
+    public boolean deleteCombo(boolean throwException) {
+        return super.isAuthorized(ACTION.PRO_CBO_D.name(), throwException);
+    }
+
+    @Override
     public boolean updateImage(boolean throwException) {
         return super.isAuthorized(ACTION.PRO_PRD_U.name(), throwException);
     }

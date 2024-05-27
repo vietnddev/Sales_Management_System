@@ -19,12 +19,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/don-hang")
+@RequestMapping("/order")
 public class OrderControllerView extends BaseController {
     private final OrderService orderService;
     private final OrderExportService orderExportService;
@@ -101,7 +100,7 @@ public class OrderControllerView extends BaseController {
     @PostMapping("/ban-hang/cart/add-voucher/{code}")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
     public ModelAndView checkToUse(@PathVariable("code") String code) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/don-hang/ban-hang");
+        ModelAndView modelAndView = new ModelAndView("redirect:/order/ban-hang");
         modelAndView.addObject("ticket_code", code);
         modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
         modelAndView.addObject("ticket_info", voucherTicketService.findTicketByCode(code));
@@ -112,14 +111,14 @@ public class OrderControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView update(@ModelAttribute("donHang") OrderDTO order, @PathVariable("id") Integer orderId) {
         orderService.update(order, orderId);
-        return new ModelAndView("redirect:/don-hang");
+        return new ModelAndView("redirect:/order");
     }
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
     public ModelAndView delete(@PathVariable("id") Integer orderId) {
         orderService.delete(orderId);
-        return new ModelAndView("redirect:/don-hang");
+        return new ModelAndView("redirect:/order");
     }
 
     @GetMapping("/abc")
@@ -127,14 +126,14 @@ public class OrderControllerView extends BaseController {
         return null;
     }
 
-    @GetMapping("/export/pdf/{id}")
-    public void exportToPDF(@PathVariable("id") Integer orderId, HttpServletResponse response) throws IOException {
+    @GetMapping("/print-invoice/{id}")
+    public void exportToPDF(@PathVariable("id") Integer orderId, HttpServletResponse response) {
         try {
             Optional<OrderDTO> orderDTO = orderService.findById(orderId);
             if (orderDTO.isEmpty()) {
                 throw new BadRequestException();
             }
-            orderExportService.exportToPDF(orderId, null, true, response);
+            orderExportService.printInvoicePDF(orderId, null, true, response);
         } catch (RuntimeException ex) {
             throw new AppException(ex);
         }

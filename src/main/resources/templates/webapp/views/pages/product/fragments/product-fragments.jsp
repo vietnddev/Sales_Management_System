@@ -299,7 +299,7 @@
                                                             <div class="fileupload-process w-100">
                                                                 <div id="total-progress" class="progress progress-striped active" role="progressbar"
                                                                      aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                                                    <div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -383,6 +383,45 @@
                 <!--Srart Sub-Image-->
                 <div class="row w-100" style="max-height: 500px; overflow: scroll" id="gridSubImages"></div>
                 <!--End Sub-Image-->
+            </div>
+        </div>
+
+        <div th:fragment="storageHistoryModal">
+            <div class="modal fade" id="storageHistoryModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <strong class="modal-title">Cập nhật giá bán</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-4">Giá gốc</label>
+                                <input class="col-sm-8 form-control" type="text" id="orgPriceFieldFUP" readonly>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4">Giá điều chỉnh</label>
+                                <input class="col-sm-8 form-control" type="text" id="orgPriceToUpdateFieldFUP" name="giaBan">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4">Giá khuyến mãi</label>
+                                <input class="col-sm-8 form-control" type="text" id="promoPriceFieldFUP" readonly>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4">Giá điều chỉnh</label>
+                                <input class="col-sm-8 form-control" type="text" id="promoPriceToUpdateFieldFUP" name="giaBan">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4">Ghi chú</label>
+                                <textarea class="col-sm-8 form-control" type="text" id="noteFieldFUP" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-end">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-sm btn-primary" id="btnUpdatePriceSubmit">Đồng ý</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

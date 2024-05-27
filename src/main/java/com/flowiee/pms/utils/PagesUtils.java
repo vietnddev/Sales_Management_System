@@ -33,6 +33,7 @@ public class PagesUtils {
     public static final String PRO_SUPPLIER = mdlPRODUCT + "/supplier";
     public static final String PRO_PROMOTION = mdlPRODUCT + "/promotion";
     public static final String PRO_PROMOTION_DETAIL = mdlPRODUCT + "/promotion-detail";
+    public static final String PRO_COMBO = mdlPRODUCT + "/combo";
 
     private static final String mdlSTORAGE = "/pages/storage";
     public static final String STG_DASHBOARD = mdlSTORAGE + "/dashboard";

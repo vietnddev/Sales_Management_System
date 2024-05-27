@@ -117,7 +117,7 @@ public class FileStorage extends BaseEntity implements Serializable {
             this.customizeName = file.getOriginalFilename();
             //this.storageName = Instant.now(Clock.systemUTC()).toEpochMilli() + "_" + file.getOriginalFilename();
             this.fileSize = file.getSize();
-            this.extension = CommonUtils.getExtension(file.getOriginalFilename());
+            this.extension = CommonUtils.getFileExtension(file.getOriginalFilename());
             this.contentType = file.getContentType();
             this.directoryPath = CommonUtils.getPathDirectory(pModule).substring(CommonUtils.getPathDirectory(pModule).indexOf("uploads"));
             this.account = new Account(CommonUtils.getUserPrincipal().getId());

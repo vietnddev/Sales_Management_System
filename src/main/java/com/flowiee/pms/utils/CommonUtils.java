@@ -1,8 +1,8 @@
 package com.flowiee.pms.utils;
 
-import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.model.ServerInfo;
 import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.model.UserPrincipal;
 import org.apache.commons.lang3.ObjectUtils;
@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.*;
 import java.time.Clock;
@@ -29,17 +30,19 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
+    public static LocalDateTime START_APP_TIME = null;
+    public static final String ADMINISTRATOR = "admin";
     public static final String rootPath = "src/main/resources/static";
     public static final String fileUploadPath = rootPath + "/uploads/";
+    public static final String initCsvDataPath = rootPath + "/data/csv";
     public static final String reportTemplatePath = rootPath + "/report";
     public static final String excelTemplatePath = rootPath + "/templates/excel";
-    public static final String initCsvDataPath = rootPath + "/data/csv";
-    public static final String ADMINISTRATOR = "admin";
-    public static LocalDateTime START_APP_TIME = null;
+    public static Path logoPath = Paths.get(rootPath + "/dist/img/FlowieeLogo.png");
     public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
     public static ShopInfo mvShopInfo;
-    public static Boolean mvInitData = false;
+    public static ServerInfo mvServerInfo;
+    public static  Boolean mvInitData = false;
 
     public static String formatToVND(Object currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -76,7 +79,7 @@ public class CommonUtils {
         return map.get(key);
     }
 
-    public static String getExtension(String fileName) {
+    public static String getFileExtension(String fileName) {
         String extension = "";
         if (ObjectUtils.isNotEmpty(fileName)) {
             int lastIndex = fileName.lastIndexOf('.');

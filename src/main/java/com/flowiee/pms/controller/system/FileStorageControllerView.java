@@ -36,8 +36,8 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/uploads/san-pham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView uploadImageOfSanPham(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productId) throws Exception {
-        if (productId <= 0 || productInfoService.findById(productId) == null) {
+    public ModelAndView uploadImageOfProductBase(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productId) throws Exception {
+        if (productId <= 0 || productInfoService.findById(productId).isEmpty()) {
             throw new NotFoundException("Product not found!");
         }
         if (file.isEmpty()) {
@@ -49,7 +49,7 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/uploads/bien-the-san-pham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView uploadImageOfSanPhamBienThe(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productVariantId) throws Exception {
+    public ModelAndView uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productVariantId) throws Exception {
         if (productVariantId <= 0 || productVariantService.findById(productVariantId).isEmpty()) {
             throw new NotFoundException("Product variant not found!");
         }

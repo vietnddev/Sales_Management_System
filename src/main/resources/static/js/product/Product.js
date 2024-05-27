@@ -37,6 +37,9 @@ function init() {
         loadCategoriesOfProductVariant();
         autoFillVariantNameInField(mvProductNameField.val(), null, null, null);
     });
+    mvBtnViewStorageHistory.hide();
+    mvBtnUpdateVariant.hide();
+    mvBtnDeleteVariant.hide();
     setupListener();
 }
 
@@ -99,6 +102,9 @@ function setupListener() {
     $(document).on("click", ".productVariantNameRowTbl", function () {
         let lvProductVariantId = $(this).attr("productVariantId");
         loadProductVariantInfoOnForm(lvProductVariantId);
+        mvBtnViewStorageHistory.show();
+        mvBtnUpdateVariant.show();
+        mvBtnDeleteVariant.show();
     })
     mvBtnUpdateVariant.on("click", function (e) {
         e.preventDefault();

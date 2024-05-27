@@ -178,15 +178,14 @@
                                                             <textarea class="form-control" rows="2" id="variantNoteF2"></textarea>
                                                         </div>
                                                         <div class="form-group col-12 row p-0">
-                                                            <div class="col-6">
-                                                                <button class="btn btn-info w-100" type="button" id="btnUpdateVariant">
-                                                                    <i class="fa-solid fa-pencil"></i>
-                                                                </button>
+                                                            <div class="col-4">
+                                                                <button class="btn btn-secondary w-100" type="button" id="btnViewStorageHistory"><i class="fa-solid fa-warehouse"></i></button>
                                                             </div>
-                                                            <div class="col-6">
-                                                                <button class="btn btn-danger w-100" type="button" id="btnDeleteVariant">
-                                                                    <i class="fa-solid fa-trash"></i>
-                                                                </button>
+                                                            <div class="col-4">
+                                                                <button class="btn btn-info w-100" type="button" id="btnUpdateVariant"><i class="fa-solid fa-pencil"></i></button>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <button class="btn btn-danger w-100" type="button" id="btnDeleteVariant"><i class="fa-solid fa-trash"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -271,6 +270,7 @@
         let mvImagesOfProduct = [];
         let mvImageActive = {};
 
+        let mvBtnViewStorageHistory = $("#btnViewStorageHistory");
         let mvBtnUpdateVariant = $("#btnUpdateVariant");
         let mvBtnDeleteVariant = $("#btnDeleteVariant");
 

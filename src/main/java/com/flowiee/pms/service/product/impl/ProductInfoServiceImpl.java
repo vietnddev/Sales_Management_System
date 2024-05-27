@@ -16,13 +16,10 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
-import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
 import com.flowiee.pms.utils.converter.ProductConvert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -35,7 +32,6 @@ import java.util.Optional;
 
 @Service
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
-    private static final Logger logger = LoggerFactory.getLogger(ProductInfoServiceImpl.class);
     private static final String mvModule = MODULE.PRODUCT.name();
 
     @Autowired

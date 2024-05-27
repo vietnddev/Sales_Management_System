@@ -18,7 +18,7 @@ function callApiDelete(apiURL, redirectTo) {
         type: 'DELETE',
         success: function(result) {
             // Xử lý kết quả nếu cần thiết
-            alert(result.data)
+            alert(result.message)
             if (redirectTo != null) {
                 window.location = mvHostURL + redirectTo;
             } else {
@@ -27,7 +27,7 @@ function callApiDelete(apiURL, redirectTo) {
         },
         error: function(xhr, status, error) {
             // Xử lý lỗi nếu có
-            alert(status + ': ' + JSON.stringify(xhr.responseJSON));
+            alert(status + ': ' + JSON.stringify(xhr.responseJSON.message));
         }
     });
 }

@@ -1,0 +1,50 @@
+package com.flowiee.pms.entity.product;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.flowiee.pms.entity.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Table(name = "product_combo")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class ProductCombo extends BaseEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Column(name = "combo_name", nullable = false)
+    private String comboName;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
+    @Column(name = "amount_discount", nullable = false)
+    private BigDecimal amountDiscount;
+
+    @Column(name = "note")
+    private String note;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "productCombo", fetch = FetchType.LAZY)
+    private List<ProductDetail> listProductVariant;
+
+    @Transient
+    private BigDecimal totalValue;
+}

@@ -10,8 +10,6 @@ import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.MessageUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +19,6 @@ import java.util.Optional;
 
 @Service
 public class ProductPriceServiceImpl extends BaseService implements ProductPriceService {
-    Logger logger = LoggerFactory.getLogger(ProductPriceServiceImpl.class);
-
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired

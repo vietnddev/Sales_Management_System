@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/don-hang")
+@RequestMapping("/order")
 @Tag(name = "Order API", description = "Quản lý giỏ hàng")
 public class CartController extends BaseController {
     @Autowired
@@ -41,7 +41,7 @@ public class CartController extends BaseController {
             throw new NotFoundException("Cart not found!");
         }
         cartService.addItemsToCart(cartId, bienTheSanPhamId);
-        return new ModelAndView("redirect:/don-hang/ban-hang");
+        return new ModelAndView("redirect:/order/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/item/update/{itemId}")
@@ -53,7 +53,7 @@ public class CartController extends BaseController {
             throw new NotFoundException("Cart not found!");
         }
         cartService.updateItemsOfCart(items, itemId);
-        return new ModelAndView("redirect:/don-hang/ban-hang");
+        return new ModelAndView("redirect:/order/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/item/delete/{itemId}")
@@ -63,7 +63,7 @@ public class CartController extends BaseController {
             throw new BadRequestException("Sản phẩm cần xóa trong giỏ hàng không tồn tại! cartId=" + cartId + ", itemId=" + itemId);
         }
         cartItemsService.delete(itemId);
-        return new ModelAndView("redirect:/don-hang/ban-hang");
+        return new ModelAndView("redirect:/order/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/{cartId}/reset")
@@ -73,7 +73,7 @@ public class CartController extends BaseController {
             throw new BadRequestException("Cart not found! cartId=" + cartId);
         }
         cartService.resetCart(cartId);
-        return new ModelAndView("redirect:/don-hang/ban-hang");
+        return new ModelAndView("redirect:/order/ban-hang");
     }
 
 //    @PutMapping("/cart/{cartId}/item/update/{itemId}")

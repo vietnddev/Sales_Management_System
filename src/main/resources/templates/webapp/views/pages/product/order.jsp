@@ -104,7 +104,7 @@
                             contentTable.append(`
                                <tr>
                                     <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                    <td><a href="/don-hang/${d.id}">${d.code}</a></td>
+                                    <td><a href="/order/${d.id}">${d.code}</a></td>
                                     <td>${d.orderTime}</td>
                                     <td>${d.receiverAddress}</td>
                                     <td>${d.receiverName}</td>
@@ -114,7 +114,7 @@
                                     <td>${d.note}</td>
                                     <td>${d.paymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán"}</td>
                                     <td>${d.orderStatusName}</td>
-                                    <td><a class="btn btn-sm btn-info btn-print-report" href="/don-hang/export/pdf/${d.id}" orderId="${d.id}"><i class="fa-solid fa-print"></i></a></td>
+                                    <td><a class="btn btn-sm btn-info btn-print-invoice" href="/order/print-invoice/${d.id}" orderId="${d.id}"><i class="fa-solid fa-print"></i></a></td>
                                 </tr>
                             `);
                         });
@@ -125,9 +125,9 @@
             }
 
             function printReport() {
-                $(document).on("click", ".btn-print-report", function (e) {
+                $(document).on("click", ".btn-print-invoice", function (e) {
                     e.preventDefault();
-                    window.open(mvHostURL + "/don-hang/export/pdf/" + parseInt($(this).attr("orderId")), "_blank");
+                    window.open(mvHostURL + "/order/print-invoice/" + parseInt($(this).attr("orderId")), "_blank");
                 })
             }
         </script>

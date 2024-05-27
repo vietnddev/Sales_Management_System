@@ -80,8 +80,9 @@
 	<parameter name="nowDate" class="java.lang.String"/>
 	<parameter name="barcode" class="java.lang.String"/>
 	<parameter name="parameter14" class="java.lang.String"/>
-	<parameter name="parameter15" class="java.lang.String"/>
+	<parameter name="logoPath" class="java.lang.String"/>
 	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="parameter2" class="java.lang.String"/>
 	<field name="productName" class="java.lang.String"/>
 	<field name="unitPrice" class="java.lang.String"/>
 	<field name="quantity" class="java.lang.String"/>
@@ -198,7 +199,7 @@
 			</image>
 			<image hAlign="Center" vAlign="Middle">
 				<reportElement mode="Transparent" x="0" y="0" width="95" height="61" uuid="b03a6d4c-5c95-4482-b79c-0bd762049c9f"/>
-				<imageExpression><![CDATA["D:\\App\\FW_PMS\\src\\main\\resources\\static\\dist\\img\\FlowieeLogo.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
 			</image>
 		</band>
 	</title>

@@ -12,8 +12,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +28,6 @@ import java.util.Optional;
 
 @Service
 public class StorageExportServiceImpl extends BaseService implements StorageExportService {
-    Logger logger = LoggerFactory.getLogger(StorageExportServiceImpl.class);
-
     @Autowired
     private StorageService storageService;
 

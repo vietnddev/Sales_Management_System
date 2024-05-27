@@ -11,6 +11,14 @@ interface IVldModuleProduct {
 
     boolean importProduct(boolean throwException);
 
+    boolean readCombo(boolean throwException);
+
+    boolean insertCombo(boolean throwException);
+
+    boolean updateCombo(boolean throwException);
+
+    boolean deleteCombo(boolean throwException);
+
     boolean readMaterial(boolean throwException);
 
     boolean insertMaterial(boolean throwException);

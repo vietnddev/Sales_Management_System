@@ -15,8 +15,6 @@ import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +31,6 @@ import java.util.Optional;
 
 @Service
 public class ProductImageServiceImpl extends BaseService implements ProductImageService {
-    Logger logger = LoggerFactory.getLogger(ProductImageServiceImpl.class);
-
     @Autowired
     private FileStorageRepository fileRepository;
     @Autowired
@@ -60,7 +56,6 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), pProductId);
         fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
-        fileInfo.setActive(false);
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
@@ -81,7 +76,6 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), productDetail.get().getProductId());
         fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setProductDetail(productDetail.get());
-        fileInfo.setActive(false);
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
@@ -101,7 +95,6 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
         fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setTicketImport(ticketImport.get());
-        fileInfo.setActive(false);
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
@@ -121,7 +114,6 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
         fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
         fileInfo.setTicketExport(ticketExport.get());
-        fileInfo.setActive(false);
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
@@ -197,7 +189,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         fileToChange.setCustomizeName(fileAttached.getOriginalFilename());
         fileToChange.setStorageName(currentTime + "_" + fileAttached.getOriginalFilename());
         fileToChange.setFileSize(fileAttached.getSize());
-        fileToChange.setExtension(CommonUtils.getExtension(fileAttached.getOriginalFilename()));
+        fileToChange.setExtension(CommonUtils.getFileExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")));
         fileToChange.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));

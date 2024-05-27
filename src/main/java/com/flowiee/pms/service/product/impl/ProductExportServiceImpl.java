@@ -5,15 +5,12 @@ import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductExportService;
 import com.flowiee.pms.service.product.ProductVariantService;
-import com.flowiee.pms.service.sales.impl.OrderExportServiceImpl;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.ExcelUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +25,6 @@ import java.util.List;
 
 @Service
 public class ProductExportServiceImpl extends BaseService implements ProductExportService {
-    Logger logger = LoggerFactory.getLogger(OrderExportServiceImpl.class);
-
     @Autowired
     private ProductVariantService productVariantService;
 

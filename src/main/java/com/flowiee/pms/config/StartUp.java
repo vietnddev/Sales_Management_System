@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.Branch;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.entity.system.SystemConfig;
+import com.flowiee.pms.model.ServerInfo;
 import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
@@ -19,6 +20,8 @@ import com.flowiee.pms.utils.CommonUtils;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,10 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.opencsv.*;
+import org.jfree.util.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.EventListener;
 
 @Configuration
 public class StartUp {
@@ -43,6 +50,7 @@ public class StartUp {
 	private final CategoryRepository categoryRepository;
 	private final GroupAccountRepository groupAccountRepository;
 
+	@Autowired
 	public StartUp(LanguageService languageService, ConfigRepository configRepository, @Lazy CategoryRepository categoryRepository,
 				   @Lazy BranchRepository branchRepository, @Lazy AccountRepository accountRepository, @Lazy CustomerRepository customerRepository,
 				   @Lazy GroupAccountRepository groupAccountRepository) {
@@ -67,6 +75,19 @@ public class StartUp {
 			CommonUtils.START_APP_TIME = LocalDateTime.now();
         };
     }
+
+	@EventListener
+	private void loadServerInfo(WebServerInitializedEvent event) {
+		int serverPort = event.getWebServer().getPort();
+		String ipAddress = "localhost";
+		try {
+			ipAddress = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			Log.info("Can't get local host address");
+		}
+		System.out.println("Server is running on IP: " + ipAddress + ", Port: " + serverPort);
+		CommonUtils.mvServerInfo = new ServerInfo(ipAddress, serverPort);
+	}
 
     private void loadLanguageMessages(String langCode) {
         languageService.reloadMessage(langCode);
