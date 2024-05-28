@@ -99,7 +99,7 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
     }
 
     @Override
-    public void exportToPDF(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response) {
+    public void printInvoicePDF(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response) {
         Optional<OrderDTO> dtoOptional = orderService.findById(pOrderId);
         if (dtoOptional.isEmpty()) {
             throw new BadRequestException();
@@ -126,6 +126,7 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
         parameterMap.put("nowDate", new Date());
         FileStorage f = orderQRCodeService.findQRCodeOfOrder(dto.getId());
         parameterMap.put("barcode", Path.of(CommonUtils.rootPath + "/" + f.getDirectoryPath() + "/" + f.getStorageName()));
+        parameterMap.put("logoPath", CommonUtils.logoPath);
 
         // orderDetails
         List<OrderDetailRpt> listDetail = new ArrayList<>();

@@ -10,5 +10,5 @@ public interface OrderExportService {
 
     byte[] exportToCSV(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response);
 
-    void exportToPDF(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response);
+    void printInvoicePDF(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response);
 }
