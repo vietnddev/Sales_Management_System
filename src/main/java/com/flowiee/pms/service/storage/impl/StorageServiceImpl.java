@@ -11,6 +11,7 @@ import com.flowiee.pms.repository.storage.StorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.LogType;
 import com.flowiee.pms.utils.converter.StorageConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ import java.util.Optional;
 
 @Service
 public class StorageServiceImpl extends BaseService implements StorageService {
+    private static final String mainObjectName = "Storage";
     private final StorageRepository storageRepository;
 
     @Autowired
@@ -132,7 +134,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
                 return "This storage is in use!";
             }
             storageRepository.deleteById(storageId);
-            systemLogService.writeLog(MODULE.STORAGE.name(), ACTION.STG_STORAGE.name(), "Delete Storage storageId=" + storageId);
+            systemLogService.writeLog(MODULE.STORAGE.name(), ACTION.STG_STORAGE.name(), mainObjectName, LogType.D.name(), "Delete Storage storageId=" + storageId);
             logger.info("Delete storage success! storageId={}", storageId);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {

@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.system.impl;
 
+import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.repository.system.SystemLogRepository;
 import com.flowiee.pms.service.BaseService;
@@ -20,8 +21,10 @@ import java.util.List;
 
 @Service
 public class SystemLogServiceImpl extends BaseService implements SystemLogService {
-    @Autowired private SystemLogRepository systemLogRepo;
-    @Autowired private EntityManager entityManager;
+    @Autowired
+    private SystemLogRepository systemLogRepo;
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {
@@ -39,7 +42,7 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
             SystemLog systemLog = new SystemLog();
             systemLog.setId(Integer.parseInt(String.valueOf(data[0])));
             systemLog.setModule(String.valueOf(data[1]));
-            systemLog.setAction(String.valueOf(data[2]));
+            systemLog.setFunction(String.valueOf(data[2]));
             systemLog.setContent(String.valueOf(data[3]));
             systemLog.setContentChange(String.valueOf(data[4]));
             systemLog.setIp(String.valueOf(data[5]));
@@ -50,31 +53,21 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
     }
 
     @Override
-    public SystemLog writeLog(SystemLog log) {
-        return systemLogRepo.save(log);
+    public SystemLog writeLog(String module, String function, String object, String mode, String content) {
+        return writeLog(module, function, object, mode, content, null);
     }
 
     @Override
-    public SystemLog writeLog(String module, String action, String content) {
+    public SystemLog writeLog(String module, String function, String object, String mode, String content, String contentChange) {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
-        systemLog.setAction(action);
-        systemLog.setContent(content);
-        systemLog.setContentChange(null);
-        systemLog.setCreatedBy(CommonUtils.getUserPrincipal() != null ? CommonUtils.getUserPrincipal().getId() : null);
-        systemLog.setIp(CommonUtils.getUserPrincipal() != null ? CommonUtils.getUserPrincipal().getIp() : null);
-        return systemLogRepo.save(systemLog);
-    }
-
-    @Override
-    public SystemLog writeLog(String module, String action, String content, String contentChange) {
-        SystemLog systemLog = new SystemLog();
-        systemLog.setModule(module);
-        systemLog.setAction(action);
+        systemLog.setFunction(function);
+        systemLog.setObject(object);
+        systemLog.setMode(mode);
         systemLog.setContent(content);
         systemLog.setContentChange(contentChange);
-        systemLog.setCreatedBy(CommonUtils.getUserPrincipal().getId());
         systemLog.setIp(CommonUtils.getUserPrincipal().getIp());
+        systemLog.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
         return systemLogRepo.save(systemLog);
     }
 }

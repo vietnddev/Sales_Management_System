@@ -8,6 +8,7 @@ import com.flowiee.pms.repository.product.ProductAttributeRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Service
 public class ProductAttributeServiceImpl extends BaseService implements ProductAttributeService {
     private static final String mvModule = MODULE.PRODUCT.name();
+    private static final String mainObjectName = "ProductAttribute";
 
     @Autowired
     private ProductAttributeRepository productAttributeRepo;
@@ -47,7 +49,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     @Override
     public ProductAttribute save(ProductAttribute productAttribute) {
         ProductAttribute productAttributeSaved = productAttributeRepo.save(productAttribute);
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Thêm mới thuộc tính sản phẩm");
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, LogType.I.name(), "Thêm mới thuộc tính sản phẩm");
         return productAttributeSaved;
     }
 
@@ -55,7 +57,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     public ProductAttribute update(ProductAttribute attribute, Integer attributeId) {
         attribute.setId(attributeId);
         ProductAttribute productAttributeUpdated = productAttributeRepo.save(attribute);
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Cập nhật thuộc tính sản phẩm");
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, LogType.U.name(), "Cập nhật thuộc tính sản phẩm");
         return productAttributeUpdated;
     }
 
@@ -65,7 +67,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
             throw new NotFoundException("Product attribute not found!");
         }
         productAttributeRepo.deleteById(attributeId);
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Xóa thuộc tính sản phẩm");
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, LogType.D.name(), "Xóa thuộc tính sản phẩm");
         return MessageUtils.DELETE_SUCCESS;
     }
 }

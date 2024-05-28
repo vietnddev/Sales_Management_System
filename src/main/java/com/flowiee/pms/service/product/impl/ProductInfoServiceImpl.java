@@ -19,6 +19,7 @@ import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.LogType;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -33,6 +34,7 @@ import java.util.Optional;
 @Service
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
     private static final String mvModule = MODULE.PRODUCT.name();
+    private static final String mainObjectName = "ProductBase";
 
     @Autowired
     private ProductRepository productsRepo;
@@ -93,7 +95,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             productToSave.setDescription(product.getDescription() != null ? product.getDescription() : "");
             productToSave.setStatus(AppConstants.PRODUCT_STATUS.I.name());
             Product productSaved = productsRepo.save(productToSave);
-            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_C.name(), "Thêm mới sản phẩm: " + product);
+            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_C.name(), mainObjectName, LogType.I.name(), "Thêm mới sản phẩm: " + product);
             logger.info("Insert product success! {}", product);
             return ProductConvert.convertToDTO(productSaved);
         } catch (RuntimeException ex) {
@@ -137,7 +139,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         } else {
             noiDungLogUpdate = productToUpdate.toString();
         }
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
+        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, LogType.U.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
         logger.info("Update product success! productId={}", productId);
         return ProductConvert.convertToDTO(productUpdated);
     }
@@ -154,7 +156,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
                 throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
             }
             productsRepo.deleteById(id);
-            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_D.name(), "Xóa sản phẩm: " + productToDelete.toString());
+            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_D.name(), mainObjectName, LogType.D.name(), "Xóa sản phẩm: " + productToDelete.toString());
             logger.info("Delete product success! productId={}", id);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {

@@ -85,6 +85,10 @@ public class Account extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
 	private List<FlowieeImport> listHistoryImportData;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+	private List<SystemLog> listLog;
+
 	@Transient
 	private String ip;
 

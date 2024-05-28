@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.flowiee.pms.utils.FileUtils;
 import com.opencsv.*;
 import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,7 @@ public class StartUp {
     }
 
 	private void initReportConfig() {
-		String templateExportTempStr = CommonUtils.excelTemplatePath + "/temp";
+		String templateExportTempStr = FileUtils.excelTemplatePath + "/temp";
 		Path templateExportTempPath = Paths.get(templateExportTempStr);
 		if (!Files.exists(templateExportTempPath)) {
             try {
@@ -148,31 +149,31 @@ public class StartUp {
 		String flagConfigCode = "initData";
 		SystemConfig flagConfigObj = configRepository.findByCode(flagConfigCode);
 		if (flagConfigObj == null) {
-			CommonUtils.mvInitData = false;
-			configRepository.save(new SystemConfig(flagConfigCode, "Initialize initial data for the system", "N"));
-			configRepository.save(new SystemConfig("shopName", "Tên cửa hàng", "Flowiee"));
-			configRepository.save(new SystemConfig("shopEmail", "Email", "nguyenducviet0684@gmail.com"));
-			configRepository.save(new SystemConfig("shopPhoneNumber", "Số điện thoại", "(+84) 706 820 684"));
-			configRepository.save(new SystemConfig("shopAddress", "Địa chỉ", "Phường 7, Quận 8, Thành phố Hồ Chí Minh"));
-			configRepository.save(new SystemConfig("shopLogoUrl", "Logo", null));
-			configRepository.save(new SystemConfig("emailHost", "Email host", "smtp"));
-			configRepository.save(new SystemConfig("emailPort", "Email port", "587"));
-			configRepository.save(new SystemConfig("emailUser", "Email username", null));
-			configRepository.save(new SystemConfig("emailPass", "Email password", null));
-			configRepository.save(new SystemConfig("sysTimeOut", "Thời gian timeout", "3600"));
-			configRepository.save(new SystemConfig("pathFileUpload", "Thư mục lưu file upload", null));
-			configRepository.save(new SystemConfig("maxSizeFileUpload", "Dung lượng file tối đa cho phép upload", null));
-			configRepository.save(new SystemConfig("extensionAllowedFileUpload", "Định dạng file được phép upload", null));
-			configRepository.save(new SystemConfig("sendEmailReportDaily", "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
+			List<SystemConfig> listConfig = new ArrayList<>();
+			listConfig.add(new SystemConfig(flagConfigCode, "Initialize initial data for the system", "N"));
+			listConfig.add(new SystemConfig("shopName", "Tên cửa hàng", "Flowiee"));
+			listConfig.add(new SystemConfig("shopEmail", "Email", "nguyenducviet0684@gmail.com"));
+			listConfig.add(new SystemConfig("shopPhoneNumber", "Số điện thoại", "(+84) 706 820 684"));
+			listConfig.add(new SystemConfig("shopAddress", "Địa chỉ", "Phường 7, Quận 8, Thành phố Hồ Chí Minh"));
+			listConfig.add(new SystemConfig("shopLogoUrl", "Logo", null));
+			listConfig.add(new SystemConfig("emailHost", "Email host", "smtp"));
+			listConfig.add(new SystemConfig("emailPort", "Email port", "587"));
+			listConfig.add(new SystemConfig("emailUser", "Email username", null));
+			listConfig.add(new SystemConfig("emailPass", "Email password", null));
+			listConfig.add(new SystemConfig("sysTimeOut", "Thời gian timeout", "3600"));
+			listConfig.add(new SystemConfig("pathFileUpload", "Thư mục lưu file upload", null));
+			listConfig.add(new SystemConfig("maxSizeFileUpload", "Dung lượng file tối đa cho phép upload", null));
+			listConfig.add(new SystemConfig("extensionAllowedFileUpload", "Định dạng file được phép upload", null));
+			listConfig.add(new SystemConfig("sendEmailReportDaily", "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
+			configRepository.saveAll(listConfig);
 		}
 		SystemConfig systemConfigInitData = configRepository.findByCode(flagConfigCode);
 		if ("Y".equals(systemConfigInitData.getValue())) {
 			return;
 		}
 		//Init category
-		String fileNameCsvCategory = CommonUtils.initCsvDataPath + "/Category.csv";
 		CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
-		FileReader fileReader = new FileReader(fileNameCsvCategory);
+		FileReader fileReader = new FileReader(FileUtils.getFileDataCategoryInit());
 		CSVReader csvReader = new CSVReaderBuilder(fileReader).withCSVParser(parser).build();
 		List<Category> listCategory = new ArrayList<>();
 		for (String[] row : csvReader.readAll()) {
@@ -244,6 +245,5 @@ public class StartUp {
 
 		systemConfigInitData.setValue("Y");
 		configRepository.save(systemConfigInitData);
-		CommonUtils.mvInitData = true;
 	}
 }

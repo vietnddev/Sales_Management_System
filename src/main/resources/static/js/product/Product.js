@@ -124,6 +124,12 @@ function setupListener() {
         $(this).attr("entityName", productVariant.variantName);
         showConfirmModal($(this), "Xóa biến thể sản phẩm", $(this).attr("entityName"));
     })
+    mvBtnViewStorageHistory.on("click", function (e) {
+        e.preventDefault();
+        let productVariant = mvProductVariantList[$(this).attr("productVariantId")];
+        getStorageHistory(productVariant.id);
+        $("#storageHistoryModal").modal();
+    })
 }
 
 function hideShowInitDaBanElement(type) {
@@ -269,6 +275,7 @@ function loadProductVariantInfoOnForm(productVariantId) {
     mvStatusF2.empty();
     mvStatusF2.append('<option value=' + lvProductVariant.status + '>' + mvProductStatus[lvProductVariant.status] + '</option>');
 
+    mvBtnViewStorageHistory.attr("productVariantId", productVariantId);
     mvBtnUpdateVariant.attr("productVariantId", productVariantId);
     mvBtnDeleteVariant.attr("productVariantId", productVariantId);
 }

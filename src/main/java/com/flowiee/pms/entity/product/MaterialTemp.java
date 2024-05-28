@@ -36,6 +36,9 @@ public class MaterialTemp extends BaseEntity implements Serializable {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @Column(name = "storage_qty")
+    private Integer storageQty;
+
     @Column(name = "purchase_price")
     private BigDecimal purchasePrice;
 

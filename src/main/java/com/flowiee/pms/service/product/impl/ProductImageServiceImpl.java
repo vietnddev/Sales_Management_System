@@ -14,6 +14,7 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -177,7 +178,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         FileStorage fileToChange = fileOptional.get();
         //Delete file vật lý cũ
         try {
-            File file = new File(CommonUtils.rootPath + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getStorageName());
+            File file = new File(FileUtils.rootPath + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getStorageName());
             if (file.exists()) {
                 file.delete();
             }

@@ -22,9 +22,9 @@ public class TicketImportDTO extends TicketImport implements Serializable {
     private String supplierName;
     private Integer paymentMethodId;
     private String paymentMethodName;
-    //private List<ProductVariantDTO> listProductDTO;
+    private Integer storageId;
+    private String storageName;
     private List<ProductVariantTemp> listProductVariantTemp;
-    //private List<MaterialDTO> listMaterialDTO;
     private List<MaterialTemp> listMaterialTemp;
 
     public static TicketImportDTO fromTicketImport(TicketImport ticketImport) {

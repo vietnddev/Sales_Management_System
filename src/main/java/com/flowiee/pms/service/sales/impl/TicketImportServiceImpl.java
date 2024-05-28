@@ -12,6 +12,7 @@ import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.ACTION;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
+import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.repository.sales.MaterialTempRepository;
 import com.flowiee.pms.repository.product.ProductDetailTempRepository;
 import com.flowiee.pms.service.BaseService;
@@ -106,15 +107,9 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                         Set<Account> stgManagersReceiveNtfs = new HashSet<>();
                         for (AccountRole storageManagerRight : listOfStorageManagersRight) {
                             Optional<GroupAccount> groupAccount = groupAccountService.findById(storageManagerRight.getGroupId());
-                            if (groupAccount.isPresent()) {
-                                for (Account acc : groupAccount.get().getListAccount()) {
-                                    stgManagersReceiveNtfs.add(acc);
-                                }
-                            }
+                            groupAccount.ifPresent(account -> stgManagersReceiveNtfs.addAll(account.getListAccount()));
                             Optional<Account> account = accountService.findById(storageManagerRight.getAccountId());
-                            if (account.isPresent()) {
-                                stgManagersReceiveNtfs.add(account.get());
-                            }
+                            account.ifPresent(stgManagersReceiveNtfs::add);
                         }
                         for (Account a : stgManagersReceiveNtfs) {
                             Notification ntf = new Notification();
@@ -149,11 +144,13 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemps())) {
                 for (ProductVariantTemp p : ticketImport.getListProductVariantTemps()) {
                     productQuantityService.updateProductVariantQuantityIncrease(p.getQuantity(), p.getProductVariant().getId());
+                    productVariantTempRepo.updateStorageQuantity(p.getProductVariant().getId(), p.getQuantity());
                 }
             }
             if (ObjectUtils.isNotEmpty(ticketImportUpdated.getListMaterialTemps())) {
                 for (MaterialTemp m : ticketImport.getListMaterialTemps()) {
                     materialService.updateQuantity(m.getQuantity(), m.getMaterial().getId(), "I");
+                    materialTempRepo.updateStorageQuantity(m.getMaterial().getId(), m.getQuantity());
                 }
             }
         }
@@ -175,14 +172,14 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public TicketImport createDraftTicketImport(TicketImport ticketImportInput) {
+    public TicketImport createDraftTicketImport(TicketImportDTO ticketImportInput) {
         TicketImport ticketImport = new TicketImport();
         ticketImport.setTitle(ticketImportInput.getTitle());
         ticketImport.setStatus("DRAFT");
         ticketImport.setCreatedBy(CommonUtils.getUserPrincipal().getId());
         ticketImport.setImporter(CommonUtils.getUserPrincipal().getUsername());
         ticketImport.setImportTime(LocalDateTime.now());
-        ticketImport.setStorage(ticketImportInput.getStorage());
+        ticketImport.setStorage(new Storage(ticketImportInput.getStorageId()));
         return this.save(ticketImport);
     }
 
@@ -215,6 +212,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                 productVariantTemp.setTicketImport(new TicketImport(ticketImportId));
                 productVariantTemp.setProductVariant(productDetail.get());
                 productVariantTemp.setQuantity(1);
+                productVariantTemp.setStorageQty(productDetail.get().getStorageQty());
                 productVariantTemp.setNote(null);
                 ProductVariantTemp productVariantTempAdded = productVariantTempRepo.save(productVariantTemp);
                 listAdded.add(productVariantTempAdded);
@@ -239,6 +237,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                 materialTemp.setTicketImport(new TicketImport(ticketImportId));
                 materialTemp.setMaterial(material.get());
                 materialTemp.setQuantity(1);
+                materialTemp.setStorageQty(material.get().getQuantity());
                 materialTemp.setNote(null);
                 MaterialTemp materialTempAdded = materialTempRepo.save(materialTemp);
                 listAdded.add(materialTempAdded);

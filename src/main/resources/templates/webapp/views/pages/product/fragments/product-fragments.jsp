@@ -388,37 +388,31 @@
 
         <div th:fragment="storageHistoryModal">
             <div class="modal fade" id="storageHistoryModal">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <strong class="modal-title">Cập nhật giá bán</strong>
+                            <strong class="modal-title">Lịch sử kho</strong>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
-                        <div class="modal-body">
-                            <div class="form-group row">
-                                <label class="col-sm-4">Giá gốc</label>
-                                <input class="col-sm-8 form-control" type="text" id="orgPriceFieldFUP" readonly>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4">Giá điều chỉnh</label>
-                                <input class="col-sm-8 form-control" type="text" id="orgPriceToUpdateFieldFUP" name="giaBan">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4">Giá khuyến mãi</label>
-                                <input class="col-sm-8 form-control" type="text" id="promoPriceFieldFUP" readonly>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4">Giá điều chỉnh</label>
-                                <input class="col-sm-8 form-control" type="text" id="promoPriceToUpdateFieldFUP" name="giaBan">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4">Ghi chú</label>
-                                <textarea class="col-sm-8 form-control" type="text" id="noteFieldFUP" rows="3"></textarea>
-                            </div>
+                        <div class="modal-body p-0">
+                            <table class="table table-responsive table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Ngày ghi nhận</th>
+                                        <th>Nhân viên</th>
+                                        <th>Thao tác</th>
+                                        <th>Số lượng thay đổi</th>
+                                        <th>Tồn kho</th>
+                                        <th>Mã chứng từ</th>
+                                        <th>Chi nhánh</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="storageHistoryTbl"></tbody>
+                            </table>
                         </div>
                         <div class="modal-footer justify-content-end">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-sm btn-primary" id="btnUpdatePriceSubmit">Đồng ý</button>
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Đóng</button>
                         </div>
                     </div>
                 </div>

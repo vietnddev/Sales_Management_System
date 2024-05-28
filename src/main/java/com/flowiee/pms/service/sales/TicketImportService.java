@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.sales;
 
+import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.service.CrudService;
 import com.flowiee.pms.entity.product.MaterialTemp;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
@@ -13,7 +14,7 @@ public interface TicketImportService extends CrudService<TicketImport> {
 
     TicketImport findDraftImportPresent(Integer createdBy);
 
-    TicketImport createDraftTicketImport(TicketImport title);
+    TicketImport createDraftTicketImport(TicketImportDTO ticketImportDTO);
 
     TicketImport updateStatus(Integer entityId, String status);
 

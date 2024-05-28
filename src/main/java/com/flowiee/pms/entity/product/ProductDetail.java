@@ -200,4 +200,13 @@ public class ProductDetail extends BaseEntity implements Serializable {
 	public String toString() {
 		return "ProductVariant [id=" + super.id + ", variantCode=" + variantCode + ", variantName=" + variantName + ", status=" + status;
 	}
+
+    public String toStringInsert() {
+        return "ProductVariant [id=" + this.id + ", code=" + variantCode + ", name=" + variantName +
+                             ", color=" + color.getName() + ", size=" + size.getName() +
+                             ", retailPrice=" + retailPrice + ", retailPriceDiscount=" + retailPriceDiscount +
+                             ", wholesalePrice=" + wholesalePrice + ", wholesalePriceDiscount=" + wholesalePriceDiscount +
+                             ", costPrice=" + costPrice + ", purchasePrice=" + purchasePrice +
+                             ", status=" + status;
+    }
 }

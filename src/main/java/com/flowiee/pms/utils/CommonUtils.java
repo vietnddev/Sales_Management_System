@@ -5,18 +5,22 @@ import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.ServerInfo;
 import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.model.UserPrincipal;
+import com.flowiee.pms.service.BaseService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,19 +34,14 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
+    private static final Logger logger = LoggerFactory.getLogger(BaseService.class);
     public static LocalDateTime START_APP_TIME = null;
     public static final String ADMINISTRATOR = "admin";
-    public static final String rootPath = "src/main/resources/static";
-    public static final String fileUploadPath = rootPath + "/uploads/";
-    public static final String initCsvDataPath = rootPath + "/data/csv";
-    public static final String reportTemplatePath = rootPath + "/report";
-    public static final String excelTemplatePath = rootPath + "/templates/excel";
-    public static Path logoPath = Paths.get(rootPath + "/dist/img/FlowieeLogo.png");
+    public static Path logoPath = Paths.get(FileUtils.rootPath + "/dist/img/FlowieeLogo.png");
     public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
     public static ShopInfo mvShopInfo;
     public static ServerInfo mvServerInfo;
-    public static  Boolean mvInitData = false;
 
     public static String formatToVND(Object currency) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -92,7 +91,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(MODULE systemModule) {
         try {
-            StringBuilder path = new StringBuilder(fileUploadPath);
+            StringBuilder path = new StringBuilder(FileUtils.fileUploadPath);
             switch (systemModule) {
                 case PRODUCT:
                     path.append("product");
@@ -125,7 +124,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(String systemModule) {
         try {
-            StringBuilder path = new StringBuilder(fileUploadPath);
+            StringBuilder path = new StringBuilder(FileUtils.fileUploadPath);
             if (MODULE.PRODUCT.name().equals(systemModule)) {
                 path.append("product");
             } else if (MODULE.CATEGORY.name().equals(systemModule)) {
@@ -151,8 +150,8 @@ public class CommonUtils {
 
     public static byte[] exportTemplate(String templateName) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtils.excelTemplatePath + "/" + templateName + ".xlsx";
-        String filePathTemp = CommonUtils.excelTemplatePath + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = FileUtils.excelTemplatePath + "/" + templateName + ".xlsx";
+        String filePathTemp = FileUtils.excelTemplatePath + "/" + templateName + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = null;
         try {
             fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
@@ -199,5 +198,22 @@ public class CommonUtils {
 
     public static String genOrderCode() {
         return CommonUtils.now("yyyyMMddHHmmss");
+    }
+
+    public static Map<String, Object[]> logChanges(Object oldObject, Object newObject) {
+        Map<String, Object[]> changes = new HashMap<>();
+        for (Field field : oldObject.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                Object oldValue = field.get(oldObject);
+                Object newValue = field.get(newObject);
+                if (!Objects.equals(oldValue, newValue)) {
+                    changes.put(field.getName(), new Object[]{oldValue, newValue});
+                }
+            } catch (IllegalAccessException e) {
+                logger.error("Lỗi khi thực hiện kiểm tra các thay đổi của entity {}", oldObject.getClass().getName(), e);
+            }
+        }
+        return changes;
     }
 }

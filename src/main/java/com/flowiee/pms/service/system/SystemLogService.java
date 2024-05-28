@@ -3,6 +3,7 @@ package com.flowiee.pms.service.system;
 import java.util.List;
 
 import com.flowiee.pms.entity.system.SystemLog;
+import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.data.domain.Page;
 
 public interface SystemLogService {
@@ -10,9 +11,7 @@ public interface SystemLogService {
 
     List<SystemLog> getAll();
 
-    SystemLog writeLog(SystemLog log);
+    SystemLog writeLog(String module, String function, String object, String mode, String content);
 
-    SystemLog writeLog(String module, String action, String content);
-
-    SystemLog writeLog(String module, String action, String content, String contentChange);
+    SystemLog writeLog(String module, String function, String object, String mode, String content, String contentChange);
 }

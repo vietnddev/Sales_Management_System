@@ -18,6 +18,7 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
+import com.flowiee.pms.utils.constants.LogType;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     private final OrderQRCodeService orderQRCodeService;
     private final VoucherTicketService voucherTicketService;
     private final ModelMapper modelMapper;
+
+    private static final String mainObjectName = "Order";
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, CartService cartService, CartItemsService cartItemsService,
@@ -176,7 +179,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             cartItemsService.deleteAllItems();
 
             //Log
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), "Thêm mới đơn hàng: " + order.toString());
+            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), mainObjectName, LogType.I.name(), "Thêm mới đơn hàng: " + order.toString());
             logger.info("Insert new order success! insertBy={}", CommonUtils.getUserPrincipal().getUsername());
 
             return OrderDTO.fromOrder(orderSaved);
@@ -203,7 +206,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         orderToUpdate.setPaymentMethod(dto.getPaymentMethod());
         orderToUpdate.setPaymentStatus(dto.getPaymentStatus());
         orderRepository.save(orderToUpdate);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), "Cập nhật đơn hàng: " + dto.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), mainObjectName, LogType.U.name(), "Cập nhật đơn hàng: " + dto.toString());
         logger.info("Cập nhật đơn hàng {}", dto.toString());
         return OrderDTO.fromOrder(orderToUpdate);
     }
@@ -215,7 +218,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         orderRepository.deleteById(id);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), "Xóa đơn hàng: " + order.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), mainObjectName, LogType.D.name(), "Xóa đơn hàng: " + order.toString());
         logger.info("Xóa đơn hàng orderId={}", id);
         return MessageUtils.DELETE_SUCCESS;
     }

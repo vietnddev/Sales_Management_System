@@ -7,7 +7,7 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageExportService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.ExcelUtils;
+import com.flowiee.pms.utils.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -38,7 +38,7 @@ public class StorageExportServiceImpl extends BaseService implements StorageExpo
             return null;
         }
         long exportTime = System.currentTimeMillis();
-        String rootPath = CommonUtils.excelTemplatePath;
+        String rootPath = FileUtils.excelTemplatePath;
         String templateName = "Template_E_Storage.xlsx";
         String fileNameReturn = exportTime + "_Storage_ListOfItems.xlsx";
         Path templateOriginal = Path.of(rootPath + "/" + templateName);
@@ -64,10 +64,10 @@ public class StorageExportServiceImpl extends BaseService implements StorageExpo
                 row.createCell(6).setCellValue(storageItems.getLastImportTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 row.createCell(7).setCellValue(storageItems.getFirstImportTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 for (int j = 0; j <= 7; j++) {
-                    row.getCell(j).setCellStyle(ExcelUtils.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FileUtils.setBorder(workbook.createCellStyle()));
                 }
             }
-            return new ResponseEntity<>(ExcelUtils.build(workbook), ExcelUtils.setHeaders(fileNameReturn), HttpStatus.OK);
+            return new ResponseEntity<>(FileUtils.build(workbook), FileUtils.setHeaders(fileNameReturn), HttpStatus.OK);
         } catch (IOException | InvalidFormatException ex) {
             logger.error("An error when export list of storage items!", ex);
             throw new AppException(ex);

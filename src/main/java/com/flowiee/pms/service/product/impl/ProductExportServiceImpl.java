@@ -6,7 +6,7 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductExportService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.ExcelUtils;
+import com.flowiee.pms.utils.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -31,7 +31,7 @@ public class ProductExportServiceImpl extends BaseService implements ProductExpo
     @Override
     public ResponseEntity<?> exportToExcel(Integer pProductId, List<Integer> pProductIds, boolean isExportAll) {
         long exportTime = System.currentTimeMillis();
-        String rootPath = CommonUtils.excelTemplatePath;
+        String rootPath = FileUtils.excelTemplatePath;
         String templateName = "Template_E_Product.xlsx";
         String fileNameReturn = exportTime + "_ListOfProducts.xlsx";
         Path templateOriginal = Path.of(rootPath + "/" + templateName);
@@ -58,10 +58,10 @@ public class ProductExportServiceImpl extends BaseService implements ProductExpo
                 row.createCell(9).setCellValue(productVariant.getSoldQty());
                 row.createCell(10).setCellValue(productVariant.getStatus());
                 for (int j = 0; j <= 10; j++) {
-                    row.getCell(j).setCellStyle(ExcelUtils.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FileUtils.setBorder(workbook.createCellStyle()));
                 }
             }
-            return new ResponseEntity<>(ExcelUtils.build(workbook), ExcelUtils.setHeaders(fileNameReturn), HttpStatus.OK);
+            return new ResponseEntity<>(FileUtils.build(workbook), FileUtils.setHeaders(fileNameReturn), HttpStatus.OK);
         } catch (IOException | InvalidFormatException ex) {
             logger.error("An error when export list of orders!", ex);
             throw new AppException(ex);

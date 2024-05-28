@@ -7,6 +7,7 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.FileStorageService;
 
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
             throw new BadRequestException("File not found!");
         }
         fileRepository.deleteById(fileId);
-        File file = new File(CommonUtils.rootPath + "/" + fileStorage.get().getDirectoryPath() + "/" + fileStorage.get().getStorageName());
+        File file = new File(FileUtils.rootPath + "/" + fileStorage.get().getDirectoryPath() + "/" + fileStorage.get().getStorageName());
         if (file.exists() && file.delete()) {
             return MessageUtils.DELETE_SUCCESS;
         }

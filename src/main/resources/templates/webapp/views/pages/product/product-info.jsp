@@ -238,6 +238,9 @@
 
                         <!--Modal active image-->
                         <div th:replace="pages/product/fragments/product-fragments :: activeImageModal"></div>
+
+                        <!--Modal view storage history-->
+                        <div th:replace="pages/product/fragments/product-fragments :: storageHistoryModal"></div>
                     </div>
                 </div>
             </section>
@@ -256,6 +259,7 @@
         <script th:src="@{/js/product/Image.js}"></script>
         <script th:src="@{/js/product/LoadProductDetail.js}"></script>
         <script th:src="@{/js/product/LoadProductVariant.js}"></script>
+        <script th:src="@{/js/product/LoadStorageHistory.js}"></script>
         <script th:src="@{/js/product/Product.js}"></script>
         <script th:src="@{/js/product/ProductHistory.js}"></script>
         <script th:src="@{/js/product/ProductPrice.js}"></script>
@@ -270,6 +274,7 @@
         let mvImagesOfProduct = [];
         let mvImageActive = {};
 
+        let mvStorageHistoryTbl = $("#storageHistoryTbl");
         let mvBtnViewStorageHistory = $("#btnViewStorageHistory");
         let mvBtnUpdateVariant = $("#btnUpdateVariant");
         let mvBtnDeleteVariant = $("#btnDeleteVariant");

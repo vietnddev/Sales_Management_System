@@ -23,4 +23,12 @@ public interface ProductDetailTempRepository extends JpaRepository <ProductVaria
     @Modifying
     @Query("update ProductVariantTemp p set p.quantity = (p.quantity + :quantity) where p.id =:productVariantTempId")
     void updateQuantityIncrease(@Param("productVariantTempId") Integer productVariantTempId, @Param("quantity") Integer quantity);
+
+    @Transactional
+    @Modifying
+    @Query("update ProductVariantTemp p set p.storageQty=:storageQty where p.id =:productVariantTempId")
+    void updateStorageQuantity(@Param("productVariantTempId") Integer productVariantTempId, @Param("storageQty") Integer storageQty);
+
+    @Query("from ProductVariantTemp p where p.productVariant.id=:productVariantId order by p.createdAt desc")
+    List<ProductVariantTemp> findByProductVariantId(@Param("productVariantId") Integer productVariantId);
 }

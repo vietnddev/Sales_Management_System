@@ -1,5 +1,6 @@
 package com.flowiee.pms.entity.system;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.utils.CommonUtils;
@@ -22,11 +23,14 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Column(name = "module", length = 50, nullable = false)
 	private String module;
 
-	@Column(name = "action_type")
-	private String actionType;
+	@Column(name = "function", nullable = false)
+	private String function;
 
-	@Column(name = "action", nullable = false)
-	private String action;
+	@Column(name = "object")
+	private String object;
+
+	@Column(name = "action_mode", nullable = false)
+	private String mode;
 
 	@Column(name = "content", length = 4000, nullable = false)
 	private String content;
@@ -37,12 +41,17 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Column(name = "ip", length = 20)
 	private String ip;
 
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "account_id", nullable = false)
+	private Account account;
+
 	@Transient
 	private String username;
 
-	public SystemLog (String module, String action, String value, String newValue) {
+	public SystemLog (String module, String function, String value, String newValue) {
 		this.module = module;
-		this.action = action;
+		this.function = function;
 		this.content = value;
 		this.contentChange = newValue;
 		this.ip = "unknown";
@@ -50,7 +59,7 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 
 	@PreUpdate
 	public void updateAudit() {
-		if (ip == null && CommonUtils.mvInitData) {
+		if (ip == null) {
 			ip = CommonUtils.getUserPrincipal().getIp();
 		} else {
 			ip = "unknown";
@@ -59,6 +68,6 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "SystemLog [id=" + super.id + ", module=" + module + ", action=" + action + ", content=" + content + ", contentChange=" + contentChange + ", ip=" + ip + ", username=" + username + "]";
+		return "SystemLog [id=" + super.id + ", module=" + module + ", action=" + function + ", content=" + content + ", contentChange=" + contentChange + ", ip=" + ip + ", username=" + username + "]";
 	}
 }

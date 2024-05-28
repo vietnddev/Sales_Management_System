@@ -144,12 +144,11 @@
     function createNewDraft() {
         $("#btnNewDraftSubmit").on("click", function () {
             let title = $("#titleField").val();
-            let storage = {id : $("#storageField").val()};
             if (title === null || title.trim() === "") {
                 alert("Title is can not allow null value");
             } else {
                 let apiURL = mvHostURLCallApi + "/stg/ticket-import/create-draft";
-                let body = {title : title, storage : storage}
+                let body = {title : title, storageId : $("#storageField").val()}
                 $.ajax({
                     url: apiURL,
                     type: "POST",

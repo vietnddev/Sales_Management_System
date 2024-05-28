@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
 import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.service.sales.SupplierService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.*;
@@ -31,6 +32,8 @@ public class TicketImportControllerView extends BaseController {
     private ProductVariantService productVariantService;
     @Autowired
     private MaterialService materialService;
+    @Autowired
+    private SupplierService supplierService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.importGoods(true)")
@@ -64,6 +67,8 @@ public class TicketImportControllerView extends BaseController {
         modelAndView.addObject("ticketImportDetail", ticketImport.get());
         modelAndView.addObject("listProductVariant", productVariantService.findAll());
         modelAndView.addObject("listMaterial", materialService.findAll());
+        modelAndView.addObject("listSupplier", supplierService.findAll());
+        modelAndView.addObject("listStorage", storageService.findAll());
         return baseView(modelAndView);
     }
 

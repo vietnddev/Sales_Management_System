@@ -11,7 +11,7 @@ import com.flowiee.pms.service.sales.OrderExportService;
 import com.flowiee.pms.service.sales.OrderQRCodeService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.ExcelUtils;
+import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.ReportUtils;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -47,7 +47,7 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
     @Override
     public ResponseEntity<?> exportToExcel(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll) {
         long exportTime = System.currentTimeMillis();
-        String rootPath = CommonUtils.excelTemplatePath;
+        String rootPath = FileUtils.excelTemplatePath;
         String templateName = "Template_E_Order.xlsx";
         String fileNameReturn = exportTime + "_ListOfOrders.xlsx";
         Path templateOriginal = Path.of(rootPath + "/" + templateName);
@@ -74,10 +74,10 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
                 row.createCell(10).setCellValue(listData.get(i).getOrderStatusName());
                 row.createCell(11).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 11; j++) {
-                    row.getCell(j).setCellStyle(ExcelUtils.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FileUtils.setBorder(workbook.createCellStyle()));
                 }
             }
-            return new ResponseEntity<>(ExcelUtils.build(workbook), ExcelUtils.setHeaders(fileNameReturn), HttpStatus.OK);
+            return new ResponseEntity<>(FileUtils.build(workbook), FileUtils.setHeaders(fileNameReturn), HttpStatus.OK);
         } catch (IOException | InvalidFormatException ex) {
             logger.error("An error when export list of orders!", ex);
             throw new AppException(ex);
@@ -125,7 +125,7 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
         parameterMap.put("orderDate", dto.getOrderTime());
         parameterMap.put("nowDate", new Date());
         FileStorage f = orderQRCodeService.findQRCodeOfOrder(dto.getId());
-        parameterMap.put("barcode", Path.of(CommonUtils.rootPath + "/" + f.getDirectoryPath() + "/" + f.getStorageName()));
+        parameterMap.put("barcode", Path.of(FileUtils.rootPath + "/" + f.getDirectoryPath() + "/" + f.getStorageName()));
         parameterMap.put("logoPath", CommonUtils.logoPath);
 
         // orderDetails

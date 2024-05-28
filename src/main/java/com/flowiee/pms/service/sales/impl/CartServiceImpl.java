@@ -3,7 +3,6 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
-import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
@@ -15,14 +14,13 @@ import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 
 import com.flowiee.pms.utils.AppConstants;
-import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -82,18 +80,12 @@ public class CartServiceImpl extends BaseService implements CartService {
     }
 
     @Override
-    public String delete(Integer id) {
-        if (this.findById(id).isEmpty()) {
+    public String delete(Integer cartId) {
+        if (this.findById(cartId).isEmpty()) {
             throw new BadRequestException();
         }
-        cartRepository.deleteById(id);
-        SystemLog systemLog = new SystemLog();
-        systemLog.setModule(MODULE.PRODUCT.name());
-        systemLog.setAction("DELETE_CART");
-        systemLog.setCreatedBy(CommonUtils.getUserPrincipal().getId());
-        systemLog.setIp(CommonUtils.getUserPrincipal().getIp());
-        systemLog.setContent("DELETE CART");
-        systemLogService.writeLog(systemLog);
+        cartRepository.deleteById(cartId);
+        systemLogService.writeLog(MODULE.PRODUCT.name(), "Xóa/Reset giỏ hàng", "Cart", LogType.D.name(), "cartId = " + cartId);
         return MessageUtils.DELETE_SUCCESS;
     }
 

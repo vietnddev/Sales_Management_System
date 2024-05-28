@@ -9,10 +9,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
-public class ExcelUtils {
+public class FileUtils {
+    public static final String rootPath = "src/main/resources/static";
+    public static final String fileUploadPath = rootPath + "/uploads/";
+    public static final String initCsvDataPath = rootPath + "/data/csv";
+    public static final String reportTemplatePath = rootPath + "/report";
+    public static final String excelTemplatePath = rootPath + "/templates/excel";
+
     public static void createDropdownList(XSSFWorkbook workbook, XSSFSheet sheet, XSSFSheet hsheet, List<String> listValue, int row, int column, String nameName) {
         //Put các tên danh mục vào column trong sheet danh mục ẩn
         for (int i = 0; i < listValue.size(); i++) {
@@ -67,5 +75,9 @@ public class ExcelUtils {
         cellStyle.setBorderRight(BorderStyle.THIN);
 
         return cellStyle;
+    }
+
+    public static File getFileDataCategoryInit() {
+        return Paths.get(initCsvDataPath + "/Category.csv").toFile();
     }
 }

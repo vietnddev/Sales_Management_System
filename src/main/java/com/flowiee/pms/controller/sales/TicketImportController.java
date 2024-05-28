@@ -59,7 +59,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Thêm mới phiếu nhập hàng")
     @PostMapping("/create-draft")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<TicketImport> createDraftImport(@RequestBody TicketImport ticketImport) {
+    public AppResponse<TicketImport> createDraftImport(@RequestBody TicketImportDTO ticketImport) {
         try {
             return success(ticketImportService.createDraftTicketImport(ticketImport));
         } catch (RuntimeException ex) {

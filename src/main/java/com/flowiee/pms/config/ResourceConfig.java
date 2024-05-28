@@ -1,6 +1,6 @@
 package com.flowiee.pms.config;
 
-import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.FileUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -12,7 +12,7 @@ public class ResourceConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
             .addResourceHandler("/uploads/**")
-            .addResourceLocations("file:/" + System.getProperty("user.dir") + "/" + CommonUtils.fileUploadPath)
+            .addResourceLocations("file:/" + System.getProperty("user.dir") + "/" + FileUtils.fileUploadPath)
             .setCachePeriod(3600)
             .resourceChain(true)
             .addResolver(new PathResourceResolver());

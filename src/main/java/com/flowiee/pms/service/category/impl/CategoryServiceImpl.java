@@ -346,8 +346,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     @Override
     public byte[] exportData(String categoryType) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = CommonUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
-        String filePathTemp = CommonUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
+        String filePathOriginal = FileUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
+        String filePathTemp = FileUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
         File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal), Path.of(filePathTemp), StandardCopyOption.REPLACE_EXISTING).toFile());
@@ -360,7 +360,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
                 row.createCell(2).setCellValue(listData.get(i).getName());
                 row.createCell(3).setCellValue(listData.get(i).getNote());
                 for (int j = 0; j <= 3; j++) {
-                    row.getCell(j).setCellStyle(ExcelUtils.setBorder(workbook.createCellStyle()));
+                    row.getCell(j).setCellStyle(FileUtils.setBorder(workbook.createCellStyle()));
                 }
             }
             workbook.write(stream);

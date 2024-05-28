@@ -7,6 +7,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
+import com.flowiee.pms.model.dto.ProductVariantTempDTO;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
@@ -142,6 +143,17 @@ public class ProductVariantController extends BaseController {
                                                                  @RequestParam("fabricTypeId") Integer fabricTypeId) {
         try {
             return success(productVariantService.isProductVariantExists(productId, colorId, sizeId, fabricTypeId));
+        } catch (RuntimeException ex) {
+            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
+        }
+    }
+
+    @Operation(summary = "Get history import/export storage of product variant")
+    @GetMapping("/variant/{productVariantId}/storage-history")
+    @PreAuthorize("@vldModuleProduct.readProduct(true)")
+    public AppResponse<List<ProductVariantTempDTO>> getStorageHistoryOfProduct(@PathVariable("productVariantId") Integer productVariantId) {
+        try {
+            return success(productVariantService.findStorageHistory(productVariantId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
         }

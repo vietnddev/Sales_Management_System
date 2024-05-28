@@ -19,6 +19,7 @@ import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl extends BaseService implements CustomerService {
+    private static final String mainObjectName = "Customer";
+
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
@@ -115,7 +118,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             customerContact.setStatus(true);
             customerContactService.save(customerContact);
         }
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_C.name(), "Thêm mới khách hàng: " + customer.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_C.name(), mainObjectName, LogType.I.name(), "Thêm mới khách hàng: " + customer.toString());
         logger.info("Create customer: {}", customer.toString());
         return CustomerDTO.fromCustomer(customerInserted);
     }
@@ -189,7 +192,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 customerContactService.save(addressDefault);
             }
         }
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_U.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_U.name(), mainObjectName, LogType.U.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
         logger.info("Update customer info {}", customer.toString());
         return CustomerDTO.fromCustomer(customerUpdated);
     }
@@ -203,7 +206,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_D.name(), "Xóa khách hàng id=" + id);
+        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_D.name(), mainObjectName, LogType.D.name(), "Xóa khách hàng id=" + id);
         logger.info("Deleted customer id={}", id);
         return MessageUtils.DELETE_SUCCESS;
     }
