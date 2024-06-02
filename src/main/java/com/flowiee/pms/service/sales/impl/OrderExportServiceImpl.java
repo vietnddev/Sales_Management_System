@@ -125,7 +125,14 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
         parameterMap.put("orderDate", dto.getOrderTime());
         parameterMap.put("nowDate", new Date());
         FileStorage f = orderQRCodeService.findQRCodeOfOrder(dto.getId());
-        parameterMap.put("barcode", Path.of(FileUtils.rootPath + "/" + f.getDirectoryPath() + "/" + f.getStorageName()));
+        if (f != null) {
+            Path barcodePath = Path.of(FileUtils.rootPath + "/" + f.getDirectoryPath() + "/" + f.getStorageName());
+            if (barcodePath.toFile().exists()) {
+                parameterMap.put("barcode", barcodePath);
+            }
+        } else {
+            parameterMap.put("barcode", null);
+        }
         parameterMap.put("logoPath", CommonUtils.logoPath);
 
         // orderDetails

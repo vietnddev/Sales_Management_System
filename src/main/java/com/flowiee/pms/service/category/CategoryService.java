@@ -27,6 +27,14 @@ public interface CategoryService extends CrudService<Category> {
 
     List<Category> findOrderStatus();
 
+    List<Category> findLedgerReceiptGroups();
+
+    List<Category> findLedgerPaymentGroups();
+
+    List<Category> findLedgerReceiptTypes();
+
+    List<Category> findLedgerPaymentTypes();
+
     Boolean categoryInUse(Integer categoryId);
     
     String importData(MultipartFile fileImport, String categoryType);

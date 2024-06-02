@@ -35,6 +35,13 @@ public class PagesUtils {
     public static final String PRO_PROMOTION_DETAIL = mdlPRODUCT + "/promotion-detail";
     public static final String PRO_COMBO = mdlPRODUCT + "/combo";
 
+    private static final String mdlSales = "/pages/sales/ledger/";
+    public static final String SLS_LEDGER = mdlSales + "/ledger";
+    public static final String SLS_LEDGER_RECEIPT = mdlSales + "/ledger-receipt";
+    public static final String SLS_LEDGER_RECEIPT_DETAIL = mdlSales + "/ledger-receipt-detail";
+    public static final String SLS_LEDGER_PAYMENT = mdlSales + "/ledger-payment";
+    public static final String SLS_LEDGER_PAYMENT_DETAIL = mdlSales + "/ledger-payment-detail";
+
     private static final String mdlSTORAGE = "/pages/storage";
     public static final String STG_DASHBOARD = mdlSTORAGE + "/dashboard";
     public static final String STG_DOCUMENT = mdlSTORAGE + "/document";

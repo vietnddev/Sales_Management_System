@@ -133,11 +133,14 @@ public class AppConstants {
         ORDER_TYPE("order-type", "ORDER_TYPE", "Loại đơn hàng"),
         FABRIC_TYPE("fabric-type", "FABRIC_TYPE", "Chất liệu vải"),
         PRODUCT_TYPE("product-type", "PRODUCT_TYPE", "Loại sản phẩm"),
+        RECEIPT_TYPE("receipt-type", "RECEIPT_TYPE", "Loại phiếu thu"),
+        PAYMENT_TYPE("payment-type", "PAYMENT_TYPE", "Loại phiếu chi"),
         DOCUMENT_TYPE("document-type", "DOCUMENT_TYPE", "Loại tài liệu"),
         SALES_CHANNEL("sales-channel", "SALES_CHANNEL", "Kênh bán hàng"),
         SHIP_METHOD("ship-method", "SHIP_METHOD", "Hình thức vận chuyển"),
         ORDER_STATUS("order-status", "ORDER_STATUS", "Trạng thái đơn hàng"),
         GROUP_CUSTOMER("group-customer", "GROUP_CUSTOMER", "Nhóm khách hàng"),
+        GROUP_OBJECT("group-object", "GROUP_OBJECT", "Nhóm đối tượng/ đối tác"),
         PAYMENT_METHOD("payment-method", "PAYMENT_METHOD", "Hình thức thanh toán"),
         PAYMENT_STATUS("payment-status", "PAYMENT_STATUS", "Trạng thái thanh toán"),
         COMMUNE("commune", "COMMUNE", "Xã"),
@@ -154,7 +157,6 @@ public class AppConstants {
             this.name = name;
             this.label = label;
         }
-
     }
 
     @Getter
@@ -177,13 +179,16 @@ public class AppConstants {
 
         URL_CATEGORY("/system/category", "SIDEBAR", true),
         URL_PRODUCT("/san-pham", "SIDEBAR", true),
-        URL_PRODUCT_ORDER("/don-hang", "SIDEBAR", true),
-        URL_PRODUCT_CREATE_ORDER("/don-hang/ban-hang", "SIDEBAR", true),
+        URL_PRODUCT_ORDER("/order", "SIDEBAR", true),
+        URL_PRODUCT_CREATE_ORDER("/order/ban-hang", "SIDEBAR", true),
         URL_PRODUCT_CUSTOMER("/customer", "SIDEBAR", true),
         URL_PRODUCT_SUPPLIER("/san-pham/supplier", "SIDEBAR", true),
         URL_PRODUCT_GALLERY("/gallery", "SIDEBAR", true),
         URL_PRODUCT_VOUCHER("/san-pham/voucher", "SIDEBAR", true),
         URL_PRODUCT_PROMOTION("/promotion", "SIDEBAR", true),
+        URL_SALES_LEDGER("/ledger", "SIDEBAR", true),
+        URL_SALES_LEDGER_RECEIPT("/ledger/receipt", "SIDEBAR", true),
+        URL_SALES_LEDGER_PAYMENT("/ledger/payment", "SIDEBAR", true),
         URL_STG_DASHBOARD("/stg", "SIDEBAR", true),
         URL_STG_DOCUMENT("/stg/doc", "SIDEBAR", true),
         URL_STG_MATERIAL("/stg/material", "SIDEBAR", true),

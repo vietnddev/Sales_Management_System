@@ -3,6 +3,8 @@ package com.flowiee.pms.entity.category;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.entity.sales.LedgerPayment;
+import com.flowiee.pms.entity.sales.LedgerReceipt;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductDetail;
@@ -18,6 +20,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.persistence.*;
 
@@ -120,6 +123,22 @@ public class Category extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
 	private List<CategoryHistory> listCategoryHistory;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "receiverGroup", fetch = FetchType.LAZY)
+	private List<LedgerReceipt> listLedgerByReceiverGroup;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "receiptType", fetch = FetchType.LAZY)
+	private List<LedgerReceipt> listLedgerByReceiptType;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "payerGroup", fetch = FetchType.LAZY)
+	private List<LedgerPayment> listLedgerByPayerGroup;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "paymentType", fetch = FetchType.LAZY)
+	private List<LedgerPayment> listLedgerByPaymentType;
+
 	public Category(Integer id, String name) {
 		super.id = id;
 		this.name = name;
@@ -127,10 +146,10 @@ public class Category extends BaseEntity implements Serializable {
 
 	public Map<String, String> compareTo(Category categoryToCompare) {
 		Map<String, String> map = new HashMap<>();
-		if (!this.getCode().equals(categoryToCompare.getCode())) {
+		if (!Objects.equals(this.getCode(), categoryToCompare.getCode())) {
 			map.put("CODE", this.getCode() + "#" + categoryToCompare.getCode());
 		}
-		if (!this.getName().equals(categoryToCompare.getName())) {
+		if (!Objects.equals(this.getName(), categoryToCompare.getName())) {
 			map.put("NAME", this.getName() + "#" + categoryToCompare.getName());
 		}
 		return map;

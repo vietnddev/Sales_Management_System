@@ -77,6 +77,26 @@
                                 class="fa-solid fa-user-tag mr-2"></i>
                             <p>Nhà cung cấp</p></a>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fa-solid fa-cart-shopping mr-2"></i>
+                            <p>Sổ quỹ<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{${URL_SALES_LEDGER_RECEIPT}}" class="nav-link"><i class="nav-icon mr-3"></i>
+                                    <p>Phiếu thu</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{${URL_SALES_LEDGER_PAYMENT}}" class="nav-link"><i class="nav-icon mr-3"></i>
+                                    <p>Phiếu chi</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{${URL_SALES_LEDGER}}" class="nav-link"><i class="nav-icon mr-3"></i>
+                                    <p>Sổ quỹ</p></a>
+                            </li>
+                        </ul>
+                    </li>
 
                     <li class="nav-header">
                         <hr class="mt-0 mb-3" style="border-color: darkgrey">

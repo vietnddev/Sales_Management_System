@@ -188,6 +188,26 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
+    public List<Category> findLedgerReceiptGroups() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findLedgerPaymentGroups() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findLedgerReceiptTypes() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.RECEIPT_TYPE.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public List<Category> findLedgerPaymentTypes() {
+        return categoryRepo.findSubCategory(AppConstants.CATEGORY.PAYMENT_TYPE.name(), null, Pageable.unpaged()).getContent();
+    }
+
+    @Override
     public Boolean categoryInUse(Integer categoryId) {
         Optional<Category> category = this.findById(categoryId);
         if (category.isEmpty()) {

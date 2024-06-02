@@ -43,6 +43,14 @@ public enum ACTION {
     PRO_PROMO_D("Delete promotion", "PRODUCT"),
     PRO_GAL_R("Gallery", "PRODUCT"),
 
+    SLS_RCT_R("Xem danh sách phiếu thu", "SALES"),
+    SLS_RCT_C("Tạo phiếu thu", "SALES"),
+    SLS_RCT_U("Cập nhật phiếu thu", "SALES"),
+    SLS_PMT_R("Xem danh sách phiếu chi", "SALES"),
+    SLS_PMT_C("Tạo phiếu chi", "SALES"),
+    SLS_PMT_U("Cập nhật phiếu chi", "SALES"),
+    SLS_LEDGER("Xem sổ quỹ", "SALES"),
+
     STG_DASHBOARD("Xem dashboard STG", "PRODUCT"),
     STG_MAT_R("View list of materials", "PRODUCT"),
     STG_MAT_C("Create material", "PRODUCT"),

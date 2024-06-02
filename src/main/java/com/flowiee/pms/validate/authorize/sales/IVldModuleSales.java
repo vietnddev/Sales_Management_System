@@ -46,4 +46,18 @@ public interface IVldModuleSales {
     boolean updatePromotion(boolean throwException);
 
     boolean deletePromotion(boolean throwException);
+
+    boolean readLedgerReceipt(boolean throwException);
+
+    boolean insertLedgerReceipt(boolean throwException);
+
+    boolean updateLedgerReceipt(boolean throwException);
+
+    boolean readLedgerPayment(boolean throwException);
+
+    boolean insertLedgerPayment(boolean throwException);
+
+    boolean updateLedgerPayment(boolean throwException);
+
+    boolean readGeneralLedger(boolean throwException);
 }

@@ -76,6 +76,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
             if (object[8] != null) {
                 if (Objects.toString(object[8]).length() == 22) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS");
                 if (Objects.toString(object[8]).length() == 23) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                if (Objects.toString(object[8]).length() == 25) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS");
                 if (Objects.toString(object[8]).length() == 26) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
                 LocalDateTime firstImportTime = LocalDateTime.parse(Objects.toString(object[8]), formatter);
                 s.setFirstImportTime(firstImportTime);
@@ -83,6 +84,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
             if (object[9] != null) {
                 if (Objects.toString(object[9]).length() == 22) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS");
                 if (Objects.toString(object[9]).length() == 23) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                if (Objects.toString(object[9]).length() == 25) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS");
                 if (Objects.toString(object[9]).length() == 26) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
                 LocalDateTime lastImportTime = LocalDateTime.parse(Objects.toString(object[9]), formatter);
                 s.setLastImportTime(lastImportTime);
