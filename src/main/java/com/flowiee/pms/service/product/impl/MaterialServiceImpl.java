@@ -1,14 +1,17 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.Material;
-import com.flowiee.pms.entity.product.MaterialHistory;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.product.MaterialRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.MaterialHistoryService;
 import com.flowiee.pms.service.product.MaterialService;
 
+import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.MessageUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,10 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class MaterialServiceImpl extends BaseService implements MaterialService {
+    private static final String mainObjectName = "Material";
+
     @Autowired
     private MaterialRepository materialRepository;
     @Autowired
@@ -48,47 +54,58 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
     @Override
     public Material save(Material entity) {
-        return materialRepository.save(entity);
+        Material materialSaved = materialRepository.save(entity);
+        systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.STG_MAT_C.name(), mainObjectName, "Thêm mới nguyên vật liệu", materialSaved.getName());
+        return materialSaved;
     }
 
     @Override
-    public Material update(Material entity, Integer entityId) {
-        if (entity == null || entityId == null || entityId <= 0) {
+    public Material update(Material entity, Integer materialId) {
+        if (entity == null || materialId == null || materialId <= 0) {
             throw new BadRequestException();
         }
-        Optional<Material> materialBefore = this.findById(entityId);
-        if (materialBefore.isEmpty()) {
+        Optional<Material> materialOptional = this.findById(materialId);
+        if (materialOptional.isEmpty()) {
             throw new BadRequestException();
         }
-        materialBefore.get().compareTo(entity).forEach((key, value) -> {
-            MaterialHistory categoryHistory = new MaterialHistory();
-            categoryHistory.setTitle("Update material");
-            categoryHistory.setMaterial(new Material(entityId));
-            categoryHistory.setFieldName(key);
-            categoryHistory.setOldValue(value.substring(0, value.indexOf("#")));
-            categoryHistory.setNewValue(value.substring(value.indexOf("#") + 1));
-            materialHistoryService.save(categoryHistory);
-        });
-        entity.setId(entityId);
-        return materialRepository.save(entity);
+        Material materialBefore = ObjectUtils.clone(materialOptional.get());
+        entity.setId(materialId);
+        Material materialUpdated = materialRepository.save(entity);
+
+        String logTitle = "Cập nhật nguyên vật liệu: " + materialUpdated.getName();
+        Map<String, Object[]> logChanges = LogUtils.logChanges(materialBefore, materialUpdated);
+        materialHistoryService.save(logChanges, logTitle, materialId);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.STG_MAT_U.name(), mainObjectName, logTitle, logChanges);
+        logger.info(logTitle);
+
+        return materialUpdated;
     }
 
     @Override
     public String delete(Integer entityId) {
-        if (this.findById(entityId).isEmpty()) {
+        Optional<Material> materialToDelete = this.findById(entityId);
+        if (materialToDelete.isEmpty()) {
             throw new BadRequestException("Material not found!");
         }
         materialRepository.deleteById(entityId);
+
+        String logTitle = "Xóa nguyên vật liệu";
+        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.STG_MAT_U.name(), mainObjectName, "Xóa nguyên vật liệu", materialToDelete.get().getName());
+        logger.info("{}: {}", logTitle, materialToDelete.get().getName());
+
         return MessageUtils.DELETE_SUCCESS;
     }
 
     @Transactional
     @Override
     public void updateQuantity(Integer quantity, Integer materialId, String type) {
+        String logTitle = "Cập nhật số lượng nguyên vật liệu";
         if ("I".equals(type)) {
             materialRepository.updateQuantityIncrease(quantity, materialId);
+            systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.STG_MAT_U.name(), mainObjectName, logTitle, " + " + quantity);
         } else if ("D".equals(type)) {
             materialRepository.updateQuantityDecrease(quantity, materialId);
+            systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.STG_MAT_U.name(), mainObjectName, logTitle, " - " + quantity);
         }
     }
 }

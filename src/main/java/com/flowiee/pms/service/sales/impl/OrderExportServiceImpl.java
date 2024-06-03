@@ -17,7 +17,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.apache.pdfbox.util.PDFMergerUtility;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -108,8 +107,8 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
 
         boolean checkBatch = false;
 
-        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-        PDFMergerUtility mergePdf = new PDFMergerUtility();
+        //ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        //PDFMergerUtility mergePdf = new PDFMergerUtility();
         //Barcode_Image.createImage(order.getId().toString() + ".png", order.getId().toString());
         HashMap<String, Object> parameterMap = new HashMap<String, Object>();
         parameterMap.put("customerName", dto.getReceiverName());

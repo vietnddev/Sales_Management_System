@@ -1,4 +1,4 @@
-package com.flowiee.pms.model;
+package com.flowiee.pms.utils.constants;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.sales;
 
-import com.flowiee.pms.service.CrudService;
+import com.flowiee.pms.service.BaseCurd;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.entity.sales.Order;
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface OrderService extends CrudService<OrderDTO> {
+public interface OrderService extends BaseCurd<OrderDTO> {
     Page<OrderDTO> findAll(int pageSize, int pageNum, Integer pOrderId, Integer pPaymentMethodId, Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy);
 
     Optional<OrderDTO> findById(Integer orderId);

@@ -3,13 +3,10 @@ package com.flowiee.pms.entity.category;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import com.flowiee.pms.entity.sales.LedgerPayment;
-import com.flowiee.pms.entity.sales.LedgerReceipt;
-import com.flowiee.pms.entity.sales.Order;
+import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.Material;
-import com.flowiee.pms.entity.sales.TicketImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -124,20 +121,12 @@ public class Category extends BaseEntity implements Serializable {
 	private List<CategoryHistory> listCategoryHistory;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "receiverGroup", fetch = FetchType.LAZY)
-	private List<LedgerReceipt> listLedgerByReceiverGroup;
+	@OneToMany(mappedBy = "groupObject", fetch = FetchType.LAZY)
+	private List<LedgerTransaction> listLedgerByGroupObject;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "receiptType", fetch = FetchType.LAZY)
-	private List<LedgerReceipt> listLedgerByReceiptType;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "payerGroup", fetch = FetchType.LAZY)
-	private List<LedgerPayment> listLedgerByPayerGroup;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "paymentType", fetch = FetchType.LAZY)
-	private List<LedgerPayment> listLedgerByPaymentType;
+	@OneToMany(mappedBy = "tranContent", fetch = FetchType.LAZY)
+	private List<LedgerTransaction> listLedgerTransByTranType;
 
 	public Category(Integer id, String name) {
 		super.id = id;

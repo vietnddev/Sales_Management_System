@@ -3,7 +3,7 @@ package com.flowiee.pms.service;
 import java.util.List;
 import java.util.Optional;
 
-public interface CrudService<T> {
+public interface BaseCurd<T> {
     List<T> findAll();
 
     Optional<T> findById(Integer entityId);

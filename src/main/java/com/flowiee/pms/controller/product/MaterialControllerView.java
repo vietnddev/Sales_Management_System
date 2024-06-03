@@ -1,12 +1,12 @@
 package com.flowiee.pms.controller.product;
 
 import com.flowiee.pms.entity.product.Material;
-import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
 
+import com.flowiee.pms.utils.constants.EndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,9 +26,9 @@ public class MaterialControllerView extends BaseController {
     public ModelAndView viewMaterials() {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_MATERIAL);
         modelAndView.addObject("templateImportName", "Name");
-        modelAndView.addObject("url_template", AppConstants.ENDPOINT.URL_STG_MATERIAL_IMPORT_TEMPLATE.getValue());
-        modelAndView.addObject("url_import", AppConstants.ENDPOINT.URL_STG_MATERIAL_IMPORT.getValue());
-        modelAndView.addObject("url_export", AppConstants.ENDPOINT.URL_STG_MATERIAL_EXPORT.getValue());
+        modelAndView.addObject("url_template", EndPoint.URL_STG_MATERIAL_IMPORT_TEMPLATE.getValue());
+        modelAndView.addObject("url_import", EndPoint.URL_STG_MATERIAL_IMPORT.getValue());
+        modelAndView.addObject("url_export", EndPoint.URL_STG_MATERIAL_EXPORT.getValue());
         return baseView(modelAndView);
     }
 

@@ -36,17 +36,11 @@ public class PagesUtils {
     public static final String PRO_COMBO = mdlPRODUCT + "/combo";
 
     private static final String mdlSales = "/pages/sales/ledger/";
-    public static final String SLS_LEDGER = mdlSales + "/ledger";
-    public static final String SLS_LEDGER_RECEIPT = mdlSales + "/ledger-receipt";
-    public static final String SLS_LEDGER_RECEIPT_DETAIL = mdlSales + "/ledger-receipt-detail";
-    public static final String SLS_LEDGER_PAYMENT = mdlSales + "/ledger-payment";
-    public static final String SLS_LEDGER_PAYMENT_DETAIL = mdlSales + "/ledger-payment-detail";
+    public static final String SLS_LEDGER = mdlSales + "/general-ledger";
+    public static final String SLS_LEDGER_TRANS = mdlSales + "/ledger-trans";
+    public static final String SLS_LEDGER_TRANS_DETAIL = mdlSales + "/ledger-trans-detail";
 
     private static final String mdlSTORAGE = "/pages/storage";
-    public static final String STG_DASHBOARD = mdlSTORAGE + "/dashboard";
-    public static final String STG_DOCUMENT = mdlSTORAGE + "/document";
-    public static final String STG_DOCUMENT_DETAIL = mdlSTORAGE + "/document-detail";
-    public static final String STG_DOCTYPE_DETAIL = mdlSTORAGE + "/doctype-detail";
     public static final String STG_MATERIAL = mdlSTORAGE + "/material";
     public static final String STG_TICKET_IMPORT = mdlSTORAGE + "/ticket-import";
     public static final String STG_TICKET_IMPORT_DETAIL = mdlSTORAGE + "/ticket-import-detail";

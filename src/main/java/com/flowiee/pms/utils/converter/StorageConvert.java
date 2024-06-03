@@ -4,7 +4,7 @@ import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.model.dto.StorageDTO;
 
 public class StorageConvert {
-    public static Storage convertToDTO(StorageDTO inputDTO) {
+    public static Storage convertToEntity(StorageDTO inputDTO) {
         Storage storage = new Storage();
         storage.setId(inputDTO.getId());
         storage.setName(inputDTO.getName());

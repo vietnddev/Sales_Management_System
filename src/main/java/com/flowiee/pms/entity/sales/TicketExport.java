@@ -32,7 +32,7 @@ public class TicketExport extends BaseEntity implements Serializable {
     @JoinColumn(name = "storage_id", nullable = false)
     private Storage storage;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "exporter", nullable = false)

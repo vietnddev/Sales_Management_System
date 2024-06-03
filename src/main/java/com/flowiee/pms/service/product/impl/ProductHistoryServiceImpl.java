@@ -1,5 +1,8 @@
 package com.flowiee.pms.service.product.impl;
 
+import com.flowiee.pms.entity.product.Product;
+import com.flowiee.pms.entity.product.ProductAttribute;
+import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.repository.product.ProductHistoryRepository;
 import com.flowiee.pms.service.BaseService;
@@ -8,7 +11,9 @@ import com.flowiee.pms.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,5 +65,31 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
             }
         }
         return prices;
+    }
+
+    @Override
+    public List<ProductHistory> save(Map<String, Object[]> logChanges, String title, Integer productBaseId, Integer productVariantId, Integer productAttributeId) {
+        List<ProductHistory> logSaved = new ArrayList<>();
+        for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
+            String field = entry.getKey();
+            String oldValue = entry.getValue()[0].toString();
+            String newValue = entry.getValue()[1].toString();
+            ProductHistory productHistory = new ProductHistory();
+            productHistory.setTitle(title);
+            if (productBaseId != null) {
+                productHistory.setProduct(new Product(productBaseId));
+            }
+            if (productVariantId != null) {
+                productHistory.setProductDetail(new ProductDetail(productVariantId));
+            }
+            if (productAttributeId != null) {
+                productHistory.setProductAttribute(new ProductAttribute(productAttributeId));
+            }
+            productHistory.setField(field);
+            productHistory.setOldValue(oldValue);
+            productHistory.setNewValue(newValue);
+            logSaved.add(this.save(productHistory));
+        }
+        return logSaved;
     }
 }

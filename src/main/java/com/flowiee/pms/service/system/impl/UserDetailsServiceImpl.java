@@ -4,8 +4,8 @@ import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.AccountRole;
-import com.flowiee.pms.model.ACTION;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
 import com.flowiee.pms.repository.system.SystemLogRepository;
@@ -13,7 +13,7 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
 
-import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.MessageUtils;
 import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +90,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	@Override
 	public Account save(Account account) {
 		try {
-			if (account.getRole() != null && account.getRole().equals(CommonUtils.ADMINISTRATOR)) {
+			if (account.getRole() != null && account.getRole().equals(AppConstants.ADMINISTRATOR)) {
 				account.setRole("ADMIN");
 			} else {
 				account.setRole("USER");
@@ -99,7 +99,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			String password = account.getPassword();
 			account.setPassword(bCrypt.encode(password));
 			Account accountSaved = accountRepo.save(account);
-			systemLogService.writeLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_C.name(), mainObjectName, LogType.I.name(), "Thêm mới account: " + account.getUsername());
+			systemLogService.writeLogCreate(MODULE.SYSTEM.name(), ACTION.SYS_ACC_C.name(), mainObjectName, "Thêm mới account", account.getUsername());
             logger.info("Insert account success! username={}", account.getUsername());
 			return accountSaved;
 		} catch (RuntimeException ex) {
@@ -112,12 +112,12 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	public Account update(Account account, Integer entityId) {
 		try {
 			account.setId(entityId);
-			if (account.getRole() != null && account.getRole().equals(CommonUtils.ADMINISTRATOR)) {
+			if (account.getRole() != null && account.getRole().equals(AppConstants.ADMINISTRATOR)) {
 				account.setRole("ADMIN");
 			} else {
 				account.setRole("USER");
 			}
-			systemLogService.writeLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_U.name(), mainObjectName, LogType.U.name(), "Cập nhật account: " + account.getUsername());
+			systemLogService.writeLogUpdate(MODULE.SYSTEM.name(), ACTION.SYS_ACC_U.name(), mainObjectName, "Cập nhật account", account.getUsername());
 			logger.info("Update account success! username={}", account.getUsername());
 			return accountRepo.save(account);
 		} catch (RuntimeException ex) {
@@ -132,7 +132,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			Optional<Account> account = accountRepo.findById(accountId);
 			if (account.isPresent()) {
 				accountRepo.delete(account.get());
-				systemLogService.writeLog(MODULE.SYSTEM.name(), ACTION.SYS_ACC_D.name(), mainObjectName, LogType.D.name(), "Xóa account " + account.get().getUsername());
+				systemLogService.writeLogDelete(MODULE.SYSTEM.name(), ACTION.SYS_ACC_D.name(), mainObjectName, "Xóa account", account.get().getUsername());
                 logger.info("Delete account success! username={}", account.get().getUsername());
 			}
 			return MessageUtils.DELETE_SUCCESS;

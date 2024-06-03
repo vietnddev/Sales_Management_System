@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,7 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 public class PromotionInfoDTO extends PromotionInfo implements Serializable {
-    private String startTimeStr;
+	@Serial
+	private static final long serialVersionUID = 1L;
+	
+	private String startTimeStr;
     private String endTimeStr;
     private String status;
     private List<ProductDTO> applicableProducts;

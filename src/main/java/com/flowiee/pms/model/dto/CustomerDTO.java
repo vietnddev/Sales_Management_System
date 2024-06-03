@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +16,10 @@ import java.util.List;
 @Getter
 @Setter
 public class CustomerDTO extends Customer implements Serializable {
-    private String phoneDefault;
+	@Serial
+	private static final long serialVersionUID = 1L;
+	
+	private String phoneDefault;
     private String emailDefault;
     private String addressDefault;
     private BigDecimal orderAvgValue;

@@ -3,6 +3,8 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.exception.AppException;
@@ -14,8 +16,10 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
-import com.flowiee.pms.utils.AppConstants;
+import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.VoucherStatus;
+import com.flowiee.pms.utils.constants.VoucherType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,8 @@ import java.util.*;
 
 @Service
 public class VoucherInfoServiceImpl extends BaseService implements VoucherService {
+    private static final String mainObjectName = "VoucherInfo";
+
     @Autowired
     private VoucherInfoRepository voucherInfoRepo;
     @Autowired
@@ -118,6 +124,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             }
             VoucherInfoDTO dto = modelMapper.map(voucherSaved, VoucherInfoDTO.class);
             dto.setStatus(genVoucherStatus(dto.getStartTime(), dto.getEndTime()));
+            systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_VOU_C.name(), mainObjectName, "Thêm mới voucher", dto.getTitle());
             return dto;
         } catch (RuntimeException ex) {
             throw new AppException(ex);
@@ -127,11 +134,17 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     @Override
     public VoucherInfoDTO update(VoucherInfoDTO voucherInfo, Integer voucherId) {
         try {
-            if (voucherInfo == null || voucherId == null || this.findById(voucherId).isEmpty()) {
+            Optional<VoucherInfoDTO> voucherInfoBefore = this.findById(voucherId);
+            if (voucherInfoBefore.isEmpty()) {
                 throw new BadRequestException();
             }
             voucherInfo.setId(voucherId);
-            return voucherInfoRepo.save(voucherInfo);
+            VoucherInfo voucherInfoUpdated = voucherInfoRepo.save(voucherInfo);
+
+            Map<String, Object[]> logChanges = LogUtils.logChanges(voucherInfoBefore, voucherInfoUpdated);
+            systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_VOU_U.name(), mainObjectName, "Cập nhật voucher " + voucherInfoUpdated.getTitle(), logChanges);
+
+            return modelMapper.map(voucherInfoUpdated, VoucherInfoDTO.class);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "voucher"), ex);
         }
@@ -139,25 +152,27 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
 
     @Override
     public String delete(Integer voucherId) {
-        if (voucherId <= 0 || this.findById(voucherId).isEmpty()) {
+        Optional<VoucherInfoDTO> voucherInfoBefore = this.findById(voucherId);
+        if (voucherInfoBefore.isEmpty()) {
             throw new BadRequestException("Voucher not found!");
         }
         if (!voucherApplyService.findByVoucherId(voucherId).isEmpty()) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         voucherInfoRepo.deleteById(voucherId);
+        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_VOU_D.name(), mainObjectName, "Xóa voucher", voucherInfoBefore.get().getTitle());
         return MessageUtils.DELETE_SUCCESS;
     }
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {
         String characters = "";
-        if (AppConstants.VOUCHER_TYPE.NUMBER.name().equals(voucherType)) {
+        if (VoucherType.NUMBER.name().equals(voucherType)) {
             characters = "0123456789";
         }
-        if (AppConstants.VOUCHER_TYPE.TEXT.name().equals(voucherType)) {
+        if (VoucherType.TEXT.name().equals(voucherType)) {
             characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         }
-        if (AppConstants.VOUCHER_TYPE.BOTH.name().equals(voucherType)) {
+        if (VoucherType.BOTH.name().equals(voucherType)) {
             characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         }
 
@@ -177,9 +192,9 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
         endTime = endTime.withHour(0).withMinute(0).withSecond(0);
 
         if ((startTime.isBefore(currentDate) || startTime.equals(currentDate)) && (endTime.isAfter(currentDate) || endTime.equals(currentDate))) {
-            return AppConstants.VOUCHER_STATUS.A.getLabel();
+            return VoucherStatus.A.getLabel();
         } else {
-            return AppConstants.VOUCHER_STATUS.I.getLabel();
+            return VoucherStatus.I.getLabel();
         }
     }
 }

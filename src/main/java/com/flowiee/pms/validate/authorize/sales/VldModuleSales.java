@@ -1,7 +1,7 @@
 package com.flowiee.pms.validate.authorize.sales;
 
 import com.flowiee.pms.validate.authorize.BaseAuthorize;
-import com.flowiee.pms.model.ACTION;
+import com.flowiee.pms.utils.constants.ACTION;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -122,33 +122,18 @@ public class VldModuleSales extends BaseAuthorize implements IVldModuleSales {
     }
 
     @Override
-    public boolean readLedgerReceipt(boolean throwException) {
+    public boolean readLedgerTransaction(boolean throwException) {
         return super.isAuthorized(ACTION.SLS_RCT_R.name(), throwException);
     }
 
     @Override
-    public boolean insertLedgerReceipt(boolean throwException) {
+    public boolean insertLedgerTransaction(boolean throwException) {
         return super.isAuthorized(ACTION.SLS_RCT_C.name(), throwException);
     }
 
     @Override
-    public boolean updateLedgerReceipt(boolean throwException) {
+    public boolean updateLedgerTransaction(boolean throwException) {
         return super.isAuthorized(ACTION.SLS_RCT_U.name(), throwException);
-    }
-
-    @Override
-    public boolean readLedgerPayment(boolean throwException) {
-        return super.isAuthorized(ACTION.SLS_PMT_R.name(), throwException);
-    }
-
-    @Override
-    public boolean insertLedgerPayment(boolean throwException) {
-        return super.isAuthorized(ACTION.SLS_PMT_C.name(), throwException);
-    }
-
-    @Override
-    public boolean updateLedgerPayment(boolean throwException) {
-        return super.isAuthorized(ACTION.SLS_PMT_U.name(), throwException);
     }
 
     @Override

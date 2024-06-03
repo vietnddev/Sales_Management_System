@@ -4,13 +4,12 @@ import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ACTION;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.OrderDetailDTO;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
-import com.flowiee.pms.repository.sales.OrderHistoryRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.*;
@@ -18,9 +17,7 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
-import com.flowiee.pms.utils.constants.LogType;
 import org.apache.commons.lang3.ObjectUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -32,32 +29,30 @@ import java.util.*;
 
 @Service
 public class OrderServiceImpl extends BaseService implements OrderService {
+    private static final String mainObjectName = "Order";
+
     private final OrderRepository orderRepository;
     private final ProductVariantService productVariantService;
     private final CartService cartService;
     private final CartItemsService cartItemsService;
-    private final OrderHistoryRepository orderHistoryRepo;
+    private final OrderHistoryService orderHistoryService;
     private final OrderItemsService orderItemsService;
     private final OrderQRCodeService orderQRCodeService;
     private final VoucherTicketService voucherTicketService;
-    private final ModelMapper modelMapper;
-
-    private static final String mainObjectName = "Order";
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, CartService cartService, CartItemsService cartItemsService,
-                            OrderHistoryRepository orderHistoryRepo, ProductVariantService productVariantService,
+                            OrderHistoryService orderHistoryService, ProductVariantService productVariantService,
                             OrderQRCodeService orderQRCodeService, VoucherTicketService voucherTicketService,
-                            OrderItemsService orderItemsService, ModelMapper modelMapper) {
+                            OrderItemsService orderItemsService) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.cartItemsService = cartItemsService;
-        this.orderHistoryRepo = orderHistoryRepo;
+        this.orderHistoryService = orderHistoryService;
         this.orderItemsService = orderItemsService;
         this.productVariantService = productVariantService;
         this.orderQRCodeService = orderQRCodeService;
         this.voucherTicketService = voucherTicketService;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -179,7 +174,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             cartItemsService.deleteAllItems();
 
             //Log
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), mainObjectName, LogType.I.name(), "Thêm mới đơn hàng: " + order.toString());
+            systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), mainObjectName, "Thêm mới đơn hàng", order.toString());
             logger.info("Insert new order success! insertBy={}", CommonUtils.getUserPrincipal().getUsername());
 
             return OrderDTO.fromOrder(orderSaved);
@@ -194,20 +189,21 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         if (orderToUpdate == null) {
             throw new BadRequestException();
         }
-        for (Map.Entry<String, String> entry : orderToUpdate.compareTo(dto).entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            orderHistoryRepo.save(new OrderHistory(id, null, "Update order", key, value.substring(0, value.indexOf("#")), value.substring(value.indexOf("#") + 1)));
-        }
+        Order orderBefore = ObjectUtils.clone(orderToUpdate);
         orderToUpdate.setId(id);
         orderToUpdate.setNote(dto.getNote());
         orderToUpdate.setPaymentNote(dto.getPaymentNote());
         orderToUpdate.setKenhBanHang(dto.getKenhBanHang());
         orderToUpdate.setPaymentMethod(dto.getPaymentMethod());
         orderToUpdate.setPaymentStatus(dto.getPaymentStatus());
-        orderRepository.save(orderToUpdate);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), mainObjectName, LogType.U.name(), "Cập nhật đơn hàng: " + dto.toString());
+        Order orderUpdated = orderRepository.save(orderToUpdate);
+
+        String logTitle = "Cập nhật đơn hàng";
+        Map<String, Object[]> logChanges = LogUtils.logChanges(orderBefore, orderUpdated);
+        orderHistoryService.save(logChanges, logTitle, id, null);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), mainObjectName, logTitle, logChanges);
         logger.info("Cập nhật đơn hàng {}", dto.toString());
+
         return OrderDTO.fromOrder(orderToUpdate);
     }
 
@@ -218,7 +214,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         orderRepository.deleteById(id);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), mainObjectName, LogType.D.name(), "Xóa đơn hàng: " + order.toString());
+        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), mainObjectName, "Xóa đơn hàng", order.toString());
         logger.info("Xóa đơn hàng orderId={}", id);
         return MessageUtils.DELETE_SUCCESS;
     }

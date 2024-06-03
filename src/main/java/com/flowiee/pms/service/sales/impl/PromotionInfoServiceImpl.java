@@ -12,8 +12,8 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.sales.PromotionApplyService;
 import com.flowiee.pms.service.sales.PromotionService;
-import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.PromotionStatus;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,9 +146,9 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
         endTime = endTime.withHour(0).withMinute(0).withSecond(0);
 
         if ((startTime.isBefore(currentDate) || startTime.equals(currentDate)) && (endTime.isAfter(currentDate) || endTime.equals(currentDate))) {
-            return AppConstants.PROMOTION_STATUS.A.getLabel();
+            return PromotionStatus.A.getLabel();
         } else {
-            return AppConstants.PROMOTION_STATUS.I.getLabel();
+            return PromotionStatus.I.getLabel();
         }
     }
 }

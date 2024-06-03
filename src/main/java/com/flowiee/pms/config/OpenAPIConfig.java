@@ -27,10 +27,10 @@ public class OpenAPIConfig {
 
         Info info = new Info()
                 .title("Flowiee API")
-                .version("1.0");
+                .version("1.0")
                 //.contact(contact)
                 //.description("This API exposes endpoints to manage tutorials.").termsOfService("http://localhost:8085/swagger-ui/index.html")
-                //.license(mitLicense);
+                .license(mitLicense);
 
         //return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
         return new OpenAPI().info(info);

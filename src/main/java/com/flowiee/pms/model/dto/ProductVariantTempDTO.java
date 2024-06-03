@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
 
-import javax.persistence.Transient;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;

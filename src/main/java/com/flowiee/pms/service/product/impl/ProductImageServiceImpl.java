@@ -5,7 +5,7 @@ import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.BaseService;

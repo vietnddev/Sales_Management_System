@@ -4,7 +4,7 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.repository.sales.OrderCartRepository;
@@ -13,9 +13,8 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 
-import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.LogType;
+import com.flowiee.pms.utils.constants.PriceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +84,7 @@ public class CartServiceImpl extends BaseService implements CartService {
             throw new BadRequestException();
         }
         cartRepository.deleteById(cartId);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), "Xóa/Reset giỏ hàng", "Cart", LogType.D.name(), "cartId = " + cartId);
+        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), "Xóa/Reset giỏ hàng", "Cart", "Xóa/Reset giỏ hàng", "cartId = " + cartId);
         return MessageUtils.DELETE_SUCCESS;
     }
 
@@ -122,7 +121,7 @@ public class CartServiceImpl extends BaseService implements CartService {
                 Items items = new Items();
                 items.setOrderCart(new OrderCart(cartId));
                 items.setProductDetail(new ProductDetail(Integer.parseInt(productVariantId)));
-                items.setPriceType(AppConstants.PRICE_TYPE.L.name());
+                items.setPriceType(PriceType.L.name());
                 items.setPrice(productVariant.get().getRetailPriceDiscount() != null ? productVariant.get().getRetailPriceDiscount() : productVariant.get().getRetailPrice());
                 items.setPriceOriginal(productVariant.get().getRetailPrice());
                 items.setExtraDiscount(BigDecimal.ZERO);
@@ -147,15 +146,15 @@ public class CartServiceImpl extends BaseService implements CartService {
             item.setNote(itemToUpdate.getNote());
             item.setQuantity(itemToUpdate.getQuantity());
             if (itemToUpdate.getPriceType() != null && (!item.getPriceType().equals(itemToUpdate.getPriceType()))) {
-                if (itemToUpdate.getPriceType().equals(AppConstants.PRICE_TYPE.L.name())) {
+                if (itemToUpdate.getPriceType().equals(PriceType.L.name())) {
                     item.setPrice(productVariant.getRetailPriceDiscount());
                     item.setPriceOriginal(productVariant.getRetailPrice());
-                    item.setPriceType(AppConstants.PRICE_TYPE.L.name());
+                    item.setPriceType(PriceType.L.name());
                 }
-                if (itemToUpdate.getPriceType().equals(AppConstants.PRICE_TYPE.S.name())) {
+                if (itemToUpdate.getPriceType().equals(PriceType.S.name())) {
                     item.setPrice(productVariant.getWholesalePriceDiscount());
                     item.setPriceOriginal(productVariant.getWholesalePrice());
-                    item.setPriceType(AppConstants.PRICE_TYPE.S.name());
+                    item.setPriceType(PriceType.S.name());
                 }
             }
             if (itemToUpdate.getExtraDiscount() != null) {

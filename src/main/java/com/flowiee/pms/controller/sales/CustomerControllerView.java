@@ -9,6 +9,7 @@ import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
+import com.flowiee.pms.utils.constants.ContactType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,9 +58,9 @@ public class CustomerControllerView extends BaseController {
         }
         List<CustomerContact> listContacts = customerContactService.findContacts(customerId);
         listContacts.forEach(c -> {
-            if (AppConstants.CONTACT_TYPE.P.name().equals(c.getCode())) c.setCode(AppConstants.CONTACT_TYPE.P.getLabel());
-            if (AppConstants.CONTACT_TYPE.E.name().equals(c.getCode())) c.setCode(AppConstants.CONTACT_TYPE.E.getLabel());
-            if (AppConstants.CONTACT_TYPE.A.name().equals(c.getCode())) c.setCode(AppConstants.CONTACT_TYPE.A.getLabel());
+            if (ContactType.P.name().equals(c.getCode())) c.setCode(ContactType.P.getLabel());
+            if (ContactType.E.name().equals(c.getCode())) c.setCode(ContactType.E.getLabel());
+            if (ContactType.A.name().equals(c.getCode())) c.setCode(ContactType.A.getLabel());
         });
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_CUSTOMER_DETAIL);
         modelAndView.addObject("customerDetail", customerDTO.get());

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sổ quỹ</title>
-    <div th:replace="header :: stylesheets"></div>
+    <th:block th:replace="header :: stylesheets"></th:block>
     <style rel="stylesheet">
         .table td, th {
             vertical-align: middle;
@@ -35,28 +35,28 @@
                     <div class="col"></div>
                     <div class="col">
                         <span class="font-weight-bold">Số dư đầu kì</span> <br>
-                        <span class="font-weight-bold">123,456 đ</span>
+                        <span class="font-weight-bold" id="beginBal"></span>
                     </div>
                     <div class="col" style="display: flex; align-items: center; justify-content: center">
                         <span class="font-weight-bold">+</span>
                     </div>
                     <div class="col">
                         <span class="font-weight-bold">Tổng thu</span> <br>
-                        <span class="font-weight-bold text-success">123,456 đ</span>
+                        <span class="font-weight-bold text-success" id="totalReceipt"></span>
                     </div>
                     <div class="col" style="display: flex; align-items: center; justify-content: center">
                         <span class="font-weight-bold">-</span>
                     </div>
                     <div class="col">
                         <span class="font-weight-bold">Tổng chi</span> <br>
-                        <span class="font-weight-bold text-danger">123,456 đ</span>
+                        <span class="font-weight-bold text-danger" id="totalPayment"></span>
                     </div>
                     <div class="col" style="display: flex; align-items: center; justify-content: center">
                         <span class="font-weight-bold">=</span>
                     </div>
                     <div class="col">
                         <span class="font-weight-bold">Số dư cuối kì</span> <br>
-                        <span class="font-weight-bold text-primary">123,456 đ</span>
+                        <span class="font-weight-bold text-primary" id="endBal"></span>
                     </div>
                     <div class="col"></div>
                 </div>
@@ -96,13 +96,18 @@
     <div th:replace="header :: scripts"></div>
 </div>
 <script>
+    let mvBeginBal = $("#beginBal");
+    let mvTotalReceipt = $("#totalReceipt");
+    let mvTotalPayment = $("#totalPayment");
+    let mvEndBal = $("#endBal");
+
     $(document).ready(function () {
         loadGeneralLedger(mvPageSizeDefault, 1);
         updateTableContentWhenOnClickPagination(loadGeneralLedger);
     });
 
     function loadGeneralLedger(pageSize, pageNum) {
-        let apiURL = mvHostURLCallApi + '/ledger/all';
+        let apiURL = mvHostURLCallApi + '/ledger';
         let params = {pageSize: pageSize, pageNum: pageNum}
         $.get(apiURL, params, function (response) {
             if (response.status === "OK") {
@@ -111,19 +116,25 @@
 
                 updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
 
+                mvBeginBal.text(formatCurrency(data.beginBalance));
+                mvTotalReceipt.text(formatCurrency(data.totalReceipt));
+                mvTotalPayment.text(formatCurrency(data.totalPayment));
+                mvEndBal.text(formatCurrency(data.endBalance));
+
+                let transactions = data.listTransactions;
                 let contentTable = $('#contentTable');
                 contentTable.empty();
-                $.each(data, function (index, d) {
+                $.each(transactions, function (index, d) {
                     contentTable.append(`
-                            <tr>
-                                <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                <td>${d.code}</td>
-                                <td>${d.type}</td>
-                                <td>${d.value}</td>
-                                <td>${d.createdAt}</td>
-                                <td></td>
-                            </tr>
-                        `);
+                        <tr>
+                            <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                            <td>${d.tranCode}</td>
+                            <td>${d.tranContentName}</td>
+                            <td>${d.amount}</td>
+                            <td>${d.createdAt}</td>
+                            <td></td>
+                        </tr>
+                    `);
                 });
             }
         }).fail(function () {

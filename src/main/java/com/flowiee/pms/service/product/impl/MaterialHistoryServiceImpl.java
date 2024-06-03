@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.product.impl;
 
+import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.MaterialHistory;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.product.MaterialHistoryRepository;
@@ -9,7 +10,9 @@ import com.flowiee.pms.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -61,5 +64,23 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     @Override
     public List<MaterialHistory> findByFieldName(String fieldName) {
         return materialHistoryRepo.findByFieldName(fieldName);
+    }
+
+    @Override
+    public List<MaterialHistory> save(Map<String, Object[]> logChanges, String title, Integer materialId) {
+        List<MaterialHistory> materialHistories = new ArrayList<>();
+        for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
+            String field = entry.getKey();
+            String oldValue = entry.getValue()[0].toString();
+            String newValue = entry.getValue()[1].toString();
+            MaterialHistory materialHistory = new MaterialHistory();
+            materialHistory.setTitle("Update material");
+            materialHistory.setMaterial(new Material(materialId));
+            materialHistory.setFieldName(field);
+            materialHistory.setOldValue(oldValue);
+            materialHistory.setNewValue(newValue);
+            materialHistories.add(this.save(materialHistory));
+        }
+        return materialHistories;
     }
 }

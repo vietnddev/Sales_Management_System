@@ -3,7 +3,6 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.entity.sales.Order;
-import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.BadRequestException;
@@ -13,9 +12,9 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.sales.TicketExportService;
-import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.TicketExportStatus;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -111,7 +110,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         ticketExportToUpdate.setStatus(ticket.getStatus());
         TicketExport ticketExportUpdated = ticketExportRepo.save(ticketExportToUpdate);
 
-        if (AppConstants.TICKET_EX_STATUS.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
+        if (TicketExportStatus.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
             for (ProductVariantTemp productVariantTemp : ticketExportUpdated.getListProductVariantTemp()) {
                 int soldQtyInOrder = productVariantTemp.getQuantity();
                 productQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, productVariantTemp.getProductVariant().getId());

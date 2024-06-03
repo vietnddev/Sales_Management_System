@@ -14,7 +14,8 @@ import java.util.Locale;
 
 @Configuration
 public class LanguageConfig implements WebMvcConfigurer {
-    @Bean
+    @SuppressWarnings("deprecation")
+	@Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
         slr.setDefaultLocale(new Locale("vi"));

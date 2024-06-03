@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.category;
 
-import com.flowiee.pms.service.CrudService;
+import com.flowiee.pms.service.BaseCurd;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import com.flowiee.pms.entity.category.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface CategoryService extends CrudService<Category> {
+public interface CategoryService extends BaseCurd<Category> {
     List<Category> findRootCategory();
 
     List<Category> findSubCategory(String categoryType, Integer parentId);
@@ -27,9 +27,7 @@ public interface CategoryService extends CrudService<Category> {
 
     List<Category> findOrderStatus();
 
-    List<Category> findLedgerReceiptGroups();
-
-    List<Category> findLedgerPaymentGroups();
+    List<Category> findLedgerGroupObjects();
 
     List<Category> findLedgerReceiptTypes();
 
@@ -38,8 +36,4 @@ public interface CategoryService extends CrudService<Category> {
     Boolean categoryInUse(Integer categoryId);
     
     String importData(MultipartFile fileImport, String categoryType);
-
-    byte[] exportTemplate(String categoryType);
-
-    byte[] exportData(String categoryType);
 }

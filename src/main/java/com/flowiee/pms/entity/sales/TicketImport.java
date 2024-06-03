@@ -31,6 +31,11 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Serial
 	private static final long serialVersionUID = 1L;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "storage_id", nullable = false)
+    private Storage storage;
+
 	@Column(name = "title", nullable = false)
     private String title;
 
@@ -61,11 +66,6 @@ public class TicketImport extends BaseEntity implements Serializable {
 //    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     @Column(name = "import_time")
     private LocalDateTime importTime;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "storage_id", nullable = false)
-    private Storage storage;
 
     @Column(name = "note")
     private String note;

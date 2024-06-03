@@ -1,29 +1,16 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.Items;
-import com.flowiee.pms.entity.sales.OrderCart;
-import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.NotFoundException;
-import com.flowiee.pms.model.AppResponse;
-import com.flowiee.pms.model.dto.ProductVariantDTO;
-import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
-import com.flowiee.pms.utils.AppConstants;
-import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/order")

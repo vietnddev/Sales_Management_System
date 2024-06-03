@@ -1,5 +1,7 @@
 package com.flowiee.pms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.flowiee.pms.entity.sales.LedgerTransaction;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,5 +15,10 @@ public class GeneralLedger {
     private BigDecimal totalReceipt;
     private BigDecimal totalPayment;
     private BigDecimal endBalance;
-    private List<Object> listTransactions;
+    private List<LedgerTransaction> listTransactions;
+
+    @JsonIgnore
+    private int totalPages;
+    @JsonIgnore
+    private long totalElements;
 }

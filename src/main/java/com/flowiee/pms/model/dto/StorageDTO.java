@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.ObjectUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,7 +15,10 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class StorageDTO extends Storage implements Serializable {
-    private Integer totalItems;
+	@Serial
+	private static final long serialVersionUID = 1L;
+	
+	private Integer totalItems;
     private BigDecimal totalInventoryValue;
     private List<TicketImportDTO> listTicketImportDTO;
     private List<ProductVariantDTO> listProductVariantDTO;

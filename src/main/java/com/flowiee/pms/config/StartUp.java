@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.flowiee.pms.utils.FileUtils;
+import com.flowiee.pms.utils.constants.EndPoint;
 import com.opencsv.*;
 import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +124,7 @@ public class StartUp {
 	private void initEndPointConfig() {
 		CommonUtils.mvEndPointHeaderConfig.clear();
 		CommonUtils.mvEndPointSideBarConfig.clear();
-		for (AppConstants.ENDPOINT e : AppConstants.ENDPOINT.values()) {
+		for (EndPoint e : EndPoint.values()) {
 			if (e.getType().equals("HEADER") && e.isStatus()) {
 				CommonUtils.mvEndPointHeaderConfig.put(e.name(), e.getValue());
 			}
@@ -210,7 +211,7 @@ public class StartUp {
 		GroupAccount groupStaffSaved = groupAccountRepository.save(groupAccountStaff);
 		//Init admin account
 		Account adminAccount = new Account();
-		adminAccount.setUsername(CommonUtils.ADMINISTRATOR);
+		adminAccount.setUsername(AppConstants.ADMINISTRATOR);
 		adminAccount.setPassword(CommonUtils.encodePassword("123456"));
 		adminAccount.setFullName("Administrator");
 		adminAccount.setSex(true);
@@ -220,7 +221,7 @@ public class StartUp {
 		adminAccount.setStatus(true);
 		adminAccount.setCreatedBy(-1);
 		adminAccount.setLastUpdatedBy("-1");
-		Account adminAccountSaved = accountRepository.save(adminAccount);
+		accountRepository.save(adminAccount);
 
 		Account staffAccount = new Account();
 		staffAccount.setUsername("staff");
@@ -233,7 +234,7 @@ public class StartUp {
 		staffAccount.setStatus(true);
 		staffAccount.setCreatedBy(-1);
 		staffAccount.setLastUpdatedBy("-1");
-		Account staffAccountSaved = accountRepository.save(staffAccount);
+		accountRepository.save(staffAccount);
 		//Init customer
 		Customer customer = new Customer();
 		customer.setCustomerName("Khách vãng lai");
@@ -241,7 +242,7 @@ public class StartUp {
 		customer.setSex(true);
 		customer.setCreatedBy(-1);
 		customer.setLastUpdatedBy("-1");
-		Customer customerSaved = customerRepository.save(customer);
+		customerRepository.save(customer);
 
 		systemConfigInitData.setValue("Y");
 		configRepository.save(systemConfigInitData);

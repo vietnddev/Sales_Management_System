@@ -7,8 +7,8 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
-import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ContactType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +36,14 @@ public class CustomerContactController extends BaseController {
             }
             List<CustomerContact> listContacts = customerContactService.findContacts(customerId);
             for (CustomerContact c : listContacts) {
-                if (AppConstants.CONTACT_TYPE.P.name().equals(c.getCode())) {
-                    c.setCode(AppConstants.CONTACT_TYPE.P.getLabel());
+                if (ContactType.P.name().equals(c.getCode())) {
+                    c.setCode(ContactType.P.getLabel());
                 }
-                if (AppConstants.CONTACT_TYPE.E.name().equals(c.getCode())) {
-                    c.setCode(AppConstants.CONTACT_TYPE.E.getLabel());
+                if (ContactType.E.name().equals(c.getCode())) {
+                    c.setCode(ContactType.E.getLabel());
                 }
-                if (AppConstants.CONTACT_TYPE.A.name().equals(c.getCode())) {
-                    c.setCode(AppConstants.CONTACT_TYPE.A.getLabel());
+                if (ContactType.A.name().equals(c.getCode())) {
+                    c.setCode(ContactType.A.getLabel());
                 }
             }
             return success(listContacts);

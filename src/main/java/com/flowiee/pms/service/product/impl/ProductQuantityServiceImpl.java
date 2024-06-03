@@ -1,14 +1,13 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.model.ACTION;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +40,7 @@ public class ProductQuantityServiceImpl extends BaseService implements ProductQu
             } else if ("D".equals(type)) {
                 productVariantRepo.updateQuantityDecrease(quantity, productVariantId);
             }
-            systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), mainObjectName, LogType.U.name(), "Update product quantity");
+            systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), mainObjectName, "Cập nhật số lượng sản phẩm", "productVariantId = " + productVariantId);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product quantity"), ex);
         }

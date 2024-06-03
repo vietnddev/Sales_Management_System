@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LedgerPaymentRepository extends JpaRepository<LedgerPayment, Integer> {
-    @Query(value = "select payment_index from ledger_payment order by created_by desc fetch first 1 rows only", nativeQuery = true)
+    @Query(value = "select payment_index from ledger_payment order by id desc fetch first 1 rows only", nativeQuery = true)
     Integer findLastIndex();
 }

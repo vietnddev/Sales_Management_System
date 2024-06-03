@@ -1,11 +1,11 @@
 package com.flowiee.pms.service.sales;
 
-import com.flowiee.pms.service.CrudService;
+import com.flowiee.pms.service.BaseCurd;
 import com.flowiee.pms.entity.sales.CustomerContact;
 
 import java.util.List;
 
-public interface CustomerContactService extends CrudService<CustomerContact> {
+public interface CustomerContactService extends BaseCurd<CustomerContact> {
     List<CustomerContact> findContacts(Integer customerId);
 
     CustomerContact findContactPhoneUseDefault(Integer customerId);

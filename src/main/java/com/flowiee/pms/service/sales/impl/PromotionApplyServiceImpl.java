@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +25,6 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
 
     @Override
     public List<PromotionApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
-        return List.of();
-    }
-
-    @Override
-    public List<PromotionApplyDTO> findByProductId(Integer productId) {
         return List.of();
     }
 
@@ -80,19 +74,19 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
         return MessageUtils.DELETE_SUCCESS;
     }
 
-    private List<PromotionApplyDTO> extractDataQuery(List<Object[]> objects) {
-        List<PromotionApplyDTO> dataResponse = new ArrayList<>();
-        for (Object[] data : objects) {
-            PromotionApplyDTO promotionApplyDTO = new PromotionApplyDTO();
-            promotionApplyDTO.setPromotionApplyId(Integer.parseInt(String.valueOf(data[0])));
-            promotionApplyDTO.setPromotionId(Integer.parseInt(String.valueOf(data[1])));
-            promotionApplyDTO.setPromotionInfoTitle(String.valueOf(data[2]));
-            promotionApplyDTO.setProductId(Integer.parseInt(String.valueOf(data[3])));
-            promotionApplyDTO.setProductName(String.valueOf(data[4]));
-            promotionApplyDTO.setAppliedAt((String.valueOf(data[5])).substring(0, 10));
-            promotionApplyDTO.setAppliedBy(Integer.parseInt(String.valueOf(data[6])));
-            dataResponse.add(promotionApplyDTO);
-        }
-        return dataResponse;
-    }
+//    private List<PromotionApplyDTO> extractDataQuery(List<Object[]> objects) {
+//        List<PromotionApplyDTO> dataResponse = new ArrayList<>();
+//        for (Object[] data : objects) {
+//            PromotionApplyDTO promotionApplyDTO = new PromotionApplyDTO();
+//            promotionApplyDTO.setPromotionApplyId(Integer.parseInt(String.valueOf(data[0])));
+//            promotionApplyDTO.setPromotionId(Integer.parseInt(String.valueOf(data[1])));
+//            promotionApplyDTO.setPromotionInfoTitle(String.valueOf(data[2]));
+//            promotionApplyDTO.setProductId(Integer.parseInt(String.valueOf(data[3])));
+//            promotionApplyDTO.setProductName(String.valueOf(data[4]));
+//            promotionApplyDTO.setAppliedAt((String.valueOf(data[5])).substring(0, 10));
+//            promotionApplyDTO.setAppliedBy(Integer.parseInt(String.valueOf(data[6])));
+//            dataResponse.add(promotionApplyDTO);
+//        }
+//        return dataResponse;
+//    }
 }

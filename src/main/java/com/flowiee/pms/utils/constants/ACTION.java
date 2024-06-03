@@ -1,6 +1,8 @@
-package com.flowiee.pms.model;
+package com.flowiee.pms.utils.constants;
 
 public enum ACTION {
+    READ_DASHBOARD("Xem dashboard", "DASHBOARD"),
+
     CTG_R("View list of system categories", "CATEGORY"),
     CTG_C("Create category", "CATEGORY"),
     CTG_U("Update category", "CATEGORY"),
@@ -60,6 +62,9 @@ public enum ACTION {
     STG_TICKET_EX("Export goods", "PRODUCT"),
 
     STG_STORAGE("Storage management", "STORAGE"),
+    STG_STG_C("Thêm mới kho", "STORAGE"),
+    STG_STG_U("Cập nhật kho", "STORAGE"),
+    STG_STG_D("Xóa kho", "STORAGE"),
 
     SYS_LOGIN("Login", "SYSTEM"),
     SYS_ROLE_R("View list of system rights", "SYSTEM"),
@@ -73,7 +78,9 @@ public enum ACTION {
     SYS_GR_ACC_R("View list of account groups", "SYSTEM"),
     SYS_GR_ACC_C("Create account group", "SYSTEM"),
     SYS_GR_ACC_U("Update account group", "SYSTEM"),
-    SYS_GR_ACC_D("Delete account group", "SYSTEM");
+    SYS_GR_ACC_D("Delete account group", "SYSTEM"),
+    SYS_CNF_R("Delete account group", "SYSTEM"),
+    SYS_CNF_U("Delete account group", "SYSTEM");
 
     private final String label;
     private final String module;

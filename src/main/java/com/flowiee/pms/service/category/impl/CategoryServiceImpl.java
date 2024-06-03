@@ -1,7 +1,6 @@
 package com.flowiee.pms.service.category.impl;
 
 import com.flowiee.pms.entity.category.Category;
-import com.flowiee.pms.entity.category.CategoryHistory;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
@@ -10,13 +9,15 @@ import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.repository.category.CategoryHistoryRepository;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.system.AppImportRepository;
 import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.service.category.CategoryHistoryService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.MaterialService;
@@ -25,6 +26,8 @@ import com.flowiee.pms.service.system.ImportService;
 import com.flowiee.pms.service.system.NotificationService;
 import com.flowiee.pms.utils.*;
 
+import com.flowiee.pms.utils.constants.CategoryType;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -39,23 +42,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl extends BaseService implements CategoryService {
     private static final String mvModule = MODULE.CATEGORY.name();
+    private static final String mainObjectName = "Category";
 
     private final CategoryRepository categoryRepo;
-    private final CategoryHistoryRepository categoryHistoryRepo;
+    private final CategoryHistoryService categoryHistoryService;
+    private final CategoryHistoryRepository categoryHistoryRepository;
     private final ProductInfoService productInfoService;
     private final NotificationService notificationService;
     private final ImportService importService;
@@ -67,7 +68,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     @Autowired
     public CategoryServiceImpl(ImportService importService, CategoryRepository categoryRepo, ProductInfoService productInfoService,
                                MaterialService materialService, NotificationService notificationService, AppImportRepository appImportRepo,
-                               FileStorageService fileStorageService, FileStorageRepository fileStorageRepo, CategoryHistoryRepository categoryHistoryRepo) {
+                               FileStorageService fileStorageService, FileStorageRepository fileStorageRepo, CategoryHistoryService categoryHistoryService,
+                               CategoryHistoryRepository categoryHistoryRepository) {
         this.importService = importService;
         this.categoryRepo = categoryRepo;
         this.productInfoService = productInfoService;
@@ -76,7 +78,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         this.appImportRepo = appImportRepo;
         this.fileStorageService = fileStorageService;
         this.fileStorageRepo = fileStorageRepo;
-        this.categoryHistoryRepo = categoryHistoryRepo;
+        this.categoryHistoryService = categoryHistoryService;
+        this.categoryHistoryRepository = categoryHistoryRepository;
     }
 
     @Override
@@ -94,40 +97,44 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         if (entity == null) {
             throw new BadRequestException();
         }
-        return categoryRepo.save(entity);
+        Category categorySaved = categoryRepo.save(entity);
+        systemLogService.writeLogCreate(MODULE.CATEGORY.name(), ACTION.CTG_I.name(), mainObjectName, "Thêm mới danh mục", categorySaved.getName());
+        return categorySaved;
     }
 
     @Transactional
     @Override
-    public Category update(Category entity, Integer entityId) {
-        Optional<Category> categoryBefore = this.findById(entityId);
-        if (categoryBefore.isEmpty()) {
+    public Category update(Category categoryToUpdate, Integer categoryId) {
+        Optional<Category> categoryOptional = this.findById(categoryId);
+        if (categoryOptional.isEmpty()) {
             throw new BadRequestException();
         }
-        categoryBefore.get().compareTo(entity).forEach((key, value) -> {
-            CategoryHistory categoryHistory = new CategoryHistory();
-            categoryHistory.setTitle("Cập nhật danh mục " + categoryBefore.get().getType());
-            categoryHistory.setCategory(new Category(categoryBefore.get().getId(), null));
-            categoryHistory.setField(key);
-            categoryHistory.setOldValue(value.substring(0, value.indexOf("#")));
-            categoryHistory.setNewValue(value.substring(value.indexOf("#") + 1));
-            categoryHistoryRepo.save(categoryHistory);
-        });
-        entity.setId(entityId);
-        return categoryRepo.save(entity);
+        Category categoryBefore = ObjectUtils.clone(categoryOptional.get());
+        categoryToUpdate.setId(categoryId);
+        Category categorySaved = categoryRepo.save(categoryToUpdate);
+
+        String logTitle = "Cập nhật thông tin danh mục: " + categorySaved.getName();
+        Map<String, Object[]> logChanges = LogUtils.logChanges(categoryBefore, categorySaved);
+        categoryHistoryService.save(logChanges, logTitle, categoryId);
+        systemLogService.writeLogUpdate(MODULE.CATEGORY.name(), ACTION.CTG_U.name(), mainObjectName, logTitle, logChanges);
+        logger.info("Update Category success! {}", categorySaved);
+
+        return categorySaved;
     }
 
     @Transactional
     @Override
-    public String delete(Integer entityId) {
-        if (entityId == null || this.findById(entityId).isEmpty()) {
+    public String delete(Integer categoryId) {
+        Optional<Category> categoryToDelete = this.findById(categoryId);
+        if (categoryToDelete.isEmpty()) {
             throw new BadRequestException();
         }
-        if (categoryInUse(entityId)) {
+        if (categoryInUse(categoryId)) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
-        categoryHistoryRepo.deleteAllByCategory(entityId);
-        categoryRepo.deleteById(entityId);
+        categoryHistoryRepository.deleteAllByCategory(categoryId);
+        categoryRepo.deleteById(categoryId);
+        systemLogService.writeLogDelete(MODULE.CATEGORY.name(), ACTION.CTG_D.name(), mainObjectName, "Xóa danh mục", categoryToDelete.get().getName());
         return MessageUtils.DELETE_SUCCESS;
     }
 
@@ -159,52 +166,47 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Override
     public List<Category> findUnits() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.UNIT.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.UNIT.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findColors() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.COLOR.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.COLOR.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findSizes() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.SIZE.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.SIZE.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findSalesChannels() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.SALES_CHANNEL.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.SALES_CHANNEL.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findPaymentMethods() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.PAYMENT_METHOD.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findOrderStatus() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
-    public List<Category> findLedgerReceiptGroups() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
-    }
-
-    @Override
-    public List<Category> findLedgerPaymentGroups() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
+    public List<Category> findLedgerGroupObjects() {
+        return categoryRepo.findSubCategory(CategoryType.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findLedgerReceiptTypes() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.RECEIPT_TYPE.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.RECEIPT_TYPE.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findLedgerPaymentTypes() {
-        return categoryRepo.findSubCategory(AppConstants.CATEGORY.PAYMENT_TYPE.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepo.findSubCategory(CategoryType.PAYMENT_TYPE.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
@@ -356,42 +358,5 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         } catch (Exception e) {
             throw new AppException(e);
         }
-    }
-
-    @Override
-    public byte[] exportTemplate(String categoryType) {
-        return CommonUtils.exportTemplate(AppConstants.TEMPLATE_IE_DM_CATEGORY);
-    }
-
-    @Override
-    public byte[] exportData(String categoryType) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String filePathOriginal = FileUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + ".xlsx";
-        String filePathTemp = FileUtils.excelTemplatePath + "/" + AppConstants.TEMPLATE_IE_DM_CATEGORY + "_" + Instant.now(Clock.systemUTC()).toEpochMilli() + ".xlsx";
-        File fileDeleteAfterExport = new File(Path.of(filePathTemp).toUri());
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook(Files.copy(Path.of(filePathOriginal), Path.of(filePathTemp), StandardCopyOption.REPLACE_EXISTING).toFile());
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            List<Category> listData = this.findAll();
-            for (int i = 0; i < listData.size(); i++) {
-                XSSFRow row = sheet.createRow(i + 3);
-                row.createCell(0).setCellValue(i + 1);
-                row.createCell(1).setCellValue(listData.get(i).getCode());
-                row.createCell(2).setCellValue(listData.get(i).getName());
-                row.createCell(3).setCellValue(listData.get(i).getNote());
-                for (int j = 0; j <= 3; j++) {
-                    row.getCell(j).setCellStyle(FileUtils.setBorder(workbook.createCellStyle()));
-                }
-            }
-            workbook.write(stream);
-            workbook.close();
-        } catch (Exception e) {
-            throw new AppException(e);
-        } finally {
-            if (fileDeleteAfterExport.exists()) {
-                fileDeleteAfterExport.delete();
-            }
-        }
-        return stream.toByteArray();
     }
 }

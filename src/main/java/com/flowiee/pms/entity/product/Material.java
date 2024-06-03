@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,8 @@ import java.util.Map;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Material extends BaseEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -152,5 +154,5 @@ public class Material extends BaseEntity implements Serializable {
 		builder.append(listMaterialHistory);
 		builder.append("]");
 		return builder.toString();
-	}   
+	}
 }

@@ -1,7 +1,7 @@
 package com.flowiee.pms.validate.authorize.system;
 
 import com.flowiee.pms.validate.authorize.BaseAuthorize;
-import com.flowiee.pms.model.ACTION;
+import com.flowiee.pms.utils.constants.ACTION;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,8 +37,13 @@ public class VldModuleSystem extends BaseAuthorize implements IVldModuleSystem {
     }
 
     @Override
-    public boolean setupConfig(boolean throwException) {
-        return super.isAuthorized("CONFIG", throwException);
+    public boolean readConfig(boolean throwException) {
+        return super.isAuthorized(ACTION.SYS_CNF_R.name(), throwException);
+    }
+
+    @Override
+    public boolean updateConfig(boolean throwException) {
+        return super.isAuthorized(ACTION.SYS_CNF_U.name(), throwException);
     }
 
     @Override

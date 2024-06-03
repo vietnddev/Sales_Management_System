@@ -61,5 +61,5 @@ public class ProductAttribute extends BaseEntity implements Serializable {
 	public String toString() {
 		return "ProductAttribute [id=" + super.id + ", productVariant=" + productDetail + ", tenThuocTinh=" + attributeName
 				+ ", giaTriThuocTinh=" + attributeValue + ", sort=" + sort + ", trangThai=" + status + "]";
-	}    
+	}
 }

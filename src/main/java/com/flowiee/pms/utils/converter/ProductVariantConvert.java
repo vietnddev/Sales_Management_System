@@ -6,7 +6,6 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.GarmentFactory;
 import com.flowiee.pms.entity.sales.Supplier;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
-import com.flowiee.pms.utils.AppConstants;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.ArrayList;

@@ -1,7 +1,10 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.ProductCombo;
+import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.product.ProductComboRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductComboService;
@@ -18,6 +21,8 @@ import java.util.Optional;
 
 @Service
 public class ProductComboServiceImpl extends BaseService implements ProductComboService {
+    private static final String mainObjectName = "ProductCombo";
+
     @Autowired
     private ProductComboRepository productComboRepository;
 
@@ -42,7 +47,9 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
 
     @Override
     public ProductCombo save(ProductCombo productCombo) {
-        return productComboRepository.save(productCombo);
+        ProductCombo comboSaved = productComboRepository.save(productCombo);
+        systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_CBO_C.name(), mainObjectName, "Thêm mới combo sản phẩm", comboSaved.getComboName());
+        return comboSaved;
     }
 
     @Override
@@ -51,12 +58,19 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
             throw new NotFoundException("Combo not found");
         }
         productCombo.setId(comboId);
-        return productComboRepository.save(productCombo);
+        ProductCombo comboUpdated = productComboRepository.save(productCombo);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_CBO_C.name(), mainObjectName, "Cập nhật combo sản phẩm", comboUpdated.getComboName());
+        return comboUpdated;
     }
 
     @Override
     public String delete(Integer comboId) {
+        Optional<ProductCombo> comboBefore = this.findById(comboId);
+        if (comboBefore.isEmpty()) {
+            throw new BadRequestException();
+        }
         productComboRepository.deleteById(comboId);
+        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_CBO_C.name(), mainObjectName, "Cập nhật combo sản phẩm", comboBefore.get().getComboName());
         return MessageUtils.DELETE_SUCCESS;
     }
 }

@@ -26,6 +26,9 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Column(name = "function", nullable = false)
 	private String function;
 
+	@Column(name = "title")
+	private String title;
+
 	@Column(name = "object")
 	private String object;
 

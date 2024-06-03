@@ -3,16 +3,17 @@ package com.flowiee.pms.service.storage.impl;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ACTION;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.repository.storage.StorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
+import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.LogType;
 import com.flowiee.pms.utils.converter.StorageConvert;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,10 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.*;
 
 @Service
 public class StorageServiceImpl extends BaseService implements StorageService {
@@ -60,6 +60,12 @@ public class StorageServiceImpl extends BaseService implements StorageService {
         }
         Page<Object[]> storageItemsRawData = storageRepository.findAllItems(searchText, storageId, pageable);
         List<StorageItems> storageItems = new ArrayList<>();
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy-MM-dd HH:mm:ss")
+                .optionalStart()
+                .appendFraction(ChronoField.NANO_OF_SECOND, 1, 9, true)
+                .optionalEnd()
+                .toFormatter();
         for (Object[] object : storageItemsRawData) {
             StorageItems s = StorageItems.builder()
                     .storageId(storageId)
@@ -72,23 +78,8 @@ public class StorageServiceImpl extends BaseService implements StorageService {
                     .build();
             if (object[6] != null) s.setItemStorageQty(Integer.parseInt(String.valueOf(object[6])));
             if (object[7] != null) s.setItemSalesAvailableQty(Integer.parseInt(String.valueOf(object[7])));
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-            if (object[8] != null) {
-                if (Objects.toString(object[8]).length() == 22) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS");
-                if (Objects.toString(object[8]).length() == 23) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                if (Objects.toString(object[8]).length() == 25) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS");
-                if (Objects.toString(object[8]).length() == 26) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-                LocalDateTime firstImportTime = LocalDateTime.parse(Objects.toString(object[8]), formatter);
-                s.setFirstImportTime(firstImportTime);
-            }
-            if (object[9] != null) {
-                if (Objects.toString(object[9]).length() == 22) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS");
-                if (Objects.toString(object[9]).length() == 23) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                if (Objects.toString(object[9]).length() == 25) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS");
-                if (Objects.toString(object[9]).length() == 26) formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-                LocalDateTime lastImportTime = LocalDateTime.parse(Objects.toString(object[9]), formatter);
-                s.setLastImportTime(lastImportTime);
-            }
+            if (object[8] != null) s.setFirstImportTime(LocalDateTime.parse(Objects.toString(object[8]), formatter));
+            if (object[9] != null) s.setLastImportTime(LocalDateTime.parse(Objects.toString(object[9]), formatter));
             storageItems.add(s);
         }
         return new PageImpl<>(storageItems, pageable, storageItemsRawData.getTotalElements());
@@ -109,20 +100,26 @@ public class StorageServiceImpl extends BaseService implements StorageService {
 
     @Override
     public StorageDTO save(StorageDTO inputStorageDTO) {
-        Storage storage = StorageConvert.convertToDTO(inputStorageDTO);
+        Storage storage = StorageConvert.convertToEntity(inputStorageDTO);
         Storage storageSaved = storageRepository.save(storage);
         return StorageDTO.convertToDTO(storageSaved);
     }
 
     @Override
     public StorageDTO update(StorageDTO inputStorageDTO, Integer storageId) {
-        if (this.findById(storageId).isEmpty()) {
+        Optional<StorageDTO> storageOptional = this.findById(storageId);
+        if (storageOptional.isEmpty()) {
             throw new BadRequestException("Storage not found");
         }
-        Storage storage = StorageConvert.convertToDTO(inputStorageDTO);
+        Storage storageBefore = ObjectUtils.clone(storageOptional.get());
+        Storage storage = StorageConvert.convertToEntity(inputStorageDTO);
         storage.setId(storageId);
-        Storage storageSaved = storageRepository.save(storage);
-        return StorageDTO.convertToDTO(storageSaved);
+        Storage storageUpdated = storageRepository.save(storage);
+
+        Map<String, Object[]> logChanges = LogUtils.logChanges(storageBefore, storageUpdated);
+        systemLogService.writeLogUpdate(MODULE.STORAGE.name(), ACTION.STG_STG_U.name(), mainObjectName, "Cập nhật Kho", logChanges);
+
+        return StorageDTO.convertToDTO(storageUpdated);
     }
 
     @Override
@@ -136,7 +133,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
                 return "This storage is in use!";
             }
             storageRepository.deleteById(storageId);
-            systemLogService.writeLog(MODULE.STORAGE.name(), ACTION.STG_STORAGE.name(), mainObjectName, LogType.D.name(), "Delete Storage storageId=" + storageId);
+            systemLogService.writeLogDelete(MODULE.STORAGE.name(), ACTION.STG_STORAGE.name(), mainObjectName, "Xóa kho", storage.get().getName());
             logger.info("Delete storage success! storageId={}", storageId);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {

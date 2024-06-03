@@ -43,9 +43,7 @@ public class ProductControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView loadProductPage() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT);
-        modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_I_SANPHAM);
-        return baseView(modelAndView);
+        return baseView(new ModelAndView(PagesUtils.PRO_PRODUCT));
     }
 
     @GetMapping(value = "/{id}")

@@ -13,6 +13,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.exception.NotFoundException;
 
+import com.flowiee.pms.utils.constants.CategoryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +64,7 @@ public class OrderControllerView extends BaseController {
         modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail.get());
         modelAndView.addObject("listOrderDetail", orderDetail.get().getListOrderDetailDTO());
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(AppConstants.CATEGORY.PAYMENT_METHOD.getName(), null));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryType.PAYMENT_METHOD.getName(), null));
         modelAndView.addObject("donHang", new Order());
         //modelAndView.addObject("donHangThanhToan", new OrderPay());
         return baseView(modelAndView);

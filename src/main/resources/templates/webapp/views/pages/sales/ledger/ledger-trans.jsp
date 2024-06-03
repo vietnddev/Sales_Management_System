@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Phiếu thu</title>
+    <title th:text="${tranTypeName}"></title>
     <div th:replace="header :: stylesheets"></div>
     <style rel="stylesheet">
         .table td, th {
@@ -17,12 +17,9 @@
 
         <div th:replace="sidebar :: sidebar"></div>
 
-        <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
-            <!-- Main content -->
             <section class="content">
                 <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
                     <div class="row">
                         <div class="col-sm-12">
                             <!--Search tool-->
@@ -32,10 +29,10 @@
                                 <div class="card-header">
                                     <div class="row justify-content-between">
                                         <div class="col-4" style="display: flex; align-items: center">
-                                            <h3 class="card-title"><strong>PHIẾU THU</strong></h3>
+                                            <h3 class="card-title"><strong class="text-uppercase" th:text="${tranTypeName}"></strong></h3>
                                         </div>
                                         <div class="col-4 text-right">
-                                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAddReceipt">Thêm mới</button>
+                                            <button type="button" class="btn btn-success" id="btnAddTrans">Thêm mới</button>
                                         </div>
                                     </div>
                                 </div>
@@ -48,10 +45,10 @@
                                                 <th>Mã phiếu</th>
                                                 <th>Loại phiếu</th>
                                                 <th>Trạng thái</th>
-                                                <th>Số tiền thu</th>
-                                                <th>Nhóm người nộp</th>
+                                                <th>Giá trị</th>
+                                                <th>Nhóm đối tượng</th>
                                                 <th>Chứng từ gốc</th>
-                                                <th>Tên người nộp</th>
+                                                <th>Tên người nộp/nhận</th>
                                             </tr>
                                         </thead>
                                         <tbody id="contentTable"></tbody>
@@ -63,27 +60,40 @@
                             </div>
                         </div>
                     </div>
-
-                    <div th:replace="pages/sales/ledger/fragments/ledger-fragments :: modalAddReceipt"></div>
-
+                    <div th:replace="pages/sales/ledger/fragments/ledger-fragments :: modalAddTrans"></div>
                 </div>
             </section>
         </div>
-
         <div th:replace="footer :: footer"></div>
-
         <aside class="control-sidebar control-sidebar-dark"></aside>
-
         <div th:replace="header :: scripts"></div>
     </div>
+
     <script>
+        let mvTranType = '[[${tranTypeKey}]]';
+
         $(document).ready(function () {
-            loadReceipts(mvPageSizeDefault, 1);
-            updateTableContentWhenOnClickPagination(loadReceipts);
+            loadLedgerTransactions(mvPageSizeDefault, 1);
+            updateTableContentWhenOnClickPagination(loadLedgerTransactions);
+            $("#btnAddTrans").on("click", function () {
+                if (mvTranType === "PT") {
+                    $("#modalAddTransForm").attr("action", "/ledger/trans/receipt/insert");
+                    $("#modalAddTransTitle").text("Thêm mới phiếu thu");
+                } else if (mvTranType === "PC") {
+                    $("#modalAddTransForm").attr("action", "/ledger/trans/payment/insert");
+                    $("#modalAddTransTitle").text("Thêm mới phiếu chi")
+                }
+                $("#modalAddTrans").modal();
+            })
         });
 
-        function loadReceipts(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + '/ledger-receipt/all';
+        function loadLedgerTransactions(pageSize, pageNum) {
+            let apiURL = mvHostURLCallApi + '/ledger-trans';
+            if (mvTranType === "PT") {
+                apiURL += '/receipt/all';
+            } else if (mvTranType === "PC") {
+                apiURL += '/payment/all';
+            }
             let params = {pageSize: pageSize, pageNum: pageNum}
             $.get(apiURL, params, function (response) {
                 if (response.status === "OK") {
@@ -96,18 +106,18 @@
                     contentTable.empty();
                     $.each(data, function (index, d) {
                         contentTable.append(`
-                               <tr>
-                                    <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                    <td>${d.createdAt}</td>
-                                    <td>${d.receiptCode}</td>
-                                    <td>${d.receiptTypeName}</td>
-                                    <td>${d.status}</td>
-                                    <td>${formatCurrency(d.receiptAmount)}</td>
-                                    <td>${d.receiverGroupName}</td>
-                                    <td></td>
-                                    <td>${d.receiverName}</td>
-                                </tr>
-                            `);
+                            <tr>
+                                <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                                <td>${d.createdAt}</td>
+                                <td>${d.tranCode}</td>
+                                <td>${d.tranContentName}</td>
+                                <td>${d.status}</td>
+                                <td>${formatCurrency(d.amount)}</td>
+                                <td>${d.groupObjectName}</td>
+                                <td></td>
+                                <td>${d.fromToName}</td>
+                            </tr>
+                        `);
                     });
                 }
             }).fail(function () {

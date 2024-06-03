@@ -11,6 +11,7 @@ import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.VoucherStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -132,10 +133,10 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
             if (voucherInfo.isEmpty()) {
                 throw new AppException();
             }
-            if (AppConstants.VOUCHER_STATUS.A.name().equals(voucherInfo.get().getStatus())) {
-                statusTicket = AppConstants.VOUCHER_STATUS.A.getLabel();
-            } else if (AppConstants.VOUCHER_STATUS.I.name().equals(voucherInfo.get().getStatus())) {
-                statusTicket = AppConstants.VOUCHER_STATUS.I.getLabel();
+            if (VoucherStatus.A.name().equals(voucherInfo.get().getStatus())) {
+                statusTicket = VoucherStatus.A.getLabel();
+            } else if (VoucherStatus.I.name().equals(voucherInfo.get().getStatus())) {
+                statusTicket = VoucherStatus.I.getLabel();
             }
         } else {
             statusTicket = "Invalid!";

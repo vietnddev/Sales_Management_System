@@ -1,26 +1,23 @@
 package com.flowiee.pms.utils;
 
 import com.flowiee.pms.exception.AuthenticationException;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.ServerInfo;
 import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.model.UserPrincipal;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.utils.constants.CategoryType;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,9 +31,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
-    private static final Logger logger = LoggerFactory.getLogger(BaseService.class);
     public static LocalDateTime START_APP_TIME = null;
-    public static final String ADMINISTRATOR = "admin";
     public static Path logoPath = Paths.get(FileUtils.rootPath + "/dist/img/FlowieeLogo.png");
     public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
@@ -44,7 +39,8 @@ public class CommonUtils {
     public static ServerInfo mvServerInfo;
 
     public static String formatToVND(Object currency) {
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        @SuppressWarnings("deprecation")
+		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         currencyFormat.setCurrency(Currency.getInstance("VND"));
         return currency != null ? currencyFormat.format(currency) : "0 VND";
     }
@@ -72,7 +68,7 @@ public class CommonUtils {
 
     public static String getCategoryType(String key) {
         Map<String, String> map = new HashMap<>();
-        for (AppConstants.CATEGORY c : AppConstants.CATEGORY.values()) {
+        for (CategoryType c : CategoryType.values()) {
             map.put(c.getKey(), c.getName());
         }
         return map.get(key);
@@ -198,22 +194,5 @@ public class CommonUtils {
 
     public static String genOrderCode() {
         return CommonUtils.now("yyyyMMddHHmmss");
-    }
-
-    public static Map<String, Object[]> logChanges(Object oldObject, Object newObject) {
-        Map<String, Object[]> changes = new HashMap<>();
-        for (Field field : oldObject.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            try {
-                Object oldValue = field.get(oldObject);
-                Object newValue = field.get(newObject);
-                if (!Objects.equals(oldValue, newValue)) {
-                    changes.put(field.getName(), new Object[]{oldValue, newValue});
-                }
-            } catch (IllegalAccessException e) {
-                logger.error("Lỗi khi thực hiện kiểm tra các thay đổi của entity {}", oldObject.getClass().getName(), e);
-            }
-        }
-        return changes;
     }
 }

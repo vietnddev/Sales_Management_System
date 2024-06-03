@@ -1,7 +1,7 @@
 package com.flowiee.pms.service.system;
 
 import com.flowiee.pms.entity.system.AccountRole;
-import com.flowiee.pms.model.ACTION;
+import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.model.role.ActionModel;
 import com.flowiee.pms.model.role.RoleModel;
 

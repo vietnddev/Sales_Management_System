@@ -7,6 +7,8 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.SystemLogService;
 
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,17 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 @Service
 public class SystemLogServiceImpl extends BaseService implements SystemLogService {
     @Autowired
     private SystemLogRepository systemLogRepo;
-    @Autowired
-    private EntityManager entityManager;
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {
@@ -33,37 +30,38 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
     }
 
     @Override
-    public List<SystemLog> getAll() {
-        List<SystemLog> dataReturn = new ArrayList<>();
-        String srtSQL = "select l.id, l.module, l.action, l.noi_dung, l.noi_dung_cap_nhat, l.ip, a.username from sys_log l inner join sys_account a on a.id = l.created_by";
-        Query result = entityManager.createNativeQuery(srtSQL);
-        List<Object[]> listData = result.getResultList();
-        for (Object[] data : listData) {
-            SystemLog systemLog = new SystemLog();
-            systemLog.setId(Integer.parseInt(String.valueOf(data[0])));
-            systemLog.setModule(String.valueOf(data[1]));
-            systemLog.setFunction(String.valueOf(data[2]));
-            systemLog.setContent(String.valueOf(data[3]));
-            systemLog.setContentChange(String.valueOf(data[4]));
-            systemLog.setIp(String.valueOf(data[5]));
-            systemLog.setUsername(String.valueOf(data[6]));
-            dataReturn.add(systemLog);
-        }
-        return dataReturn;
+    public SystemLog writeLogCreate(String module, String function, String object, String title, String content) {
+        return this.writeLog(module, function, object, LogType.I, title, content, null);
     }
 
     @Override
-    public SystemLog writeLog(String module, String function, String object, String mode, String content) {
-        return writeLog(module, function, object, mode, content, null);
+    public SystemLog writeLogUpdate(String module, String function, String object, String title, Map<String, Object[]> logChanges) {
+        return this.writeLog(module, function, object, LogType.U, title, LogUtils.getValueChanges(logChanges)[0], LogUtils.getValueChanges(logChanges)[1]);
     }
 
     @Override
-    public SystemLog writeLog(String module, String function, String object, String mode, String content, String contentChange) {
+    public SystemLog writeLogUpdate(String module, String function, String object, String title, String content) {
+        return this.writeLog(module, function, object, LogType.U, title, content, null);
+    }
+
+    @Override
+    public SystemLog writeLogUpdate(String module, String function, String object, String title, String content, String contentChange) {
+        return this.writeLog(module, function, object, LogType.U, title, content, contentChange);
+    }
+
+    @Override
+    public SystemLog writeLogDelete(String module, String function, String object, String title, String content) {
+        return this.writeLog(module, function, object, LogType.D, title, content, null);
+    }
+
+    @Override
+    public SystemLog writeLog(String module, String function, String object, LogType mode, String title, String content, String contentChange) {
         SystemLog systemLog = new SystemLog();
         systemLog.setModule(module);
         systemLog.setFunction(function);
         systemLog.setObject(object);
-        systemLog.setMode(mode);
+        systemLog.setMode(mode.name());
+        systemLog.setTitle(title);
         systemLog.setContent(content);
         systemLog.setContentChange(contentChange);
         systemLog.setIp(CommonUtils.getUserPrincipal().getIp());

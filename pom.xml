@@ -9,10 +9,10 @@
 		<relativePath />
 	</parent>
 	<groupId>com.flowiee</groupId>
-	<artifactId>FlowieeOfficial_Backend</artifactId>
+	<artifactId>Flowiee_PMS</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>FlowieeOfficial</name>
+	<name>Flowiee_PMS</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>19</java.version>

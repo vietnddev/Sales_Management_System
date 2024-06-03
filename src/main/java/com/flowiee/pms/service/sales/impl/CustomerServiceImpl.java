@@ -1,8 +1,8 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.exception.NotFoundException;
-import com.flowiee.pms.model.ACTION;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.entity.sales.CustomerContact;
@@ -19,7 +19,6 @@ import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -118,7 +117,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             customerContact.setStatus(true);
             customerContactService.save(customerContact);
         }
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_C.name(), mainObjectName, LogType.I.name(), "Thêm mới khách hàng: " + customer.toString());
+        systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_CUS_C.name(), mainObjectName, "Thêm mới khách hàng", customer.toString());
         logger.info("Create customer: {}", customer.toString());
         return CustomerDTO.fromCustomer(customerInserted);
     }
@@ -192,21 +191,22 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 customerContactService.save(addressDefault);
             }
         }
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_U.name(), mainObjectName, LogType.U.name(), "Cập nhật thông tin khách hàng: " + customer.toString());
+        systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_CUS_U.name(), mainObjectName, "Cập nhật thông tin khách hàng", customer.toString());
         logger.info("Update customer info {}", customer.toString());
         return CustomerDTO.fromCustomer(customerUpdated);
     }
 
     @Override
     public String delete(Integer id) {
-        if (this.findById(id).isEmpty()) {
+        Optional<CustomerDTO> customer = this.findById(id);
+        if (customer.isEmpty()) {
             throw new BadRequestException("Customer not found!");
         }
         if (!orderService.findAll().isEmpty()) {
             throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLog(MODULE.PRODUCT.name(), ACTION.PRO_CUS_D.name(), mainObjectName, LogType.D.name(), "Xóa khách hàng id=" + id);
+        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_CUS_D.name(), mainObjectName, "Xóa khách hàng", customer.get().getCustomerName());
         logger.info("Deleted customer id={}", id);
         return MessageUtils.DELETE_SUCCESS;
     }

@@ -4,11 +4,12 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.*;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ACTION;
-import com.flowiee.pms.model.MODULE;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.DataInUseException;
+import com.flowiee.pms.model.dto.VoucherApplyDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.product.ProductRepository;
@@ -16,20 +17,19 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
-import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.LogType;
+import com.flowiee.pms.utils.constants.ProductStatus;
+import com.flowiee.pms.utils.constants.VoucherStatus;
 import com.flowiee.pms.utils.converter.ProductConvert;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
@@ -75,7 +75,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Override
     public List<Product> findProductsIdAndProductName() {
         List<Product> products = new ArrayList<>();
-        for (Object[] objects : productsRepo.findIdAndName(AppConstants.PRODUCT_STATUS.A.name())) {
+        for (Object[] objects : productsRepo.findIdAndName(ProductStatus.A.name())) {
             products.add(new Product(Integer.parseInt(String.valueOf(objects[0])), String.valueOf(objects[1])));
         }
         return products;
@@ -93,9 +93,9 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             Product productToSave = ProductConvert.convertToEntity(product);
             productToSave.setCreatedBy(CommonUtils.getUserPrincipal().getId());
             productToSave.setDescription(product.getDescription() != null ? product.getDescription() : "");
-            productToSave.setStatus(AppConstants.PRODUCT_STATUS.I.name());
+            productToSave.setStatus(ProductStatus.I.name());
             Product productSaved = productsRepo.save(productToSave);
-            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_C.name(), mainObjectName, LogType.I.name(), "Thêm mới sản phẩm: " + product);
+            systemLogService.writeLogCreate(mvModule, ACTION.PRO_PRD_C.name(), mainObjectName, "Thêm mới sản phẩm", product.getProductName());
             logger.info("Insert product success! {}", product);
             return ProductConvert.convertToDTO(productSaved);
         } catch (RuntimeException ex) {
@@ -110,36 +110,18 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         if (productToUpdate.getDescription().isEmpty()) {
             productToUpdate.setDescription("-");
         }
-        Optional<ProductDTO> productBefore = this.findById(productId);
-        if (productBefore.isEmpty()) {
+        Optional<ProductDTO> productOptional = this.findById(productId);
+        if (productOptional.isEmpty()) {
             throw new BadRequestException();
         }
-//        productBefore.get().compareTo(productToUpdate).forEach((key, value) -> {
-//            ProductHistory productHistory = new ProductHistory();
-//            productHistory.setTitle("Update product");
-//            productHistory.setProduct(new Product(productId));
-//            productHistory.setField(key);
-//            productHistory.setOldValue(value.substring(0, value.indexOf("#")));
-//            productHistory.setNewValue(value.substring(value.indexOf("#") + 1));
-//            productHistoryService.save(productHistory);
-//        });
-
+        Product productBefore = ObjectUtils.clone(productOptional.get());
         productToUpdate.setId(productId);
-        productToUpdate.setLastUpdatedBy(CommonUtils.getUserPrincipal().getUsername());
         Product productUpdated = productsRepo.save(productToUpdate);
-        String noiDungLog = "";
-        String noiDungLogUpdate = "";
-        if (productBefore.get().toString().length() > 1950) {
-            noiDungLog = productBefore.get().toString().substring(0, 1950);
-        } else {
-            noiDungLog = productBefore.get().toString();
-        }
-        if (productToUpdate.toString().length() > 1950) {
-            noiDungLogUpdate = productToUpdate.toString().substring(0, 1950);
-        } else {
-            noiDungLogUpdate = productToUpdate.toString();
-        }
-        systemLogService.writeLog(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, LogType.U.name(), "Cập nhật sản phẩm: " + noiDungLog, "Sản phẩm sau khi cập nhật: " + noiDungLogUpdate);
+
+        String logTitle = "Cập nhật sản phẩm: " + productUpdated.getProductName();
+        Map<String, Object[]> logChanges = LogUtils.logChanges(productBefore, productUpdated);
+        productHistoryService.save(logChanges, logTitle, productUpdated.getId(), null, null);
+        systemLogService.writeLogUpdate(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, logTitle, logChanges);
         logger.info("Update product success! productId={}", productId);
         return ProductConvert.convertToDTO(productUpdated);
     }
@@ -156,7 +138,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
                 throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
             }
             productsRepo.deleteById(id);
-            systemLogService.writeLog(mvModule, ACTION.PRO_PRD_D.name(), mainObjectName, LogType.D.name(), "Xóa sản phẩm: " + productToDelete.toString());
+            systemLogService.writeLogDelete(mvModule, ACTION.PRO_PRD_D.name(), mainObjectName, "Xóa sản phẩm", productToDelete.get().getProductName());
             logger.info("Delete product success! productId={}", id);
             return MessageUtils.DELETE_SUCCESS;
         } catch (RuntimeException ex) {
@@ -179,41 +161,42 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
                 p.setImageActive("/" + imageActive.getDirectoryPath() + "/" + imageActive.getStorageName());
             }
             List<Integer> listVoucherInfoId = new ArrayList<>();
-            voucherApplyService.findByProductId(p.getId()).forEach(voucherApplyDTO -> {
+            for (VoucherApplyDTO voucherApplyDTO : voucherApplyService.findByProductId(p.getId())) {
                 listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
-            });
+            }
             if (!listVoucherInfoId.isEmpty()) {
-                List<VoucherInfoDTO> voucherInfoDTOs = voucherInfoService.findAll(-1, -1, listVoucherInfoId, null, null, null, AppConstants.VOUCHER_STATUS.A.name()).getContent();
+                List<VoucherInfoDTO> voucherInfoDTOs = voucherInfoService.findAll(-1, -1, listVoucherInfoId, null, null, null, VoucherStatus.A.name()).getContent();
                 p.setListVoucherInfoApply(voucherInfoDTOs);
             }
         }
     }
 
     private void setInfoVariantOfProduct(List<ProductDTO> products) {
-        if (products != null) {
-            for (ProductDTO p : products) {
-                LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
-                int totalQtyStorage = 0;
-                for (Category color : categoryRepo.findColorOfProduct(p.getId())) {
-                    StringBuilder sizeName = new StringBuilder();
-                    List<Category> listSize = categoryRepo.findSizeOfColorOfProduct(p.getId(), color.getId());
-                    for (int i = 0; i < listSize.size(); i++) {
-                        int qtyStorage = productStatisticsService.findProductVariantQuantityBySizeOfEachColor(p.getId(), color.getId(), listSize.get(i).getId());
-                        if (i == listSize.size() - 1) {
-                            sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")");
-                        } else {
-                            sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")").append(", ");
-                        }
-                        totalQtyStorage += qtyStorage;
+        if (products == null) {
+            return;
+        }
+        for (ProductDTO p : products) {
+            LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
+            int totalQtyStorage = 0;
+            for (Category color : categoryRepo.findColorOfProduct(p.getId())) {
+                StringBuilder sizeName = new StringBuilder();
+                List<Category> listSize = categoryRepo.findSizeOfColorOfProduct(p.getId(), color.getId());
+                for (int i = 0; i < listSize.size(); i++) {
+                    int qtyStorage = productStatisticsService.findProductVariantQuantityBySizeOfEachColor(p.getId(), color.getId(), listSize.get(i).getId());
+                    if (i == listSize.size() - 1) {
+                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")");
+                    } else {
+                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")").append(", ");
                     }
-                    variantInfo.put(color.getName(), sizeName.toString());//Đen: S (5)
+                    totalQtyStorage += qtyStorage;
                 }
-                p.setProductVariantInfo(variantInfo);
-                p.setTotalQtyStorage(totalQtyStorage);
-                p.setTotalQtySell(productStatisticsService.findProductVariantTotalQtySell(p.getId()));
-                int totalDefective = 0;
-                p.setTotalQtyAvailableSales(totalQtyStorage - totalDefective);
+                variantInfo.put(color.getName(), sizeName.toString());//Đen: S (5)
             }
+            p.setProductVariantInfo(variantInfo);
+            p.setTotalQtyStorage(totalQtyStorage);
+            p.setTotalQtySell(productStatisticsService.findProductVariantTotalQtySell(p.getId()));
+            int totalDefective = 0;
+            p.setTotalQtyAvailableSales(totalQtyStorage - totalDefective);
         }
     }
 }

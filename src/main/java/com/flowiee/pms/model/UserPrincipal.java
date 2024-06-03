@@ -6,13 +6,17 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Set;
 
 @Getter
 @Setter
 public class UserPrincipal extends Account implements UserDetails {
-    private Integer id;
+	@Serial
+	private static final long serialVersionUID = 1L;
+	
+	private Integer id;
     private String username;
     private String password;
     private String ip;

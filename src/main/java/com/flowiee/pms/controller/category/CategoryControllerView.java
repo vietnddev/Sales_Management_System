@@ -3,11 +3,14 @@ package com.flowiee.pms.controller.category;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.service.category.CategoryExportService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.PagesUtils;
 
+import com.flowiee.pms.utils.constants.CategoryType;
+import com.flowiee.pms.utils.constants.TemplateExport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +27,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/system/category")
 public class CategoryControllerView extends BaseController {
-    @Autowired private CategoryService categoryService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private CategoryExportService categoryExportService;
 
     @GetMapping
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
@@ -43,8 +49,8 @@ public class CategoryControllerView extends BaseController {
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY_DETAIL);
         modelAndView.addObject("categoryType", categoryType);
-        modelAndView.addObject("ctgRootName", AppConstants.CATEGORY.valueOf(CommonUtils.getCategoryType(categoryType)).getLabel());
-        modelAndView.addObject("templateImportName", AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH);
+        modelAndView.addObject("ctgRootName", CategoryType.valueOf(CommonUtils.getCategoryType(categoryType)).getLabel());
+        modelAndView.addObject("templateImportName", TemplateExport.LIST_OF_CATEGORIES);
         modelAndView.addObject("url_template", "");
         modelAndView.addObject("url_import", "");
         modelAndView.addObject("url_export", "");
@@ -57,10 +63,10 @@ public class CategoryControllerView extends BaseController {
         if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new NotFoundException("Category not found!");
         }
-        byte[] dataExport = categoryService.exportTemplate(categoryType);
+        byte[] dataExport = categoryExportService.exportTemplate(categoryType);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + TemplateExport.LIST_OF_CATEGORIES + ".xlsx");
         return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 
@@ -77,10 +83,10 @@ public class CategoryControllerView extends BaseController {
     @GetMapping("/{type}/export")
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public ResponseEntity<?> exportData(@PathVariable("type") String categoryType) {
-        byte[] dataExport = categoryService.exportData(categoryType);
+        byte[] dataExport = categoryExportService.exportData(categoryType);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + AppConstants.TEMPLATE_IE_DM_LOAIDONVITINH + ".xlsx");
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + TemplateExport.LIST_OF_CATEGORIES + ".xlsx");
         return new ResponseEntity<>(new ByteArrayResource(dataExport), header, HttpStatus.CREATED);
     }
 }

@@ -3,23 +3,29 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.system.ConfigService;
 
 import com.flowiee.pms.service.system.LanguageService;
-import com.flowiee.pms.utils.AppConstants;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.constants.CategoryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ConfigServiceImpl extends BaseService implements ConfigService {
+    private static final String mainObjectName = "SystemConfig";
+
     private final ConfigRepository sysConfigRepo;
     private final CategoryService  categoryService;
     private final LanguageService languageService;
@@ -42,25 +48,17 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
     }
 
     @Override
-    public SystemConfig save(SystemConfig systemConfig) {
-        return sysConfigRepo.save(systemConfig);
-    }
-
-    @Override
     public SystemConfig update(SystemConfig systemConfig, Integer id) {
-        systemConfig.setId(id);
-        logger.info("Update config success! {}", systemConfig.toString());
-        return sysConfigRepo.save(systemConfig);
-    }
-
-    @Override
-    public String delete(Integer id) {
-        try {
-            sysConfigRepo.deleteById(id);
-            return MessageUtils.DELETE_SUCCESS;
-        } catch (RuntimeException ex) {
-            throw new AppException(ex);
+        Optional<SystemConfig> configBefore = this.findById(id);
+        if (configBefore.isEmpty()) {
+            throw new BadRequestException();
         }
+        systemConfig.setId(id);
+        SystemConfig configUpdated = sysConfigRepo.save(systemConfig);
+        Map<String, Object[]> logChanges = LogUtils.logChanges(configBefore, configUpdated);
+        systemLogService.writeLogUpdate(MODULE.SYSTEM.name(), ACTION.SYS_CNF_U.name(), mainObjectName, "Cập nhật cấu hình hệ thống", logChanges);
+        logger.info("Update config success! {}", systemConfig.toString());
+        return configUpdated;
     }
 
     @Transactional
@@ -71,7 +69,7 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
             List<Category> rootCategories = categoryService.findRootCategory();
             for (Category c : rootCategories) {
                 if (c.getType() != null && !c.getType().trim().isEmpty()) {
-                    AppConstants.CATEGORY.valueOf(c.getType()).setLabel(c.getName());
+                    CategoryType.valueOf(c.getType()).setLabel(c.getName());
                 }
             }
             //

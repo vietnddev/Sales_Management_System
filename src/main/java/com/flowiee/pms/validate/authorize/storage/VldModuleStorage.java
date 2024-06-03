@@ -1,7 +1,7 @@
 package com.flowiee.pms.validate.authorize.storage;
 
 import com.flowiee.pms.validate.authorize.BaseAuthorize;
-import com.flowiee.pms.model.ACTION;
+import com.flowiee.pms.utils.constants.ACTION;
 import org.springframework.stereotype.Component;
 
 @Component
