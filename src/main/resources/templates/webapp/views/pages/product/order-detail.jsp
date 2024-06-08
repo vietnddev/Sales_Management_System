@@ -60,10 +60,12 @@
                                                         <tr>
                                                             <th>STT</th>
                                                             <th>Tên sản phẩm</th>
-                                                            <th>Đơn vị tính</th>
-                                                            <th>Số lượng</th>
+                                                            <th>ĐVT</th>
+                                                            <th>Loại giá</th>
+                                                            <th>SL</th>
                                                             <th>Giá gốc</th>
-                                                            <th>Giá áp dụng</th>
+                                                            <th>Giá khuyến mãi</th>
+                                                            <th>Giảm thêm</th>
                                                             <th>Thành tiền</th>
                                                             <th>Ghi chú</th>
                                                         </tr>
@@ -76,14 +78,16 @@
                                                                    th:href="@{/san-pham/variant/{id}(id=${list.productVariantDTO.id})}"></a>
                                                             </td>
                                                             <td th:text="${list.productVariantDTO.unitName}"></td>
+                                                            <td th:text="${list.priceType == 'L' ? 'Lẻ' : 'Sỉ'}"></td>
                                                             <td th:text="${list.quantity}" class="text-right"></td>
                                                             <td th:text="${list.priceOriginal != null} ? ${#numbers.formatDecimal (list.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
                                                             <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
-                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.quantity, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
+                                                            <td th:text="${#numbers.formatDecimal (list.extraDiscount, 0, 'COMMA', 0, 'NONE') + 'đ '}" class="text-right"></td>
+                                                            <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.quantity - list.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
                                                             <td th:text="${list.note}"></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="6"></td>
+                                                            <td colspan="7"></td>
                                                             <td th:text="${orderDetail.totalAmount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right font-weight-bold"></td>
                                                             <td></td>
                                                         </tr>
@@ -100,41 +104,52 @@
                                                             <img th:src="@{'/' + ${orderDetail.qrCode}}" class="img-fluid" alt="Qr code"
                                                                  style="width: 100%; border-radius: 5px; margin: auto">
                                                         </div>
-                                                        <p class="text-muted text-center">QR Code</p>
+                                                        <p class="text-muted text-center">Mã đơn</p>
+                                                        <p class="text-muted text-center" th:text="${orderDetail.code}"></p>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="card-header col-sm-7 pt-0 pr-3 pb-0 pl-3" style="border-bottom: 0">
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th>Khách hàng</th>
-                                                            <td th:text="${orderDetail.receiverName}"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Số điện thoại</th>
-                                                            <td th:text="${orderDetail.receiverPhone}"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Email</th>
-                                                            <td th:text="${orderDetail.receiverEmail}"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Địa chỉ nhận hàng</th>
-                                                            <td th:text="${orderDetail.receiverAddress}"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Thời gian đặt hàng</th>
-                                                            <td th:text="${orderDetail.orderTime}"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Kênh mua hàng</th>
-                                                            <td th:text="${orderDetail.salesChannelName}"></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                            <div class="col-sm-6 pt-0 pr-3 pb-0 pl-3" style="border-bottom: 0">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12 row">
+                                                                <label class="col-3">Khách hàng</label>
+                                                                <span class="col-9 p-0" th:text="${orderDetail.receiverName}"></span>
+                                                            </div>
+                                                            <div class="col-12 row"><hr class="w-100"></div>
+                                                            <div class="col-6 row">
+                                                                <label class="col-6">Số điện thoại</label>
+                                                                <span class="col-6" th:text="${orderDetail.receiverPhone}"></span>
+                                                            </div>
+                                                            <div class="col-6 row">
+                                                                <label class="col-6">Email</label>
+                                                                <span class="col-6" th:text="${orderDetail.receiverEmail}"></span>
+                                                            </div>
+                                                            <div class="col-12 row"><hr class="w-100"></div>
+                                                            <div class="col-12 row">
+                                                                <label class="col-3">Địa chỉ</label>
+                                                                <span class="col-9 p-0" th:text="${orderDetail.receiverAddress}"></span>
+                                                            </div>
+                                                            <div class="col-12 row"><hr class="w-100"></div>
+                                                            <div class="col-6 row">
+                                                                <label class="col-6">Thời gian mua</label>
+                                                                <span class="col-6 p-0" id="orderTime"></span>
+                                                            </div>
+                                                            <div class="col-6 row">
+                                                                <label class="col-6">Kênh bán hàng</label>
+                                                                <span class="col-6 p-0" th:text="${orderDetail.salesChannelName}"></span>
+                                                            </div>
+                                                            <div class="col-12 row"><hr class="w-100"></div>
+                                                            <div class="col-12 row">
+                                                                <label class="col-3">Ghi chú</label>
+                                                                <textarea class="form-control col-9 p-0" required rows="3" id="noteField" th:text="${orderDetail.note}"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="card-footer col-sm-3 p-0">
+                                            <div class="card-footer col-sm-4 p-0">
                                                 <table class="table">
                                                     <tbody>
                                                         <tr>
@@ -157,6 +172,14 @@
                                                             <th>Tổng phải thu</th>
                                                             <td th:text="${orderDetail.totalAmountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                         </tr>
+                                                        <tr>
+                                                            <th>Trạng thái đơn hàng</th>
+                                                            <td class="form-group">
+                                                                <select class="custom-select" id="orderStatusField">
+                                                                    <option th:each="d : ${orderStatus}" th:value="${d.id}" th:text="${d.name}"></option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -165,7 +188,7 @@
                                                 <div class="row justify-content-between">
                                                     <div class="col-4" style="display: flex; align-items: center"></div>
                                                     <div class="col-4 text-right">
-                                                        <button type="button" class="btn btn-danger">Hủy đơn hàng</button>
+                                                        <button type="button" class="btn btn-success" id="btnUpdateOrder">Cập nhật</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -186,8 +209,8 @@
                                                 <div class="row justify-content-between">
                                                     <div class="col-2" style="display: flex; align-items: center"></div>
                                                     <div class="col-10 text-right">
-                                                        <button type="button" class="btn btn-sm btn-primary">In</button>
-                                                        <button type="button" class="btn btn-sm btn-success" id="btnDoPay">
+                                                        <button type="button" class="btn btn-primary">In</button>
+                                                        <button type="button" class="btn btn-success" id="btnDoPay">
                                                             Thanh toán
                                                         </button>
                                                         <!--POPUP THANH TOÁN-->
@@ -259,7 +282,7 @@
                                                 <hr>
                                                 <div class="row justify-content-between">
                                                     <div class="col-4" style="display: flex; align-items: center"></div>
-                                                    <div class="col-4 text-right"><button type="button" class="btn btn-sm btn-info link-confirm" id="btnCreateTicketExport">Tạo phiếu xuất hàng</button></div>
+                                                    <div class="col-4 text-right"><button type="button" class="btn btn-info link-confirm" id="btnCreateTicketExport">Tạo phiếu xuất hàng</button></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -309,6 +332,7 @@
             }
             doPay();
             createTicketExport();
+            updateOrder();
         });
 
         function init() {
@@ -322,6 +346,7 @@
             $.get(apiURL, function (response) {
                 if (response.status === "OK") {
                     mvOrderDetail = response.data;
+                    loadOrderInfoOnForm(mvOrderDetail);
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
@@ -383,29 +408,69 @@
                     return;
                 }
                 $(this).attr("actionType", "create");
+                $(this).attr("entityName", "ticketExport");
                 showConfirmModal($(this), "Tạo phiếu xuất kho", "Bạn có chắc muốn tạo phiếu?");
+                submitCreateOrUpdate();
             });
+        }
 
+        function updateOrder() {
+            $("#btnUpdateOrder").on("click", function () {
+                $(this).attr("actionType", "update");
+                $(this).attr("entityName", "order");
+                showConfirmModal($(this), "Cập nhật đơn hàng", "Bạn có chắc muốn cập nhật đơn hàng này?");
+                submitCreateOrUpdate();
+            });
+        }
+
+        function submitCreateOrUpdate() {
             $("#yesButton").on("click", function () {
-                let apiURL = mvHostURLCallApi + "/stg/ticket-export/create-draft";
-                let body = {id : mvOrderDetail.id, code : mvOrderDetail.code};
-                $.ajax({
-                    url: apiURL,
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify(body),
-                    success: function (response, textStatus, jqXHR) {
-                        if (response.status === "OK") {
-                            let data = response.data;
-                            setTicketExportTableValue(data);
+                console.log("at ", $(this).attr("actionType"));
+                console.log("en ", $(this).attr("entityName"));
+                if ($(this).attr("actionType") === "update" && $(this).attr("entityName") === "order") {
+                    $.ajax({
+                        url: mvHostURLCallApi + "/order/update/" + [[${orderDetailId}]],
+                        type: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify(
+                            {
+                                note : $("#noteField").val(),
+                                orderStatusId: $("#orderStatusField").val()
+                            }
+                        ),
+                        success: function (response, textStatus, jqXHR) {
+                            if (response.status === "OK") {
+                                alert("Cập nhật thành công!");
+                                window.location.reload();
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            showErrorModal("Could not connect to the server");
                         }
-                        alert("Tạo phiếu xuất kho thành công!");
-                        $("#confirmModal").modal("hide");
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        showErrorModal("Could not connect to the server");
-                    }
-                });
+                    });
+                    return
+                }
+                if ($(this).attr("actionType") === "create" && $(this).attr("entityName") === "ticketExport") {
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-export/create-draft";
+                    let body = {id : mvOrderDetail.id, code : mvOrderDetail.code};
+                    $.ajax({
+                        url: apiURL,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(body),
+                        success: function (response, textStatus, jqXHR) {
+                            if (response.status === "OK") {
+                                let data = response.data;
+                                setTicketExportTableValue(data);
+                            }
+                            alert("Tạo phiếu xuất kho thành công!");
+                            $("#confirmModal").modal("hide");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            showErrorModal("Could not connect to the server");
+                        }
+                    });
+                }
             });
         }
 
@@ -421,6 +486,10 @@
                     '<td></td>' +
                 '<tr>'
             );
+        }
+
+        function loadOrderInfoOnForm(orderDetail) {
+            $("#orderTime").text(orderDetail.orderTime);
         }
     </script>
 </div>

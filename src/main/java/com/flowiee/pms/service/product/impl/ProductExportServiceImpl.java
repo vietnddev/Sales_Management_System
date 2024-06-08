@@ -1,7 +1,7 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.model.dto.ProductVariantDTO;
-import com.flowiee.pms.service.BaseExport;
+import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductExportServiceImpl extends BaseExport {
+public class ProductExportServiceImpl extends BaseExportService {
     private final ProductVariantService productVariantService;
 
     public ProductExportServiceImpl(ProductVariantService productVariantService) {

@@ -32,7 +32,6 @@ import java.util.regex.Pattern;
 
 public class CommonUtils {
     public static LocalDateTime START_APP_TIME = null;
-    public static Path logoPath = Paths.get(FileUtils.rootPath + "/dist/img/FlowieeLogo.png");
     public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
     public static ShopInfo mvShopInfo;
@@ -194,5 +193,16 @@ public class CommonUtils {
 
     public static String genOrderCode() {
         return CommonUtils.now("yyyyMMddHHmmss");
+    }
+
+    public static String trim(String str) {
+        if (ObjectUtils.isEmpty(str)) {
+            return "";
+        }
+        str = str.trim();
+        if ("null".equals(str)) {
+            str = null;
+        }
+        return str;
     }
 }

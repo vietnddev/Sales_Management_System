@@ -11,15 +11,17 @@ import org.springframework.http.MediaType;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class FileUtils {
-    public static final String rootPath = "src/main/resources/static";
-    public static final String fileUploadPath = rootPath + "/uploads/";
-    public static final String initCsvDataPath = rootPath + "/data/csv";
-    public static final String reportTemplatePath = rootPath + "/report";
-    public static final String excelTemplatePath = rootPath + "/templates/excel";
+    public static String rootPath = "src/main/resources/static";
+    public static String fileUploadPath = rootPath + "/uploads/";
+    public static String initCsvDataPath = rootPath + "/data/csv";
+    public static String reportTemplatePath = rootPath + "/report";
+    public static String excelTemplatePath = rootPath + "/templates/excel";
+    public static Path logoPath = Paths.get(FileUtils.rootPath + "/dist/img/FlowieeLogo.png");
 
     public static void createDropdownList(XSSFWorkbook workbook, XSSFSheet sheet, XSSFSheet hsheet, List<String> listValue, int row, int column, String nameName) {
         //Put các tên danh mục vào column trong sheet danh mục ẩn

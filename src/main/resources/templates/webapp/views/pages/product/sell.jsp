@@ -293,18 +293,14 @@
                                         </div>
                                         <hr class="mt-0">
                                         <div class="form-group row">
-                                            <!--LƯU NHÁP-->
-                                            <div class="col-sm-4">
-                                                <button type="button" class="btn btn-info w-100" style="padding-right: 3px">Lưu nháp</button>
-                                            </div>
                                             <!--TẠO ĐƠN HÀNG-->
-                                            <div class="col-sm-4">
+                                            <div class="col-sm">
                                                 <button type="button" class="btn btn-primary w-100 link-confirm" style="padding-right: 3px" th:cartId="${cart.id}" th:actionType="'create'">
                                                     Tạo đơn
                                                 </button>
                                             </div>
                                             <!--XÓA GIỎ HÀNG-->
-                                            <div class="col-sm-4">
+                                            <div class="col-sm">
                                                 <button type="button" class="btn btn-danger w-100" style="padding-left: 3px;" data-toggle="modal"
                                                         id="preDeleteDonHang"
                                                         th:data-target="'#modalDeleteCart_' + ${cart.id}">Clear

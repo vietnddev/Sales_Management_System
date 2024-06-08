@@ -1,7 +1,7 @@
 package com.flowiee.pms.service.category.impl;
 
 import com.flowiee.pms.entity.category.Category;
-import com.flowiee.pms.service.BaseExport;
+import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategoryExportServiceImpl extends BaseExport {
+public class CategoryExportServiceImpl extends BaseExportService {
     @Autowired
     private CategoryService categoryService;
 

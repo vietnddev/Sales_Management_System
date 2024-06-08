@@ -39,7 +39,7 @@ public class SystemController extends BaseController {
 
     @Operation(summary = "Find all configs")
     @GetMapping("/config/all")
-    @PreAuthorize("@vldModuleSystem.setupConfig(true)")
+    @PreAuthorize("@vldModuleSystem.readConfig(true)")
     public AppResponse<List<SystemConfig>> findConfigs() {
         try {
             return success(configService.findAll());
@@ -50,7 +50,7 @@ public class SystemController extends BaseController {
 
     @Operation(summary = "Update config")
     @PutMapping("/config/update/{id}")
-    @PreAuthorize("@vldModuleSystem.setupConfig(true)")
+    @PreAuthorize("@vldModuleSystem.updateConfig(true)")
     public AppResponse<SystemConfig> updateConfig(@RequestBody SystemConfig config, @PathVariable("id") Integer configId) {
         try {
             if (configId <= 0 || configService.findById(configId).isEmpty()) {

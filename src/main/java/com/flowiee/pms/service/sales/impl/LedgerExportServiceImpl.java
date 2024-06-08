@@ -2,7 +2,7 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.sales.LedgerTransaction;
 import com.flowiee.pms.model.GeneralLedger;
-import com.flowiee.pms.service.BaseExport;
+import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.sales.LedgerService;
 import com.flowiee.pms.utils.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LedgerExportServiceImpl extends BaseExport {
+public class LedgerExportServiceImpl extends BaseExportService {
     @Autowired
     private LedgerService ledgerService;
 

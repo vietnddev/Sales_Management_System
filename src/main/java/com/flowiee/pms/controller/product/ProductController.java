@@ -32,14 +32,12 @@ import java.util.Optional;
 public class ProductController extends BaseController {
     private final ProductInfoService productInfoService;
     private final ProductHistoryService productHistoryService;
-    private final ProductExportService productExportService;
     private final ExportService exportService;
 
     public ProductController(ProductInfoService productInfoService, ProductHistoryService productHistoryService,
-                             ProductExportService productExportService, @Qualifier("productExportServiceImpl") ExportService exportService) {
+                             @Qualifier("productExportServiceImpl") ExportService exportService) {
         this.productInfoService = productInfoService;
         this.productHistoryService = productHistoryService;
-        this.productExportService = productExportService;
         this.exportService = exportService;
     }
 
@@ -122,13 +120,5 @@ public class ProductController extends BaseController {
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product history"), ex);
         }
-    }
-
-    @Operation(summary = "Export list of products")
-    @GetMapping("/export")
-    @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ResponseEntity<InputStreamResource> exportData() {
-        ExportDataModel model = exportService.exportToExcel(TemplateExport.LIST_OF_PRODUCTS, null, false);
-        return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

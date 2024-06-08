@@ -10,7 +10,6 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderExportService;
 import com.flowiee.pms.service.sales.OrderQRCodeService;
 import com.flowiee.pms.service.sales.OrderService;
-import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.ReportUtils;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -132,7 +131,7 @@ public class OrderExportServiceImpl extends BaseService implements OrderExportSe
         } else {
             parameterMap.put("barcode", null);
         }
-        parameterMap.put("logoPath", CommonUtils.logoPath);
+        parameterMap.put("logoPath", FileUtils.logoPath);
 
         // orderDetails
         List<OrderDetailRpt> listDetail = new ArrayList<>();

@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.category;
 
-import com.flowiee.pms.service.BaseCurd;
+import com.flowiee.pms.service.BaseCurdService;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import com.flowiee.pms.entity.category.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface CategoryService extends BaseCurd<Category> {
+public interface CategoryService extends BaseCurdService<Category> {
     List<Category> findRootCategory();
 
     List<Category> findSubCategory(String categoryType, Integer parentId);
@@ -25,7 +25,7 @@ public interface CategoryService extends BaseCurd<Category> {
 
     List<Category> findPaymentMethods();
 
-    List<Category> findOrderStatus();
+    List<Category> findOrderStatus(Integer ignoreId);
 
     List<Category> findLedgerGroupObjects();
 

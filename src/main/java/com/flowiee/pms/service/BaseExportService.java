@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalTime;
 
-public abstract class BaseExport extends BaseService implements ExportService {
+public abstract class BaseExportService extends BaseService implements ExportService {
     protected abstract void writeData(Object pCondition);
 
     protected XSSFWorkbook mvWorkbook;

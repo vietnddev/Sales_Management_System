@@ -50,6 +50,7 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "note", length = 500)
 	private String note;
 
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@Column(name = "order_time", nullable = false)
 	private LocalDateTime orderTime;
 

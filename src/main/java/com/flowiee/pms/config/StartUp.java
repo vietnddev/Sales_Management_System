@@ -70,8 +70,9 @@ public class StartUp {
     	return args -> {
 			initData();
 			loadShopInfo();
-			initReportConfig();
-            initEndPointConfig();
+			configReport();
+            configEndPoint();
+            configResourcePath();
 			loadLanguageMessages("en");
 			loadLanguageMessages("vi");
 			CommonUtils.START_APP_TIME = LocalDateTime.now();
@@ -121,20 +122,7 @@ public class StartUp {
 		CommonUtils.mvShopInfo = shopInfo;
 	}
 
-	private void initEndPointConfig() {
-		CommonUtils.mvEndPointHeaderConfig.clear();
-		CommonUtils.mvEndPointSideBarConfig.clear();
-		for (EndPoint e : EndPoint.values()) {
-			if (e.getType().equals("HEADER") && e.isStatus()) {
-				CommonUtils.mvEndPointHeaderConfig.put(e.name(), e.getValue());
-			}
-			 if (e.getType().equals("SIDEBAR") && e.isStatus()) {
-				CommonUtils.mvEndPointSideBarConfig.put(e.name(), e.getValue());
-			}
-		}
-    }
-
-	private void initReportConfig() {
+	private void configReport() {
 		String templateExportTempStr = FileUtils.excelTemplatePath + "/temp";
 		Path templateExportTempPath = Paths.get(templateExportTempStr);
 		if (!Files.exists(templateExportTempPath)) {
@@ -144,6 +132,23 @@ public class StartUp {
                 throw new RuntimeException(e);
             }
         }
+	}
+
+	private void configEndPoint() {
+		CommonUtils.mvEndPointHeaderConfig.clear();
+		CommonUtils.mvEndPointSideBarConfig.clear();
+		for (EndPoint e : EndPoint.values()) {
+			if (e.getType().equals("HEADER") && e.isStatus()) {
+				CommonUtils.mvEndPointHeaderConfig.put(e.name(), e.getValue());
+			}
+			if (e.getType().equals("SIDEBAR") && e.isStatus()) {
+				CommonUtils.mvEndPointSideBarConfig.put(e.name(), e.getValue());
+			}
+		}
+	}
+
+	private void configResourcePath() {
+		//set file upload path
 	}
 
 	private void initData() throws Exception {

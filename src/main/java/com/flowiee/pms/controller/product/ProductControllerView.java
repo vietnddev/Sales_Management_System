@@ -4,14 +4,18 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.model.ExportDataModel;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
+import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.*;
 
+import com.flowiee.pms.utils.constants.TemplateExport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +30,17 @@ public class ProductControllerView extends BaseController {
     private final ProductInfoService productInfoService;
     private final ProductVariantService productVariantService;
     private final ProductAttributeService productAttributeService;
-    private final ProductExportService productExportService;
+    private final ExportService exportService;
     private final ProductImageService productImageService;
 
     @Autowired
     public ProductControllerView(ProductInfoService productInfoService, ProductVariantService productVariantService,
-                                 ProductAttributeService productAttributeService, ProductExportService productExportService,
+                                 ProductAttributeService productAttributeService, @Qualifier("productExportServiceImpl") ExportService exportService,
                                  ProductImageService productImageService) {
         this.productInfoService = productInfoService;
         this.productVariantService = productVariantService;
         this.productAttributeService = productAttributeService;
-        this.productExportService = productExportService;
+        this.exportService = exportService;
         this.productImageService = productImageService;
     }
 
@@ -124,6 +128,7 @@ public class ProductControllerView extends BaseController {
     @GetMapping("/export")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ResponseEntity<?> exportData() {
-        return productExportService.exportToExcel(null, null, true);
+        ExportDataModel model = exportService.exportToExcel(TemplateExport.LIST_OF_PRODUCTS, null, false);
+        return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

@@ -1,12 +1,11 @@
 package com.flowiee.pms.utils;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class LogUtils {
     private static final Logger logger = LoggerFactory.getLogger(LogUtils.class);
@@ -14,6 +13,9 @@ public class LogUtils {
     public static Map<String, Object[]> logChanges(Object oldObject, Object newObject) {
         Map<String, Object[]> changes = new HashMap<>();
         for (Field field : oldObject.getClass().getDeclaredFields()) {
+            if (Collection.class.isAssignableFrom(field.getType())) {
+                continue;
+            }
             field.setAccessible(true);
             try {
                 Object oldValue = field.get(oldObject);
@@ -33,8 +35,10 @@ public class LogUtils {
         StringBuilder newValue = new StringBuilder("Fields: ");
         for (Map.Entry<String, Object[]> entry : dataChanges.entrySet()) {
             String field = entry.getKey();
-            oldValue.append(field).append(" (").append(entry.getValue()[0].toString()).append("); ");
-            newValue.append(field).append(" (").append(entry.getValue()[1].toString()).append("); ");
+            String oldValueStr = ObjectUtils.isNotEmpty(entry.getValue()[0]) ? entry.getValue()[0].toString() : " ";
+            String newValueStr = ObjectUtils.isNotEmpty(entry.getValue()[1]) ? entry.getValue()[1].toString() : " ";
+            oldValue.append(field).append(" (").append(oldValueStr).append("); ");
+            newValue.append(field).append(" (").append(newValueStr).append("); ");
         }
         String oldValueStr = oldValue.toString();
         String newValueStr = newValue.toString();

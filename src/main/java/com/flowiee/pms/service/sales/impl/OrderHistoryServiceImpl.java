@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.sales.OrderHistory;
 import com.flowiee.pms.repository.sales.OrderHistoryRepository;
 import com.flowiee.pms.service.sales.OrderHistoryService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,8 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
         List<OrderHistory> orderHistories = new ArrayList<>();
         for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
             String field = entry.getKey();
-            String oldValue = entry.getValue()[0].toString();
-            String newValue = entry.getValue()[1].toString();
+            String oldValue = ObjectUtils.isNotEmpty(entry.getValue()[0]) ? entry.getValue()[0].toString() : " ";
+            String newValue = ObjectUtils.isNotEmpty(entry.getValue()[1]) ? entry.getValue()[1].toString() : " ";
 
             OrderHistory orderHistory = new OrderHistory();
             if (orderId != null) {

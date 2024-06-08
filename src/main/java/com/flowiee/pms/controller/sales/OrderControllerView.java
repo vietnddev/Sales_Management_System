@@ -1,5 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
+import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.AppException;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,13 +62,15 @@ public class OrderControllerView extends BaseController {
         if (orderId <= 0 || orderDetail.isEmpty()) {
             throw new NotFoundException("Order not found!");
         }
+        List<Category> orderStatus = new ArrayList<>(List.of(new Category(orderDetail.get().getOrderStatusId(), orderDetail.get().getOrderStatusName())));
+        orderStatus.addAll(categoryService.findOrderStatus(orderDetail.get().getOrderStatusId()));
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_DETAIL);
         modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail.get());
         modelAndView.addObject("listOrderDetail", orderDetail.get().getListOrderDetailDTO());
         modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryType.PAYMENT_METHOD.getName(), null));
+        modelAndView.addObject("orderStatus", orderStatus);
         modelAndView.addObject("donHang", new Order());
-        //modelAndView.addObject("donHangThanhToan", new OrderPay());
         return baseView(modelAndView);
     }
 
@@ -86,7 +90,7 @@ public class OrderControllerView extends BaseController {
         modelAndView.addObject("listAccount", accountService.findAll());
         modelAndView.addObject("listSalesChannel", categoryService.findSalesChannels());
         modelAndView.addObject("listPaymentMethod", categoryService.findPaymentMethods());
-        modelAndView.addObject("listOrderStatus", categoryService.findOrderStatus());
+        modelAndView.addObject("listOrderStatus", categoryService.findOrderStatus(null));
         modelAndView.addObject("listProductVariant", productVariantService.findAll());
 
         double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
@@ -106,13 +110,6 @@ public class OrderControllerView extends BaseController {
         modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
         modelAndView.addObject("ticket_info", voucherTicketService.findTicketByCode(code));
         return modelAndView;
-    }
-
-    @PostMapping("/update/{id}")
-    @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public ModelAndView update(@ModelAttribute("donHang") OrderDTO order, @PathVariable("id") Integer orderId) {
-        orderService.update(order, orderId);
-        return new ModelAndView("redirect:/order");
     }
 
     @PostMapping("/delete/{id}")

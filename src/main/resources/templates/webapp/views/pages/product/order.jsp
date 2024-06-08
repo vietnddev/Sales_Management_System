@@ -34,14 +34,13 @@
                                         <thead class="align-self-center">
                                             <tr class="align-self-center">
                                                 <th>STT</th>
-                                                <th th:text="#{pro.order.code}"></th>
-                                                <th>Thời gian đặt hàng</th>
-                                                <th>Địa chỉ giao hàng</th>
-                                                <th>Người nhận</th>
+                                                <th>Mã đơn</th>
+                                                <th>Thời gian mua</th>
+                                                <th>Địa chỉ giao</th>
+                                                <th>Tên khách</th>
                                                 <th>SĐT nhận hàng</th>
                                                 <th>Số tiền</th>
                                                 <th>Kênh bán hàng</th>
-                                                <th>Ghi chú</th>
                                                 <th>Thanh toán</th>
                                                 <th>Trạng thái</th>
                                                 <th>Thao tác</th>
@@ -111,7 +110,6 @@
                                     <td>${d.receiverPhone}</td>
                                     <td>${formatCurrency(d.totalAmountDiscount)}</td>
                                     <td>${d.salesChannelName}</td>
-                                    <td>${d.note}</td>
                                     <td>${d.paymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán"}</td>
                                     <td>${d.orderStatusName}</td>
                                     <td><a class="btn btn-sm btn-info btn-print-invoice" href="/order/print-invoice/${d.id}" orderId="${d.id}"><i class="fa-solid fa-print"></i></a></td>

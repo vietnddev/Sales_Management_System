@@ -1,9 +1,9 @@
 package com.flowiee.pms.service.system;
 
-import com.flowiee.pms.service.BaseCurd;
+import com.flowiee.pms.service.BaseCurdService;
 import com.flowiee.pms.entity.system.GroupAccount;
 import org.springframework.data.domain.Page;
 
-public interface GroupAccountService extends BaseCurd<GroupAccount> {
+public interface GroupAccountService extends BaseCurdService<GroupAccount> {
     Page<GroupAccount> findAll(int pageSize, int pageNum);
 }

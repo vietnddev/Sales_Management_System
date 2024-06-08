@@ -3,10 +3,12 @@ package com.flowiee.pms.model.dto;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.system.FileStorage;
+import com.flowiee.pms.utils.CommonUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -45,9 +47,9 @@ public class OrderDTO extends Order implements Serializable {
 		dto.setCode(order.getCode());
 		dto.setOrderTime(order.getOrderTime());
 		//dto.setOrderTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getThoiGianDatHang()));
-		dto.setReceiverAddress(order.getReceiverAddress());
-		dto.setReceiverPhone(order.getReceiverPhone());
-		dto.setReceiverEmail(order.getReceiverEmail());
+		dto.setReceiverAddress(CommonUtils.trim(order.getReceiverAddress()));
+		dto.setReceiverPhone(CommonUtils.trim(order.getReceiverPhone()));
+		dto.setReceiverEmail(CommonUtils.trim(order.getReceiverEmail()));
 		dto.setReceiverName(order.getReceiverName());
 		dto.setCustomerId(order.getCustomer().getId());
 		dto.setCustomerName(order.getCustomer().getCustomerName());

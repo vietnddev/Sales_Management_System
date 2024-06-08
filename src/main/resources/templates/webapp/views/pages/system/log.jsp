@@ -34,7 +34,6 @@
                                             <tr>
                                                 <th>STT</th>
                                                 <th>Tài khoản</th>
-                                                <th>Module</th>
                                                 <th>Thao tác</th>
                                                 <th>Nội dung</th>
                                                 <th>Nội dung cập nhật</th>
@@ -47,7 +46,6 @@
                                             <tr>
                                                 <th>STT</th>
                                                 <th>Tài khoản</th>
-                                                <th>Module</th>
                                                 <th>Thao tác</th>
                                                 <th>Nội dung</th>
                                                 <th>Nội dung cập nhật</th>
@@ -96,11 +94,10 @@
                         contentTable.append(
                             '<tr>' +
                                 '<td>' + (((pageNum - 1) * pageSize + 1) + index) + '</td>' +
-                                '<td>' + d.username + '</td>' +
-                                '<td>' + d.module + '</td>' +
-                                '<td style="max-width: 100px">' + d.action + '</td>' +
-                                '<td style="max-width: 250px">' + d.content + '</td>' +
-                                '<td style="max-width: 250px">' + d.contentChange + '</td>' +
+                                '<td>' + d.accountName + '</td>' +
+                                '<td style="max-width: 250px">' + d.title + '</td>' +
+                                '<td style="max-width: 300px">' + d.content + '</td>' +
+                                '<td style="max-width: 300px">' + d.contentChange + '</td>' +
                                 '<td>' + d.createdAt + '</td>' +
                                 '<td>' + d.ip + '</td>' +
                             '</tr>'

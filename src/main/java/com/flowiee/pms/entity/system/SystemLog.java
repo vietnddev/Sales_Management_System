@@ -35,7 +35,9 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Column(name = "action_mode", nullable = false)
 	private String mode;
 
-	@Column(name = "content", length = 4000, nullable = false)
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name = "content", length = 4000, nullable = false, columnDefinition = "CLOB")
 	private String content;
 
 	@Column(name = "content_change", length = 4000)
@@ -52,13 +54,8 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Transient
 	private String username;
 
-	public SystemLog (String module, String function, String value, String newValue) {
-		this.module = module;
-		this.function = function;
-		this.content = value;
-		this.contentChange = newValue;
-		this.ip = "unknown";
-	}
+	@Transient
+	private String accountName;
 
 	@PreUpdate
 	public void updateAudit() {

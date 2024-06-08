@@ -1,12 +1,12 @@
 package com.flowiee.pms.service.product;
 
-import com.flowiee.pms.service.BaseCurd;
+import com.flowiee.pms.service.BaseCurdService;
 import com.flowiee.pms.entity.product.MaterialHistory;
 
 import java.util.List;
 import java.util.Map;
 
-public interface MaterialHistoryService extends BaseCurd<MaterialHistory> {
+public interface MaterialHistoryService extends BaseCurdService<MaterialHistory> {
     List<MaterialHistory> findByMaterialId(Integer materialId);
 
     List<MaterialHistory> findByFieldName(String action);

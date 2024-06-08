@@ -146,7 +146,6 @@ public class Category extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Category [id= " + super.id + ", type=" + type + ", code=" + code + ", name=" + name + ", sort=" + sort + ", color=" + color
-				+ ", note=" + note + ", endpoint=" + endpoint + ", isDefault=" + isDefault + ", status=" + status + "]";
+		return "Category [id= " + super.id + ", name=" + name + "]";
 	}
 }

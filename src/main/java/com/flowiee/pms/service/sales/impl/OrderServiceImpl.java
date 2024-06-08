@@ -148,7 +148,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                         orderDetail.setNote(items.getNote());
                         orderDetail.setPrice(items.getPrice());
                         orderDetail.setPriceOriginal(items.getPriceOriginal());
-                        orderDetail.setExtraDiscount(items.getExtraDiscount());
+                        orderDetail.setExtraDiscount(items.getExtraDiscount() != null ? items.getExtraDiscount() : BigDecimal.ZERO);
                         orderDetail.setPriceType(items.getPriceType());
                         orderItemsService.save(orderDetail);
                     }
@@ -190,12 +190,8 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             throw new BadRequestException();
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
-        orderToUpdate.setId(id);
         orderToUpdate.setNote(dto.getNote());
-        orderToUpdate.setPaymentNote(dto.getPaymentNote());
-        orderToUpdate.setKenhBanHang(dto.getKenhBanHang());
-        orderToUpdate.setPaymentMethod(dto.getPaymentMethod());
-        orderToUpdate.setPaymentStatus(dto.getPaymentStatus());
+        orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId(), null));
         Order orderUpdated = orderRepository.save(orderToUpdate);
 
         String logTitle = "Cập nhật đơn hàng";
@@ -229,5 +225,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Override
     public List<Order> findOrdersToday() {
         return orderRepository.findOrdersToday();
+    }
+
+    private String getNextOrderCode() {
+        return "";
     }
 }

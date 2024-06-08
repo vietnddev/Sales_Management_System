@@ -78,6 +78,7 @@ public class OrderController extends BaseController {
         }
     }
 
+    @Operation(summary = "Update order")
     @PutMapping("/update/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public AppResponse<String> update(@RequestBody OrderDTO order, @PathVariable("orderId") Integer orderId) {

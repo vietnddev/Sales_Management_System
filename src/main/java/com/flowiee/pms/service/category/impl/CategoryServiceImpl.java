@@ -44,10 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CategoryServiceImpl extends BaseService implements CategoryService {
@@ -190,8 +187,15 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
-    public List<Category> findOrderStatus() {
-        return categoryRepo.findSubCategory(CategoryType.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
+    public List<Category> findOrderStatus(Integer ignoreId) {
+        List<Category> categories = categoryRepo.findSubCategory(CategoryType.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
+        List<Category> lsRes = new ArrayList<>();
+        for (Category c : categories) {
+           if (!c.getId().equals(ignoreId)) {
+               lsRes.add(c);
+           }
+        }
+        return lsRes;
     }
 
     @Override

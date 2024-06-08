@@ -28,7 +28,7 @@ public class SystemControllerView extends BaseController {
     }
 
     @GetMapping("/config")
-    @PreAuthorize("@vldModuleSystem.setupConfig(true)")
+    @PreAuthorize("@vldModuleSystem.readConfig(true)")
     public ModelAndView showConfig() {
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_CONFIG);
         modelAndView.addObject("listConfig", configService.findAll());
@@ -36,7 +36,7 @@ public class SystemControllerView extends BaseController {
     }
 
     @PostMapping("/config/update/{id}")
-    @PreAuthorize("@vldModuleSystem.setupConfig(true)")
+    @PreAuthorize("@vldModuleSystem.updateConfig(true)")
     public ModelAndView update(@ModelAttribute("config") SystemConfig config, @PathVariable("id") Integer configId) {
         if (configId <= 0 || configService.findById(configId).isEmpty()) {
             throw new NotFoundException("Config not found!");
