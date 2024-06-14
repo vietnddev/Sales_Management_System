@@ -9,7 +9,6 @@ import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.entity.system.Account;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,8 +28,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping
 public class ProfileControllerView extends BaseController {
-	@Autowired
-	private AccountService accountService;
+	private final AccountService accountService;
+
+	public ProfileControllerView(AccountService accountService) {
+		this.accountService = accountService;
+	}
 
 	@GetMapping("/sys/profile")
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {

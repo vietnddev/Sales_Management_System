@@ -4,6 +4,9 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.ExportDataModel;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import lombok.SneakyThrows;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -37,14 +40,16 @@ public abstract class BaseExportService extends BaseService implements ExportSer
             mvWorkbook.write(byteArrayOutputStream);
             setFileContent(byteArrayOutputStream);
             setHttpHeaders();
+            mvExportModel.setResult("OK");
             return mvExportModel;
         } catch (Exception e) {
+            mvExportModel.setResult("NOK");
             throw new AppException("Error when export data!", e);
         } finally {
             try {
-                mvExportModel.setFinishTime(LocalTime.now());
                 if (mvWorkbook != null) mvWorkbook.close();
                 Files.deleteIfExists(mvExportModel.getPathTarget());
+                mvExportModel.setFinishTime(LocalTime.now());
             } catch (IOException e) {
                 logger.error("Error when export data!", e);
             }
@@ -68,5 +73,18 @@ public abstract class BaseExportService extends BaseService implements ExportSer
         ByteArrayInputStream byteArrayIS = new ByteArrayInputStream(byteArrayOS.toByteArray());
         InputStreamResource inputStreamResource = new InputStreamResource(byteArrayIS);
         mvExportModel.setContent(inputStreamResource);
+    }
+
+    protected void setBorderCell(XSSFRow pRow, int pColFrom, int pColTo) {
+        if (pRow == null) return;
+        for (int j = pColFrom; j <= pColTo; j++) {
+            XSSFCellStyle lvCellStyle = mvWorkbook.createCellStyle();
+            lvCellStyle.setBorderTop(BorderStyle.THIN);
+            lvCellStyle.setBorderBottom(BorderStyle.THIN);
+            lvCellStyle.setBorderLeft(BorderStyle.THIN);
+            lvCellStyle.setBorderRight(BorderStyle.THIN);
+
+            pRow.getCell(j).setCellStyle(lvCellStyle);
+        }
     }
 }

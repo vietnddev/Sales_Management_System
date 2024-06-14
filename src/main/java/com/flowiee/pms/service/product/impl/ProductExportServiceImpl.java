@@ -4,7 +4,6 @@ import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
@@ -37,9 +36,8 @@ public class ProductExportServiceImpl extends BaseExportService {
             row.createCell(8).setCellValue(productVariant.getStorageQty());
             row.createCell(9).setCellValue(productVariant.getSoldQty());
             row.createCell(10).setCellValue(productVariant.getStatus());
-            for (int j = 0; j <= 10; j++) {
-                row.getCell(j).setCellStyle(FileUtils.setBorder(mvWorkbook.createCellStyle()));
-            }
+
+            setBorderCell(row, 0, 10);
         }
     }
 }

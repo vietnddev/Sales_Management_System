@@ -10,7 +10,6 @@ import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.constants.ContactType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +22,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/customer")
 public class CustomerControllerView extends BaseController {
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private CustomerContactService customerContactService;
+    private final OrderService           orderService;
+    private final CustomerService        customerService;
+    private final CustomerContactService customerContactService;
+
+    public CustomerControllerView(OrderService orderService, CustomerService customerService, CustomerContactService customerContactService) {
+        this.orderService = orderService;
+        this.customerService = customerService;
+        this.customerContactService = customerContactService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readCustomer(true)")

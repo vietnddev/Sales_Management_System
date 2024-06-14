@@ -13,7 +13,6 @@ import com.flowiee.pms.model.role.ActionModel;
 import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.RoleService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +25,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/sys/tai-khoan")
 public class AccountControllerView extends BaseController {
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private GroupAccountService groupAccountService;
+    private final AccountService      accountService;
+    private final RoleService         roleService;
+    private final GroupAccountService groupAccountService;
+
+    public AccountControllerView(AccountService accountService, RoleService roleService, GroupAccountService groupAccountService) {
+        this.accountService = accountService;
+        this.roleService = roleService;
+        this.groupAccountService = groupAccountService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldModuleSystem.readAccount(true)")

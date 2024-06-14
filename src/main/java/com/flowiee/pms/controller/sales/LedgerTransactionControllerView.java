@@ -8,7 +8,6 @@ import com.flowiee.pms.service.sales.LedgerPaymentService;
 import com.flowiee.pms.service.sales.LedgerReceiptService;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.utils.constants.LedgerTranType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,12 +17,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/ledger/trans/")
 public class LedgerTransactionControllerView extends BaseController {
-    @Autowired
-    private LedgerReceiptService ledgerReceiptService;
-    @Autowired
-    private LedgerPaymentService ledgerPaymentService;
-    @Autowired
-    private CategoryService categoryService;
+    private final LedgerReceiptService ledgerReceiptService;
+    private final LedgerPaymentService ledgerPaymentService;
+    private final CategoryService      categoryService;
+
+    public LedgerTransactionControllerView(LedgerReceiptService ledgerReceiptService, LedgerPaymentService ledgerPaymentService, CategoryService categoryService) {
+        this.ledgerReceiptService = ledgerReceiptService;
+        this.ledgerPaymentService = ledgerPaymentService;
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/receipt")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")

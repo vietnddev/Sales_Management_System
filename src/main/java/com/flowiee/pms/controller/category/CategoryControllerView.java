@@ -11,7 +11,6 @@ import com.flowiee.pms.utils.PagesUtils;
 
 import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.TemplateExport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +24,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/system/category")
 public class CategoryControllerView extends BaseController {
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired @Qualifier("categoryExportServiceImpl")
-    private ExportService exportService;
+    private final CategoryService categoryService;
+    private final ExportService   exportService;
+
+    public CategoryControllerView(CategoryService categoryService, @Qualifier("categoryExportServiceImpl") ExportService exportService) {
+        this.categoryService = categoryService;
+        this.exportService = exportService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldModuleCategory.readCategory(true)")

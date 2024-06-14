@@ -10,7 +10,6 @@ import com.flowiee.pms.service.sales.PromotionService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +21,12 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/promotion")
 @Tag(name = "Promotion API", description = "Quản lý promotion, promotion will be deducted from the price of the product")
 public class PromotionController extends BaseController {
-    @Autowired
-    private PromotionService promotionService;
-    
+    private final PromotionService promotionService;
+
+    public PromotionController(PromotionService promotionService) {
+        this.promotionService = promotionService;
+    }
+
     @Operation(summary = "Find all promotions")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.readPromotion(true)")

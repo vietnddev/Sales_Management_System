@@ -12,7 +12,6 @@ import com.flowiee.pms.service.system.RoleService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +22,13 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/system/account")
 @Tag(name = "Account system API", description = "Quản lý tài khoản hệ thống")
 public class AccountController extends BaseController {
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private RoleService roleService;
+    private final AccountService accountService;
+    private final RoleService    roleService;
+
+    public AccountController(AccountService accountService, RoleService roleService) {
+        this.accountService = accountService;
+        this.roleService = roleService;
+    }
 
     @Operation(summary = "Find all accounts")
     @GetMapping("/all")

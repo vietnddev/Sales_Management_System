@@ -1,6 +1,5 @@
 package com.flowiee.pms.controller.sales;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,11 @@ import com.flowiee.pms.service.sales.SupplierService;
 @Controller
 @RequestMapping("/san-pham/supplier")
 public class SupplierControllerView extends BaseController {
-	@Autowired private SupplierService  supplierService;
+	private final SupplierService supplierService;
+
+	public SupplierControllerView(SupplierService supplierService) {
+		this.supplierService = supplierService;
+	}
 
 	@GetMapping
 	@PreAuthorize("@vldModuleSales.readSupplier(true)")

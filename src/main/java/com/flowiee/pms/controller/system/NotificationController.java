@@ -8,7 +8,6 @@ import com.flowiee.pms.service.system.NotificationService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +16,11 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/notification")
 @Tag(name = "Notification API", description = "Thông báo hệ thống")
 public class NotificationController extends BaseController {
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
+
+    public NotificationController(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     @Operation(summary = "Find all notifications")
     @GetMapping("/all")

@@ -12,7 +12,6 @@ import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.*;
 import com.flowiee.pms.controller.BaseController;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +23,19 @@ import java.util.*;
 @Controller
 @RequestMapping("/stg/ticket-import")
 public class TicketImportControllerView extends BaseController {
-    @Autowired
-    private TicketImportService ticketImportService;
-    @Autowired
-    private StorageService storageService;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private MaterialService materialService;
-    @Autowired
-    private SupplierService supplierService;
+    private final TicketImportService   ticketImportService;
+    private final StorageService        storageService;
+    private final ProductVariantService productVariantService;
+    private final MaterialService       materialService;
+    private final SupplierService       supplierService;
+
+    public TicketImportControllerView(TicketImportService ticketImportService, StorageService storageService, ProductVariantService productVariantService, MaterialService materialService, SupplierService supplierService) {
+        this.ticketImportService = ticketImportService;
+        this.storageService = storageService;
+        this.productVariantService = productVariantService;
+        this.materialService = materialService;
+        this.supplierService = supplierService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.importGoods(true)")

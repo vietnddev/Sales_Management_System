@@ -11,7 +11,6 @@ import com.flowiee.pms.utils.MessageUtils;
 import com.flowiee.pms.utils.constants.ContactType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +20,13 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/customer")
 @Tag(name = "Customer API", description = "Quản lý thông tin liên hệ khách hàng")
 public class CustomerContactController extends BaseController {
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private CustomerContactService customerContactService;
+    private final CustomerService        customerService;
+    private final CustomerContactService customerContactService;
+
+    public CustomerContactController(CustomerService customerService, CustomerContactService customerContactService) {
+        this.customerService = customerService;
+        this.customerContactService = customerContactService;
+    }
 
     @Operation(summary = "Find contacts of customer")
     @GetMapping("/{customerId}/contact")

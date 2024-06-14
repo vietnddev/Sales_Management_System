@@ -7,7 +7,6 @@ import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.PagesUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,8 +15,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/san-pham/voucher")
 @Tag(name = "Voucher API", description = "Quản lý voucher")
 public class VoucherControllerView extends BaseController {
-    @Autowired
-    private VoucherService voucherService;
+    private final VoucherService voucherService;
+
+    public VoucherControllerView(VoucherService voucherService) {
+        this.voucherService = voucherService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readVoucher(true)")

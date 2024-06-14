@@ -5,7 +5,6 @@ import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import com.flowiee.pms.service.sales.PromotionService;
 import com.flowiee.pms.utils.PagesUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +17,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/promotion")
 public class PromotionControllerView extends BaseController {
-    @Autowired
-    private PromotionService promotionService;
+    private final PromotionService promotionService;
+
+    public PromotionControllerView(PromotionService promotionService) {
+        this.promotionService = promotionService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readPromotion(true)")

@@ -2,15 +2,19 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.ExportDataModel;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.service.sales.OrderExportService;
+import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,12 +30,12 @@ import java.util.Optional;
 @Tag(name = "Order API", description = "Quản lý đơn hàng")
 public class OrderController extends BaseController {
     private final OrderService orderService;
-    private final OrderExportService orderExportService;
+    private final ExportService exportService;
 
     @Autowired
-    public OrderController(OrderService orderService, OrderExportService orderExportService) {
+    public OrderController(OrderService orderService, @Qualifier("orderExportServiceImpl") ExportService exportService) {
         this.orderService = orderService;
-        this.orderExportService = orderExportService;
+        this.exportService = exportService;
     }
 
     @Operation(summary = "Find all orders")
@@ -129,9 +133,10 @@ public class OrderController extends BaseController {
 
     @GetMapping("/export")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public ResponseEntity<?> exportToExcel() {
+    public ResponseEntity<InputStreamResource> exportToExcel() {
         try {
-            return orderExportService.exportToExcel(null, null, true);
+            ExportDataModel model = exportService.exportToExcel(TemplateExport.LIST_OF_ORDERS, null, false);
+            return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "export order"), ex);
         }

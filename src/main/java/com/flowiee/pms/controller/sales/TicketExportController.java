@@ -12,7 +12,6 @@ import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,11 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/stg/ticket-export")
 @Tag(name = "Ticket export API", description = "Quản lý xuất hàng")
 public class TicketExportController extends BaseController {
-    @Autowired private TicketExportService ticketExportService;
+    private final TicketExportService ticketExportService;
+
+    public TicketExportController(TicketExportService ticketExportService) {
+        this.ticketExportService = ticketExportService;
+    }
 
     @Operation(summary = "Find all tickets")
     @GetMapping("/all")

@@ -79,15 +79,6 @@ public class CategoryController extends BaseController {
                 throw new BadRequestException();
             }
             category.setType(CommonUtils.getCategoryType(category.getType()));
-            if (category.getCode() == null) {
-                category.setCode("");
-            }
-            if (category.getColor() == null) {
-                category.setColor("");
-            }
-            if (category.getNote() == null) {
-                category.setNote("");
-            }
             return success(categoryService.update(category, categoryId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "category"), ex);

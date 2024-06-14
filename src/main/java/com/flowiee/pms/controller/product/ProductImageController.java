@@ -13,7 +13,6 @@ import com.flowiee.pms.service.system.FileStorageService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +26,17 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product's image API", description = "Quản lý hình ảnh sản phẩm")
 public class ProductImageController extends BaseController {
-    @Autowired
-    private ProductInfoService productInfoService;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private FileStorageService fileStorageService;
-    @Autowired
-    private ProductImageService productImageService;
+    private final ProductInfoService    productInfoService;
+    private final ProductVariantService productVariantService;
+    private final FileStorageService    fileStorageService;
+    private final ProductImageService   productImageService;
+
+    public ProductImageController(ProductInfoService productInfoService, ProductVariantService productVariantService, FileStorageService fileStorageService, ProductImageService productImageService) {
+        this.productInfoService = productInfoService;
+        this.productVariantService = productVariantService;
+        this.fileStorageService = fileStorageService;
+        this.productImageService = productImageService;
+    }
 
     @Operation(summary = "Upload images of product")
     @PostMapping(value = "/{productId}/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

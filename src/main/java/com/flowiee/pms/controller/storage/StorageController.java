@@ -1,17 +1,21 @@
 package com.flowiee.pms.controller.storage;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.ExportDataModel;
 import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
-import com.flowiee.pms.service.storage.StorageExportService;
+import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +28,13 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/storage")
 @Tag(name = "Storage API", description = "Storage management")
 public class StorageController extends BaseController {
-    @Autowired
-    private StorageService storageService;
-    @Autowired
-    private StorageExportService storageExportService;
+    private final StorageService storageService;
+    private final ExportService  exportService;
+
+    public StorageController(StorageService storageService, @Qualifier("storageExportServiceImpl") ExportService exportService) {
+        this.storageService = storageService;
+        this.exportService = exportService;
+    }
 
     @Operation(summary = "Find all storages")
     @GetMapping("/all")
@@ -112,7 +119,8 @@ public class StorageController extends BaseController {
     @Operation(summary = "Export storage information")
     @GetMapping("/export")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
-    public ResponseEntity<?> exportData(@RequestParam("storageId") Integer storageId) {
-        return storageExportService.exportToExcel(storageId);
+    public ResponseEntity<InputStreamResource> exportData(@RequestParam("storageId") Integer storageId) {
+        ExportDataModel model = exportService.exportToExcel(TemplateExport.STORAGE_ITEMS, new Storage(storageId), false);
+        return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

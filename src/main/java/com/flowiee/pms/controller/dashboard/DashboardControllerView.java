@@ -5,7 +5,6 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.service.dashboard.DashboardService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping
 public class DashboardControllerView extends BaseController {
-    @Autowired private DashboardService dashboardService;
+    private final DashboardService dashboardService;
+
+    public DashboardControllerView(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldDashboard.readDashboard(true)")

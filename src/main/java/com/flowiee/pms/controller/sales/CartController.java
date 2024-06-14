@@ -7,7 +7,6 @@ import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,10 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/order")
 @Tag(name = "Order API", description = "Quản lý giỏ hàng")
 public class CartController extends BaseController {
-    @Autowired
-    private CartService cartService;
-    @Autowired
-    private CartItemsService cartItemsService;
+    private final CartService      cartService;
+    private final CartItemsService cartItemsService;
+
+    public CartController(CartService cartService, CartItemsService cartItemsService) {
+        this.cartService = cartService;
+        this.cartItemsService = cartItemsService;
+    }
 
     @PostMapping("/ban-hang/cart/item/add")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")

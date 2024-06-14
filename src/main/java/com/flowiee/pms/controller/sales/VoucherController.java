@@ -13,7 +13,6 @@ import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,10 +26,13 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/voucher")
 @Tag(name = "Voucher API", description = "Quản lý voucher, voucher will be deducted from the value of the order")
 public class VoucherController extends BaseController {
-    @Autowired
-    private VoucherService voucherService;
-    @Autowired
-    private VoucherTicketService voucherTicketService;
+    private final VoucherService       voucherService;
+    private final VoucherTicketService voucherTicketService;
+
+    public VoucherController(VoucherService voucherService, VoucherTicketService voucherTicketService) {
+        this.voucherService = voucherService;
+        this.voucherTicketService = voucherTicketService;
+    }
 
     @Operation(summary = "Find all voucher")
     @GetMapping("/all")

@@ -27,11 +27,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/san-pham")
 public class ProductControllerView extends BaseController {
-    private final ProductInfoService productInfoService;
-    private final ProductVariantService productVariantService;
+    private final ProductInfoService      productInfoService;
+    private final ProductVariantService   productVariantService;
     private final ProductAttributeService productAttributeService;
-    private final ExportService exportService;
-    private final ProductImageService productImageService;
+    private final ExportService           exportService;
+    private final ProductImageService     productImageService;
 
     @Autowired
     public ProductControllerView(ProductInfoService productInfoService, ProductVariantService productVariantService,

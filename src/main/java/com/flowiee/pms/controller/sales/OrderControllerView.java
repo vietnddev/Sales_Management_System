@@ -29,7 +29,7 @@ import java.util.Optional;
 @RequestMapping("/order")
 public class OrderControllerView extends BaseController {
     private final OrderService orderService;
-    private final OrderExportService orderExportService;
+    private final OrderPrintInvoiceService printInvoiceService;
     private final CategoryService categoryService;
     private final CartService cartService;
     private final VoucherTicketService voucherTicketService;
@@ -37,11 +37,11 @@ public class OrderControllerView extends BaseController {
     private final ProductVariantService productVariantService;
 
     @Autowired
-    public OrderControllerView(OrderService orderService, OrderExportService orderExportService, CategoryService categoryService,
+    public OrderControllerView(OrderService orderService, OrderPrintInvoiceService printInvoiceService, CategoryService categoryService,
                                CartService cartService, VoucherTicketService voucherTicketService, AccountService accountService,
                                ProductVariantService productVariantService) {
         this.orderService = orderService;
-        this.orderExportService = orderExportService;
+        this.printInvoiceService = printInvoiceService;
         this.categoryService = categoryService;
         this.cartService = cartService;
         this.voucherTicketService = voucherTicketService;
@@ -131,7 +131,7 @@ public class OrderControllerView extends BaseController {
             if (orderDTO.isEmpty()) {
                 throw new BadRequestException();
             }
-            orderExportService.printInvoicePDF(orderId, null, true, response);
+            printInvoiceService.printInvoicePDF(orderId, null, true, response);
         } catch (RuntimeException ex) {
             throw new AppException(ex);
         }

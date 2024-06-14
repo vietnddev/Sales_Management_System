@@ -16,6 +16,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +50,9 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     @Override
     public OrderDetail save(OrderDetail orderDetail) {
         try {
+            if (orderDetail.getExtraDiscount() == null) {
+                orderDetail.setExtraDiscount(BigDecimal.ZERO);
+            }
             OrderDetail orderDetailSaved = orderDetailRepo.save(orderDetail);
             systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), mainObjectName, "Thêm mới item vào đơn hàng", orderDetail.toString());
             logger.info("{}: Thêm mới item vào đơn hàng {}", OrderServiceImpl.class.getName(), orderDetail.toString());

@@ -8,7 +8,6 @@ import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý thuộc tính mở rộng của sản phẩm")
 public class ProductAttributeController extends BaseController {
-    @Autowired
-    private ProductAttributeService productAttributeService;
+    private final ProductAttributeService productAttributeService;
+
+    public ProductAttributeController(ProductAttributeService productAttributeService) {
+        this.productAttributeService = productAttributeService;
+    }
 
     @Operation(summary = "Create product attribute")
     @PostMapping("/attribute/create")

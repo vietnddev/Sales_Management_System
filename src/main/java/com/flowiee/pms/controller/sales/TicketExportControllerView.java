@@ -7,7 +7,6 @@ import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.constants.TicketExportStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +20,11 @@ import java.util.*;
 @Controller
 @RequestMapping("/stg/ticket-export")
 public class TicketExportControllerView extends BaseController {
-    @Autowired
-    private TicketExportService ticketExportService;
+    private final TicketExportService ticketExportService;
+
+    public TicketExportControllerView(TicketExportService ticketExportService) {
+        this.ticketExportService = ticketExportService;
+    }
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.exportGoods(true)")

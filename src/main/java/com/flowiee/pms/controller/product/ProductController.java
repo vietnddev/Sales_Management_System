@@ -4,22 +4,18 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.model.AppResponse;
-import com.flowiee.pms.model.ExportDataModel;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.TemplateExport;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +26,9 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý sản phẩm")
 public class ProductController extends BaseController {
-    private final ProductInfoService productInfoService;
+    private final ProductInfoService    productInfoService;
     private final ProductHistoryService productHistoryService;
-    private final ExportService exportService;
+    private final ExportService         exportService;
 
     public ProductController(ProductInfoService productInfoService, ProductHistoryService productHistoryService,
                              @Qualifier("productExportServiceImpl") ExportService exportService) {

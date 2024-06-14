@@ -10,7 +10,6 @@ import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +20,11 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/supplier")
 @Tag(name = "Material API", description = "Quản lý nhà cung cấp")
 public class SupplierController extends BaseController {
-    @Autowired
-    private SupplierService supplierService;
+    private final SupplierService supplierService;
+
+    public SupplierController(SupplierService supplierService) {
+        this.supplierService = supplierService;
+    }
 
     @Operation(summary = "Find all nhà cung cấp")
     @GetMapping("/all")

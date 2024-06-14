@@ -42,7 +42,7 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@Column(name = "price_original", nullable = false)
 	private BigDecimal priceOriginal;
 
-	@Column(name = "extra_discount")
+	@Column(name = "extra_discount", nullable = false)
 	private BigDecimal extraDiscount;
 
 	@Column(name = "quantity", nullable = false)

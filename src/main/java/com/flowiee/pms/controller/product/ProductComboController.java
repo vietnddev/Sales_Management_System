@@ -9,7 +9,6 @@ import com.flowiee.pms.service.product.ProductComboService;
 import com.flowiee.pms.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +20,12 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/product/combo")
 @Tag(name = "Product combo API", description = "Quản lý combo")
 public class ProductComboController extends BaseController {
-    @Autowired
-    private ProductComboService productComboService;
-    
+    private final ProductComboService productComboService;
+
+    public ProductComboController(ProductComboService productComboService) {
+        this.productComboService = productComboService;
+    }
+
     @Operation(summary = "Find all combos")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
