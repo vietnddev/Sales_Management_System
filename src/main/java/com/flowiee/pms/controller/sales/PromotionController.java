@@ -7,7 +7,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import com.flowiee.pms.service.sales.PromotionService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -32,27 +32,19 @@ public class PromotionController extends BaseController {
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
     public AppResponse<List<PromotionInfoDTO>> findPromotions(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                               @RequestParam(value = "pageNum", required = false) Integer pageNum) {
-        try {
-            Page<PromotionInfoDTO> promotionPage = promotionService.findAll(pageSize, pageNum - 1, null, null, null, null);
-            return success(promotionPage.getContent(), pageNum, pageSize, promotionPage.getTotalPages(), promotionPage.getTotalElements());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "promotion"), ex);
-        }
+        Page<PromotionInfoDTO> promotionPage = promotionService.findAll(pageSize, pageNum - 1, null, null, null, null);
+        return success(promotionPage.getContent(), pageNum, pageSize, promotionPage.getTotalPages(), promotionPage.getTotalElements());
     }
 
     @Operation(summary = "Find detail promotion")
     @GetMapping("/{promotionId}")
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
     public AppResponse<PromotionInfo> findDetailPromotion(@PathVariable("promotionId") Integer promotionId) {
-        try {
-            Optional<PromotionInfoDTO> promotion = promotionService.findById(promotionId);
-            if (promotion.isEmpty()) {
-                throw new BadRequestException("Promotion not found");
-            }
-            return success(promotion.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "promotion"), ex);
+        Optional<PromotionInfoDTO> promotion = promotionService.findById(promotionId);
+        if (promotion.isEmpty()) {
+            throw new BadRequestException("Promotion not found");
         }
+        return success(promotion.get());
     }
 
     @Operation(summary = "Create promotion")
@@ -62,7 +54,7 @@ public class PromotionController extends BaseController {
         try {
             return success(promotionService.save(promotion));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "promotion"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "promotion"), ex);
         }
     }
 
@@ -73,7 +65,7 @@ public class PromotionController extends BaseController {
         try {
             return success(promotionService.update(promotion, promotionId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "promotion"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "promotion"), ex);
         }
     }
 

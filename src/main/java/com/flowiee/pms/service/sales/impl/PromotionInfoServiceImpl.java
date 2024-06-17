@@ -12,11 +12,11 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.sales.PromotionApplyService;
 import com.flowiee.pms.service.sales.PromotionService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.PromotionStatus;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +29,17 @@ import java.util.Optional;
 
 @Service
 public class PromotionInfoServiceImpl extends BaseService implements PromotionService {
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private PromotionInfoRepository promotionInfoRepository;
-    @Autowired
-    private PromotionApplyService promotionApplyService;
-    @Autowired
-    private ProductInfoService productInfoService;
+    private final ModelMapper             modelMapper;
+    private final PromotionInfoRepository promotionInfoRepository;
+    private final PromotionApplyService   promotionApplyService;
+    private final ProductInfoService      productInfoService;
+
+    public PromotionInfoServiceImpl(ModelMapper modelMapper, PromotionInfoRepository promotionInfoRepository, PromotionApplyService promotionApplyService, ProductInfoService productInfoService) {
+        this.modelMapper = modelMapper;
+        this.promotionInfoRepository = promotionInfoRepository;
+        this.promotionApplyService = promotionApplyService;
+        this.productInfoService = productInfoService;
+    }
 
     @Override
     public List<PromotionInfoDTO> findAll() {
@@ -54,7 +57,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             pEndTime = LocalDateTime.of(2100, 12, 31, 0, 0);
         }
         if (pStartTime == null) {
-            pStartTime = LocalDateTime.of(1900, 1, 1, 0, 0);;
+            pStartTime = LocalDateTime.of(1900, 1, 1, 0, 0);
         }
         Page<PromotionInfo> pagePromotionInfos = promotionInfoRepository.findAll(pTitle, pStartTime, pEndTime, pStatus, pageable);
 
@@ -124,7 +127,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             PromotionInfo promotionInfoSaved = promotionInfoRepository.save(promotionInfo);
             return modelMapper.map(promotionInfoSaved, PromotionInfoDTO.class);
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "promotion"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "promotion"), ex);
         }
     }
 
@@ -134,10 +137,10 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             throw new BadRequestException("Promotion not found!");
         }
         if (!promotionApplyService.findByPromotionId(promotionId).isEmpty()) {
-            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         promotionInfoRepository.deleteById(promotionId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     private String genPromotionStatus(LocalDateTime startTime, LocalDateTime endTime) {

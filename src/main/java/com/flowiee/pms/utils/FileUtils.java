@@ -1,5 +1,6 @@
 package com.flowiee.pms.utils;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.CellReference;
@@ -53,5 +54,16 @@ public class FileUtils {
 
     public static File getFileDataCategoryInit() {
         return Paths.get(initCsvDataPath + "/Category.csv").toFile();
+    }
+
+    public static String getFileExtension(String fileName) {
+        String extension = "";
+        if (ObjectUtils.isNotEmpty(fileName)) {
+            int lastIndex = fileName.lastIndexOf('.');
+            if (lastIndex > 0 && lastIndex < fileName.length() - 1) {
+                extension = fileName.substring(lastIndex + 1);
+            }
+        }
+        return extension;
     }
 }

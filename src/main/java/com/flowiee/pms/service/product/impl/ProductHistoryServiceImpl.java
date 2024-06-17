@@ -7,8 +7,7 @@ import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.repository.product.ProductHistoryRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,8 +17,11 @@ import java.util.Optional;
 
 @Service
 public class ProductHistoryServiceImpl extends BaseService implements ProductHistoryService {
-    @Autowired
-    private ProductHistoryRepository productHistoryRepo;
+    private final ProductHistoryRepository productHistoryRepo;
+
+    public ProductHistoryServiceImpl(ProductHistoryRepository productHistoryRepo) {
+        this.productHistoryRepo = productHistoryRepo;
+    }
 
     @Override
     public List<ProductHistory> findAll() {
@@ -45,7 +47,7 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
     @Override
     public String delete(Integer productHistoryId) {
         productHistoryRepo.deleteById(productHistoryId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

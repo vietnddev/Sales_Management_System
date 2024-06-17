@@ -6,8 +6,7 @@ import com.flowiee.pms.repository.system.NotificationRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.NotificationService;
 
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +14,11 @@ import java.util.Optional;
 
 @Service
 public class NotificationServiceImpl extends BaseService implements NotificationService {
-    @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
+
+    public NotificationServiceImpl(NotificationRepository notificationRepository) {
+        this.notificationRepository = notificationRepository;
+    }
 
     @Override
     public List<Notification> findAll() {
@@ -67,6 +69,6 @@ public class NotificationServiceImpl extends BaseService implements Notification
             throw new BadRequestException();
         }
         notificationRepository.deleteById(entityId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

@@ -14,9 +14,8 @@ import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
 
 import com.flowiee.pms.utils.AppConstants;
-import com.flowiee.pms.utils.MessageUtils;
 import com.flowiee.pms.utils.constants.LogType;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,12 +35,16 @@ import java.util.*;
 public class UserDetailsServiceImpl extends BaseService implements UserDetailsService, AccountService {
 	private static final String mainObjectName = "Account";
 
-	@Autowired
-	private AccountRepository accountRepo;
-	@Autowired @Lazy
-	private RoleService roleService;
-	@Autowired
-	private SystemLogRepository systemLogRepo;
+	@Lazy
+	private final RoleService         roleService;
+	private final AccountRepository   accountRepo;
+	private final SystemLogRepository systemLogRepo;
+
+	public UserDetailsServiceImpl(RoleService roleService, AccountRepository accountRepo, SystemLogRepository systemLogRepo) {
+		this.roleService = roleService;
+		this.accountRepo = accountRepo;
+		this.systemLogRepo = systemLogRepo;
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -135,7 +138,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 				systemLogService.writeLogDelete(MODULE.SYSTEM.name(), ACTION.SYS_ACC_D.name(), mainObjectName, "Xóa account", account.get().getUsername());
                 logger.info("Delete account success! username={}", account.get().getUsername());
 			}
-			return MessageUtils.DELETE_SUCCESS;
+			return MessageCode.DELETE_SUCCESS.getDescription();
 		} catch (Exception ex) {
 			throw new AppException("Delete account fail! id=" + accountId, ex);
 		}

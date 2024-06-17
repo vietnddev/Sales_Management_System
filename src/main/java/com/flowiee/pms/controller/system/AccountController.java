@@ -9,7 +9,7 @@ import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +37,7 @@ public class AccountController extends BaseController {
         try {
             return success(accountService.findAll());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "account"), ex);
         }
     }
 
@@ -52,7 +52,7 @@ public class AccountController extends BaseController {
             }
             return success(account.get());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "account"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "account"), ex);
         }
     }
 
@@ -69,7 +69,7 @@ public class AccountController extends BaseController {
             }
             return success(accountService.save(account));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "account"), ex);
         }
     }
 
@@ -83,7 +83,7 @@ public class AccountController extends BaseController {
             }
             return success(accountService.update(account, accountId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "account"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "account"), ex);
         }
     }
 
@@ -125,7 +125,7 @@ public class AccountController extends BaseController {
         try {
             return success(roleService.findAllRoleByAccountId(accountId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "role"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "role"), ex);
         }
     }
 }

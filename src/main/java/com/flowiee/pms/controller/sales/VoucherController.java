@@ -10,7 +10,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.dto.VoucherTicketDTO;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -49,7 +49,7 @@ public class VoucherController extends BaseController {
             Page<VoucherInfoDTO> voucherInfos = voucherService.findAll(pageSize, pageNum - 1, null, pTitle, pStartTime, pEndTime, pStatus);
             return success(voucherInfos.getContent(), pageNum, pageSize, voucherInfos.getTotalPages(), voucherInfos.getTotalElements());
         } catch (Exception ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "voucher"), ex);
         }
     }
 
@@ -64,7 +64,7 @@ public class VoucherController extends BaseController {
             }
             throw new BadRequestException();
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "voucher"), ex);
         }
     }
 
@@ -78,7 +78,7 @@ public class VoucherController extends BaseController {
             }
             return success(voucherService.save(voucherInfoDTO));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "voucher"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "voucher"), ex);
         }
     }
 
@@ -92,7 +92,7 @@ public class VoucherController extends BaseController {
             }
             return success(voucherService.update(voucherInfo ,voucherInfoId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "voucher"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "voucher"), ex);
         }
     }
 
@@ -116,7 +116,7 @@ public class VoucherController extends BaseController {
             }
             return success(voucherTicketService.isAvailable(voucherCode));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "voucher"), ex);
         }
     }
 
@@ -133,7 +133,7 @@ public class VoucherController extends BaseController {
             }
             return success(voucherTicketService.findByVoucherId(voucherInfoId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "voucher ticket"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "voucher ticket"), ex);
         }
     }
 }

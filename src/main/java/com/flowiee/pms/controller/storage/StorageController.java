@@ -10,7 +10,7 @@ import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.storage.StorageService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,7 +48,7 @@ public class StorageController extends BaseController {
             Page<StorageDTO> storagePage = storageService.findAll(pageSize, pageNum - 1);
             return success(storagePage.getContent(), pageNum, pageSize, storagePage.getTotalPages(), storagePage.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "storage"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "storage"), ex);
         }
     }
 
@@ -63,7 +63,7 @@ public class StorageController extends BaseController {
             }
             return success(storage.get());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "storage"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "storage"), ex);
         }
     }
 
@@ -74,7 +74,7 @@ public class StorageController extends BaseController {
         try {
             return success(storageService.save(storage));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "storage"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "storage"), ex);
         }
     }
 
@@ -85,7 +85,7 @@ public class StorageController extends BaseController {
         try {
             return success(storageService.update(storage, storageId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "storage"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "storage"), ex);
         }
     }
 
@@ -112,7 +112,7 @@ public class StorageController extends BaseController {
             Page<StorageItems> storageItemsPage = storageService.findStorageItems(pageSize, pageNum -1, storageId, searchText);
             return success(storageItemsPage.getContent(), pageNum, pageSize, storageItemsPage.getTotalPages(), storageItemsPage.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "storage"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "storage"), ex);
         }
     }
 

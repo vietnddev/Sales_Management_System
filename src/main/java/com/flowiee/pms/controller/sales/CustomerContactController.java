@@ -7,8 +7,8 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
-import com.flowiee.pms.utils.MessageUtils;
 import com.flowiee.pms.utils.constants.ContactType;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +50,7 @@ public class CustomerContactController extends BaseController {
             }
             return success(listContacts);
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "contact"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
     }
 
@@ -64,7 +64,7 @@ public class CustomerContactController extends BaseController {
             }
             return success(customerContactService.save(customerContact));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "contact"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
     }
 
@@ -78,7 +78,7 @@ public class CustomerContactController extends BaseController {
             }
             return success(customerContactService.update(customerContact, contactId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
     }
 
@@ -101,7 +101,7 @@ public class CustomerContactController extends BaseController {
             }
             return success(customerContactService.enableContactUseDefault(customerId, contactCode, contactId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
     }
 
@@ -115,7 +115,7 @@ public class CustomerContactController extends BaseController {
             }
             return success(customerContactService.disableContactUnUseDefault(contactId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
     }
 }

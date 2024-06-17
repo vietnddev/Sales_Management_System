@@ -6,8 +6,7 @@ import com.flowiee.pms.repository.sales.GarmentFactoryRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.GarmentFactoryService;
 
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +14,11 @@ import java.util.Optional;
 
 @Service
 public class GarmentFactoryServiceImpl extends BaseService implements GarmentFactoryService {
-    @Autowired
-    private GarmentFactoryRepository garmentFactoryRepo;
+    private final GarmentFactoryRepository garmentFactoryRepo;
+
+    public GarmentFactoryServiceImpl(GarmentFactoryRepository garmentFactoryRepo) {
+        this.garmentFactoryRepo = garmentFactoryRepo;
+    }
 
     @Override
     public List<GarmentFactory> findAll() {
@@ -51,6 +53,6 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
             throw new BadRequestException();
         }
         garmentFactoryRepo.deleteById(entityId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

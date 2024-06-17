@@ -6,10 +6,9 @@ import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import com.flowiee.pms.repository.sales.PromotionApplyRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.PromotionApplyService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -18,10 +17,13 @@ import java.util.Optional;
 
 @Service
 public class PromotionApplyServiceImpl extends BaseService implements PromotionApplyService {
-    @Autowired
-    private PromotionApplyRepository promotionApplyRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final PromotionApplyRepository promotionApplyRepository;
+    private final ModelMapper              modelMapper;
+
+    public PromotionApplyServiceImpl(PromotionApplyRepository promotionApplyRepository, ModelMapper modelMapper) {
+        this.promotionApplyRepository = promotionApplyRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public List<PromotionApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
@@ -71,7 +73,7 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
         if (this.findById(entityId).isEmpty()) {
             promotionApplyRepository.deleteById(entityId);
         }
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
 //    private List<PromotionApplyDTO> extractDataQuery(List<Object[]> objects) {

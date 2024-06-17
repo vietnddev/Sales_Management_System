@@ -3,8 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.exception.AppException;
@@ -17,12 +16,9 @@ import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.VoucherStatus;
-import com.flowiee.pms.utils.constants.VoucherType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,14 +32,17 @@ import java.util.*;
 public class VoucherInfoServiceImpl extends BaseService implements VoucherService {
     private static final String mainObjectName = "VoucherInfo";
 
-    @Autowired
-    private VoucherInfoRepository voucherInfoRepo;
-    @Autowired
-    private VoucherApplyService voucherApplyService;
-    @Autowired
-    private VoucherTicketService voucherTicketService;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final VoucherInfoRepository voucherInfoRepo;
+    private final VoucherApplyService   voucherApplyService;
+    private final VoucherTicketService  voucherTicketService;
+    private final ModelMapper           modelMapper;
+
+    public VoucherInfoServiceImpl(VoucherInfoRepository voucherInfoRepo, VoucherApplyService voucherApplyService, @Lazy VoucherTicketService voucherTicketService, ModelMapper modelMapper) {
+        this.voucherInfoRepo = voucherInfoRepo;
+        this.voucherApplyService = voucherApplyService;
+        this.voucherTicketService = voucherTicketService;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public List<VoucherInfoDTO> findAll() {
@@ -61,7 +60,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             pEndTime = LocalDateTime.of(2100, 12, 31, 0, 0);
         }
         if (pStartTime == null) {
-            pStartTime = LocalDateTime.of(1900, 1, 1, 0, 0);;
+            pStartTime = LocalDateTime.of(1900, 1, 1, 0, 0);
         }
         Page<VoucherInfo> pageVoucherInfoDTOs = voucherInfoRepo.findAll(null, pTitle, pStartTime, pEndTime, pStatus, pageable);
 
@@ -146,7 +145,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
 
             return modelMapper.map(voucherInfoUpdated, VoucherInfoDTO.class);
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "voucher"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "voucher"), ex);
         }
     }
 
@@ -157,11 +156,11 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             throw new BadRequestException("Voucher not found!");
         }
         if (!voucherApplyService.findByVoucherId(voucherId).isEmpty()) {
-            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         voucherInfoRepo.deleteById(voucherId);
         systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_VOU_D.name(), mainObjectName, "Xóa voucher", voucherInfoBefore.get().getTitle());
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {

@@ -8,8 +8,8 @@ import com.flowiee.pms.service.system.FileStorageService;
 
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +21,11 @@ import java.util.Optional;
 
 @Service
 public class FileStorageServiceImpl extends BaseService implements FileStorageService {
-    @Autowired
     private FileStorageRepository fileRepository;
+
+    public FileStorageServiceImpl(FileStorageRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     @Override
     public List<FileStorage> findAll() {
@@ -61,8 +64,8 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
         fileRepository.deleteById(fileId);
         File file = new File(FileUtils.rootPath + "/" + fileStorage.get().getDirectoryPath() + "/" + fileStorage.get().getStorageName());
         if (file.exists() && file.delete()) {
-            return MessageUtils.DELETE_SUCCESS;
+            return MessageCode.DELETE_SUCCESS.getDescription();
         }
-        return String.format(MessageUtils.DELETE_ERROR_OCCURRED, "file");
+        return String.format(ErrorCode.DELETE_ERROR_OCCURRED.getDescription(), "file");
     }
 }

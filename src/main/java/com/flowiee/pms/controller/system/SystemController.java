@@ -8,7 +8,7 @@ import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.service.system.SystemLogService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -37,7 +37,7 @@ public class SystemController extends BaseController {
             Page<SystemLog> logPage = logService.findAll(pageSize, pageNum - 1);
             return success(logPage.getContent(), pageNum, pageSize, logPage.getTotalPages(), logPage.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "system log"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "system log"), ex);
         }
     }
 
@@ -48,7 +48,7 @@ public class SystemController extends BaseController {
         try {
             return success(configService.findAll());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "configs"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "configs"), ex);
         }
     }
 
@@ -62,7 +62,7 @@ public class SystemController extends BaseController {
             }
             return success(configService.update(config, configId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, config), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), config), ex);
         }
     }
 

@@ -5,7 +5,7 @@ import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductAttributeService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +28,7 @@ public class ProductAttributeController extends BaseController {
         try {
             return success(productAttributeService.save(productAttribute));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product attribute"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product attribute"), ex);
         }
     }
 
@@ -39,7 +39,7 @@ public class ProductAttributeController extends BaseController {
         try {
             return success(productAttributeService.update(productAttribute, productAttributeId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product attribute"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product attribute"), ex);
         }
     }
 
@@ -50,7 +50,7 @@ public class ProductAttributeController extends BaseController {
         try {
             return success(productAttributeService.delete(productAttributeId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product attribute"), ex);
+            throw new AppException(String.format(ErrorCode.DELETE_ERROR_OCCURRED.getDescription(), "product attribute"), ex);
         }
     }
 }

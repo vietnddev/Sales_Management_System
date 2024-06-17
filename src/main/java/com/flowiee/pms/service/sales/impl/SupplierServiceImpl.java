@@ -6,8 +6,7 @@ import com.flowiee.pms.repository.sales.SupplierRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.SupplierService;
 
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +18,11 @@ import java.util.Optional;
 
 @Service
 public class SupplierServiceImpl extends BaseService implements SupplierService {
-    @Autowired
-    private SupplierRepository supplierRepo;
+    private final SupplierRepository supplierRepo;
+
+    public SupplierServiceImpl(SupplierRepository supplierRepo) {
+        this.supplierRepo = supplierRepo;
+    }
 
     @Override
     public List<Supplier> findAll() {
@@ -62,6 +64,6 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
             throw new BadRequestException();
         }
         supplierRepo.deleteById(entityId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

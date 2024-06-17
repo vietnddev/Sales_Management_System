@@ -6,7 +6,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductComboService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -35,7 +35,7 @@ public class ProductComboController extends BaseController {
             Page<ProductCombo> productComboPage = productComboService.findAll(pageSize, pageNum - 1);
             return success(productComboPage.getContent(), pageNum, pageSize, productComboPage.getTotalPages(), productComboPage.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product combo"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product combo"), ex);
         }
     }
 
@@ -50,7 +50,7 @@ public class ProductComboController extends BaseController {
             }
             return success(productCombo.get());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product combo"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product combo"), ex);
         }
     }
 
@@ -61,7 +61,7 @@ public class ProductComboController extends BaseController {
         try {
             return success(productComboService.save(productCombo));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product combo"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product combo"), ex);
         }
     }
 
@@ -72,7 +72,7 @@ public class ProductComboController extends BaseController {
         try {
             return success(productComboService.update(productCombo, comboId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product combo"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product combo"), ex);
         }
     }
 

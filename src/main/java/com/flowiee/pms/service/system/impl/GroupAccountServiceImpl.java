@@ -5,8 +5,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.system.GroupAccountRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.GroupAccountService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +17,11 @@ import java.util.Optional;
 
 @Service
 public class GroupAccountServiceImpl extends BaseService implements GroupAccountService {
-    @Autowired
-    private GroupAccountRepository groupAccountRepository;
+    private final GroupAccountRepository groupAccountRepository;
+
+    public GroupAccountServiceImpl(GroupAccountRepository groupAccountRepository) {
+        this.groupAccountRepository = groupAccountRepository;
+    }
 
     @Override
     public List<GroupAccount> findAll() {
@@ -63,6 +65,6 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
             throw new BadRequestException();
         }
         groupAccountRepository.deleteById(groupId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

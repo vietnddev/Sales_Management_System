@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.OrderDetailDTO;
 import com.flowiee.pms.model.dto.OrderDTO;
@@ -17,6 +18,7 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -80,7 +82,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Override
     public Optional<OrderDTO> findById(Integer orderId) {
-        OrderDTO order = OrderDTO.fromOrder(Objects.requireNonNull(orderRepository.findById(orderId).orElse(null)));
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        OrderDTO order = OrderDTO.fromOrder(orderOptional.get());
         List<OrderDetail> listOrderDetail = orderItemsService.findByOrderId(orderId);
         int totalProduct = 0;
         BigDecimal totalAmount = new BigDecimal(0);
@@ -207,19 +213,19 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     public String delete(Integer id) {
         Optional<OrderDTO> order = this.findById(id);
         if (order.isEmpty() || order.get().getPaymentStatus()) {
-            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         orderRepository.deleteById(id);
         systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), mainObjectName, "Xóa đơn hàng", order.toString());
         logger.info("Xóa đơn hàng orderId={}", id);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Transactional
     @Override
     public String doPay(Integer orderId, LocalDateTime paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote) {
         orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
-        return "Thanh toán thành công!";
+        return MessageCode.UPDATE_SUCCESS.getDescription();
     }
 
     @Override

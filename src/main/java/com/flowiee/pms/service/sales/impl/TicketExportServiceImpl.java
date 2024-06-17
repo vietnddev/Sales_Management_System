@@ -13,10 +13,10 @@ import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.TicketExportStatus;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,14 +30,17 @@ import java.util.Optional;
 
 @Service
 public class TicketExportServiceImpl extends BaseService implements TicketExportService {
-    @Autowired
-    private TicketExportRepository ticketExportRepo;
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private ProductQuantityService productQuantityService;
-    @Autowired
-    private ProductHistoryService productHistoryService;
+    private final TicketExportRepository ticketExportRepo;
+    private final OrderRepository        orderRepository;
+    private final ProductQuantityService productQuantityService;
+    private final ProductHistoryService  productHistoryService;
+
+    public TicketExportServiceImpl(TicketExportRepository ticketExportRepo, OrderRepository orderRepository, ProductQuantityService productQuantityService, ProductHistoryService productHistoryService) {
+        this.ticketExportRepo = ticketExportRepo;
+        this.orderRepository = orderRepository;
+        this.productQuantityService = productQuantityService;
+        this.productHistoryService = productHistoryService;
+    }
 
     @Override
     public List<TicketExport> findAll() {
@@ -103,7 +106,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         }
         TicketExport ticketExportToUpdate = ticketExportOptional.get();
         if ("COMPLETED".equals(ticketExportToUpdate.getStatus()) || "CANCEL".equals(ticketExportToUpdate.getStatus())) {
-            throw new BadRequestException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         ticketExportToUpdate.setTitle(ticket.getTitle());
         ticketExportToUpdate.setNote(ticket.getNote());
@@ -138,6 +141,6 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
             orderRepository.save(order);
         }
         ticketExportRepo.deleteById(ticketExportId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

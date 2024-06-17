@@ -2,13 +2,12 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.system.SystemLogService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductQuantityServiceImpl extends BaseService implements ProductQuantityService {
     private static final String mainObjectName = "ProductVariant";
 
-    @Autowired
-    private ProductDetailRepository productVariantRepo;
-    @Autowired
-    private SystemLogService systemLogService;
+    private final ProductDetailRepository productVariantRepo;
+    private final SystemLogService        systemLogService;
+
+    public ProductQuantityServiceImpl(ProductDetailRepository productVariantRepo, SystemLogService systemLogService) {
+        this.productVariantRepo = productVariantRepo;
+        this.systemLogService = systemLogService;
+    }
 
     @Transactional
     @Override
@@ -42,7 +44,7 @@ public class ProductQuantityServiceImpl extends BaseService implements ProductQu
             }
             systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), mainObjectName, "Cập nhật số lượng sản phẩm", "productVariantId = " + productVariantId);
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product quantity"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product quantity"), ex);
         }
     }
 }

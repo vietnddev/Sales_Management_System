@@ -10,9 +10,8 @@ import com.flowiee.pms.service.product.MaterialHistoryService;
 import com.flowiee.pms.service.product.MaterialService;
 
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +27,13 @@ import java.util.Optional;
 public class MaterialServiceImpl extends BaseService implements MaterialService {
     private static final String mainObjectName = "Material";
 
-    @Autowired
-    private MaterialRepository materialRepository;
-    @Autowired
-    private MaterialHistoryService materialHistoryService;
+    private final MaterialRepository     materialRepository;
+    private final MaterialHistoryService materialHistoryService;
+
+    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialHistoryService materialHistoryService) {
+        this.materialRepository = materialRepository;
+        this.materialHistoryService = materialHistoryService;
+    }
 
     @Override
     public List<Material> findAll() {
@@ -93,7 +95,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.STG_MAT_U.name(), mainObjectName, "Xóa nguyên vật liệu", materialToDelete.get().getName());
         logger.info("{}: {}", logTitle, materialToDelete.get().getName());
 
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Transactional

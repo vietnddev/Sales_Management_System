@@ -4,8 +4,7 @@ import com.flowiee.pms.entity.system.Branch;
 import com.flowiee.pms.repository.system.BranchRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.BranchService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +12,11 @@ import java.util.Optional;
 
 @Service
 public class BranchServiceImpl extends BaseService implements BranchService {
-    @Autowired
     private BranchRepository branchRepository;
+
+    public BranchServiceImpl(BranchRepository branchRepository) {
+        this.branchRepository = branchRepository;
+    }
 
     @Override
     public List<Branch> findAll() {
@@ -40,6 +42,6 @@ public class BranchServiceImpl extends BaseService implements BranchService {
     @Override
     public String delete(Integer branchId) {
         branchRepository.deleteById(branchId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

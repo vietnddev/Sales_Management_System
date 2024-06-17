@@ -3,11 +3,11 @@ package com.flowiee.pms.controller.category;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +33,7 @@ public class CategoryController extends BaseController {
     @GetMapping("/all")
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public AppResponse<List<Category>> findAll() {
-        try {
-            return success(categoryService.findRootCategory());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"), ex);
-        }
+        return success(categoryService.findRootCategory());
     }
 
     @Operation(summary = "Find by type")
@@ -54,7 +50,7 @@ public class CategoryController extends BaseController {
             Page<Category> categories = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId, pageSize, pageNum - 1);
             return success(categories.getContent(), pageNum, pageSize, categories.getTotalPages(), categories.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "category"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"), ex);
         }
     }
 
@@ -66,7 +62,7 @@ public class CategoryController extends BaseController {
             category.setType(CommonUtils.getCategoryType(category.getType()));
             return success(categoryService.save(category));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "category"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "category"), ex);
         }
     }
 
@@ -74,14 +70,14 @@ public class CategoryController extends BaseController {
     @PutMapping("/update/{categoryId}")
     @PreAuthorize("@vldModuleCategory.updateCategory(true)")
     public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
+        if (categoryService.findById(categoryId).isEmpty()) {
+            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"));
+        }
         try {
-            if (categoryService.findById(categoryId).isEmpty()) {
-                throw new BadRequestException();
-            }
             category.setType(CommonUtils.getCategoryType(category.getType()));
             return success(categoryService.update(category, categoryId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "category"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "category"), ex);
         }
     }
 

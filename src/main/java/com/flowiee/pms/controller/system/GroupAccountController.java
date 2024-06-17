@@ -8,7 +8,7 @@ import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.service.system.RoleService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -38,7 +38,7 @@ public class GroupAccountController extends BaseController {
             Page<GroupAccount> groupAccounts = groupAccountService.findAll(pageSize, pageNum - 1);
             return success(groupAccounts.getContent(), pageNum, pageSize, groupAccounts.getTotalPages(), groupAccounts.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "group account"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "group account"), ex);
         }
     }
 
@@ -53,7 +53,7 @@ public class GroupAccountController extends BaseController {
             }
             return success(groupAcc.get());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "group account"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "group account"), ex);
         }
     }
 
@@ -67,7 +67,7 @@ public class GroupAccountController extends BaseController {
             }
             return success(groupAccountService.save(groupAccount));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "group account"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "group account"), ex);
         }
     }
 
@@ -81,7 +81,7 @@ public class GroupAccountController extends BaseController {
             }
             return success(groupAccountService.update(groupAccount, groupId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "group account"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "group account"), ex);
         }
     }
 
@@ -99,7 +99,7 @@ public class GroupAccountController extends BaseController {
         try {
             return success(roleService.findAllRoleByGroupId(groupId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "rights of group account"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "rights of group account"), ex);
         }
     }
 
@@ -113,7 +113,7 @@ public class GroupAccountController extends BaseController {
             }
             return success(roleService.updateRightsOfGroup(rights, groupId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "group account"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "group account"), ex);
         }
     }
 }

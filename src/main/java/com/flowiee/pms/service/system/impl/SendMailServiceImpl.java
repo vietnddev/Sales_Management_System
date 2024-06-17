@@ -4,9 +4,8 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.SendMailService;
 
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,11 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 public class SendMailServiceImpl extends BaseService implements SendMailService {
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+
+    public SendMailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public String sendMail(String subject, String to, String body) {
@@ -31,7 +33,7 @@ public class SendMailServiceImpl extends BaseService implements SendMailService 
             helper.setTo(to);
             helper.setText(body, true);
             javaMailSender.send(mimeMessage);
-            return MessageUtils.DELETE_SUCCESS;
+            return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (MessagingException ex) {
             throw new AppException(ex);
         }

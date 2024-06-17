@@ -1,13 +1,15 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.sales.CustomerService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.MessageCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ public class CustomerController extends BaseController {
             Page<CustomerDTO> customers = customerService.findAll(pageSize, pageNum - 1, pName, pSex, pBirthday, pPhone, pEmail, pAddress);
             return success(customers.getContent(), pageNum, pageSize, customers.getTotalPages(), customers.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"), ex);
         }
     }
 
@@ -55,15 +57,11 @@ public class CustomerController extends BaseController {
     @GetMapping("/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Integer customerId) {
-        try {
-            Optional<CustomerDTO> customer = customerService.findById(customerId);
-            if (customer.isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(customer.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "customer"), ex);
+        Optional<CustomerDTO> customer = customerService.findById(customerId);
+        if (customer.isEmpty()) {
+            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"));
         }
+        return success(customer.get());
     }
 
     @Operation(summary = "Create customer")
@@ -75,9 +73,9 @@ public class CustomerController extends BaseController {
                 throw new BadRequestException();
             }
             customerService.save(customer);
-            return success(MessageUtils.CREATE_SUCCESS);
+            return success(MessageCode.CREATE_SUCCESS.getDescription());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "customer"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "customer"), ex);
         }
     }
 
@@ -90,9 +88,9 @@ public class CustomerController extends BaseController {
                 throw new BadRequestException();
             }
             customerService.update(customer, customerId);
-            return success(MessageUtils.UPDATE_SUCCESS);
+            return success(MessageCode.UPDATE_SUCCESS.getDescription());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "customer"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "customer"), ex);
         }
     }
 
@@ -113,7 +111,7 @@ public class CustomerController extends BaseController {
             }
             return success(customerService.findPurchaseHistory(customerId, year, null));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "purchase history of customer"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "purchase history of customer"), ex);
         }
     }
 }

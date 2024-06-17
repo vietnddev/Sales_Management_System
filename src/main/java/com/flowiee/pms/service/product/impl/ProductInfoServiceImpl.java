@@ -4,8 +4,7 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.*;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.DataInUseException;
@@ -19,12 +18,9 @@ import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.MessageUtils;
-import com.flowiee.pms.utils.constants.ProductStatus;
-import com.flowiee.pms.utils.constants.VoucherStatus;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,22 +32,25 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     private static final String mvModule = MODULE.PRODUCT.name();
     private static final String mainObjectName = "ProductBase";
 
-    @Autowired
-    private ProductRepository productsRepo;
-    @Autowired
-    private ProductHistoryService productHistoryService;
-    @Autowired
-    private VoucherService voucherInfoService;
-    @Autowired
-    private VoucherApplyService voucherApplyService;
-    @Autowired
-    private CategoryRepository categoryRepo;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private ProductStatisticsService productStatisticsService;
-    @Autowired
-    private ProductImageService productImageService;
+    private final ProductRepository        productsRepo;
+    private final ProductHistoryService    productHistoryService;
+    private final VoucherService           voucherInfoService;
+    private final VoucherApplyService      voucherApplyService;
+    private final CategoryRepository       categoryRepo;
+    private final ProductVariantService    productVariantService;
+    private final ProductStatisticsService productStatisticsService;
+    private final ProductImageService      productImageService;
+
+    public ProductInfoServiceImpl(ProductRepository productsRepo, ProductHistoryService productHistoryService, @Lazy VoucherService voucherInfoService, @Lazy VoucherApplyService voucherApplyService, CategoryRepository categoryRepo, ProductVariantService productVariantService, ProductStatisticsService productStatisticsService, ProductImageService productImageService) {
+        this.productsRepo = productsRepo;
+        this.productHistoryService = productHistoryService;
+        this.voucherInfoService = voucherInfoService;
+        this.voucherApplyService = voucherApplyService;
+        this.categoryRepo = categoryRepo;
+        this.productVariantService = productVariantService;
+        this.productStatisticsService = productStatisticsService;
+        this.productImageService = productImageService;
+    }
 
     @Override
     public List<ProductDTO> findAll() {
@@ -135,12 +134,12 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
                 throw new BadRequestException();
             }
             if (productInUse(id)) {
-                throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
+                throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
             }
             productsRepo.deleteById(id);
             systemLogService.writeLogDelete(mvModule, ACTION.PRO_PRD_D.name(), mainObjectName, "Xóa sản phẩm", productToDelete.get().getProductName());
             logger.info("Delete product success! productId={}", id);
-            return MessageUtils.DELETE_SUCCESS;
+            return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {
             throw new AppException("Delete product fail! productId=" + id, ex);
         }

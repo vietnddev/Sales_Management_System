@@ -9,7 +9,7 @@ import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.sales.TicketImportService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -39,7 +39,7 @@ public class TicketImportController extends BaseController {
             Page<TicketImport> ticketImports = ticketImportService.findAll(pageSize, pageNum - 1, null, null, null, null, null, storageId);
             return success(TicketImportDTO.fromTicketImports(ticketImports.getContent()), pageNum, pageSize, ticketImports.getTotalPages(), ticketImports.getTotalElements());
         } catch (Exception ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "ticket import"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "ticket import"), ex);
         }
     }
 
@@ -54,7 +54,7 @@ public class TicketImportController extends BaseController {
             }
             return success(TicketImportDTO.fromTicketImport(ticketImport.get()));
         } catch (Exception ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "ticket import"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "ticket import"), ex);
         }
     }
 
@@ -65,7 +65,7 @@ public class TicketImportController extends BaseController {
         try {
             return success(ticketImportService.createDraftTicketImport(ticketImport));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "ticket import"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "ticket import"), ex);
         }
     }
 
@@ -76,7 +76,7 @@ public class TicketImportController extends BaseController {
         try {
             return success(TicketImportDTO.fromTicketImport(ticketImportService.update(TicketImport.fromTicketImportDTO(ticketImportDTO), ticketImportId)));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket import"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "ticket import"), ex);
         }
     }
 
@@ -98,7 +98,7 @@ public class TicketImportController extends BaseController {
         try {
             return success(ticketImportService.addProductToTicket(ticketImportId, productVariantIds));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket_import"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "ticket_import"), ex);
         }
     }
 
@@ -113,7 +113,7 @@ public class TicketImportController extends BaseController {
         try {
             return success(ticketImportService.addMaterialToTicket(ticketImportId, materialIds));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "ticket_import"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "ticket_import"), ex);
         }
     }
 }

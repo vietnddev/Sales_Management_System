@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
@@ -11,7 +12,7 @@ import com.flowiee.pms.repository.storage.StorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.converter.StorageConvert;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,9 +136,9 @@ public class StorageServiceImpl extends BaseService implements StorageService {
             storageRepository.deleteById(storageId);
             systemLogService.writeLogDelete(MODULE.STORAGE.name(), ACTION.STG_STORAGE.name(), mainObjectName, "Xóa kho", storage.get().getName());
             logger.info("Delete storage success! storageId={}", storageId);
-            return MessageUtils.DELETE_SUCCESS;
+            return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "Storage storageId=" + storageId), ex);
+            throw new AppException(String.format(ErrorCode.DELETE_ERROR_OCCURRED.getDescription(), "Storage storageId=" + storageId), ex);
         }
     }
 }

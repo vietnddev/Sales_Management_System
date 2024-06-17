@@ -7,8 +7,7 @@ import com.flowiee.pms.repository.sales.VoucherApplyRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,8 +16,11 @@ import java.util.Optional;
 
 @Service
 public class VoucherApplyServiceImpl extends BaseService implements VoucherApplyService {
-    @Autowired
-    private VoucherApplyRepository voucherApplyRepo;
+    private final VoucherApplyRepository voucherApplyRepo;
+
+    public VoucherApplyServiceImpl(VoucherApplyRepository voucherApplyRepo) {
+        this.voucherApplyRepo = voucherApplyRepo;
+    }
 
     @Override
     public List<VoucherApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
@@ -64,7 +66,7 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
         if (this.findById(entityId).isEmpty()) {
             voucherApplyRepo.deleteById(entityId);
         }
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     private List<VoucherApplyDTO> extractDataQuery(List<Object[]> objects) {

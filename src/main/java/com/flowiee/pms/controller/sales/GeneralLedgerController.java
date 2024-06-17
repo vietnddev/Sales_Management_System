@@ -5,7 +5,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.GeneralLedger;
 import com.flowiee.pms.service.sales.LedgerService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +37,7 @@ public class GeneralLedgerController extends BaseController {
             GeneralLedger generalLedger = ledgerService.findGeneralLedger(pageSize, pageNum -1, fromDate, toDate);
             return success(generalLedger, pageNum, pageSize, generalLedger.getTotalPages(), generalLedger.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "generalLedger"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "generalLedger"), ex);
         }
     }
 }

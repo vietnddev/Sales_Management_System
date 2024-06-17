@@ -6,8 +6,7 @@ import com.flowiee.pms.repository.system.AppImportRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.ImportService;
 
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +14,11 @@ import java.util.Optional;
 
 @Service
 public class ImportServiceImpl extends BaseService implements ImportService {
-    @Autowired
-    private AppImportRepository appImportRepository;
+    private final AppImportRepository appImportRepository;
+
+    public ImportServiceImpl(AppImportRepository appImportRepository) {
+        this.appImportRepository = appImportRepository;
+    }
 
     @Override
     public List<FlowieeImport> findAll() {
@@ -57,6 +59,6 @@ public class ImportServiceImpl extends BaseService implements ImportService {
             throw new BadRequestException();
         }
         appImportRepository.deleteById(entityId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

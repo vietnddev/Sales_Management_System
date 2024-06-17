@@ -10,9 +10,8 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +27,13 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     private static final String mvModule = MODULE.PRODUCT.name();
     private static final String mainObjectName = "ProductAttribute";
 
-    @Autowired
-    private ProductAttributeRepository productAttributeRepo;
-    @Autowired
-    private ProductHistoryService productHistoryService;
+    private final ProductAttributeRepository productAttributeRepo;
+    private final ProductHistoryService      productHistoryService;
+
+    public ProductAttributeServiceImpl(ProductAttributeRepository productAttributeRepo, ProductHistoryService productHistoryService) {
+        this.productAttributeRepo = productAttributeRepo;
+        this.productHistoryService = productHistoryService;
+    }
 
     @Override
     public List<ProductAttribute> findAll() {
@@ -85,6 +87,6 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
         }
         productAttributeRepo.deleteById(attributeId);
         systemLogService.writeLogDelete(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, "Xóa thuộc tính sản phẩm", attributeToDelete.get().getAttributeName());
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

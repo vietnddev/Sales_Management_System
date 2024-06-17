@@ -1,6 +1,5 @@
 package com.flowiee.pms.model;
 
-import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class ImportDataModel {
         long currentTime = beginTime.toNanoOfDay();
         pathSource = Path.of(FileUtils.excelTemplatePath + "/" + templateExport.getTemplateName());
         pathTarget = Path.of(FileUtils.excelTemplatePath + "/temp/" + currentTime + "_" + templateExport.getTemplateName());
-        fileType = CommonUtils.getFileExtension(templateExport.getTemplateName());
+        fileType = FileUtils.getFileExtension(templateExport.getTemplateName());
         defaultOutputName = currentTime + "_" + templateExport.getTemplateName();
     }
 }

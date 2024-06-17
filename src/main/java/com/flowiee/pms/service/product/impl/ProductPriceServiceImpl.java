@@ -9,8 +9,8 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +19,15 @@ import java.util.Optional;
 
 @Service
 public class ProductPriceServiceImpl extends BaseService implements ProductPriceService {
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private ProductDetailRepository productVariantRepo;
-    @Autowired
-    private ProductHistoryService productHistoryService;
+    private final ProductVariantService   productVariantService;
+    private final ProductDetailRepository productVariantRepo;
+    private final ProductHistoryService   productHistoryService;
+
+    public ProductPriceServiceImpl(ProductVariantService productVariantService, ProductDetailRepository productVariantRepo, ProductHistoryService productHistoryService) {
+        this.productVariantService = productVariantService;
+        this.productVariantRepo = productVariantRepo;
+        this.productHistoryService = productHistoryService;
+    }
 
     @Transactional
     @Override
@@ -54,9 +57,9 @@ public class ProductPriceServiceImpl extends BaseService implements ProductPrice
             if (pOriginalPrice != null) {
                 productHistoryService.save(new ProductHistory(productId, variantId, null, String.format(title, "giảm"), "PRICE", oldValue, newValue));
             }
-            return MessageUtils.UPDATE_SUCCESS;
+            return MessageCode.UPDATE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "price"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "price"), ex);
         }
     }
 }

@@ -47,7 +47,7 @@ public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeSe
             fileInfo.setActive(false);
             fileRepository.save(fileInfo);
 
-            String data = "http://" + CommonUtils.mvServerInfo.getIp() + ":" + CommonUtils.mvServerInfo.getPort() + "/order/" + orderId;
+            String data = "http://" + CommonUtils.mvServerInfo.ip() + ":" + CommonUtils.mvServerInfo.port() + "/order/" + orderId;
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 200, 200);
 
