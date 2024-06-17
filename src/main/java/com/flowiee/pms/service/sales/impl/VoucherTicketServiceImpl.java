@@ -9,11 +9,10 @@ import com.flowiee.pms.repository.sales.VoucherTicketRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
-import com.flowiee.pms.utils.AppConstants;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.VoucherStatus;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +26,15 @@ import java.util.Optional;
 
 @Service
 public class VoucherTicketServiceImpl extends BaseService implements VoucherTicketService {
-    @Autowired
-    private VoucherTicketRepository voucherTicketRepo;
-    @Autowired
-    private VoucherService  voucherService;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final VoucherTicketRepository voucherTicketRepo;
+    private final VoucherService          voucherService;
+    private final ModelMapper             modelMapper;
+
+    public VoucherTicketServiceImpl(VoucherTicketRepository voucherTicketRepo, @Lazy VoucherService voucherService, ModelMapper modelMapper) {
+        this.voucherTicketRepo = voucherTicketRepo;
+        this.voucherService = voucherService;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public List<VoucherTicket> findAll() {
@@ -83,7 +85,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
             throw new AppException();
         }
         voucherTicketRepo.deleteById(ticketId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

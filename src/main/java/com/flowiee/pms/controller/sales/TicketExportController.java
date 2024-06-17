@@ -8,7 +8,7 @@ import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.sales.TicketExportService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
@@ -57,7 +57,7 @@ public class TicketExportController extends BaseController {
         try {
             return success(ticketExportService.save(order));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "ticket export"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "ticket export"), ex);
         }
     }
 
@@ -80,7 +80,7 @@ public class TicketExportController extends BaseController {
             throw new BadRequestException();
         }
         if ("COMPLETED".equals(ticketExportToDelete.get().getStatus())) {
-            throw new BadRequestException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         return success(ticketExportService.delete(ticketExportId));
     }

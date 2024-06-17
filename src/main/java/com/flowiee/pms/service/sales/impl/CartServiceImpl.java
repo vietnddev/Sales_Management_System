@@ -13,9 +13,8 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.PriceType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +25,17 @@ import java.util.Optional;
 
 @Service
 public class CartServiceImpl extends BaseService implements CartService {
-    @Autowired
-    private OrderCartRepository cartRepository;
-    @Autowired
-    private CartItemsService cartItemsService;
-    @Autowired
-    private CartItemsRepository cartItemsRepository;
-    @Autowired
-    private ProductVariantService productVariantService;
+    private final OrderCartRepository   cartRepository;
+    private final CartItemsService      cartItemsService;
+    private final CartItemsRepository   cartItemsRepository;
+    private final ProductVariantService productVariantService;
+
+    public CartServiceImpl(OrderCartRepository cartRepository, CartItemsService cartItemsService, CartItemsRepository cartItemsRepository, ProductVariantService productVariantService) {
+        this.cartRepository = cartRepository;
+        this.cartItemsService = cartItemsService;
+        this.cartItemsRepository = cartItemsRepository;
+        this.productVariantService = productVariantService;
+    }
 
     @Override
     public List<OrderCart> findCartByAccountId(Integer accountId) {
@@ -85,7 +87,7 @@ public class CartServiceImpl extends BaseService implements CartService {
         }
         cartRepository.deleteById(cartId);
         systemLogService.writeLogDelete(MODULE.PRODUCT.name(), "Xóa/Reset giỏ hàng", "Cart", "Xóa/Reset giỏ hàng", "cartId = " + cartId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

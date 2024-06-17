@@ -8,8 +8,8 @@ import com.flowiee.pms.repository.sales.CustomerContactRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +17,13 @@ import java.util.Optional;
 
 @Service
 public class CustomerContactServiceImpl extends BaseService implements CustomerContactService {
-    @Autowired
-    private CustomerContactRepository customerContactRepo;
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerContactRepository customerContactRepo;
+    private final CustomerService           customerService;
+
+    public CustomerContactServiceImpl(CustomerContactRepository customerContactRepo, @Lazy CustomerService customerService) {
+        this.customerContactRepo = customerContactRepo;
+        this.customerService = customerService;
+    }
 
     @Override
     public List<CustomerContact> findAll() {
@@ -65,7 +68,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
             throw new DataInUseException("This contact has been used!");
         }
         customerContactRepo.deleteById(contactId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

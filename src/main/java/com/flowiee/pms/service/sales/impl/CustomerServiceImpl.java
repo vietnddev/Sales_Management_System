@@ -2,6 +2,7 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
@@ -18,8 +19,7 @@ import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,16 +35,19 @@ import java.util.Optional;
 public class CustomerServiceImpl extends BaseService implements CustomerService {
     private static final String mainObjectName = "Customer";
 
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private CustomerContactRepository customerContactRepository;
-    @Autowired
-    private CustomerContactService customerContactService;
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private OrderRepository orderRepository;
+    private final CustomerRepository        customerRepository;
+    private final CustomerContactRepository customerContactRepository;
+    private final CustomerContactService    customerContactService;
+    private final OrderService              orderService;
+    private final OrderRepository           orderRepository;
+
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerContactRepository customerContactRepository, CustomerContactService customerContactService, OrderService orderService, OrderRepository orderRepository) {
+        this.customerRepository = customerRepository;
+        this.customerContactRepository = customerContactRepository;
+        this.customerContactService = customerContactService;
+        this.orderService = orderService;
+        this.orderRepository = orderRepository;
+    }
 
     @Override
     public List<CustomerDTO> findAll() {
@@ -203,12 +206,12 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             throw new BadRequestException("Customer not found!");
         }
         if (!orderService.findAll().isEmpty()) {
-            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         customerRepository.deleteById(id);
         systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_CUS_D.name(), mainObjectName, "Xóa khách hàng", customer.get().getCustomerName());
         logger.info("Deleted customer id={}", id);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     private void setContactDefault(List<CustomerDTO> customerDTOs) {

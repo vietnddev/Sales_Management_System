@@ -5,8 +5,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CartItemsService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,8 +14,11 @@ import java.util.Optional;
 
 @Service
 public class CartItemsServiceImpl extends BaseService implements CartItemsService {
-    @Autowired
-    private CartItemsRepository cartItemsRepository;
+    private final CartItemsRepository cartItemsRepository;
+
+    public CartItemsServiceImpl(CartItemsRepository cartItemsRepository) {
+        this.cartItemsRepository = cartItemsRepository;
+    }
 
     @Override
     public List<Items> findAll() {
@@ -61,7 +63,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
             throw new BadRequestException();
         }
         cartItemsRepository.deleteById(itemId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Transactional

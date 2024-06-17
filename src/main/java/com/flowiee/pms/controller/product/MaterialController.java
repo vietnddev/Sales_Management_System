@@ -6,7 +6,7 @@ import com.flowiee.pms.model.dto.MaterialDTO;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.product.MaterialService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.converter.MaterialConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,7 +37,7 @@ public class MaterialController extends BaseController {
             Page<Material> materials = materialService.findAll(pageSize, pageNum - 1, null, null, null, null, null, null);
             return success(materials.getContent(), pageNum, pageSize, materials.getTotalPages(), materials.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "material"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "material"), ex);
         }
     }
 
@@ -48,7 +48,7 @@ public class MaterialController extends BaseController {
         try {
             return success(MaterialConvert.convertToDTO(materialService.save(Material.fromMaterialDTO(materialDTO))));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "material"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "material"), ex);
         }
     }
 }

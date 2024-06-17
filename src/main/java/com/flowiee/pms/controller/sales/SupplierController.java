@@ -6,7 +6,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.sales.SupplierService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
@@ -40,7 +40,7 @@ public class SupplierController extends BaseController {
                 return success(suppliers.getContent(), 1, 0, suppliers.getTotalPages(), suppliers.getTotalElements());
             }
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "supplier"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "supplier"), ex);
         }
     }
 
@@ -51,7 +51,7 @@ public class SupplierController extends BaseController {
         try {
             return success(supplierService.save(supplier));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "supplier"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "supplier"), ex);
         }
     }
 
@@ -65,7 +65,7 @@ public class SupplierController extends BaseController {
             }
             return success(supplierService.update(supplier, supplierId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "supplier"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "supplier"), ex);
         }
     }
 

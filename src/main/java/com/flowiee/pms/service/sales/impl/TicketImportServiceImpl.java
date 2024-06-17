@@ -27,9 +27,9 @@ import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.repository.sales.TicketImportRepository;
 import com.flowiee.pms.service.sales.TicketImportService;
 
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,26 +42,29 @@ import java.util.*;
 
 @Service
 public class TicketImportServiceImpl extends BaseService implements TicketImportService {
-    @Autowired
-    private TicketImportRepository ticketImportRepo;
-    @Autowired @Lazy
-    private ProductVariantService productVariantService;
-    @Autowired
-    private ProductDetailTempRepository productVariantTempRepo;
-    @Autowired
-    private MaterialService materialService;
-    @Autowired
-    private MaterialTempRepository materialTempRepo;
-    @Autowired
-    private ProductQuantityService productQuantityService;
-    @Autowired
-    private NotificationService notificationService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private GroupAccountService groupAccountService;
-    @Autowired
-    private AccountService accountService;
+    private final TicketImportRepository      ticketImportRepo;
+    private final ProductVariantService       productVariantService;
+    private final ProductDetailTempRepository productVariantTempRepo;
+    private final MaterialService             materialService;
+    private final MaterialTempRepository      materialTempRepo;
+    private final ProductQuantityService      productQuantityService;
+    private final NotificationService         notificationService;
+    private final RoleService                 roleService;
+    private final GroupAccountService         groupAccountService;
+    private final AccountService              accountService;
+
+    public TicketImportServiceImpl(TicketImportRepository ticketImportRepo, @Lazy ProductVariantService productVariantService, ProductDetailTempRepository productVariantTempRepo, MaterialService materialService, MaterialTempRepository materialTempRepo, ProductQuantityService productQuantityService, NotificationService notificationService, RoleService roleService, GroupAccountService groupAccountService, AccountService accountService) {
+        this.ticketImportRepo = ticketImportRepo;
+        this.productVariantService = productVariantService;
+        this.productVariantTempRepo = productVariantTempRepo;
+        this.materialService = materialService;
+        this.materialTempRepo = materialTempRepo;
+        this.productQuantityService = productQuantityService;
+        this.notificationService = notificationService;
+        this.roleService = roleService;
+        this.groupAccountService = groupAccountService;
+        this.accountService = accountService;
+    }
 
     @Override
     public List<TicketImport> findAll() {
@@ -136,7 +139,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             throw new BadRequestException();
         }
         if ("COMPLETED".equals(ticketImportToUpdate.get().getStatus()) || "CANCEL".equals(ticketImportToUpdate.get().getStatus())) {
-            throw new BadRequestException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         ticketImport.setId(entityId);
         TicketImport ticketImportUpdated = ticketImportRepo.save(ticketImport);
@@ -163,7 +166,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             throw new BadRequestException("Ticket import not found!");
         }
         ticketImportRepo.deleteById(entityId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

@@ -5,13 +5,14 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.model.dto.ProductVariantTempDTO;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils;
@@ -40,37 +41,25 @@ public class ProductVariantController extends BaseController {
     @GetMapping("/variant/all")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductVariantDTO>> findProductVariants() {
-        try {
-            return success(productVariantService.findAll());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"), ex);
-        }
+        return success(productVariantService.findAll());
     }
 
     @Operation(summary = "Find all variants of product")
     @GetMapping("/{productId}/variants")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
-        try {
-            return success(productVariantService.findAll(-1, -1, productId, null, null, null, null).getContent());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"), ex);
-        }
+        return success(productVariantService.findAll(-1, -1, productId, null, null, null, null).getContent());
     }
 
     @Operation(summary = "Find detail product variant")
     @GetMapping("/variant/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Integer productVariantId) {
-        try {
-            Optional<ProductVariantDTO> productVariant = productVariantService.findById(productVariantId);
-            if (productVariant.isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(productVariant.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
+        Optional<ProductVariantDTO> productVariant = productVariantService.findById(productVariantId);
+        if (productVariant.isEmpty()) {
+            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
+        return success(productVariant.get());
     }
 
     @Operation(summary = "Create product variant")
@@ -80,7 +69,7 @@ public class ProductVariantController extends BaseController {
         try {
             return success(productVariantService.save(productVariantDTO));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "productVariant"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "productVariant"), ex);
         }
     }
 
@@ -91,7 +80,7 @@ public class ProductVariantController extends BaseController {
         try {
             return success(productVariantService.update(productVariant, productVariantId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 
@@ -102,7 +91,7 @@ public class ProductVariantController extends BaseController {
         try {
             return success(productVariantService.delete(productVariantId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.DELETE_ERROR_OCCURRED, "product"), ex);
+            throw new AppException(String.format(ErrorCode.DELETE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 
@@ -116,7 +105,7 @@ public class ProductVariantController extends BaseController {
             }
             return success(productHistoryService.findPriceChange(productVariantId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product history"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"), ex);
         }
     }
 
@@ -132,7 +121,7 @@ public class ProductVariantController extends BaseController {
             }
             return success(productPriceService.updateProductPrice(productVariantId, originalPrice, discountPrice));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "price"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "price"), ex);
         }
     }
 
@@ -146,7 +135,7 @@ public class ProductVariantController extends BaseController {
         try {
             return success(productVariantService.isProductVariantExists(productId, colorId, sizeId, fabricTypeId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 
@@ -157,7 +146,7 @@ public class ProductVariantController extends BaseController {
         try {
             return success(productVariantService.findStorageHistory(productVariantId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 }

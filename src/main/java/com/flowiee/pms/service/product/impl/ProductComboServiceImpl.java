@@ -8,8 +8,7 @@ import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.product.ProductComboRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductComboService;
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +22,11 @@ import java.util.Optional;
 public class ProductComboServiceImpl extends BaseService implements ProductComboService {
     private static final String mainObjectName = "ProductCombo";
 
-    @Autowired
-    private ProductComboRepository productComboRepository;
+    private final ProductComboRepository productComboRepository;
+
+    public ProductComboServiceImpl(ProductComboRepository productComboRepository) {
+        this.productComboRepository = productComboRepository;
+    }
 
     @Override
     public Page<ProductCombo> findAll(int pageSize, int pageNum) {
@@ -71,6 +73,6 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
         }
         productComboRepository.deleteById(comboId);
         systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_CBO_C.name(), mainObjectName, "Cập nhật combo sản phẩm", comboBefore.get().getComboName());
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

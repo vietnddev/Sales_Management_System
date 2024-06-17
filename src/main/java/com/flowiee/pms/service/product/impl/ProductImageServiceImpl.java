@@ -16,7 +16,6 @@ import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,14 +31,17 @@ import java.util.Optional;
 
 @Service
 public class ProductImageServiceImpl extends BaseService implements ProductImageService {
-    @Autowired
-    private FileStorageRepository fileRepository;
-    @Autowired
-    private ProductVariantService productVariantService;
-    @Autowired
-    private TicketExportService ticketExportService;
-    @Autowired
-    private TicketImportService ticketImportService;
+    private final FileStorageRepository fileRepository;
+    private final ProductVariantService productVariantService;
+    private final TicketExportService   ticketExportService;
+    private final TicketImportService   ticketImportService;
+
+    public ProductImageServiceImpl(FileStorageRepository fileRepository, ProductVariantService productVariantService, TicketExportService ticketExportService, TicketImportService ticketImportService) {
+        this.fileRepository = fileRepository;
+        this.productVariantService = productVariantService;
+        this.ticketExportService = ticketExportService;
+        this.ticketImportService = ticketImportService;
+    }
 
     @Override
     public List<FileStorage> getImageOfProduct(Integer productId) {
@@ -190,7 +192,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         fileToChange.setCustomizeName(fileAttached.getOriginalFilename());
         fileToChange.setStorageName(currentTime + "_" + fileAttached.getOriginalFilename());
         fileToChange.setFileSize(fileAttached.getSize());
-        fileToChange.setExtension(CommonUtils.getFileExtension(fileAttached.getOriginalFilename()));
+        fileToChange.setExtension(FileUtils.getFileExtension(fileAttached.getOriginalFilename()));
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")));
         fileToChange.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));

@@ -5,7 +5,7 @@ import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.system.NotificationService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class NotificationController extends BaseController {
         try {
             return success(notificationService.findAll());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "notification"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "notification"), ex);
         }
     }
 
@@ -42,7 +42,7 @@ public class NotificationController extends BaseController {
         try {
             return success(notificationService.findAllByReceiveId(pageSize, pageNum, totalRecord, accountId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "notification"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "notification"), ex);
         }
     }
 }

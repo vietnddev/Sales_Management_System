@@ -10,7 +10,7 @@ import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.service.system.RoleService;
 
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -86,7 +86,7 @@ public class AccountRoleServiceImpl implements RoleService {
     @Override
     public String updatePermission(String moduleKey, String actionKey, Integer accountId) {
         accountRoleRepo.save(new AccountRole(moduleKey, actionKey, accountId, null));
-        return MessageUtils.UPDATE_SUCCESS;
+        return MessageCode.UPDATE_SUCCESS.getDescription();
     }
 
     @Override
@@ -100,7 +100,7 @@ public class AccountRoleServiceImpl implements RoleService {
             throw new IllegalArgumentException("groupId and accountId cannot be null");
         }
         accountRoleRepo.deleteAll(groupId, accountId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

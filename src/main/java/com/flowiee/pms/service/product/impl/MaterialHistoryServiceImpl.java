@@ -6,8 +6,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.product.MaterialHistoryRepository;
 import com.flowiee.pms.service.product.MaterialHistoryService;
 
-import com.flowiee.pms.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,8 +16,11 @@ import java.util.Optional;
 
 @Service
 public class MaterialHistoryServiceImpl implements MaterialHistoryService {
-    @Autowired
-    private MaterialHistoryRepository materialHistoryRepo;
+    private final MaterialHistoryRepository materialHistoryRepo;
+
+    public MaterialHistoryServiceImpl(MaterialHistoryRepository materialHistoryRepo) {
+        this.materialHistoryRepo = materialHistoryRepo;
+    }
 
     @Override
     public List<MaterialHistory> findAll() {
@@ -53,7 +55,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
             throw new BadRequestException();
         }
         materialHistoryRepo.deleteById(entityId);
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

@@ -20,11 +20,9 @@ import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.MessageUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.utils.converter.ProductVariantConvert;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -42,16 +40,19 @@ import java.util.Optional;
 public class ProductVariantServiceImpl extends BaseService implements ProductVariantService {
     private static final String mainObjectName = "ProductVariant";
 
-    @Autowired
-    private ProductDetailRepository productVariantRepo;
-    @Autowired @Lazy
-    private TicketImportService ticketImportService;
-    @Autowired
-    private TicketExportService ticketExportService;
-    @Autowired
-    private ProductHistoryService productHistoryService;
-    @Autowired
-    private ProductDetailTempRepository productVariantTempRepo;
+    private final ProductDetailRepository     productVariantRepo;
+    private final TicketImportService         ticketImportService;
+    private final TicketExportService         ticketExportService;
+    private final ProductHistoryService       productHistoryService;
+    private final ProductDetailTempRepository productVariantTempRepo;
+
+    public ProductVariantServiceImpl(ProductDetailRepository productVariantRepo, @Lazy TicketImportService ticketImportService, TicketExportService ticketExportService, ProductHistoryService productHistoryService, ProductDetailTempRepository productVariantTempRepo) {
+        this.productVariantRepo = productVariantRepo;
+        this.ticketImportService = ticketImportService;
+        this.ticketExportService = ticketExportService;
+        this.productHistoryService = productHistoryService;
+        this.productVariantTempRepo = productVariantTempRepo;
+    }
 
     @Override
     public List<ProductVariantDTO> findAll() {
@@ -133,7 +134,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             logger.info("Insert productVariant success! {}", pVariant);
             return ProductVariantConvert.entityToDTO(productDetailSaved);
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product variant"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product variant"), ex);
         }
     }
 
@@ -181,7 +182,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             productVariantRepo.deleteById(productVariantId);
             systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), mainObjectName, "Xóa biến thể sản phẩm", productDetailToDelete.get().getVariantName());
             logger.info("Delete productVariant success! {}", productDetailToDelete);
-            return MessageUtils.DELETE_SUCCESS;
+            return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {
             throw new AppException("Delete productVariant fail! id=" + productVariantId, ex);
         }

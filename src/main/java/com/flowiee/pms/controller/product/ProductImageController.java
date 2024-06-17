@@ -10,7 +10,7 @@ import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.system.FileStorageService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -51,7 +51,7 @@ public class ProductImageController extends BaseController {
             }
             return success(productImageService.saveImageProduct(file, productId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "image"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "image"), ex);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,7 +70,7 @@ public class ProductImageController extends BaseController {
             }
             return success(productImageService.saveImageProductVariant(file, productVariantId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "image"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "image"), ex);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +86,7 @@ public class ProductImageController extends BaseController {
             }
             return success(productImageService.setImageActiveOfProduct(productId, imageId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "update image of product"), ex);
         }
     }
 
@@ -103,7 +103,7 @@ public class ProductImageController extends BaseController {
             }
             return success(productImageService.changeImageProduct(file, imageId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "update image of product"), ex);
         }
     }
 
@@ -117,7 +117,7 @@ public class ProductImageController extends BaseController {
             }
             return success(productImageService.setImageActiveOfProductVariant(productVariantId, imageId));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "update image of product"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "update image of product"), ex);
         }
     }
 
@@ -133,7 +133,7 @@ public class ProductImageController extends BaseController {
             }
             return success(productImageService.changeImageProduct(fileUpload, imageId));
         } catch (Exception ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "contact"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
     }
 
@@ -145,7 +145,7 @@ public class ProductImageController extends BaseController {
             List<FileStorage> images = productImageService.getImageOfProduct(productId);
             return success(FileDTO.fromFileStorages(images), 1, 0, 1, images.size());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "gallery"), ex);
         }
     }
 }

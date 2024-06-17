@@ -3,13 +3,13 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
+import com.flowiee.pms.exception.NotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.product.*;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,7 +56,7 @@ public class ProductController extends BaseController {
             Page<ProductDTO> productPage = productInfoService.findAll(pageSize, pageNum - 1, txtSearch, pBrand, pProductType, pColor, pSize, pUnit, null);
             return success(productPage.getContent(), pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 
@@ -64,15 +64,11 @@ public class ProductController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
-        try {
-            Optional<ProductDTO> product = productInfoService.findById(productId);
-            if (product.isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(product.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product"), ex);
+        Optional<ProductDTO> product = productInfoService.findById(productId);
+        if (product.isEmpty()) {
+            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
+        return success(product.get());
     }
 
     @Operation(summary = "Create product")
@@ -82,7 +78,7 @@ public class ProductController extends BaseController {
         try {
             return success(productInfoService.save(product));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.CREATE_ERROR_OCCURRED, "product"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 
@@ -93,7 +89,7 @@ public class ProductController extends BaseController {
         try {
             return success(ProductConvert.convertToDTO(productInfoService.update(product, productId)));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.UPDATE_ERROR_OCCURRED, "product"), ex);
+            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 
@@ -108,13 +104,9 @@ public class ProductController extends BaseController {
     @GetMapping(value = "/{productId}/history")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
-        try {
-            if (ObjectUtils.isEmpty(productInfoService.findById(productId))) {
-                throw new BadRequestException();
-            }
-            return success(productHistoryService.findByProduct(productId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product history"), ex);
+        if (ObjectUtils.isEmpty(productInfoService.findById(productId))) {
+            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
+        return success(productHistoryService.findByProduct(productId));
     }
 }

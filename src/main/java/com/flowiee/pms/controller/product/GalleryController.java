@@ -5,7 +5,7 @@ import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductImageService;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,11 @@ import java.util.List;
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Gallery API", description = "Gallery management")
 public class GalleryController extends BaseController {
-    @Autowired
-    private ProductImageService productImageService;
+    private final ProductImageService productImageService;
+
+    public GalleryController(ProductImageService productImageService) {
+        this.productImageService = productImageService;
+    }
 
     @Operation(summary = "Find images of all products")
     @GetMapping("/images/all")
@@ -30,7 +33,7 @@ public class GalleryController extends BaseController {
         try {
             return success(productImageService.getImageOfProduct(null));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "gallery"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "gallery"), ex);
         }
     }
 }

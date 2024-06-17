@@ -13,6 +13,7 @@ import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.*;
 
+import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,7 +64,7 @@ public class ProductControllerView extends BaseController {
             modelAndView.addObject("detailProducts", product.get());
             return baseView(modelAndView);
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(MessageUtils.SEARCH_ERROR_OCCURRED, "product variant"), ex);
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product variant"), ex);
         }
     }
 

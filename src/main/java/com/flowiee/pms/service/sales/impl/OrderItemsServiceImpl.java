@@ -11,9 +11,8 @@ import com.flowiee.pms.service.sales.OrderHistoryService;
 import com.flowiee.pms.service.sales.OrderItemsService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.MessageUtils;
+import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,12 +24,15 @@ import java.util.Optional;
 public class OrderItemsServiceImpl extends BaseService implements OrderItemsService {
     private static final String mainObjectName = "OrderItems";
 
-    @Autowired
-    private OrderDetailRepository orderDetailRepo;
-    @Autowired
-    private SystemLogService systemLogService;
-    @Autowired
-    private OrderHistoryService orderHistoryService;
+    private final OrderDetailRepository orderDetailRepo;
+    private final SystemLogService      systemLogService;
+    private final OrderHistoryService   orderHistoryService;
+
+    public OrderItemsServiceImpl(OrderDetailRepository orderDetailRepo, SystemLogService systemLogService, OrderHistoryService orderHistoryService) {
+        this.orderDetailRepo = orderDetailRepo;
+        this.systemLogService = systemLogService;
+        this.orderHistoryService = orderHistoryService;
+    }
 
     @Override
     public List<OrderDetail> findAll() {
@@ -96,7 +98,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             orderDetailRepo.deleteById(orderDetailId);
             systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), mainObjectName, "Xóa item of đơn hàng", orderDetail.toString());
             logger.info("{}: Xóa item of đơn hàng {}", OrderServiceImpl.class.getName(), orderDetail.toString());
-            return MessageUtils.DELETE_SUCCESS;
+            return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {
             throw new AppException(ex);
         }

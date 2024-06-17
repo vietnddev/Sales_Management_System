@@ -9,8 +9,7 @@ import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.repository.category.CategoryHistoryRepository;
 import com.flowiee.pms.repository.category.CategoryRepository;
@@ -26,14 +25,12 @@ import com.flowiee.pms.service.system.ImportService;
 import com.flowiee.pms.service.system.NotificationService;
 import com.flowiee.pms.utils.*;
 
-import com.flowiee.pms.utils.constants.CategoryType;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -62,7 +59,6 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     private final FileStorageRepository fileStorageRepo;
     private final MaterialService materialService;
 
-    @Autowired
     public CategoryServiceImpl(ImportService importService, CategoryRepository categoryRepo, ProductInfoService productInfoService,
                                MaterialService materialService, NotificationService notificationService, AppImportRepository appImportRepo,
                                FileStorageService fileStorageService, FileStorageRepository fileStorageRepo, CategoryHistoryService categoryHistoryService,
@@ -131,27 +127,31 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
             throw new BadRequestException();
         }
         if (categoryInUse(categoryId)) {
-            throw new DataInUseException(MessageUtils.ERROR_DATA_LOCKED);
+            throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         categoryHistoryRepository.deleteAllByCategory(categoryId);
         categoryRepo.deleteById(categoryId);
         systemLogService.writeLogDelete(MODULE.CATEGORY.name(), ACTION.CTG_D.name(), mainObjectName, "Xóa danh mục", categoryToDelete.get().getName());
-        return MessageUtils.DELETE_SUCCESS;
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
     public List<Category> findRootCategory() {
-        List<Category> roots = categoryRepo.findRootCategory();
-        List<Object[]> recordsOfEachType = categoryRepo.totalRecordsOfEachType();
-        for (Category c : roots) {
-            for (Object[] o : recordsOfEachType) {
-                if (c.getType().equals(o[0])) {
-                    c.setTotalSubRecords(Integer.parseInt(String.valueOf(o[1])));
-                    break;
+        try {
+            List<Category> roots = categoryRepo.findRootCategory();
+            List<Object[]> recordsOfEachType = categoryRepo.totalRecordsOfEachType();
+            for (Category c : roots) {
+                for (Object[] o : recordsOfEachType) {
+                    if (c.getType().equals(o[0])) {
+                        c.setTotalSubRecords(Integer.parseInt(String.valueOf(o[1])));
+                        break;
+                    }
                 }
             }
+            return roots;
+        } catch (RuntimeException ex) {
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"), ex);
         }
-        return roots;
     }
 
     @Override
@@ -362,7 +362,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
             notification.setImportId(appImportRepo.findByStartTime(flowieeImport.getStartTime()).getId());
             notificationService.save(notification);
 
-            return MessageUtils.CREATE_SUCCESS;
+            return MessageCode.IMPORT_SUCCESS.getDescription();
         } catch (Exception e) {
             throw new AppException(e);
         }

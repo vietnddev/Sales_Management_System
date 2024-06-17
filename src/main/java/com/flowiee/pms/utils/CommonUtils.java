@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.*;
 import java.time.Clock;
@@ -71,17 +70,6 @@ public class CommonUtils {
             map.put(c.getKey(), c.getName());
         }
         return map.get(key);
-    }
-
-    public static String getFileExtension(String fileName) {
-        String extension = "";
-        if (ObjectUtils.isNotEmpty(fileName)) {
-            int lastIndex = fileName.lastIndexOf('.');
-            if (lastIndex > 0 && lastIndex < fileName.length() - 1) {
-                extension = fileName.substring(lastIndex + 1);
-            }
-        }
-        return extension;
     }
 
     public static String getPathDirectory(MODULE systemModule) {
