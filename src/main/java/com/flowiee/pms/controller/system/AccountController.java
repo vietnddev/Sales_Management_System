@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.AccountService;
@@ -45,15 +46,11 @@ public class AccountController extends BaseController {
     @GetMapping("/{accountId}")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
     public AppResponse<Account> findDetailAccount(@PathVariable("accountId") Integer accountId) {
-        try {
-            Optional<Account> account = accountService.findById(accountId);
-            if (account.isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(account.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "account"), ex);
+        Optional<Account> account = accountService.findById(accountId);
+        if (account.isEmpty()) {
+            throw new ResourceNotFoundException("Account not found!");
         }
+        return success(account.get());
     }
 
     @Operation(summary = "Create account")
@@ -77,14 +74,7 @@ public class AccountController extends BaseController {
     @PutMapping(value = "/update/{accountId}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
     public AppResponse<Account> update(@RequestBody Account account, @PathVariable("accountId") Integer accountId) {
-        try {
-            if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(accountService.update(account, accountId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "account"), ex);
-        }
+        return success(accountService.update(account, accountId));
     }
 
     @PutMapping("/update-permission/{accountId}")

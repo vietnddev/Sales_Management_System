@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
@@ -16,6 +17,7 @@ import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.LogUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.context.annotation.Lazy;
@@ -30,8 +32,6 @@ import java.util.*;
 
 @Service
 public class VoucherInfoServiceImpl extends BaseService implements VoucherService {
-    private static final String mainObjectName = "VoucherInfo";
-
     private final VoucherInfoRepository voucherInfoRepo;
     private final VoucherApplyService   voucherApplyService;
     private final VoucherTicketService  voucherTicketService;
@@ -123,7 +123,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             }
             VoucherInfoDTO dto = modelMapper.map(voucherSaved, VoucherInfoDTO.class);
             dto.setStatus(genVoucherStatus(dto.getStartTime(), dto.getEndTime()));
-            systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_VOU_C.name(), mainObjectName, "Thêm mới voucher", dto.getTitle());
+            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_VOU_C, MasterObject.VoucherInfo, "Thêm mới voucher", dto.getTitle());
             return dto;
         } catch (RuntimeException ex) {
             throw new AppException(ex);
@@ -133,15 +133,16 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     @Override
     public VoucherInfoDTO update(VoucherInfoDTO voucherInfo, Integer voucherId) {
         try {
-            Optional<VoucherInfoDTO> voucherInfoBefore = this.findById(voucherId);
-            if (voucherInfoBefore.isEmpty()) {
-                throw new BadRequestException();
+            Optional<VoucherInfoDTO> voucherOpt = this.findById(voucherId);
+            if (voucherOpt.isEmpty()) {
+                throw new ResourceNotFoundException("Voucher not found!");
             }
+            VoucherInfoDTO voucherInfoBefore = ObjectUtils.clone(voucherOpt.get());
             voucherInfo.setId(voucherId);
             VoucherInfo voucherInfoUpdated = voucherInfoRepo.save(voucherInfo);
 
             Map<String, Object[]> logChanges = LogUtils.logChanges(voucherInfoBefore, voucherInfoUpdated);
-            systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_VOU_U.name(), mainObjectName, "Cập nhật voucher " + voucherInfoUpdated.getTitle(), logChanges);
+            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_VOU_U, MasterObject.VoucherInfo, "Cập nhật voucher " + voucherInfoUpdated.getTitle(), logChanges);
 
             return modelMapper.map(voucherInfoUpdated, VoucherInfoDTO.class);
         } catch (RuntimeException ex) {
@@ -159,7 +160,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         voucherInfoRepo.deleteById(voucherId);
-        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_VOU_D.name(), mainObjectName, "Xóa voucher", voucherInfoBefore.get().getTitle());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_VOU_D, MasterObject.VoucherInfo, "Xóa voucher", voucherInfoBefore.get().getTitle());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 

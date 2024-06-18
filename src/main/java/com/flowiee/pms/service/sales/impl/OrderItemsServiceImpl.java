@@ -11,6 +11,7 @@ import com.flowiee.pms.service.sales.OrderHistoryService;
 import com.flowiee.pms.service.sales.OrderItemsService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,6 @@ import java.util.Optional;
 
 @Service
 public class OrderItemsServiceImpl extends BaseService implements OrderItemsService {
-    private static final String mainObjectName = "OrderItems";
-
     private final OrderDetailRepository orderDetailRepo;
     private final SystemLogService      systemLogService;
     private final OrderHistoryService   orderHistoryService;
@@ -56,7 +55,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
                 orderDetail.setExtraDiscount(BigDecimal.ZERO);
             }
             OrderDetail orderDetailSaved = orderDetailRepo.save(orderDetail);
-            systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), mainObjectName, "Thêm mới item vào đơn hàng", orderDetail.toString());
+            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.OrderDetail, "Thêm mới item vào đơn hàng", orderDetail.toString());
             logger.info("{}: Thêm mới item vào đơn hàng {}", OrderServiceImpl.class.getName(), orderDetail.toString());
             return orderDetailSaved;
         } catch (RuntimeException ex) {
@@ -79,7 +78,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             String logTitle = "Cập nhật đơn hàng " + orderItemUpdated.getOrder().getCode();
             Map<String, Object[]> logChanges = LogUtils.logChanges(orderItemBefore, orderItemUpdated);
             orderHistoryService.save(logChanges, logTitle, orderItemBefore.getOrder().getId(), orderItemBefore.getId());
-            systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), mainObjectName, logTitle, logChanges);
+            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.OrderDetail, logTitle, logChanges);
             logger.info("{}: Cập nhật item of đơn hàng {}", OrderServiceImpl.class.getName(), orderItemUpdated.toString());
 
             return orderItemUpdated;
@@ -96,7 +95,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
         }
         try {
             orderDetailRepo.deleteById(orderDetailId);
-            systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), mainObjectName, "Xóa item of đơn hàng", orderDetail.toString());
+            systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.OrderDetail, "Xóa item of đơn hàng", orderDetail.toString());
             logger.info("{}: Xóa item of đơn hàng {}", OrderServiceImpl.class.getName(), orderDetail.toString());
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {

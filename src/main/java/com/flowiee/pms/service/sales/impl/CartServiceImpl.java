@@ -4,7 +4,7 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.repository.sales.OrderCartRepository;
@@ -13,8 +13,6 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 
-import com.flowiee.pms.utils.constants.MessageCode;
-import com.flowiee.pms.utils.constants.PriceType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,7 +84,7 @@ public class CartServiceImpl extends BaseService implements CartService {
             throw new BadRequestException();
         }
         cartRepository.deleteById(cartId);
-        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), "Xóa/Reset giỏ hàng", "Cart", "Xóa/Reset giỏ hàng", "cartId = " + cartId);
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CART_C, MasterObject.Cart, "Xóa/Reset giỏ hàng", "cartId = " + cartId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 

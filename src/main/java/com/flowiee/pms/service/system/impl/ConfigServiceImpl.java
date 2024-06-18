@@ -14,6 +14,8 @@ import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.service.system.LanguageService;
 import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.CategoryType;
+import com.flowiee.pms.utils.constants.MasterObject;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +26,6 @@ import java.util.Optional;
 
 @Service
 public class ConfigServiceImpl extends BaseService implements ConfigService {
-    private static final String mainObjectName = "SystemConfig";
-
     private final ConfigRepository sysConfigRepo;
     private final CategoryService  categoryService;
     private final LanguageService languageService;
@@ -49,15 +49,19 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
 
     @Override
     public SystemConfig update(SystemConfig systemConfig, Integer id) {
-        Optional<SystemConfig> configBefore = this.findById(id);
-        if (configBefore.isEmpty()) {
+        Optional<SystemConfig> configOpt = this.findById(id);
+        if (configOpt.isEmpty()) {
             throw new BadRequestException();
         }
+        SystemConfig configBefore = ObjectUtils.clone(configOpt.get());
+
         systemConfig.setId(id);
         SystemConfig configUpdated = sysConfigRepo.save(systemConfig);
+
         Map<String, Object[]> logChanges = LogUtils.logChanges(configBefore, configUpdated);
-        systemLogService.writeLogUpdate(MODULE.SYSTEM.name(), ACTION.SYS_CNF_U.name(), mainObjectName, "Cập nhật cấu hình hệ thống", logChanges);
-        logger.info("Update config success! {}", systemConfig.toString());
+        systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_CNF_U, MasterObject.SystemConfig, "Cập nhật cấu hình hệ thống", logChanges);
+        logger.info("Update config success! {}", configUpdated.getName());
+
         return configUpdated;
     }
 

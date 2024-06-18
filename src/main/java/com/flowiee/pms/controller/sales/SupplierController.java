@@ -3,13 +3,11 @@ package com.flowiee.pms.controller.sales;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.Supplier;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.sales.SupplierService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -59,14 +57,7 @@ public class SupplierController extends BaseController {
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.updateSupplier(true)")
     public AppResponse<Supplier> updateSupplier(@RequestBody Supplier supplier, @PathVariable("id") Integer supplierId) {
-        try {
-            if (ObjectUtils.isEmpty(supplierService.findById(supplierId))) {
-                throw new BadRequestException();
-            }
-            return success(supplierService.update(supplier, supplierId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "supplier"), ex);
-        }
+        return success(supplierService.update(supplier, supplierId));
     }
 
     @Operation(summary = "Xóa nhà cung cấp")

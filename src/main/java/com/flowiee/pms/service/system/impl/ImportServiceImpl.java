@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.entity.system.FlowieeImport;
+import com.flowiee.pms.entity.system.FileImportHistory;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.system.AppImportRepository;
 import com.flowiee.pms.service.BaseService;
@@ -21,30 +21,30 @@ public class ImportServiceImpl extends BaseService implements ImportService {
     }
 
     @Override
-    public List<FlowieeImport> findAll() {
+    public List<FileImportHistory> findAll() {
         return appImportRepository.findAll();
     }
 
     @Override
-    public List<FlowieeImport> findByAccountId(Integer accountId) {
+    public List<FileImportHistory> findByAccountId(Integer accountId) {
         return appImportRepository.findByAccountId(accountId);
     }
 
     @Override
-    public Optional<FlowieeImport> findById(Integer importId) {
+    public Optional<FileImportHistory> findById(Integer importId) {
         return appImportRepository.findById(importId);
     }
 
     @Override
-    public FlowieeImport save(FlowieeImport flowieeImport) {
-        if (flowieeImport == null) {
+    public FileImportHistory save(FileImportHistory fileImportHistory) {
+        if (fileImportHistory == null) {
             throw new BadRequestException();
         }
-        return appImportRepository.save(flowieeImport);
+        return appImportRepository.save(fileImportHistory);
     }
 
     @Override
-    public FlowieeImport update(FlowieeImport entity, Integer entityId) {
+    public FileImportHistory update(FileImportHistory entity, Integer entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
@@ -54,7 +54,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
 
     @Override
     public String delete(Integer entityId) {
-        Optional<FlowieeImport> fImport = this.findById(entityId);
+        Optional<FileImportHistory> fImport = this.findById(entityId);
         if (fImport.isEmpty()) {
             throw new BadRequestException();
         }

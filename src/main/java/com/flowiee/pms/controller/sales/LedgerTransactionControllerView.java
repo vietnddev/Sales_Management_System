@@ -2,7 +2,7 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.LedgerTransaction;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.sales.LedgerPaymentService;
 import com.flowiee.pms.service.sales.LedgerReceiptService;
@@ -52,7 +52,7 @@ public class LedgerTransactionControllerView extends BaseController {
     public ModelAndView findTransactionDetail(@PathVariable("id") Integer tranId) {
         Optional<LedgerTransaction> transaction = ledgerReceiptService.findById(tranId);
         if (transaction.isEmpty()) {
-            throw new NotFoundException("Ledger receipt not found!");
+            throw new ResourceNotFoundException("Ledger receipt not found!");
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SLS_LEDGER_TRANS_DETAIL);
         modelAndView.addObject("tranId", tranId);

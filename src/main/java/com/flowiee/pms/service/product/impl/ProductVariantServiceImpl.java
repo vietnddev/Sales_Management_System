@@ -7,6 +7,8 @@ import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.model.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
@@ -38,8 +40,6 @@ import java.util.Optional;
 
 @Service
 public class ProductVariantServiceImpl extends BaseService implements ProductVariantService {
-    private static final String mainObjectName = "ProductVariant";
-
     private final ProductDetailRepository     productVariantRepo;
     private final TicketImportService         ticketImportService;
     private final TicketExportService         ticketExportService;
@@ -130,7 +130,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                 productVariantTempRepo.save(productVariantTemp);
             }
 
-            systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), mainObjectName, "Thêm mới biến thể sản phẩm", pVariant.toStringInsert());
+            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Thêm mới biến thể sản phẩm", pVariant.toStringInsert());
             logger.info("Insert productVariant success! {}", pVariant);
             return ProductVariantConvert.entityToDTO(productDetailSaved);
         } catch (RuntimeException ex) {
@@ -161,9 +161,12 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             ProductDetail productVariantUpdated = productVariantRepo.save(productToUpdate);
 
             String logTitle = "Cập nhật thông tin sản phẩm: " + productVariantUpdated.getVariantName();
-            Map<String, Object[]> logChanges = LogUtils.logChanges(productBeforeUpdate, productVariantUpdated);
-            productHistoryService.save(logChanges, logTitle, productVariantUpdated.getProduct().getId(), productVariantUpdated.getId(), null);
-            systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), mainObjectName, logTitle, logChanges);
+            //Map<String, Object[]> logChanges = LogUtils.logChanges(productBeforeUpdate, productVariantUpdated);
+
+            ChangeLog changeLog = LogUtils.logChanges2(productBeforeUpdate, productVariantUpdated);
+
+            productHistoryService.save(changeLog.getLogChanges(), logTitle, productVariantUpdated.getProduct().getId(), productVariantUpdated.getId(), null);
+            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, logTitle, changeLog.getOldValue(), changeLog.getNewValue());
             logger.info("Update productVariant success! {}", productVariantUpdated);
 
             return ProductVariantConvert.entityToDTO(productVariantUpdated);
@@ -176,11 +179,11 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     public String delete(Integer productVariantId) {
         Optional<ProductVariantDTO> productDetailToDelete = this.findById(productVariantId);
         if (productDetailToDelete.isEmpty()) {
-            throw new BadRequestException();
+            throw new ResourceNotFoundException("Product variant not found!");
         }
         try {
             productVariantRepo.deleteById(productVariantId);
-            systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_PRD_U.name(), mainObjectName, "Xóa biến thể sản phẩm", productDetailToDelete.get().getVariantName());
+            systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Xóa biến thể sản phẩm", productDetailToDelete.get().getVariantName());
             logger.info("Delete productVariant success! {}", productDetailToDelete);
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {

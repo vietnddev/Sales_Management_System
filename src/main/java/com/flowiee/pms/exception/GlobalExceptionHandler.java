@@ -18,12 +18,12 @@ public class GlobalExceptionHandler extends BaseController {
     }
 
     @ExceptionHandler
-    public ModelAndView exceptionHandler(NotFoundException ex) {
+    public ResponseEntity<AppResponse<Object>> exceptionHandler(ResourceNotFoundException ex) {
         logger.error(ex.getMessage(), ex);
         ErrorModel error = new ErrorModel(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
         modelAndView.addObject("error", error);
-        return baseView(modelAndView);
+        return ResponseEntity.badRequest().body(fail(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
     @ExceptionHandler

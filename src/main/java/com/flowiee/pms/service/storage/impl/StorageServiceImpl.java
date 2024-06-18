@@ -3,16 +3,13 @@ package com.flowiee.pms.service.storage.impl;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.ErrorCode;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.repository.storage.StorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.LogUtils;
-import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.converter.StorageConvert;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +27,6 @@ import java.util.*;
 
 @Service
 public class StorageServiceImpl extends BaseService implements StorageService {
-    private static final String mainObjectName = "Storage";
     private final StorageRepository storageRepository;
 
     @Autowired
@@ -55,6 +51,9 @@ public class StorageServiceImpl extends BaseService implements StorageService {
 
     @Override
     public Page<StorageItems> findStorageItems(int pageSize, int pageNum, Integer storageId, String searchText) {
+        Optional<StorageDTO> storage = this.findById(storageId);
+        if (storage.isEmpty())
+            throw new BadRequestException("Storage not found");
         Pageable pageable = Pageable.unpaged();
         if (pageNum >= 0 && pageSize >= 0) {
             pageable = PageRequest.of(pageNum, pageSize);
@@ -118,7 +117,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
         Storage storageUpdated = storageRepository.save(storage);
 
         Map<String, Object[]> logChanges = LogUtils.logChanges(storageBefore, storageUpdated);
-        systemLogService.writeLogUpdate(MODULE.STORAGE.name(), ACTION.STG_STG_U.name(), mainObjectName, "Cập nhật Kho", logChanges);
+        systemLogService.writeLogUpdate(MODULE.STORAGE, ACTION.STG_STG_U, MasterObject.Storage, "Cập nhật Kho", logChanges);
 
         return StorageDTO.convertToDTO(storageUpdated);
     }
@@ -134,7 +133,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
                 return "This storage is in use!";
             }
             storageRepository.deleteById(storageId);
-            systemLogService.writeLogDelete(MODULE.STORAGE.name(), ACTION.STG_STORAGE.name(), mainObjectName, "Xóa kho", storage.get().getName());
+            systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_STORAGE, MasterObject.Storage, "Xóa kho", storage.get().getName());
             logger.info("Delete storage success! storageId={}", storageId);
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {

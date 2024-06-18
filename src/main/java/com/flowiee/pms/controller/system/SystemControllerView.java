@@ -2,7 +2,7 @@ package com.flowiee.pms.controller.system;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.system.SystemConfig;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.utils.PagesUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +42,7 @@ public class SystemControllerView extends BaseController {
     @PreAuthorize("@vldModuleSystem.updateConfig(true)")
     public ModelAndView update(@ModelAttribute("config") SystemConfig config, @PathVariable("id") Integer configId) {
         if (configId <= 0 || configService.findById(configId).isEmpty()) {
-            throw new NotFoundException("Config not found!");
+            throw new ResourceNotFoundException("Config not found!");
         }
         configService.update(config, configId);
         return new ModelAndView("redirect:/he-thong/config");

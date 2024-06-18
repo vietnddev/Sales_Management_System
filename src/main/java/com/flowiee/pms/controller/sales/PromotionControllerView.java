@@ -1,7 +1,7 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import com.flowiee.pms.service.sales.PromotionService;
 import com.flowiee.pms.utils.PagesUtils;
@@ -34,7 +34,7 @@ public class PromotionControllerView extends BaseController {
     public ModelAndView findDetail(@PathVariable("promotionId") Integer promotionId) {
         Optional<PromotionInfoDTO> promotion = promotionService.findById(promotionId);
         if (promotion.isEmpty()) {
-            throw new NotFoundException("Promotion not found!");
+            throw new ResourceNotFoundException("Promotion not found!");
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PROMOTION_DETAIL);
         modelAndView.addObject("promotion", promotion.get());

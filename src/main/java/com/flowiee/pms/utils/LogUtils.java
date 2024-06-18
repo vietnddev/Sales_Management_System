@@ -1,5 +1,6 @@
 package com.flowiee.pms.utils;
 
+import com.flowiee.pms.model.ChangeLog;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,28 @@ public class LogUtils {
             }
         }
         return changes;
+    }
+
+    public static ChangeLog logChanges2(Object oldObject, Object newObject) {
+        ChangeLog changeLog = new ChangeLog();
+        Map<String, Object[]> changes = new HashMap<>();
+        for (Field field : oldObject.getClass().getDeclaredFields()) {
+            if (Collection.class.isAssignableFrom(field.getType())) {
+                continue;
+            }
+            field.setAccessible(true);
+            try {
+                Object oldValue = field.get(oldObject);
+                Object newValue = field.get(newObject);
+                if (!Objects.equals(oldValue, newValue)) {
+                    changes.put(field.getName(), new Object[]{oldValue, newValue});
+                }
+            } catch (IllegalAccessException e) {
+                logger.error("Error when checking entity's fields changes {}", oldObject.getClass().getName(), e);
+            }
+        }
+        changeLog.setLogChanges(changes);
+        return changeLog;
     }
 
     public static String[] getValueChanges(Map<String, Object[]> dataChanges) {

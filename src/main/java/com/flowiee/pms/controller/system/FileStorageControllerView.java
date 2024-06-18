@@ -1,7 +1,7 @@
 package com.flowiee.pms.controller.system;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.ProductVariantService;
@@ -40,10 +40,10 @@ public class FileStorageControllerView extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfProductBase(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productId) throws Exception {
         if (productId <= 0 || productInfoService.findById(productId).isEmpty()) {
-            throw new NotFoundException("Product not found!");
+            throw new ResourceNotFoundException("Product not found!");
         }
         if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
+            throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageProduct(file, productId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -53,10 +53,10 @@ public class FileStorageControllerView extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productVariantId) throws Exception {
         if (productVariantId <= 0 || productVariantService.findById(productVariantId).isEmpty()) {
-            throw new NotFoundException("Product variant not found!");
+            throw new ResourceNotFoundException("Product variant not found!");
         }
         if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
+            throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageProductVariant(file, productVariantId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -66,10 +66,10 @@ public class FileStorageControllerView extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") Integer fileId, HttpServletRequest request) {
         if (fileId <= 0 || fileService.findById(fileId).isEmpty()) {
-            throw new NotFoundException("Image not found");
+            throw new ResourceNotFoundException("Image not found");
         }
         if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
+            throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.changeImageProduct(file, fileId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -79,10 +79,10 @@ public class FileStorageControllerView extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfTicketImport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer ticketImportId) throws Exception {
         if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId).isEmpty()) {
-            throw new NotFoundException("Ticket import not found!");
+            throw new ResourceNotFoundException("Ticket import not found!");
         }
         if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
+            throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageTicketImport(file, ticketImportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -92,10 +92,10 @@ public class FileStorageControllerView extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfTicketExport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer ticketExportId) throws Exception {
         if (ticketExportId <= 0 || ticketExportService.findById(ticketExportId).isEmpty()) {
-            throw new NotFoundException("Ticket export not found!");
+            throw new ResourceNotFoundException("Ticket export not found!");
         }
         if (file.isEmpty()) {
-            throw new NotFoundException("File attach not found!");
+            throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageTicketExport(file, ticketExportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));

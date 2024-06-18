@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.sales;
 import com.flowiee.pms.entity.product.MaterialTemp;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketImport;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.SupplierService;
@@ -50,7 +50,7 @@ public class TicketImportControllerView extends BaseController {
     public ModelAndView viewDetail(@PathVariable("id") Integer ticketImportId) {
         Optional<TicketImport> ticketImport = ticketImportService.findById(ticketImportId);
         if (ticketImport.isEmpty()) {
-            throw new NotFoundException("Ticket import not found!");
+            throw new ResourceNotFoundException("Ticket import not found!");
         }
         BigDecimal totalValue = BigDecimal.ZERO;
         for (ProductVariantTemp p : ticketImport.get().getListProductVariantTemps()) {
@@ -102,7 +102,7 @@ public class TicketImportControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public ModelAndView clear(@PathVariable("id") Integer draftImportId) {
         if (draftImportId <= 0 || ticketImportService.findById(draftImportId).isEmpty()) {
-            throw new NotFoundException("Goods import not found!");
+            throw new ResourceNotFoundException("Goods import not found!");
         }
         ticketImportService.delete(draftImportId);
         return new ModelAndView("redirect:");
@@ -112,7 +112,7 @@ public class TicketImportControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public ModelAndView sendApproval(@PathVariable("id") Integer importId) {
         if (importId <= 0 || ticketImportService.findById(importId).isEmpty()) {
-            throw new NotFoundException("Goods import not found!");
+            throw new ResourceNotFoundException("Goods import not found!");
         }
         ticketImportService.updateStatus(importId, "");
         return new ModelAndView("redirect:");
@@ -122,7 +122,7 @@ public class TicketImportControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public ModelAndView approve(@PathVariable("id") Integer importId) {
         if (importId <= 0 || ticketImportService.findById(importId).isEmpty()) {
-            throw new NotFoundException("Goods import not found!");
+            throw new ResourceNotFoundException("Goods import not found!");
         }
         ticketImportService.updateStatus(importId, "");
         return new ModelAndView("redirect:");

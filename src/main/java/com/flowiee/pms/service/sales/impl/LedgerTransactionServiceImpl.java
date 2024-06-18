@@ -8,6 +8,7 @@ import com.flowiee.pms.repository.sales.LedgerTransactionRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.LedgerTransactionService;
 import com.flowiee.pms.utils.constants.LedgerTranStatus;
+import com.flowiee.pms.utils.constants.MasterObject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,6 @@ import java.util.Optional;
 
 @Service
 public class LedgerTransactionServiceImpl extends BaseService implements LedgerTransactionService {
-    private static final String mainObjectName = "LedgerTransaction";
-
     @Autowired
     private LedgerTransactionRepository ledgerTransRepo;
 
@@ -77,12 +76,12 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
         LedgerTransaction transactionSaved = ledgerTransRepo.save(transaction);
 
         String logTitle = "Thêm mới phiếu thu";
-        String logFunc = ACTION.SLS_RCT_C.name();
+        ACTION logFunc = ACTION.SLS_RCT_C;
         if (transactionSaved.getTranType().equals("PC")) {
             logTitle = "Thêm mới phiếu chi";
-            logFunc = ACTION.SLS_PMT_C.name();
+            logFunc = ACTION.SLS_PMT_C;
         }
-        systemLogService.writeLogCreate(MODULE.PRODUCT.name(), logFunc, mainObjectName, logTitle, transactionSaved.getGroupObject().getName());
+        systemLogService.writeLogCreate(MODULE.PRODUCT, logFunc, MasterObject.LedgerTransaction, logTitle, transactionSaved.getGroupObject().getName());
 
         return transactionSaved;
     }
@@ -94,12 +93,12 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
         LedgerTransaction transactionUpdated = ledgerTransRepo.save(transaction);
 
         String logTitle = "Cập nhật phiếu thu";
-        String logFunc = ACTION.SLS_RCT_U.name();
+        ACTION logFunc = ACTION.SLS_RCT_U;
         if (transactionUpdated.getTranType().equals("PC")) {
             logTitle = "Cập nhật phiếu chi";
-            logFunc = ACTION.SLS_PMT_U.name();
+            logFunc = ACTION.SLS_PMT_U;
         }
-        systemLogService.writeLogCreate(MODULE.PRODUCT.name(), logFunc, mainObjectName, logTitle, transactionUpdated.getGroupObject().getName());
+        systemLogService.writeLogCreate(MODULE.PRODUCT, logFunc, MasterObject.LedgerTransaction, logTitle, transactionUpdated.getGroupObject().getName());
 
         return transactionUpdated;
     }

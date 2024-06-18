@@ -5,7 +5,7 @@ import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.entity.sales.CustomerContact;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.utils.*;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
@@ -56,7 +56,7 @@ public class CustomerControllerView extends BaseController {
     public ModelAndView findCustomerDetail(@PathVariable("id") Integer customerId) {
         Optional<CustomerDTO> customerDTO = customerService.findById(customerId);
         if (customerDTO.isEmpty()) {
-            throw new NotFoundException("Customer not found");
+            throw new ResourceNotFoundException("Customer not found");
         }
         List<CustomerContact> listContacts = customerContactService.findContacts(customerId);
         listContacts.forEach(c -> {
@@ -82,7 +82,7 @@ public class CustomerControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public ModelAndView updateCustomer(@ModelAttribute("customer") CustomerDTO customer, @PathVariable("id") Integer customerId) {
         if (customer == null || customerId <= 0 || customerService.findById(customerId).isEmpty()) {
-            throw new NotFoundException("Customer not found!");
+            throw new ResourceNotFoundException("Customer not found!");
         }
         customerService.update(customer, customerId);
         return new ModelAndView("redirect:/customer");
@@ -99,7 +99,7 @@ public class CustomerControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public ModelAndView insertCustomerContact(@ModelAttribute("customerContact") CustomerContact customerContact, HttpServletRequest request) {
         if (customerContact == null || customerContact.getCustomer() == null) {
-            throw new NotFoundException("Customer not found!");
+            throw new ResourceNotFoundException("Customer not found!");
         }
         customerContactService.save(customerContact);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -111,7 +111,7 @@ public class CustomerControllerView extends BaseController {
                                               @PathVariable("id") Integer customerContactId,
                                               HttpServletRequest request) {
         if (customerContact == null || customerContact.getCustomer() == null) {
-            throw new NotFoundException("Customer not found!");
+            throw new ResourceNotFoundException("Customer not found!");
         }
         customerContactService.update(customerContact, customerContactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -138,7 +138,7 @@ public class CustomerControllerView extends BaseController {
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public ModelAndView setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId, HttpServletRequest request) {
         if (contactId <= 0 || customerContactService.findById(contactId).isEmpty()) {
-            throw new NotFoundException("Customer contact not found!");
+            throw new ResourceNotFoundException("Customer contact not found!");
         }
         customerContactService.disableContactUnUseDefault(contactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));

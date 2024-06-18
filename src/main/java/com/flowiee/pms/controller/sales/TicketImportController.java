@@ -1,6 +1,7 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.entity.product.MaterialTemp;
@@ -47,15 +48,11 @@ public class TicketImportController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public AppResponse<TicketImportDTO> findDetail(@PathVariable("id") Integer ticketImportId) {
-        try {
-            Optional<TicketImport> ticketImport = ticketImportService.findById(ticketImportId);
-            if (ticketImport.isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(TicketImportDTO.fromTicketImport(ticketImport.get()));
-        } catch (Exception ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "ticket import"), ex);
+        Optional<TicketImport> ticketImport = ticketImportService.findById(ticketImportId);
+        if (ticketImport.isEmpty()) {
+            throw new ResourceNotFoundException("Ticket import goods not found!");
         }
+        return success(TicketImportDTO.fromTicketImport(ticketImport.get()));
     }
 
     @Operation(summary = "Thêm mới phiếu nhập hàng")
@@ -92,14 +89,7 @@ public class TicketImportController extends BaseController {
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public AppResponse<List<ProductVariantTemp>> addProductVariantToTicket(@PathVariable("id") Integer ticketImportId,
                                                                            @RequestBody List<Integer> productVariantIds) {
-        if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId).isEmpty()) {
-            throw new BadRequestException("Goods import to add product not found!");
-        }
-        try {
-            return success(ticketImportService.addProductToTicket(ticketImportId, productVariantIds));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "ticket_import"), ex);
-        }
+        return success(ticketImportService.addProductToTicket(ticketImportId, productVariantIds));
     }
 
     @Operation(summary = "Add nguyên vật liệu vào phiếu nhập hàng")

@@ -3,11 +3,14 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.CustomerContact;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -45,7 +48,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     @Override
     public CustomerContact update(CustomerContact pContact, Integer contactId) {
         if (pContact == null || pContact.getCustomer() == null) {
-            throw new NotFoundException("Customer not found!");
+            throw new ResourceNotFoundException("Customer not found!");
         }
         Optional<CustomerContact> contact = this.findById(contactId);
         if (contact.isEmpty()) {
@@ -68,13 +71,18 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
             throw new DataInUseException("This contact has been used!");
         }
         customerContactRepo.deleteById(contactId);
+
+        String contactCode = customerContact.get().getCode();
+        String customerName = customerContact.get().getCustomer().getCustomerName();
+        systemLogService.writeLogDelete(MODULE.SALES, ACTION.PRO_CUS_D, MasterObject.CustomerContact, "Xóa %s của khách hàng %s".formatted(contactCode, customerName), customerContact.get().getValue());
+
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
     public List<CustomerContact> findContacts(Integer customerId) {
         if (customerService.findById(customerId).isEmpty()) {
-            throw new NotFoundException("Customer not found!");
+            throw new ResourceNotFoundException("Customer not found!");
         }
         return customerContactRepo.findByCustomerId(customerId);
     }
@@ -102,10 +110,10 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     @Override
     public CustomerContact enableContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
         if (customerService.findById(customerId).isEmpty()) {
-            throw new NotFoundException("Customer not found!");
+            throw new ResourceNotFoundException("Customer not found!");
         }
         if (this.findById(contactId).isEmpty()) {
-            throw new NotFoundException("Customer contact not found!");
+            throw new ResourceNotFoundException("Customer contact not found!");
         }
         CustomerContact customerContactUsingDefault = switch (contactCode) {
             case "P" -> customerContactRepo.findPhoneUseDefault(customerId);

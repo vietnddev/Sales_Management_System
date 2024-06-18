@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
@@ -118,7 +119,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
     public PromotionInfoDTO update(PromotionInfoDTO inputDTO, Integer promotionId) {
         try {
             if (inputDTO == null || promotionId == null || this.findById(promotionId).isEmpty()) {
-                throw new BadRequestException();
+                throw new ResourceNotFoundException("Product promotion not found!");
             }
             PromotionInfo promotionInfo = PromotionInfo.fromDTO(inputDTO);
             promotionInfo.setStartTime(LocalDateTime.parse(inputDTO.getStartTimeStr() + "T00:00"));
@@ -134,7 +135,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
     @Override
     public String delete(Integer promotionId) {
         if (this.findById(promotionId).isEmpty()) {
-            throw new BadRequestException("Promotion not found!");
+            throw new ResourceNotFoundException("Promotion not found!");
         }
         if (!promotionApplyService.findByPromotionId(promotionId).isEmpty()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());

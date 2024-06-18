@@ -10,7 +10,8 @@ import com.flowiee.pms.entity.system.AccountRole;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.repository.sales.MaterialTempRepository;
@@ -27,8 +28,6 @@ import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.repository.sales.TicketImportRepository;
 import com.flowiee.pms.service.sales.TicketImportService;
 
-import com.flowiee.pms.utils.constants.ErrorCode;
-import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -162,10 +161,14 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public String delete(Integer entityId) {
-        if (this.findById(entityId).isEmpty()) {
+        Optional<TicketImport> ticketImport = this.findById(entityId);
+        if (ticketImport.isEmpty()) {
             throw new BadRequestException("Ticket import not found!");
         }
         ticketImportRepo.deleteById(entityId);
+
+        systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_IM, MasterObject.TicketImport, "Xóa phiếu nhập hàng", ticketImport.get().getTitle());
+
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
@@ -201,6 +204,9 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public List<ProductVariantTemp> addProductToTicket(Integer ticketImportId, List<Integer> productVariantIds) {
+        if (this.findById(ticketImportId).isEmpty()) {
+            throw new ResourceNotFoundException("Ticket import goods not found!");
+        }
         List<ProductVariantTemp> listAdded = new ArrayList<>();
         for (Integer productVariantId : productVariantIds) {
             Optional<ProductVariantDTO> productDetail =  productVariantService.findById(productVariantId);

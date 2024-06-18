@@ -4,9 +4,8 @@ import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.ErrorCode;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.OrderDetailDTO;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.DataInUseException;
@@ -18,7 +17,6 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
-import com.flowiee.pms.utils.constants.MessageCode;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -31,8 +29,6 @@ import java.util.*;
 
 @Service
 public class OrderServiceImpl extends BaseService implements OrderService {
-    private static final String mainObjectName = "Order";
-
     private final OrderRepository orderRepository;
     private final ProductVariantService productVariantService;
     private final CartService cartService;
@@ -180,7 +176,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             cartItemsService.deleteAllItems();
 
             //Log
-            systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_ORD_C.name(), mainObjectName, "Thêm mới đơn hàng", order.toString());
+            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.Order, "Thêm mới đơn hàng", order.toString());
             logger.info("Insert new order success! insertBy={}", CommonUtils.getUserPrincipal().getUsername());
 
             return OrderDTO.fromOrder(orderSaved);
@@ -193,7 +189,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     public OrderDTO update(OrderDTO dto, Integer id) {
         Order orderToUpdate = orderRepository.findById(id).orElse(null);
         if (orderToUpdate == null) {
-            throw new BadRequestException();
+            throw new ResourceNotFoundException("Order not found!");
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
         orderToUpdate.setNote(dto.getNote());
@@ -203,7 +199,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         String logTitle = "Cập nhật đơn hàng";
         Map<String, Object[]> logChanges = LogUtils.logChanges(orderBefore, orderUpdated);
         orderHistoryService.save(logChanges, logTitle, id, null);
-        systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_ORD_U.name(), mainObjectName, logTitle, logChanges);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.Order, logTitle, logChanges);
         logger.info("Cập nhật đơn hàng {}", dto.toString());
 
         return OrderDTO.fromOrder(orderToUpdate);
@@ -212,11 +208,14 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Override
     public String delete(Integer id) {
         Optional<OrderDTO> order = this.findById(id);
-        if (order.isEmpty() || order.get().getPaymentStatus()) {
+        if (order.isEmpty()) {
+            throw new ResourceNotFoundException("Order not found!");
+        }
+        if (order.get().getPaymentStatus()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         orderRepository.deleteById(id);
-        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_ORD_D.name(), mainObjectName, "Xóa đơn hàng", order.toString());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.Order, "Xóa đơn hàng", order.toString());
         logger.info("Xóa đơn hàng orderId={}", id);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -224,7 +223,19 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Transactional
     @Override
     public String doPay(Integer orderId, LocalDateTime paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote) {
+        Optional<OrderDTO> dto = this.findById(orderId);
+        if (dto.isEmpty()) {
+            throw new ResourceNotFoundException("Order not found!");
+        }
+        if (dto.get().getPaymentStatus()) {
+            throw new BadRequestException("The order has been paid");
+        }
+        if ((paymentMethod == null || paymentMethod <= 0) || paymentAmount == null) {
+            throw new BadRequestException("Thông tin thanh toán không hợp lệ!");
+        }
+        if (paymentTime == null) paymentTime = LocalDateTime.now();
         orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
+        systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật trạng thái thanh toán đơn hàng", "Số tiền: " + CommonUtils.formatToVND(paymentAmount));
         return MessageCode.UPDATE_SUCCESS.getDescription();
     }
 

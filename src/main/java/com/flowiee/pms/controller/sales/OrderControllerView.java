@@ -12,7 +12,7 @@ import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.*;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.service.category.CategoryService;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 
 import com.flowiee.pms.utils.constants.CategoryType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,7 @@ public class OrderControllerView extends BaseController {
     public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) {
         Optional<OrderDTO> orderDetail = orderService.findById(orderId);
         if (orderId <= 0 || orderDetail.isEmpty()) {
-            throw new NotFoundException("Order not found!");
+            throw new ResourceNotFoundException("Order not found!");
         }
         List<Category> orderStatus = new ArrayList<>(List.of(new Category(orderDetail.get().getOrderStatusId(), orderDetail.get().getOrderStatusName())));
         orderStatus.addAll(categoryService.findOrderStatus(orderDetail.get().getOrderStatusId()));

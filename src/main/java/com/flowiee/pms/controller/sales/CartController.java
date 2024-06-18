@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.sales;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ public class CartController extends BaseController {
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
         if (cartId <= 0 || cartService.findById(cartId).isEmpty()) {
-            throw new NotFoundException("Cart not found!");
+            throw new ResourceNotFoundException("Cart not found!");
         }
         cartService.addItemsToCart(cartId, bienTheSanPhamId);
         return new ModelAndView("redirect:/order/ban-hang");
@@ -39,7 +39,7 @@ public class CartController extends BaseController {
                                           @ModelAttribute("items") Items items,
                                           @PathVariable("itemId") Integer itemId) {
         if (cartService.findById(cartId).isEmpty()) {
-            throw new NotFoundException("Cart not found!");
+            throw new ResourceNotFoundException("Cart not found!");
         }
         cartService.updateItemsOfCart(items, itemId);
         return new ModelAndView("redirect:/order/ban-hang");

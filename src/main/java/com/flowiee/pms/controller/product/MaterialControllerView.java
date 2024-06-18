@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
 
 import com.flowiee.pms.utils.constants.EndPoint;
@@ -48,8 +48,8 @@ public class MaterialControllerView extends BaseController {
     public ModelAndView update(@ModelAttribute("material") Material material,
                                                @PathVariable("id") Integer materialId,
                                                HttpServletRequest request) {
-        if (materialId <= 0 || materialService.findById(materialId).isEmpty()) {
-            throw new NotFoundException("Material not found!");
+        if (materialService.findById(materialId).isEmpty()) {
+            throw new ResourceNotFoundException("Material not found!");
         }
         materialService.update(material, materialId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));

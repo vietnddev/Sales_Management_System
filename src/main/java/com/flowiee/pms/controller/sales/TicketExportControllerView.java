@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.sales;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.constants.TicketExportStatus;
@@ -39,7 +39,7 @@ public class TicketExportControllerView extends BaseController {
     public ModelAndView viewDetail(@PathVariable("id") Integer ticketExportId) {
         Optional<TicketExport> ticketExport = ticketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
-            throw new NotFoundException("Ticket export not found!");
+            throw new ResourceNotFoundException("Ticket export not found!");
         }
         LinkedHashMap<String, String> ticketExportStatus = new LinkedHashMap<>();
         ticketExportStatus.put(ticketExport.get().getStatus(), TicketExportStatus.valueOf(ticketExport.get().getStatus()).getLabel());

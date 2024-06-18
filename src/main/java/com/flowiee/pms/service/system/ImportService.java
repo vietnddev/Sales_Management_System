@@ -1,12 +1,12 @@
 package com.flowiee.pms.service.system;
 
 import com.flowiee.pms.service.BaseCurdService;
-import com.flowiee.pms.entity.system.FlowieeImport;
+import com.flowiee.pms.entity.system.FileImportHistory;
 
 import java.util.List;
 
-public interface ImportService extends BaseCurdService<FlowieeImport> {
-    List<FlowieeImport> findAll();
+public interface ImportService extends BaseCurdService<FileImportHistory> {
+    List<FileImportHistory> findAll();
 
-    List<FlowieeImport> findByAccountId(Integer accountId);
+    List<FileImportHistory> findByAccountId(Integer accountId);
 }

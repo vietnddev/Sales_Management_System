@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class BaseController {
-	protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
 		modelAndView.addObject("USERNAME_LOGIN", CommonUtils.getUserPrincipal().getUsername());

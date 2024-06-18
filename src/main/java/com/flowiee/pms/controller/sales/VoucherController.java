@@ -1,6 +1,7 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.entity.sales.VoucherInfo;
@@ -57,15 +58,11 @@ public class VoucherController extends BaseController {
     @GetMapping("/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
     public AppResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
-        try {
-            Optional<VoucherInfoDTO> voucherInfoDTO = voucherService.findById(voucherInfoId);
-            if (voucherInfoDTO.isPresent()) {
-                return success(voucherInfoDTO.get());
-            }
-            throw new BadRequestException();
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "voucher"), ex);
+        Optional<VoucherInfoDTO> voucherInfoDTO = voucherService.findById(voucherInfoId);
+        if (voucherInfoDTO.isEmpty()) {
+            throw new ResourceNotFoundException("Voucher not found!");
         }
+        return success(voucherInfoDTO.get());
     }
 
     @Operation(summary = "Create voucher")
@@ -74,7 +71,7 @@ public class VoucherController extends BaseController {
     public AppResponse<VoucherInfo> createVoucher(@RequestBody VoucherInfoDTO voucherInfoDTO) {
         try {
             if (voucherInfoDTO.getApplicableProducts().isEmpty()) {
-                throw new BadRequestException();
+                throw new BadRequestException("Sản phẩm được áp dụng không được rỗng!");
             }
             return success(voucherService.save(voucherInfoDTO));
         } catch (RuntimeException ex) {
@@ -86,14 +83,7 @@ public class VoucherController extends BaseController {
     @PutMapping("/update/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.updateVoucher(true)")
     public AppResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfoDTO voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
-        try {
-            if (voucherInfo == null || voucherService.findById(voucherInfoId).isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(voucherService.update(voucherInfo ,voucherInfoId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "voucher"), ex);
-        }
+        return success(voucherService.update(voucherInfo ,voucherInfoId));
     }
 
     @Operation(summary = "Delete voucher")

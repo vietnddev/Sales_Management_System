@@ -12,7 +12,7 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class ExportDataModel {
+public class EximModel {
     private LocalTime beginTime;
     private LocalTime finishTime;
     private Path pathSource;
@@ -23,7 +23,7 @@ public class ExportDataModel {
     private HttpHeaders httpHeaders;
     private String result;
 
-    public ExportDataModel(TemplateExport templateExport) {
+    public EximModel(TemplateExport templateExport) {
         beginTime = LocalTime.now();
         long currentTime = beginTime.toNanoOfDay();
         pathSource = Path.of(FileUtils.excelTemplatePath + "/" + templateExport.getTemplateName());

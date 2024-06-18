@@ -4,8 +4,9 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
-import com.flowiee.pms.model.ExportDataModel;
+import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.service.ExportService;
@@ -56,15 +57,11 @@ public class StorageController extends BaseController {
     @GetMapping("/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
     public AppResponse<StorageDTO> findDetailStorage(@PathVariable("storageId") Integer storageId) {
-        try {
-            Optional<StorageDTO> storage = storageService.findById(storageId);
-            if (storage.isEmpty()) {
-                throw new BadRequestException("Storage not found");
-            }
-            return success(storage.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "storage"), ex);
+        Optional<StorageDTO> storage = storageService.findById(storageId);
+        if (storage.isEmpty()) {
+            throw new ResourceNotFoundException("Storage not found");
         }
+        return success(storage.get());
     }
 
     @Operation(summary = "Create storage")
@@ -104,11 +101,6 @@ public class StorageController extends BaseController {
                                                             @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                             @RequestParam(value = "searchText", required = false) String searchText) {
         try {
-            System.out.println("searchText " + searchText);
-            Optional<StorageDTO> storage = storageService.findById(storageId);
-            if (storage.isEmpty()) {
-                throw new BadRequestException("Storage not found");
-            }
             Page<StorageItems> storageItemsPage = storageService.findStorageItems(pageSize, pageNum -1, storageId, searchText);
             return success(storageItemsPage.getContent(), pageNum, pageSize, storageItemsPage.getTotalPages(), storageItemsPage.getTotalElements());
         } catch (RuntimeException ex) {
@@ -120,7 +112,7 @@ public class StorageController extends BaseController {
     @GetMapping("/export")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
     public ResponseEntity<InputStreamResource> exportData(@RequestParam("storageId") Integer storageId) {
-        ExportDataModel model = exportService.exportToExcel(TemplateExport.STORAGE_ITEMS, new Storage(storageId), false);
+        EximModel model = exportService.exportToExcel(TemplateExport.EX_STORAGE_ITEMS, new Storage(storageId), false);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.flowiee.pms.entity.category.Category;
 import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface CategoryService extends BaseCurdService<Category> {
     List<Category> findRootCategory();
@@ -34,6 +33,4 @@ public interface CategoryService extends BaseCurdService<Category> {
     List<Category> findLedgerPaymentTypes();
 
     Boolean categoryInUse(Integer categoryId);
-    
-    String importData(MultipartFile fileImport, String categoryType);
 }

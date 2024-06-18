@@ -62,11 +62,7 @@ public class PromotionController extends BaseController {
     @PutMapping("/update/{promotionId}")
     @PreAuthorize("@vldModuleSales.updatePromotion(true)")
     public AppResponse<PromotionInfoDTO> updatePromotion(@RequestBody PromotionInfoDTO promotion, @PathVariable("promotionId") Integer promotionId) {
-        try {
-            return success(promotionService.update(promotion, promotionId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "promotion"), ex);
-        }
+        return success(promotionService.update(promotion, promotionId));
     }
 
     @Operation(summary = "Delete promotion")

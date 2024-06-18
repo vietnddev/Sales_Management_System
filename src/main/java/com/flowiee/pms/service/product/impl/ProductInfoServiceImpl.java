@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.*;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
@@ -29,9 +30,6 @@ import java.util.*;
 
 @Service
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
-    private static final String mvModule = MODULE.PRODUCT.name();
-    private static final String mainObjectName = "ProductBase";
-
     private final ProductRepository        productsRepo;
     private final ProductHistoryService    productHistoryService;
     private final VoucherService           voucherInfoService;
@@ -94,7 +92,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             productToSave.setDescription(product.getDescription() != null ? product.getDescription() : "");
             productToSave.setStatus(ProductStatus.I.name());
             Product productSaved = productsRepo.save(productToSave);
-            systemLogService.writeLogCreate(mvModule, ACTION.PRO_PRD_C.name(), mainObjectName, "Thêm mới sản phẩm", product.getProductName());
+            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_PRD_C, MasterObject.Product, "Thêm mới sản phẩm", product.getProductName());
             logger.info("Insert product success! {}", product);
             return ProductConvert.convertToDTO(productSaved);
         } catch (RuntimeException ex) {
@@ -120,7 +118,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         String logTitle = "Cập nhật sản phẩm: " + productUpdated.getProductName();
         Map<String, Object[]> logChanges = LogUtils.logChanges(productBefore, productUpdated);
         productHistoryService.save(logChanges, logTitle, productUpdated.getId(), null, null);
-        systemLogService.writeLogUpdate(mvModule, ACTION.PRO_PRD_U.name(), mainObjectName, logTitle, logChanges);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.Product, logTitle, logChanges);
         logger.info("Update product success! productId={}", productId);
         return ProductConvert.convertToDTO(productUpdated);
     }
@@ -131,13 +129,13 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         try {
             Optional<ProductDTO> productToDelete = this.findById(id);
             if (productToDelete.isEmpty()) {
-                throw new BadRequestException();
+                throw new ResourceNotFoundException("Product not found!");
             }
             if (productInUse(id)) {
                 throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
             }
             productsRepo.deleteById(id);
-            systemLogService.writeLogDelete(mvModule, ACTION.PRO_PRD_D.name(), mainObjectName, "Xóa sản phẩm", productToDelete.get().getProductName());
+            systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_D, MasterObject.Product, "Xóa sản phẩm", productToDelete.get().getProductName());
             logger.info("Delete product success! productId={}", id);
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {

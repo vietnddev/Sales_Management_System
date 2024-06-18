@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.system;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.utils.CommonUtils;
@@ -50,7 +50,7 @@ public class AccountControllerView extends BaseController {
     public ModelAndView findDetailAccountById(@PathVariable("id") Integer accountId) {
         Optional<Account> account = accountService.findById(accountId);
         if (accountId <= 0 || account.isEmpty()) {
-            throw new NotFoundException("Account not found!");
+            throw new ResourceNotFoundException("Account not found!");
         }
         ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ACCOUNT_DETAIL);
         List<RoleModel> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
@@ -79,7 +79,7 @@ public class AccountControllerView extends BaseController {
                                @PathVariable("id") Integer accountId,
                                HttpServletRequest request) {
         if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
-            throw new NotFoundException("Account not found!");
+            throw new ResourceNotFoundException("Account not found!");
         }
         Optional<Account> acc = accountService.findById(accountId);
         if (acc.isEmpty()) {
@@ -98,7 +98,7 @@ public class AccountControllerView extends BaseController {
     public ModelAndView deleteAccount(@PathVariable("id") Integer accountId) {
         Optional<Account> account = accountService.findById(accountId);
         if (account.isEmpty()) {
-            throw new NotFoundException("Account not found!");
+            throw new ResourceNotFoundException("Account not found!");
         }
         account.get().setStatus(false);
         accountService.save(account.get());
@@ -109,7 +109,7 @@ public class AccountControllerView extends BaseController {
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
     public ModelAndView updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
         if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
-            throw new NotFoundException("Account not found!");
+            throw new ResourceNotFoundException("Account not found!");
         }
         roleService.deleteAllRole(null, accountId);
         List<ActionModel> listAction = roleService.findAllAction();

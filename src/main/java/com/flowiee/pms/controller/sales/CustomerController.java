@@ -1,7 +1,7 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
@@ -59,7 +59,7 @@ public class CustomerController extends BaseController {
     public AppResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Integer customerId) {
         Optional<CustomerDTO> customer = customerService.findById(customerId);
         if (customer.isEmpty()) {
-            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"));
+            throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"));
         }
         return success(customer.get());
     }
@@ -82,16 +82,8 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Update customer")
     @PutMapping("/update/{customerId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public AppResponse<String> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
-        try {
-            if (customer == null || customerId <= 0 || customerService.findById(customerId).isEmpty()) {
-                throw new BadRequestException();
-            }
-            customerService.update(customer, customerId);
-            return success(MessageCode.UPDATE_SUCCESS.getDescription());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "customer"), ex);
-        }
+    public AppResponse<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
+        return success(customerService.update(customer, customerId));
     }
 
     @Operation(summary = "Delete customer")
@@ -105,13 +97,9 @@ public class CustomerController extends BaseController {
     @GetMapping("/purchase-history/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<List<PurchaseHistory>> findPurchaseHistory(@PathVariable("customerId") Integer customerId, @RequestParam(value = "year", required = false) Integer year) {
-        try {
-            if (customerService.findById(customerId).isEmpty()) {
-                throw new BadRequestException("Customer not found");
-            }
-            return success(customerService.findPurchaseHistory(customerId, year, null));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "purchase history of customer"), ex);
+        if (customerService.findById(customerId).isEmpty()) {
+            throw new BadRequestException("Customer not found");
         }
+        return success(customerService.findPurchaseHistory(customerId, year, null));
     }
 }

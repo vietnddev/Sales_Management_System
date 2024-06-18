@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BaseService {
-    protected Logger logger = LoggerFactory.getLogger(BaseService.class);
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     protected SystemLogService systemLogService;

@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.category;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.CommonUtils;
@@ -71,7 +71,7 @@ public class CategoryController extends BaseController {
     @PreAuthorize("@vldModuleCategory.updateCategory(true)")
     public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
         if (categoryService.findById(categoryId).isEmpty()) {
-            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"));
+            throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"));
         }
         try {
             category.setType(CommonUtils.getCategoryType(category.getType()));

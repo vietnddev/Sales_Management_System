@@ -2,11 +2,17 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.sales.Supplier;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.sales.SupplierRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.SupplierService;
 
+import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -51,11 +58,18 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
 
     @Override
     public Supplier update(Supplier entity, Integer entityId) {
-        if (entity == null || entityId == null || entityId <= 0) {
-            throw new BadRequestException();
+        Optional<Supplier> supplierOptional = this.findById(entityId);
+        if (supplierOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Supplier not found!");
         }
+        Supplier supplierBefore =  ObjectUtils.clone(supplierOptional.get());
         entity.setId(entityId);
-        return supplierRepo.save(entity);
+        Supplier supplierUpdated = supplierRepo.save(entity);
+
+        Map<String, Object[]> logChanges = LogUtils.logChanges(supplierBefore, supplierUpdated);
+        systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_SUP_U, MasterObject.Supplier, "Cập nhật thông tin nhà cung cấp: " + supplierUpdated.getName(), logChanges);
+
+        return supplierUpdated;
     }
 
     @Override

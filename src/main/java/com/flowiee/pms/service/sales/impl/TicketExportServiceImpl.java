@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.product.ProductHistory;
@@ -13,9 +14,7 @@ import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.constants.ErrorCode;
-import com.flowiee.pms.utils.constants.MessageCode;
-import com.flowiee.pms.utils.constants.TicketExportStatus;
+import com.flowiee.pms.utils.constants.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -135,12 +134,23 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 
     @Override
     public String delete(Integer ticketExportId) {
+        Optional<TicketExport> ticketExportToDelete = this.findById(ticketExportId);
+        if (ticketExportToDelete.isEmpty()) {
+            throw new ResourceNotFoundException("Ticket export not found!");
+        }
+        if ("COMPLETED".equals(ticketExportToDelete.get().getStatus())) {
+            throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
+        }
+
         Order order = orderRepository.findByTicketExport(ticketExportId);
         if (order != null) {
             order.setTicketExport(null);
             orderRepository.save(order);
         }
         ticketExportRepo.deleteById(ticketExportId);
+
+        systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_EX, MasterObject.TicketExport, "Xóa phiếu xuất hàng", ticketExportToDelete.get().getTitle());
+
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

@@ -2,10 +2,16 @@ package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.system.GroupAccountRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.GroupAccountService;
+import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -52,11 +59,19 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
 
     @Override
     public GroupAccount update(GroupAccount groupAccount, Integer groupId) {
-        if (this.findById(groupId).isEmpty()) {
-            throw new BadRequestException();
+        Optional<GroupAccount> groupAccountOpt = this.findById(groupId);
+        if (groupAccountOpt.isEmpty()) {
+            throw new ResourceNotFoundException("Group account not found");
         }
+        GroupAccount groupAccountBefore = ObjectUtils.clone(groupAccountOpt.get());
+
         groupAccount.setId(groupId);
-        return groupAccountRepository.save(groupAccount);
+        GroupAccount groupAccountUpdated = groupAccountRepository.save(groupAccount);
+
+        Map<String, Object[]> logChanges = LogUtils.logChanges(groupAccountBefore, groupAccountUpdated);
+        systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_GR_ACC_U, MasterObject.GroupAccount, "Cập nhật thông tin nhóm người dùng", logChanges);
+
+        return groupAccountUpdated;
     }
 
     @Override

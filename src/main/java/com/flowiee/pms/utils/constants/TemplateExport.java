@@ -4,17 +4,23 @@ import lombok.Getter;
 
 @Getter
 public enum TemplateExport {
-    LIST_OF_PRODUCTS("Template_E_Product.xlsx", "E"),
-    LIST_OF_ORDERS("Template_E_Order.xlsx", "E"),
-    LIST_OF_CATEGORIES("Template_IE_DM_Category.xlsx", "E"),
-    STORAGE_ITEMS("Template_E_Storage.xlsx", "E"),
-    LEDGER_TRANSACTIONS("Template_E_GeneralLedger.xlsx", "E");
+    IM_LIST_OF_PRODUCTS("Template_E_Product.xlsx", "I", MODULE.PRODUCT, ""),
+    EX_LIST_OF_PRODUCTS("Template_E_Product.xlsx", "E", MODULE.PRODUCT, ""),
+    EX_LIST_OF_ORDERS("Template_E_Order.xlsx", "E", MODULE.SALES, ""),
+    IM_LIST_OF_CATEGORIES("Template_IE_DM_Category.xlsx", "I", MODULE.CATEGORY, ""),
+    EX_LIST_OF_CATEGORIES("Template_IE_DM_Category.xlsx", "E", MODULE.CATEGORY, ""),
+    EX_STORAGE_ITEMS("Template_E_Storage.xlsx", "E", MODULE.STORAGE, ""),
+    EX_LEDGER_TRANSACTIONS("Template_E_GeneralLedger.xlsx", "E", MODULE.STORAGE, "");
 
     private final String templateName;
     private final String type;
+    private final MODULE module;
+    private final String entity;
 
-    TemplateExport(String templateName, String type) {
+    TemplateExport(String templateName, String type, MODULE module, String entity) {
         this.templateName = templateName;
         this.type = type;
+        this.module = module;
+        this.entity = entity;
     }
 }

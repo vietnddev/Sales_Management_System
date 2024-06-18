@@ -5,16 +5,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.flowiee.pms.entity.system.FlowieeImport;
+import com.flowiee.pms.entity.system.FileImportHistory;
 
 import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface AppImportRepository extends JpaRepository<FlowieeImport, Integer> {
-    @Query("from FlowieeImport i where i.account.id=:accountId")
-    List<FlowieeImport> findByAccountId(@Param("accountId") Integer accountId);
+public interface AppImportRepository extends JpaRepository<FileImportHistory, Integer> {
+    @Query("from FileImportHistory i where i.account.id=:accountId")
+    List<FileImportHistory> findByAccountId(@Param("accountId") Integer accountId);
 
-    @Query("from FlowieeImport i where i.startTime=:startTime")
-    FlowieeImport findByStartTime(@Param("startTime") Date startTime);
+    @Query("from FileImportHistory i where i.beginTime=:startTime")
+    FileImportHistory findByStartTime(@Param("startTime") Date startTime);
 }

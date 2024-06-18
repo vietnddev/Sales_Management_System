@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
@@ -66,7 +66,7 @@ public class ProductController extends BaseController {
     public AppResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
         Optional<ProductDTO> product = productInfoService.findById(productId);
         if (product.isEmpty()) {
-            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
+            throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
         return success(product.get());
     }
@@ -86,11 +86,10 @@ public class ProductController extends BaseController {
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public AppResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Integer productId) {
-        try {
-            return success(ProductConvert.convertToDTO(productInfoService.update(product, productId)));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product"), ex);
+        if (productInfoService.findById(productId).isEmpty()) {
+            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
+        return success(ProductConvert.convertToDTO(productInfoService.update(product, productId)));
     }
 
     @Operation(summary = "Delete product")
@@ -105,7 +104,7 @@ public class ProductController extends BaseController {
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
         if (ObjectUtils.isEmpty(productInfoService.findById(productId))) {
-            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
+            throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
         return success(productHistoryService.findByProduct(productId));
     }

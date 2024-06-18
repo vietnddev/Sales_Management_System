@@ -5,7 +5,7 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.model.dto.ProductVariantTempDTO;
@@ -57,7 +57,7 @@ public class ProductVariantController extends BaseController {
     public AppResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Integer productVariantId) {
         Optional<ProductVariantDTO> productVariant = productVariantService.findById(productVariantId);
         if (productVariant.isEmpty()) {
-            throw new NotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
+            throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
         return success(productVariant.get());
     }
@@ -77,36 +77,27 @@ public class ProductVariantController extends BaseController {
     @PutMapping("/variant/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public AppResponse<ProductDetail> updateProductVariant(@RequestBody ProductVariantDTO productVariant, @PathVariable("id") Integer productVariantId) {
-        try {
-            return success(productVariantService.update(productVariant, productVariantId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product"), ex);
+        if (productVariantService.findById(productVariantId).isEmpty()) {
+            throw new ResourceNotFoundException("Product variant not found!");
         }
+        return success(productVariantService.update(productVariant, productVariantId));
     }
 
     @Operation(summary = "Delete product variant")
     @DeleteMapping("/variant/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
     public AppResponse<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
-        try {
-            return success(productVariantService.delete(productVariantId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.DELETE_ERROR_OCCURRED.getDescription(), "product"), ex);
-        }
+        return success(productVariantService.delete(productVariantId));
     }
 
     @Operation(summary = "Get price history of product detail")
     @GetMapping(value = "/variant/price/history/{Id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductHistory>> getHistoryPriceOfProductDetail(@PathVariable("Id") Integer productVariantId) {
-        try {
-            if (ObjectUtils.isEmpty(productVariantService.findById(productVariantId))) {
-                throw new BadRequestException();
-            }
-            return success(productHistoryService.findPriceChange(productVariantId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"), ex);
+        if (ObjectUtils.isEmpty(productVariantService.findById(productVariantId))) {
+            throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
+        return success(productHistoryService.findPriceChange(productVariantId));
     }
 
     @Operation(summary = "Update price")

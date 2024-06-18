@@ -3,7 +3,7 @@ package com.flowiee.pms.controller.system;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.PagesUtils;
@@ -38,7 +38,7 @@ public class ProfileControllerView extends BaseController {
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
 		Optional<Account> profile = accountService.findById(CommonUtils.getUserPrincipal().getId());
 		if (profile.isEmpty()) {
-			throw new NotFoundException("Account not found in system");
+			throw new ResourceNotFoundException("Account not found in system");
 		}
 		ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_PROFILE);
 		modelAndView.addObject("message", message);

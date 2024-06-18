@@ -4,7 +4,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.service.system.SystemLogService;
@@ -56,14 +56,7 @@ public class SystemController extends BaseController {
     @PutMapping("/config/update/{id}")
     @PreAuthorize("@vldModuleSystem.updateConfig(true)")
     public AppResponse<SystemConfig> updateConfig(@RequestBody SystemConfig config, @PathVariable("id") Integer configId) {
-        try {
-            if (configId <= 0 || configService.findById(configId).isEmpty()) {
-                throw new NotFoundException("Config not found!");
-            }
-            return success(configService.update(config, configId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), config), ex);
-        }
+        return success(configService.update(config, configId));
     }
 
     @GetMapping("/refresh")

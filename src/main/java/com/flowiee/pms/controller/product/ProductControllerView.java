@@ -4,16 +4,17 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.ExportDataModel;
+import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.dto.ProductDTO;
-import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.service.ExportService;
-import com.flowiee.pms.service.product.*;
-import com.flowiee.pms.utils.*;
 
-import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.service.product.ProductAttributeService;
+import com.flowiee.pms.service.product.ProductImageService;
+import com.flowiee.pms.service.product.ProductInfoService;
+import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,8 +32,8 @@ public class ProductControllerView extends BaseController {
     private final ProductInfoService      productInfoService;
     private final ProductVariantService   productVariantService;
     private final ProductAttributeService productAttributeService;
-    private final ExportService           exportService;
-    private final ProductImageService     productImageService;
+    private final ExportService       exportService;
+    private final ProductImageService productImageService;
 
     @Autowired
     public ProductControllerView(ProductInfoService productInfoService, ProductVariantService productVariantService,
@@ -56,16 +57,12 @@ public class ProductControllerView extends BaseController {
     public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
         Optional<ProductDTO> product = productInfoService.findById(productId);
         if (product.isEmpty()) {
-            throw new NotFoundException("Product not found!");
+            throw new ResourceNotFoundException("Product not found!");
         }
-        try {
-            ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
-            modelAndView.addObject("productId", productId);
-            modelAndView.addObject("detailProducts", product.get());
-            return baseView(modelAndView);
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product variant"), ex);
-        }
+        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
+        modelAndView.addObject("productId", productId);
+        modelAndView.addObject("detailProducts", product.get());
+        return baseView(modelAndView);
     }
 
     @GetMapping(value = "/variant/{id}")
@@ -101,7 +98,7 @@ public class ProductControllerView extends BaseController {
                                                @PathVariable("id") Integer attributeId,
                                                HttpServletRequest request) {
         if (productAttributeService.findById(attributeId).isEmpty()) {
-            throw new NotFoundException("Product attribute not found!");
+            throw new ResourceNotFoundException("Product attribute not found!");
         }
         attribute.setId(attributeId);
         productAttributeService.update(attribute, attributeId);
@@ -120,7 +117,7 @@ public class ProductControllerView extends BaseController {
                                                     @PathVariable("sanPhamBienTheId") Integer productVariantId,
                                                     @RequestParam("imageId") Integer imageId) {
         if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
-            throw new NotFoundException("Product variant or image not found!");
+            throw new ResourceNotFoundException("Product variant or image not found!");
         }
         productImageService.setImageActiveOfProductVariant(productVariantId, imageId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -129,7 +126,7 @@ public class ProductControllerView extends BaseController {
     @GetMapping("/export")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ResponseEntity<?> exportData() {
-        ExportDataModel model = exportService.exportToExcel(TemplateExport.LIST_OF_PRODUCTS, null, false);
+        EximModel model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_PRODUCTS, null, false);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

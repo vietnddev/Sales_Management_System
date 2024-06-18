@@ -2,75 +2,44 @@ package com.flowiee.pms.service.category.impl;
 
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.Material;
-import com.flowiee.pms.entity.system.Account;
-import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.entity.system.FlowieeImport;
-import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.repository.category.CategoryHistoryRepository;
 import com.flowiee.pms.repository.category.CategoryRepository;
-import com.flowiee.pms.repository.system.AppImportRepository;
-import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.category.CategoryHistoryService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.MaterialService;
-import com.flowiee.pms.service.system.FileStorageService;
-import com.flowiee.pms.service.system.ImportService;
-import com.flowiee.pms.service.system.NotificationService;
 import com.flowiee.pms.utils.*;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Clock;
-import java.time.Instant;
 import java.util.*;
 
 @Service
 public class CategoryServiceImpl extends BaseService implements CategoryService {
-    private static final String mvModule = MODULE.CATEGORY.name();
-    private static final String mainObjectName = "Category";
-
     private final CategoryRepository categoryRepo;
     private final CategoryHistoryService categoryHistoryService;
     private final CategoryHistoryRepository categoryHistoryRepository;
     private final ProductInfoService productInfoService;
-    private final NotificationService notificationService;
-    private final ImportService importService;
-    private final AppImportRepository appImportRepo;
-    private final FileStorageService fileStorageService;
-    private final FileStorageRepository fileStorageRepo;
     private final MaterialService materialService;
 
-    public CategoryServiceImpl(ImportService importService, CategoryRepository categoryRepo, ProductInfoService productInfoService,
-                               MaterialService materialService, NotificationService notificationService, AppImportRepository appImportRepo,
-                               FileStorageService fileStorageService, FileStorageRepository fileStorageRepo, CategoryHistoryService categoryHistoryService,
-                               CategoryHistoryRepository categoryHistoryRepository) {
-        this.importService = importService;
+    public CategoryServiceImpl(CategoryRepository categoryRepo, ProductInfoService productInfoService, MaterialService materialService,
+                               CategoryHistoryService categoryHistoryService, CategoryHistoryRepository categoryHistoryRepository) {
         this.categoryRepo = categoryRepo;
         this.productInfoService = productInfoService;
         this.materialService = materialService;
-        this.notificationService = notificationService;
-        this.appImportRepo = appImportRepo;
-        this.fileStorageService = fileStorageService;
-        this.fileStorageRepo = fileStorageRepo;
         this.categoryHistoryService = categoryHistoryService;
         this.categoryHistoryRepository = categoryHistoryRepository;
     }
@@ -91,7 +60,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
             throw new BadRequestException();
         }
         Category categorySaved = categoryRepo.save(entity);
-        systemLogService.writeLogCreate(MODULE.CATEGORY.name(), ACTION.CTG_I.name(), mainObjectName, "Thêm mới danh mục", categorySaved.getName());
+        systemLogService.writeLogCreate(MODULE.CATEGORY, ACTION.CTG_I, MasterObject.Category, "Thêm mới danh mục", categorySaved.getName());
         return categorySaved;
     }
 
@@ -113,7 +82,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         String logTitle = "Cập nhật thông tin danh mục: " + categorySaved.getName();
         Map<String, Object[]> logChanges = LogUtils.logChanges(categoryBefore, categorySaved);
         categoryHistoryService.save(logChanges, logTitle, categoryId);
-        systemLogService.writeLogUpdate(MODULE.CATEGORY.name(), ACTION.CTG_U.name(), mainObjectName, logTitle, logChanges);
+        systemLogService.writeLogUpdate(MODULE.CATEGORY, ACTION.CTG_U, MasterObject.Category, logTitle, logChanges);
         logger.info("Update Category success! {}", categorySaved);
 
         return categorySaved;
@@ -124,14 +93,14 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     public String delete(Integer categoryId) {
         Optional<Category> categoryToDelete = this.findById(categoryId);
         if (categoryToDelete.isEmpty()) {
-            throw new BadRequestException();
+            throw new ResourceNotFoundException("Category not found!");
         }
         if (categoryInUse(categoryId)) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         categoryHistoryRepository.deleteAllByCategory(categoryId);
         categoryRepo.deleteById(categoryId);
-        systemLogService.writeLogDelete(MODULE.CATEGORY.name(), ACTION.CTG_D.name(), mainObjectName, "Xóa danh mục", categoryToDelete.get().getName());
+        systemLogService.writeLogDelete(MODULE.CATEGORY, ACTION.CTG_D, MasterObject.Category, "Xóa danh mục", categoryToDelete.get().getName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
@@ -271,100 +240,5 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
                 throw new IllegalStateException("Unexpected value: " + category.get().getType());
         }
         return false;
-    }
-
-    @Transactional
-    @Override
-    public String importData(MultipartFile fileImport, String categoryType) {
-        Date startTimeImport = new Date();
-        String resultOfFlowieeImport = "";
-        String detailOfFlowieeImport = "";
-        int importSuccess = 0;
-        int totalRecord = 0;
-        boolean isImportSuccess = true;
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook(fileImport.getInputStream());
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            for (int i = 3; i < sheet.getPhysicalNumberOfRows(); i++) {
-                XSSFRow row = sheet.getRow(i);
-                if (row != null) {
-                    String categoryCode = row.getCell(1).getStringCellValue();
-                    String categoryName = row.getCell(2).getStringCellValue();
-                    String categoryNote = row.getCell(3).getStringCellValue();
-                    //Nếu name null -> không ínsert data null vào database
-                    if (categoryName == null || categoryName.isEmpty()) {
-                        XSSFCellStyle cellStyle = workbook.createCellStyle();
-                        XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
-                        continue;
-                    }
-
-                    Category category = new Category();
-                    category.setType(categoryType);
-                    category.setCode(!categoryCode.isEmpty() ? categoryCode : CommonUtils.genCategoryCodeByName(categoryName));
-                    category.setName(categoryName);
-                    category.setNote(categoryNote);
-
-                    if (this.save(category) == null) {
-                        isImportSuccess = false;
-                        XSSFCellStyle cellStyle = workbook.createCellStyle();
-                        XSSFFont fontStyle = workbook.createFont();
-                        row.getCell(1).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
-                        row.getCell(2).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
-                        row.getCell(3).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
-                    } else {
-                        importSuccess++;
-                    }
-                    totalRecord++;
-                }
-            }
-            workbook.close();
-
-            if (isImportSuccess) {
-                //resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_SUCCESS;
-                detailOfFlowieeImport = importSuccess + " / " + totalRecord;
-            } else {
-                //resultOfFlowieeImport = MessagesUtil.IMPORT_DM_DONVITINH_FAIL;
-                detailOfFlowieeImport = importSuccess + " / " + totalRecord;
-            }
-            //Save file attach to storage
-            FileStorage fileStorage = new FileStorage(fileImport, MODULE.CATEGORY.name(), null);
-            fileStorage.setNote("IMPORT");
-            fileStorage.setStatus(false);
-            fileStorage.setActive(false);
-            fileStorage.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
-            fileStorage.setStorageName(Instant.now(Clock.systemUTC()).toEpochMilli() + "_" + fileImport.getOriginalFilename());
-            fileStorageService.saveFileOfImport(fileImport, fileStorage);
-
-            //Save import
-            FlowieeImport flowieeImport = new FlowieeImport();
-            flowieeImport.setModule(mvModule);
-            flowieeImport.setEntity(Category.class.getName());
-            flowieeImport.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
-            flowieeImport.setStartTime(startTimeImport);
-            flowieeImport.setEndTime(new Date());
-            flowieeImport.setResult(resultOfFlowieeImport);
-            flowieeImport.setDetail(detailOfFlowieeImport);
-            flowieeImport.setSuccessRecord(importSuccess);
-            flowieeImport.setTotalRecord(totalRecord);
-            flowieeImport.setFileId(fileStorageRepo.findByCreatedTime(fileStorage.getCreatedAt()).getId());
-            importService.save(flowieeImport);
-
-            Notification notification = new Notification();
-            notification.setTitle(resultOfFlowieeImport);
-            notification.setSend(0);
-            notification.setReceive(CommonUtils.getUserPrincipal().getId());
-            //notification.setType(MessagesUtil.NOTI_TYPE_IMPORT);
-            notification.setContent(resultOfFlowieeImport);
-            notification.setReaded(false);
-            notification.setImportId(appImportRepo.findByStartTime(flowieeImport.getStartTime()).getId());
-            notificationService.save(notification);
-
-            return MessageCode.IMPORT_SUCCESS.getDescription();
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
     }
 }

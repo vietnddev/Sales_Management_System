@@ -1,9 +1,7 @@
 package com.flowiee.pms.service.sales.impl;
 
-import com.flowiee.pms.exception.NotFoundException;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.ErrorCode;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.entity.sales.CustomerContact;
@@ -19,7 +17,6 @@ import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.constants.MessageCode;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +30,6 @@ import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl extends BaseService implements CustomerService {
-    private static final String mainObjectName = "Customer";
-
     private final CustomerRepository        customerRepository;
     private final CustomerContactRepository customerContactRepository;
     private final CustomerContactService    customerContactService;
@@ -88,7 +83,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     @Override
     public CustomerDTO save(CustomerDTO dto) {
         if (dto == null) {
-            throw new NotFoundException("Customer not found!");
+            throw new ResourceNotFoundException("Customer not found!");
         }
         Customer customer = Customer.fromCustomerDTO(dto);
         customer.setCreatedBy(dto.getCreatedBy() != null ? dto.getCreatedBy() : CommonUtils.getUserPrincipal().getId());
@@ -120,7 +115,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             customerContact.setStatus(true);
             customerContactService.save(customerContact);
         }
-        systemLogService.writeLogCreate(MODULE.PRODUCT.name(), ACTION.PRO_CUS_C.name(), mainObjectName, "Thêm mới khách hàng", customer.toString());
+        systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_CUS_C, MasterObject.Customer, "Thêm mới khách hàng", customer.toString());
         logger.info("Create customer: {}", customer.toString());
         return CustomerDTO.fromCustomer(customerInserted);
     }
@@ -129,7 +124,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     @Override
     public CustomerDTO update(CustomerDTO customer, Integer customerId) {
         if (customer == null || customerId <= 0 || this.findById(customerId).isEmpty()) {
-            throw new BadRequestException();
+            throw new ResourceNotFoundException("Customer not found!");
         }
         Customer customerToUpdate = Customer.fromCustomerDTO(customer);
         customerToUpdate.setId(customerId);
@@ -194,7 +189,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 customerContactService.save(addressDefault);
             }
         }
-        systemLogService.writeLogUpdate(MODULE.PRODUCT.name(), ACTION.PRO_CUS_U.name(), mainObjectName, "Cập nhật thông tin khách hàng", customer.toString());
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_CUS_U, MasterObject.Customer, "Cập nhật thông tin khách hàng", customer.toString());
         logger.info("Update customer info {}", customer.toString());
         return CustomerDTO.fromCustomer(customerUpdated);
     }
@@ -209,7 +204,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         customerRepository.deleteById(id);
-        systemLogService.writeLogDelete(MODULE.PRODUCT.name(), ACTION.PRO_CUS_D.name(), mainObjectName, "Xóa khách hàng", customer.get().getCustomerName());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CUS_D, MasterObject.Customer, "Xóa khách hàng", customer.get().getCustomerName());
         logger.info("Deleted customer id={}", id);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

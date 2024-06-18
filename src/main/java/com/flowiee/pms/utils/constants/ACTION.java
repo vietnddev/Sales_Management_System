@@ -22,6 +22,7 @@ public enum ACTION {
     PRO_CBO_C("Create combo", "PRODUCT"),
     PRO_CBO_U("Update combo", "PRODUCT"),
     PRO_CBO_D("Delete combo", "PRODUCT"),
+    PRO_CART_C("Tạo giỏ hàng", MODULE.SALES.name()),
     PRO_ORD_R("View list of orders", "PRODUCT"),
     PRO_ORD_C("Create order", "PRODUCT"),
     PRO_ORD_U("Update order", "PRODUCT"),

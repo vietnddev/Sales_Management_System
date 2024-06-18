@@ -4,8 +4,9 @@ import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.AccountRole;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
 import com.flowiee.pms.repository.system.SystemLogRepository;
@@ -14,8 +15,7 @@ import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
 
 import com.flowiee.pms.utils.AppConstants;
-import com.flowiee.pms.utils.constants.LogType;
-import com.flowiee.pms.utils.constants.MessageCode;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,8 +33,6 @@ import java.util.*;
 
 @Service
 public class UserDetailsServiceImpl extends BaseService implements UserDetailsService, AccountService {
-	private static final String mainObjectName = "Account";
-
 	@Lazy
 	private final RoleService         roleService;
 	private final AccountRepository   accountRepo;
@@ -76,7 +74,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			userPrincipal.setIp(details != null ? details.getRemoteAddress() : "unknown");
 			userPrincipal.setCreatedBy(accountEntity.getId());
 			userPrincipal.setLastUpdatedBy(accountEntity.getUsername());
-			SystemLog systemLog = SystemLog.builder().module(MODULE.SYSTEM.name()).function(ACTION.SYS_LOGIN.name()).object(mainObjectName).mode(LogType.LI.name()).content(accountEntity.getUsername()).ip(userPrincipal.getIp()).account(accountEntity).build();
+			SystemLog systemLog = SystemLog.builder().module(MODULE.SYSTEM.name()).function(ACTION.SYS_LOGIN.name()).object(MasterObject.Account.name()).mode(LogType.LI.name()).content(accountEntity.getUsername()).ip(userPrincipal.getIp()).account(accountEntity).build();
 			systemLog.setCreatedBy(accountEntity.getId());
 			systemLogRepo.save(systemLog);
 		} else {
@@ -102,7 +100,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			String password = account.getPassword();
 			account.setPassword(bCrypt.encode(password));
 			Account accountSaved = accountRepo.save(account);
-			systemLogService.writeLogCreate(MODULE.SYSTEM.name(), ACTION.SYS_ACC_C.name(), mainObjectName, "Thêm mới account", account.getUsername());
+			systemLogService.writeLogCreate(MODULE.SYSTEM, ACTION.SYS_ACC_C, MasterObject.Account, "Thêm mới account", account.getUsername());
             logger.info("Insert account success! username={}", account.getUsername());
 			return accountSaved;
 		} catch (RuntimeException ex) {
@@ -113,6 +111,11 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	@Transactional
 	@Override
 	public Account update(Account account, Integer entityId) {
+		Optional<Account> accountOpt = this.findById(entityId);
+		if (accountOpt.isEmpty()) {
+			throw new ResourceNotFoundException("Account not found!");
+		}
+		Account accountBefore = ObjectUtils.clone(accountOpt.get());
 		try {
 			account.setId(entityId);
 			if (account.getRole() != null && account.getRole().equals(AppConstants.ADMINISTRATOR)) {
@@ -120,9 +123,13 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			} else {
 				account.setRole("USER");
 			}
-			systemLogService.writeLogUpdate(MODULE.SYSTEM.name(), ACTION.SYS_ACC_U.name(), mainObjectName, "Cập nhật account", account.getUsername());
-			logger.info("Update account success! username={}", account.getUsername());
-			return accountRepo.save(account);
+			Account accountUpdated = accountRepo.save(account);
+
+			Map<String, Object[]> logChanges = LogUtils.logChanges(accountBefore, accountUpdated);
+			systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_ACC_U, MasterObject.Account, "Cập nhật tài khoản " + accountUpdated.getUsername(), logChanges);
+			logger.info("Update account success! username={}", accountUpdated.getUsername());
+
+			return accountUpdated;
 		} catch (RuntimeException ex) {
 			throw new AppException("Update account fail! username=" + account.getUsername(), ex);
 		}
@@ -135,7 +142,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			Optional<Account> account = accountRepo.findById(accountId);
 			if (account.isPresent()) {
 				accountRepo.delete(account.get());
-				systemLogService.writeLogDelete(MODULE.SYSTEM.name(), ACTION.SYS_ACC_D.name(), mainObjectName, "Xóa account", account.get().getUsername());
+				systemLogService.writeLogDelete(MODULE.SYSTEM, ACTION.SYS_ACC_D, MasterObject.Account, "Xóa account", account.get().getUsername());
                 logger.info("Delete account success! username={}", account.get().getUsername());
 			}
 			return MessageCode.DELETE_SUCCESS.getDescription();

@@ -46,15 +46,11 @@ public class GroupAccountController extends BaseController {
     @GetMapping("/{groupId}")
     @PreAuthorize("@vldModuleSystem.readGroupAccount(true)")
     public AppResponse<GroupAccount> findDetailAccount(@PathVariable("groupId") Integer groupId) {
-        try {
-            Optional<GroupAccount> groupAcc = groupAccountService.findById(groupId);
-            if (groupAcc.isEmpty()) {
-                throw new BadRequestException("Group not found");
-            }
-            return success(groupAcc.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "group account"), ex);
+        Optional<GroupAccount> groupAcc = groupAccountService.findById(groupId);
+        if (groupAcc.isEmpty()) {
+            throw new BadRequestException("Group account not found");
         }
+        return success(groupAcc.get());
     }
 
     @Operation(summary = "Create group account")
@@ -75,14 +71,7 @@ public class GroupAccountController extends BaseController {
     @PutMapping(value = "/update/{groupId}")
     @PreAuthorize("@vldModuleSystem.updateGroupAccount(true)")
     public AppResponse<GroupAccount> update(@RequestBody GroupAccount groupAccount, @PathVariable("groupId") Integer groupId) {
-        try {
-            if (groupAccountService.findById(groupId).isEmpty()) {
-                throw new BadRequestException("Group not found");
-            }
-            return success(groupAccountService.update(groupAccount, groupId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "group account"), ex);
-        }
+        return success(groupAccountService.update(groupAccount, groupId));
     }
 
     @Operation(summary = "Delete group account")

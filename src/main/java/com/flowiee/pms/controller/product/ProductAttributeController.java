@@ -3,6 +3,7 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.utils.constants.ErrorCode;
@@ -47,10 +48,6 @@ public class ProductAttributeController extends BaseController {
     @DeleteMapping("/attribute/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
     public AppResponse<String> deleteProductAttribute(@PathVariable("id") Integer productAttributeId) {
-        try {
-            return success(productAttributeService.delete(productAttributeId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.DELETE_ERROR_OCCURRED.getDescription(), "product attribute"), ex);
-        }
+        return success(productAttributeService.delete(productAttributeId));
     }
 }

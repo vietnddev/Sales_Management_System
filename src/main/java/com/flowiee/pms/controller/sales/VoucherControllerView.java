@@ -2,7 +2,7 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.PagesUtils;
@@ -42,7 +42,7 @@ public class VoucherControllerView extends BaseController {
             throw new BadRequestException("Voucher to update not null!");
         }
         if (voucherInfoId <= 0 || voucherService.findById(voucherInfoId).isEmpty()) {
-            throw new NotFoundException("VoucherId invalid!");
+            throw new ResourceNotFoundException("VoucherId invalid!");
         }
         voucherService.update(voucherInfo ,voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");

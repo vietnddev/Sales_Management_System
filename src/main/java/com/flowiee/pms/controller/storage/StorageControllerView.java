@@ -1,7 +1,7 @@
 package com.flowiee.pms.controller.storage;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.exception.NotFoundException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.PagesUtils;
@@ -34,7 +34,7 @@ public class StorageControllerView extends BaseController {
     public ModelAndView findDetail(@PathVariable("storageId") Integer storageId) {
         Optional<StorageDTO> storage = storageService.findById(storageId);
         if (storage.isEmpty()) {
-            throw new NotFoundException("Storage not found!");
+            throw new ResourceNotFoundException("Storage not found!");
         }
         System.out.println("storageId: " + storageId);
         ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_STORAGE_DETAIL);

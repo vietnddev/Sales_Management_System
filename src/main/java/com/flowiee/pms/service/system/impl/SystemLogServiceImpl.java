@@ -8,8 +8,10 @@ import com.flowiee.pms.service.system.SystemLogService;
 
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.LogType;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.MasterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +22,11 @@ import java.util.Map;
 
 @Service
 public class SystemLogServiceImpl extends BaseService implements SystemLogService {
-    @Autowired
-    private SystemLogRepository systemLogRepo;
+    private final SystemLogRepository systemLogRepo;
+
+    public SystemLogServiceImpl(SystemLogRepository systemLogRepo) {
+        this.systemLogRepo = systemLogRepo;
+    }
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {
@@ -36,36 +41,36 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
     }
 
     @Override
-    public SystemLog writeLogCreate(String module, String function, String object, String title, String content) {
+    public SystemLog writeLogCreate(MODULE module, ACTION function, MasterObject object, String title, String content) {
         return this.writeLog(module, function, object, LogType.I, title, content, null);
     }
 
     @Override
-    public SystemLog writeLogUpdate(String module, String function, String object, String title, Map<String, Object[]> logChanges) {
+    public SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, Map<String, Object[]> logChanges) {
         return this.writeLog(module, function, object, LogType.U, title, LogUtils.getValueChanges(logChanges)[0], LogUtils.getValueChanges(logChanges)[1]);
     }
 
     @Override
-    public SystemLog writeLogUpdate(String module, String function, String object, String title, String content) {
+    public SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, String content) {
         return this.writeLog(module, function, object, LogType.U, title, content, null);
     }
 
     @Override
-    public SystemLog writeLogUpdate(String module, String function, String object, String title, String content, String contentChange) {
+    public SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, String content, String contentChange) {
         return this.writeLog(module, function, object, LogType.U, title, content, contentChange);
     }
 
     @Override
-    public SystemLog writeLogDelete(String module, String function, String object, String title, String content) {
+    public SystemLog writeLogDelete(MODULE module, ACTION function, MasterObject object, String title, String content) {
         return this.writeLog(module, function, object, LogType.D, title, content, null);
     }
 
     @Override
-    public SystemLog writeLog(String module, String function, String object, LogType mode, String title, String content, String contentChange) {
+    public SystemLog writeLog(MODULE module, ACTION function, MasterObject object, LogType mode, String title, String content, String contentChange) {
         SystemLog systemLog = new SystemLog();
-        systemLog.setModule(module);
-        systemLog.setFunction(function);
-        systemLog.setObject(object);
+        systemLog.setModule(module.name());
+        systemLog.setFunction(function.name());
+        systemLog.setObject(object.name());
         systemLog.setMode(mode.name());
         systemLog.setTitle(title);
         systemLog.setContent(content);

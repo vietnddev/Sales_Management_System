@@ -75,13 +75,6 @@ public class TicketExportController extends BaseController {
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<String> deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
-        Optional<TicketExport> ticketExportToDelete = ticketExportService.findById(ticketExportId);
-        if (ticketExportToDelete.isEmpty()) {
-            throw new BadRequestException();
-        }
-        if ("COMPLETED".equals(ticketExportToDelete.get().getStatus())) {
-            throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
-        }
         return success(ticketExportService.delete(ticketExportId));
     }
 }

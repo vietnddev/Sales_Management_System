@@ -1,15 +1,14 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
-import com.flowiee.pms.model.ExportDataModel;
+import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.constants.ErrorCode;
-import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,15 +61,11 @@ public class OrderController extends BaseController {
     @GetMapping("/{orderId}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Integer orderId) {
-        try {
-            Optional<OrderDTO> orderDTO = orderService.findById(orderId);
-            if (orderDTO.isEmpty()) {
-                throw new BadRequestException();
-            }
-            return success(orderDTO.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "order"), ex);
+        Optional<OrderDTO> orderDTO = orderService.findById(orderId);
+        if (orderDTO.isEmpty()) {
+            throw new ResourceNotFoundException("Order not found!");
         }
+        return success(orderDTO.get());
     }
 
     @Operation(summary = "Create new order")
@@ -86,27 +81,15 @@ public class OrderController extends BaseController {
     @Operation(summary = "Update order")
     @PutMapping("/update/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public AppResponse<String> update(@RequestBody OrderDTO order, @PathVariable("orderId") Integer orderId) {
-        try {
-            if (orderId <= 0 || order == null || orderService.findById(orderId).isEmpty()) {
-                throw new BadRequestException();
-            }
-            orderService.update(order, orderId);
-            return success(MessageCode.UPDATE_SUCCESS.getDescription());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "order"), ex);
-        }
+    public AppResponse<OrderDTO> update(@RequestBody OrderDTO order, @PathVariable("orderId") Integer orderId) {
+        return success(orderService.update(order, orderId));
     }
 
     @DeleteMapping("/delete/{orderId}")
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
     public AppResponse<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
-        try {
-            //Check them trang thai
-            return success(orderService.delete(orderId));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.DELETE_ERROR_OCCURRED.getDescription(), "order"), ex);
-        }
+        //Check them trang thai
+        return success(orderService.delete(orderId));
     }
 
     @PutMapping("/do-pay/{orderId}")
@@ -116,31 +99,14 @@ public class OrderController extends BaseController {
                                           @RequestParam("paymentMethod") Integer paymentMethod,
                                           @RequestParam("paymentAmount") Float paymentAmount,
                                           @RequestParam(value = "paymentNote", required = false) String paymentNote) {
-        try {
-            if (orderId == null || orderId <= 0 || orderService.findById(orderId).isEmpty()) {
-                throw new BadRequestException();
-            }
-            if (paymentTime == null) {
-                paymentTime = LocalDateTime.now();
-            }
-            if (paymentMethod <= 0) {
-                throw new BadRequestException("Hình thức thanh toán không hợp lệ!");
-            }
-            return success(orderService.doPay(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "pay order"), ex);
-        }
+        return success(orderService.doPay(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote));
     }
 
     @GetMapping("/export")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ResponseEntity<InputStreamResource> exportToExcel() {
-        try {
-            ExportDataModel model = exportService.exportToExcel(TemplateExport.LIST_OF_ORDERS, null, false);
-            return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "export order"), ex);
-        }
+        EximModel model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_ORDERS, null, false);
+        return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 
     @GetMapping("/scan/QR-Code/{code}")
