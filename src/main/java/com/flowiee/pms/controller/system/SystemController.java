@@ -4,13 +4,15 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/sys")
 @Tag(name = "System API", description = "Quản lý hệ thống")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SystemController extends BaseController {
-    private final SystemLogService logService;
-    private final ConfigService    configService;
-
-    public SystemController(SystemLogService logService, ConfigService configService) {
-        this.logService = logService;
-        this.configService = configService;
-    }
+    SystemLogService logService;
+    ConfigService    configService;
 
     @Operation(summary = "Find all log")
     @GetMapping("/log/all")

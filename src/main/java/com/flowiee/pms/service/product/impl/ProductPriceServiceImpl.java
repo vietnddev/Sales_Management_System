@@ -11,6 +11,9 @@ import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +21,12 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductPriceServiceImpl extends BaseService implements ProductPriceService {
-    private final ProductVariantService   productVariantService;
-    private final ProductDetailRepository productVariantRepo;
-    private final ProductHistoryService   productHistoryService;
-
-    public ProductPriceServiceImpl(ProductVariantService productVariantService, ProductDetailRepository productVariantRepo, ProductHistoryService productHistoryService) {
-        this.productVariantService = productVariantService;
-        this.productVariantRepo = productVariantRepo;
-        this.productHistoryService = productHistoryService;
-    }
+    ProductVariantService   productVariantService;
+    ProductDetailRepository productVariantRepo;
+    ProductHistoryService   productHistoryService;
 
     @Transactional
     @Override

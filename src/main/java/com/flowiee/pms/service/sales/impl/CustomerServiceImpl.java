@@ -17,6 +17,9 @@ import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.CommonUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,20 +32,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CustomerServiceImpl extends BaseService implements CustomerService {
-    private final CustomerRepository        customerRepository;
-    private final CustomerContactRepository customerContactRepository;
-    private final CustomerContactService    customerContactService;
-    private final OrderService              orderService;
-    private final OrderRepository           orderRepository;
-
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerContactRepository customerContactRepository, CustomerContactService customerContactService, OrderService orderService, OrderRepository orderRepository) {
-        this.customerRepository = customerRepository;
-        this.customerContactRepository = customerContactRepository;
-        this.customerContactService = customerContactService;
-        this.orderService = orderService;
-        this.orderRepository = orderRepository;
-    }
+    OrderService              orderService;
+    OrderRepository           orderRepository;
+    CustomerRepository        customerRepository;
+    CustomerContactService    customerContactService;
+    CustomerContactRepository customerContactRepository;
 
     @Override
     public List<CustomerDTO> findAll() {

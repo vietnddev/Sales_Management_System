@@ -3,10 +3,8 @@ package com.flowiee.pms.entity.system;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -20,31 +18,32 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Branch extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @Column(name = "branch_code", nullable = false)
-    private String branchCode;
+    String branchCode;
 
     @Column(name = "branch_name", nullable = false)
-    private String branchName;
+    String branchName;
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    String phoneNumber;
 
     @Column(name = "email")
-    private String email;
+    String email;
 
     @Column(name = "address")
-    private String address;
+    String address;
 
     @Column(name = "contact_point")
-    private String contactPoint;
+    String contactPoint;
 
     @JsonIgnore
     @OneToMany(mappedBy = "branch", fetch = FetchType.LAZY)
-    private List<Account> listAccount;
+    List<Account> listAccount;
 
     public Branch(Integer id, String branchCode, String branchName) {
         this.id = id;

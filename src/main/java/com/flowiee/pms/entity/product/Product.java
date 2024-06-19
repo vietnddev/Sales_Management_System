@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.FileStorage;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -24,68 +25,69 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_type_id", nullable = false)
-    private Category productType;
+    Category productType;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable = false)
-    private Category brand;
+    Category brand;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id", nullable = false)
-    private Category unit;
+    Category unit;
 
     @Column(name = "product_name", nullable = false)
-    private String productName;
+    String productName;
 
     @Column(name = "origin_country")
-    private String originCountry;
+    String originCountry;
 
     @Column(name = "release_date")
-    private LocalDate releaseDate;
+    LocalDate releaseDate;
 
     @Column(name = "gender")
-    private String gender;
+    String gender;
 
     @Column(name = "storage_instructions")
-    private String storageInstructions;
+    String storageInstructions;
 
     @Column(name = "uv_protection")
-    private String uvProtection;
+    String uvProtection;
 
     @Column(name = "is_machine_washable")
-    private Boolean isMachineWashable;
+    Boolean isMachineWashable;
 
     @Lob
     @Column(name = "description", length = 30000, columnDefinition = "CLOB")
-    private String description;
+    String description;
 
     @Column(name = "status", nullable = false, length = 10)
-    private String status;
+    String status;
 
     @JsonIgnore
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<ProductDetail> listVariants;
+    List<ProductDetail> listVariants;
 
     @JsonIgnore
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<FileStorage> listImages;
+    List<FileStorage> listImages;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<ProductHistory> listProductHistories;
+    List<ProductHistory> listProductHistories;
 
     public Product(int id) {
         super.id = id;

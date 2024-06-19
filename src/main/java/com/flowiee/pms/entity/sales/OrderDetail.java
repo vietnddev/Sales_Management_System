@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductDetail;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,44 +19,45 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetail extends BaseEntity implements java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@JsonIgnore
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_id", nullable = false)
-	private Order order;
+	Order order;
 
 	@JsonIgnore
 	@JsonIgnoreProperties("listDonHangChiTiet")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_variant_id", nullable = false)
-	private ProductDetail productDetail;
+	ProductDetail productDetail;
 
 	@Column(name = "price_type", nullable = false)
-	private String priceType;//S or L
+	String priceType;//S or L
 
 	@Column(name = "price", nullable = false)
-	private BigDecimal price;
+	BigDecimal price;
 
 	@Column(name = "price_original", nullable = false)
-	private BigDecimal priceOriginal;
+	BigDecimal priceOriginal;
 
 	@Column(name = "extra_discount", nullable = false)
-	private BigDecimal extraDiscount;
+	BigDecimal extraDiscount;
 
 	@Column(name = "quantity", nullable = false)
-	private int quantity;
+	int quantity;
 
 	@Column(name = "note", length = 500)
-	private String note;
+	String note;
 
 	@Column(name = "status", nullable = false)
-	private boolean status;
+	boolean status;
 
 	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY)
-	private List<OrderHistory> listOrderHistory;
+	List<OrderHistory> listOrderHistory;
 
 	public OrderDetail(Integer id) {
 		this.id = id;

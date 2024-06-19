@@ -5,6 +5,8 @@ import com.flowiee.pms.model.GeneralLedger;
 import com.flowiee.pms.repository.sales.LedgerTransactionRepository;
 import com.flowiee.pms.service.sales.LedgerService;
 import com.flowiee.pms.service.sales.LedgerTransactionService;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -16,9 +18,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class LedgerServiceImpl implements LedgerService {
-    private final LedgerTransactionRepository ledgerTransactionRepository;
-    private final LedgerTransactionService    ledgerTransactionService;
+    LedgerTransactionRepository ledgerTransactionRepository;
+    LedgerTransactionService    ledgerTransactionService;
 
     public LedgerServiceImpl(LedgerTransactionRepository ledgerTransactionRepository, @Qualifier("ledgerTransactionServiceImpl") LedgerTransactionService ledgerTransactionService) {
         this.ledgerTransactionRepository = ledgerTransactionRepository;

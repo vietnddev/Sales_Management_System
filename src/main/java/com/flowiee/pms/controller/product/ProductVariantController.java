@@ -15,6 +15,9 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +29,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý biến thể sản phẩm")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductVariantController extends BaseController {
-    private final ProductVariantService productVariantService;
-    private final ProductHistoryService productHistoryService;
-    private final ProductPriceService   productPriceService;
-
-    public ProductVariantController(ProductVariantService productVariantService, ProductHistoryService productHistoryService, ProductPriceService productPriceService) {
-        this.productVariantService = productVariantService;
-        this.productHistoryService = productHistoryService;
-        this.productPriceService = productPriceService;
-    }
+    ProductVariantService productVariantService;
+    ProductHistoryService productHistoryService;
+    ProductPriceService   productPriceService;
 
     @Operation(summary = "Find all variants")
     @GetMapping("/variant/all")

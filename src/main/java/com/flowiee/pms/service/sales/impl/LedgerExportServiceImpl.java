@@ -4,17 +4,18 @@ import com.flowiee.pms.entity.sales.LedgerTransaction;
 import com.flowiee.pms.model.GeneralLedger;
 import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.sales.LedgerService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class LedgerExportServiceImpl extends BaseExportService {
-    private final LedgerService ledgerService;
-
-    public LedgerExportServiceImpl(LedgerService ledgerService) {
-        this.ledgerService = ledgerService;
-    }
+    LedgerService ledgerService;
 
     @Override
     protected void writeData(Object pCondition) {

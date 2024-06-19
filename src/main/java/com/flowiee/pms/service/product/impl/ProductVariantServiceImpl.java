@@ -21,11 +21,12 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.utils.converter.ProductVariantConvert;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -35,24 +36,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductVariantServiceImpl extends BaseService implements ProductVariantService {
-    private final ProductDetailRepository     productVariantRepo;
-    private final TicketImportService         ticketImportService;
-    private final TicketExportService         ticketExportService;
-    private final ProductHistoryService       productHistoryService;
-    private final ProductDetailTempRepository productVariantTempRepo;
-
-    public ProductVariantServiceImpl(ProductDetailRepository productVariantRepo, @Lazy TicketImportService ticketImportService, TicketExportService ticketExportService, ProductHistoryService productHistoryService, ProductDetailTempRepository productVariantTempRepo) {
-        this.productVariantRepo = productVariantRepo;
-        this.ticketImportService = ticketImportService;
-        this.ticketExportService = ticketExportService;
-        this.productHistoryService = productHistoryService;
-        this.productVariantTempRepo = productVariantTempRepo;
-    }
+    ProductDetailRepository     productVariantRepo;
+    TicketImportService         ticketImportService;
+    TicketExportService         ticketExportService;
+    ProductHistoryService       productHistoryService;
+    ProductDetailTempRepository productVariantTempRepo;
 
     @Override
     public List<ProductVariantDTO> findAll() {
@@ -161,12 +155,9 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             ProductDetail productVariantUpdated = productVariantRepo.save(productToUpdate);
 
             String logTitle = "Cập nhật thông tin sản phẩm: " + productVariantUpdated.getVariantName();
-            //Map<String, Object[]> logChanges = LogUtils.logChanges(productBeforeUpdate, productVariantUpdated);
-
-            ChangeLog changeLog = LogUtils.logChanges2(productBeforeUpdate, productVariantUpdated);
-
+            ChangeLog changeLog = new ChangeLog(productBeforeUpdate, productVariantUpdated);
             productHistoryService.save(changeLog.getLogChanges(), logTitle, productVariantUpdated.getProduct().getId(), productVariantUpdated.getId(), null);
-            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, logTitle, changeLog.getOldValue(), changeLog.getNewValue());
+            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, logTitle, changeLog.getOldValues(), changeLog.getNewValues());
             logger.info("Update productVariant success! {}", productVariantUpdated);
 
             return ProductVariantConvert.entityToDTO(productVariantUpdated);

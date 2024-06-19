@@ -7,18 +7,19 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.ImportService;
 
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ImportServiceImpl extends BaseService implements ImportService {
-    private final AppImportRepository appImportRepository;
-
-    public ImportServiceImpl(AppImportRepository appImportRepository) {
-        this.appImportRepository = appImportRepository;
-    }
+    AppImportRepository appImportRepository;
 
     @Override
     public List<FileImportHistory> findAll() {

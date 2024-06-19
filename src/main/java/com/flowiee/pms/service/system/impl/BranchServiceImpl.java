@@ -5,18 +5,19 @@ import com.flowiee.pms.repository.system.BranchRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.BranchService;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class BranchServiceImpl extends BaseService implements BranchService {
-    private BranchRepository branchRepository;
-
-    public BranchServiceImpl(BranchRepository branchRepository) {
-        this.branchRepository = branchRepository;
-    }
+    BranchRepository branchRepository;
 
     @Override
     public List<Branch> findAll() {

@@ -12,6 +12,7 @@ import com.flowiee.pms.entity.sales.GarmentFactory;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.FileStorage;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -32,145 +33,146 @@ import java.util.Map;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDetail extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    Product product;
     
     @Column(name = "variant_code", length = 50, nullable = false)
-    private String variantCode;
+    String variantCode;
     
     @Column(name = "variant_name")
-    private String variantName;
+    String variantName;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_combo_id")
-    private ProductCombo productCombo;
+    ProductCombo productCombo;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id", nullable = false)
-    private Category color;
+    Category color;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "size_id", nullable = false)
-    private Category size;
+    Category size;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fabric_id", nullable = false)
-    private Category fabricType;
+    Category fabricType;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "garment_factory_id")
-    private GarmentFactory garmentFactory;
+    GarmentFactory garmentFactory;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
+    Supplier supplier;
 
     @Column(name = "quantity_stg", nullable = false)
-    private Integer storageQty;
+    Integer storageQty;
 
     @Column(name = "quantity_sold", nullable = false)
-    private Integer soldQty;
+    Integer soldQty;
 
     @Column(name = "quantity_defective", nullable = false)
-    private Integer defectiveQty;
+    Integer defectiveQty;
 
     @Column(name = "original_price", nullable = false)
-    private BigDecimal originalPrice;//Remove in future
+    BigDecimal originalPrice;//Remove in future
 
     @Column(name = "discount_price", nullable = false)
-    private BigDecimal discountPrice;//Remove in future
+    BigDecimal discountPrice;//Remove in future
 
     @Column(name = "purchase_price")
-    private BigDecimal purchasePrice;
+    BigDecimal purchasePrice;
 
     @Column(name = "cost_price")
-    private BigDecimal costPrice;
+    BigDecimal costPrice;
 
     @Column(name = "retail_price", nullable = false)
-    private BigDecimal retailPrice;
+    BigDecimal retailPrice;
 
     @Column(name = "retail_price_discount")
-    private BigDecimal retailPriceDiscount;
+    BigDecimal retailPriceDiscount;
 
     @Column(name = "wholesale_price", nullable = false)
-    private BigDecimal wholesalePrice;
+    BigDecimal wholesalePrice;
 
     @Column(name = "wholesale_price_discount")
-    private BigDecimal wholesalePriceDiscount;
+    BigDecimal wholesalePriceDiscount;
 
     @Column(name = "weight")
-    private String weight;
+    String weight;
 
     @Column(name = "dimensions")
-    private String dimensions;
+    String dimensions;
 
     @Column(name = "sku")
-    private String sku;
+    String sku;
 
     @Column(name = "warranty_period")
-    private Integer warrantyPeriod;
+    Integer warrantyPeriod;
 
     @Column(name = "sole_material")
-    private String soleMaterial;
+    String soleMaterial;
 
     @Column(name = "heel_height")
-    private String heelHeight;
+    String heelHeight;
 
     @Column(name = "discontinued_date")
-    private LocalDate discontinuedDate;
+    LocalDate discontinuedDate;
 
     @Column(name = "is_limited_edition")
-    private Boolean isLimitedEdition;
+    Boolean isLimitedEdition;
 
     @Column(name = "pattern")
-    private String pattern;
+    String pattern;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    String status;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<ProductAttribute> listAttributes;
+    List<ProductAttribute> listAttributes;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productDetail", fetch = FetchType.LAZY)
-    private List<OrderDetail> listOrderDetail;
+    List<OrderDetail> listOrderDetail;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<FileStorage> listImages;
+    List<FileStorage> listImages;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Items> listItems;
+    List<Items> listItems;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<ProductHistory> listProductHistories;
+    List<ProductHistory> listProductHistories;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<ProductVariantTemp> listProductVariantTemp;
+    List<ProductVariantTemp> listProductVariantTemp;
 
     public ProductDetail(int id) {
         super.id = id;

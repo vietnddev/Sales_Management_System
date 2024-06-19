@@ -2,26 +2,29 @@ package com.flowiee.pms.model;
 
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.model.dto.CustomerDTO;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DashboardModel {
-    private Integer totalProducts;
-    private String revenueToday;
-    private String revenueThisMonth;
-    private Integer ordersNewTodayQty;
-    private Integer ordersCancelTodayQty;
-    private Integer ordersReturnTodayQty;
-    private List<Order> listOrdersToday;
-    private Integer customersNewInMonthQty;
-    private Integer customersNewInTodayQty;
-    private List<CustomerDTO> listCustomersNewInMonth;
-    private LinkedHashMap<String, Float> revenueDayOfMonth;
-    private LinkedHashMap<Integer, Float> revenueMonthOfYear;
-    private LinkedHashMap<String, Float> revenueSalesChannel;
-    private LinkedHashMap<String, Integer> productsTopSellQty;
-    private LinkedHashMap<String, Integer> productsTopSellRevenue;
+    Integer totalProducts;
+    String revenueToday;
+    String revenueThisMonth;
+    Integer ordersNewTodayQty;
+    Integer ordersCancelTodayQty;
+    Integer ordersReturnTodayQty;
+    List<Order> listOrdersToday;
+    Integer customersNewInMonthQty;
+    Integer customersNewInTodayQty;
+    List<CustomerDTO> listCustomersNewInMonth;
+    LinkedHashMap<String, Float> revenueDayOfMonth;
+    LinkedHashMap<Integer, Float> revenueMonthOfYear;
+    LinkedHashMap<String, Float> revenueSalesChannel;
+    LinkedHashMap<String, Integer> productsTopSellQty;
+    LinkedHashMap<String, Integer> productsTopSellRevenue;
 }

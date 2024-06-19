@@ -3,6 +3,9 @@ package com.flowiee.pms.service.category.impl;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.category.CategoryService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
@@ -10,12 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CategoryExportServiceImpl extends BaseExportService {
-    private final CategoryService categoryService;
-
-    public CategoryExportServiceImpl(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    CategoryService categoryService;
 
     @Override
     protected void writeData(Object pCondition) {

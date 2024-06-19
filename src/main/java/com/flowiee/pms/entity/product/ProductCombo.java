@@ -3,10 +3,8 @@ package com.flowiee.pms.entity.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -22,29 +20,30 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductCombo extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @Column(name = "combo_name", nullable = false)
-    private String comboName;
+    String comboName;
 
     @Column(name = "start_date")
-    private LocalDate startDate;
+    LocalDate startDate;
 
     @Column(name = "end_date")
-    private LocalDate endDate;
+    LocalDate endDate;
 
     @Column(name = "amount_discount", nullable = false)
-    private BigDecimal amountDiscount;
+    BigDecimal amountDiscount;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productCombo", fetch = FetchType.LAZY)
-    private List<ProductDetail> listProductVariant;
+    List<ProductDetail> listProductVariant;
 
     @Transient
-    private BigDecimal totalValue;
+    BigDecimal totalValue;
 }

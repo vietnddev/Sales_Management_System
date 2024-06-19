@@ -17,6 +17,9 @@ import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.LogUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -31,11 +34,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class VoucherInfoServiceImpl extends BaseService implements VoucherService {
-    private final VoucherInfoRepository voucherInfoRepo;
-    private final VoucherApplyService   voucherApplyService;
-    private final VoucherTicketService  voucherTicketService;
-    private final ModelMapper           modelMapper;
+    ModelMapper           modelMapper;
+    VoucherInfoRepository voucherInfoRepo;
+    VoucherApplyService   voucherApplyService;
+    VoucherTicketService  voucherTicketService;
 
     public VoucherInfoServiceImpl(VoucherInfoRepository voucherInfoRepo, VoucherApplyService voucherApplyService, @Lazy VoucherTicketService voucherTicketService, ModelMapper modelMapper) {
         this.voucherInfoRepo = voucherInfoRepo;

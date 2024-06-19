@@ -4,6 +4,9 @@ import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.CommonUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
@@ -11,12 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductExportServiceImpl extends BaseExportService {
-    private final ProductVariantService productVariantService;
-
-    public ProductExportServiceImpl(ProductVariantService productVariantService) {
-        this.productVariantService = productVariantService;
-    }
+    ProductVariantService productVariantService;
 
     @Override
     protected void writeData(Object pCondition) {

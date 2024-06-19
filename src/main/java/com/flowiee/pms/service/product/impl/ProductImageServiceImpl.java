@@ -15,6 +15,9 @@ import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +33,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductImageServiceImpl extends BaseService implements ProductImageService {
-    private final FileStorageRepository fileRepository;
-    private final ProductVariantService productVariantService;
-    private final TicketExportService   ticketExportService;
-    private final TicketImportService   ticketImportService;
-
-    public ProductImageServiceImpl(FileStorageRepository fileRepository, ProductVariantService productVariantService, TicketExportService ticketExportService, TicketImportService ticketImportService) {
-        this.fileRepository = fileRepository;
-        this.productVariantService = productVariantService;
-        this.ticketExportService = ticketExportService;
-        this.ticketImportService = ticketImportService;
-    }
+    FileStorageRepository fileRepository;
+    TicketExportService   ticketExportService;
+    TicketImportService   ticketImportService;
+    ProductVariantService productVariantService;
 
     @Override
     public List<FileStorage> getImageOfProduct(Integer productId) {

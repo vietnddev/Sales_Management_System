@@ -14,7 +14,9 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
@@ -23,9 +25,10 @@ import java.time.Clock;
 import java.time.Instant;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeService {
-    @Autowired
-    private FileStorageRepository fileRepository;
+    FileStorageRepository fileRepository;
 
     @Override
     public String saveQRCodeOfOrder(int orderId) {

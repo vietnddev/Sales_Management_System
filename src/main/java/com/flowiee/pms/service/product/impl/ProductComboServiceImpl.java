@@ -9,6 +9,9 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductComboService;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +22,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductComboServiceImpl extends BaseService implements ProductComboService {
-    private final ProductComboRepository productComboRepository;
-
-    public ProductComboServiceImpl(ProductComboRepository productComboRepository) {
-        this.productComboRepository = productComboRepository;
-    }
+    ProductComboRepository productComboRepository;
 
     @Override
     public Page<ProductCombo> findAll(int pageSize, int pageNum) {

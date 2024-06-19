@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.ProductDetail;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -21,57 +22,58 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Supplier extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "name", nullable = false)
-    private String name;
+    String name;
 
     @Column(name = "code")
-    private String code;
+    String code;
 
     @Column(name = "tax_code")
-    private String taxCode;
+    String taxCode;
 
     @Column(name = "phone")
-    private String phone;
+    String phone;
 
     @Column(name = "email")
-    private String email;
+    String email;
 
     @Column(name = "address")
-    private String address;
+    String address;
 
     @Column(name = "website")
-    private String website;
+    String website;
 
     @Column(name = "contact_point")
-    private String contactPoint;
+    String contactPoint;
 
     @Column(name = "product_provided")
-    private String productProvided;
+    String productProvided;
 
     @Column(name = "current_debt_amount")
-    private BigDecimal currentDebtAmount;
+    BigDecimal currentDebtAmount;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @Column(name = "status")
-    private String status;
+    String status;
 
     @JsonIgnore
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private List<TicketImport> listTicketImportGoods;
+    List<TicketImport> listTicketImportGoods;
 
     @JsonIgnore
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private List<ProductDetail> listProductDetail;
+    List<ProductDetail> listProductDetail;
 
     @JsonIgnore
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private List<Material> listMaterial;
+    List<Material> listMaterial;
 
     public Supplier(Integer id) {
         this.id = id;

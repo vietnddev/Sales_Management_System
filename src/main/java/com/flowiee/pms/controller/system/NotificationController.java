@@ -8,6 +8,9 @@ import com.flowiee.pms.service.system.NotificationService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/notification")
 @Tag(name = "Notification API", description = "Thông báo hệ thống")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class NotificationController extends BaseController {
-    private final NotificationService notificationService;
-
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
+    NotificationService notificationService;
 
     @Operation(summary = "Find all notifications")
     @GetMapping("/all")

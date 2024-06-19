@@ -2,10 +2,8 @@ package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,19 +20,20 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SupplierOrder extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "description")
-    private String description;
+    String description;
 
     @Column(name = "total_amount")
-    private BigDecimal totalAmount;
+    BigDecimal totalAmount;
 
     @Column(name = "order_time")
-    private LocalDateTime orderTime;
+    LocalDateTime orderTime;
 }

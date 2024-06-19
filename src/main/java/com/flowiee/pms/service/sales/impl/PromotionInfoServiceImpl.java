@@ -16,6 +16,9 @@ import com.flowiee.pms.service.sales.PromotionService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.PromotionStatus;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.*;
@@ -29,18 +32,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class PromotionInfoServiceImpl extends BaseService implements PromotionService {
-    private final ModelMapper             modelMapper;
-    private final PromotionInfoRepository promotionInfoRepository;
-    private final PromotionApplyService   promotionApplyService;
-    private final ProductInfoService      productInfoService;
-
-    public PromotionInfoServiceImpl(ModelMapper modelMapper, PromotionInfoRepository promotionInfoRepository, PromotionApplyService promotionApplyService, ProductInfoService productInfoService) {
-        this.modelMapper = modelMapper;
-        this.promotionInfoRepository = promotionInfoRepository;
-        this.promotionApplyService = promotionApplyService;
-        this.productInfoService = productInfoService;
-    }
+    ModelMapper             modelMapper;
+    ProductInfoService      productInfoService;
+    PromotionInfoRepository promotionInfoRepository;
+    PromotionApplyService   promotionApplyService;
 
     @Override
     public List<PromotionInfoDTO> findAll() {

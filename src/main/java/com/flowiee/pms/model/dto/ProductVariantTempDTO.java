@@ -1,8 +1,10 @@
 package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.product.ProductVariantTemp;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
@@ -12,18 +14,19 @@ import java.util.List;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductVariantTempDTO extends ProductVariantTemp implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer ticketImportId;
-    private Integer ticketExportId;
-    private Integer productVariantId;
-    private String productVariantName;
+    Integer ticketImportId;
+    Integer ticketExportId;
+    Integer productVariantId;
+    String productVariantName;
     //Popup's field get import/export storage of product
-    private String staff;
-    private String changeQty;
-    private String branchName;
+    String staff;
+    String changeQty;
+    String branchName;
 
     public static ProductVariantTempDTO convertToDTO(ProductVariantTemp inputEntity) {
         ProductVariantTempDTO outputDTO = new ProductVariantTempDTO();

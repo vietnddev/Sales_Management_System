@@ -1,15 +1,18 @@
 package com.flowiee.pms.model;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopInfo {
-    private String name;
-    private String email;
-    private String phoneNumber;
-    private String address;
-    private String description;
-    private String returnPolicy;
-    private String refundPolicy;
-    private String logoUrl;
+    String name;
+    String email;
+    String phoneNumber;
+    String address;
+    String description;
+    String returnPolicy;
+    String refundPolicy;
+    String logoUrl;
 }

@@ -3,10 +3,8 @@ package com.flowiee.pms.entity.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -19,47 +17,48 @@ import java.io.Serializable;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductHistory extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product product;
+    Product product;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id")
-    private ProductDetail productDetail;
+    ProductDetail productDetail;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_attribute_id")
-    private ProductAttribute productAttribute;
+    ProductAttribute productAttribute;
 
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "field", nullable = false)
-    private String field;
+    String field;
 
     @Lob
     @Column(name = "old_value", nullable = false, length = 9999, columnDefinition = "CLOB")
-    private String oldValue;
+    String oldValue;
 
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
-    private String newValue;
+    String newValue;
 
     @Transient
-    private Integer productId;
+    Integer productId;
 
     @Transient
-    private Integer productVariantId;
+    Integer productVariantId;
 
     @Transient
-    private Integer productAttributeId;
+    Integer productAttributeId;
 
     public ProductHistory(Integer productId, Integer variantId, Integer attributeId, String title, String field, String oldValue, String newValue) {
         if (productId != null) {

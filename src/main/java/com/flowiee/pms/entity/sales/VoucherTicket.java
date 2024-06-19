@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -18,30 +19,31 @@ import java.util.Date;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class VoucherTicket extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voucher_info_id", nullable = false)
-    private VoucherInfo voucherInfo;
+    VoucherInfo voucherInfo;
 
     @Column(name = "code", nullable = false, length = 15)
-    private String code;
+    String code;
 
     @Column(name = "length", nullable = false)
-    private Integer length;
+    Integer length;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @Column(name = "active_time")
-    private Date activeTime;
+    Date activeTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer")
-    private Customer customer;
+    Customer customer;
 
     @Column(name = "is_used", nullable = false)
-    private boolean isUsed;
+    boolean isUsed;
 
 	@Override
 	public String toString() {

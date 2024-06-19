@@ -7,7 +7,9 @@ import java.util.*;
 
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.BaseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import com.flowiee.pms.entity.system.Language;
@@ -16,22 +18,19 @@ import com.flowiee.pms.repository.system.LanguagesRepository;
 import com.flowiee.pms.service.system.LanguageService;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class LanguageServiceImpl extends BaseService implements LanguageService {
-	private final LanguagesRepository languagesRepo;
-
-	@Autowired
-	public LanguageServiceImpl(LanguagesRepository languagesRepo) {
-		this.languagesRepo = languagesRepo;
-	}
+	LanguagesRepository languagesRepository;
 
 	@Override
 	public List<Language> findAll() {
-		return languagesRepo.findAll();
+		return languagesRepository.findAll();
 	}
 
 	@Override
 	public Optional<Language> findById(Integer langId) {
-		return languagesRepo.findById(langId);
+		return languagesRepository.findById(langId);
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 
 	@Override
 	public Map<String, String> findAllLanguageMessages(String langCode) {
-		List<Language> languageList = languagesRepo.findByCode(langCode);
+		List<Language> languageList = languagesRepository.findByCode(langCode);
         Map<String, String> languageMessages = new HashMap<>();
         for (Language language : languageList) {
             languageMessages.put(language.getKey(), language.getValue());
@@ -54,7 +53,7 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 		if (langId == null || langId <= 0) {
 			throw new BadRequestException();
 		}
-		return languagesRepo.save(language);
+		return languagesRepository.save(language);
 	}
 
 	@Override

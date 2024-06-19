@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.model.dto.CustomerDTO;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -25,50 +26,51 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Customer extends BaseEntity implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "customer_name", length = 100, nullable = false)
-	private String customerName;
+	String customerName;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "birthday")
-	private LocalDate dateOfBirth;
+	LocalDate dateOfBirth;
 
 	@Column(name = "sex", nullable = false)
-	private boolean sex;
+	boolean sex;
 
 	@Column(name = "marital_status")
-	private String maritalStatus;
+	String maritalStatus;
 
 	@Column(name = "referral_source")
-	private String referralSource;
+	String referralSource;
 
 	@Column(name = "black_list")
-	private String isBlackList;
+	String isBlackList;
 
 	@Column(name = "black_list_reason")
-	private String blackListReason;
+	String blackListReason;
 
 	@Column(name = "loyalty_points")
-	private Integer loyaltyPoints;
+	Integer loyaltyPoints;
 
 	@Column(name = "has_outstanding_balance")
-	private Boolean hasOutstandingBalance;
+	Boolean hasOutstandingBalance;
 
 	@Column(name = "outstanding_balance_amount")
-	private BigDecimal outstandingBalanceAmount;
+	BigDecimal outstandingBalanceAmount;
 
 	@JsonIgnore
 	@JsonIgnoreProperties("customer")
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-	private List<Order> listOrder;
+	List<Order> listOrder;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	private List<CustomerContact> listCustomerContact;
+	List<CustomerContact> listCustomerContact;
 
 	public Customer(int id) {
 		super.id = id;

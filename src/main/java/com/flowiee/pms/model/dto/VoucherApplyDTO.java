@@ -1,24 +1,27 @@
 package com.flowiee.pms.model.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class VoucherApplyDTO implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer voucherApplyId;
-    private Integer voucherInfoId;
-    private String voucherInfoTitle;
-    private Integer productId;
-    private String productName;
-    private String appliedAt;
-    private Integer appliedBy;
+    Integer voucherApplyId;
+    Integer voucherInfoId;
+    String voucherInfoTitle;
+    Integer productId;
+    String productName;
+    String appliedAt;
+    Integer appliedBy;
     
 	@Override
 	public String toString() {

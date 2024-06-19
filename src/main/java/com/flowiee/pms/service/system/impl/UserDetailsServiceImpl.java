@@ -15,8 +15,10 @@ import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
 
 import com.flowiee.pms.utils.AppConstants;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,17 +34,12 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl extends BaseService implements UserDetailsService, AccountService {
-	@Lazy
-	private final RoleService         roleService;
-	private final AccountRepository   accountRepo;
-	private final SystemLogRepository systemLogRepo;
-
-	public UserDetailsServiceImpl(RoleService roleService, AccountRepository accountRepo, SystemLogRepository systemLogRepo) {
-		this.roleService = roleService;
-		this.accountRepo = accountRepo;
-		this.systemLogRepo = systemLogRepo;
-	}
+	RoleService         roleService;
+	AccountRepository   accountRepo;
+	SystemLogRepository systemLogRepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -74,7 +71,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			userPrincipal.setIp(details != null ? details.getRemoteAddress() : "unknown");
 			userPrincipal.setCreatedBy(accountEntity.getId());
 			userPrincipal.setLastUpdatedBy(accountEntity.getUsername());
-			SystemLog systemLog = SystemLog.builder().module(MODULE.SYSTEM.name()).function(ACTION.SYS_LOGIN.name()).object(MasterObject.Account.name()).mode(LogType.LI.name()).content(accountEntity.getUsername()).ip(userPrincipal.getIp()).account(accountEntity).build();
+			SystemLog systemLog = SystemLog.builder().module(MODULE.SYSTEM.name()).function(ACTION.SYS_LOGIN.name()).object(MasterObject.Account.name()).mode(LogType.LI.name()).content(accountEntity.getUsername()).title("Login").ip(userPrincipal.getIp()).account(accountEntity).build();
 			systemLog.setCreatedBy(accountEntity.getId());
 			systemLogRepo.save(systemLog);
 		} else {

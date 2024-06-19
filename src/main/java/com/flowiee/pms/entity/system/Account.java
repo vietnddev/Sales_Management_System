@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.entity.sales.Order;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -21,76 +22,77 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Account extends BaseEntity implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "username", nullable = false)
-	private String username;
+	String username;
 
 	@JsonIgnore
 	@Column(name = "password", nullable = false)
-	private String password;
+	String password;
 
 	@Column(name = "fullname", nullable = false)
-	private String fullName;
+	String fullName;
 
 	@Column(name = "sex", nullable = false)
-	private boolean sex;
+	boolean sex;
 
 	@Column(name = "phone_number")
-	private String phoneNumber;
+	String phoneNumber;
 
 	@Column(name = "email")
-	private String email;
+	String email;
 
 	@Column(name = "address")
-	private String address;
+	String address;
 
 	@Column(name = "avatar")
-	private String avatar;
+	String avatar;
 
 	@Column(name = "remark")
-	private String remark;
+	String remark;
 
 	@Column(name = "role")
-	private String role;
+	String role;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_account")
-	private GroupAccount groupAccount;
+	GroupAccount groupAccount;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "branch_id", nullable = false)
-	private Branch branch;
+	Branch branch;
 
 	@Column(name = "status")
-	private boolean status;
+	boolean status;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-	private List<FileStorage> listFileStorage;
+	List<FileStorage> listFileStorage;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "nhanVienBanHang", fetch = FetchType.LAZY)
-	private List<Order> listOrder;
+	List<Order> listOrder;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-	private List<Customer> listCustomer;
+	List<Customer> listCustomer;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-	private List<FileImportHistory> listHistoryImportData;
+	List<FileImportHistory> listHistoryImportData;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-	private List<SystemLog> listLog;
+	List<SystemLog> listLog;
 
 	@Transient
-	private String ip;
+	String ip;
 
 	public Account(Integer id) {
 		super.id = id;

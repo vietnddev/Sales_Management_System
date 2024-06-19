@@ -3,6 +3,7 @@ package com.flowiee.pms.entity.sales;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,30 +15,31 @@ import java.io.Serializable;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerContact extends BaseEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    Customer customer;
 
     @Column(name = "code", length = 20, nullable = false)
-    private String code;
+    String code;
 
     @Column(name = "value", length = 500, nullable = false)
-    private String value;
+    String value;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @Column(name = "is_default")
-    private String isDefault;
+    String isDefault;
 
     @Column(name = "status", nullable = false)
-    private boolean status;
+    boolean status;
 
     @Column(name = "is_used")
-    private boolean isUsed;
+    boolean isUsed;
 
 	@Override
 	public String toString() {

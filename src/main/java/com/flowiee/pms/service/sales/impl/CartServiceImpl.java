@@ -13,6 +13,9 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,18 +25,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CartServiceImpl extends BaseService implements CartService {
-    private final OrderCartRepository   cartRepository;
-    private final CartItemsService      cartItemsService;
-    private final CartItemsRepository   cartItemsRepository;
-    private final ProductVariantService productVariantService;
-
-    public CartServiceImpl(OrderCartRepository cartRepository, CartItemsService cartItemsService, CartItemsRepository cartItemsRepository, ProductVariantService productVariantService) {
-        this.cartRepository = cartRepository;
-        this.cartItemsService = cartItemsService;
-        this.cartItemsRepository = cartItemsRepository;
-        this.productVariantService = productVariantService;
-    }
+    OrderCartRepository   cartRepository;
+    CartItemsService      cartItemsService;
+    CartItemsRepository   cartItemsRepository;
+    ProductVariantService productVariantService;
 
     @Override
     public List<OrderCart> findCartByAccountId(Integer accountId) {

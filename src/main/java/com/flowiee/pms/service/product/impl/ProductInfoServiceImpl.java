@@ -20,6 +20,8 @@ import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.converter.ProductConvert;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.*;
@@ -29,15 +31,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
-    private final ProductRepository        productsRepo;
-    private final ProductHistoryService    productHistoryService;
-    private final VoucherService           voucherInfoService;
-    private final VoucherApplyService      voucherApplyService;
-    private final CategoryRepository       categoryRepo;
-    private final ProductVariantService    productVariantService;
-    private final ProductStatisticsService productStatisticsService;
-    private final ProductImageService      productImageService;
+    ProductRepository        productsRepo;
+    CategoryRepository       categoryRepo;
+    VoucherService           voucherInfoService;
+    VoucherApplyService      voucherApplyService;
+    ProductImageService      productImageService;
+    ProductVariantService    productVariantService;
+    ProductHistoryService    productHistoryService;
+    ProductStatisticsService productStatisticsService;
 
     public ProductInfoServiceImpl(ProductRepository productsRepo, ProductHistoryService productHistoryService, @Lazy VoucherService voucherInfoService, @Lazy VoucherApplyService voucherApplyService, CategoryRepository categoryRepo, ProductVariantService productVariantService, ProductStatisticsService productStatisticsService, ProductImageService productImageService) {
         this.productsRepo = productsRepo;

@@ -9,6 +9,9 @@ import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.entity.system.Account;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,12 +30,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProfileControllerView extends BaseController {
-	private final AccountService accountService;
-
-	public ProfileControllerView(AccountService accountService) {
-		this.accountService = accountService;
-	}
+	AccountService accountService;
 
 	@GetMapping("/sys/profile")
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {

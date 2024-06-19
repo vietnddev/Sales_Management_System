@@ -7,6 +7,9 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,14 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/order")
 @Tag(name = "Order API", description = "Quản lý giỏ hàng")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CartController extends BaseController {
-    private final CartService      cartService;
-    private final CartItemsService cartItemsService;
-
-    public CartController(CartService cartService, CartItemsService cartItemsService) {
-        this.cartService = cartService;
-        this.cartItemsService = cartItemsService;
-    }
+    CartService      cartService;
+    CartItemsService cartItemsService;
 
     @PostMapping("/ban-hang/cart/item/add")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")

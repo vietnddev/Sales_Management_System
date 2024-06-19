@@ -13,6 +13,9 @@ import com.flowiee.pms.service.system.FileStorageService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,18 +28,13 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product's image API", description = "Quản lý hình ảnh sản phẩm")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductImageController extends BaseController {
-    private final ProductInfoService    productInfoService;
-    private final ProductVariantService productVariantService;
-    private final FileStorageService    fileStorageService;
-    private final ProductImageService   productImageService;
-
-    public ProductImageController(ProductInfoService productInfoService, ProductVariantService productVariantService, FileStorageService fileStorageService, ProductImageService productImageService) {
-        this.productInfoService = productInfoService;
-        this.productVariantService = productVariantService;
-        this.fileStorageService = fileStorageService;
-        this.productImageService = productImageService;
-    }
+    ProductInfoService    productInfoService;
+    ProductVariantService productVariantService;
+    FileStorageService    fileStorageService;
+    ProductImageService   productImageService;
 
     @Operation(summary = "Upload images of product")
     @PostMapping(value = "/{productId}/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

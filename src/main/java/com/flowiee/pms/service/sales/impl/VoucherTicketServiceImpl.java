@@ -11,8 +11,10 @@ import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.VoucherStatus;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,16 +27,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class VoucherTicketServiceImpl extends BaseService implements VoucherTicketService {
-    private final VoucherTicketRepository voucherTicketRepo;
-    private final VoucherService          voucherService;
-    private final ModelMapper             modelMapper;
-
-    public VoucherTicketServiceImpl(VoucherTicketRepository voucherTicketRepo, @Lazy VoucherService voucherService, ModelMapper modelMapper) {
-        this.voucherTicketRepo = voucherTicketRepo;
-        this.voucherService = voucherService;
-        this.modelMapper = modelMapper;
-    }
+    ModelMapper             modelMapper;
+    VoucherService          voucherService;
+    VoucherTicketRepository voucherTicketRepo;
 
     @Override
     public List<VoucherTicket> findAll() {

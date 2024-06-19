@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,36 +26,37 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PromotionInfo extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "description", length = 1000)
-    private String description;
+    String description;
 
     @Column(name = "discount_percent")
-    private Integer discountPercent;
+    Integer discountPercent;
 
     @Column(name = "discount_price")
-    private BigDecimal discountPrice;
+    BigDecimal discountPrice;
 
     @Column(name = "discount_price_max")
-    private BigDecimal discountPriceMax;
+    BigDecimal discountPriceMax;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    LocalDateTime startTime;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    LocalDateTime endTime;
 
     public static PromotionInfo fromDTO(PromotionInfoDTO inputDTO) {
         PromotionInfo promotionInfo = new PromotionInfo();

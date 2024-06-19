@@ -14,6 +14,9 @@ import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,14 +29,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/voucher")
 @Tag(name = "Voucher API", description = "Quản lý voucher, voucher will be deducted from the value of the order")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class VoucherController extends BaseController {
-    private final VoucherService       voucherService;
-    private final VoucherTicketService voucherTicketService;
-
-    public VoucherController(VoucherService voucherService, VoucherTicketService voucherTicketService) {
-        this.voucherService = voucherService;
-        this.voucherTicketService = voucherTicketService;
-    }
+    VoucherService       voucherService;
+    VoucherTicketService voucherTicketService;
 
     @Operation(summary = "Find all voucher")
     @GetMapping("/all")

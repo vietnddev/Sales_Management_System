@@ -7,18 +7,19 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.GarmentFactoryService;
 
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class GarmentFactoryServiceImpl extends BaseService implements GarmentFactoryService {
-    private final GarmentFactoryRepository garmentFactoryRepo;
-
-    public GarmentFactoryServiceImpl(GarmentFactoryRepository garmentFactoryRepo) {
-        this.garmentFactoryRepo = garmentFactoryRepo;
-    }
+    GarmentFactoryRepository garmentFactoryRepo;
 
     @Override
     public List<GarmentFactory> findAll() {

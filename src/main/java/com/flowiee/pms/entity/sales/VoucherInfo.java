@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -22,45 +23,46 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class VoucherInfo extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "description", length = 1000)
-    private String description;
+    String description;
 
     @Column(name = "applicable_objects", nullable = false)
-    private String applicableObjects;
+    String applicableObjects;
 
     @Column(name = "type", length = 1000)
-    private String voucherType;
+    String voucherType;
 
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    Integer quantity;
 
     @Column(name = "discount", nullable = false)
-    private Integer discount;
+    Integer discount;
 
     @Column(name = "discount_price")
-    private BigDecimal discountPrice;
+    BigDecimal discountPrice;
 
     @Column(name = "discount_price_max")
-    private BigDecimal discountPriceMax;
+    BigDecimal discountPriceMax;
 
     @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    LocalDateTime startTime;
 
     @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    LocalDateTime endTime;
 
     @JsonIgnore
     @OneToMany(mappedBy = "voucherInfo", fetch = FetchType.LAZY)
-    private List<VoucherTicket> listVoucherTicket;
+    List<VoucherTicket> listVoucherTicket;
 
     public static VoucherInfo fromVoucherDTO(VoucherInfoDTO dto) {
         VoucherInfo voucherInfo = new VoucherInfo();

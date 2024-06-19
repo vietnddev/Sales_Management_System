@@ -1,8 +1,10 @@
 package com.flowiee.pms.model;
 
 import com.flowiee.pms.entity.system.Account;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,19 +14,20 @@ import java.util.Set;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserPrincipal extends Account implements UserDetails {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 	
-	private Integer id;
-    private String username;
-    private String password;
-    private String ip;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private boolean isEnabled;
-    private Set<GrantedAuthority> grantedAuthorities;
+	Integer id;
+    String username;
+    String password;
+    String ip;
+    boolean isAccountNonExpired;
+    boolean isAccountNonLocked;
+    boolean isCredentialsNonExpired;
+    boolean isEnabled;
+    Set<GrantedAuthority> grantedAuthorities;
 
     public UserPrincipal(Account account) {
         this.id = account.getId();

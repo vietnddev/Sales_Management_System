@@ -5,10 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
+
 public class ActionModel {
-    private String actionKey;
-    private String actionLabel;
-    private String moduleKey;
+    String actionKey;
+    String actionLabel;
+    String moduleKey;
 
     public ActionModel() {}
     

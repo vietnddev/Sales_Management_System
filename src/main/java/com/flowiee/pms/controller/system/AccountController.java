@@ -13,6 +13,9 @@ import com.flowiee.pms.service.system.RoleService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +25,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/system/account")
 @Tag(name = "Account system API", description = "Quản lý tài khoản hệ thống")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class AccountController extends BaseController {
-    private final AccountService accountService;
-    private final RoleService    roleService;
-
-    public AccountController(AccountService accountService, RoleService roleService) {
-        this.accountService = accountService;
-        this.roleService = roleService;
-    }
+    RoleService    roleService;
+    AccountService accountService;
 
     @Operation(summary = "Find all accounts")
     @GetMapping("/all")

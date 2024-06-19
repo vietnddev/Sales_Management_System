@@ -11,6 +11,9 @@ import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,12 +25,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/stg/ticket-export")
 @Tag(name = "Ticket export API", description = "Quản lý xuất hàng")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class TicketExportController extends BaseController {
-    private final TicketExportService ticketExportService;
-
-    public TicketExportController(TicketExportService ticketExportService) {
-        this.ticketExportService = ticketExportService;
-    }
+    TicketExportService ticketExportService;
 
     @Operation(summary = "Find all tickets")
     @GetMapping("/all")

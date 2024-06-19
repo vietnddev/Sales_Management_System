@@ -2,6 +2,7 @@ package com.flowiee.pms.entity.sales;
 
 import com.flowiee.pms.entity.BaseEntity;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -14,12 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderCart extends BaseEntity implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 	
 	@OneToMany(mappedBy = "orderCart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Items> listItems;
+    List<Items> listItems;
 
 	public OrderCart(int id) {
 		super.id = id;

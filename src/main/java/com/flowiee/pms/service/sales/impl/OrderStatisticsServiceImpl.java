@@ -3,13 +3,16 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderStatisticsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderStatisticsServiceImpl extends BaseService implements OrderStatisticsService {
-    @Autowired
-    private OrderRepository orderRepository;
+    OrderRepository orderRepository;
 
     @Override
     public Double findRevenueToday() {

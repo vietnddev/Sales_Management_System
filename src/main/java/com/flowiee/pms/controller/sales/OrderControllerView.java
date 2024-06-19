@@ -15,7 +15,9 @@ import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 
 import com.flowiee.pms.utils.constants.CategoryType;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,27 +29,16 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/order")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderControllerView extends BaseController {
-    private final OrderService orderService;
-    private final OrderPrintInvoiceService printInvoiceService;
-    private final CategoryService categoryService;
-    private final CartService cartService;
-    private final VoucherTicketService voucherTicketService;
-    private final AccountService accountService;
-    private final ProductVariantService productVariantService;
-
-    @Autowired
-    public OrderControllerView(OrderService orderService, OrderPrintInvoiceService printInvoiceService, CategoryService categoryService,
-                               CartService cartService, VoucherTicketService voucherTicketService, AccountService accountService,
-                               ProductVariantService productVariantService) {
-        this.orderService = orderService;
-        this.printInvoiceService = printInvoiceService;
-        this.categoryService = categoryService;
-        this.cartService = cartService;
-        this.voucherTicketService = voucherTicketService;
-        this.accountService = accountService;
-        this.productVariantService = productVariantService;
-    }
+    CartService              cartService;
+    OrderService             orderService;
+    AccountService           accountService;
+    CategoryService          categoryService;
+    VoucherTicketService     voucherTicketService;
+    OrderPrintInvoiceService printInvoiceService;
+    ProductVariantService    productVariantService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readOrder(true)")

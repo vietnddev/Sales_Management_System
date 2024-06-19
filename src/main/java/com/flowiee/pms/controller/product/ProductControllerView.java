@@ -16,6 +16,8 @@ import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.utils.constants.TemplateExport;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +30,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/san-pham")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductControllerView extends BaseController {
-    private final ProductInfoService      productInfoService;
-    private final ProductVariantService   productVariantService;
-    private final ProductAttributeService productAttributeService;
-    private final ExportService       exportService;
-    private final ProductImageService productImageService;
+    ProductInfoService      productInfoService;
+    ProductVariantService   productVariantService;
+    ProductAttributeService productAttributeService;
+    ExportService           exportService;
+    ProductImageService     productImageService;
 
     @Autowired
     public ProductControllerView(ProductInfoService productInfoService, ProductVariantService productVariantService,

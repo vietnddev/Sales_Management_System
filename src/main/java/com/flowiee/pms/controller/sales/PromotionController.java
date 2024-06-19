@@ -10,6 +10,9 @@ import com.flowiee.pms.service.sales.PromotionService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +23,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/promotion")
 @Tag(name = "Promotion API", description = "Quản lý promotion, promotion will be deducted from the price of the product")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class PromotionController extends BaseController {
-    private final PromotionService promotionService;
-
-    public PromotionController(PromotionService promotionService) {
-        this.promotionService = promotionService;
-    }
+    PromotionService promotionService;
 
     @Operation(summary = "Find all promotions")
     @GetMapping("/all")

@@ -13,6 +13,9 @@ import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +25,12 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderItemsServiceImpl extends BaseService implements OrderItemsService {
-    private final OrderDetailRepository orderDetailRepo;
-    private final SystemLogService      systemLogService;
-    private final OrderHistoryService   orderHistoryService;
-
-    public OrderItemsServiceImpl(OrderDetailRepository orderDetailRepo, SystemLogService systemLogService, OrderHistoryService orderHistoryService) {
-        this.orderDetailRepo = orderDetailRepo;
-        this.systemLogService = systemLogService;
-        this.orderHistoryService = orderHistoryService;
-    }
+    OrderDetailRepository orderDetailRepo;
+    SystemLogService      systemLogService;
+    OrderHistoryService   orderHistoryService;
 
     @Override
     public List<OrderDetail> findAll() {

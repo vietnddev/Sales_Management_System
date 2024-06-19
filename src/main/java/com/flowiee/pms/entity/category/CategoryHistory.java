@@ -2,10 +2,8 @@ package com.flowiee.pms.entity.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -18,27 +16,28 @@ import java.io.Serializable;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryHistory extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    private Category category;
+    Category category;
 
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "field", nullable = false)
-    private String field;
+    String field;
 
     @Lob
     @Column(name = "old_value", nullable = false, length = 9999, columnDefinition = "CLOB")
-    private String oldValue;
+    String oldValue;
 
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
-    private String newValue;
+    String newValue;
 
 	@Override
 	public String toString() {

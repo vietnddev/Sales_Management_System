@@ -12,6 +12,9 @@ import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MessageCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,13 +27,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/customer")
 @Tag(name = "Customer API", description = "Quản lý khách hàng")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CustomerController extends BaseController {
-    private final CustomerService customerService;
-
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    CustomerService customerService;
 
     @Operation(summary = "Find all customers")
     @GetMapping("/all")

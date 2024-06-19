@@ -9,6 +9,8 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.LedgerTransactionService;
 import com.flowiee.pms.utils.constants.LedgerTranStatus;
 import com.flowiee.pms.utils.constants.MasterObject;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,9 +24,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class LedgerTransactionServiceImpl extends BaseService implements LedgerTransactionService {
     @Autowired
-    private LedgerTransactionRepository ledgerTransRepo;
+    LedgerTransactionRepository ledgerTransRepo;
 
     @Override
     public List<LedgerTransaction> findAll() {

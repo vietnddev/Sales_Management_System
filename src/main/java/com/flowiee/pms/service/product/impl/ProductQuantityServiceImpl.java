@@ -9,18 +9,18 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.constants.MasterObject;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductQuantityServiceImpl extends BaseService implements ProductQuantityService {
-    private final ProductDetailRepository productVariantRepo;
-    private final SystemLogService        systemLogService;
-
-    public ProductQuantityServiceImpl(ProductDetailRepository productVariantRepo, SystemLogService systemLogService) {
-        this.productVariantRepo = productVariantRepo;
-        this.systemLogService = systemLogService;
-    }
+    ProductDetailRepository productVariantRepo;
+    SystemLogService        systemLogService;
 
     @Transactional
     @Override

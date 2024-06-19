@@ -3,6 +3,9 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.sales.OrderService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
@@ -11,12 +14,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderExportServiceImpl extends BaseExportService {
-    private final OrderService orderService;
-
-    public OrderExportServiceImpl(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    OrderService orderService;
 
     @Override
     protected void writeData(Object pCondition) {

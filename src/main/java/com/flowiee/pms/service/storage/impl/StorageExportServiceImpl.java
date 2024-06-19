@@ -5,9 +5,11 @@ import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.service.BaseExportService;
 import com.flowiee.pms.service.storage.StorageService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -15,9 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class StorageExportServiceImpl extends BaseExportService {
-    @Autowired
-    private StorageService storageService;
+    StorageService storageService;
 
     @Override
     protected void writeData(Object pCondition) {

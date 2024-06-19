@@ -15,8 +15,10 @@ import com.flowiee.pms.service.system.LanguageService;
 import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.MasterObject;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,17 +27,12 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ConfigServiceImpl extends BaseService implements ConfigService {
-    private final ConfigRepository sysConfigRepo;
-    private final CategoryService  categoryService;
-    private final LanguageService languageService;
-
-    @Autowired
-    public ConfigServiceImpl(ConfigRepository sysConfigRepo, CategoryService categoryService, LanguageService languageService) {
-        this.sysConfigRepo = sysConfigRepo;
-        this.categoryService = categoryService;
-        this.languageService = languageService;
-    }
+    ConfigRepository sysConfigRepo;
+    CategoryService  categoryService;
+    LanguageService  languageService;
 
     @Override
     public Optional<SystemConfig> findById(Integer id) {

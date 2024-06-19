@@ -8,6 +8,9 @@ import com.flowiee.pms.service.sales.LedgerPaymentService;
 import com.flowiee.pms.service.sales.LedgerReceiptService;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.utils.constants.LedgerTranType;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,16 +19,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/ledger/trans/")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class LedgerTransactionControllerView extends BaseController {
-    private final LedgerReceiptService ledgerReceiptService;
-    private final LedgerPaymentService ledgerPaymentService;
-    private final CategoryService      categoryService;
-
-    public LedgerTransactionControllerView(LedgerReceiptService ledgerReceiptService, LedgerPaymentService ledgerPaymentService, CategoryService categoryService) {
-        this.ledgerReceiptService = ledgerReceiptService;
-        this.ledgerPaymentService = ledgerPaymentService;
-        this.categoryService = categoryService;
-    }
+    LedgerReceiptService ledgerReceiptService;
+    LedgerPaymentService ledgerPaymentService;
+    CategoryService      categoryService;
 
     @GetMapping("/receipt")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")

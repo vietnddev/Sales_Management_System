@@ -1,25 +1,28 @@
 package com.flowiee.pms.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 @Builder
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StorageItems {
-    private Integer storageId;
-    private Integer itemId;
-    private String itemImageSrc;
-    private String itemName;
-    private String itemType;
-    private String itemBrand;
-    private Integer itemSalesAvailableQty;
-    private Integer itemStorageQty;
+    Integer storageId;
+    Integer itemId;
+    String itemImageSrc;
+    String itemName;
+    String itemType;
+    String itemBrand;
+    Integer itemSalesAvailableQty;
+    Integer itemStorageQty;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime lastImportTime;
+    LocalDateTime lastImportTime;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime firstImportTime;
-    private String isProduct;
+    LocalDateTime firstImportTime;
+    String isProduct;
 }

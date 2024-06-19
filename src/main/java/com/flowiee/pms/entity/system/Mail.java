@@ -1,10 +1,8 @@
 package com.flowiee.pms.entity.system;
 
 import com.flowiee.pms.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,25 +16,26 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Mail extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @Column(name = "send_from", nullable = false)
-    private String from;
+    String from;
 
     @Column(name = "send_to", nullable = false)
-    private String to;
+    String to;
 
     @Column(name = "cc")
-    private String cc;
+    String cc;
 
     @Column(name = "bcc")
-    private String bcc;
+    String bcc;
 
     @Column(name = "subject", nullable = false)
-    private String subject;
+    String subject;
 
     @Column(name = "content", nullable = false)
-    private String content;
+    String content;
 }

@@ -13,6 +13,8 @@ import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -25,10 +27,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý sản phẩm")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController extends BaseController {
-    private final ProductInfoService    productInfoService;
-    private final ProductHistoryService productHistoryService;
-    private final ExportService         exportService;
+    ProductInfoService    productInfoService;
+    ProductHistoryService productHistoryService;
+    ExportService         exportService;
 
     public ProductController(ProductInfoService productInfoService, ProductHistoryService productHistoryService,
                              @Qualifier("productExportServiceImpl") ExportService exportService) {

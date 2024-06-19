@@ -12,6 +12,9 @@ import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.*;
 import com.flowiee.pms.controller.BaseController;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +25,14 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/stg/ticket-import")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class TicketImportControllerView extends BaseController {
-    private final TicketImportService   ticketImportService;
-    private final StorageService        storageService;
-    private final ProductVariantService productVariantService;
-    private final MaterialService       materialService;
-    private final SupplierService       supplierService;
-
-    public TicketImportControllerView(TicketImportService ticketImportService, StorageService storageService, ProductVariantService productVariantService, MaterialService materialService, SupplierService supplierService) {
-        this.ticketImportService = ticketImportService;
-        this.storageService = storageService;
-        this.productVariantService = productVariantService;
-        this.materialService = materialService;
-        this.supplierService = supplierService;
-    }
+    StorageService        storageService;
+    MaterialService       materialService;
+    SupplierService       supplierService;
+    TicketImportService   ticketImportService;
+    ProductVariantService productVariantService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.importGoods(true)")

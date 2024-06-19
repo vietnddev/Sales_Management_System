@@ -5,6 +5,9 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.PagesUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,12 +19,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/storage")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class StorageControllerView extends BaseController {
-    private final StorageService storageService;
-
-    public StorageControllerView(StorageService storageService) {
-        this.storageService = storageService;
-    }
+    StorageService storageService;
 
     @GetMapping
     @PreAuthorize("@vldModuleStorage.readStorage(true)")

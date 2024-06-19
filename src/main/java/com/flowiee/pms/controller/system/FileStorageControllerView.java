@@ -10,6 +10,9 @@ import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.service.system.FileStorageService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,22 +22,15 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Tag(name = "File API", description = "Quản lý file đính kèm và hình ảnh sản phẩm")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class FileStorageControllerView extends BaseController {
-    private final FileStorageService    fileService;
-    private final ProductInfoService    productInfoService;
-    private final ProductVariantService productVariantService;
-    private final ProductImageService   productImageService;
-    private final TicketImportService   ticketImportService;
-    private final TicketExportService   ticketExportService;
-
-    public FileStorageControllerView(FileStorageService fileService, ProductInfoService productInfoService, ProductVariantService productVariantService, ProductImageService productImageService, TicketImportService ticketImportService, TicketExportService ticketExportService) {
-        this.fileService = fileService;
-        this.productInfoService = productInfoService;
-        this.productVariantService = productVariantService;
-        this.productImageService = productImageService;
-        this.ticketImportService = ticketImportService;
-        this.ticketExportService = ticketExportService;
-    }
+    FileStorageService    fileService;
+    TicketImportService   ticketImportService;
+    TicketExportService   ticketExportService;
+    ProductInfoService    productInfoService;
+    ProductImageService   productImageService;
+    ProductVariantService productVariantService;
 
     @PostMapping("/uploads/san-pham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")

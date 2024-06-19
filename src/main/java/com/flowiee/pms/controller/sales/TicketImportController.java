@@ -13,6 +13,9 @@ import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +26,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/stg/ticket-import")
 @Tag(name = "Ticket import API", description = "Quản lý nhập hàng")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class TicketImportController extends BaseController {
-    private final TicketImportService ticketImportService;
-
-    public TicketImportController(TicketImportService ticketImportService) {
-        this.ticketImportService = ticketImportService;
-    }
+    TicketImportService ticketImportService;
 
     @Operation(summary = "Find all phiếu nhập")
     @GetMapping("/all")

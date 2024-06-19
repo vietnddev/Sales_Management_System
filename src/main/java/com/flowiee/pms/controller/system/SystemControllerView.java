@@ -5,6 +5,9 @@ import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.utils.PagesUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/sys")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SystemControllerView extends BaseController {
-    private final ConfigService configService;
-
-    public SystemControllerView(ConfigService configService) {
-        this.configService = configService;
-    }
+    ConfigService configService;
 
     @GetMapping("/notification")
     public ModelAndView getAllNotification() {

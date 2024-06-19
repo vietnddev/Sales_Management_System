@@ -12,6 +12,9 @@ import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,14 +27,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductAttributeServiceImpl extends BaseService implements ProductAttributeService {
-    private final ProductAttributeRepository productAttributeRepo;
-    private final ProductHistoryService      productHistoryService;
-
-    public ProductAttributeServiceImpl(ProductAttributeRepository productAttributeRepo, ProductHistoryService productHistoryService) {
-        this.productAttributeRepo = productAttributeRepo;
-        this.productHistoryService = productHistoryService;
-    }
+    ProductAttributeRepository productAttributeRepo;
+    ProductHistoryService      productHistoryService;
 
     @Override
     public List<ProductAttribute> findAll() {

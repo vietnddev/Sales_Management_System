@@ -3,22 +3,26 @@ package com.flowiee.pms.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @JsonPropertyOrder({"success", "status", "message", "pagination", "data"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppResponse<T> implements Serializable {
     @Getter
     @Setter
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class PaginationModel {
-        private int pageNum;
-        private int pageSize;
-        private int totalPage;
-        private long totalElements;
+        int pageNum;
+        int pageSize;
+        int totalPage;
+        long totalElements;
 
         public PaginationModel(int pageNum, int pageSize, int totalPage, long totalElements) {
             this.pageNum = pageNum;
@@ -30,22 +34,22 @@ public class AppResponse<T> implements Serializable {
 
     @JsonIgnore
     @Serial
-    private static final long serialVersionUID = 7702134516418120340L;
+    static final long serialVersionUID = 7702134516418120340L;
 
     @JsonProperty("success")
-    private Boolean success;
+    Boolean success;
 
     @JsonProperty("status")
-    private HttpStatus status;
+    HttpStatus status;
 
     @JsonProperty("message")
-    private String message;
+    String message;
 
     @JsonProperty("data")
-    private T data;
+    T data;
 
     @JsonProperty("pagination")
-    private PaginationModel pagination;
+    PaginationModel pagination;
 
     public AppResponse(Boolean success, HttpStatus status, String message, T data, PaginationModel pagination) {
         this.success = success;

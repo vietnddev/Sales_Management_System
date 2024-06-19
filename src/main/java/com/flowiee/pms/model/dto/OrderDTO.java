@@ -4,9 +4,11 @@ import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.utils.CommonUtils;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,27 +21,28 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDTO extends Order implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
-    private Integer customerId;
-    private String customerName;
-    private Integer salesChannelId;
-    private String salesChannelName;
-    private Integer orderStatusId;
-    private String orderStatusName;
-    private Integer payMethodId;
-    private String payMethodName;
-    private Integer cashierId;
-    private String cashierName;
-	private BigDecimal totalAmount;
-	private BigDecimal totalAmountDiscount;
-	private Integer totalProduct;
-    private String qrCode;
-	private Integer cartId;
-	private Integer ticketExportId;
-	private List<OrderDetailDTO> listOrderDetailDTO;
+    Integer customerId;
+    String customerName;
+    Integer salesChannelId;
+    String salesChannelName;
+    Integer orderStatusId;
+    String orderStatusName;
+    Integer payMethodId;
+    String payMethodName;
+    Integer cashierId;
+    String cashierName;
+	BigDecimal totalAmount;
+	BigDecimal totalAmountDiscount;
+	Integer totalProduct;
+    String qrCode;
+	Integer cartId;
+	Integer ticketExportId;
+	List<OrderDetailDTO> listOrderDetailDTO;
 
 	public static OrderDTO fromOrder(Order order) {
 		OrderDTO dto = new OrderDTO();

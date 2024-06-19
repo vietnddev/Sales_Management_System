@@ -12,6 +12,9 @@ import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.LogType;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.utils.constants.MasterObject;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +24,10 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SystemLogServiceImpl extends BaseService implements SystemLogService {
-    private final SystemLogRepository systemLogRepo;
-
-    public SystemLogServiceImpl(SystemLogRepository systemLogRepo) {
-        this.systemLogRepo = systemLogRepo;
-    }
+    SystemLogRepository systemLogRepo;
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {

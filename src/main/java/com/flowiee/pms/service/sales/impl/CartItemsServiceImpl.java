@@ -6,6 +6,9 @@ import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,12 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CartItemsServiceImpl extends BaseService implements CartItemsService {
-    private final CartItemsRepository cartItemsRepository;
-
-    public CartItemsServiceImpl(CartItemsRepository cartItemsRepository) {
-        this.cartItemsRepository = cartItemsRepository;
-    }
+    CartItemsRepository cartItemsRepository;
 
     @Override
     public List<Items> findAll() {

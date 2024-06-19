@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -16,19 +17,20 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GroupAccount extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @Column(name = "group_code")
-    private String groupCode;
+    String groupCode;
 
     @Column(name = "group_name", nullable = false)
-    private String groupName;
+    String groupName;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     public GroupAccount(Integer id, String groupCode, String groupName) {
         this.id = id;
@@ -38,5 +40,5 @@ public class GroupAccount extends BaseEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "groupAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Account> listAccount;
+    List<Account> listAccount;
 }

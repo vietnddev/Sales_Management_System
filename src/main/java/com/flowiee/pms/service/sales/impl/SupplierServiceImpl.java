@@ -12,6 +12,9 @@ import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,12 +27,10 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SupplierServiceImpl extends BaseService implements SupplierService {
-    private final SupplierRepository supplierRepo;
-
-    public SupplierServiceImpl(SupplierRepository supplierRepo) {
-        this.supplierRepo = supplierRepo;
-    }
+    SupplierRepository supplierRepo;
 
     @Override
     public List<Supplier> findAll() {

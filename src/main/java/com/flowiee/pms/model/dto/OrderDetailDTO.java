@@ -2,8 +2,10 @@ package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.utils.converter.ProductVariantConvert;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
@@ -13,12 +15,13 @@ import java.util.List;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetailDTO extends OrderDetail implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer orderId;
-    private ProductVariantDTO productVariantDTO;
+    Integer orderId;
+    ProductVariantDTO productVariantDTO;
 
     public static OrderDetailDTO fromOrderDetail(OrderDetail d) {
         OrderDetailDTO dto = new OrderDetailDTO();

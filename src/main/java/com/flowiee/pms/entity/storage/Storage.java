@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -19,41 +20,42 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Storage extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @Column(name = "name", nullable = false)
-    private String name;
+    String name;
 
     @Column(name = "code")
-    private String code;
+    String code;
 
     @Column(name = "location")
-    private String location;
+    String location;
 
     @Column(name = "area")
-    private Double area;
+    Double area;
 
     @Column(name = "holdable_quantity")
-    private Integer holdableQty;
+    Integer holdableQty;
 
     @Column(name = "hold_warning_percent")
-    private Integer holdWarningPercent;
+    Integer holdWarningPercent;
 
     @Column(name = "description")
-    private String description;
+    String description;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    String status;
 
     @JsonIgnore
     @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY)
-    private List<TicketImport> listTicketImports;
+    List<TicketImport> listTicketImports;
 
     @JsonIgnore
     @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY)
-    private List<TicketExport> listTicketExports;
+    List<TicketExport> listTicketExports;
 
     public Storage(Integer id) {
         this.id = id;

@@ -8,6 +8,7 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -23,116 +24,117 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order extends BaseEntity implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "code", length = 20, nullable = false)
-	private String code;
+	String code;
 
 	@Column(name = "receiver_name")
-	private String receiverName;
+	String receiverName;
 
 	@Column(name = "receiver_phone")
-	private String receiverPhone;
+	String receiverPhone;
 
 	@Column(name = "receiver_email")
-	private String receiverEmail;
+	String receiverEmail;
 
 	@Column(name = "receiver_address")
-	private String receiverAddress;
+	String receiverAddress;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id", nullable = false)
-	private Customer customer;
+	Customer customer;
 
 	@Column(name = "note", length = 500)
-	private String note;
+	String note;
 
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@Column(name = "order_time", nullable = false)
-	private LocalDateTime orderTime;
+	LocalDateTime orderTime;
 
 	@Column(name = "voucher_used")
-	private String voucherUsedCode;
+	String voucherUsedCode;
 
 	@Column(name = "amount_discount")
-	private BigDecimal amountDiscount;
+	BigDecimal amountDiscount;
 
 	@Column(name = "shipping_cost")
-	private BigDecimal shippingCost;
+	BigDecimal shippingCost;
 
 	@Column(name = "is_gift_wrapped")
-	private Boolean isGiftWrapped;
+	Boolean isGiftWrapped;
 
 	@Column(name = "gift_wrap_cost")
-	private BigDecimal giftWrapCost;
+	BigDecimal giftWrapCost;
 
 	@Column(name = "packaging_cost")
-	private BigDecimal packagingCost;
+	BigDecimal packagingCost;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sales")
-	private Account nhanVienBanHang;
+	Account nhanVienBanHang;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "channel", nullable = false)
-	private Category kenhBanHang;
+	Category kenhBanHang;
 
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@Column(name = "payment_time")
-	private LocalDateTime paymentTime;
+	LocalDateTime paymentTime;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "payment_method")
-	private Category paymentMethod;
+	Category paymentMethod;
 
 	@Column(name = "payment_status")
-	private Boolean paymentStatus;
+	Boolean paymentStatus;
 
 	@Column(name = "payment_note")
-	private String paymentNote;
+	String paymentNote;
 
 	@Column(name = "payment_amount")
-	private Float paymentAmount;
+	Float paymentAmount;
 
 	@Column(name = "cod_fee")
-	private BigDecimal codFee;
+	BigDecimal codFee;
 
 //	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-//	private List<OrderPay> listOrderPay;
+//	List<OrderPay> listOrderPay;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ticket_export_id")
-	private TicketExport ticketExport;
+	TicketExport ticketExport;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status", nullable = false)
-	private Category trangThaiDonHang;
+	Category trangThaiDonHang;
 
 	@Column(name = "cancellation_date")
-	private LocalDateTime cancellationDate;
+	LocalDateTime cancellationDate;
 
 	@Column(name = "cancellation_reason")
-	private String cancellationReason;
+	String cancellationReason;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-	private List<OrderDetail> listOrderDetail;
+	List<OrderDetail> listOrderDetail;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-	private List<OrderHistory> listOrderHistory;
+	List<OrderHistory> listOrderHistory;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<FileStorage> listImageQR;
+	List<FileStorage> listImageQR;
 
 	public Order(int id) {
 		super.id = id;

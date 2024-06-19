@@ -12,6 +12,8 @@ import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerContactServiceImpl extends BaseService implements CustomerContactService {
-    private final CustomerContactRepository customerContactRepo;
-    private final CustomerService           customerService;
+    CustomerContactRepository customerContactRepo;
+    CustomerService           customerService;
 
     public CustomerContactServiceImpl(CustomerContactRepository customerContactRepo, @Lazy CustomerService customerService) {
         this.customerContactRepo = customerContactRepo;

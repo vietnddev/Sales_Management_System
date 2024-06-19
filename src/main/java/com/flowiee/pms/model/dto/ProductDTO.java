@@ -1,8 +1,10 @@
 package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.product.Product;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,25 +15,26 @@ import java.util.Map;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDTO extends Product implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer productTypeId;
-    private String productTypeName;
-    private Integer brandId;
-    private String brandName;
-    private Integer unitId;
-    private String unitName;
-    private String imageActive;
-    private Integer totalQtySell;
-    private Integer totalQtyStorage;
-    private Integer totalDefective;
-    private Integer totalQtyAvailableSales;
-    private Integer productVariantQty;
-    private Integer soldQty;
-    private List<VoucherInfoDTO> listVoucherInfoApply;
-    private LinkedHashMap<String, String> productVariantInfo;
+    Integer productTypeId;
+    String productTypeName;
+    Integer brandId;
+    String brandName;
+    Integer unitId;
+    String unitName;
+    String imageActive;
+    Integer totalQtySell;
+    Integer totalQtyStorage;
+    Integer totalDefective;
+    Integer totalQtyAvailableSales;
+    Integer productVariantQty;
+    Integer soldQty;
+    List<VoucherInfoDTO> listVoucherInfoApply;
+    LinkedHashMap<String, String> productVariantInfo;
 
     public Map<String, String> compareTo(ProductDTO productToCompare) {
         Map<String, String> map = new HashMap<>();

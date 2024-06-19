@@ -2,8 +2,10 @@ package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.model.StorageItems;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
@@ -14,16 +16,17 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StorageDTO extends Storage implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 	
-	private Integer totalItems;
-    private BigDecimal totalInventoryValue;
-    private List<TicketImportDTO> listTicketImportDTO;
-    private List<ProductVariantDTO> listProductVariantDTO;
-    private List<MaterialDTO> listMaterialDTO;
-    private List<StorageItems> listStorageItems;
+	Integer totalItems;
+    BigDecimal totalInventoryValue;
+    List<TicketImportDTO> listTicketImportDTO;
+    List<ProductVariantDTO> listProductVariantDTO;
+    List<MaterialDTO> listMaterialDTO;
+    List<StorageItems> listStorageItems;
 
     public static StorageDTO convertToDTO(Storage inputEntity) {
         if (inputEntity == null) {

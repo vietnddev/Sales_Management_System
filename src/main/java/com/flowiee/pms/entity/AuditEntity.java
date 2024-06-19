@@ -3,8 +3,10 @@ package com.flowiee.pms.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flowiee.pms.utils.CommonUtils;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -18,11 +20,12 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuditEntity {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @Column(name = "created_at", updatable = false, columnDefinition = "timestamp default current_timestamp")
     @CreatedDate
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @Column(name = "created_by", updatable = false)
     @CreatedBy
@@ -31,20 +34,20 @@ public class AuditEntity {
     @JsonIgnore
     @Column(name = "last_updated_at", columnDefinition = "timestamp default current_timestamp")
     @LastModifiedDate
-    private LocalDateTime lastUpdatedAt;
+    LocalDateTime lastUpdatedAt;
 
     @JsonIgnore
     @Column(name = "last_updated_by")
     @LastModifiedBy
-    private String lastUpdatedBy;
+    String lastUpdatedBy;
 
     @JsonIgnore
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    LocalDateTime deletedAt;
 
     @JsonIgnore
     @Column(name = "deleted_by")
-    private String deletedBy;
+    String deletedBy;
 
     @PreUpdate
     @PrePersist

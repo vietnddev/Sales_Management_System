@@ -13,6 +13,9 @@ import com.flowiee.pms.model.role.ActionModel;
 import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.RoleService;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +27,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/sys/tai-khoan")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class AccountControllerView extends BaseController {
-    private final AccountService      accountService;
-    private final RoleService         roleService;
-    private final GroupAccountService groupAccountService;
-
-    public AccountControllerView(AccountService accountService, RoleService roleService, GroupAccountService groupAccountService) {
-        this.accountService = accountService;
-        this.roleService = roleService;
-        this.groupAccountService = groupAccountService;
-    }
+    RoleService         roleService;
+    AccountService      accountService;
+    GroupAccountService groupAccountService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSystem.readAccount(true)")

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,15 +20,16 @@ import java.io.Serializable;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PromotionApply extends BaseEntity implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "product_id", nullable = false)
-    private Integer productId;
+    Integer productId;
 
     @Column(name = "promotion_id", nullable = false)
-    private Integer promotionId;
+    Integer promotionId;
 
 	@Override
 	public String toString() {

@@ -1,12 +1,15 @@
 package com.flowiee.pms.model.role;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleModel {
-    private Integer accountId;
-    private Integer groupId;
-    private ModuleModel module;
-    private ActionModel action;
-    private Boolean isAuthor;
+    Integer accountId;
+    Integer groupId;
+    ModuleModel module;
+    ActionModel action;
+    Boolean isAuthor;
 }

@@ -5,8 +5,10 @@ import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.sales.OrderHistory;
 import com.flowiee.pms.repository.sales.OrderHistoryRepository;
 import com.flowiee.pms.service.sales.OrderHistoryService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,9 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderHistoryServiceImpl implements OrderHistoryService {
-    @Autowired
-    private OrderHistoryRepository orderHistoryRepository;
+    OrderHistoryRepository orderHistoryRepository;
 
     @Override
     public List<OrderHistory> save(Map<String, Object[]> logChanges, String title, Integer orderId, Integer orderItemId) {

@@ -12,6 +12,9 @@ import com.flowiee.pms.service.product.MaterialService;
 import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,14 +28,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class MaterialServiceImpl extends BaseService implements MaterialService {
-    private final MaterialRepository     materialRepository;
-    private final MaterialHistoryService materialHistoryService;
-
-    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialHistoryService materialHistoryService) {
-        this.materialRepository = materialRepository;
-        this.materialHistoryService = materialHistoryService;
-    }
+    MaterialRepository     materialRepository;
+    MaterialHistoryService materialHistoryService;
 
     @Override
     public List<Material> findAll() {

@@ -2,10 +2,8 @@ package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -18,31 +16,32 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderHistory extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Order order;
+    Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_detail_id")
-    private OrderDetail orderDetail;
+    OrderDetail orderDetail;
 
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "field_name", nullable = false)
-    private String field;
+    String field;
 
     @Lob
     @Column(name = "old_value", nullable = false, length = 9999, columnDefinition = "CLOB")
-    private String oldValue;
+    String oldValue;
 
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
-    private String newValue;
+    String newValue;
 
     public OrderHistory(Integer orderId, Integer orderDetailId, String title, String field, String oldValue, String newValue) {
         this.order = new Order(orderId);

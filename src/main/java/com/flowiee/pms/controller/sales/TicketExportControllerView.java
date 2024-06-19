@@ -7,6 +7,9 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.constants.TicketExportStatus;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +22,10 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/stg/ticket-export")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class TicketExportControllerView extends BaseController {
-    private final TicketExportService ticketExportService;
-
-    public TicketExportControllerView(TicketExportService ticketExportService) {
-        this.ticketExportService = ticketExportService;
-    }
+    TicketExportService ticketExportService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.exportGoods(true)")

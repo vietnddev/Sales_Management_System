@@ -1,16 +1,19 @@
 package com.flowiee.pms.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetailRpt {
-    private String productName;
-    private BigDecimal unitPrice;
-    private int quantity;
-    private BigDecimal subTotal;
-    private String note;
+    String productName;
+    BigDecimal unitPrice;
+    int quantity;
+    BigDecimal subTotal;
+    String note;
 }

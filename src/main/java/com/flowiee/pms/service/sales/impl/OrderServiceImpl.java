@@ -17,8 +17,10 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -28,30 +30,17 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderServiceImpl extends BaseService implements OrderService {
-    private final OrderRepository orderRepository;
-    private final ProductVariantService productVariantService;
-    private final CartService cartService;
-    private final CartItemsService cartItemsService;
-    private final OrderHistoryService orderHistoryService;
-    private final OrderItemsService orderItemsService;
-    private final OrderQRCodeService orderQRCodeService;
-    private final VoucherTicketService voucherTicketService;
-
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, CartService cartService, CartItemsService cartItemsService,
-                            OrderHistoryService orderHistoryService, ProductVariantService productVariantService,
-                            OrderQRCodeService orderQRCodeService, VoucherTicketService voucherTicketService,
-                            OrderItemsService orderItemsService) {
-        this.orderRepository = orderRepository;
-        this.cartService = cartService;
-        this.cartItemsService = cartItemsService;
-        this.orderHistoryService = orderHistoryService;
-        this.orderItemsService = orderItemsService;
-        this.productVariantService = productVariantService;
-        this.orderQRCodeService = orderQRCodeService;
-        this.voucherTicketService = voucherTicketService;
-    }
+    CartService           cartService;
+    OrderRepository       orderRepository;
+    CartItemsService      cartItemsService;
+    OrderItemsService     orderItemsService;
+    OrderQRCodeService    orderQRCodeService;
+    OrderHistoryService   orderHistoryService;
+    VoucherTicketService  voucherTicketService;
+    ProductVariantService productVariantService;
 
     @Override
     public List<OrderDTO> findAll() {

@@ -5,6 +5,9 @@ import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.utils.PagesUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,12 +16,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/sys/group-account")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class GroupAccountControllerView extends BaseController {
-    private final GroupAccountService groupAccountService;
-
-    public GroupAccountControllerView(GroupAccountService groupAccountService) {
-        this.groupAccountService = groupAccountService;
-    }
+    GroupAccountService groupAccountService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSystem.readGroupAccount(true)")

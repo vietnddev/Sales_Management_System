@@ -10,6 +10,9 @@ import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,12 +23,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class FileStorageServiceImpl extends BaseService implements FileStorageService {
-    private FileStorageRepository fileRepository;
-
-    public FileStorageServiceImpl(FileStorageRepository fileRepository) {
-        this.fileRepository = fileRepository;
-    }
+    FileStorageRepository fileRepository;
 
     @Override
     public List<FileStorage> findAll() {

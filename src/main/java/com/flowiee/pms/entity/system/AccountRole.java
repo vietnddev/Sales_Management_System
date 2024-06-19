@@ -2,9 +2,11 @@ package com.flowiee.pms.entity.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,23 +18,24 @@ import java.io.Serial;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountRole extends BaseEntity implements java.io.Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 	
 	@Column(name = "module", nullable = false)
 	@NotNull
-	private String module;
+	String module;
 
 	@Column(name = "action", nullable = false)
 	@NotNull
-	private String action;
+	String action;
 
 	@Column(name = "account_id")
-	private Integer accountId;
+	Integer accountId;
 
 	@Column(name = "group_id")
-	private Integer groupId;
+	Integer groupId;
 
 	public AccountRole(String module, String action, Integer accountId, Integer groupId) {
 		this.module = module;

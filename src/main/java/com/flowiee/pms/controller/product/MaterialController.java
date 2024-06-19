@@ -10,6 +10,9 @@ import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.converter.MaterialConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +22,10 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/storage/material")
 @Tag(name = "Material API", description = "Quản lý nguyên vật liệu")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class MaterialController extends BaseController {
-    private final MaterialService materialService;
-
-    public MaterialController(MaterialService materialService) {
-        this.materialService = materialService;
-    }
+    MaterialService materialService;
 
     @Operation(summary = "Find all nguyên vật liệu")
     @GetMapping("/all")

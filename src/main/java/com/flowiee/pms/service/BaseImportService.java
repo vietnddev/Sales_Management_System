@@ -6,7 +6,8 @@ import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.repository.system.AppImportRepository;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.TemplateExport;
-import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +19,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class BaseImportService extends BaseService implements ImportService {
     protected abstract void writeData();
 
     @Autowired
-    private AppImportRepository mvFileImportRepository;
+    AppImportRepository         mvFileImportRepository;
     protected XSSFWorkbook      mvWorkbook;
     protected EximModel         mvEximModel;
     protected FileImportHistory mvFileImportHistory;

@@ -28,6 +28,8 @@ import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.repository.sales.TicketImportRepository;
 import com.flowiee.pms.service.sales.TicketImportService;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -40,17 +42,18 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TicketImportServiceImpl extends BaseService implements TicketImportService {
-    private final TicketImportRepository      ticketImportRepo;
-    private final ProductVariantService       productVariantService;
-    private final ProductDetailTempRepository productVariantTempRepo;
-    private final MaterialService             materialService;
-    private final MaterialTempRepository      materialTempRepo;
-    private final ProductQuantityService      productQuantityService;
-    private final NotificationService         notificationService;
-    private final RoleService                 roleService;
-    private final GroupAccountService         groupAccountService;
-    private final AccountService              accountService;
+    RoleService                 roleService;
+    AccountService              accountService;
+    MaterialService             materialService;
+    MaterialTempRepository      materialTempRepo;
+    TicketImportRepository      ticketImportRepo;
+    NotificationService         notificationService;
+    GroupAccountService         groupAccountService;
+    ProductVariantService       productVariantService;
+    ProductQuantityService      productQuantityService;
+    ProductDetailTempRepository productVariantTempRepo;
 
     public TicketImportServiceImpl(TicketImportRepository ticketImportRepo, @Lazy ProductVariantService productVariantService, ProductDetailTempRepository productVariantTempRepo, MaterialService materialService, MaterialTempRepository materialTempRepo, ProductQuantityService productQuantityService, NotificationService notificationService, RoleService roleService, GroupAccountService groupAccountService, AccountService accountService) {
         this.ticketImportRepo = ticketImportRepo;

@@ -9,18 +9,19 @@ import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý thuộc tính mở rộng của sản phẩm")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductAttributeController extends BaseController {
-    private final ProductAttributeService productAttributeService;
-
-    public ProductAttributeController(ProductAttributeService productAttributeService) {
-        this.productAttributeService = productAttributeService;
-    }
+    ProductAttributeService productAttributeService;
 
     @Operation(summary = "Create product attribute")
     @PostMapping("/attribute/create")

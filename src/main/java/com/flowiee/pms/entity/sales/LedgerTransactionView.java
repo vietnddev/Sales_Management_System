@@ -1,8 +1,10 @@
 package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,24 +17,25 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "vw_general_ledger_transaction")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class LedgerTransactionView {
     @Id
     @Column(name = "tran_id")
-    private Integer tranId;
+    Integer tranId;
 
     @Column(name = "tran_code")
-    private String tranCode;
+    String tranCode;
 
     @Column(name = "tran_type")
-    private String tranType;
+    String tranType;
 
     @Column(name = "description")
-    private String description;
+    String description;
 
     @Column(name = "value")
-    private BigDecimal value;
+    BigDecimal value;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @Column(name = "tran_time")
-    private LocalDateTime tranTime;
+    LocalDateTime tranTime;
 }

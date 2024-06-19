@@ -11,6 +11,9 @@ import com.flowiee.pms.utils.constants.ContactType;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/customer")
 @Tag(name = "Customer API", description = "Quản lý thông tin liên hệ khách hàng")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CustomerContactController extends BaseController {
-    private final CustomerService        customerService;
-    private final CustomerContactService customerContactService;
-
-    public CustomerContactController(CustomerService customerService, CustomerContactService customerContactService) {
-        this.customerService = customerService;
-        this.customerContactService = customerContactService;
-    }
+    CustomerService        customerService;
+    CustomerContactService customerContactService;
 
     @Operation(summary = "Find contacts of customer")
     @GetMapping("/{customerId}/contact")

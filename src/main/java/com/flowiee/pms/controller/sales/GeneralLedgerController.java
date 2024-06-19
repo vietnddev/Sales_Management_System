@@ -8,6 +8,9 @@ import com.flowiee.pms.service.sales.LedgerService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +22,10 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("${app.api.prefix}/ledger")
 @Tag(name = "LedgerPayment API", description = "Quản lý phiếu chi")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class GeneralLedgerController extends BaseController {
-    private final LedgerService ledgerService;
-
-    public GeneralLedgerController(LedgerService ledgerService) {
-        this.ledgerService = ledgerService;
-    }
+    LedgerService ledgerService;
 
     @Operation(summary = "Find general ledger")
     @GetMapping

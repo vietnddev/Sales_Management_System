@@ -15,6 +15,9 @@ import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.*;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,18 +31,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class TicketExportServiceImpl extends BaseService implements TicketExportService {
-    private final TicketExportRepository ticketExportRepo;
-    private final OrderRepository        orderRepository;
-    private final ProductQuantityService productQuantityService;
-    private final ProductHistoryService  productHistoryService;
-
-    public TicketExportServiceImpl(TicketExportRepository ticketExportRepo, OrderRepository orderRepository, ProductQuantityService productQuantityService, ProductHistoryService productHistoryService) {
-        this.ticketExportRepo = ticketExportRepo;
-        this.orderRepository = orderRepository;
-        this.productQuantityService = productQuantityService;
-        this.productHistoryService = productHistoryService;
-    }
+    OrderRepository        orderRepository;
+    TicketExportRepository ticketExportRepo;
+    ProductHistoryService  productHistoryService;
+    ProductQuantityService productQuantityService;
 
     @Override
     public List<TicketExport> findAll() {

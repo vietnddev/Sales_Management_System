@@ -11,6 +11,9 @@ import com.flowiee.pms.service.system.RoleService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +24,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/sys/group-account")
 @Tag(name = "Group account API", description = "Quản lý nhóm người dùng")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class GroupAccountController extends BaseController {
-    private final GroupAccountService groupAccountService;
-    private final RoleService         roleService;
-
-    public GroupAccountController(GroupAccountService groupAccountService, RoleService roleService) {
-        this.groupAccountService = groupAccountService;
-        this.roleService = roleService;
-    }
+    RoleService         roleService;
+    GroupAccountService groupAccountService;
 
     @Operation(summary = "Find all group account")
     @GetMapping("/all")

@@ -12,6 +12,8 @@ import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
@@ -28,11 +30,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/order")
 @Tag(name = "Order API", description = "Quản lý đơn hàng")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderController extends BaseController {
-    private final OrderService orderService;
-    private final ExportService exportService;
+     OrderService orderService;
+     ExportService exportService;
 
-    @Autowired
     public OrderController(OrderService orderService, @Qualifier("orderExportServiceImpl") ExportService exportService) {
         this.orderService = orderService;
         this.exportService = exportService;

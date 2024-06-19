@@ -2,8 +2,10 @@ package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,38 +14,39 @@ import java.util.List;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductVariantDTO extends ProductDetail implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer productId;
-    private Integer productTypeId;
-    private String productTypeName;
-    private Integer brandId;
-    private String brandName;
-    private Integer unitId;
-    private String  unitName;
-    private Integer colorId;
-    private String colorName;
-    private Integer sizeId;
-    private String sizeName;
-    private Integer fabricTypeId;
-    private String fabricTypeName;
-    private Integer garmentFactoryId;
-    private String garmentFactoryName;
-    private Integer supplierId;
-    private String supplierName;
-    //private Integer ticketImportGoodsId;
-    //private String ticketImportGoodsTitle;
-    private BigDecimal originalPrice;
-    private BigDecimal discountPrice;
-    private Float priceMaxDiscount;
-    private Float priceAfterDiscount;
-    private String unitCurrency;
-    private Integer availableSalesQty;
-    private List<ProductHistory> listPrices;
-    private Integer storageIdInitStorageQty;
-    private Integer storageIdInitSoldQty;
+    Integer productId;
+    Integer productTypeId;
+    String productTypeName;
+    Integer brandId;
+    String brandName;
+    Integer unitId;
+    String  unitName;
+    Integer colorId;
+    String colorName;
+    Integer sizeId;
+    String sizeName;
+    Integer fabricTypeId;
+    String fabricTypeName;
+    Integer garmentFactoryId;
+    String garmentFactoryName;
+    Integer supplierId;
+    String supplierName;
+    //Integer ticketImportGoodsId;
+    //String ticketImportGoodsTitle;
+    BigDecimal originalPrice;
+    BigDecimal discountPrice;
+    Float priceMaxDiscount;
+    Float priceAfterDiscount;
+    String unitCurrency;
+    Integer availableSalesQty;
+    List<ProductHistory> listPrices;
+    Integer storageIdInitStorageQty;
+    Integer storageIdInitSoldQty;
 
 	@Override
 	public String toString() {

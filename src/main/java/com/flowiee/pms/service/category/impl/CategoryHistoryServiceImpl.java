@@ -4,8 +4,10 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.category.CategoryHistory;
 import com.flowiee.pms.repository.category.CategoryHistoryRepository;
 import com.flowiee.pms.service.category.CategoryHistoryService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,9 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CategoryHistoryServiceImpl implements CategoryHistoryService {
-    @Autowired
-    private CategoryHistoryRepository categoryHistoryRepository;
+    CategoryHistoryRepository categoryHistoryRepository;
 
     @Override
     public List<CategoryHistory> save(Map<String, Object[]> logChanges, String title, Integer categoryId) {

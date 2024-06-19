@@ -7,6 +7,9 @@ import com.flowiee.pms.repository.product.MaterialHistoryRepository;
 import com.flowiee.pms.service.product.MaterialHistoryService;
 
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,12 +18,10 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class MaterialHistoryServiceImpl implements MaterialHistoryService {
-    private final MaterialHistoryRepository materialHistoryRepo;
-
-    public MaterialHistoryServiceImpl(MaterialHistoryRepository materialHistoryRepo) {
-        this.materialHistoryRepo = materialHistoryRepo;
-    }
+    MaterialHistoryRepository materialHistoryRepo;
 
     @Override
     public List<MaterialHistory> findAll() {

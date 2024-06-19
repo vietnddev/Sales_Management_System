@@ -8,6 +8,7 @@ import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.model.dto.TicketExportDTO;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -23,44 +24,45 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketExport extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "storage_id", nullable = false)
-    private Storage storage;
+    Storage storage;
 
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "exporter", nullable = false)
-    private String exporter;
+    String exporter;
 
     @Column(name = "export_time", nullable = false)
-    private LocalDateTime exportTime;
+    LocalDateTime exportTime;
 
     @Column(name = "note", length = 500)
-    private String note;
+    String note;
 
     @Column(name = "status")
-    private String status;
+    String status;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
-    private List<Order> listOrders;
+    List<Order> listOrders;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
-    private List<ProductVariantTemp> listProductVariantTemp;
+    List<ProductVariantTemp> listProductVariantTemp;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
-    private List<FileStorage> listImages;
+    List<FileStorage> listImages;
 
     @Transient
-    private BigDecimal totalValue;
+    BigDecimal totalValue;
 
     public static TicketExport fromTicketExportDTO(TicketExportDTO dto) {
         TicketExport ticketExport = new TicketExport();

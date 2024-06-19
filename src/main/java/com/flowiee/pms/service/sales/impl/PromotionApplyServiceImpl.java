@@ -7,6 +7,9 @@ import com.flowiee.pms.repository.sales.PromotionApplyRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.PromotionApplyService;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
@@ -16,14 +19,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class PromotionApplyServiceImpl extends BaseService implements PromotionApplyService {
-    private final PromotionApplyRepository promotionApplyRepository;
-    private final ModelMapper              modelMapper;
-
-    public PromotionApplyServiceImpl(PromotionApplyRepository promotionApplyRepository, ModelMapper modelMapper) {
-        this.promotionApplyRepository = promotionApplyRepository;
-        this.modelMapper = modelMapper;
-    }
+    ModelMapper              modelMapper;
+    PromotionApplyRepository promotionApplyRepository;
 
     @Override
     public List<PromotionApplyDTO> findAll(Integer voucherInfoId , Integer productId) {

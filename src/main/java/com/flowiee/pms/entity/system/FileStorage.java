@@ -12,12 +12,9 @@ import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.FileUtils;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -33,83 +30,84 @@ import java.util.Arrays;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileStorage extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "customize_name")
-    private String customizeName;
+    String customizeName;
 
     @Column(name = "saved_name", nullable = false)
-    private String storageName;
+    String storageName;
 
     @Column(name = "original_name", nullable = false)
-    private String originalName;
+    String originalName;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @Column(name = "extension", length = 10)
-    private String extension;
+    String extension;
 
     @Column(name = "content_type", length = 100)
-    private String contentType;
+    String contentType;
 
     @Column(name = "file_size")
-    private long fileSize;
+    long fileSize;
 
     @Column(name = "content")
-    private byte[] content;
+    byte[] content;
 
     @Column(name = "directory_path", length = 500)
-    private String directoryPath;
+    String directoryPath;
 
     @Column(name = "sort")
-    private Integer sort;
+    Integer sort;
 
     @Column(name = "status", nullable = false)
-    private boolean status;
+    boolean status;
 
     @Column(name = "module", nullable = false)
-    private String module;
+    String module;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product product;
+    Product product;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id")
-    private ProductDetail productDetail;
+    ProductDetail productDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id")
-    private Material material;
+    Material material;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Order order;
+    Order order;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "upload_by", nullable = false)
-    private Account account;
+    Account account;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_import_id")
-    private TicketImport ticketImport;
+    TicketImport ticketImport;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_export_id")
-    private TicketExport ticketExport;
+    TicketExport ticketExport;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    boolean isActive;
 
     @Transient
-    private String src;
+    String src;
 
     public FileStorage(MultipartFile file, String pModule, Integer productId) {
         try {

@@ -5,6 +5,9 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.utils.PagesUtils;
 import com.flowiee.pms.service.dashboard.DashboardService;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class DashboardControllerView extends BaseController {
-    private final DashboardService dashboardService;
-
-    public DashboardControllerView(DashboardService dashboardService) {
-        this.dashboardService = dashboardService;
-    }
+    DashboardService dashboardService;
 
     @GetMapping
     @PreAuthorize("@vldDashboard.readDashboard(true)")

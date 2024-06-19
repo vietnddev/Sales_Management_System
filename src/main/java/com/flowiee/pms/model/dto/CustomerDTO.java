@@ -1,9 +1,11 @@
 package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.sales.Customer;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,18 +17,19 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerDTO extends Customer implements Serializable {
 	@Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 	
-	private String phoneDefault;
-    private String emailDefault;
-    private String addressDefault;
-    private BigDecimal orderAvgValue;
-    private String customerGroup;
-    private String profilePictureUrl;
-    private LocalDate lastPurchaseDate;
-    private BigDecimal totalSpent;
+	String phoneDefault;
+    String emailDefault;
+    String addressDefault;
+    BigDecimal orderAvgValue;
+    String customerGroup;
+    String profilePictureUrl;
+    LocalDate lastPurchaseDate;
+    BigDecimal totalSpent;
 
     public static CustomerDTO fromCustomer(Customer customer) {
         CustomerDTO dto = new CustomerDTO();

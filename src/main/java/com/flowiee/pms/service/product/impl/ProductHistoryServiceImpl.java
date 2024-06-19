@@ -8,6 +8,9 @@ import com.flowiee.pms.repository.product.ProductHistoryRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,12 +19,10 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductHistoryServiceImpl extends BaseService implements ProductHistoryService {
-    private final ProductHistoryRepository productHistoryRepo;
-
-    public ProductHistoryServiceImpl(ProductHistoryRepository productHistoryRepo) {
-        this.productHistoryRepo = productHistoryRepo;
-    }
+    ProductHistoryRepository productHistoryRepo;
 
     @Override
     public List<ProductHistory> findAll() {

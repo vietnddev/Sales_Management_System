@@ -3,10 +3,8 @@ package com.flowiee.pms.entity.system;
 import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.utils.CommonUtils;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
@@ -21,37 +19,38 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileImportHistory extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
     @Column(name = "title", nullable = false, length = 999)
-    private String title;
+    String title;
 
 	@Column(name = "module")
-    private String module;
+    String module;
 
     @Column(name = "entity")
-    private String entity;
+    String entity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account", nullable = false)
-    private Account account;
+    Account account;
 
     @Column(name = "begin_time", nullable = false)
-    private LocalTime beginTime;
+    LocalTime beginTime;
 
     @Column(name = "finish_time", nullable = false)
-    private LocalTime finishTime;
+    LocalTime finishTime;
 
     @Column(name = "total_record")
-    private Integer totalRecord;
+    Integer totalRecord;
 
     @Column(name = "result", nullable = false)
-    private String result;
+    String result;
 
     @Column(name = "file_path", nullable = false)
-    private String filePath;
+    String filePath;
 
 	@Override
 	public String toString() {

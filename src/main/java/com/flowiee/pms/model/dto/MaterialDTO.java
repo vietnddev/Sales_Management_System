@@ -1,20 +1,23 @@
 package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.product.Material;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MaterialDTO extends Material implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer supplierId;
-    private String supplierName;
-    private Integer unitId;
-    private String unitName;
+    Integer supplierId;
+    String supplierName;
+    Integer unitId;
+    String unitName;
 }

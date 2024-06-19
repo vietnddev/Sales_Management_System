@@ -2,23 +2,26 @@ package com.flowiee.pms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flowiee.pms.entity.sales.LedgerTransaction;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GeneralLedger {
-    private BigDecimal beginBalance;
-    private BigDecimal totalReceipt;
-    private BigDecimal totalPayment;
-    private BigDecimal endBalance;
-    private List<LedgerTransaction> listTransactions;
+    BigDecimal beginBalance;
+    BigDecimal totalReceipt;
+    BigDecimal totalPayment;
+    BigDecimal endBalance;
+    List<LedgerTransaction> listTransactions;
 
     @JsonIgnore
-    private int totalPages;
+    int totalPages;
     @JsonIgnore
-    private long totalElements;
+    long totalElements;
 }

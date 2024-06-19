@@ -11,8 +11,10 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.converter.StorageConvert;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,13 +28,10 @@ import java.time.temporal.ChronoField;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class StorageServiceImpl extends BaseService implements StorageService {
-    private final StorageRepository storageRepository;
-
-    @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository) {
-        this.storageRepository = storageRepository;
-    }
+    StorageRepository storageRepository;
 
     @Override
     public List<StorageDTO> findAll() {

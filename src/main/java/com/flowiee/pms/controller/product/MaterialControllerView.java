@@ -7,6 +7,9 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
 
 import com.flowiee.pms.utils.constants.EndPoint;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/stg/material")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class MaterialControllerView extends BaseController {
-    private final MaterialService materialService;
-
-    public MaterialControllerView(MaterialService materialService) {
-        this.materialService = materialService;
-    }
+    MaterialService materialService;
 
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readMaterial(true)")

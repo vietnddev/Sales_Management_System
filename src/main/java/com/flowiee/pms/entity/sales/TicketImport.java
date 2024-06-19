@@ -12,6 +12,7 @@ import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -27,66 +28,67 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketImport extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "storage_id", nullable = false)
-    private Storage storage;
+    Storage storage;
 
 	@Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
+    Supplier supplier;
 
     @Column(name = "discount")
-    private Float discount;
+    Float discount;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method")
-    private Category paymentMethod;
+    Category paymentMethod;
 
     @Column(name = "paid_amount")
-    private Float paidAmount;
+    Float paidAmount;
 
     @Column(name = "pay_status")
-    private String paidStatus;
+    String paidStatus;
 
     @Column(name = "importer")
-    private String importer;
+    String importer;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 //    @JsonSerialize(using = DateSerializer.class)
 //    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     @Column(name = "import_time")
-    private LocalDateTime importTime;
+    LocalDateTime importTime;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    String status;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<MaterialTemp> listMaterialTemps;
+    List<MaterialTemp> listMaterialTemps;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<ProductVariantTemp> listProductVariantTemps;
+    List<ProductVariantTemp> listProductVariantTemps;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    private List<FileStorage> listImages;
+    List<FileStorage> listImages;
 
     @Transient
-    private BigDecimal totalValue;
+    BigDecimal totalValue;
 
     public TicketImport(Integer id) {
         super.id = id;

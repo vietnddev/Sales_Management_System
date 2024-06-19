@@ -7,6 +7,9 @@ import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.PagesUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,12 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/san-pham/voucher")
 @Tag(name = "Voucher API", description = "Quản lý voucher")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class VoucherControllerView extends BaseController {
-    private final VoucherService voucherService;
-
-    public VoucherControllerView(VoucherService voucherService) {
-        this.voucherService = voucherService;
-    }
+    VoucherService voucherService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readVoucher(true)")

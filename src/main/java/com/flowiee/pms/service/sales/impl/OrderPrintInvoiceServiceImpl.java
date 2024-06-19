@@ -12,11 +12,13 @@ import com.flowiee.pms.service.sales.OrderQRCodeService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.ReportUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
@@ -27,11 +29,11 @@ import java.nio.file.Path;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPrintInvoiceService {
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private OrderQRCodeService orderQRCodeService;
+    OrderService       orderService;
+    OrderQRCodeService orderQRCodeService;
 
     @Override
     public void printInvoicePDF(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response) {

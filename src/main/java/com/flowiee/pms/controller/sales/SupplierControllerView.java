@@ -1,5 +1,8 @@
 package com.flowiee.pms.controller.sales;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +15,10 @@ import com.flowiee.pms.service.sales.SupplierService;
 
 @Controller
 @RequestMapping("/san-pham/supplier")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SupplierControllerView extends BaseController {
-	private final SupplierService supplierService;
-
-	public SupplierControllerView(SupplierService supplierService) {
-		this.supplierService = supplierService;
-	}
+	SupplierService supplierService;
 
 	@GetMapping
 	@PreAuthorize("@vldModuleSales.readSupplier(true)")

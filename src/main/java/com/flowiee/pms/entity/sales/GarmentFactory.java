@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductDetail;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -17,30 +18,31 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GarmentFactory extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "name", nullable = false)
-    private String name;
+    String name;
 
     @Column(name = "phone")
-    private String phone;
+    String phone;
 
     @Column(name = "email")
-    private String email;
+    String email;
 
     @Column(name = "address")
-    private String address;
+    String address;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @Column(name = "status")
-    private String status;
+    String status;
 
     @OneToMany(mappedBy = "garmentFactory", fetch = FetchType.LAZY)
-    private List<ProductDetail> listProductDetail;
+    List<ProductDetail> listProductDetail;
 
     public GarmentFactory(Integer id) {
         this.id = id;

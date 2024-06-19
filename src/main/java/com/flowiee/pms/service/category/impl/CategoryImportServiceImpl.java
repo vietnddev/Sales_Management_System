@@ -4,6 +4,9 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.service.BaseImportService;
 import com.flowiee.pms.utils.CommonUtils;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CategoryImportServiceImpl extends BaseImportService {
-    private final CategoryRepository mvCategoryRepository;
-
-    public CategoryImportServiceImpl(CategoryRepository categoryRepository) {
-        this.mvCategoryRepository = categoryRepository;
-    }
+    CategoryRepository mvCategoryRepository;
 
     @Override
     protected void writeData() {

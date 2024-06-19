@@ -2,10 +2,8 @@ package com.flowiee.pms.entity.system;
 
 import com.flowiee.pms.entity.BaseEntity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
@@ -17,29 +15,30 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Notification extends BaseEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Column(name = "send", nullable = false)
-    private Integer send;
+    Integer send;
 
     @Column(name = "receive", nullable = false)
-    private Integer receive;
+    Integer receive;
 
     @Column(name = "type", nullable = false)
-    private String type;
+    String type;
 
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "content", nullable = false, length = 1000)
-    private String content;
+    String content;
 
     @Column(name = "readed", nullable = false)
-    private Boolean readed;
+    Boolean readed;
 
     @Column(name = "import_id")
-    private Integer importId;
+    Integer importId;
 
 	@Override
 	public String toString() {

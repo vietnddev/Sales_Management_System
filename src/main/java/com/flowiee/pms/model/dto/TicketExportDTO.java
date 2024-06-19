@@ -2,8 +2,10 @@ package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,12 +14,13 @@ import java.util.List;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketExportDTO extends TicketExport implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private List<OrderDTO> listOrderDTO;
-    private List<ProductVariantTemp> listProductTemp;
+    List<OrderDTO> listOrderDTO;
+    List<ProductVariantTemp> listProductTemp;
 
     public static TicketExportDTO fromTicketExport(TicketExport t) {
         TicketExportDTO dto = new TicketExportDTO();

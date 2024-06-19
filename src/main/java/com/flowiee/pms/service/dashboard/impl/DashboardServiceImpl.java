@@ -11,7 +11,9 @@ import com.flowiee.pms.service.dashboard.DashboardService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.service.sales.OrderStatisticsService;
 import com.flowiee.pms.utils.CommonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -20,17 +22,14 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class DashboardServiceImpl extends BaseService implements DashboardService {
-    @Autowired
-    private EntityManager entityManager;
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private OrderStatisticsService orderStatisticsService;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private ProductStatisticsService productStatisticsService;
+    EntityManager            entityManager;
+    OrderService             orderService;
+    CustomerService          customerService;
+    OrderStatisticsService   orderStatisticsService;
+    ProductStatisticsService productStatisticsService;
 
     @Override
     @SuppressWarnings("unchecked")

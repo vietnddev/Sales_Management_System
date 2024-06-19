@@ -3,13 +3,16 @@ package com.flowiee.pms.service.product.impl;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductStatisticsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductStatisticsServiceImpl extends BaseService implements ProductStatisticsService {
-    @Autowired
-    private ProductDetailRepository productVariantRepo;
+    ProductDetailRepository productVariantRepo;
 
     @Override
     public Integer countTotalProductsInStorage() {

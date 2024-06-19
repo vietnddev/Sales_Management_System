@@ -3,8 +3,10 @@ package com.flowiee.pms.model.dto;
 import com.flowiee.pms.entity.product.MaterialTemp;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketImport;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,18 +15,19 @@ import java.util.List;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketImportDTO extends TicketImport implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer supplierId;
-    private String supplierName;
-    private Integer paymentMethodId;
-    private String paymentMethodName;
-    private Integer storageId;
-    private String storageName;
-    private List<ProductVariantTemp> listProductVariantTemp;
-    private List<MaterialTemp> listMaterialTemp;
+    Integer supplierId;
+    String supplierName;
+    Integer paymentMethodId;
+    String paymentMethodName;
+    Integer storageId;
+    String storageName;
+    List<ProductVariantTemp> listProductVariantTemp;
+    List<MaterialTemp> listMaterialTemp;
 
     public static TicketImportDTO fromTicketImport(TicketImport ticketImport) {
         TicketImportDTO dto = new TicketImportDTO();

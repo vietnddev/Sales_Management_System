@@ -7,6 +7,9 @@ import com.flowiee.pms.service.sales.LedgerPaymentService;
 import com.flowiee.pms.service.sales.LedgerReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/ledger-trans")
 @Tag(name = "Ledger transaction API", description = "Quản lý phiếu thu và phiếu chi")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class LedgerTransactionController extends BaseController {
-    private final LedgerReceiptService ledgerReceiptService;
-    private final LedgerPaymentService ledgerPaymentService;
-
-    public LedgerTransactionController(LedgerReceiptService ledgerReceiptService, LedgerPaymentService ledgerPaymentService) {
-        this.ledgerReceiptService = ledgerReceiptService;
-        this.ledgerPaymentService = ledgerPaymentService;
-    }
+    LedgerReceiptService ledgerReceiptService;
+    LedgerPaymentService ledgerPaymentService;
 
     @Operation(summary = "Find all trans receipts")
     @GetMapping("/receipt/all")

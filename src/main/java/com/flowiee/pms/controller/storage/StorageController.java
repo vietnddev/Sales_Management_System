@@ -15,6 +15,8 @@ import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -28,9 +30,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/storage")
 @Tag(name = "Storage API", description = "Storage management")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class StorageController extends BaseController {
-    private final StorageService storageService;
-    private final ExportService  exportService;
+    StorageService storageService;
+    ExportService  exportService;
 
     public StorageController(StorageService storageService, @Qualifier("storageExportServiceImpl") ExportService exportService) {
         this.storageService = storageService;

@@ -5,6 +5,9 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.SendMailService;
 
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,12 +17,10 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SendMailServiceImpl extends BaseService implements SendMailService {
-    private final JavaMailSender javaMailSender;
-
-    public SendMailServiceImpl(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
+    JavaMailSender javaMailSender;
 
     @Override
     public String sendMail(String subject, String to, String body) {

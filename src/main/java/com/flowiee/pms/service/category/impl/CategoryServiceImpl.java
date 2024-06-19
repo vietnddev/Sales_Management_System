@@ -17,6 +17,9 @@ import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.MaterialService;
 import com.flowiee.pms.utils.*;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,30 +31,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CategoryServiceImpl extends BaseService implements CategoryService {
-    private final CategoryRepository categoryRepo;
-    private final CategoryHistoryService categoryHistoryService;
-    private final CategoryHistoryRepository categoryHistoryRepository;
-    private final ProductInfoService productInfoService;
-    private final MaterialService materialService;
-
-    public CategoryServiceImpl(CategoryRepository categoryRepo, ProductInfoService productInfoService, MaterialService materialService,
-                               CategoryHistoryService categoryHistoryService, CategoryHistoryRepository categoryHistoryRepository) {
-        this.categoryRepo = categoryRepo;
-        this.productInfoService = productInfoService;
-        this.materialService = materialService;
-        this.categoryHistoryService = categoryHistoryService;
-        this.categoryHistoryRepository = categoryHistoryRepository;
-    }
+    MaterialService           materialService;
+    CategoryRepository        categoryRepository;
+    ProductInfoService        productInfoService;
+    CategoryHistoryService    categoryHistoryService;
+    CategoryHistoryRepository categoryHistoryRepository;
 
     @Override
     public List<Category> findAll() {
-        return categoryRepo.findAll();
+        return categoryRepository.findAll();
     }
 
     @Override
     public Optional<Category> findById(Integer entityId) {
-        return categoryRepo.findById(entityId);
+        return categoryRepository.findById(entityId);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         if (entity == null) {
             throw new BadRequestException();
         }
-        Category categorySaved = categoryRepo.save(entity);
+        Category categorySaved = categoryRepository.save(entity);
         systemLogService.writeLogCreate(MODULE.CATEGORY, ACTION.CTG_I, MasterObject.Category, "Thêm mới danh mục", categorySaved.getName());
         return categorySaved;
     }
@@ -77,7 +73,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         categoryOptional.get().setNote(inputCategory.getName());
         if (inputCategory.getSort() != null) categoryOptional.get().setSort(inputCategory.getSort());
 
-        Category categorySaved = categoryRepo.save(categoryOptional.get());
+        Category categorySaved = categoryRepository.save(categoryOptional.get());
 
         String logTitle = "Cập nhật thông tin danh mục: " + categorySaved.getName();
         Map<String, Object[]> logChanges = LogUtils.logChanges(categoryBefore, categorySaved);
@@ -99,7 +95,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         categoryHistoryRepository.deleteAllByCategory(categoryId);
-        categoryRepo.deleteById(categoryId);
+        categoryRepository.deleteById(categoryId);
         systemLogService.writeLogDelete(MODULE.CATEGORY, ACTION.CTG_D, MasterObject.Category, "Xóa danh mục", categoryToDelete.get().getName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -107,8 +103,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     @Override
     public List<Category> findRootCategory() {
         try {
-            List<Category> roots = categoryRepo.findRootCategory();
-            List<Object[]> recordsOfEachType = categoryRepo.totalRecordsOfEachType();
+            List<Category> roots = categoryRepository.findRootCategory();
+            List<Object[]> recordsOfEachType = categoryRepository.totalRecordsOfEachType();
             for (Category c : roots) {
                 for (Object[] o : recordsOfEachType) {
                     if (c.getType().equals(o[0])) {
@@ -125,43 +121,43 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Override
     public List<Category> findSubCategory(String categoryType, Integer parentId) {
-        return categoryRepo.findSubCategory(categoryType, parentId, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(categoryType, parentId, Pageable.unpaged()).getContent();
     }
 
     @Override
     public Page<Category> findSubCategory(String categoryType, Integer parentId, int pageSize, int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        return categoryRepo.findSubCategory(categoryType, parentId, pageable);
+        return categoryRepository.findSubCategory(categoryType, parentId, pageable);
     }
 
     @Override
     public List<Category> findUnits() {
-        return categoryRepo.findSubCategory(CategoryType.UNIT.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.UNIT.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findColors() {
-        return categoryRepo.findSubCategory(CategoryType.COLOR.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.COLOR.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findSizes() {
-        return categoryRepo.findSubCategory(CategoryType.SIZE.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.SIZE.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findSalesChannels() {
-        return categoryRepo.findSubCategory(CategoryType.SALES_CHANNEL.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.SALES_CHANNEL.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findPaymentMethods() {
-        return categoryRepo.findSubCategory(CategoryType.PAYMENT_METHOD.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.PAYMENT_METHOD.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findOrderStatus(Integer ignoreId) {
-        List<Category> categories = categoryRepo.findSubCategory(CategoryType.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
+        List<Category> categories = categoryRepository.findSubCategory(CategoryType.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
         List<Category> lsRes = new ArrayList<>();
         for (Category c : categories) {
            if (!c.getId().equals(ignoreId)) {
@@ -173,17 +169,17 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Override
     public List<Category> findLedgerGroupObjects() {
-        return categoryRepo.findSubCategory(CategoryType.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findLedgerReceiptTypes() {
-        return categoryRepo.findSubCategory(CategoryType.RECEIPT_TYPE.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.RECEIPT_TYPE.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override
     public List<Category> findLedgerPaymentTypes() {
-        return categoryRepo.findSubCategory(CategoryType.PAYMENT_TYPE.name(), null, Pageable.unpaged()).getContent();
+        return categoryRepository.findSubCategory(CategoryType.PAYMENT_TYPE.name(), null, Pageable.unpaged()).getContent();
     }
 
     @Override

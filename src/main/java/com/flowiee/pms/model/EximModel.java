@@ -2,8 +2,10 @@ package com.flowiee.pms.model;
 
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.TemplateExport;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 
@@ -12,16 +14,17 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EximModel {
-    private LocalTime beginTime;
-    private LocalTime finishTime;
-    private Path pathSource;
-    private Path pathTarget;
-    private InputStreamResource content;
-    private String fileType;
-    private String defaultOutputName;
-    private HttpHeaders httpHeaders;
-    private String result;
+    LocalTime beginTime;
+    LocalTime finishTime;
+    Path pathSource;
+    Path pathTarget;
+    InputStreamResource content;
+    String fileType;
+    String defaultOutputName;
+    HttpHeaders httpHeaders;
+    String result;
 
     public EximModel(TemplateExport templateExport) {
         beginTime = LocalTime.now();

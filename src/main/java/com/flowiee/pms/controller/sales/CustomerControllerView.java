@@ -10,6 +10,9 @@ import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.constants.ContactType;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +24,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/customer")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CustomerControllerView extends BaseController {
-    private final OrderService           orderService;
-    private final CustomerService        customerService;
-    private final CustomerContactService customerContactService;
-
-    public CustomerControllerView(OrderService orderService, CustomerService customerService, CustomerContactService customerContactService) {
-        this.orderService = orderService;
-        this.customerService = customerService;
-        this.customerContactService = customerContactService;
-    }
+    OrderService           orderService;
+    CustomerService        customerService;
+    CustomerContactService customerContactService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readCustomer(true)")

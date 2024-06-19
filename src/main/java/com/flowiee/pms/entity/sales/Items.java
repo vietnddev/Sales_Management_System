@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductDetail;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -17,35 +18,36 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Items extends BaseEntity implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_detail_id", nullable = false)
-    private ProductDetail productDetail;
+    ProductDetail productDetail;
 
     @Column(name = "quantity")
-    private int quantity;
+    int quantity;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
-    private OrderCart orderCart;
+    OrderCart orderCart;
 
     @Column(name = "price_type", nullable = false)
-    private String priceType;//S or L
+    String priceType;//S or L
 
     @Column(name = "price", nullable = false)
-    private BigDecimal price;
+    BigDecimal price;
 
     @Column(name = "price_original", nullable = false)
-    private BigDecimal priceOriginal;
+    BigDecimal priceOriginal;
 
     @Column(name = "extra_discount")
-    private BigDecimal extraDiscount;
+    BigDecimal extraDiscount;
 
 	@Override
 	public String toString() {

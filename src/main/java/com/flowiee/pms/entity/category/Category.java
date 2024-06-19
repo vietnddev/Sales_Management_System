@@ -7,10 +7,8 @@ import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.Material;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -28,105 +26,106 @@ import javax.persistence.*;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "type", length = 20, nullable = false)
-	private String type;
+	String type;
 
 	@Column(name = "code", length = 20, columnDefinition = "VARCHAR2(20) DEFAULT ''")
-	private String code;
+	String code;
 
 	@Column(name = "name", length = 50, nullable = false)
-	private String name;
+	String name;
 
 	@Column(name = "sort")
-	private Integer sort;
+	Integer sort;
 
 	@Column(name = "icon")
-	private String icon;
+	String icon;
 
 	@Column(name = "color")
-	private String color;
+	String color;
 
 	@Column(name = "parent_id")
-	private Integer parentId;
+	Integer parentId;
 
 	@Column(name = "note", length = 255)
-	private String note;
+	String note;
 
 	@Column(name = "endpoint", length = 50)
-	private String endpoint;
+	String endpoint;
 
 	@Column(name = "is_default", length = 1, nullable = false)
-	private String isDefault;
+	String isDefault;
 
 	@Column(name = "status", length = 20, nullable = false)
-	private Boolean status;
+	Boolean status;
 
 	@Transient
-	private Integer totalSubRecords;
+	Integer totalSubRecords;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
-	private List<TicketImport> listPaymentMethod;
+	List<TicketImport> listPaymentMethod;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "kenhBanHang", fetch = FetchType.LAZY)
-	private List<Order> listKenhBanHang;
+	List<Order> listKenhBanHang;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "fabricType", fetch = FetchType.LAZY)
-	private List<ProductDetail> listFabricType;
+	List<ProductDetail> listFabricType;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "color", fetch = FetchType.LAZY)
-	private List<ProductDetail> listLoaiMauSac;
+	List<ProductDetail> listLoaiMauSac;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
-	private List<ProductDetail> listLoaiKichCo;
+	List<ProductDetail> listLoaiKichCo;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
-	private List<Material> listUnit;
+	List<Material> listUnit;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
-	private List<Material> listBrand;
+	List<Material> listBrand;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
-	private List<Order> listOrderPayment;
+	List<Order> listOrderPayment;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
-	private List<Order> listTrangThaiDonHang;
+	List<Order> listTrangThaiDonHang;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "productType", fetch = FetchType.LAZY)
-	private List<Product> listProductByProductType;
+	List<Product> listProductByProductType;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
-	private List<Product> listProductByBrand;
+	List<Product> listProductByBrand;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
-	private List<Product> listProductByUnit;
+	List<Product> listProductByUnit;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-	private List<CategoryHistory> listCategoryHistory;
+	List<CategoryHistory> listCategoryHistory;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "groupObject", fetch = FetchType.LAZY)
-	private List<LedgerTransaction> listLedgerByGroupObject;
+	List<LedgerTransaction> listLedgerByGroupObject;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "tranContent", fetch = FetchType.LAZY)
-	private List<LedgerTransaction> listLedgerTransByTranType;
+	List<LedgerTransaction> listLedgerTransByTranType;
 
 	public Category(Integer id, String name) {
 		super.id = id;

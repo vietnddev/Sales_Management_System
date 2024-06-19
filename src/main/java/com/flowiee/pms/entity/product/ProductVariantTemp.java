@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -21,37 +22,38 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductVariantTemp extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_import_id")
-    private TicketImport ticketImport;
+    TicketImport ticketImport;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_export_id")
-    private TicketExport ticketExport;
+    TicketExport ticketExport;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_variant_id", nullable = false)
-	private ProductDetail productVariant;
+	ProductDetail productVariant;
 
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    Integer quantity;
 
     @Column(name = "storage_qty")
-    private Integer storageQty;
+    Integer storageQty;
 
     @Column(name = "purchase_price")
-    private BigDecimal purchasePrice;
+    BigDecimal purchasePrice;
 
     @Column(name = "note")
-    private String note;
+    String note;
 
     @Column(name = "action")
-    private String action;
+    String action;
 }

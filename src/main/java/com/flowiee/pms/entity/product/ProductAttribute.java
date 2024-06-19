@@ -3,6 +3,7 @@ package com.flowiee.pms.entity.product;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -18,29 +19,30 @@ import java.util.Map;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductAttribute extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@JsonIgnoreProperties("listThuocTinh")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id", nullable = false)
-    private ProductDetail productDetail;
+    ProductDetail productDetail;
 
     @Column(name = "attribute_name", nullable = false)
-    private String attributeName;
+    String attributeName;
 
     @Column(name = "attribute_value", length = 500)
-    private String attributeValue;
+    String attributeValue;
 
     @Column(name = "sort", nullable = false)
-    private int sort;
+    int sort;
 
     @Column(name = "status", nullable = false)
-    private boolean status;
+    boolean status;
 
     @OneToMany(mappedBy = "productAttribute", fetch = FetchType.LAZY)
-    private List<ProductHistory> listProductHistory;
+    List<ProductHistory> listProductHistory;
 
     public ProductAttribute(Integer id) {
         this.id = id;

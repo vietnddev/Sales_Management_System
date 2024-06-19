@@ -8,6 +8,9 @@ import com.flowiee.pms.service.sales.SupplierService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +20,10 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/supplier")
 @Tag(name = "Material API", description = "Quản lý nhà cung cấp")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SupplierController extends BaseController {
-    private final SupplierService supplierService;
-
-    public SupplierController(SupplierService supplierService) {
-        this.supplierService = supplierService;
-    }
+    SupplierService supplierService;
 
     @Operation(summary = "Find all nhà cung cấp")
     @GetMapping("/all")

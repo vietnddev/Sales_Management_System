@@ -2,9 +2,11 @@ package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,15 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class VoucherInfoDTO extends VoucherInfo implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer length;
-    private BigDecimal discountPriceMax;
-    private String status;
-    private List<VoucherTicket> listVoucherTicket;
-    private List<ProductDTO> applicableProducts;
+    Integer length;
+    BigDecimal discountPriceMax;
+    String status;
+    List<VoucherTicket> listVoucherTicket;
+    List<ProductDTO> applicableProducts;
 
 	@Override
 	public String toString() {

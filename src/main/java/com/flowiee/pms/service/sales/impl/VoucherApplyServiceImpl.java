@@ -8,6 +8,9 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 
 import com.flowiee.pms.utils.constants.MessageCode;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,12 +18,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class VoucherApplyServiceImpl extends BaseService implements VoucherApplyService {
-    private final VoucherApplyRepository voucherApplyRepo;
-
-    public VoucherApplyServiceImpl(VoucherApplyRepository voucherApplyRepo) {
-        this.voucherApplyRepo = voucherApplyRepo;
-    }
+    VoucherApplyRepository voucherApplyRepo;
 
     @Override
     public List<VoucherApplyDTO> findAll(Integer voucherInfoId , Integer productId) {

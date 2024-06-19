@@ -1,14 +1,17 @@
 package com.flowiee.pms.model;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PurchaseHistory {
-    private int customerId;
-    private int year;
-    private int month;
-    private int purchaseQty;
-    private BigDecimal orderAvgValue;
+    int customerId;
+    int year;
+    int month;
+    int purchaseQty;
+    BigDecimal orderAvgValue;
 }

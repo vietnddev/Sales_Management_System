@@ -2,8 +2,10 @@ package com.flowiee.pms.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.pms.entity.system.FileStorage;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serial;
@@ -14,20 +16,21 @@ import java.util.List;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileDTO extends FileStorage implements Serializable{
     @Serial
-    private static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    private Integer productId;
-    private Integer productVariantId;
-    private Integer orderId;
-    private String name;
-    private String uploadBy;
-    private String src;
-    private Boolean status;
-    private long size;
+    Integer productId;
+    Integer productVariantId;
+    Integer orderId;
+    String name;
+    String uploadBy;
+    String src;
+    Boolean status;
+    long size;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime uploadAt;
+    LocalDateTime uploadAt;
 
     public static FileDTO fromFileStorage(FileStorage fileStorage) {
         FileDTO dto = new FileDTO();

@@ -5,22 +5,20 @@ import com.flowiee.pms.model.dto.FileDTO;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.utils.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/gallery")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class GalleryControllerView extends BaseController {
-    private final ProductInfoService  productInfoService;
-    private final ProductImageService productImageService;
-
-    @Autowired
-    public GalleryControllerView(ProductInfoService productInfoService, ProductImageService productImageService) {
-        this.productInfoService = productInfoService;
-        this.productImageService = productImageService;
-    }
+    ProductInfoService  productInfoService;
+    ProductImageService productImageService;
 
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readGallery(true)")

@@ -9,10 +9,8 @@ import javax.persistence.Table;
 
 import com.flowiee.pms.entity.BaseEntity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "languages")
@@ -20,22 +18,23 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Language extends BaseEntity implements Serializable {
     @Serial
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
     @Column(name = "module")
-    private String module;
+    String module;
 
     @Column(name = "screen")
-    private String screen;
+    String screen;
 
 	@Column(name = "code", nullable = false)
-    private String code;
+    String code;
     
     @Column(name = "key", nullable = false)
-    private String key;
+    String key;
     
     @Column(name = "value", nullable = false)
-    private String value;
+    String value;
 }

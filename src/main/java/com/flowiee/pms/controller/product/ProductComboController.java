@@ -9,6 +9,9 @@ import com.flowiee.pms.service.product.ProductComboService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +22,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("${app.api.prefix}/product/combo")
 @Tag(name = "Product combo API", description = "Quản lý combo")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductComboController extends BaseController {
-    private final ProductComboService productComboService;
-
-    public ProductComboController(ProductComboService productComboService) {
-        this.productComboService = productComboService;
-    }
+    ProductComboService productComboService;
 
     @Operation(summary = "Find all combos")
     @GetMapping("/all")
