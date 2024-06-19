@@ -1,5 +1,6 @@
 package com.flowiee.pms.utils;
 
+import com.flowiee.pms.config.StartUp;
 import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.ServerInfo;
@@ -74,7 +75,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(MODULE systemModule) {
         try {
-            StringBuilder path = new StringBuilder(FileUtils.fileUploadPath);
+            StringBuilder path = new StringBuilder(StartUp.appConfig.getFileUploadPath());
             switch (systemModule) {
                 case PRODUCT:
                     path.append("product");
@@ -107,7 +108,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(String systemModule) {
         try {
-            StringBuilder path = new StringBuilder(FileUtils.fileUploadPath);
+            StringBuilder path = new StringBuilder(StartUp.appConfig.getFileUploadPath());
             if (MODULE.PRODUCT.name().equals(systemModule)) {
                 path.append("product");
             } else if (MODULE.CATEGORY.name().equals(systemModule)) {

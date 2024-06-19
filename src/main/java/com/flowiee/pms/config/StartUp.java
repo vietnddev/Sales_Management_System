@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.Branch;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.entity.system.SystemConfig;
+import com.flowiee.pms.model.AppConfig;
 import com.flowiee.pms.model.ServerInfo;
 import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.repository.category.CategoryRepository;
@@ -33,46 +34,41 @@ import java.util.List;
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.EndPoint;
 import com.opencsv.*;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ObjectUtils;
 import org.jfree.util.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class StartUp {
-	private final ConfigRepository configRepository;
-	private final BranchRepository branchRepository;
-	private final AccountRepository accountRepository;
-	private final LanguageService languageService;
-	private final CustomerRepository customerRepository;
-	private final CategoryRepository categoryRepository;
-	private final GroupAccountRepository groupAccountRepository;
+	Environment 		   environment;
+	LanguageService        languageService;
+	ConfigRepository       configRepository;
+	BranchRepository       branchRepository;
+	AccountRepository      accountRepository;
+	CustomerRepository     customerRepository;
+	CategoryRepository     categoryRepository;
+	GroupAccountRepository groupAccountRepository;
 
-	@Autowired
-	public StartUp(LanguageService languageService, ConfigRepository configRepository, @Lazy CategoryRepository categoryRepository,
-				   @Lazy BranchRepository branchRepository, @Lazy AccountRepository accountRepository, @Lazy CustomerRepository customerRepository,
-				   @Lazy GroupAccountRepository groupAccountRepository) {
-		this.configRepository = configRepository;
-		this.branchRepository = branchRepository;
-		this.accountRepository = accountRepository;
-		this.languageService = languageService;
-		this.customerRepository = customerRepository;
-		this.categoryRepository = categoryRepository;
-		this.groupAccountRepository = groupAccountRepository;
-	}
+	public static AppConfig appConfig = AppConfig.builder().build();
 
     @Bean
     CommandLineRunner init() {
     	return args -> {
+			configResourcePath();
 			initData();
 			loadShopInfo();
 			configReport();
             configEndPoint();
-            configResourcePath();
 			loadLanguageMessages("en");
 			loadLanguageMessages("vi");
 			CommonUtils.START_APP_TIME = LocalDateTime.now();
@@ -148,7 +144,20 @@ public class StartUp {
 	}
 
 	private void configResourcePath() {
-		//set file upload path
+		String rootPath = environment.getProperty("app.resource.path");
+		if (ObjectUtils.isEmpty(rootPath)) rootPath = "src/main/resources/static";
+
+		String logoPath = environment.getProperty("app.logo.path");
+		if (ObjectUtils.isEmpty(logoPath)) logoPath = rootPath + "/dist/img/FlowieeLogo.png";
+
+		appConfig = AppConfig.builder()
+				.rootPath(rootPath)
+				.fileUploadPath(rootPath + "/uploads/")
+				.initCsvDataPath(rootPath + "/data/csv")
+				.reportTemplatePath(rootPath + "/report")
+				.excelTemplatePath(rootPath + "/templates/excel")
+				.logoPath(logoPath)
+				.build();
 	}
 
 	private void initData() throws Exception {

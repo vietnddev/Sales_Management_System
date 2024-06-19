@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		//Cấu hình phần này để có thể nhúng URL vào các thẻ như iframe,..
 		//httpSecurity.headers().frameOptions().sameOrigin();
-
+//oad local resource: file:///D:/Image/uploads/D:/Image/uploads/product/2024/6/19/1718783777648_mbappe.jpg
 		httpSecurity
 				.cors().and()
 				.csrf().disable()
@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(EndPoint.URL_SYS_CONFIG.getValue(),
 							 EndPoint.URL_SYS_ACCOUNT.getValue(),
 							 EndPoint.URL_SYS_LOG.getValue()).hasRole("ADMIN")
-				.antMatchers("/build/**", "/dist/**", "/js/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**").permitAll()
+				.antMatchers("/build/**", "/dist/**", "/js/**", "/plugins/**", "/uploads/**", "/actuator/**", "/swagger-ui/**", StartUp.appConfig.getFileUploadPath() + "/**").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				//Page login

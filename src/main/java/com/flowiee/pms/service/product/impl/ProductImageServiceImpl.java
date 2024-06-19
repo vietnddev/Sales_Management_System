@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.product.impl;
 
+import com.flowiee.pms.config.StartUp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.system.Account;
@@ -57,6 +58,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), pProductId);
         fileInfo.setStorageName(currentTime + "_" + fileUpload.getOriginalFilename());
+        fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT.name()));
         FileStorage imageSaved = fileRepository.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + currentTime + "_" + fileUpload.getOriginalFilename());
