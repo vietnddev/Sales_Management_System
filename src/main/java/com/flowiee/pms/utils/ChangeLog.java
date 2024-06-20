@@ -1,7 +1,8 @@
-package com.flowiee.pms.model;
+package com.flowiee.pms.utils;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Data
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChangeLog {
     final Logger logger = LoggerFactory.getLogger(this.getClass());

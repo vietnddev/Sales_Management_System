@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.sales.OrderDetailRepository;
@@ -10,7 +11,6 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderHistoryService;
 import com.flowiee.pms.service.sales.OrderItemsService;
 import com.flowiee.pms.service.system.SystemLogService;
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -75,9 +74,9 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             OrderDetail orderItemUpdated = orderDetailRepo.save(orderDetail);
 
             String logTitle = "Cập nhật đơn hàng " + orderItemUpdated.getOrder().getCode();
-            Map<String, Object[]> logChanges = LogUtils.logChanges(orderItemBefore, orderItemUpdated);
-            orderHistoryService.save(logChanges, logTitle, orderItemBefore.getOrder().getId(), orderItemBefore.getId());
-            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.OrderDetail, logTitle, logChanges);
+            ChangeLog changeLog = new ChangeLog(orderItemBefore, orderItemUpdated);
+            orderHistoryService.save(changeLog.getLogChanges(), logTitle, orderItemBefore.getOrder().getId(), orderItemBefore.getId());
+            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.OrderDetail, logTitle, changeLog);
             logger.info("{}: Cập nhật item of đơn hàng {}", OrderServiceImpl.class.getName(), orderItemUpdated.toString());
 
             return orderItemUpdated;

@@ -1,8 +1,7 @@
 package com.flowiee.pms.service.system;
 
-import java.util.Map;
-
 import com.flowiee.pms.entity.system.SystemLog;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.LogType;
 import com.flowiee.pms.utils.constants.MODULE;
@@ -14,7 +13,7 @@ public interface SystemLogService {
 
     SystemLog writeLogCreate(MODULE module, ACTION function, MasterObject object, String title, String content);
 
-    SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, Map<String, Object[]> logChanges);
+    SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, ChangeLog changeLog);
 
     SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, String content);
 

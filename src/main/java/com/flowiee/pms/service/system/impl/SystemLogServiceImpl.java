@@ -2,12 +2,12 @@ package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.SystemLog;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.repository.system.SystemLogRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.SystemLogService;
 
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.LogType;
 import com.flowiee.pms.utils.constants.MODULE;
@@ -20,8 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -47,8 +45,8 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
     }
 
     @Override
-    public SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, Map<String, Object[]> logChanges) {
-        return this.writeLog(module, function, object, LogType.U, title, LogUtils.getValueChanges(logChanges)[0], LogUtils.getValueChanges(logChanges)[1]);
+    public SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, ChangeLog changeLog) {
+        return this.writeLog(module, function, object, LogType.U, title, changeLog.getOldValues(), changeLog.getNewValues());
     }
 
     @Override

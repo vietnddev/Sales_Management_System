@@ -80,8 +80,8 @@ public enum ACTION {
     SYS_GR_ACC_C("Create account group", "SYSTEM"),
     SYS_GR_ACC_U("Update account group", "SYSTEM"),
     SYS_GR_ACC_D("Delete account group", "SYSTEM"),
-    SYS_CNF_R("Delete account group", "SYSTEM"),
-    SYS_CNF_U("Delete account group", "SYSTEM");
+    SYS_CNF_R("View system config", "SYSTEM"),
+    SYS_CNF_U("Update system config", "SYSTEM");
 
     private final String label;
     private final String module;

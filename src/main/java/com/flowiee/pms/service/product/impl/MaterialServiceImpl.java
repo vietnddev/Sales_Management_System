@@ -2,6 +2,7 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.product.MaterialRepository;
@@ -9,7 +10,6 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.MaterialHistoryService;
 import com.flowiee.pms.service.product.MaterialService;
 
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -74,9 +73,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         Material materialUpdated = materialRepository.save(entity);
 
         String logTitle = "Cập nhật nguyên vật liệu: " + materialUpdated.getName();
-        Map<String, Object[]> logChanges = LogUtils.logChanges(materialBefore, materialUpdated);
-        materialHistoryService.save(logChanges, logTitle, materialId);
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, logTitle, logChanges);
+        ChangeLog changeLog = new ChangeLog(materialBefore, materialUpdated);
+        materialHistoryService.save(changeLog.getLogChanges(), logTitle, materialId);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, logTitle, changeLog);
         logger.info(logTitle);
 
         return materialUpdated;

@@ -6,6 +6,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.repository.category.CategoryHistoryRepository;
@@ -15,7 +16,6 @@ import com.flowiee.pms.service.category.CategoryHistoryService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.MaterialService;
-import com.flowiee.pms.utils.*;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -76,9 +76,9 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         Category categorySaved = categoryRepository.save(categoryOptional.get());
 
         String logTitle = "Cập nhật thông tin danh mục: " + categorySaved.getName();
-        Map<String, Object[]> logChanges = LogUtils.logChanges(categoryBefore, categorySaved);
-        categoryHistoryService.save(logChanges, logTitle, categoryId);
-        systemLogService.writeLogUpdate(MODULE.CATEGORY, ACTION.CTG_U, MasterObject.Category, logTitle, logChanges);
+        ChangeLog changeLog = new ChangeLog(categoryBefore, categorySaved);
+        categoryHistoryService.save(changeLog.getLogChanges(), logTitle, categoryId);
+        systemLogService.writeLogUpdate(MODULE.CATEGORY, ACTION.CTG_U, MasterObject.Category, logTitle, changeLog.getOldValues(), changeLog.getNewValues());
         logger.info("Update Category success! {}", categorySaved);
 
         return categorySaved;

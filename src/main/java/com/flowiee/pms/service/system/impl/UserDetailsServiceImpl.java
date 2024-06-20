@@ -5,7 +5,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.AccountRole;
 import com.flowiee.pms.exception.ResourceNotFoundException;
-import com.flowiee.pms.utils.LogUtils;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
@@ -122,8 +122,8 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			}
 			Account accountUpdated = accountRepo.save(account);
 
-			Map<String, Object[]> logChanges = LogUtils.logChanges(accountBefore, accountUpdated);
-			systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_ACC_U, MasterObject.Account, "Cập nhật tài khoản " + accountUpdated.getUsername(), logChanges);
+			ChangeLog changeLog = new ChangeLog(accountBefore, accountUpdated);
+			systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_ACC_U, MasterObject.Account, "Cập nhật tài khoản " + accountUpdated.getUsername(), changeLog);
 			logger.info("Update account success! username={}", accountUpdated.getUsername());
 
 			return accountUpdated;

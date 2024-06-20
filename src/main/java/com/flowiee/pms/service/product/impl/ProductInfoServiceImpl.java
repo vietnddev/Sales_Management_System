@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.product.*;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
@@ -18,7 +19,6 @@ import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -119,9 +119,9 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         Product productUpdated = productsRepo.save(productToUpdate);
 
         String logTitle = "Cập nhật sản phẩm: " + productUpdated.getProductName();
-        Map<String, Object[]> logChanges = LogUtils.logChanges(productBefore, productUpdated);
-        productHistoryService.save(logChanges, logTitle, productUpdated.getId(), null, null);
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.Product, logTitle, logChanges);
+        ChangeLog changeLog = new ChangeLog(productBefore, productUpdated);
+        productHistoryService.save(changeLog.getLogChanges(), logTitle, productUpdated.getId(), null, null);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.Product, logTitle, changeLog);
         logger.info("Update product success! productId={}", productId);
         return ProductConvert.convertToDTO(productUpdated);
     }

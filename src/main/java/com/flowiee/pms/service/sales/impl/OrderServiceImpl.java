@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.OrderDetailDTO;
 import com.flowiee.pms.model.dto.OrderDTO;
@@ -186,9 +187,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         Order orderUpdated = orderRepository.save(orderToUpdate);
 
         String logTitle = "Cập nhật đơn hàng";
-        Map<String, Object[]> logChanges = LogUtils.logChanges(orderBefore, orderUpdated);
-        orderHistoryService.save(logChanges, logTitle, id, null);
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.Order, logTitle, logChanges);
+        ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
+        orderHistoryService.save(changeLog.getLogChanges(), logTitle, id, null);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.Order, logTitle, changeLog);
         logger.info("Cập nhật đơn hàng {}", dto.toString());
 
         return OrderDTO.fromOrder(orderToUpdate);

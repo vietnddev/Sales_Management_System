@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
@@ -16,9 +17,7 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
-import com.flowiee.pms.utils.LogUtils;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
@@ -145,8 +144,8 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             voucherInfo.setId(voucherId);
             VoucherInfo voucherInfoUpdated = voucherInfoRepo.save(voucherInfo);
 
-            Map<String, Object[]> logChanges = LogUtils.logChanges(voucherInfoBefore, voucherInfoUpdated);
-            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_VOU_U, MasterObject.VoucherInfo, "Cập nhật voucher " + voucherInfoUpdated.getTitle(), logChanges);
+            ChangeLog changeLog = new ChangeLog(voucherInfoBefore, voucherInfoUpdated);
+            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_VOU_U, MasterObject.VoucherInfo, "Cập nhật voucher " + voucherInfoUpdated.getTitle(), changeLog.getOldValues(), changeLog.getNewValues());
 
             return modelMapper.map(voucherInfoUpdated, VoucherInfoDTO.class);
         } catch (RuntimeException ex) {

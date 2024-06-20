@@ -3,13 +3,13 @@ package com.flowiee.pms.service.storage.impl;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.repository.storage.StorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.converter.StorageConvert;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -115,8 +115,8 @@ public class StorageServiceImpl extends BaseService implements StorageService {
         storage.setId(storageId);
         Storage storageUpdated = storageRepository.save(storage);
 
-        Map<String, Object[]> logChanges = LogUtils.logChanges(storageBefore, storageUpdated);
-        systemLogService.writeLogUpdate(MODULE.STORAGE, ACTION.STG_STG_U, MasterObject.Storage, "Cập nhật Kho", logChanges);
+        ChangeLog changeLog = new ChangeLog(storageBefore, storageUpdated);
+        systemLogService.writeLogUpdate(MODULE.STORAGE, ACTION.STG_STG_U, MasterObject.Storage, "Cập nhật Kho", changeLog);
 
         return StorageDTO.convertToDTO(storageUpdated);
     }

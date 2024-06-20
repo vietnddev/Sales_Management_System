@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.system.ConfigRepository;
@@ -12,7 +13,6 @@ import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.system.ConfigService;
 
 import com.flowiee.pms.service.system.LanguageService;
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.MasterObject;
 import lombok.AccessLevel;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -55,8 +54,8 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
         systemConfig.setId(id);
         SystemConfig configUpdated = sysConfigRepo.save(systemConfig);
 
-        Map<String, Object[]> logChanges = LogUtils.logChanges(configBefore, configUpdated);
-        systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_CNF_U, MasterObject.SystemConfig, "Cập nhật cấu hình hệ thống", logChanges);
+        ChangeLog changeLog = new ChangeLog(configBefore, configUpdated);
+        systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_CNF_U, MasterObject.SystemConfig, "Cập nhật cấu hình hệ thống", changeLog);
         logger.info("Update config success! {}", configUpdated.getName());
 
         return configUpdated;

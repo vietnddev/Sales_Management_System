@@ -3,13 +3,13 @@ package com.flowiee.pms.service.product.impl;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.product.ProductAttributeRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.service.product.ProductHistoryService;
-import com.flowiee.pms.utils.LogUtils;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
@@ -23,7 +23,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -70,9 +69,9 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
         ProductAttribute attributeUpdated = productAttributeRepo.save(attribute);
 
         String logTitle = "Cập nhật thuộc tính sản phẩm";
-        Map<String, Object[]> logChanges = LogUtils.logChanges(attributeBefore, attributeUpdated);
-        productHistoryService.save(logChanges, logTitle, attributeUpdated.getProductDetail().getProduct().getId(), attributeUpdated.getProductDetail().getId(), attributeUpdated.getId());
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductAttribute, "Cập nhật thuộc tính sản phẩm", logChanges);
+        ChangeLog changeLog = new ChangeLog(attributeBefore, attributeUpdated);
+        productHistoryService.save(changeLog.getLogChanges(), logTitle, attributeUpdated.getProductDetail().getProduct().getId(), attributeUpdated.getProductDetail().getId(), attributeUpdated.getId());
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductAttribute, "Cập nhật thuộc tính sản phẩm", changeLog);
 
         return attributeUpdated;
     }
