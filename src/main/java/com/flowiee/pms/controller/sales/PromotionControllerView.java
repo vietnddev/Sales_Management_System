@@ -4,7 +4,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import com.flowiee.pms.service.sales.PromotionService;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +27,7 @@ public class PromotionControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
     public ModelAndView findAll() {
-        return baseView(new ModelAndView(PagesUtils.PRO_PROMOTION));
+        return baseView(new ModelAndView(Pages.PRO_PROMOTION.getTemplate()));
     }
 
     @GetMapping(value = "/{promotionId}")
@@ -37,7 +37,7 @@ public class PromotionControllerView extends BaseController {
         if (promotion.isEmpty()) {
             throw new ResourceNotFoundException("Promotion not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PROMOTION_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_PROMOTION_DETAIL.getTemplate());
         modelAndView.addObject("promotion", promotion.get());
         return baseView(modelAndView);
     }

@@ -15,6 +15,7 @@ import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 
 import com.flowiee.pms.utils.constants.CategoryType;
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -43,7 +44,7 @@ public class OrderControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView viewAllOrders() {
-        return baseView(new ModelAndView(PagesUtils.PRO_ORDER));
+        return baseView(new ModelAndView(Pages.PRO_ORDER.getTemplate()));
     }
 
     @GetMapping("/{id}")
@@ -55,7 +56,7 @@ public class OrderControllerView extends BaseController {
         }
         List<Category> orderStatus = new ArrayList<>(List.of(new Category(orderDetail.get().getOrderStatusId(), orderDetail.get().getOrderStatusName())));
         orderStatus.addAll(categoryService.findOrderStatus(orderDetail.get().getOrderStatusId()));
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_DETAIL.getTemplate());
         modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail.get());
         modelAndView.addObject("listOrderDetail", orderDetail.get().getListOrderDetailDTO());
@@ -68,7 +69,7 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/ban-hang")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView showPageBanHang() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_ORDER_SELL);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_SELL.getTemplate());
         List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
         if (orderCartCurrent.isEmpty()) {
             OrderCart orderCart = new OrderCart();

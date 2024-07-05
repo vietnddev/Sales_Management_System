@@ -22,7 +22,7 @@
         <div class="content-wrapper" style="padding-top: 10px; padding-bottom: 1px;">
             <section class="content">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="row" style="padding: 30px">
                         <div class="col-md-3 col-sm-6 col-12 mb-3" style="height: 200px; border-radius:  10px;" th:each="c, index : ${listCategory}">
                             <a th:href="@{${c.endpoint}}">
                                 <div class="info-box bg-success h-100" style="border-radius: 20px; opacity: 95%">

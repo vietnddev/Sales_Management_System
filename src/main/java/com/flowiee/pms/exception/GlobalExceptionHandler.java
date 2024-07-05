@@ -2,7 +2,7 @@ package com.flowiee.pms.exception;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.model.AppResponse;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,14 +14,14 @@ public class GlobalExceptionHandler extends BaseController {
     @ExceptionHandler
     public ModelAndView exceptionHandler(AuthenticationException ex) {
         logger.error(ex.getMessage(), ex);
-        return new ModelAndView(PagesUtils.SYS_LOGIN);
+        return new ModelAndView(Pages.SYS_LOGIN.getTemplate());
     }
 
     @ExceptionHandler
     public ResponseEntity<AppResponse<Object>> exceptionHandler(ResourceNotFoundException ex) {
         logger.error(ex.getMessage(), ex);
         ErrorModel error = new ErrorModel(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ERROR.getTemplate());
         modelAndView.addObject("error", error);
         return ResponseEntity.badRequest().body(fail(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler extends BaseController {
     public ModelAndView exceptionHandler(ForbiddenException ex) {
         logger.error(ex.getMessage(), ex);
         ErrorModel error = new ErrorModel(HttpStatus.FORBIDDEN.value(), ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ERROR.getTemplate());
         modelAndView.addObject("error", error);
         return baseView(modelAndView);
     }

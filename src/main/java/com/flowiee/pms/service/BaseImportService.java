@@ -47,7 +47,7 @@ public abstract class BaseImportService extends BaseService implements ImportSer
             mvFileImportHistory.setBeginTime(mvEximModel.getBeginTime());
             mvFileImportHistory.setFinishTime(finishTime);
             mvFileImportHistory.setFilePath(path.toString());
-            mvFileImportHistory.setAccount(CommonUtils.getUserPrincipal().toAccountEntity());
+            mvFileImportHistory.setAccount(CommonUtils.getUserPrincipal().toEntity());
             mvFileImportRepository.save(mvFileImportHistory);
 
             mvEximModel.setResult("OK");

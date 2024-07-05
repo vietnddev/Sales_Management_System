@@ -78,7 +78,10 @@ public class UserPrincipal extends Account implements UserDetails {
         return this.isEnabled;
     }
 
-    public Account toAccountEntity() {
-        return new Account(this.id);
+    public Account toEntity() {
+        Account entity = new Account();
+        entity.setId(this.id);
+        entity.setUsername(this.username);
+        return entity;
     }
 }

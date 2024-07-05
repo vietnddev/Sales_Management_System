@@ -7,7 +7,7 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.model.role.ActionModel;
 import com.flowiee.pms.model.role.RoleModel;
@@ -37,7 +37,7 @@ public class AccountControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
     public ModelAndView findAllAccount() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ACCOUNT);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ACCOUNT.getTemplate());
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
         modelAndView.addObject("groupAccount", groupAccountService.findAll());
@@ -51,7 +51,7 @@ public class AccountControllerView extends BaseController {
         if (accountId <= 0 || account.isEmpty()) {
             throw new ResourceNotFoundException("Account not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ACCOUNT_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ACCOUNT_DETAIL.getTemplate());
         List<RoleModel> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
         modelAndView.addObject("listRole", roleOfAccount);
         modelAndView.addObject("accountInfo", account.get());

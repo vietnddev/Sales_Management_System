@@ -38,10 +38,10 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Category findSubCategoryDefault(@Param("type") String type);
 
     @Query("from Category c where c.id in (select p.color.id from ProductDetail p where p.product.id=:productId)")
-    List<Category> findColorOfProduct(Integer productId);
+    List<Category> findColorOfProduct(@Param("productId") Integer productId);
 
     @Query("from Category c where c.id in (select p.size.id from ProductDetail p where p.product.id=:productId and p.color.id=:colorId)")
-    List<Category> findSizeOfColorOfProduct(Integer productId, Integer colorId);
+    List<Category> findSizeOfColorOfProduct(@Param("productId") Integer productId, @Param("colorId") Integer colorId);
 
     @Query("select c.type, nvl((select count(*) from Category where code <> 'ROOT' and type = c.type), 0) as total_records " +
            "from Category c " +

@@ -10,6 +10,7 @@ import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.constants.ContactType;
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,7 +40,7 @@ public class CustomerControllerView extends BaseController {
                                        @Nullable @RequestParam("phone") String phone,
                                        @Nullable @RequestParam("email") String email,
                                        @Nullable @RequestParam("address") String address) {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_CUSTOMER);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_CUSTOMER.getTemplate());
         modelAndView.addObject("listCustomer", customerService.findAll(-1, -1, name, sex, birthday != null ? DateUtils.convertStringToDate(birthday, "YYYY/MM/dd") : null, phone, email, address));
         modelAndView.addObject("filter_name", name);
         modelAndView.addObject("filter_sex", sex);
@@ -63,7 +64,7 @@ public class CustomerControllerView extends BaseController {
             if (ContactType.E.name().equals(c.getCode())) c.setCode(ContactType.E.getLabel());
             if (ContactType.A.name().equals(c.getCode())) c.setCode(ContactType.A.getLabel());
         });
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_CUSTOMER_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_CUSTOMER_DETAIL.getTemplate());
         modelAndView.addObject("customerDetail", customerDTO.get());
         modelAndView.addObject("listCustomerContact", listContacts);
         modelAndView.addObject("listDonHang", orderService.findAll());

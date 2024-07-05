@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.product.Material;
+import com.flowiee.pms.entity.product.ProductCombo;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductDetail;
@@ -103,6 +104,10 @@ public class FileStorage extends BaseEntity implements Serializable {
     @JoinColumn(name = "ticket_export_id")
     TicketExport ticketExport;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_combo_id")
+    ProductCombo productCombo;
+
     @Column(name = "is_active", nullable = false)
     boolean isActive;
 
@@ -112,11 +117,11 @@ public class FileStorage extends BaseEntity implements Serializable {
     public FileStorage(MultipartFile file, String pModule, Integer productId) {
         try {
             this.module = pModule;
+            this.extension = FileUtils.getFileExtension(file.getOriginalFilename());
             this.originalName = file.getOriginalFilename();
             this.customizeName = file.getOriginalFilename();
-            //this.storageName = Instant.now(Clock.systemUTC()).toEpochMilli() + "_" + file.getOriginalFilename();
+            this.storageName = FileUtils.genRandomFileName() + "." + this.extension;
             this.fileSize = file.getSize();
-            this.extension = FileUtils.getFileExtension(file.getOriginalFilename());
             this.contentType = file.getContentType();
             this.directoryPath = CommonUtils.getPathDirectory(pModule).substring(CommonUtils.getPathDirectory(pModule).indexOf("uploads"));
             this.account = new Account(CommonUtils.getUserPrincipal().getId());

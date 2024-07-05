@@ -2,7 +2,7 @@ package com.flowiee.pms.controller.dashboard;
 
 import com.flowiee.pms.model.DashboardModel;
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.service.dashboard.DashboardService;
 
 import lombok.AccessLevel;
@@ -24,7 +24,7 @@ public class DashboardControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldDashboard.readDashboard(true)")
     public ModelAndView reportDoanhThu() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_DASHBOARD);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_DASHBOARD.getTemplate());
 
         DashboardModel dashboardModel = dashboardService.loadDashboard();
 

@@ -357,3 +357,32 @@ let convertDateT1 = (dateInput) => {
     // Format lại chuỗi ngày tháng thành 'dd/MM/yyyy'
     return formattedDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year;
 }
+
+function setupSelectMultiple() {
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+
+        $("input[data-bootstrap-switch]").each(function () {
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        })
+
+        //Date and time picker
+        $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
+        //Timepicker
+        $('#timepicker').datetimepicker({
+            format: 'LT'
+        })
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+    })
+}

@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 public class FileUtils {
     public static String rootPath = "src/main/resources/static";
@@ -65,5 +66,9 @@ public class FileUtils {
             }
         }
         return extension;
+    }
+
+    public static String genRandomFileName() {
+        return UUID.randomUUID().toString();
     }
 }

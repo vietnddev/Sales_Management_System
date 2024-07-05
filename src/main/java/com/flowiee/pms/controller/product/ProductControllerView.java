@@ -14,7 +14,7 @@ import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.ProductVariantService;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -52,7 +52,7 @@ public class ProductControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView loadProductPage() {
-        return baseView(new ModelAndView(PagesUtils.PRO_PRODUCT));
+        return baseView(new ModelAndView(Pages.PRO_PRODUCT.getTemplate()));
     }
 
     @GetMapping(value = "/{id}")
@@ -62,7 +62,7 @@ public class ProductControllerView extends BaseController {
         if (product.isEmpty()) {
             throw new ResourceNotFoundException("Product not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_INFO);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_PRODUCT_INFO.getTemplate());
         modelAndView.addObject("productId", productId);
         modelAndView.addObject("detailProducts", product.get());
         return baseView(modelAndView);
@@ -75,7 +75,7 @@ public class ProductControllerView extends BaseController {
         if (productVariant.isEmpty()) {
             throw new BadRequestException();
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_PRODUCT_VARIANT);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_PRODUCT_VARIANT.getTemplate());
         modelAndView.addObject("listAttributes", productAttributeService.findAll(-1, -1, variantId).getContent());
         modelAndView.addObject("bienTheSanPhamId", variantId);
         modelAndView.addObject("bienTheSanPham", productVariant.get());

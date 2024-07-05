@@ -2,7 +2,7 @@ package com.flowiee.pms.controller.system;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.ErrorModel;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class ErrorController extends BaseController {
     @GetMapping("/403")
     public ModelAndView forbiddenException() {
         ErrorModel error = new ErrorModel(HttpStatus.FORBIDDEN.value(), ErrorCode.ERROR_FORBIDDEN.getDescription());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ERROR.getTemplate());
         modelAndView.addObject("error", error);
         return baseView(modelAndView);
     }
@@ -24,7 +24,7 @@ public class ErrorController extends BaseController {
     @GetMapping("/404")
     public ModelAndView notfoundException() {
         ErrorModel error = new ErrorModel(HttpStatus.FORBIDDEN.value(), ErrorCode.ERROR_NOTFOUND.getDescription());
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_ERROR);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ERROR.getTemplate());
         modelAndView.addObject("error", error);
         return baseView(modelAndView);
     }

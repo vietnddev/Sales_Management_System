@@ -4,7 +4,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.ConfigService;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,19 +22,19 @@ public class SystemControllerView extends BaseController {
 
     @GetMapping("/notification")
     public ModelAndView getAllNotification() {
-        return baseView(new ModelAndView(PagesUtils.SYS_NOTIFICATION));
+        return baseView(new ModelAndView(Pages.SYS_NOTIFICATION.getTemplate()));
     }
 
     @GetMapping("/log")
     @PreAuthorize("@vldModuleSystem.readLog(true)")
     public ModelAndView showPageLog() {
-        return baseView(new ModelAndView(PagesUtils.SYS_LOG));
+        return baseView(new ModelAndView(Pages.SYS_LOG.getTemplate()));
     }
 
     @GetMapping("/config")
     @PreAuthorize("@vldModuleSystem.readConfig(true)")
     public ModelAndView showConfig() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_CONFIG);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_CONFIG.getTemplate());
         modelAndView.addObject("listConfig", configService.findAll());
         return baseView(modelAndView);
     }
