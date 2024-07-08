@@ -31,6 +31,10 @@ public class TicketExportDTO extends TicketExport implements Serializable {
         dto.setNote(t.getNote());
         dto.setStatus(t.getStatus());
         dto.setListOrderDTO(OrderDTO.fromOrders(t.getListOrders()));
+        dto.setStorage(t.getStorage());
+        if (dto.getStorage() != null) {
+            dto.setStorageName(dto.getStorage().getName());
+        }
         return dto;
     }
 

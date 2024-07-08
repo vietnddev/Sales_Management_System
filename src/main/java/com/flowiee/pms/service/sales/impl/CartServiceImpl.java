@@ -43,6 +43,7 @@ public class CartServiceImpl extends BaseService implements CartService {
                     BigDecimal originalPrice = productDetail.get().getOriginalPrice();
                     BigDecimal discountPrice = productDetail.get().getDiscountPrice();
                     item.setPrice(discountPrice != null ? discountPrice : originalPrice);
+                    item.getProductDetail().setAvailableSalesQty(productDetail.get().getStorageQty() - productDetail.get().getDefectiveQty());
                 }
             }
         }
@@ -116,15 +117,16 @@ public class CartServiceImpl extends BaseService implements CartService {
                 Items items = cartItemsService.findItemByCartAndProductVariant(cartId, productVariant.get().getId());
                 cartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
             } else {
-                Items items = new Items();
-                items.setOrderCart(new OrderCart(cartId));
-                items.setProductDetail(new ProductDetail(Integer.parseInt(productVariantId)));
-                items.setPriceType(PriceType.L.name());
-                items.setPrice(productVariant.get().getRetailPriceDiscount() != null ? productVariant.get().getRetailPriceDiscount() : productVariant.get().getRetailPrice());
-                items.setPriceOriginal(productVariant.get().getRetailPrice());
-                items.setExtraDiscount(BigDecimal.ZERO);
-                items.setQuantity(1);
-                items.setNote("");
+                Items items = Items.builder()
+                    .orderCart(new OrderCart(cartId))
+                    .productDetail(new ProductDetail(Integer.parseInt(productVariantId)))
+                    .priceType(PriceType.L.name())
+                    .price(productVariant.get().getRetailPriceDiscount() != null ? productVariant.get().getRetailPriceDiscount() : productVariant.get().getRetailPrice())
+                    .priceOriginal(productVariant.get().getRetailPrice())
+                    .extraDiscount(BigDecimal.ZERO)
+                    .quantity(1)
+                    .note("")
+                    .build();
                 cartItemsService.save(items);
             }
         }
@@ -141,6 +143,9 @@ public class CartServiceImpl extends BaseService implements CartService {
             cartItemsService.delete(item.getId());
         } else {
             ProductDetail productVariant = item.getProductDetail();
+            if (itemToUpdate.getQuantity() > productVariant.getAvailableSalesQty()) {
+                throw new BadRequestException("This item's quantity is over available quantity!");
+            }
             item.setNote(itemToUpdate.getNote());
             item.setQuantity(itemToUpdate.getQuantity());
             if (itemToUpdate.getPriceType() != null && (!item.getPriceType().equals(itemToUpdate.getPriceType()))) {

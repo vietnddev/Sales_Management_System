@@ -38,6 +38,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -79,12 +80,25 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        return ticketImportRepo.findAll(pText, pSupplierId, pPaymentMethod, pPayStatus, pImportStatus, pStorageId, pageable);
+        Page<TicketImport> ticketImportPage = ticketImportRepo.findAll(pText, pSupplierId, pPaymentMethod, pPayStatus, pImportStatus, pStorageId, pageable);
+        for (TicketImport ticketImport : ticketImportPage.getContent()) {
+            BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketImport.getListProductVariantTemps(), ticketImport.getListMaterialTemps());
+            ticketImport.setTotalValue(totalValueAndItems[0]);
+            ticketImport.setTotalItems(totalValueAndItems[1].intValue());
+        }
+        return ticketImportPage;
     }
 
     @Override
     public Optional<TicketImport> findById(Integer entityId) {
-        return ticketImportRepo.findById(entityId);
+        Optional<TicketImport> ticketImport = ticketImportRepo.findById(entityId);
+        if (ticketImport.isEmpty()) {
+            return Optional.empty();
+        }
+        BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketImport.get().getListProductVariantTemps(), ticketImport.get().getListMaterialTemps());
+        ticketImport.get().setTotalValue(totalValueAndItems[0]);
+        ticketImport.get().setTotalItems(totalValueAndItems[1].intValue());
+        return ticketImport;
     }
 
     @Override
@@ -117,15 +131,15 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                             account.ifPresent(stgManagersReceiveNtfs::add);
                         }
                         for (Account a : stgManagersReceiveNtfs) {
-                            Notification ntf = new Notification();
-                            ntf.setSend(0);
-                            ntf.setReceive(a.getId());
-                            ntf.setType("WARNING");
-                            ntf.setTitle("Sức chứa của kho " + storage.getName() + " đã chạm mốc cảnh báo!");
-                            ntf.setContent("Số lượng hàng hóa hiện tại " + totalGoodsHolding + ", Số lượng nhập thêm: " + totalGoodsImport + ", Số lượng sau khi nhập: " + totalGoodsImport + totalGoodsHolding + "/" + storage.getHoldableQty());
-                            ntf.setReaded(false);
-                            ntf.setImportId(ticketImportSaved.getId());
-                            notificationService.save(ntf);
+                            notificationService.save(Notification.builder()
+                                .send(0)
+                                .receive(a.getId())
+                                .type("WARNING")
+                                .title("Sức chứa của kho " + storage.getName() + " đã chạm mốc cảnh báo!")
+                                .content("Số lượng hàng hóa hiện tại " + totalGoodsHolding + ", Số lượng nhập thêm: " + totalGoodsImport + ", Số lượng sau khi nhập: " + totalGoodsImport + totalGoodsHolding + "/" + storage.getHoldableQty())
+                                .readed(false)
+                                .importId(ticketImportSaved.getId())
+                                .build());
                         }
                     }
                 }
@@ -182,13 +196,14 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public TicketImport createDraftTicketImport(TicketImportDTO ticketImportInput) {
-        TicketImport ticketImport = new TicketImport();
-        ticketImport.setTitle(ticketImportInput.getTitle());
-        ticketImport.setStatus("DRAFT");
+        TicketImport ticketImport = TicketImport.builder()
+            .title(ticketImportInput.getTitle())
+            .status("DRAFT")
+            .importer(CommonUtils.getUserPrincipal().getUsername())
+            .importTime(LocalDateTime.now())
+            .storage(new Storage(ticketImportInput.getStorageId()))
+            .build();
         ticketImport.setCreatedBy(CommonUtils.getUserPrincipal().getId());
-        ticketImport.setImporter(CommonUtils.getUserPrincipal().getUsername());
-        ticketImport.setImportTime(LocalDateTime.now());
-        ticketImport.setStorage(new Storage(ticketImportInput.getStorageId()));
         return this.save(ticketImport);
     }
 
@@ -220,13 +235,12 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             if (temp != null) {
                 productVariantTempRepo.updateQuantityIncrease(temp.getId(), 1);
             } else {
-                ProductVariantTemp productVariantTemp = new ProductVariantTemp();
-                productVariantTemp.setTicketImport(new TicketImport(ticketImportId));
-                productVariantTemp.setProductVariant(productDetail.get());
-                productVariantTemp.setQuantity(1);
-                productVariantTemp.setStorageQty(productDetail.get().getStorageQty());
-                productVariantTemp.setNote(null);
-                ProductVariantTemp productVariantTempAdded = productVariantTempRepo.save(productVariantTemp);
+                ProductVariantTemp productVariantTempAdded = productVariantTempRepo.save(ProductVariantTemp.builder()
+                        .ticketImport(new TicketImport(ticketImportId))
+                        .productVariant(productDetail.get())
+                        .quantity(1)
+                        .storageQty(productDetail.get().getStorageQty())
+                        .build());
                 listAdded.add(productVariantTempAdded);
             }
         }
@@ -245,16 +259,37 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             if (temp != null) {
                 materialTempRepo.updateQuantityIncrease(temp.getId(), 1);
             } else {
-                MaterialTemp materialTemp = new MaterialTemp();
-                materialTemp.setTicketImport(new TicketImport(ticketImportId));
-                materialTemp.setMaterial(material.get());
-                materialTemp.setQuantity(1);
-                materialTemp.setStorageQty(material.get().getQuantity());
-                materialTemp.setNote(null);
-                MaterialTemp materialTempAdded = materialTempRepo.save(materialTemp);
+                MaterialTemp materialTempAdded = materialTempRepo.save(MaterialTemp.builder()
+                        .ticketImport(new TicketImport(ticketImportId))
+                        .material(material.get())
+                        .quantity(1)
+                        .storageQty(material.get().getQuantity())
+                        .build());
                 listAdded.add(materialTempAdded);
             }
         }
         return listAdded;
+    }
+
+    private BigDecimal[] getTotalValueAndItems(List<ProductVariantTemp> pProductVariantTempList, List<MaterialTemp> pMaterialTempList) {
+        BigDecimal totalValue = BigDecimal.ZERO;
+        int totalItems = 0;
+        if (pProductVariantTempList != null) {
+            for (ProductVariantTemp p : pProductVariantTempList) {
+                if (p.getPurchasePrice() != null) {
+                    totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
+                }
+                totalItems = totalItems + p.getQuantity();
+            }
+        }
+        if (pMaterialTempList != null) {
+            for (MaterialTemp m : pMaterialTempList) {
+                if (m.getPurchasePrice() != null) {
+                    totalValue = totalValue.add(m.getPurchasePrice().multiply(new BigDecimal(m.getQuantity())));
+                }
+                totalItems += m.getQuantity();
+            }
+        }
+        return new BigDecimal[] {totalValue, BigDecimal.valueOf(totalItems)};
     }
 }

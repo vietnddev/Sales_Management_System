@@ -6,7 +6,6 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.model.dto.TicketExportDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "ticket_export_goods")
 @NoArgsConstructor
@@ -62,16 +62,11 @@ public class TicketExport extends BaseEntity implements Serializable {
     List<FileStorage> listImages;
 
     @Transient
+    Integer totalItems;
+
+    @Transient
     BigDecimal totalValue;
 
-    public static TicketExport fromTicketExportDTO(TicketExportDTO dto) {
-        TicketExport ticketExport = new TicketExport();
-        ticketExport.setId(dto.getId());
-        ticketExport.setTitle(dto.getTitle());
-        ticketExport.setExporter(dto.getExporter());
-        ticketExport.setExportTime(dto.getExportTime());
-        ticketExport.setNote(dto.getNote());
-        ticketExport.setStatus(dto.getStatus());
-        return ticketExport;
-    }
+    @Transient
+    String storageName;
 }

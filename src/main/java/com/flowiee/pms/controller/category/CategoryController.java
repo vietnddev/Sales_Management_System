@@ -39,14 +39,15 @@ public class CategoryController extends BaseController {
     @GetMapping("/{type}")
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public AppResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
-                                                  @RequestParam(value = "parentId", required = false) Integer parentId,
-                                                  @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                                  @RequestParam(value = "pageNum", required = false) Integer pageNum) {
+                                                  @RequestParam(name = "parentId", required = false) Integer parentId,
+                                                  @RequestParam(name = "pageSize", required = false) Integer pageSize,
+                                                  @RequestParam(name = "pageNum", required = false) Integer pageNum) {
         try {
             if (Objects.isNull(pageSize) || Objects.isNull(pageNum)) {
-                return success(categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId));
+                pageSize = -1;
+                pageNum = -1;
             }
-            Page<Category> categories = categoryService.findSubCategory(CommonUtils.getCategoryType(categoryType), parentId, pageSize, pageNum - 1);
+            Page<Category> categories = categoryService.findSubCategory(CommonUtils.getCategoryEnum(categoryType), parentId, null, pageSize, pageNum - 1);
             return success(categories.getContent(), pageNum, pageSize, categories.getTotalPages(), categories.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"), ex);

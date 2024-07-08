@@ -48,15 +48,14 @@ public class LedgerServiceImpl implements LedgerService {
         BigDecimal totalPayment = totalReceiptPayment[1];
         BigDecimal endBal = beginBal.add(totalReceipt).subtract(totalPayment);
 
-        GeneralLedger generalLedger = new GeneralLedger();
-        generalLedger.setBeginBalance(beginBal);
-        generalLedger.setTotalReceipt(totalReceipt);
-        generalLedger.setTotalPayment(totalPayment);
-        generalLedger.setEndBalance(endBal);
-        generalLedger.setListTransactions(ledgerTransactions.getContent());
-        generalLedger.setTotalPages(ledgerTransactions.getTotalPages());
-        generalLedger.setTotalElements(ledgerTransactions.getTotalElements());
-
-        return generalLedger;
+        return GeneralLedger.builder()
+                .beginBalance(beginBal)
+                .totalReceipt(totalReceipt)
+                .totalPayment(totalPayment)
+                .endBalance(endBal)
+                .listTransactions(ledgerTransactions.getContent())
+                .totalPages(ledgerTransactions.getTotalPages())
+                .totalElements(ledgerTransactions.getTotalElements())
+                .build();
     }
 }

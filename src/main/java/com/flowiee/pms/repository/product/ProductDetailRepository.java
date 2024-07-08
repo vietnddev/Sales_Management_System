@@ -25,11 +25,13 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
            "and (:colorId is null or c.id=:colorId) " +
            "and (:sizeId is null or s.id=:sizeId) " +
            "and (:fabricTypeId is null or f.id=:fabricTypeId) " +
+           "and (:availableForSales is null or :availableForSales = false or v.storageQty > 0) " +
            "order by v.variantName, s.name, c.name")
     List<ProductDetail> findAll(@Param("productId") Integer productId,
                            @Param("colorId") Integer colorId,
                            @Param("sizeId") Integer sizeId,
                            @Param("fabricTypeId") Integer fabricTypeId,
+                           @Param("availableForSales") Boolean availableForSales,
                            Pageable pageable);
     
     @Query("from ProductDetail b where b.product.id=:productId and b.color.id=:colorId and b.size.id=:sizeId and b.fabricType.id=:fabricTypeId")

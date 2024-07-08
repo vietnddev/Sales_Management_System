@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Builder
 @Entity
 @Table(name = "orders")
 @Getter
@@ -59,7 +60,7 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "voucher_used")
 	String voucherUsedCode;
 
-	@Column(name = "amount_discount")
+	@Column(name = "amount_discount", nullable = false)
 	BigDecimal amountDiscount;
 
 	@Column(name = "shipping_cost")
@@ -105,9 +106,6 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "cod_fee")
 	BigDecimal codFee;
 
-//	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-//	List<OrderPay> listOrderPay;
-
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ticket_export_id")
@@ -138,41 +136,6 @@ public class Order extends BaseEntity implements Serializable {
 
 	public Order(int id) {
 		super.id = id;
-	}
-
-	public Map<String, String> compareTo(Order compare) {
-		Map<String, String> map = new HashMap<>();
-		if (!this.getReceiverName().equals(compare.getReceiverName())) {
-			map.put("Receiver name", this.getReceiverName() + "#" + compare.getReceiverName());
-		}
-		if (!this.getReceiverPhone().equals(compare.getReceiverPhone())) {
-			map.put("Receiver phone", this.getReceiverPhone() + "#" + compare.getReceiverPhone());
-		}
-		if (!this.getReceiverAddress().equals(compare.getReceiverAddress())) {
-			map.put("Receiver address", this.getReceiverAddress() + "#" + compare.getReceiverAddress());
-		}
-		if (!this.getReceiverEmail().equals(compare.getReceiverEmail())) {
-			map.put("Receiver email", this.getReceiverEmail() + "#" + compare.getReceiverEmail());
-		}
-		if (!this.getCustomer().getCustomerName().equals(compare.getCustomer().getCustomerName())) {
-			map.put("Customer", this.getCustomer().getCustomerName() + "#" + compare.getCustomer().getCustomerName());
-		}
-		if (!this.getNote().equals(compare.getNote())) {
-			map.put("Note", this.getNote() + "#" + compare.getNote());
-		}
-		if (this.getOrderTime().compareTo(compare.getOrderTime()) != 0) {
-			map.put("Order time", this.getOrderTime() + "#" + compare.getOrderTime());
-		}
-		if (!this.getVoucherUsedCode().equals(compare.getVoucherUsedCode())) {
-			map.put("Voucher", this.getVoucherUsedCode() + "#" + compare.getVoucherUsedCode());
-		}
-		if (!this.getKenhBanHang().getName().equals(compare.getKenhBanHang().getName())) {
-			map.put("Sales channel", this.getKenhBanHang().getName() + "#" + compare.getKenhBanHang().getName());
-		}
-		if (!this.getTrangThaiDonHang().getName().equals(compare.getTrangThaiDonHang().getName())) {
-			map.put("Order status", this.getTrangThaiDonHang().getName() + "#" + compare.getTrangThaiDonHang().getName());
-		}
-		return map;
 	}
 
 	@Override

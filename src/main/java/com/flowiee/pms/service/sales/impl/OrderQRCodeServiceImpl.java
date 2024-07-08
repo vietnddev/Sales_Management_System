@@ -35,21 +35,17 @@ public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeSe
         try {
             long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
             String imageQRCodeName = "qrcode_" + orderId + ".png";
-            FileStorage fileInfo = new FileStorage();
-            fileInfo.setModule(MODULE.PRODUCT.name());
-            fileInfo.setOriginalName(imageQRCodeName);
-            fileInfo.setCustomizeName(imageQRCodeName);
-            fileInfo.setStorageName(currentTime + "_" + imageQRCodeName);
-            //fileInfo.setKichThuocFile();
-            fileInfo.setExtension(FileExtension.PNG.getLabel());
-            fileInfo.setContentType(null);
-            fileInfo.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")));
-            fileInfo.setProduct(null);
-            fileInfo.setOrder(new Order(orderId));
-            fileInfo.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
-            fileInfo.setActive(false);
-            fileRepository.save(fileInfo);
-
+            fileRepository.save(FileStorage.builder()
+                    .module(MODULE.PRODUCT.name())
+                    .originalName(imageQRCodeName)
+                    .customizeName(imageQRCodeName)
+                    .storageName(currentTime + "_" + imageQRCodeName)
+                    .extension(FileExtension.PNG.getLabel())
+                    .directoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")))
+                    .order(new Order(orderId))
+                    .account(new Account(CommonUtils.getUserPrincipal().getId()))
+                    .isActive(false)
+                    .build());
             String data = "http://" + CommonUtils.mvServerInfo.ip() + ":" + CommonUtils.mvServerInfo.port() + "/order/" + orderId;
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 200, 200);

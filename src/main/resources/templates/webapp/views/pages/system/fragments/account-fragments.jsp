@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="modalCreateAccount">
+        <div class="modal fade" id="insert">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/sys/tai-khoan/insert}" th:object="${account}" method="post">
+                        <div class="modal-header">
+                            <strong class="modal-title">Thêm mới tài khoản</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Tên đăng nhập</label>
+                                        <input type="text" class="form-control" placeholder="Tên đăng nhập" name="username">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mật khẩu</label>
+                                        <input type="text" class="form-control" placeholder="Mật khẩu" name="password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Họ tên</label>
+                                        <input type="text" class="form-control" placeholder="Họ tên" name="fullName">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Giới tính</label>
+                                        <select class="custom-select" name="sex">
+                                            <option value="true" selected>Nam</option>
+                                            <option value="false">Nữ</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Số điện thoại</label>
+                                        <input type="text" class="form-control" placeholder="Số điện thoại" name="phoneNumber">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" placeholder="Email" name="email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nhóm người dùng</label>
+                                        <select class="custom-select" name="groupAccount">
+                                            <option th:each="gr : ${groupAccount}"
+                                                    th:value="${gr.id}"
+                                                    th:text="${gr.groupName}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Trạng thái</label>
+                                        <select class="custom-select" name="status">
+                                            <option value="true" selected>Kích hoạt</option>
+                                            <option value="false">Khóa</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="modalUpdateAccount">
+        <div class="modal fade" th:id="'update-' + ${list.id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/sys/tai-khoan/update/{id}(id=${list.id})}"
+                          th:object="${account}" method="post">
+                        <div class="modal-header">
+                            <strong class="modal-title">Cập nhật thông tin tài khoản</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Tên đăng nhập</label>
+                                        <input type="text" class="form-control" placeholder="Tên đăng nhập" th:value="${list.username}" disabled/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Họ tên</label>
+                                        <input type="text" class="form-control" placeholder="Họ tên" name="fullName" th:value="${list.fullName}"/>
+                                    </div>
+                                    <div class="form-group" th:if="${list.sex}">
+                                        <label>Giới tính</label>
+                                        <select class="custom-select" name="sex">
+                                            <option value="true" selected>Nam</option>
+                                            <option value="false">Nữ</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" th:if="not ${list.sex}">
+                                        <label>Giới tính</label>
+                                        <select class="custom-select" name="sex">
+                                            <option value="true">Nam</option>
+                                            <option value="false" selected>Nữ
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Số điện thoại</label>
+                                        <input type="text" class="form-control" placeholder="Số điện thoại" name="phoneNumber" th:value="${list.phoneNumber}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" placeholder="Email" name="email" th:value="${list.email}"/>
+                                    </div>
+                                    <div class="form-group"
+                                         th:if="${list.status}">
+                                        <label>Trạng thái</label>
+                                        <select class="custom-select" name="status">
+                                            <option value="true" selected>Kích hoạt</option>
+                                            <option value="false">Khóa</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group"
+                                         th:if="not ${list.status}">
+                                        <label>Trạng thái</label>
+                                        <select class="custom-select" name="status">
+                                            <option value="true">Khóa</option>
+                                            <option value="false" selected>Hoạt động</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                <input type="hidden" name="username" th:value="${list.username}"/>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="modalDeleteAccount">
+        <div class="modal fade" th:id="'delete-' + ${list.id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/sys/tai-khoan/delete/{id}(id=${list.id})}"
+                          th:object="${account}"
+                          method="post">
+                        <div class="modal-header">
+                            <strong class="modal-title">Xác nhận khóa tài khoản</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card-body">
+                                Tài khoản <strong class="badge text-bg-info" th:text="${list.fullName}" style="font-size: 16px;"></strong>sẽ bị khóa!
+                            </div>
+                            <div class="modal-footer justify-content-end" style="margin-bottom: -15px;">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Đồng ý</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

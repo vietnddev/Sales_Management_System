@@ -215,7 +215,7 @@ function updateTableContentWhenOnClickPagination3(loadNewDataMethod) {
 }
 
 //Search tool
-function setupSearchTool(keySearch) {
+function setupSearchTool() {
     let brandFilter = $('#brandFilter');
     let productTypeFilter = $('#productTypeFilter');
     let colorFilter = $('#colorFilter');
@@ -233,84 +233,93 @@ function setupSearchTool(keySearch) {
     let groupCustomerFilter = $('#groupCustomerFilter');
 
     $("#btnOpenSearchAdvance").on("click", function () {
-        brandFilter.empty();
-        brandFilter.append("<option>Chọn nhãn hiệu</option>");
-        productTypeFilter.empty();
-        productTypeFilter.append("<option>Chọn loại sản phẩm</option>");
-        colorFilter.empty();
-        colorFilter.append("<option>Chọn màu sắc</option>");
-        sizeFilter.empty();
-        sizeFilter.append("<option>Chọn kích cỡ</option>");
-        unitFilter.empty();
-        unitFilter.append("<option>Chọn đơn vị tính</option>");
-        discountFilter.empty();
-        discountFilter.append("<option>Chọn khuyến mãi</option>");
-        productStatusFilter.empty();
-        productStatusFilter.append("<option>Chọn trạng thái sản phẩm</option>");
+        clearSearchSelection(sizeFilter, 'Chọn kích cỡ');
+        clearSearchSelection(unitFilter, 'Chọn đơn vị tính');
+        clearSearchSelection(brandFilter, 'Chọn nhãn hiệu');
+        clearSearchSelection(brandFilter, 'Chọn nhãn hiệu');
+        clearSearchSelection(colorFilter, 'Chọn màu sắc');
+        clearSearchSelection(discountFilter, 'Chọn khuyến mãi');
+        clearSearchSelection(orderTypeFilter, 'Chọn loại đơn hàng');
+        clearSearchSelection(shipMethodFilter, 'Chọn hình thức giao hàng');
+        clearSearchSelection(orderStatusFilter, 'Chọn trạng thái đơn hàng');
+        clearSearchSelection(productTypeFilter, 'Chọn loại sản phẩm');
+        clearSearchSelection(salesChannelFilter, 'Chọn kênh bán hàng');
+        clearSearchSelection(productStatusFilter, 'Chọn trạng thái sản phẩm');
+        clearSearchSelection(paymentMethodFilter, 'Chọn hình thức thanh toán');
+        clearSearchSelection(paymentStatusFilter, 'Chọn trạng thái thanh toán');
+        clearSearchSelection(groupCustomerFilter, 'Chọn nhóm khách hàng');
+
+        let keySearch = [];
+        $.each($('.search-selection'), function (index, d) {
+            keySearch.push($(d).attr('entity'));
+        })
 
         $.each(keySearch, function (index, key) {
-            let apiURL = "";
             switch (key) {
                 case "BRAND":
-                    apiURL = mvHostURLCallApi + '/category/brand';
-                    downloadCategoryForSelection(brandFilter, apiURL);
+                    downloadCategoryForSelection(brandFilter, mvHostURLCallApi + '/category/brand');
                     break;
                 case "PRODUCT_TYPE":
-                    apiURL = mvHostURLCallApi + '/category/product-type';
-                    downloadCategoryForSelection(productTypeFilter, apiURL);
+                    downloadCategoryForSelection(productTypeFilter, mvHostURLCallApi + '/category/product-type');
                     break;
                 case "COLOR":
-                    apiURL = mvHostURLCallApi + '/category/color';
-                    downloadCategoryForSelection(colorFilter, apiURL);
+                    downloadCategoryForSelection(colorFilter, mvHostURLCallApi + '/category/color');
                     break;
                 case "SIZE":
-                    apiURL = mvHostURLCallApi + '/category/size';
-                    downloadCategoryForSelection(sizeFilter, apiURL);
+                    downloadCategoryForSelection(sizeFilter, mvHostURLCallApi + '/category/size');
                     break;
                 case "UNIT":
-                    apiURL = mvHostURLCallApi + '/category/unit';
-                    downloadCategoryForSelection(unitFilter, apiURL);
+                    downloadCategoryForSelection(unitFilter, mvHostURLCallApi + '/category/unit');
                     break;
                 case "BRANCH":
-                    apiURL = mvHostURLCallApi + '/category/branch';
-                    downloadCategoryForSelection(branchFilter, apiURL);
+                    $.get((mvHostURLCallApi + '/system/branch/all'), function (response) {
+                        if (response.status === "OK") {
+                            $.each(response.data, function (index, d) {
+                                branchFilter.append('<option value=' + d.id + '>' + d.branchName + '</option>');
+                            });
+                        }
+                    }).fail(function () {
+                        showErrorModal("Could not connect to the server");
+                    });
                     break;
                 case "PAYMENT_METHOD":
-                    apiURL = mvHostURLCallApi + '/category/payment-method';
-                    downloadCategoryForSelection(paymentMethodFilter, apiURL);
+                    downloadCategoryForSelection(paymentMethodFilter, mvHostURLCallApi + '/category/payment-method');
                     break;
                 case "SALES_CHANNEL":
-                    apiURL = mvHostURLCallApi + '/category/sales-channel';
-                    downloadCategoryForSelection(salesChannelFilter, apiURL);
+                    downloadCategoryForSelection(salesChannelFilter, mvHostURLCallApi + '/category/sales-channel');
                     break;
                 case "ORDER_STATUS":
-                    apiURL = mvHostURLCallApi + '/category/order-status';
-                    downloadCategoryForSelection(orderStatusFilter, apiURL);
+                    downloadCategoryForSelection(orderStatusFilter, mvHostURLCallApi + '/category/order-status');
                     break;
                 case "PAYMENT_STATUS":
-                    apiURL = mvHostURLCallApi + '/category/payment-status';
-                    downloadCategoryForSelection(paymentStatusFilter, apiURL);
+                    downloadCategoryForSelection(paymentStatusFilter, mvHostURLCallApi + '/category/payment-status');
                     break;
                 case "ORDER_TYPE":
-                    apiURL = mvHostURLCallApi + '/category/order-type';
-                    downloadCategoryForSelection(orderTypeFilter, apiURL);
+                    downloadCategoryForSelection(orderTypeFilter, mvHostURLCallApi + '/category/order-type');
                     break;
                 case "SHIP_METHOD":
-                    apiURL = mvHostURLCallApi + '/category/ship-method';
-                    downloadCategoryForSelection(shipMethodFilter, apiURL);
+                    downloadCategoryForSelection(shipMethodFilter, mvHostURLCallApi + '/category/ship-method');
                     break;
                 case "GROUP_CUSTOMER":
-                    apiURL = mvHostURLCallApi + '/category/group-customer';
-                    downloadCategoryForSelection(groupCustomerFilter, apiURL);
+                    downloadCategoryForSelection(groupCustomerFilter, mvHostURLCallApi + '/category/group-customer');
                     break;
                 case "DISCOUNT":
-                    discountFilter.append(`<option value="Y">Đang áp dụng</option><option value="N">Không áp dụng</option>`);
+                    discountFilter.append(`<option value="Y">Đang áp dụng</option>
+                                           <option value="N">Không áp dụng</option>`);
                     break;
                 case "PRODUCT_STATUS":
-                    productStatusFilter.append(`<option value="ACTIVE">Đang kinh doanh</option><option value="INACTIVE">Không kinh doanh</option>`);
+                    productStatusFilter.append(`<option value="ACTIVE">Đang kinh doanh</option>
+                                                <option value="INACTIVE">Không kinh doanh</option>`);
             }
         })
     })
+}
+
+function clearSearchSelection(element, defaultOption) {
+    element.empty();
+    if (defaultOption != null) {
+        element.append(`<option>${defaultOption}</option>`);
+    }
 }
 
 let convertDateT1 = (dateInput) => {

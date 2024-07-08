@@ -40,15 +40,14 @@ public abstract class BaseImportService extends BaseService implements ImportSer
             Path path = Paths.get(CommonUtils.getPathDirectory(templateExport.getModule()) + "/" + mvEximModel.getBeginTime().toNanoOfDay() + "_" + multipartFile.getOriginalFilename());
             multipartFile.transferTo(path);
 
-            LocalTime finishTime = LocalTime.now();
-            mvFileImportHistory = new FileImportHistory();
-            mvFileImportHistory.setModule(templateExport.getModule().name());
-            mvFileImportHistory.setEntity(templateExport.getEntity());
-            mvFileImportHistory.setBeginTime(mvEximModel.getBeginTime());
-            mvFileImportHistory.setFinishTime(finishTime);
-            mvFileImportHistory.setFilePath(path.toString());
-            mvFileImportHistory.setAccount(CommonUtils.getUserPrincipal().toEntity());
-            mvFileImportRepository.save(mvFileImportHistory);
+            mvFileImportRepository.save(FileImportHistory.builder()
+                    .module(templateExport.getModule().name())
+                    .entity(templateExport.getEntity())
+                    .beginTime(mvEximModel.getBeginTime())
+                    .finishTime(LocalTime.now())
+                    .filePath(path.toString())
+                    .account(CommonUtils.getUserPrincipal().toEntity())
+                    .build());
 
             mvEximModel.setResult("OK");
             return mvEximModel;

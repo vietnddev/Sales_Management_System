@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+@Builder
 @Entity
 @Table(name = "notification")
 @NoArgsConstructor

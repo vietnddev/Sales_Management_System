@@ -12,6 +12,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Builder
 @Entity
 @Table(name = "material_temp")
 @NoArgsConstructor

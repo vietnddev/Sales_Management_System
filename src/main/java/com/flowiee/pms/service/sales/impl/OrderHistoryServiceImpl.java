@@ -29,19 +29,16 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
             String oldValue = ObjectUtils.isNotEmpty(entry.getValue()[0]) ? entry.getValue()[0].toString() : " ";
             String newValue = ObjectUtils.isNotEmpty(entry.getValue()[1]) ? entry.getValue()[1].toString() : " ";
 
-            OrderHistory orderHistory = new OrderHistory();
-            if (orderId != null) {
-                orderHistory.setOrder(new Order(orderId));
-            }
-            if (orderItemId != null) {
-                orderHistory.setOrderDetail(new OrderDetail(orderItemId));
-            }
-            orderHistory.setTitle(title);
-            orderHistory.setField(field);
-            orderHistory.setOldValue(oldValue);
-            orderHistory.setNewValue(newValue);
+            OrderHistory orderHistorySaved = orderHistoryRepository.save(OrderHistory.builder()
+                    .order(orderId != null ? new Order(orderId) : null)
+                    .orderDetail(orderItemId != null ? new OrderDetail(orderItemId) : null)
+                    .title(title)
+                    .field(field)
+                    .oldValue(oldValue)
+                    .newValue(newValue)
+                    .build());
 
-            orderHistories.add(orderHistoryRepository.save(orderHistory));
+            orderHistories.add(orderHistorySaved);
         }
         return orderHistories;
     }

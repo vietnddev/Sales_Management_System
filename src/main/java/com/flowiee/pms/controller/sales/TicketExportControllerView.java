@@ -48,13 +48,6 @@ public class TicketExportControllerView extends BaseController {
             ticketExportStatus.put(TicketExportStatus.COMPLETED.name(), TicketExportStatus.COMPLETED.getLabel());
             ticketExportStatus.put(TicketExportStatus.CANCEL.name(), TicketExportStatus.CANCEL.getLabel());
         }
-        BigDecimal totalValue = BigDecimal.ZERO;
-        for (ProductVariantTemp p : ticketExport.get().getListProductVariantTemp()) {
-            if (p.getPurchasePrice() != null) {
-                totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
-            }
-        }
-        ticketExport.get().setTotalValue(totalValue);
         ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_EXPORT_DETAIL.getTemplate());
         modelAndView.addObject("ticketExportId", ticketExportId);
         modelAndView.addObject("ticketExportStatus", ticketExportStatus);

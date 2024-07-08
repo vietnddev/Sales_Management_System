@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Date;
 
+@Builder
 @Entity
 @Table(name = "file_import_history")
 @NoArgsConstructor

@@ -48,7 +48,7 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
         //ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
         //PDFMergerUtility mergePdf = new PDFMergerUtility();
         //Barcode_Image.createImage(order.getId().toString() + ".png", order.getId().toString());
-        HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+        HashMap<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("customerName", dto.getReceiverName());
         parameterMap.put("customerAddress", dto.getReceiverAddress());
         parameterMap.put("customerPhone", dto.getReceiverPhone());
@@ -75,12 +75,13 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
         // orderDetails
         List<OrderDetailRpt> listDetail = new ArrayList<>();
         for (OrderDetailDTO detailDTO : dto.getListOrderDetailDTO()) {
-            OrderDetailRpt rpt = new OrderDetailRpt();
-            rpt.setProductName(detailDTO.getProductVariantDTO().getVariantName());
-            rpt.setUnitPrice(detailDTO.getPrice());
-            rpt.setQuantity(detailDTO.getQuantity());
-            rpt.setSubTotal(detailDTO.getPrice().multiply(BigDecimal.valueOf(detailDTO.getQuantity())));
-            rpt.setNote(detailDTO.getNote());
+            OrderDetailRpt rpt = OrderDetailRpt.builder()
+                .productName(detailDTO.getProductVariantDTO().getVariantName())
+                .unitPrice(detailDTO.getPrice())
+                .quantity(detailDTO.getQuantity())
+                .subTotal(detailDTO.getPrice().multiply(BigDecimal.valueOf(detailDTO.getQuantity())))
+                .note(detailDTO.getNote())
+                .build();
             listDetail.add(rpt);
         }
 

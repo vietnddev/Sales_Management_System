@@ -13,7 +13,10 @@ import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +30,17 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/system/category")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CategoryControllerView extends BaseController {
     CategoryService categoryService;
+    @Autowired
+    @Qualifier("categoryExportServiceImpl")
+    @NonFinal
     ExportService   exportService;
+    @Autowired
+    @Qualifier("categoryImportServiceImpl")
+    @NonFinal
     ImportService   importService;
-
-    public CategoryControllerView(CategoryService categoryService, @Qualifier("categoryExportServiceImpl") ExportService exportService, @Qualifier("categoryImportServiceImpl") ImportService importService) {
-        this.categoryService = categoryService;
-        this.exportService = exportService;
-        this.importService = importService;
-    }
 
     @GetMapping
     @PreAuthorize("@vldModuleCategory.readCategory(true)")

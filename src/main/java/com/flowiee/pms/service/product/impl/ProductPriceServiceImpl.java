@@ -51,10 +51,24 @@ public class ProductPriceServiceImpl extends BaseService implements ProductPrice
             String oldValue = String.valueOf(productDetail.get().getOriginalPrice());
             String newValue = String.valueOf(pOriginalPrice);
             if (pOriginalPrice != null) {
-                productHistoryService.save(new ProductHistory(productId, variantId, null, String.format(title, "gốc"), "PRICE", oldValue, newValue));
+                productHistoryService.save(ProductHistory.builder()
+                        .product(productDetail.get().getProduct())
+                        .productDetail(productDetail.get())
+                        .title(String.format(title, "gốc"))
+                        .field("PRICE")
+                        .oldValue(oldValue)
+                        .newValue(newValue)
+                        .build());
             }
-            if (pOriginalPrice != null) {
-                productHistoryService.save(new ProductHistory(productId, variantId, null, String.format(title, "giảm"), "PRICE", oldValue, newValue));
+            if (pDiscountPrice != null) {
+                productHistoryService.save(ProductHistory.builder()
+                        .product(productDetail.get().getProduct())
+                        .productDetail(productDetail.get())
+                        .title(String.format(title, "giảm"))
+                        .field("PRICE")
+                        .oldValue(oldValue)
+                        .newValue(newValue)
+                        .build());
             }
             return MessageCode.UPDATE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {

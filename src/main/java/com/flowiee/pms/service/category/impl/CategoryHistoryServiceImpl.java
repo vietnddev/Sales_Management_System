@@ -27,12 +27,15 @@ public class CategoryHistoryServiceImpl implements CategoryHistoryService {
             String field = entry.getKey();
             String oldValue = ObjectUtils.isNotEmpty(entry.getValue()[0]) ? entry.getValue()[0].toString() : " ";
             String newValue = ObjectUtils.isNotEmpty(entry.getValue()[1]) ? entry.getValue()[1].toString() : " ";
-            CategoryHistory categoryHistory = new CategoryHistory();
-            categoryHistory.setTitle(title);
-            categoryHistory.setCategory(new Category(categoryId, null));
-            categoryHistory.setField(field);
-            categoryHistory.setOldValue(oldValue);
-            categoryHistory.setNewValue(newValue);
+
+            CategoryHistory categoryHistory = CategoryHistory.builder()
+                    .title(title)
+                    .category(new Category(categoryId, null))
+                    .field(field)
+                    .oldValue(oldValue)
+                    .newValue(newValue)
+                    .build();
+
             categoryHistories.add(categoryHistoryRepository.save(categoryHistory));
         }
         return categoryHistories;

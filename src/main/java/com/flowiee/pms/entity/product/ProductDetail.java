@@ -169,28 +169,15 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     List<ProductVariantTemp> listProductVariantTemp;
 
+    @Transient
+    Integer availableSalesQty;
+
     public ProductDetail(int id) {
         super.id = id;
     }
 
-    public Map<String, String> compareTo(ProductDetail entityToCompare) {
-        Map<String, String> map = new HashMap<>();
-        if (!this.getVariantCode().equals(entityToCompare.getVariantCode())) {
-            map.put("Product code", this.getVariantCode() + "#" + entityToCompare.getVariantCode());
-        }
-        if (!this.getVariantName().equals(entityToCompare.getVariantName())) {
-            map.put("Product name", this.getVariantName() + "#" + entityToCompare.getVariantName());
-        }
-        if (!this.getColor().getName().equals(entityToCompare.getColor().getName())) {
-            map.put("Product color", this.getColor().getName() + "#" + entityToCompare.getColor().getName());
-        }
-        if (!this.getSize().getName().equals(entityToCompare.getSize().getName())) {
-            map.put("Product size", this.getSize().getName() + "#" + entityToCompare.getSize().getName());
-        }
-        if (!this.getFabricType().getName().equals(entityToCompare.getFabricType().getName())) {
-            map.put("Product fabric", this.getFabricType().getName() + "#" + entityToCompare.getFabricType().getName());
-        }
-        return map;
+    public int getAvailableSalesQty() {
+        return storageQty - defectiveQty;
     }
 
 	@Override

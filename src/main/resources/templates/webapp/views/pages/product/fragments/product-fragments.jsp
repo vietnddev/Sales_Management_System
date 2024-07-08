@@ -8,6 +8,45 @@
             </th:block>
         </div>
 
+        <div th:fragment="createProductOriginal">
+            <div class="modal fade" id="insert">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <strong class="modal-title">Thêm mới sản phẩm</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Tên sản phẩm</label>
+                                        <input type="text" class="form-control" placeholder="Tên sản phẩm" id="productNameField">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Loại sản phẩm</label>
+                                        <select class="custom-select" id="productTypeField"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Đơn vị tính</label>
+                                        <select class="custom-select" id="unitField"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nhãn hiệu</label>
+                                        <select class="custom-select" id="brandField"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-end">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary" id="createProductSubmit">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div th:fragment="createProductVariantModalForm">
             <div class="modal fade" id="insertOrUpdateProductVariant">
                 <div class="modal-dialog modal-lg">

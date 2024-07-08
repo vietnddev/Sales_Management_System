@@ -11,25 +11,24 @@ import java.util.List;
 
 public class MaterialConvert {
     public static Material convertToEntity(MaterialDTO inputDTO) {
-        Material outEntity = new Material();
+        Material outEntity = Material.builder()
+            .code(inputDTO.getCode())
+            .name(inputDTO.getName())
+            .supplier(inputDTO.getSupplier())
+            .unit(inputDTO.getUnit())
+            .quantity(inputDTO.getQuantity())
+            .location(inputDTO.getLocation())
+            .note(inputDTO.getNote())
+            .status(inputDTO.isStatus())
+            .build();
         outEntity.setId(inputDTO.getId());
-        outEntity.setCode(inputDTO.getCode());
-        outEntity.setName(inputDTO.getName());
 
-        if (inputDTO.getSupplier() != null)
-            outEntity.setSupplier(inputDTO.getSupplier());
         if (outEntity.getSupplier() == null && inputDTO.getSupplierId() != null)
             outEntity.setSupplier(new Supplier(inputDTO.getSupplierId()));
 
-        if (inputDTO.getUnit() != null)
-            outEntity.setUnit(inputDTO.getUnit());
         if (outEntity.getUnit() == null && inputDTO.getUnitId() != null)
             outEntity.setUnit(new Category(inputDTO.getUnitId(), inputDTO.getUnitName()));
 
-        outEntity.setQuantity(inputDTO.getQuantity());
-        outEntity.setLocation(inputDTO.getLocation());
-        outEntity.setNote(inputDTO.getNote());
-        outEntity.setStatus(inputDTO.isStatus());
         return outEntity;
     }
 

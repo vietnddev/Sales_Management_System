@@ -47,7 +47,7 @@ public class ProductVariantController extends BaseController {
     @GetMapping("/{productId}/variants")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
-        return success(productVariantService.findAll(-1, -1, productId, null, null, null, null).getContent());
+        return success(productVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent());
     }
 
     @Operation(summary = "Find detail product variant")

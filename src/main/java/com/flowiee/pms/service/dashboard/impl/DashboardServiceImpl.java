@@ -171,20 +171,20 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
         List<CustomerDTO> customersNew = customerService.findCustomerNewInMonth();
         List<Order> ordersToday = orderService.findOrdersToday();
 
-        DashboardModel dashboard = new DashboardModel();
-        dashboard.setTotalProducts(productStatisticsService.countTotalProductsInStorage());
-        dashboard.setRevenueToday(revenueToday);
-        dashboard.setRevenueThisMonth(revenueThisMonth);
-        dashboard.setOrdersNewTodayQty(ordersToday.size());
-        dashboard.setListOrdersToday(ordersToday);
-        dashboard.setCustomersNewInMonthQty(customersNew.size());
-        dashboard.setListCustomersNewInMonth(customersNew);
-        dashboard.setRevenueDayOfMonth(revenueDayOfMonth);
-        dashboard.setRevenueMonthOfYear(revenueMonthOfYear);
-        dashboard.setRevenueSalesChannel(revenueSalesChannel);
-        dashboard.setProductsTopSellQty(productsTopSell);
-
         logger.info("Finished loadDashboard(): " + CommonUtils.now("YYYY/MM/dd HH:mm:ss"));
-        return dashboard;
+
+        return DashboardModel.builder()
+                .totalProducts(productStatisticsService.countTotalProductsInStorage())
+                .revenueToday(revenueToday)
+                .revenueThisMonth(revenueThisMonth)
+                .ordersNewTodayQty(ordersToday.size())
+                .listOrdersToday(ordersToday)
+                .customersNewInMonthQty(customersNew.size())
+                .listCustomersNewInMonth(customersNew)
+                .revenueDayOfMonth(revenueDayOfMonth)
+                .revenueMonthOfYear(revenueMonthOfYear)
+                .revenueSalesChannel(revenueSalesChannel)
+                .productsTopSellQty(productsTopSell)
+                .build();
     }
 }

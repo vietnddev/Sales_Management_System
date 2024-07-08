@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Builder
 @Entity
 @Table(name = "customer_contact")
 @NoArgsConstructor

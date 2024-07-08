@@ -73,15 +73,15 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     private List<VoucherApplyDTO> extractDataQuery(List<Object[]> objects) {
         List<VoucherApplyDTO> dataResponse = new ArrayList<>();
         for (Object[] data : objects) {
-            VoucherApplyDTO voucherApplyDTO = new VoucherApplyDTO();
-            voucherApplyDTO.setVoucherApplyId(Integer.parseInt(String.valueOf(data[0])));
-            voucherApplyDTO.setVoucherInfoId(Integer.parseInt(String.valueOf(data[1])));
-            voucherApplyDTO.setVoucherInfoTitle(String.valueOf(data[2]));
-            voucherApplyDTO.setProductId(Integer.parseInt(String.valueOf(data[3])));
-            voucherApplyDTO.setProductName(String.valueOf(data[4]));
-            voucherApplyDTO.setAppliedAt((String.valueOf(data[5])).substring(0, 10));
-            voucherApplyDTO.setAppliedBy(Integer.parseInt(String.valueOf(data[6])));
-            dataResponse.add(voucherApplyDTO);
+            dataResponse.add(VoucherApplyDTO.builder()
+                    .voucherApplyId(Integer.parseInt(String.valueOf(data[0])))
+                    .voucherInfoId(Integer.parseInt(String.valueOf(data[1])))
+                    .voucherInfoTitle(String.valueOf(data[2]))
+                    .productId(Integer.parseInt(String.valueOf(data[3])))
+                    .productName(String.valueOf(data[4]))
+                    .appliedAt((String.valueOf(data[5])).substring(0, 10))
+                    .appliedBy(Integer.parseInt(String.valueOf(data[6])))
+                    .build());
         }
         return dataResponse;
     }

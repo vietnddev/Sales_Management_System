@@ -18,6 +18,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "material")
 @NoArgsConstructor
@@ -84,14 +85,15 @@ public class Material extends BaseEntity implements Serializable {
     }
 
     public static Material fromMaterialDTO(MaterialDTO dto) {
-    	Material material = new Material();
+    	Material material = Material.builder()
+                .code(dto.getCode())
+                .name(dto.getName())
+                .location(dto.getLocation())
+                .unit(new Category(dto.getUnitId(), dto.getUnitName()))
+                .quantity(dto.getQuantity())
+                .note(dto.getNote())
+                .build();
         material.setId(dto.getId());
-        material.setCode(dto.getCode());
-        material.setName(dto.getName());
-        material.setLocation(dto.getLocation());
-        material.setUnit(new Category(dto.getUnitId(), dto.getUnitName()));
-        material.setQuantity(dto.getQuantity());
-        material.setNote(dto.getNote());
         return material;
     }
 

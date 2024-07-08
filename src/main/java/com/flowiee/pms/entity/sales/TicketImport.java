@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "ticket_import_goods")
 @NoArgsConstructor
@@ -90,6 +91,9 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Transient
     BigDecimal totalValue;
 
+    @Transient
+    Integer totalItems;
+
     public TicketImport(Integer id) {
         super.id = id;
     }
@@ -100,15 +104,16 @@ public class TicketImport extends BaseEntity implements Serializable {
     }
 
     public static TicketImport fromTicketImportDTO(TicketImportDTO dto) {
-        TicketImport ticketImport = new TicketImport();
+        TicketImport ticketImport = TicketImport.builder()
+            .title(dto.getTitle())
+            .importer(dto.getImporter())
+            .importTime(dto.getImportTime())
+            .note(dto.getNote())
+            .status(dto.getStatus())
+            .listProductVariantTemps(dto.getListProductVariantTemp())
+            .listMaterialTemps(dto.getListMaterialTemp())
+            .build();
         ticketImport.setId(dto.getId());
-        ticketImport.setTitle(dto.getTitle());
-        ticketImport.setImporter(dto.getImporter());
-        ticketImport.setImportTime(dto.getImportTime());
-        ticketImport.setNote(dto.getNote());
-        ticketImport.setStatus(dto.getStatus());
-        ticketImport.setListProductVariantTemps(dto.getListProductVariantTemp());
-        ticketImport.setListMaterialTemps(dto.getListMaterialTemp());
         return ticketImport;
     }
 

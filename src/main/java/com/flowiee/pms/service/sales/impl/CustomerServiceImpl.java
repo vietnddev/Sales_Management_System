@@ -84,32 +84,23 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         }
         Customer customer = Customer.fromCustomerDTO(dto);
         customer.setCreatedBy(dto.getCreatedBy() != null ? dto.getCreatedBy() : CommonUtils.getUserPrincipal().getId());
+        customer.setBonusPoints(0);
         Customer customerInserted = customerRepository.save(customer);
+        CustomerContact customerContact = CustomerContact.builder()
+                .customer(new Customer(customerInserted.getId()))
+                .value(dto.getPhoneDefault())
+                .isDefault("Y")
+                .status(true).build();
         if (dto.getPhoneDefault() != null) {
-            CustomerContact customerContact = new CustomerContact();
-            customerContact.setCustomer(new Customer(customerInserted.getId()));
             customerContact.setCode("P");
-            customerContact.setValue(dto.getPhoneDefault());
-            customerContact.setIsDefault("Y");
-            customerContact.setStatus(true);
             customerContactService.save(customerContact);
         }
         if (dto.getEmailDefault() != null) {
-            CustomerContact customerContact = new CustomerContact();
-            customerContact.setCustomer(new Customer(customerInserted.getId()));
             customerContact.setCode("E");
-            customerContact.setValue(dto.getEmailDefault());
-            customerContact.setIsDefault("Y");
-            customerContact.setStatus(true);
             customerContactService.save(customerContact);
         }
         if (dto.getAddressDefault() != null) {
-            CustomerContact customerContact = new CustomerContact();
-            customerContact.setCustomer(new Customer(customerInserted.getId()));
             customerContact.setCode("A");
-            customerContact.setValue(dto.getAddressDefault());
-            customerContact.setIsDefault("Y");
-            customerContact.setStatus(true);
             customerContactService.save(customerContact);
         }
         systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_CUS_C, MasterObject.Customer, "Thêm mới khách hàng", customer.toString());
@@ -149,12 +140,12 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 //customerContactService.update(phoneDefault, customerId);
                 customerContactRepository.save(phoneDefault);
             } else if (customer.getPhoneDefault() != null && !customer.getPhoneDefault().isEmpty()) {
-                phoneDefault = new CustomerContact();
-                phoneDefault.setCustomer(new Customer(customerId));
-                phoneDefault.setCode("P");
-                phoneDefault.setValue(customer.getPhoneDefault());
-                phoneDefault.setIsDefault("Y");
-                phoneDefault.setStatus(true);
+                phoneDefault = CustomerContact.builder()
+                    .customer(new Customer(customerId))
+                    .code("P")
+                    .value(customer.getPhoneDefault())
+                    .isDefault("Y")
+                    .status(true).build();
                 customerContactService.save(phoneDefault);
             }
 
@@ -163,12 +154,12 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 //customerContactService.update(emailDefault, customerId);
                 customerContactRepository.save(emailDefault);
             } else if (customer.getEmailDefault() != null && !customer.getEmailDefault().isEmpty()) {
-                emailDefault = new CustomerContact();
-                emailDefault.setCustomer(new Customer(customerId));
-                emailDefault.setCode("E");
-                emailDefault.setValue(customer.getEmailDefault());
-                emailDefault.setIsDefault("Y");
-                emailDefault.setStatus(true);
+                emailDefault = CustomerContact.builder()
+                    .customer(new Customer(customerId))
+                    .code("E")
+                    .value(customer.getEmailDefault())
+                    .isDefault("Y")
+                    .status(true).build();
                 customerContactService.save(emailDefault);
             }
 
@@ -177,12 +168,12 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 //customerContactService.update(addressDefault, customerId);
                 customerContactRepository.save(addressDefault);
             } else if (customer.getAddressDefault() != null && !customer.getAddressDefault().isEmpty()) {
-                addressDefault = new CustomerContact();
-                addressDefault.setCustomer(new Customer(customerId));
-                addressDefault.setCode("A");
-                addressDefault.setValue(customer.getAddressDefault());
-                addressDefault.setIsDefault("Y");
-                addressDefault.setStatus(true);
+                addressDefault = CustomerContact.builder()
+                    .customer(new Customer(customerId))
+                    .code("A")
+                    .value(customer.getAddressDefault())
+                    .isDefault("Y")
+                    .status(true).build();
                 customerContactService.save(addressDefault);
             }
         }
@@ -229,12 +220,13 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         //col 2 -> purchase qty
         //col 3 -> average value
         for (Object[] data : purchaseHistoriesRawValue) {
-            PurchaseHistory ph = new PurchaseHistory();
-            ph.setCustomerId(customerId);
-            ph.setYear(year);
-            ph.setMonth(Integer.parseInt(String.valueOf(data[1])));
-            ph.setPurchaseQty(Integer.parseInt(String.valueOf(data[2])));
-            ph.setOrderAvgValue(new BigDecimal(String.valueOf(data[3])));
+            PurchaseHistory ph = PurchaseHistory.builder()
+                .customerId(customerId)
+                .year(year)
+                .month(Integer.parseInt(String.valueOf(data[1])))
+                .purchaseQty(Integer.parseInt(String.valueOf(data[2])))
+                .orderAvgValue(new BigDecimal(String.valueOf(data[3])))
+                .build();
             purchaseHistories.add(ph);
         }
         return purchaseHistories;

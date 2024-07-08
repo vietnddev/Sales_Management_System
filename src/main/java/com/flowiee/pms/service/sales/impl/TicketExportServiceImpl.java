@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -50,12 +51,26 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("exportTime").descending());
         }
-        return ticketExportRepo.findAll(storageId, pageable);
+        Page<TicketExport> ticketExportPage = ticketExportRepo.findAll(storageId, pageable);
+        for (TicketExport ticketExport : ticketExportPage.getContent()) {
+            BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketExport.getListProductVariantTemp());
+            ticketExport.setTotalValue(totalValueAndItems[0]);
+            ticketExport.setTotalItems(totalValueAndItems[1].intValue());
+            ticketExport.setStorageName(ticketExport.getStorage().getName());
+        }
+        return ticketExportPage;
     }
 
     @Override
     public Optional<TicketExport> findById(Integer entityId) {
-        return ticketExportRepo.findById(entityId);
+        Optional<TicketExport> ticketExportOpt = ticketExportRepo.findById(entityId);
+        if (ticketExportOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketExportOpt.get().getListProductVariantTemp());
+        ticketExportOpt.get().setTotalValue(totalValueAndItems[0]);
+        ticketExportOpt.get().setTotalItems(totalValueAndItems[1].intValue());
+        return ticketExportOpt;
     }
 
     @Override
@@ -82,13 +97,13 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         if (orderRepository.findById(orderDTO.getId()).isEmpty()) {
             throw new BadRequestException();
         }
-        TicketExport ticketExport = new TicketExport();
-        ticketExport.setTitle("Xuất hàng cho đơn " + orderDTO.getCode());
-        ticketExport.setExporter(CommonUtils.getUserPrincipal().getUsername());
-        ticketExport.setExportTime(LocalDateTime.now());
-        ticketExport.setNote(null);
-        ticketExport.setStatus("DRAFT");
-        TicketExport ticketExportSaved = ticketExportRepo.save(ticketExport);
+        TicketExport ticketExportSaved = ticketExportRepo.save(TicketExport.builder()
+                .title("Xuất hàng cho đơn " + orderDTO.getCode())
+                .exporter(CommonUtils.getUserPrincipal().getUsername())
+                .exportTime(LocalDateTime.now())
+                .note(null)
+                .status("DRAFT")
+                .build());
         orderRepository.setTicketExportInfo(orderDTO.getId(), ticketExportSaved.getId());
         return ticketExportSaved;
     }
@@ -117,13 +132,14 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
                 //Save log
                 int storageQty = productVariantTemp.getProductVariant().getStorageQty();
                 int soldQty = productVariantTemp.getProductVariant().getSoldQty();
-                ProductHistory productHistory = new ProductHistory();
-                productHistory.setProduct(productVariantTemp.getProductVariant().getProduct());
-                productHistory.setProductDetail(productVariantTemp.getProductVariant());
-                productHistory.setTitle("Cập nhật số lượng cho [" + productVariantTemp.getProductVariant().getVariantName() + "] - " + ticket.getTitle());
-                productHistory.setField("Storage Qty | Sold Qty");
-                productHistory.setOldValue(storageQty + " | " + soldQty);
-                productHistory.setNewValue((storageQty - soldQtyInOrder) +  " | " + (soldQty + soldQtyInOrder));
+                ProductHistory productHistory = ProductHistory.builder()
+                    .product(productVariantTemp.getProductVariant().getProduct())
+                    .productDetail(productVariantTemp.getProductVariant())
+                    .title("Cập nhật số lượng cho [" + productVariantTemp.getProductVariant().getVariantName() + "] - " + ticket.getTitle())
+                    .field("Storage Qty | Sold Qty")
+                    .oldValue(storageQty + " | " + soldQty)
+                    .newValue((storageQty - soldQtyInOrder) +  " | " + (soldQty + soldQtyInOrder))
+                    .build();
                 productHistoryService.save(productHistory);
             }
         }
@@ -150,5 +166,19 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_EX, MasterObject.TicketExport, "Xóa phiếu xuất hàng", ticketExportToDelete.get().getTitle());
 
         return MessageCode.DELETE_SUCCESS.getDescription();
+    }
+
+    private BigDecimal[] getTotalValueAndItems(List<ProductVariantTemp> pProductVariantTempList) {
+        BigDecimal totalValue = BigDecimal.ZERO;
+        int totalItems = 0;
+        if (pProductVariantTempList != null) {
+            for (ProductVariantTemp p : pProductVariantTempList) {
+                if (p.getPurchasePrice() != null) {
+                    totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
+                }
+                totalItems = totalItems + p.getQuantity();
+            }
+        }
+        return new BigDecimal[] {totalValue, BigDecimal.valueOf(totalItems)};
     }
 }

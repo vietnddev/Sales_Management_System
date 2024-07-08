@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
+@Builder
 @Entity
 @Table(name = "order_history")
 @Getter
@@ -42,17 +43,6 @@ public class OrderHistory extends BaseEntity implements Serializable {
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
     String newValue;
-
-    public OrderHistory(Integer orderId, Integer orderDetailId, String title, String field, String oldValue, String newValue) {
-        this.order = new Order(orderId);
-        if (orderDetailId != null) {
-            this.orderDetail = new OrderDetail(orderDetailId);
-        }
-        this.title = title;
-        this.field = field;
-        this.oldValue = oldValue;
-        this.newValue = newValue;
-    }
 
 	@Override
 	public String toString() {

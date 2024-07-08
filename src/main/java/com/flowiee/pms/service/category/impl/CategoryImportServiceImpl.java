@@ -38,14 +38,12 @@ public class CategoryImportServiceImpl extends BaseImportService {
                         row.getCell(3).setCellStyle(CommonUtils.highlightDataImportError(cellStyle, fontStyle));
                         continue;
                     }
-
-                    Category category = new Category();
-                    category.setType(null);
-                    category.setCode(!categoryCode.isEmpty() ? categoryCode : CommonUtils.genCategoryCodeByName(categoryName));
-                    category.setName(categoryName);
-                    category.setNote(categoryNote);
-
-                    lvListToImport.add(category);
+                    lvListToImport.add(Category.builder()
+                            .type(null)
+                            .code(!categoryCode.isEmpty() ? categoryCode : CommonUtils.genCategoryCodeByName(categoryName))
+                            .name(categoryName)
+                            .note(categoryNote)
+                            .build());
                 }
             }
             List<Category> listCategorySaved = mvCategoryRepository.saveAll(lvListToImport);

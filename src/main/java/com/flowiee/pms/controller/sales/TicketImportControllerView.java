@@ -49,18 +49,6 @@ public class TicketImportControllerView extends BaseController {
         if (ticketImport.isEmpty()) {
             throw new ResourceNotFoundException("Ticket import not found!");
         }
-        BigDecimal totalValue = BigDecimal.ZERO;
-        for (ProductVariantTemp p : ticketImport.get().getListProductVariantTemps()) {
-            if (p.getPurchasePrice() != null) {
-                totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
-            }
-        }
-        for (MaterialTemp m : ticketImport.get().getListMaterialTemps()) {
-            if (m.getPurchasePrice() != null) {
-                totalValue = totalValue.add(m.getPurchasePrice().multiply(new BigDecimal(m.getQuantity())));
-            }
-        }
-        ticketImport.get().setTotalValue(totalValue);
         ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_IMPORT_DETAIL.getTemplate());
         modelAndView.addObject("ticketImportId", ticketImportId);
         modelAndView.addObject("ticketImportDetail", ticketImport.get());

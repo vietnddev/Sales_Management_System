@@ -100,9 +100,7 @@ public class VoucherController extends BaseController {
         try {
             VoucherTicket voucherTicket = voucherTicketService.isAvailable(voucherCode);
             if (voucherTicket == null) {
-                VoucherTicketDTO dto = new VoucherTicketDTO();
-                dto.setAvailable("N");
-                return success(dto);
+                return success(new VoucherTicketDTO("N"));
             }
             return success(voucherTicketService.isAvailable(voucherCode));
         } catch (RuntimeException ex) {

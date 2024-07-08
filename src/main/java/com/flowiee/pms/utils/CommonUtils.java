@@ -179,10 +179,6 @@ public class CommonUtils {
         return CommonUtils.now("yyyyMMddHHmmss");
     }
 
-    public static String genOrderCode() {
-        return CommonUtils.now("yyyyMMddHHmmss");
-    }
-
     public static String trim(String str) {
         if (ObjectUtils.isEmpty(str)) {
             return "";
@@ -192,5 +188,14 @@ public class CommonUtils {
             str = null;
         }
         return str;
+    }
+
+    public static CategoryType getCategoryEnum(String name) {
+        for (CategoryType c : CategoryType.values()) {
+            if (c.name().equals(name) || c.name().equals(getCategoryType(name))) {
+                return c;
+            }
+        }
+        return null;
     }
 }

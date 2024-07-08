@@ -37,9 +37,9 @@ public class PromotionApply extends BaseEntity implements Serializable {
 	}
 
 	public static PromotionApply fromDTO(PromotionApplyDTO inputDTO) {
-		PromotionApply promotionApply = new PromotionApply();
-		promotionApply.setProductId(inputDTO.getProductId());
-		promotionApply.setPromotionId(inputDTO.getPromotionId());
-		return promotionApply;
+		return PromotionApply.builder()
+				.productId(inputDTO.getProductId())
+				.promotionId(inputDTO.getPromotionId())
+				.build();
 	}
 }

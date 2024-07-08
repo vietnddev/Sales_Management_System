@@ -5,16 +5,17 @@ import com.flowiee.pms.model.dto.StorageDTO;
 
 public class StorageConvert {
     public static Storage convertToEntity(StorageDTO inputDTO) {
-        Storage storage = new Storage();
+        Storage storage = Storage.builder()
+            .name(inputDTO.getName())
+            .code(inputDTO.getCode())
+            .location(inputDTO.getLocation())
+            .area(inputDTO.getArea())
+            .holdableQty(inputDTO.getHoldableQty())
+            .holdWarningPercent(inputDTO.getHoldWarningPercent())
+            .description(inputDTO.getDescription())
+            .status(inputDTO.getStatus())
+            .build();
         storage.setId(inputDTO.getId());
-        storage.setName(inputDTO.getName());
-        storage.setCode(inputDTO.getCode());
-        storage.setLocation(inputDTO.getLocation());
-        storage.setArea(inputDTO.getArea());
-        storage.setHoldableQty(inputDTO.getHoldableQty());
-        storage.setHoldWarningPercent(inputDTO.getHoldWarningPercent());
-        storage.setDescription(inputDTO.getDescription());
-        storage.setStatus(inputDTO.getStatus());
         return storage;
     }
 }

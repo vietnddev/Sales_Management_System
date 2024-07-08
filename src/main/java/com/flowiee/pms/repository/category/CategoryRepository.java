@@ -20,8 +20,12 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
            "and c.type=:type " +
            "and (c.code is null or c.code <> 'ROOT') " +
            "and (:parentId is null or c.parentId=:parentId) " +
+           "and (coalesce(:ignoreId) is null or c.id not in (:ignoreId))" +
            "order by c.sort")
-    Page<Category> findSubCategory(@Param("type") String type, @Param("parentId") Integer parentId, Pageable pageable);
+    Page<Category> findSubCategory(@Param("type") String type,
+                                   @Param("parentId") Integer parentId,
+                                   @Param("ignoreId") List<Integer> ignoreId,
+                                   Pageable pageable);
 
     @Query("from Category c where c.type in (:type) and (c.code is null or c.code <> 'ROOT') order by c.sort")
     List<Category> findSubCategory(@Param("type") List<String> type);

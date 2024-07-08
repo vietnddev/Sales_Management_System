@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
+@Builder
 @Entity
 @Table(name = "category_history")
 @NoArgsConstructor

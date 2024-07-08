@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -42,6 +41,7 @@ public class OrderDTO extends Order implements Serializable {
     String qrCode;
 	Integer cartId;
 	Integer ticketExportId;
+	Boolean accumulateBonusPoints;
 	List<OrderDetailDTO> listOrderDetailDTO;
 
 	public static OrderDTO fromOrder(Order order) {

@@ -71,8 +71,19 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			userPrincipal.setIp(details != null ? details.getRemoteAddress() : "unknown");
 			userPrincipal.setCreatedBy(accountEntity.getId());
 			userPrincipal.setLastUpdatedBy(accountEntity.getUsername());
-			SystemLog systemLog = SystemLog.builder().module(MODULE.SYSTEM.name()).function(ACTION.SYS_LOGIN.name()).object(MasterObject.Account.name()).mode(LogType.LI.name()).content(accountEntity.getUsername()).title("Login").ip(userPrincipal.getIp()).account(accountEntity).build();
+
+			SystemLog systemLog = SystemLog.builder()
+					.module(MODULE.SYSTEM.name())
+					.function(ACTION.SYS_LOGIN.name())
+					.object(MasterObject.Account.name())
+					.mode(LogType.LI.name())
+					.content(accountEntity.getUsername())
+					.title("Login")
+					.ip(userPrincipal.getIp())
+					.account(accountEntity)
+					.build();
 			systemLog.setCreatedBy(accountEntity.getId());
+
 			systemLogRepo.save(systemLog);
 		} else {
             logger.error("User not found with username: {}", username);

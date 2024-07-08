@@ -2,14 +2,12 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.sales.Order;
-import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.*;
 import com.flowiee.pms.service.system.AccountService;
-import com.flowiee.pms.utils.*;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.exception.ResourceNotFoundException;
@@ -33,18 +31,15 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderControllerView extends BaseController {
-    CartService              cartService;
     OrderService             orderService;
-    AccountService           accountService;
     CategoryService          categoryService;
     VoucherTicketService     voucherTicketService;
     OrderPrintInvoiceService printInvoiceService;
-    ProductVariantService    productVariantService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView viewAllOrders() {
-        setupFilters(List.of("BRANCH", "GROUP_CUSTOMER", "PAYMENT_METHOD"));
+        setupSearchTool(true, List.of("BRANCH", CategoryType.GROUP_CUSTOMER, CategoryType.PAYMENT_METHOD, CategoryType.ORDER_STATUS));
         return baseView(new ModelAndView(Pages.PRO_ORDER.getTemplate()));
     }
 
@@ -61,37 +56,9 @@ public class OrderControllerView extends BaseController {
         modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail.get());
         modelAndView.addObject("listOrderDetail", orderDetail.get().getListOrderDetailDTO());
-        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryType.PAYMENT_METHOD.getName(), null));
+        modelAndView.addObject("listHinhThucThanhToan", categoryService.findSubCategory(CategoryType.PAYMENT_METHOD, null, null, -1, -1).getContent());
         modelAndView.addObject("orderStatus", orderStatus);
         modelAndView.addObject("donHang", new Order());
-        return baseView(modelAndView);
-    }
-
-    @GetMapping("/ban-hang")
-    @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ModelAndView showPageBanHang() {
-        ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_SELL.getTemplate());
-        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
-        if (orderCartCurrent.isEmpty()) {
-            OrderCart orderCart = new OrderCart();
-            orderCart.setCreatedBy(CommonUtils.getUserPrincipal().getId());
-            cartService.save(orderCart);
-        }
-
-        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
-        modelAndView.addObject("listCart", listOrderCart);
-        modelAndView.addObject("listAccount", accountService.findAll());
-        modelAndView.addObject("listSalesChannel", categoryService.findSalesChannels());
-        modelAndView.addObject("listPaymentMethod", categoryService.findPaymentMethods());
-        modelAndView.addObject("listOrderStatus", categoryService.findOrderStatus(null));
-        modelAndView.addObject("listProductVariant", productVariantService.findAll());
-
-        double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
-        double amountDiscount = 0;
-        double totalAmountDiscount = totalAmountWithoutDiscount - amountDiscount;
-        modelAndView.addObject("totalAmountWithoutDiscount", totalAmountWithoutDiscount);
-        //modelAndView.addObject("amountDiscount", amountDiscount);
-        modelAndView.addObject("totalAmountDiscount", totalAmountDiscount);
         return baseView(modelAndView);
     }
     

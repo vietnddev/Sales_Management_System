@@ -1,10 +1,7 @@
 package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.sales.Customer;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;

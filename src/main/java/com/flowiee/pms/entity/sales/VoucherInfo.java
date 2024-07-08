@@ -65,18 +65,19 @@ public class VoucherInfo extends BaseEntity implements Serializable {
     List<VoucherTicket> listVoucherTicket;
 
     public static VoucherInfo fromVoucherDTO(VoucherInfoDTO dto) {
-        VoucherInfo voucherInfo = new VoucherInfo();
+        VoucherInfo voucherInfo = VoucherInfo.builder()
+            .title(dto.getTitle())
+            .description(dto.getDescription())
+            .applicableObjects(dto.getApplicableObjects())
+            .voucherType(dto.getVoucherType())
+            .quantity(dto.getQuantity())
+            .discount(dto.getDiscount())
+            .discountPrice(dto.getDiscountPrice())
+            .discountPriceMax(dto.getDiscountPriceMax())
+            .startTime(dto.getStartTime())
+            .endTime(dto.getEndTime())
+            .build();
         voucherInfo.setId(dto.getId());
-        voucherInfo.setTitle(dto.getTitle());
-        voucherInfo.setDescription(dto.getDescription());
-        voucherInfo.setApplicableObjects(dto.getApplicableObjects());
-        voucherInfo.setVoucherType(dto.getVoucherType());
-        voucherInfo.setQuantity(dto.getQuantity());
-        voucherInfo.setDiscount(dto.getDiscount());
-        voucherInfo.setDiscountPrice(dto.getDiscountPrice());
-        voucherInfo.setDiscountPriceMax(dto.getDiscountPriceMax());
-        voucherInfo.setStartTime(dto.getStartTime());
-        voucherInfo.setEndTime(dto.getEndTime());
         return voucherInfo;
     }
 

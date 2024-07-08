@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-12">
                         <!--Search tool-->
-                        <div th:replace="fragments :: searchTool('N', 'Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+                        <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                         <div class="card" style="font-size: 14px">
                             <div class="card-header" style="font-weight: bold; font-size: 16px">

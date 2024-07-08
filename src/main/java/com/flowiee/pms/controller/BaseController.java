@@ -2,7 +2,9 @@ package com.flowiee.pms.controller;
 
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.constants.CategoryType;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,23 @@ import java.util.Map;
 @Component
 @Getter
 public class BaseController {
+	@Getter
+	@Setter
+	class SearchTool {
+		private boolean enableFilter;
+		private List<String> filters;
+
+		SearchTool() {
+			enableFilter = false;
+		}
+	}
+
 	protected Logger logger = LoggerFactory.getLogger(getClass());
-	private List<String> listOfFilters = new ArrayList<>();
+	private SearchTool searchTool;
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {
-		modelAndView.addObject("listOfFilters", getListOfFilters());
+		SearchTool searchTool = getSearchTool();
+		modelAndView.addObject("configSearchTool", searchTool != null ? searchTool : new SearchTool());
 		modelAndView.addObject("USERNAME_LOGIN", CommonUtils.getUserPrincipal().getUsername());
 		setURLHeader(modelAndView);
 		setURLSidebar(modelAndView);
@@ -40,9 +54,20 @@ public class BaseController {
 		}
 	}
 
-	protected void setupFilters(List<String> pFilters) {
-		listOfFilters.clear();
-		listOfFilters.addAll(pFilters);
+	protected void setupSearchTool(boolean pEnableFilter, List<Object> pFilters) {
+		searchTool = new SearchTool();
+		searchTool.setEnableFilter(pEnableFilter);
+		List<String> filters = new ArrayList<>();
+		if (pFilters != null) {
+			for (Object obj : pFilters) {
+				if (obj instanceof CategoryType) {
+					filters.add(((CategoryType) obj).name());
+				} else if (obj instanceof String) {
+					filters.add(obj.toString());
+				}
+			}
+		}
+		searchTool.setFilters(filters);
 	}
 
 	protected static <T> AppResponse<T> success(@NonNull T data) {

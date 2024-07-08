@@ -81,29 +81,29 @@
             </nav>
         </div>
 
-        <div th:fragment="searchTool(isSearchAdvance, filters)" th:remove="tag">
+        <div th:fragment="searchTool(configSearch)" th:remove="tag">
             <div class="row col-10 input-group mb-2">
                 <input class="form-control col-8 mr-1" id="txtFilter"/>
                 <a class="btn btn-outline-secondary col-2 mr-1" data-toggle="collapse" href="#collapseExample" id="btnOpenSearchAdvance"
-                   role="button" aria-expanded="false" aria-controls="collapseExample" th:if="${isSearchAdvance == 'Y'}"><i class="fa-solid fa-caret-down mr-2"></i>Nâng cao</a>
+                   role="button" aria-expanded="false" aria-controls="collapseExample" th:if="${configSearch.enableFilter == true}"><i class="fa-solid fa-caret-down mr-2"></i>Nâng cao</a>
                 <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm kiếm</button>
             </div>
             <div class="row col-12 collapse w-100 mt-2 mb-2" id="collapseExample">
-                <th:block>
-                    <select class="form-control custom-select col mr-1" id="brandFilter"         th:if="${filters != null && filters.contains('BRAND')}"></select>
-                    <select class="form-control custom-select col mr-1" id="productTypeFilter"   th:if="${filters != null && filters.contains('PRODUCT_TYPE')}"></select>
-                    <select class="form-control custom-select col mr-1" id="colorFilter"         th:if="${filters != null && filters.contains('COLOR')}"></select>
-                    <select class="form-control custom-select col mr-1" id="sizeFilter"          th:if="${filters != null && filters.contains('SIZE')}"></select>
-                    <select class="form-control custom-select col mr-1" id="unitFilter"          th:if="${filters != null && filters.contains('UNIT')}"></select>
-                    <select class="form-control custom-select col mr-1" id="groupCustomerFilter" th:if="${filters != null && filters.contains('GROUP_CUSTOMER')}"></select>
-                    <select class="form-control custom-select col mr-1" id="shipMethodFilter"    th:if="${filters != null && filters.contains('SHIP_METHOD')}"></select>
-                    <select class="form-control custom-select col mr-1" id="orderTypeFilter"     th:if="${filters != null && filters.contains('ORDERTYPE')}"></select>
-                    <select class="form-control custom-select col mr-1" id="paymentStatusFilter" th:if="${filters != null && filters.contains('PAYMENT_STATUS')}"></select>
-                    <select class="form-control custom-select col mr-1" id="orderStatusFilter"   th:if="${filters != null && filters.contains('ORDER_STATUS')}"></select>
-                    <select class="form-control custom-select col mr-1" id="salesChannelFilter"  th:if="${filters != null && filters.contains('SALES_CHANNEL')}"></select>
-                    <select class="form-control custom-select col mr-1" id="paymentMethodFilter" th:if="${filters != null && filters.contains('PAYMENT_METHOD')}"></select>
-                    <select class="form-control custom-select col mr-1" id="branchFilter"        th:if="${filters != null && filters.contains('BRANCH')}"></select>
-                    <select class="form-control custom-select col"      id="productStatusFilter" th:if="${filters != null && filters.contains('PRODUCT_STATUS')}"></select>
+                <th:block th:if="${configSearch.filters != null}">
+                    <select class="form-control custom-select search-selection col mr-1" id="brandFilter"         th:entity="BRAND"          th:if="${configSearch.filters.contains('BRAND')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="productTypeFilter"   th:entity="PRODUCT_TYPE"   th:if="${configSearch.filters.contains('PRODUCT_TYPE')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="colorFilter"         th:entity="COLOR"          th:if="${configSearch.filters.contains('COLOR')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="sizeFilter"          th:entity="SIZE"           th:if="${configSearch.filters.contains('SIZE')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="unitFilter"          th:entity="UNIT"           th:if="${configSearch.filters.contains('UNIT')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="groupCustomerFilter" th:entity="GROUP_CUSTOMER" th:if="${configSearch.filters.contains('GROUP_CUSTOMER')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="shipMethodFilter"    th:entity="SHIP_METHOD"    th:if="${configSearch.filters.contains('SHIP_METHOD')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="orderTypeFilter"     th:entity="ORDERTYPE"      th:if="${configSearch.filters.contains('ORDERTYPE')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="paymentStatusFilter" th:entity="PAYMENT_STATUS" th:if="${configSearch.filters.contains('PAYMENT_STATUS')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="orderStatusFilter"   th:entity="ORDER_STATUS"   th:if="${configSearch.filters.contains('ORDER_STATUS')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="salesChannelFilter"  th:entity="SALES_CHANNEL"  th:if="${configSearch.filters.contains('SALES_CHANNEL')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="paymentMethodFilter" th:entity="PAYMENT_METHOD" th:if="${configSearch.filters.contains('PAYMENT_METHOD')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="branchFilter"        th:entity="BRANCH"         th:if="${configSearch.filters.contains('BRANCH')}"></select>
+                    <select class="form-control custom-select search-selection col"      id="productStatusFilter" th:entity="PRODUCT_STATUS" th:if="${configSearch.filters.contains('PRODUCT_STATUS')}"></select>
                 </th:block>
             </div>
         </div>

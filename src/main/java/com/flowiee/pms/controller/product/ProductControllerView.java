@@ -14,10 +14,13 @@ import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -32,28 +35,21 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/san-pham")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductControllerView extends BaseController {
     ProductInfoService      productInfoService;
     ProductVariantService   productVariantService;
     ProductAttributeService productAttributeService;
-    ExportService           exportService;
     ProductImageService     productImageService;
-
     @Autowired
-    public ProductControllerView(ProductInfoService productInfoService, ProductVariantService productVariantService,
-                                 ProductAttributeService productAttributeService, @Qualifier("productExportServiceImpl") ExportService exportService,
-                                 ProductImageService productImageService) {
-        this.productInfoService = productInfoService;
-        this.productVariantService = productVariantService;
-        this.productAttributeService = productAttributeService;
-        this.exportService = exportService;
-        this.productImageService = productImageService;
-    }
+    @Qualifier("productExportServiceImpl")
+    @NonFinal
+    ExportService           exportService;
 
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView loadProductPage() {
-        setupFilters(List.of("UNIT", "SIZE", "COLOR", "BRAND", "PRODUCT_TYPE", "PRODUCT_STATUS"));
+        setupSearchTool(true, List.of(CategoryType.UNIT, CategoryType.SIZE, CategoryType.COLOR, CategoryType.BRAND, CategoryType.PRODUCT_TYPE, "PRODUCT_STATUS"));
         return baseView(new ModelAndView(Pages.PRO_PRODUCT.getTemplate()));
     }
 

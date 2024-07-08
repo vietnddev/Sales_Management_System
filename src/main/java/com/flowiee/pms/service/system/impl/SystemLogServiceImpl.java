@@ -1,6 +1,5 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.repository.system.SystemLogRepository;
@@ -66,16 +65,16 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public SystemLog writeLog(MODULE module, ACTION function, MasterObject object, LogType mode, String title, String content, String contentChange) {
-        SystemLog systemLog = new SystemLog();
-        systemLog.setModule(module.name());
-        systemLog.setFunction(function.name());
-        systemLog.setObject(object.name());
-        systemLog.setMode(mode.name());
-        systemLog.setTitle(title);
-        systemLog.setContent(content);
-        systemLog.setContentChange(contentChange);
-        systemLog.setIp(CommonUtils.getUserPrincipal().getIp());
-        systemLog.setAccount(new Account(CommonUtils.getUserPrincipal().getId()));
-        return systemLogRepo.save(systemLog);
+        return systemLogRepo.save(SystemLog.builder()
+                .module(module.name())
+                .function(function.name())
+                .object(object.name())
+                .mode(mode.name())
+                .title(title)
+                .content(content)
+                .contentChange(contentChange)
+                .ip(CommonUtils.getUserPrincipal().getIp())
+                .account(CommonUtils.getUserPrincipal().toEntity())
+                .build());
     }
 }

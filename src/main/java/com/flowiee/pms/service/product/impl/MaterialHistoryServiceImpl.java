@@ -76,12 +76,13 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
             String field = entry.getKey();
             String oldValue = entry.getValue()[0].toString();
             String newValue = entry.getValue()[1].toString();
-            MaterialHistory materialHistory = new MaterialHistory();
-            materialHistory.setTitle("Update material");
-            materialHistory.setMaterial(new Material(materialId));
-            materialHistory.setFieldName(field);
-            materialHistory.setOldValue(oldValue);
-            materialHistory.setNewValue(newValue);
+            MaterialHistory materialHistory = MaterialHistory.builder()
+                    .title("Update material")
+                    .material(new Material(materialId))
+                    .fieldName(field)
+                    .oldValue(oldValue)
+                    .newValue(newValue)
+                    .build();
             materialHistories.add(this.save(materialHistory));
         }
         return materialHistories;

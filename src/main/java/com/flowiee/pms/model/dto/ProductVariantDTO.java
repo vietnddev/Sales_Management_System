@@ -43,7 +43,6 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
     Float priceMaxDiscount;
     Float priceAfterDiscount;
     String unitCurrency;
-    Integer availableSalesQty;
     List<ProductHistory> listPrices;
     Integer storageIdInitStorageQty;
     Integer storageIdInitSoldQty;

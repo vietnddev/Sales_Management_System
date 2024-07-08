@@ -41,6 +41,10 @@ public class TicketImportDTO extends TicketImport implements Serializable {
             dto.setPaymentMethodId(ticketImport.getPaymentMethod().getId());
             dto.setPaymentMethodName(ticketImport.getPaymentMethod().getName());
         }
+        if (ticketImport.getStorage() != null) {
+            dto.setStorageName(ticketImport.getStorage().getName());
+        }
+        dto.setStorage(ticketImport.getStorage());
         dto.setImporter(ticketImport.getImporter());
         dto.setImportTime(ticketImport.getImportTime());
         dto.setNote(ticketImport.getNote());
@@ -49,6 +53,8 @@ public class TicketImportDTO extends TicketImport implements Serializable {
         dto.setListProductVariantTemp(ticketImport.getListProductVariantTemps());
         //dto.setListMaterialDTO(MaterialDTO.fromMaterials(ticketImport.getListMaterials()));
         dto.setListMaterialTemp(ticketImport.getListMaterialTemps());
+        dto.setTotalItems(ticketImport.getTotalItems());
+        dto.setTotalValue(ticketImport.getTotalValue());
         return dto;
     }
 

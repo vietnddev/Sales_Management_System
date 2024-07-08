@@ -2,10 +2,17 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.Items;
+import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.model.CartItemModel;
+import com.flowiee.pms.service.category.CategoryService;
+import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
+import com.flowiee.pms.service.system.AccountService;
+import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +21,48 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 @Tag(name = "Order API", description = "Quản lý giỏ hàng")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CartController extends BaseController {
-    CartService      cartService;
-    CartItemsService cartItemsService;
+    CartService           cartService;
+    AccountService        accountService;
+    CategoryService       categoryService;
+    CartItemsService      cartItemsService;
+    ProductVariantService productVariantService;
+
+    @GetMapping("/ban-hang")
+    @PreAuthorize("@vldModuleSales.insertOrder(true)")
+    public ModelAndView showPageBanHang() {
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_SELL.getTemplate());
+        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
+        if (orderCartCurrent.isEmpty()) {
+            OrderCart orderCart = new OrderCart();
+            orderCart.setCreatedBy(CommonUtils.getUserPrincipal().getId());
+            cartService.save(orderCart);
+        }
+
+        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
+        modelAndView.addObject("listCart", listOrderCart);
+        modelAndView.addObject("listAccount", accountService.findAll());
+        modelAndView.addObject("listSalesChannel", categoryService.findSalesChannels());
+        modelAndView.addObject("listPaymentMethod", categoryService.findPaymentMethods());
+        modelAndView.addObject("listOrderStatus", categoryService.findOrderStatus(null));
+        modelAndView.addObject("listProductVariant", productVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent());
+        modelAndView.addObject("listItems_", cartItemsService.findAllItemsForSales());
+
+        double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
+        double amountDiscount = 0;
+        double totalAmountDiscount = totalAmountWithoutDiscount - amountDiscount;
+        modelAndView.addObject("totalAmountWithoutDiscount", totalAmountWithoutDiscount);
+        //modelAndView.addObject("amountDiscount", amountDiscount);
+        modelAndView.addObject("totalAmountDiscount", totalAmountDiscount);
+        return baseView(modelAndView);
+    }
 
     @PostMapping("/ban-hang/cart/item/add")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")

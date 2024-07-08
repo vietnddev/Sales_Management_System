@@ -1,30 +1,23 @@
 package com.flowiee.pms.service.category.impl;
 
 import com.flowiee.pms.entity.category.Category;
-import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
-import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.repository.category.CategoryHistoryRepository;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.category.CategoryHistoryService;
 import com.flowiee.pms.service.category.CategoryService;
-import com.flowiee.pms.service.product.ProductInfoService;
-import com.flowiee.pms.service.product.MaterialService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +27,7 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryServiceImpl extends BaseService implements CategoryService {
-    MaterialService           materialService;
     CategoryRepository        categoryRepository;
-    ProductInfoService        productInfoService;
     CategoryHistoryService    categoryHistoryService;
     CategoryHistoryRepository categoryHistoryRepository;
 
@@ -120,120 +111,124 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
-    public List<Category> findSubCategory(String categoryType, Integer parentId) {
-        return categoryRepository.findSubCategory(categoryType, parentId, Pageable.unpaged()).getContent();
-    }
-
-    @Override
-    public Page<Category> findSubCategory(String categoryType, Integer parentId, int pageSize, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        return categoryRepository.findSubCategory(categoryType, parentId, pageable);
+    public Page<Category> findSubCategory(CategoryType categoryType, Integer parentId, List<Integer> ignoreIds, int pageSize, int pageNum) {
+        Pageable pageable = Pageable.unpaged();
+        if (pageSize >= 0 && pageNum >= 0) {
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
+        }
+        Page<Category> categoryPage = categoryRepository.findSubCategory(categoryType.name(), parentId, ignoreIds, pageable);
+        for (Category c : categoryPage.getContent()) {
+            String statusName = CategoryStatus.I.getLabel();
+            if (c.getStatus()) {
+                statusName = CategoryStatus.A.getLabel();
+            }
+            boolean categoryInUse = categoryInUse(c.getId());
+            c.setInUse(categoryInUse ? "Đang được sử dụng" : "Chưa sử dụng");
+            c.setStatusName(statusName);
+        }
+        return new PageImpl<>(categoryPage.getContent(), pageable, categoryPage.getTotalElements());
     }
 
     @Override
     public List<Category> findUnits() {
-        return categoryRepository.findSubCategory(CategoryType.UNIT.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.UNIT, null, null, -1, -1).getContent();
     }
 
     @Override
     public List<Category> findColors() {
-        return categoryRepository.findSubCategory(CategoryType.COLOR.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.COLOR, null, null, -1, -1).getContent();
     }
 
     @Override
     public List<Category> findSizes() {
-        return categoryRepository.findSubCategory(CategoryType.SIZE.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.SIZE, null, null, -1, -1).getContent();
     }
 
     @Override
     public List<Category> findSalesChannels() {
-        return categoryRepository.findSubCategory(CategoryType.SALES_CHANNEL.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.SALES_CHANNEL, null, null, -1, -1).getContent();
     }
 
     @Override
     public List<Category> findPaymentMethods() {
-        return categoryRepository.findSubCategory(CategoryType.PAYMENT_METHOD.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.PAYMENT_METHOD, null, null, -1, -1).getContent();
     }
 
     @Override
     public List<Category> findOrderStatus(Integer ignoreId) {
-        List<Category> categories = categoryRepository.findSubCategory(CategoryType.ORDER_STATUS.name(), null, Pageable.unpaged()).getContent();
-        List<Category> lsRes = new ArrayList<>();
-        for (Category c : categories) {
-           if (!c.getId().equals(ignoreId)) {
-               lsRes.add(c);
-           }
-        }
-        return lsRes;
+        return findSubCategory(CategoryType.ORDER_STATUS, null, List.of(ignoreId), -1, -1).getContent();
     }
 
     @Override
     public List<Category> findLedgerGroupObjects() {
-        return categoryRepository.findSubCategory(CategoryType.GROUP_OBJECT.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.GROUP_OBJECT, null, null, -1, -1).getContent();
     }
 
     @Override
     public List<Category> findLedgerReceiptTypes() {
-        return categoryRepository.findSubCategory(CategoryType.RECEIPT_TYPE.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.RECEIPT_TYPE, null, null, -1, -1).getContent();
     }
 
     @Override
     public List<Category> findLedgerPaymentTypes() {
-        return categoryRepository.findSubCategory(CategoryType.PAYMENT_TYPE.name(), null, Pageable.unpaged()).getContent();
+        return findSubCategory(CategoryType.PAYMENT_TYPE, null, null, -1, -1).getContent();
     }
 
     @Override
-    public Boolean categoryInUse(Integer categoryId) {
+    public boolean categoryInUse(Integer categoryId) {
         Optional<Category> category = this.findById(categoryId);
         if (category.isEmpty()) {
-            throw new AppException();
+            throw new BadRequestException("Category not found!");
         }
         switch (category.get().getType()) {
             case "UNIT":
-                List<ProductDTO> productByUnits = productInfoService.findAll(-1, -1, null, null, null, null, null, categoryId, null).getContent();
-                List<Material> materials = materialService.findAll(-1, -1, null, categoryId, null, null, null, null).getContent();
-                if (!productByUnits.isEmpty() || !materials.isEmpty()) {
+                if (ObjectUtils.isNotEmpty(category.get().getListUnit())) {
+                    return true;
+                }
+                if (ObjectUtils.isNotEmpty(category.get().getListProductByUnit())) {
                     return true;
                 }
                 break;
             case "FABRIC_TYPE":
-//                if (!productDetailRepo.findAll(null, null, null, null, categoryId).isEmpty()) {
-//                    return true;
-//                }
+                if (ObjectUtils.isNotEmpty(category.get().getListFabricType()))
+                    return true;
                 break;
             case "PAYMENT_METHOD":
-//                if (!orderService.findOrdersByPaymentMethodId(categoryId).isEmpty()) {
-//                    return true;
-//                }
+                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
+                    return true;
+                }
+                if (ObjectUtils.isNotEmpty(category.get().getListPaymentMethod())) {
+                    return true;
+                }
                 break;
             case "SALES_CHANNEL":
-//                if (!orderService.findOrdersBySalesChannelId(categoryId).isEmpty()) {
-//                    return true;
-//                }
+                if (ObjectUtils.isNotEmpty(category.get().getListKenhBanHang())) {
+                    return true;
+                }
                 break;
             case "SIZE":
-//                if (!productDetailRepo.findAll(null, null, null, categoryId, null).isEmpty()) {
-//                    return true;
-//                }
+                if (ObjectUtils.isNotEmpty(category.get().getListLoaiKichCo())) {
+                    return true;
+                }
                 break;
             case "COLOR":
-//                if (!productDetailRepo.findAll(null, null, categoryId, null, null).isEmpty()) {
-//                    return true;
-//                }
+                if (ObjectUtils.isNotEmpty(category.get().getListLoaiMauSac())) {
+                    return true;
+                }
                 break;
             case "PRODUCT_TYPE":
-                List<ProductDTO> productByTypes = productInfoService.findAll(-1, -1, null, null, null, null, null, categoryId, null).getContent();
-                if (!productByTypes.isEmpty()) {
+                if (ObjectUtils.isNotEmpty(category.get().getListProductByProductType())) {
                     return true;
                 }
                 break;
             case "ORDER_STATUS":
-//                if (!orderService.findOrdersByStatus(categoryId).isEmpty()) {
-//                    return true;
-//                }
+                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
+                    return true;
+                }
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + category.get().getType());
+                //throw new IllegalStateException("Unexpected value: " + category.get().getType());
+                logger.info("Unexpected value: " + category.get().getType());
         }
         return false;
     }

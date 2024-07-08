@@ -36,7 +36,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -53,16 +52,16 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Override
     public List<ProductVariantDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null).getContent();
+        return this.findAll(-1, -1, null, null, null, null, null, null).getContent();
     }
 
     @Override
-    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Integer pProductId, Integer pTicketImport, Integer pColor, Integer pSize, Integer pFabricType) {
+    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Integer pProductId, Integer pTicketImport, Integer pColor, Integer pSize, Integer pFabricType, Boolean pAvailableForSales) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize);
         }
-        List<ProductDetail> productVariants = productVariantRepo.findAll(pProductId, pColor, pSize, pFabricType, pageable);
+        List<ProductDetail> productVariants = productVariantRepo.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
         return new PageImpl<>(ProductVariantConvert.entitiesToDTOs(productVariants), pageable, productVariants.size());
     }
 
@@ -79,12 +78,9 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     public ProductVariantDTO save(ProductVariantDTO inputDTO) {
         try {
             ProductDetail pVariant = ProductVariantConvert.dtoToEntity(inputDTO);
-            if (pVariant.getStorageQty() == null)
-                pVariant.setStorageQty(0);
-            if (pVariant.getSoldQty() == null)
-                pVariant.setSoldQty(0);
-            if (pVariant.getDefectiveQty() == null)
-                pVariant.setDefectiveQty(0);
+            pVariant.setSoldQty(pVariant.getSoldQty() != null ? pVariant.getSoldQty() : 0);
+            pVariant.setStorageQty(pVariant.getStorageQty() != null ? pVariant.getStorageQty() : 0);
+            pVariant.setDefectiveQty(pVariant.getDefectiveQty() != null ? pVariant.getDefectiveQty() : 0);
             pVariant.setStatus(ProductStatus.A.name());
             pVariant.setVariantCode(ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : CommonUtils.genProductCode());
             pVariant.setRetailPriceDiscount(inputDTO.getRetailPriceDiscount() != null ? inputDTO.getRetailPriceDiscount() : inputDTO.getRetailPrice());
@@ -94,39 +90,39 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             if (productDetailSaved.getStorageQty() > 0) {
                 String initMessage = "Initialize storage quantity when create new products";
 
-                TicketImport ticketImport = new TicketImport();
-                ticketImport.setTitle("Initialize storage");
-                ticketImport.setImporter(CommonUtils.getUserPrincipal().getUsername());
-                ticketImport.setImportTime(LocalDateTime.now());
-                ticketImport.setNote(initMessage);
-                ticketImport.setStatus(TicketImportStatus.COMPLETED.name());
-                ticketImport.setStorage(new Storage(inputDTO.getStorageIdInitStorageQty()));
+                TicketImport ticketImport = TicketImport.builder()
+                    .title("Initialize storage")
+                    .importer(CommonUtils.getUserPrincipal().getUsername())
+                    .importTime(LocalDateTime.now())
+                    .note(initMessage)
+                    .status(TicketImportStatus.COMPLETED.name())
+                    .storage(new Storage(inputDTO.getStorageIdInitStorageQty())).build();
                 TicketImport ticketImportSaved = ticketImportService.save(ticketImport);
 
-                ProductVariantTemp productVariantTemp = new ProductVariantTemp();
-                productVariantTemp.setTicketImport(ticketImportSaved);
-                productVariantTemp.setProductVariant(productDetailSaved);
-                productVariantTemp.setQuantity(productDetailSaved.getStorageQty());
-                productVariantTemp.setNote(initMessage);
+                ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
+                    .ticketImport(ticketImportSaved)
+                    .productVariant(productDetailSaved)
+                    .quantity(productDetailSaved.getStorageQty())
+                    .note(initMessage).build();
                 productVariantTempRepo.save(productVariantTemp);
             }
             if (productDetailSaved.getSoldQty() > 0) {
                 String initMessage = "Initialize storage quantity when create new products";
 
-                TicketExport ticketExport = new TicketExport();
-                ticketExport.setTitle("Initialize storage");
-                ticketExport.setExporter(CommonUtils.getUserPrincipal().getUsername());
-                ticketExport.setExportTime(LocalDateTime.now());
-                ticketExport.setNote(initMessage);
-                ticketExport.setStatus(TicketExportStatus.COMPLETED.name());
-                ticketExport.setStorage(new Storage(inputDTO.getStorageIdInitStorageQty()));
+                TicketExport ticketExport = TicketExport.builder()
+                    .title("Initialize storage")
+                    .exporter(CommonUtils.getUserPrincipal().getUsername())
+                    .exportTime(LocalDateTime.now())
+                    .note(initMessage)
+                    .status(TicketExportStatus.COMPLETED.name())
+                    .storage(new Storage(inputDTO.getStorageIdInitStorageQty())).build();
                 TicketExport ticketExportSaved = ticketExportService.save(ticketExport);
 
-                ProductVariantTemp productVariantTemp = new ProductVariantTemp();
-                productVariantTemp.setTicketExport(ticketExportSaved);
-                productVariantTemp.setProductVariant(productDetailSaved);
-                productVariantTemp.setQuantity(productDetailSaved.getStorageQty());
-                productVariantTemp.setNote(initMessage);
+                ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
+                    .ticketExport(ticketExportSaved)
+                    .productVariant(productDetailSaved)
+                    .quantity(productDetailSaved.getStorageQty())
+                    .note(initMessage).build();
                 productVariantTempRepo.save(productVariantTemp);
             }
 

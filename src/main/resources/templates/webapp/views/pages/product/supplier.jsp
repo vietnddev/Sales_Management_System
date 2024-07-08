@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-12">
                         <!--Search tool-->
-                        <div th:replace="fragments :: searchTool('Y', ${listOfFilters})" id="searchTool"></div>
+                        <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                         <div class="card">
                             <div class="card-header">
@@ -59,53 +59,10 @@
                                 <div th:replace="fragments :: pagination"></div>
                             </div>
                         </div>
-
-                        <div class="modal fade" id="modalInsertAndUpdate">
-                            <div class="modal-dialog">
-                                <div class="modal-content text-left">
-                                    <div class="modal-header">
-                                        <strong class="modal-title" id="titleForm"></strong>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label for="nameField">Tên nhà cung cấp</label>
-                                                    <input type="text" class="form-control" id="nameField"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="phoneNumberField">Số điện thoại</label>
-                                                    <input type="text" class="form-control" id="phoneNumberField"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="emailField">Email</label>
-                                                    <input type="text" class="form-control" id="emailField"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="addressField">Địa chỉ</label>
-                                                    <input type="text" class="form-control" id="addressField"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="productProvidedField">Sản phẩm cung cấp</label>
-                                                    <textarea class="form-control" rows="3" id="productProvidedField"></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="noteField">Ghi chú</label>
-                                                    <textarea class="form-control" rows="3" id="noteField"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer justify-content-end">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                        <button type="submit" class="btn btn-primary" id="btnSubmitInsertOrUpdate">Lưu</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
+                <!-- Modal create and update supplier -->
+                <div th:replace="pages/sales/supplier/fragments/supplier-fragments :: modalInsertAndUpdate"></div>
             </div>
         </section>
     </div>
@@ -118,6 +75,8 @@
 
     <div th:replace="header :: scripts"></div>
 
+    <script th:src="@{/js/supplier/LoadSuppliers.js}"></script>
+    <script th:src="@{/js/supplier/CreateAndUpdateSupplier.js}"></script>
 </div>
 <script>
     let mvSuppliers = {};
@@ -137,126 +96,6 @@
         submitInsertOrUpdate();
         deleteSupplier();
     });
-
-    function loadSuppliers(pageSize, pageNum) {
-        let apiURL = mvHostURLCallApi + '/supplier/all';
-        let params = {pageSize: pageSize, pageNum: pageNum}
-        $.get(apiURL, params, function (response) {
-            if (response.status === "OK") {
-                let data = response.data;
-                let pagination = response.pagination;
-
-                updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
-
-                let contentTable = $('#contentTable');
-                contentTable.empty();
-                $.each(data, function (index, d) {
-                    mvSuppliers[d.id] = d;
-                    contentTable.append(`
-                        <tr>
-                            <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                            <td>${d.name}</td>
-                            <td>${d.phone}</td>
-                            <td>${d.email}</td>
-                            <td>${d.address}</td>
-                            <td>${d.productProvided}</td>
-                            <td>${d.note}</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm btn-update" id="${d.id}">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm btn-delete" id="${d.id}">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `);
-                });
-            }
-        }).fail(function () {
-            showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
-        });
-    }
-    
-    function preCreateSupplier() {
-        $("#btnInsert").on("click", function () {
-            $("#titleForm").text("Thêm mới nhà cung cấp");
-            $("#btnSubmitInsertOrUpdate").attr("actionType", "create");
-            mvName.val("");
-            mvPhoneNumber.val("");
-            mvEmail.val("");
-            mvAddress.val("");
-            mvProvide.text("");
-            mvNote.text("");
-            $("#modalInsertAndUpdate").modal();
-        })
-    }
-
-    function preUpdateSupplier() {
-        $(document).on("click", ".btn-update", function () {
-            let supplier = mvSuppliers[$(this).attr("id")];
-            $("#titleForm").text("Cập nhật nhà cung cấp");
-            mvId = supplier.id;
-            mvName.val(supplier.name);
-            mvPhoneNumber.val(supplier.phone);
-            mvEmail.val(supplier.email);
-            mvAddress.val(supplier.address);
-            mvProvide.text(supplier.productProvided);
-            mvNote.text(supplier.note);
-            $("#btnSubmitInsertOrUpdate").attr("actionType", "update");
-            $("#modalInsertAndUpdate").modal();
-        });
-    }
-
-    function submitInsertOrUpdate() {
-        $("#btnSubmitInsertOrUpdate").on("click", function () {
-            let body = {
-                name : mvName.val(),
-                phone : mvPhoneNumber.val(),
-                email : mvEmail.val(),
-                address : mvAddress.val(),
-                productProvided : mvProvide.val(),
-                note : mvNote.val()
-            };
-            let actionType = $(this).attr("actionType");
-            if (actionType === "create") {
-                let apiURL = mvHostURLCallApi + "/supplier/create";
-                $.ajax({
-                    url: apiURL,
-                    type: 'POST',
-                    contentType: "application/json",
-                    data: JSON.stringify(body),
-                    success: function(response) {
-                        if (response.status === "OK") {
-                            alert(response.message);
-                            window.location.reload();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Error: " + $.parseJSON(xhr.responseText).message);
-                    }
-                })
-            }
-            if (actionType === "update") {
-                let apiURL = mvHostURLCallApi + "/supplier/update/" + mvId;
-                $.ajax({
-                    url: apiURL,
-                    type: 'PUT',
-                    contentType: "application/json",
-                    data: JSON.stringify(body),
-                    success: function(response) {
-                        if (response.status === "OK") {
-                            alert(response.message);
-                            window.location.reload();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Error: " + $.parseJSON(xhr.responseText).message);
-                    }
-                })
-            }
-        })
-    }
 
     function deleteSupplier() {
         $(document).on("click", ".btn-delete", function () {

@@ -53,8 +53,8 @@ public class Customer extends BaseEntity implements Serializable {
 	@Column(name = "black_list_reason")
 	String blackListReason;
 
-	@Column(name = "loyalty_points")
-	Integer loyaltyPoints;
+	@Column(name = "bonus_points")
+	Integer bonusPoints;
 
 	@Column(name = "has_outstanding_balance")
 	Boolean hasOutstandingBalance;
@@ -82,11 +82,12 @@ public class Customer extends BaseEntity implements Serializable {
 	}
 
 	public static Customer fromCustomerDTO(CustomerDTO dto) {
-		Customer customer = new Customer();
+		Customer customer = Customer.builder()
+			.customerName(dto.getCustomerName())
+			.dateOfBirth(dto.getDateOfBirth())
+			.sex(dto.isSex())
+			.build();
 		customer.setId(dto.getId());
-		customer.setCustomerName(dto.getCustomerName());
-		customer.setDateOfBirth(dto.getDateOfBirth());
-		customer.setSex(dto.isSex());
 		return customer;
 	}
 

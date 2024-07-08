@@ -11,6 +11,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Builder
 @Entity
 @Table(name = "order_cart_items")
 @NoArgsConstructor

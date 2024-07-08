@@ -98,56 +98,50 @@ public class ProductVariantConvert {
         if (inputDTO == null) {
             return null;
         }
-        ProductDetail outputEntity = new ProductDetail();
+        ProductDetail outputEntity = ProductDetail.builder()
+            .product(inputDTO.getProduct())
+            .color(inputDTO.getColor())
+            .size(inputDTO.getSize())
+            .fabricType(inputDTO.getFabricType())
+            .garmentFactory(inputDTO.getGarmentFactory())
+            .supplier(inputDTO.getSupplier())
+            .variantCode(inputDTO.getVariantCode())
+            .variantName(inputDTO.getVariantName())
+            .storageQty(inputDTO.getStorageQty())
+            .soldQty(inputDTO.getSoldQty())
+            .defectiveQty(inputDTO.getDefectiveQty())
+            .originalPrice(inputDTO.getOriginalPrice())//Remove in future
+            .discountPrice(inputDTO.getDiscountPrice())//Remove in future
+            .purchasePrice(inputDTO.getPurchasePrice())
+            .costPrice(inputDTO.getCostPrice())
+            .retailPrice(inputDTO.getRetailPrice())
+            .retailPriceDiscount(inputDTO.getRetailPriceDiscount())
+            .wholesalePrice(inputDTO.getWholesalePrice())
+            .wholesalePriceDiscount(inputDTO.getWholesalePriceDiscount())
+            .weight(inputDTO.getWeight())
+            .note(inputDTO.getNote())
+            .status(inputDTO.getStatus())
+            .build();
+        outputEntity.setId(inputDTO.getId());
 
-        if (inputDTO.getProduct() != null)
-            outputEntity.setProduct(inputDTO.getProduct());
         if (outputEntity.getProduct() == null && inputDTO.getProductId() != null)
             outputEntity.setProduct(new Product(inputDTO.getProductId()));
 
-        outputEntity.setVariantCode(inputDTO.getVariantCode());
-        outputEntity.setVariantName(inputDTO.getVariantName());
-
-        if (inputDTO.getColor() != null)
-            outputEntity.setColor(inputDTO.getColor());
         if (outputEntity.getColor() == null && inputDTO.getColorId() != null)
             outputEntity.setColor(new Category(inputDTO.getColorId(), inputDTO.getColorName()));
 
-        if (inputDTO.getSize() != null)
-            outputEntity.setSize(inputDTO.getSize());
         if (outputEntity.getSize() == null && inputDTO.getSizeId() != null)
             outputEntity.setSize(new Category(inputDTO.getSizeId(), inputDTO.getSizeName()));
 
-        if (inputDTO.getFabricType() != null)
-            outputEntity.setFabricType(inputDTO.getFabricType());
         if (outputEntity.getFabricType() == null && inputDTO.getFabricTypeId() != null)
             outputEntity.setFabricType(new Category(inputDTO.getFabricTypeId(), inputDTO.getFabricTypeName()));
 
-        if (inputDTO.getGarmentFactory() != null)
-            outputEntity.setGarmentFactory(inputDTO.getGarmentFactory());
         if (outputEntity.getGarmentFactory() == null && inputDTO.getGarmentFactoryId() != null)
             outputEntity.setGarmentFactory(new GarmentFactory(inputDTO.getGarmentFactoryId()));
 
-        if (inputDTO.getSupplier() != null)
-            outputEntity.setSupplier(inputDTO.getSupplier());
         if (outputEntity.getSupplier() == null && inputDTO.getSupplierId() != null)
             outputEntity.setSupplier(new Supplier(inputDTO.getSupplierId()));
 
-        outputEntity.setId(inputDTO.getId());
-        outputEntity.setStorageQty(inputDTO.getStorageQty());
-        outputEntity.setSoldQty(inputDTO.getSoldQty());
-        outputEntity.setDefectiveQty(inputDTO.getDefectiveQty());
-        outputEntity.setOriginalPrice(inputDTO.getOriginalPrice());//Remove in future
-        outputEntity.setDiscountPrice(inputDTO.getDiscountPrice());//Remove in future
-        outputEntity.setPurchasePrice(inputDTO.getPurchasePrice());
-        outputEntity.setCostPrice(inputDTO.getCostPrice());
-        outputEntity.setRetailPrice(inputDTO.getRetailPrice());
-        outputEntity.setRetailPriceDiscount(inputDTO.getRetailPriceDiscount());
-        outputEntity.setWholesalePrice(inputDTO.getWholesalePrice());
-        outputEntity.setWholesalePriceDiscount(inputDTO.getWholesalePriceDiscount());
-        outputEntity.setWeight(inputDTO.getWeight());
-        outputEntity.setNote(inputDTO.getNote());
-        outputEntity.setStatus(inputDTO.getStatus());
         return outputEntity;
     }
 }

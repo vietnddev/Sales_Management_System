@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
+@Builder
 @Entity
 @Table(name = "product_history")
 @NoArgsConstructor
@@ -59,22 +60,6 @@ public class ProductHistory extends BaseEntity implements Serializable {
 
     @Transient
     Integer productAttributeId;
-
-    public ProductHistory(Integer productId, Integer variantId, Integer attributeId, String title, String field, String oldValue, String newValue) {
-        if (productId != null) {
-            this.product = new Product(productId);
-        }
-        if (variantId != null) {
-            this.productDetail = new ProductDetail(variantId);
-        }
-        if (attributeId != null) {
-            this.productAttribute = new ProductAttribute(attributeId);
-        }
-        this.title = title;
-        this.field = field;
-        this.oldValue = oldValue;
-        this.newValue = newValue;
-    }
 
 	@Override
 	public String toString() {

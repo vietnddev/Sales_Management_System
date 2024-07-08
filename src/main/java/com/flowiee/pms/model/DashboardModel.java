@@ -3,12 +3,14 @@ package com.flowiee.pms.model;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@Builder
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DashboardModel {

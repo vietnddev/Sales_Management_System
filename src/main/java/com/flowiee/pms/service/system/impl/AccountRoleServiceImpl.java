@@ -41,7 +41,7 @@ public class AccountRoleServiceImpl implements RoleService {
         }
         List<RoleModel> listReturn = new ArrayList<>();
         for (ACTION act : ACTION.values()) {
-            listReturn.add(initRole(null, accountId, act.getModuleKey(), act.getModuleLabel(), act.name(), act.getActionLabel()));
+            listReturn.add(initRoleModel(null, accountId, act.getModuleKey(), act.getModuleLabel(), act.name(), act.getActionLabel()));
         }
         return listReturn;
     }
@@ -54,7 +54,7 @@ public class AccountRoleServiceImpl implements RoleService {
         }
         List<RoleModel> listReturn = new ArrayList<>();
         for (ACTION act : ACTION.values()) {
-            listReturn.add(initRole(groupId, null, act.getModuleKey(), act.getModuleLabel(), act.name(), act.getActionLabel()));
+            listReturn.add(initRoleModel(groupId, null, act.getModuleKey(), act.getModuleLabel(), act.name(), act.getActionLabel()));
         }
         return listReturn;
     }
@@ -63,7 +63,11 @@ public class AccountRoleServiceImpl implements RoleService {
     public List<ActionModel> findAllAction() {
         List<ActionModel> listAction = new ArrayList<>();
         for (ACTION sysAction : ACTION.values()) {
-            listAction.add(new ActionModel(sysAction.getActionKey(), sysAction.getActionLabel(), sysAction.getModuleKey()));
+            listAction.add(ActionModel.builder()
+                    .actionKey(sysAction.getActionKey())
+                    .actionLabel(sysAction.getActionLabel())
+                    .moduleKey(sysAction.getModuleKey())
+                    .build());
         }
         return listAction;
     }
@@ -85,7 +89,11 @@ public class AccountRoleServiceImpl implements RoleService {
 
     @Override
     public String updatePermission(String moduleKey, String actionKey, Integer accountId) {
-        accountRoleRepo.save(new AccountRole(moduleKey, actionKey, accountId, null));
+        accountRoleRepo.save(AccountRole.builder()
+                .module(moduleKey)
+                .action(actionKey)
+                .accountId(accountId)
+                .build());
         return MessageCode.UPDATE_SUCCESS.getDescription();
     }
 
@@ -117,9 +125,11 @@ public class AccountRoleServiceImpl implements RoleService {
             if (role.getIsAuthor() == null || !role.getIsAuthor()) {
                 continue;
             }
-            String moduleKey = role.getModule().getModuleKey();
-            String actionKey = role.getAction().getActionKey();
-            accountRoleRepo.save(new AccountRole(moduleKey, actionKey, null, groupId));
+            accountRoleRepo.save(AccountRole.builder()
+                    .module(role.getModule().getModuleKey())
+                    .action(role.getAction().getActionKey())
+                    .groupId(groupId)
+                    .build());
             list.add(role);
         }
         return list;
@@ -130,26 +140,13 @@ public class AccountRoleServiceImpl implements RoleService {
         return accountRoleRepo.findByModuleAndAction(action.getModuleKey(), action.getActionKey());
     }
 
-    private RoleModel initRole(Integer pGroupId, Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
-        RoleModel roleModel = new RoleModel();
-
-        ModuleModel module = new ModuleModel();
-        module.setModuleKey(pModuleKey);
-        module.setModuleLabel(pModuleLabel);
-        roleModel.setModule(module);
-
-        ActionModel action = new ActionModel();
-        action.setActionKey(pActionKey);
-        action.setActionLabel(pActionLabel);
-        action.setModuleKey(pModuleKey);
-        roleModel.setAction(action);
-
-        AccountRole isAuthor = accountRoleRepo.isAuthorized(pGroupId, pAccountId, pModuleKey, pActionKey);
-        roleModel.setIsAuthor(isAuthor != null);
-
-        roleModel.setGroupId(pGroupId);
-        roleModel.setAccountId(pAccountId);
-
-        return roleModel;
+    private RoleModel initRoleModel(Integer pGroupId, Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
+        return RoleModel.builder()
+                .module(ModuleModel.builder().moduleKey(pModuleKey).moduleLabel(pModuleLabel).build())
+                .action(ActionModel.builder().moduleKey(pModuleKey).actionKey(pActionKey).actionLabel(pActionLabel).build())
+                .isAuthor((accountRoleRepo.isAuthorized(pGroupId, pAccountId, pModuleKey, pActionKey)) != null)
+                .groupId(pGroupId)
+                .accountId(pAccountId)
+                .build();
     }
 }

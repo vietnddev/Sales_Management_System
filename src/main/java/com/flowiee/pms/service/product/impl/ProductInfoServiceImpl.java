@@ -84,7 +84,10 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Override
     public Optional<ProductDTO> findById(Integer id) {
         Optional<Product> product = productsRepo.findById(id);
-        return product.map(p -> Optional.of(ProductConvert.convertToDTO(p))).orElse(null);
+        if (product.isPresent()) {
+            return Optional.of(ProductConvert.convertToDTO(product.get()));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -148,7 +151,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public boolean productInUse(Integer productId) throws RuntimeException {
-        return !productVariantService.findAll(-1, -1, productId, null, null, null, null).getContent().isEmpty();
+        return !productVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent().isEmpty();
     }
 
     private void setImageActiveAndLoadVoucherApply(List<ProductDTO> products) {

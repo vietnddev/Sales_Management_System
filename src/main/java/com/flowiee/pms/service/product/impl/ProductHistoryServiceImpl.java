@@ -77,20 +77,15 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
             String field = entry.getKey();
             String oldValue = entry.getValue()[0].toString();
             String newValue = entry.getValue()[1].toString();
-            ProductHistory productHistory = new ProductHistory();
-            productHistory.setTitle(title);
-            if (productBaseId != null) {
-                productHistory.setProduct(new Product(productBaseId));
-            }
-            if (productVariantId != null) {
-                productHistory.setProductDetail(new ProductDetail(productVariantId));
-            }
-            if (productAttributeId != null) {
-                productHistory.setProductAttribute(new ProductAttribute(productAttributeId));
-            }
-            productHistory.setField(field);
-            productHistory.setOldValue(oldValue);
-            productHistory.setNewValue(newValue);
+            ProductHistory productHistory = ProductHistory.builder()
+                    .title(title)
+                    .product(productBaseId != null ? new Product(productBaseId) : null)
+                    .productDetail(productVariantId != null ? new ProductDetail(productVariantId) : null)
+                    .productAttribute(productAttributeId != null ? new ProductAttribute(productAttributeId) : null)
+                    .field(field)
+                    .oldValue("null".equals(oldValue) ? null : oldValue)
+                    .newValue("null".equals(newValue) ? null : newValue)
+                    .build();
             logSaved.add(this.save(productHistory));
         }
         return logSaved;

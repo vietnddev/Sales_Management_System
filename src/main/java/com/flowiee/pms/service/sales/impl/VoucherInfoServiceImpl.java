@@ -114,12 +114,13 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
                     }
                 }
                 if (!listKeyVoucher.contains(randomKey)) {
-                    VoucherTicket voucherTicket = new VoucherTicket();
-                    voucherTicket.setCode(randomKey);
-                    voucherTicket.setLength(voucherInfo.getLength());
-                    voucherTicket.setVoucherInfo(voucherSaved);
-                    voucherTicket.setUsed(false);
-                    if (voucherTicketService.save(voucherTicket) != null) {
+                    VoucherTicket voucherTicketSaved = voucherTicketService.save(VoucherTicket.builder()
+                            .code(randomKey)
+                            .length(voucherInfo.getLength())
+                            .voucherInfo(voucherSaved)
+                            .isUsed(false)
+                            .build());
+                    if (voucherTicketSaved != null) {
                         listKeyVoucher.add(randomKey);
                     }
                 }

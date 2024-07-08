@@ -100,9 +100,9 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
     public VoucherTicketDTO isAvailable(String voucherTicketCode) {
         VoucherTicket voucherTicket = voucherTicketRepo.findByCode(voucherTicketCode);
         if (voucherTicket == null) {
-            VoucherTicketDTO voucherTicketDTO = new VoucherTicketDTO();
-            voucherTicketDTO.setAvailable("N");
-            return voucherTicketDTO;
+//            VoucherTicketDTO voucherTicketDTO = new VoucherTicketDTO();
+//            voucherTicketDTO.setAvailable("N");
+            return new VoucherTicketDTO("N");
         }
         VoucherTicketDTO voucherTicketDTO = modelMapper.map(voucherTicket, VoucherTicketDTO.class);
         Optional<VoucherInfoDTO> voucherInfoDTO = voucherService.findById(voucherTicketDTO.getVoucherInfo().getId());

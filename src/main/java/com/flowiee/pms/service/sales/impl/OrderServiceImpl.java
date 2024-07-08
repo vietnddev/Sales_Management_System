@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.OrderDetailDTO;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -39,6 +41,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     CartItemsService      cartItemsService;
     OrderItemsService     orderItemsService;
     OrderQRCodeService    orderQRCodeService;
+    CustomerRepository    customerRepository;
     OrderHistoryService   orderHistoryService;
     VoucherTicketService  voucherTicketService;
     ProductVariantService productVariantService;
@@ -93,61 +96,59 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     public OrderDTO save(OrderDTO request) {
         try {
             //Insert order
-            Order order = new Order();
-            order.setCode(request.getCode() != null ? request.getCode() : CommonUtils.genOrderCode());
-            order.setCustomer(new Customer(request.getCustomerId()));
-            order.setKenhBanHang(new Category(request.getSalesChannelId(), null));
-            order.setNhanVienBanHang(new Account(request.getCashierId()));
-            order.setNote(request.getNote());
-            if (request.getOrderTime() != null) {
-                order.setOrderTime(request.getOrderTime());
-            } else {
-                order.setOrderTime(LocalDateTime.now());
-            }
-            order.setTrangThaiDonHang(new Category(request.getOrderStatusId(), null));
-            order.setReceiverName(request.getReceiverName());
-            order.setReceiverPhone(request.getReceiverPhone());
-            order.setReceiverEmail(request.getReceiverEmail());
-            order.setReceiverAddress(request.getReceiverAddress());
-            if (request.getPayMethodId() != null) {
-                order.setPaymentMethod(new Category(request.getPayMethodId(), null));
-            }
-            order.setPaymentStatus(false);
-
-            if (ObjectUtils.isNotEmpty(request.getVoucherUsedCode())) {
-                order.setVoucherUsedCode(request.getVoucherUsedCode());
-            }
-            if (ObjectUtils.isNotEmpty(request.getAmountDiscount())) {
-                order.setAmountDiscount(request.getAmountDiscount());
-            }
-
+            Order order = Order.builder()
+                .code(getNextOrderCode())
+                .customer(new Customer(request.getCustomerId()))
+                .kenhBanHang(new Category(request.getSalesChannelId(), null))
+                .nhanVienBanHang(new Account(request.getCashierId()))
+                .note(request.getNote())
+                .orderTime(request.getOrderTime() != null ? request.getOrderTime() : LocalDateTime.now())
+                .trangThaiDonHang(new Category(request.getOrderStatusId(), null))
+                .receiverName(request.getReceiverName())
+                .receiverPhone(request.getReceiverPhone())
+                .receiverEmail(request.getReceiverEmail())
+                .receiverAddress(request.getReceiverAddress())
+                .paymentMethod(request.getPayMethodId() != null ? new Category(request.getPayMethodId(), null) : null)
+                .paymentStatus(false)
+                .voucherUsedCode(ObjectUtils.isNotEmpty(request.getVoucherUsedCode()) ? request.getVoucherUsedCode() : null)
+                .amountDiscount(request.getAmountDiscount() != null ? request.getAmountDiscount() : BigDecimal.ZERO)
+                .packagingCost(BigDecimal.ZERO)
+                .shippingCost(BigDecimal.ZERO)
+                .giftWrapCost(BigDecimal.ZERO)
+                .codFee(BigDecimal.ZERO)
+                .isGiftWrapped(false)
+                .build();
             Order orderSaved = orderRepository.save(order);
 
             //QRCode
             orderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
 
             //Insert items detail
+            BigDecimal totalAmountOfOrder = BigDecimal.ZERO;
             Optional<OrderCart> cart = cartService.findById(request.getCartId());
             if (cart.isPresent()) {
                 for (Items items : cart.get().getListItems()) {
                     Optional<ProductVariantDTO> productDetail = productVariantService.findById(items.getProductDetail().getId());
                     if (productDetail.isPresent()) {
-                        OrderDetail orderDetail = new OrderDetail();
-                        orderDetail.setOrder(orderSaved);
-                        orderDetail.setProductDetail(productDetail.get());
-                        orderDetail.setQuantity(cartItemsService.findQuantityOfItem(items.getOrderCart().getId() , productDetail.get().getId()));
-                        orderDetail.setStatus(true);
-                        orderDetail.setNote(items.getNote());
-                        orderDetail.setPrice(items.getPrice());
-                        orderDetail.setPriceOriginal(items.getPriceOriginal());
-                        orderDetail.setExtraDiscount(items.getExtraDiscount() != null ? items.getExtraDiscount() : BigDecimal.ZERO);
-                        orderDetail.setPriceType(items.getPriceType());
-                        orderItemsService.save(orderDetail);
+                        OrderDetail orderDetail = OrderDetail.builder()
+                            .order(orderSaved)
+                            .productDetail(productDetail.get())
+                            .quantity(cartItemsService.findQuantityOfItem(items.getOrderCart().getId() , productDetail.get().getId()))
+                            .status(true)
+                            .note(items.getNote())
+                            .price(items.getPrice())
+                            .priceOriginal(items.getPriceOriginal())
+                            .extraDiscount(items.getExtraDiscount() != null ? items.getExtraDiscount() : BigDecimal.ZERO)
+                            .priceType(items.getPriceType())
+                            .build();
+                        OrderDetail orderDetailSaved = orderItemsService.save(orderDetail);
+
+                        totalAmountOfOrder = totalAmountOfOrder.add(orderDetailSaved.getPrice().multiply(BigDecimal.valueOf(orderDetailSaved.getQuantity())));
                     }
                 }
             }
 
-            //Update voucher ticket status
+            //Update voucher ticket used status
             VoucherTicket voucherTicket = voucherTicketService.findTicketByCode((request.getVoucherUsedCode()));
             if (voucherTicket != null) {
 //                String statusCode = voucherService.checkTicketToUse(request.getVoucherUsedCode());
@@ -162,11 +163,17 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             }
             //orderRepo.save(orderSaved);
 
+            //Accumulate bonus points for customer
+            if (request.getAccumulateBonusPoints() != null && request.getAccumulateBonusPoints()) {
+                BigDecimal bonusPoints = totalAmountOfOrder.subtract(orderSaved.getAmountDiscount()).divide(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN);
+                customerRepository.updateBonusPoint(orderSaved.getCustomer().getId(), bonusPoints.intValue());
+            }
+
             //Sau khi đã lưu đơn hàng thì xóa all items
             cartItemsService.deleteAllItems();
 
             //Log
-            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.Order, "Thêm mới đơn hàng", order.toString());
+            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.Order, "Thêm mới đơn hàng", orderSaved.getCode());
             logger.info("Insert new order success! insertBy={}", CommonUtils.getUserPrincipal().getUsername());
 
             return OrderDTO.fromOrder(orderSaved);
@@ -186,10 +193,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId(), null));
         Order orderUpdated = orderRepository.save(orderToUpdate);
 
-        String logTitle = "Cập nhật đơn hàng";
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
-        orderHistoryService.save(changeLog.getLogChanges(), logTitle, id, null);
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.Order, logTitle, changeLog);
+        orderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", id, null);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật đơn hàng", changeLog);
         logger.info("Cập nhật đơn hàng {}", dto.toString());
 
         return OrderDTO.fromOrder(orderToUpdate);
@@ -235,6 +241,15 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     }
 
     private String getNextOrderCode() {
-        return "";
+        int orderTodayQty = 0;
+        List<Order> ordersToday = orderRepository.findOrdersToday();
+        if (ordersToday != null) {
+            orderTodayQty = ordersToday.size();
+        }
+        LocalDate currentDate = LocalDate.now();
+        String year = String.valueOf(currentDate.getYear());
+        String month = String.format("%02d", currentDate.getMonthValue());
+        String day = String.format("%02d", currentDate.getDayOfMonth());
+        return year + month + day + String.format("%03d", orderTodayQty + 1);
     }
 }

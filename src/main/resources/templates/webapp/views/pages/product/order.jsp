@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <!--Search tool-->
-                            <div th:replace="fragments :: searchTool('Y', ${listOfFilters})" id="searchTool"></div>
+                            <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                             <div class="card">
                                 <div class="card-body align-items-center p-0">
@@ -68,10 +68,11 @@
 
         <div th:replace="header :: scripts"></div>
 
+        <script th:src="@{/js/order/LoadOrders.js}"></script>
+
         <script>
             $(document).ready(function () {
-                let mvSearchTool = ["BRANCH", "PAYMENT_METHOD", "SALES_CHANNEL", "ORDER_STATUS", "PAYMENT_STATUS", "ORDER_TYPE", "SHIP_METHOD", "GROUP_CUSTOMER"];
-                setupSearchTool(mvSearchTool);
+                setupSearchTool();
 
                 searchOrders();
                 loadOrders(mvPageSizeDefault, 1);
@@ -83,45 +84,6 @@
                 $("#btnSearch").on("click", function () {
                     loadOrders(mvPageSizeDefault, 1);
                 })
-            }
-
-            function loadOrders(pageSize, pageNum) {
-                let apiURL = mvHostURLCallApi + '/order/all';
-                let params = {
-                    pageSize: pageSize,
-                    pageNum: pageNum,
-                    txtSearch : $('#txtFilter').val()
-                }
-                $.get(apiURL, params, function (response) {//dùng Ajax JQuery để gọi xuống controller
-                    if (response.status === "OK") {
-                        let data = response.data;
-                        let pagination = response.pagination;
-
-                        updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
-
-                        let contentTable = $('#contentTable');
-                        contentTable.empty();
-                        $.each(data, function (index, d) {
-                            contentTable.append(`
-                               <tr>
-                                    <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                    <td><a href="/order/${d.id}">${d.code}</a></td>
-                                    <td>${d.orderTime}</td>
-                                    <td>${d.receiverAddress}</td>
-                                    <td>${d.receiverName}</td>
-                                    <td>${d.receiverPhone}</td>
-                                    <td>${formatCurrency(d.totalAmountDiscount)}</td>
-                                    <td>${d.salesChannelName}</td>
-                                    <td>${d.paymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán"}</td>
-                                    <td>${d.orderStatusName}</td>
-                                    <td><a class="btn btn-sm btn-info btn-print-invoice" href="/order/print-invoice/${d.id}" orderId="${d.id}"><i class="fa-solid fa-print"></i></a></td>
-                                </tr>
-                            `);
-                        });
-                    }
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");//nếu ko gọi xuống được controller thì báo lỗi
-                });
             }
 
             function printReport() {

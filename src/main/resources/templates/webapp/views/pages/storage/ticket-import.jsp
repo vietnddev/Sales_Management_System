@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-12">
                         <!--Search tool-->
-                        <div th:replace="fragments :: searchTool('Y', ${listOfFilters})" id="searchTool"></div>
+                        <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                         <div class="card">
                             <div class="card-header">
@@ -73,7 +73,10 @@
                                     <thead>
                                         <tr>
                                             <th>STT</th>
+                                            <th>Kho</th>
                                             <th>Tiêu đề</th>
+                                            <th>Số lượng</th>
+                                            <th>Giá trị</th>
                                             <th>Người nhập</th>
                                             <th>Thời gian nhập</th>
                                             <th>Ghi chú</th>
@@ -127,7 +130,10 @@
                     contentTable.append(`
                         <tr>
                             <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
+                            <td>${d.storageName}</td>
                             <td><a href="/stg/ticket-import/${d.id}">${d.title}</td>
+                            <td>${d.totalItems}</td>
+                            <td>${formatCurrency(d.totalValue)}</td>
                             <td>${d.importer}</td>
                             <td>${d.importTime}</td>
                             <td>${d.note}</td>

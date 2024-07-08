@@ -24,7 +24,7 @@
                     <div class="row">
                         <div class="col-12">
                             <!--Search tool-->
-                            <div th:replace="fragments :: searchTool('Y', ${listOfFilters})" id="searchTool"></div>
+                            <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                             <div class="card">
                                 <div class="card-header">
@@ -152,8 +152,6 @@
         let mvNoteField = $("#noteField");
         let mvApplicableProductsField = $("#applicableProductsField");
 
-        let mvSearchTool = ["BRAND", "PRODUCT_TYPE", "COLOR", "SIZE", "UNIT", "DISCOUNT", "PRODUCT_STATUS"];
-
         $(document).ready(function () {
             $('#btnCreateCombo').on('click', function () {
                 loadProductVariants();
@@ -166,7 +164,7 @@
             loadProductCombos(mvPageSizeDefault, 1);
             updateTableContentWhenOnClickPagination(loadProductCombos);
 
-            setupSearchTool(mvSearchTool);
+            setupSearchTool();
             $("#btnSearch").on("click", function () {
                 let brandFilter = $('#brandFilter').val();
                 let unitFilter = $('#unitFilter').val();

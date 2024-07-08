@@ -13,6 +13,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "storage")
 @NoArgsConstructor

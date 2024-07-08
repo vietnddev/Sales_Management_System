@@ -24,7 +24,7 @@
                     <div class="row">
                         <div class="col-12">
                             <!--Search tool-->
-                            <div th:replace="fragments :: searchTool('Y', ${listOfFilters})" id="searchTool"></div>
+                            <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                             <div class="card">
                                 <div class="card-header">
@@ -38,7 +38,6 @@
                                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insert" id="createProduct"><i class="fa-solid fa-circle-plus mr-2"></i>Thêm mới</button>
                                         </div>
                                     </div>
-                                    <!-- modal-content (Thêm mới sản phẩm)-->
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body align-items-center p-0">
@@ -97,46 +96,12 @@
                                     </div>
                                 </div>
                                 <!-- modal import -->
-
-                                <div class="modal fade" id="insert">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <strong class="modal-title">Thêm mới sản phẩm</strong>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="form-group">
-                                                            <label>Tên sản phẩm</label>
-                                                            <input type="text" class="form-control" placeholder="Tên sản phẩm" id="productNameField">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Loại sản phẩm</label>
-                                                            <select class="custom-select" id="productTypeField"></select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Đơn vị tính</label>
-                                                            <select class="custom-select" id="unitField"></select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Nhãn hiệu</label>
-                                                            <select class="custom-select" id="brandField"></select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-end">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                <button type="button" class="btn btn-primary" id="createProductSubmit">Lưu</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!--Modal create product -->
+                    <div th:replace="pages/product/fragments/product-fragments :: createProductOriginal"></div>
                 </div>
             </section>
         </div>
@@ -151,9 +116,9 @@
     </div>
 
     <script type="text/javascript">
-        let mvSearchTool = ["BRAND", "PRODUCT_TYPE", "COLOR", "SIZE", "UNIT", "DISCOUNT", "PRODUCT_STATUS"];
-
         $(document).ready(function () {
+            setupSearchTool();
+
             $('#createProduct').on('click', function () {
                 loadCategory();
             });
@@ -165,7 +130,6 @@
             loadProducts(mvPageSizeDefault, 1);
             updateTableContentWhenOnClickPagination(loadProducts);
 
-            setupSearchTool(mvSearchTool);
             $("#btnSearch").on("click", function () {
                 let brandFilter = $('#brandFilter').val();
                 let unitFilter = $('#unitFilter').val();

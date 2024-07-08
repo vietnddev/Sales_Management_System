@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Builder
 @Entity
 @Table(name = "promotion_info")
 @NoArgsConstructor
@@ -59,13 +60,14 @@ public class PromotionInfo extends BaseEntity implements Serializable {
     LocalDateTime endTime;
 
     public static PromotionInfo fromDTO(PromotionInfoDTO inputDTO) {
-        PromotionInfo promotionInfo = new PromotionInfo();
+        PromotionInfo promotionInfo = PromotionInfo.builder()
+            .title(inputDTO.getTitle())
+            .description(inputDTO.getDescription())
+            .discountPercent(inputDTO.getDiscountPercent())
+            .discountPrice(inputDTO.getDiscountPrice())
+            .discountPriceMax(inputDTO.getDiscountPriceMax())
+            .build();
         promotionInfo.setId(inputDTO.getId());
-        promotionInfo.setTitle(inputDTO.getTitle());
-        promotionInfo.setDescription(inputDTO.getDescription());
-        promotionInfo.setDiscountPercent(inputDTO.getDiscountPercent());
-        promotionInfo.setDiscountPrice(inputDTO.getDiscountPrice());
-        promotionInfo.setDiscountPriceMax(inputDTO.getDiscountPriceMax());
         return promotionInfo;
     }
 }
