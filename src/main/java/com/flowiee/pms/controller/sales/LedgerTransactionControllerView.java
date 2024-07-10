@@ -6,7 +6,7 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.sales.LedgerPaymentService;
 import com.flowiee.pms.service.sales.LedgerReceiptService;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.utils.constants.LedgerTranType;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class LedgerTransactionControllerView extends BaseController {
     @GetMapping("/receipt")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
     public ModelAndView getLedgerReceipts() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SLS_LEDGER_TRANS);
+        ModelAndView modelAndView = new ModelAndView(Pages.SLS_LEDGER_TRANS.getTemplate());
         modelAndView.addObject("tranTypeKey", LedgerTranType.PT.name());
         modelAndView.addObject("tranTypeName", LedgerTranType.PT.getDescription());
         this.getCategoryOfTransaction(modelAndView, LedgerTranType.PT.name());
@@ -39,7 +39,7 @@ public class LedgerTransactionControllerView extends BaseController {
     @GetMapping("/payment")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
     public ModelAndView getLedgerPayments() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SLS_LEDGER_TRANS);
+        ModelAndView modelAndView = new ModelAndView(Pages.SLS_LEDGER_TRANS.getTemplate());
         modelAndView.addObject("tranTypeKey", LedgerTranType.PC.name());
         modelAndView.addObject("tranTypeName", LedgerTranType.PC.getDescription());
         this.getCategoryOfTransaction(modelAndView, LedgerTranType.PC.name());
@@ -53,7 +53,7 @@ public class LedgerTransactionControllerView extends BaseController {
         if (transaction.isEmpty()) {
             throw new ResourceNotFoundException("Ledger receipt not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SLS_LEDGER_TRANS_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.SLS_LEDGER_TRANS_DETAIL.getTemplate());
         modelAndView.addObject("tranId", tranId);
         modelAndView.addObject("ledgerTransactionDetail", transaction.get());
         return baseView(modelAndView);

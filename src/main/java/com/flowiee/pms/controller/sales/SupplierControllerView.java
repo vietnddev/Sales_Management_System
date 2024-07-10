@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.service.sales.SupplierService;
 
 @Controller
@@ -23,7 +23,7 @@ public class SupplierControllerView extends BaseController {
 	@GetMapping
 	@PreAuthorize("@vldModuleSales.readSupplier(true)")
 	public ModelAndView viewAllSupplier() {
-		ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_SUPPLIER);
+		ModelAndView modelAndView = new ModelAndView(Pages.PRO_SUPPLIER.getTemplate());
 		modelAndView.addObject("listSupplier", supplierService.findAll(-1, -1).getContent());
 		return baseView(modelAndView);
 	}

@@ -5,7 +5,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.service.sales.VoucherService;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,13 @@ public class VoucherControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
     public ModelAndView viewVouchers() {
-        return baseView(new ModelAndView(PagesUtils.PRO_VOUCHER));
+        return baseView(new ModelAndView(Pages.PRO_VOUCHER.getTemplate()));
     }
 
     @GetMapping("/detail/{id}")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
     public ModelAndView viewVoucherDetail(@PathVariable("id") Integer voucherInfoId) {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_VOUCHER_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_VOUCHER_DETAIL.getTemplate());
         modelAndView.addObject("voucherInfoId", voucherInfoId);
         return baseView(modelAndView);
     }

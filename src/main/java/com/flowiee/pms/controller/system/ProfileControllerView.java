@@ -6,7 +6,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.entity.system.Account;
 
 import lombok.AccessLevel;
@@ -41,7 +41,7 @@ public class ProfileControllerView extends BaseController {
 		if (profile.isEmpty()) {
 			throw new ResourceNotFoundException("Account not found in system");
 		}
-		ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_PROFILE);
+		ModelAndView modelAndView = new ModelAndView(Pages.SYS_PROFILE.getTemplate());
 		modelAndView.addObject("message", message);
 		modelAndView.addObject("profile", profile.get());
 		modelAndView.addObject("listDonHangDaBan", new ArrayList<Order>());

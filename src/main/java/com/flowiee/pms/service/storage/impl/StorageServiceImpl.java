@@ -50,7 +50,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
 
     @Override
     public Page<StorageItems> findStorageItems(int pageSize, int pageNum, Integer storageId, String searchText) {
-        Optional<StorageDTO> storage = this.findById(storageId);
+        Optional<Storage> storage = storageRepository.findById(storageId);
         if (storage.isEmpty())
             throw new BadRequestException("Storage not found");
         Pageable pageable = Pageable.unpaged();

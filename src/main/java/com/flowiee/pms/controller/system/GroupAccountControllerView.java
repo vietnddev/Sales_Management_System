@@ -4,7 +4,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.GroupAccountService;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,7 +24,7 @@ public class GroupAccountControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSystem.readGroupAccount(true)")
     public ModelAndView findAllGroup() {
-        return baseView(new ModelAndView(PagesUtils.SYS_GR_ACC));
+        return baseView(new ModelAndView(Pages.SYS_GR_ACC.getTemplate()));
     }
 
     @GetMapping(value = "/{id}")
@@ -34,7 +34,7 @@ public class GroupAccountControllerView extends BaseController {
         if (groupAcc.isEmpty()) {
             throw new ResourceNotFoundException("Group account not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.SYS_GR_ACC_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_GR_ACC_DETAIL.getTemplate());
         modelAndView.addObject("groupAccount", groupAcc.get());
         return baseView(modelAndView);
     }

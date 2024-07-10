@@ -3,8 +3,12 @@ package com.flowiee.pms.entity.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.entity.system.FileStorage;
+import com.flowiee.pms.model.dto.ProductVariantDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -23,7 +27,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductCombo extends BaseEntity implements Serializable {
     @Serial
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "combo_name", nullable = false)
     String comboName;
@@ -41,9 +45,20 @@ public class ProductCombo extends BaseEntity implements Serializable {
     String note;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "productCombo", fetch = FetchType.LAZY)
-    List<ProductDetail> listProductVariant;
+    @JsonIgnoreProperties("productCombo")
+    @OneToMany(mappedBy = "productCombo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    List<FileStorage> listImages;
 
     @Transient
     BigDecimal totalValue;
+
+    @Transient
+    Integer quantity;
+
+    @Transient
+    String status;
+
+    @Transient
+    List<ProductVariantDTO> applicableProducts;
 }

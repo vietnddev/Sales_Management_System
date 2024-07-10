@@ -31,28 +31,20 @@ public class ProductComboController extends BaseController {
     @GetMapping("/all")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
     public AppResponse<List<ProductCombo>> findProductCombos(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                                              @RequestParam(value = "pageNum", required = false) Integer pageNum) {
-        try {
-            Page<ProductCombo> productComboPage = productComboService.findAll(pageSize, pageNum - 1);
-            return success(productComboPage.getContent(), pageNum, pageSize, productComboPage.getTotalPages(), productComboPage.getTotalElements());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product combo"), ex);
-        }
+                                                             @RequestParam(value = "pageNum", required = false) Integer pageNum) {
+        Page<ProductCombo> productComboPage = productComboService.findAll(pageSize, pageNum - 1);
+        return success(productComboPage.getContent(), pageNum, pageSize, productComboPage.getTotalPages(), productComboPage.getTotalElements());
     }
 
     @Operation(summary = "Find detail combo")
     @GetMapping("/{comboId}")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
     public AppResponse<ProductCombo> findDetailCombo(@PathVariable("comboId") Integer comboId) {
-        try {
-            Optional<ProductCombo> productCombo = productComboService.findById(comboId);
-            if (productCombo.isEmpty()) {
-                throw new BadRequestException("productCombo not found");
-            }
-            return success(productCombo.get());
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product combo"), ex);
+        Optional<ProductCombo> productCombo = productComboService.findById(comboId);
+        if (productCombo.isEmpty()) {
+            throw new BadRequestException("productCombo not found");
         }
+        return success(productCombo.get());
     }
 
     @Operation(summary = "Create new combo")

@@ -9,9 +9,9 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.SupplierService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.service.storage.StorageService;
-import com.flowiee.pms.utils.*;
 import com.flowiee.pms.controller.BaseController;
 
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -37,7 +37,7 @@ public class TicketImportControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public ModelAndView viewTickets() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT);
+        ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_IMPORT.getTemplate());
         modelAndView.addObject("listStorages", storageService.findAll());
         return baseView(modelAndView);
     }
@@ -61,7 +61,7 @@ public class TicketImportControllerView extends BaseController {
             }
         }
         ticketImport.get().setTotalValue(totalValue);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_IMPORT_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_IMPORT_DETAIL.getTemplate());
         modelAndView.addObject("ticketImportId", ticketImportId);
         modelAndView.addObject("ticketImportDetail", ticketImport.get());
         modelAndView.addObject("listProductVariant", productVariantService.findAll());

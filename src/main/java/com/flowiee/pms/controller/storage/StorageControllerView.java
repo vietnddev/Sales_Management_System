@@ -4,7 +4,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.service.storage.StorageService;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +27,7 @@ public class StorageControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
     public ModelAndView findAll() {
-        return baseView(new ModelAndView(PagesUtils.STG_STORAGE));
+        return baseView(new ModelAndView(Pages.STG_STORAGE.getTemplate()));
     }
 
     @GetMapping(value = "/{storageId}")
@@ -38,7 +38,7 @@ public class StorageControllerView extends BaseController {
             throw new ResourceNotFoundException("Storage not found!");
         }
         System.out.println("storageId: " + storageId);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_STORAGE_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.STG_STORAGE_DETAIL.getTemplate());
         modelAndView.addObject("storageId", storage.get().getId());
         modelAndView.addObject("storage", storage.get());
         return baseView(modelAndView);

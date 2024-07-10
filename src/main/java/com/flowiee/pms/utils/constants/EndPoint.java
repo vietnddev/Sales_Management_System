@@ -18,6 +18,7 @@ public enum EndPoint {
     URL_PRODUCT_GALLERY("/gallery", "SIDEBAR", true),
     URL_PRODUCT_VOUCHER("/san-pham/voucher", "SIDEBAR", true),
     URL_PRODUCT_PROMOTION("/promotion", "SIDEBAR", true),
+    URL_PRODUCT_COMBO("/product/combo", "SIDEBAR", true),
     URL_SALES_LEDGER("/ledger", "SIDEBAR", true),
     URL_SALES_LEDGER_RECEIPT("/ledger/trans/receipt", "SIDEBAR", true),
     URL_SALES_LEDGER_PAYMENT("/ledger/trans/payment", "SIDEBAR", true),

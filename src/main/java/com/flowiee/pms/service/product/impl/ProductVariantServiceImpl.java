@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
@@ -34,6 +35,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +69,10 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     @Override
     public Optional<ProductVariantDTO> findById(Integer pProductVariantId) {
         Optional<ProductDetail> productVariant = productVariantRepo.findById(pProductVariantId);
-        return productVariant.map(productDetail -> Optional.ofNullable(ProductVariantConvert.entityToDTO(productDetail))).orElse(null);
+        if (productVariant.isPresent()) {
+            return Optional.of(ProductVariantConvert.entityToDTO(productVariant.get()));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -174,12 +180,12 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         }
         try {
             productVariantRepo.deleteById(productVariantId);
-            systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Xóa biến thể sản phẩm", productDetailToDelete.get().getVariantName());
-            logger.info("Delete productVariant success! {}", productDetailToDelete);
-            return MessageCode.DELETE_SUCCESS.getDescription();
-        } catch (RuntimeException ex) {
-            throw new AppException("Delete productVariant fail! id=" + productVariantId, ex);
+        } catch (ConstraintViolationException ex) {
+            throw new DataInUseException("Không thể xóa sản phẩm đã được sử dụng!", ex);
         }
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Xóa biến thể sản phẩm", productDetailToDelete.get().getVariantName());
+        logger.info("Delete productVariant success! {}", productDetailToDelete);
+        return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override

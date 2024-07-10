@@ -51,11 +51,6 @@ public class ProductDetail extends BaseEntity implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_combo_id")
-    ProductCombo productCombo;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id", nullable = false)
     Category color;
 

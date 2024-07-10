@@ -8,7 +8,7 @@ import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.ImportService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 
 import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.TemplateExport;
@@ -41,7 +41,7 @@ public class CategoryControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public ModelAndView viewRootCategory() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY);
+        ModelAndView modelAndView = new ModelAndView(Pages.CTG_CATEGORY.getTemplate());
         modelAndView.addObject("category", new Category());
         modelAndView.addObject("listCategory", categoryService.findRootCategory());
         return baseView(modelAndView);
@@ -53,7 +53,7 @@ public class CategoryControllerView extends BaseController {
         if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new ResourceNotFoundException("Category not found!");
         }
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.CTG_CATEGORY_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.CTG_CATEGORY_DETAIL.getTemplate());
         modelAndView.addObject("categoryType", categoryType);
         modelAndView.addObject("ctgRootName", CategoryType.valueOf(CommonUtils.getCategoryType(categoryType)).getLabel());
         modelAndView.addObject("templateImportName", TemplateExport.EX_LIST_OF_CATEGORIES);

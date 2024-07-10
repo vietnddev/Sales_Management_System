@@ -1,23 +1,31 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.ProductCombo;
+import com.flowiee.pms.entity.product.ProductComboApply;
 import com.flowiee.pms.exception.ResourceNotFoundException;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.model.dto.ProductVariantDTO;
+import com.flowiee.pms.repository.product.ProductComboApplyRepository;
+import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.utils.ChangeLog;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.product.ProductComboRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductComboService;
-import com.flowiee.pms.utils.constants.MasterObject;
-import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,15 +33,25 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductComboServiceImpl extends BaseService implements ProductComboService {
-    ProductComboRepository productComboRepository;
+    ProductVariantService       productVariantService;
+    ProductComboRepository      productComboRepository;
+    ProductComboApplyRepository productComboApplyRepository;
 
     @Override
     public Page<ProductCombo> findAll(int pageSize, int pageNum) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("startTime").ascending());
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by("startDate").ascending());
         }
-        return productComboRepository.findAll(pageable);
+        Page<ProductCombo> productComboPage = productComboRepository.findAll(pageable);
+        for (ProductCombo productCombo : productComboPage.getContent()) {
+            productCombo.setAmountDiscount(BigDecimal.ZERO);
+            productCombo.setTotalValue(BigDecimal.ZERO);
+            productCombo.setQuantity(0);
+        }
+        setProductIncludes(productComboPage.getContent());
+        setProductComboStatus(productComboPage.getContent());
+        return productComboPage;
     }
 
     @Override
@@ -43,24 +61,47 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
 
     @Override
     public Optional<ProductCombo> findById(Integer comboId) {
-        return productComboRepository.findById(comboId);
+        Optional<ProductCombo> productCombo = productComboRepository.findById(comboId);
+        if (productCombo.isPresent()) {
+            List<ProductCombo> productComboList = List.of(productCombo.get());
+            setProductIncludes(productComboList);
+            productCombo = Optional.of(productComboList.get(0));
+        }
+        return productCombo;
     }
 
+    @Transactional
     @Override
     public ProductCombo save(ProductCombo productCombo) {
+        if (productCombo.getAmountDiscount() == null) {
+            productCombo.setAmountDiscount(BigDecimal.ZERO);
+        }
         ProductCombo comboSaved = productComboRepository.save(productCombo);
+        if (productCombo.getApplicableProducts() != null) {
+            for (ProductVariantDTO productVariant : productCombo.getApplicableProducts()) {
+                if (productVariant.getId() != null) {
+                    productComboApplyRepository.save(ProductComboApply.builder().comboId(comboSaved.getId()).productVariantId(productVariant.getId()).build());
+                }
+            }
+        }
         systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Thêm mới combo sản phẩm", comboSaved.getComboName());
         return comboSaved;
     }
 
     @Override
     public ProductCombo update(ProductCombo productCombo, Integer comboId) {
-        if (this.findById(comboId).isEmpty()) {
+        Optional<ProductCombo> optional = this.findById(comboId);
+        if (optional.isEmpty()) {
             throw new ResourceNotFoundException("Combo not found");
         }
+        ProductCombo comboBeforeChange = ObjectUtils.clone(optional.get());
+
         productCombo.setId(comboId);
         ProductCombo comboUpdated = productComboRepository.save(productCombo);
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Cập nhật combo sản phẩm", comboUpdated.getComboName());
+
+        ChangeLog changeLog = new ChangeLog(comboBeforeChange, comboUpdated);
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Cập nhật combo sản phẩm", changeLog);
+
         return comboUpdated;
     }
 
@@ -73,5 +114,31 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
         productComboRepository.deleteById(comboId);
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Cập nhật combo sản phẩm", comboBefore.get().getComboName());
         return MessageCode.DELETE_SUCCESS.getDescription();
+    }
+
+    private void setProductIncludes(List<ProductCombo> productComboPage) {
+        for (ProductCombo productCombo : productComboPage) {
+            List<ProductVariantDTO> applicableProducts = new ArrayList<>();
+            for (ProductComboApply applicableProduct : productComboApplyRepository.findByComboId(productCombo.getId())) {
+                Optional<ProductVariantDTO> productVariantDTO = productVariantService.findById(applicableProduct.getProductVariantId());
+                if (productVariantDTO.isPresent()) {
+                    applicableProducts.add(productVariantDTO.get());
+                }
+            }
+            productCombo.setApplicableProducts(applicableProducts);
+        }
+    }
+
+    private void setProductComboStatus(List<ProductCombo> productComboPage) {
+        for (ProductCombo productCombo : productComboPage) {
+            String status = ProductComboStatus.I.getLabel();
+            if (productCombo.getStartDate() != null && productCombo.getEndDate() != null) {
+                if ((productCombo.getStartDate().isBefore(LocalDate.now()) || productCombo.getStartDate().isEqual(LocalDate.now())) &&
+                        (productCombo.getEndDate().isAfter(LocalDate.now()) || productCombo.getStartDate().isEqual(LocalDate.now()))) {
+                    status = ProductComboStatus.A.getLabel();
+                }
+            }
+            productCombo.setStatus(status);
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.flowiee.pms.utils;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
@@ -19,9 +18,9 @@ import java.util.Objects;
 public class ChangeLog {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    Map<String, Object[]> logChanges;
-    String oldValues;
-    String newValues;
+    final Map<String, Object[]> logChanges;
+    final String oldValues;
+    final String newValues;
 
     public ChangeLog(Object oldObject, Object newObject) {
         Map<String, Object[]> changes = new HashMap<>();

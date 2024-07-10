@@ -2,6 +2,7 @@ package com.flowiee.pms.controller.system;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.service.product.ProductComboService;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.product.ProductVariantService;
@@ -30,6 +31,7 @@ public class FileStorageControllerView extends BaseController {
     TicketExportService   ticketExportService;
     ProductInfoService    productInfoService;
     ProductImageService   productImageService;
+    ProductComboService   productComboService;
     ProductVariantService productVariantService;
 
     @PostMapping("/uploads/san-pham/{id}")
@@ -94,6 +96,19 @@ public class FileStorageControllerView extends BaseController {
             throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageTicketExport(file, ticketExportId);
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
+    }
+
+    @PostMapping("/uploads/product-combo/{id}")
+    @PreAuthorize("@vldModuleProduct.updateImage(true)")
+    public ModelAndView uploadImageOfProductCombo(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productComboId) throws Exception {
+        if (productComboService.findById(productComboId).isEmpty()) {
+            throw new ResourceNotFoundException("Combo not found!");
+        }
+        if (file.isEmpty()) {
+            throw new ResourceNotFoundException("File attach doesn't empty!");
+        }
+        productImageService.saveImageProductCombo(file, productComboId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 }

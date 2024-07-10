@@ -4,7 +4,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.ResourceNotFoundException;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.constants.TicketExportStatus;
 import lombok.AccessLevel;
@@ -30,7 +30,7 @@ public class TicketExportControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public ModelAndView viewAllTicketExport() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_EXPORT);
+        ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_EXPORT.getTemplate());
         modelAndView.addObject("listTicketExport", ticketExportService.findAll(-1, -1, null));
         return baseView(modelAndView);
     }
@@ -55,7 +55,7 @@ public class TicketExportControllerView extends BaseController {
             }
         }
         ticketExport.get().setTotalValue(totalValue);
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_TICKET_EXPORT_DETAIL);
+        ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_EXPORT_DETAIL.getTemplate());
         modelAndView.addObject("ticketExportId", ticketExportId);
         modelAndView.addObject("ticketExportStatus", ticketExportStatus);
         modelAndView.addObject("ticketExportDetail", ticketExport.get());

@@ -4,7 +4,7 @@ import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.model.dto.FileDTO;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.service.product.ProductInfoService;
-import com.flowiee.pms.utils.*;
+import com.flowiee.pms.utils.constants.Pages;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +23,7 @@ public class GalleryControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readGallery(true)")
     public ModelAndView viewGallery() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.PRO_GALLERY);
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_GALLERY.getTemplate());
         modelAndView.addObject("listImages", FileDTO.fromFileStorages(productImageService.getImageOfProduct(null)));
         modelAndView.addObject("listProducts", productInfoService.findProductsIdAndProductName());
         return baseView(modelAndView);

@@ -1,7 +1,7 @@
 package com.flowiee.pms.controller.product;
 
 import com.flowiee.pms.entity.product.Material;
-import com.flowiee.pms.utils.PagesUtils;
+import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
@@ -28,7 +28,7 @@ public class MaterialControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readMaterial(true)")
     public ModelAndView viewMaterials() {
-        ModelAndView modelAndView = new ModelAndView(PagesUtils.STG_MATERIAL);
+        ModelAndView modelAndView = new ModelAndView(Pages.STG_MATERIAL.getTemplate());
         modelAndView.addObject("templateImportName", "Name");
         modelAndView.addObject("url_template", EndPoint.URL_STG_MATERIAL_IMPORT_TEMPLATE.getValue());
         modelAndView.addObject("url_import", EndPoint.URL_STG_MATERIAL_IMPORT.getValue());
