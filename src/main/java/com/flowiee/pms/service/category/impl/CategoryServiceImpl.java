@@ -56,7 +56,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
             throw new BadRequestException();
         }
         Category categorySaved = categoryRepository.save(entity);
-        systemLogService.writeLogCreate(MODULE.CATEGORY, ACTION.CTG_I, MasterObject.Category, "Thêm mới danh mục", categorySaved.getName());
+        systemLogService.writeLogCreate(MODULE.CATEGORY, ACTION.CTG_I, MasterObject.Category, "Thêm mới danh mục " + categorySaved.getType(), categorySaved.getName());
         return categorySaved;
     }
 
@@ -70,12 +70,12 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         Category categoryBefore = ObjectUtils.clone(categoryOptional.get());
 
         categoryOptional.get().setName(inputCategory.getName());
-        categoryOptional.get().setNote(inputCategory.getName());
+        categoryOptional.get().setNote(inputCategory.getNote());
         if (inputCategory.getSort() != null) categoryOptional.get().setSort(inputCategory.getSort());
 
         Category categorySaved = categoryRepository.save(categoryOptional.get());
 
-        String logTitle = "Cập nhật thông tin danh mục: " + categorySaved.getName();
+        String logTitle = "Cập nhật thông tin danh mục " + categorySaved.getType() + ": " + categorySaved.getName();
         ChangeLog changeLog = new ChangeLog(categoryBefore, categorySaved);
         categoryHistoryService.save(changeLog.getLogChanges(), logTitle, categoryId);
         systemLogService.writeLogUpdate(MODULE.CATEGORY, ACTION.CTG_U, MasterObject.Category, logTitle, changeLog.getOldValues(), changeLog.getNewValues());
@@ -96,7 +96,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         }
         categoryHistoryRepository.deleteAllByCategory(categoryId);
         categoryRepository.deleteById(categoryId);
-        systemLogService.writeLogDelete(MODULE.CATEGORY, ACTION.CTG_D, MasterObject.Category, "Xóa danh mục", categoryToDelete.get().getName());
+        systemLogService.writeLogDelete(MODULE.CATEGORY, ACTION.CTG_D, MasterObject.Category, "Xóa danh mục " + categoryToDelete.get().getType(), categoryToDelete.get().getName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 

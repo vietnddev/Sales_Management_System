@@ -21,20 +21,25 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
            "left join Category os on os.id = o.trangThaiDonHang.id and os.type = 'ORDER_STATUS' " +
            "left join Category pm on pm.id = o.paymentMethod.id and pm.type = 'PAYMENT_METHOD' " +
            "left join FileStorage f on f.order.id = o.id " +
+           "left join Account a on a.id = o.createdBy " +
            "where 1=1 " +
+           "and (:txtSearch is null or (o.receiverName like %:txtSearch%)) " +
            "and (:orderId is null or o.id=:orderId) " +
            "and (:paymentMethodId is null or o.paymentMethod.id=:paymentMethodId) " +
            "and (:orderStatusId is null or o.trangThaiDonHang.id=:orderStatusId) " +
            "and (:salesChannelId is null or o.kenhBanHang.id=:salesChannelId) " +
            "and (:sellerId is null or o.nhanVienBanHang.id=:sellerId) " +
            "and (:customerId is null or o.customer.id=:customerId)" +
+           "and (:branchId is null or a.branch.id = :branchId)" +
            "and ((trunc(o.orderTime) >= trunc(:orderTimeFrom)) and (trunc(o.orderTime) <= trunc(:orderTimeTo)))")
-    Page<Order> findAll(@Param("orderId") Integer orderId,
+    Page<Order> findAll(@Param("txtSearch") String txtSearch,
+                        @Param("orderId") Integer orderId,
                         @Param("paymentMethodId") Integer paymentMethodId,
                         @Param("orderStatusId") Integer orderStatusId,
                         @Param("salesChannelId") Integer salesChannelId,
                         @Param("sellerId") Integer sellerId,
                         @Param("customerId") Integer customerId,
+                        @Param("branchId") Integer branchId,
                         @Param("orderTimeFrom") LocalDateTime orderTimeFrom,
                         @Param("orderTimeTo") LocalDateTime orderTimeTo,
                         Pageable pageable);

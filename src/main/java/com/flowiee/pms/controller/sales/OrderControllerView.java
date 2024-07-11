@@ -44,6 +44,7 @@ public class OrderControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView viewAllOrders() {
+        setupFilters(List.of("BRANCH", "GROUP_CUSTOMER", "PAYMENT_METHOD"));
         return baseView(new ModelAndView(Pages.PRO_ORDER.getTemplate()));
     }
 

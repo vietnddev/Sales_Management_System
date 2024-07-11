@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <!--Search tool-->
-                            <div th:replace="fragments :: searchTool('Y', 'Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+                            <div th:replace="fragments :: searchTool('Y', ${listOfFilters})" id="searchTool"></div>
 
                             <div class="card">
                                 <div class="card-body align-items-center p-0">
@@ -69,27 +69,29 @@
         <div th:replace="header :: scripts"></div>
 
         <script>
-            $(function () {
-                //Date and time picker
-                $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
-                //Timepicker
-                $('#timepicker').datetimepicker({
-                    format: 'LT'
-                })
-
-                //Date range picker
-                $('#reservation').daterangepicker()
-            })
-
             $(document).ready(function () {
+                let mvSearchTool = ["BRANCH", "PAYMENT_METHOD", "SALES_CHANNEL", "ORDER_STATUS", "PAYMENT_STATUS", "ORDER_TYPE", "SHIP_METHOD", "GROUP_CUSTOMER"];
+                setupSearchTool(mvSearchTool);
+
+                searchOrders();
                 loadOrders(mvPageSizeDefault, 1);
                 updateTableContentWhenOnClickPagination(loadOrders);
                 printReport();
             });
 
+            function searchOrders() {
+                $("#btnSearch").on("click", function () {
+                    loadOrders(mvPageSizeDefault, 1);
+                })
+            }
+
             function loadOrders(pageSize, pageNum) {
                 let apiURL = mvHostURLCallApi + '/order/all';
-                let params = {pageSize: pageSize, pageNum: pageNum}
+                let params = {
+                    pageSize: pageSize,
+                    pageNum: pageNum,
+                    txtSearch : $('#txtFilter').val()
+                }
                 $.get(apiURL, params, function (response) {//dùng Ajax JQuery để gọi xuống controller
                     if (response.status === "OK") {
                         let data = response.data;
@@ -128,6 +130,18 @@
                     window.open(mvHostURL + "/order/print-invoice/" + parseInt($(this).attr("orderId")), "_blank");
                 })
             }
+
+            $(function () {
+                //Date and time picker
+                $('#reservationdatetime').datetimepicker({icons: {time: 'far fa-clock'}});
+                //Timepicker
+                $('#timepicker').datetimepicker({
+                    format: 'LT'
+                })
+
+                //Date range picker
+                $('#reservation').daterangepicker()
+            })
         </script>
     </div>
 </body>

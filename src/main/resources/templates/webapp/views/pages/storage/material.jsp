@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col-12">
                             <!--Search tool-->
-                            <div th:replace="fragments :: searchTool('Y', 'Y','Y','Y','Y','Y','Y','Y')" id="searchTool"></div>
+                            <div th:replace="fragments :: searchTool('Y', ${listOfFilters})" id="searchTool"></div>
 
                             <div class="card">
                                 <div class="card-header">

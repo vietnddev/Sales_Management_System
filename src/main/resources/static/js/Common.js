@@ -223,6 +223,14 @@ function setupSearchTool(keySearch) {
     let unitFilter = $('#unitFilter');
     let discountFilter = $('#discountFilter');
     let productStatusFilter = $('#productStatusFilter');
+    let branchFilter = $('#branchFilter');
+    let paymentMethodFilter = $('#paymentMethodFilter');
+    let salesChannelFilter = $('#salesChannelFilter');
+    let orderStatusFilter = $('#orderStatusFilter');
+    let paymentStatusFilter = $('#paymentStatusFilter');
+    let orderTypeFilter = $('#orderTypeFilter');
+    let shipMethodFilter = $('#shipMethodFilter');
+    let groupCustomerFilter = $('#groupCustomerFilter');
 
     $("#btnOpenSearchAdvance").on("click", function () {
         brandFilter.empty();
@@ -241,112 +249,68 @@ function setupSearchTool(keySearch) {
         productStatusFilter.append("<option>Chọn trạng thái sản phẩm</option>");
 
         $.each(keySearch, function (index, key) {
-            if (key === "BRAND") {
-                $.get(mvHostURLCallApi + '/category/brand', function (response) {
-                    if (response.status === "OK") {
-                        $.each(response.data, function (index, d) {
-                            brandFilter.append('<option value=' + d.id + '>' + d.name + '</option>');
-                            console.log(d)
-                        });
-                    }
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");
-                });
-            }
-            if (key === "PRODUCT_TYPE") {
-                $.get(mvHostURLCallApi + '/category/product-type', function (response) {
-                    if (response.status === "OK") {
-                        $.each(response.data, function (index, d) {
-                            productTypeFilter.append('<option value=' + d.id + '>' + d.name + '</option>');
-                            console.log(d)
-                        });
-                    }
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");
-                });
-            }
-            if (key === "COLOR") {
-                $.get(mvHostURLCallApi + '/category/color', function (response) {
-                    if (response.status === "OK") {
-                        $.each(response.data, function (index, d) {
-                            colorFilter.append('<option value=' + d.id + '>' + d.name + '</option>');
-                            console.log(d)
-                        });
-                    }
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");
-                });
-            }
-            if (key === "SIZE") {
-                $.get(mvHostURLCallApi + '/category/size', function (response) {
-                    if (response.status === "OK") {
-                        $.each(response.data, function (index, d) {
-                            sizeFilter.append('<option value=' + d.id + '>' + d.name + '</option>');
-                            console.log(d)
-                        });
-                    }
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");
-                });
-            }
-            if (key === "UNIT") {
-                $.get(mvHostURLCallApi + '/category/unit', function (response) {
-                    if (response.status === "OK") {
-                        $.each(response.data, function (index, d) {
-                            unitFilter.append('<option value=' + d.id + '>' + d.name + '</option>');
-                            console.log(d)
-                        });
-                    }
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");
-                });
-            }
-            if (key === "DISCOUNT") {
-                discountFilter.append(`<option value="Y">Đang áp dụng</option><option value="N">Không áp dụng</option>`);
-            }
-            if (key === "PRODUCT_STATUS") {
-                productStatusFilter.append(`<option value="ACTIVE">Đang kinh doanh</option><option value="INACTIVE">Không kinh doanh</option>`);
+            let apiURL = "";
+            switch (key) {
+                case "BRAND":
+                    apiURL = mvHostURLCallApi + '/category/brand';
+                    downloadCategoryForSelection(brandFilter, apiURL);
+                    break;
+                case "PRODUCT_TYPE":
+                    apiURL = mvHostURLCallApi + '/category/product-type';
+                    downloadCategoryForSelection(productTypeFilter, apiURL);
+                    break;
+                case "COLOR":
+                    apiURL = mvHostURLCallApi + '/category/color';
+                    downloadCategoryForSelection(colorFilter, apiURL);
+                    break;
+                case "SIZE":
+                    apiURL = mvHostURLCallApi + '/category/size';
+                    downloadCategoryForSelection(sizeFilter, apiURL);
+                    break;
+                case "UNIT":
+                    apiURL = mvHostURLCallApi + '/category/unit';
+                    downloadCategoryForSelection(unitFilter, apiURL);
+                    break;
+                case "BRANCH":
+                    apiURL = mvHostURLCallApi + '/category/branch';
+                    downloadCategoryForSelection(branchFilter, apiURL);
+                    break;
+                case "PAYMENT_METHOD":
+                    apiURL = mvHostURLCallApi + '/category/payment-method';
+                    downloadCategoryForSelection(paymentMethodFilter, apiURL);
+                    break;
+                case "SALES_CHANNEL":
+                    apiURL = mvHostURLCallApi + '/category/sales-channel';
+                    downloadCategoryForSelection(salesChannelFilter, apiURL);
+                    break;
+                case "ORDER_STATUS":
+                    apiURL = mvHostURLCallApi + '/category/order-status';
+                    downloadCategoryForSelection(orderStatusFilter, apiURL);
+                    break;
+                case "PAYMENT_STATUS":
+                    apiURL = mvHostURLCallApi + '/category/payment-status';
+                    downloadCategoryForSelection(paymentStatusFilter, apiURL);
+                    break;
+                case "ORDER_TYPE":
+                    apiURL = mvHostURLCallApi + '/category/order-type';
+                    downloadCategoryForSelection(orderTypeFilter, apiURL);
+                    break;
+                case "SHIP_METHOD":
+                    apiURL = mvHostURLCallApi + '/category/ship-method';
+                    downloadCategoryForSelection(shipMethodFilter, apiURL);
+                    break;
+                case "GROUP_CUSTOMER":
+                    apiURL = mvHostURLCallApi + '/category/group-customer';
+                    downloadCategoryForSelection(groupCustomerFilter, apiURL);
+                    break;
+                case "DISCOUNT":
+                    discountFilter.append(`<option value="Y">Đang áp dụng</option><option value="N">Không áp dụng</option>`);
+                    break;
+                case "PRODUCT_STATUS":
+                    productStatusFilter.append(`<option value="ACTIVE">Đang kinh doanh</option><option value="INACTIVE">Không kinh doanh</option>`);
             }
         })
     })
-}
-
-function loadFolderTree() {
-    // Bắt sự kiện click cho các button có class bắt đầu bằng "nav-link folder-"
-    $(document).on('click', 'a[class^="nav-link folder-"]', function() {
-        if ($(this).attr("hasSubFolder") === "N") {
-            return;
-        }
-        if ($(this).attr("collapse") === "Y") {
-            return;
-        }
-        let aClass = $(this).attr('class');
-        let folderId = aClass.split('-')[2];
-
-        let subFolders = $('#sub-folders-' + folderId);
-        subFolders.empty();
-
-        $.get(mvHostURLCallApi + '/stg/doc/folders', {parentId: folderId}, function (response) {
-            let subFoldersData = response.data;
-            $.each(subFoldersData, function (index, d) {
-                let iconDropdownList = ``;
-                if (d.hasSubFolder === "Y") {
-                    iconDropdownList = `<i class="fas fa-angle-left right"></i>`;
-                }
-                subFolders.append(`
-                    <li class="nav-item">
-                        <a href="#" class="nav-link folder-${d.id}" hasSubFolder="${d.hasSubFolder}" collapse="N">
-                            <p>${d.name} ${iconDropdownList}</p>
-                        </a>
-                        <ul class="nav nav-treeview" id="sub-folders-${d.id}" style="margin-left: 15px"></ul>
-                    </li>
-                `);
-            })
-        }).fail(function () {
-            showErrorModal("Could not connect to the server");
-        });
-        $(this).attr("collapse", "Y");
-    });
 }
 
 let convertDateT1 = (dateInput) => {

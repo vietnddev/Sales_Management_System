@@ -45,6 +45,11 @@ public class ChangeLog {
             }
         }
 
+        if (oldValueBuilder.toString().equals("Fields: "))
+            oldValueBuilder = new StringBuilder("Nothing change");
+        if (newValueBuilder.toString().equals("Fields: "))
+            newValueBuilder = new StringBuilder("Nothing change");
+
         this.oldValues = formatValueChange(oldValueBuilder.toString());
         this.newValues = formatValueChange(newValueBuilder.toString());
         this.logChanges = changes;

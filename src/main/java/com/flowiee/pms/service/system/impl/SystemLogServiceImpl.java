@@ -41,7 +41,7 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public SystemLog writeLogCreate(MODULE module, ACTION function, MasterObject object, String title, String content) {
-        return this.writeLog(module, function, object, LogType.I, title, content, null);
+        return this.writeLog(module, function, object, LogType.I, title, content, "-");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public SystemLog writeLogUpdate(MODULE module, ACTION function, MasterObject object, String title, String content) {
-        return this.writeLog(module, function, object, LogType.U, title, content, null);
+        return this.writeLog(module, function, object, LogType.U, title, content, "-");
     }
 
     @Override
@@ -61,7 +61,7 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public SystemLog writeLogDelete(MODULE module, ACTION function, MasterObject object, String title, String content) {
-        return this.writeLog(module, function, object, LogType.D, title, content, null);
+        return this.writeLog(module, function, object, LogType.D, title, content, "-");
     }
 
     @Override

@@ -22,6 +22,7 @@ public class UserPrincipal extends Account implements UserDetails {
 	Integer id;
     String username;
     String password;
+    Integer branchId;
     String ip;
     boolean isAccountNonExpired;
     boolean isAccountNonLocked;
@@ -33,6 +34,8 @@ public class UserPrincipal extends Account implements UserDetails {
         this.id = account.getId();
         this.username = account.getUsername();
         this.password = account.getPassword();
+        if (account.getBranch() != null)
+            this.branchId = account.getBranch().getId();
         this.isAccountNonExpired = true;
         this.isAccountNonLocked = true;
         this.isCredentialsNonExpired = true;
@@ -50,7 +53,7 @@ public class UserPrincipal extends Account implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.password;
+        return null;
     }
 
     @Override
