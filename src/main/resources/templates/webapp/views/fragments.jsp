@@ -81,7 +81,7 @@
             </nav>
         </div>
 
-        <div th:fragment="searchTool(isSearchAdvance, brandCTG, productTypeCTG, colorCTG, sizeCTG, unitCTG, isDiscount, productStatus)" th:remove="tag">
+        <div th:fragment="searchTool(isSearchAdvance, filters)" th:remove="tag">
             <div class="row col-10 input-group mb-2">
                 <input class="form-control col-8 mr-1" id="txtFilter"/>
                 <a class="btn btn-outline-secondary col-2 mr-1" data-toggle="collapse" href="#collapseExample" id="btnOpenSearchAdvance"
@@ -89,13 +89,22 @@
                 <button class="btn btn-info form-control col-2" id="btnSearch"><i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm kiếm</button>
             </div>
             <div class="row col-12 collapse w-100 mt-2 mb-2" id="collapseExample">
-                <select class="form-control custom-select col mr-1" id="brandFilter"         th:if="${brandCTG == 'Y'}"></select>
-                <select class="form-control custom-select col mr-1" id="productTypeFilter"   th:if="${productTypeCTG == 'Y'}"></select>
-                <select class="form-control custom-select col mr-1" id="colorFilter"         th:if="${colorCTG == 'Y'}"></select>
-                <select class="form-control custom-select col mr-1" id="sizeFilter"          th:if="${sizeCTG == 'Y'}"></select>
-                <select class="form-control custom-select col mr-1" id="unitFilter"          th:if="${unitCTG == 'Y'}"></select>
-                <select class="form-control custom-select col mr-1" id="discountFilter"      th:if="${isDiscountCTG == 'Y'}"></select>
-                <select class="form-control custom-select col"      id="productStatusFilter" th:if="${productStatus == 'Y'}"></select>
+                <th:block>
+                    <select class="form-control custom-select col mr-1" id="brandFilter"         th:if="${filters != null && filters.contains('BRAND')}"></select>
+                    <select class="form-control custom-select col mr-1" id="productTypeFilter"   th:if="${filters != null && filters.contains('PRODUCT_TYPE')}"></select>
+                    <select class="form-control custom-select col mr-1" id="colorFilter"         th:if="${filters != null && filters.contains('COLOR')}"></select>
+                    <select class="form-control custom-select col mr-1" id="sizeFilter"          th:if="${filters != null && filters.contains('SIZE')}"></select>
+                    <select class="form-control custom-select col mr-1" id="unitFilter"          th:if="${filters != null && filters.contains('UNIT')}"></select>
+                    <select class="form-control custom-select col mr-1" id="groupCustomerFilter" th:if="${filters != null && filters.contains('GROUP_CUSTOMER')}"></select>
+                    <select class="form-control custom-select col mr-1" id="shipMethodFilter"    th:if="${filters != null && filters.contains('SHIP_METHOD')}"></select>
+                    <select class="form-control custom-select col mr-1" id="orderTypeFilter"     th:if="${filters != null && filters.contains('ORDERTYPE')}"></select>
+                    <select class="form-control custom-select col mr-1" id="paymentStatusFilter" th:if="${filters != null && filters.contains('PAYMENT_STATUS')}"></select>
+                    <select class="form-control custom-select col mr-1" id="orderStatusFilter"   th:if="${filters != null && filters.contains('ORDER_STATUS')}"></select>
+                    <select class="form-control custom-select col mr-1" id="salesChannelFilter"  th:if="${filters != null && filters.contains('SALES_CHANNEL')}"></select>
+                    <select class="form-control custom-select col mr-1" id="paymentMethodFilter" th:if="${filters != null && filters.contains('PAYMENT_METHOD')}"></select>
+                    <select class="form-control custom-select col mr-1" id="branchFilter"        th:if="${filters != null && filters.contains('BRANCH')}"></select>
+                    <select class="form-control custom-select col"      id="productStatusFilter" th:if="${filters != null && filters.contains('PRODUCT_STATUS')}"></select>
+                </th:block>
             </div>
         </div>
 

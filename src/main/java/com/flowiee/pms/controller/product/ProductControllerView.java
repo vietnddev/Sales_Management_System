@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -52,6 +53,7 @@ public class ProductControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView loadProductPage() {
+        setupFilters(List.of("UNIT", "SIZE", "COLOR", "BRAND", "PRODUCT_TYPE", "PRODUCT_STATUS"));
         return baseView(new ModelAndView(Pages.PRO_PRODUCT.getTemplate()));
     }
 

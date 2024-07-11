@@ -1,17 +1,3 @@
-/*
-async function callApiDelete(apiURL) {
-    let response = await fetch(apiURL, {
-        method: 'DELETE'
-    });
-    if (response.ok && (await response.text() === 'OK')) {
-        alert('Delete success!')
-        window.location.reload()
-    } else {
-        alert('Delete fail!')
-    }
-}
-*/
-
 function callApiDelete(apiURL, redirectTo) {
     $.ajax({
         url: apiURL,
@@ -29,5 +15,17 @@ function callApiDelete(apiURL, redirectTo) {
             // Xử lý lỗi nếu có
             alert(status + ': ' + JSON.stringify(xhr.responseJSON.message));
         }
+    });
+}
+
+function downloadCategoryForSelection(element, endpoint) {
+    $.get(endpoint, function (response) {
+        if (response.status === "OK") {
+            $.each(response.data, function (index, d) {
+                element.append('<option value=' + d.id + '>' + d.name + '</option>');
+            });
+        }
+    }).fail(function () {
+        showErrorModal("Could not connect to the server");
     });
 }

@@ -49,10 +49,12 @@ public class OrderController extends BaseController {
                                                      @RequestParam(value = "salesChannelId", required = false) Integer pSalesChannelId,
                                                      @RequestParam(value = "sellerId", required = false) Integer pSellerId,
                                                      @RequestParam(value = "customerId", required = false) Integer pCustomerId,
+                                                     @RequestParam(value = "branchId", required = false) Integer pBranchId,
+                                                     @RequestParam(value = "txtSearch", required = false) String pTxtSearch,
                                                      @RequestParam("pageSize") int pageSize,
                                                      @RequestParam("pageNum") int pageNum) {
         try {
-            Page<OrderDTO> orderPage = orderService.findAll(pageSize, pageNum - 1, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, null, null, null);
+            Page<OrderDTO> orderPage = orderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, null, null, null);
             return success(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "order"), ex);
