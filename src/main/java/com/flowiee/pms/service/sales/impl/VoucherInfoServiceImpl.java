@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
@@ -27,9 +28,11 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Column;
 import java.lang.reflect.Type;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -91,17 +94,20 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     @Transactional
     @Override
     public VoucherInfoDTO save(VoucherInfoDTO voucherInfo) {
+        if (voucherInfo == null)
+            throw new BadRequestException();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         try {
-            if (voucherInfo == null) {
-                throw new BadRequestException();
-            }
+            voucherInfo.setStartTime(LocalDateTime.parse(voucherInfo.getStartTimeStr() + " 00:00:00", formatter));
+            voucherInfo.setEndTime(LocalDateTime.parse(voucherInfo.getEndTimeStr() + " 00:00:00", formatter));
+
             VoucherInfo voucherSaved = voucherInfoRepo.save(VoucherInfo.fromVoucherDTO(voucherInfo));
             //
             for (ProductDTO product : voucherInfo.getApplicableProducts()) {
-                VoucherApply voucherApply = new VoucherApply();
-                voucherApply.setVoucherId(voucherSaved.getId());
-                voucherApply.setProductId(product.getId());
-                voucherApplyService.save(voucherApply);
+                voucherApplyService.save(VoucherApply.builder()
+                        .voucherId(voucherSaved.getId())
+                        .productId(product.getId())
+                        .build());
             }
             //Gen list voucher detail
             List<String> listKeyVoucher = new ArrayList<>();

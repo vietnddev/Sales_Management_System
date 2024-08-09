@@ -69,14 +69,10 @@ public class VoucherController extends BaseController {
     @PostMapping("/create")
     @PreAuthorize("@vldModuleSales.insertVoucher(true)")
     public AppResponse<VoucherInfo> createVoucher(@RequestBody VoucherInfoDTO voucherInfoDTO) {
-        try {
-            if (voucherInfoDTO.getApplicableProducts().isEmpty()) {
-                throw new BadRequestException("Sản phẩm được áp dụng không được rỗng!");
-            }
-            return success(voucherService.save(voucherInfoDTO));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "voucher"), ex);
+        if (voucherInfoDTO.getApplicableProducts().isEmpty()) {
+            throw new BadRequestException("Sản phẩm được áp dụng không được rỗng!");
         }
+        return success(voucherService.save(voucherInfoDTO));
     }
 
     @Operation(summary = "Update voucher")

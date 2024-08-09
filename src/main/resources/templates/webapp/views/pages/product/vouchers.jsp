@@ -209,7 +209,7 @@
                 }
                 let applicableProducts = [];
                 $.each(mvApplicableProductIds.val(), function (index, d) {
-                    applicableProducts.push({productId : d});
+                    applicableProducts.push({id : d});
                 })
                 let apiURL = mvHostURLCallApi + "/voucher/create";
                 let body = {
@@ -221,8 +221,8 @@
                     length : mvLength.val(),
                     discount : mvDiscountPercent.val(),
                     discountPriceMax : mvDiscountMaxPrice.val(),
-                    startTime : convertDateT1(mvStartTime.val()),
-                    endTime : convertDateT1(mvEndTime.val()),
+                    startTimeStr : mvStartTime.val(),
+                    endTimeStr : mvEndTime.val(),
                     applicableProducts : applicableProducts
                 };
                 $.ajax({
@@ -251,7 +251,7 @@
                     let products = response.data;
                     mvApplicableProductIds.empty();
                     $.each(products, function (index, d) {
-                        mvApplicableProductIds.append(`<option value="${d.productId}">${d.productName}</option>`);
+                        mvApplicableProductIds.append(`<option value="${d.id}">${d.productName}</option>`);
                     });
                 }
             }).fail(function () {

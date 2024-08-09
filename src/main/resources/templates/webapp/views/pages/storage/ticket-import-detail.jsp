@@ -350,8 +350,9 @@
                                 window.location.reload();
                             }
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            showErrorModal("Could not connect to the server");
+                        error: function (xhr, textStatus, errorThrown) {
+                            //showErrorModal("Could not connect to the server");
+                            showErrorModal($.parseJSON(xhr.responseText).message);
                         }
                     });
                 }
@@ -376,8 +377,9 @@
                                 window.location.reload();
                             }
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            showErrorModal("Could not connect to the server");
+                        error: function (xhr, textStatus, errorThrown) {
+                            //showErrorModal("Could not connect to the server");
+                            showErrorModal($.parseJSON(xhr.responseText).message);
                         }
                     });
                 }

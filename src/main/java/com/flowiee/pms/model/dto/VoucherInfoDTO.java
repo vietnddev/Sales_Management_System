@@ -21,6 +21,8 @@ public class VoucherInfoDTO extends VoucherInfo implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
+    String startTimeStr;
+    String endTimeStr;
     Integer length;
     BigDecimal discountPriceMax;
     String status;
