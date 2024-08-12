@@ -154,12 +154,12 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         if (ticketImportToUpdate.isEmpty()) {
             throw new BadRequestException();
         }
-        if ("COMPLETED".equals(ticketImportToUpdate.get().getStatus()) || "CANCEL".equals(ticketImportToUpdate.get().getStatus())) {
+        if (TicketImportStatus.COMPLETED.name().equals(ticketImportToUpdate.get().getStatus()) || TicketImportStatus.CANCEL.name().equals(ticketImportToUpdate.get().getStatus())) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         ticketImport.setId(entityId);
         TicketImport ticketImportUpdated = ticketImportRepo.save(ticketImport);
-        if ("COMPLETED".equals(ticketImportUpdated.getStatus())) {
+        if (TicketImportStatus.COMPLETED.name().equals(ticketImportUpdated.getStatus())) {
             if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemps())) {
                 for (ProductVariantTemp p : ticketImport.getListProductVariantTemps()) {
                     productQuantityService.updateProductVariantQuantityIncrease(p.getQuantity(), p.getProductVariant().getId());
@@ -191,14 +191,14 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public TicketImport findDraftImportPresent(Integer createdBy) {
-        return ticketImportRepo.findDraftGoodsImportPresent("DRAFT", createdBy);
+        return ticketImportRepo.findDraftGoodsImportPresent(TicketImportStatus.DRAFT.name(), createdBy);
     }
 
     @Override
     public TicketImport createDraftTicketImport(TicketImportDTO ticketImportInput) {
         TicketImport ticketImport = TicketImport.builder()
             .title(ticketImportInput.getTitle())
-            .status("DRAFT")
+            .status(TicketImportStatus.DRAFT.name())
             .importer(CommonUtils.getUserPrincipal().getUsername())
             .importTime(LocalDateTime.now())
             .storage(new Storage(ticketImportInput.getStorageId()))

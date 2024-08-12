@@ -28,13 +28,21 @@
                         <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                         <div class="card" style="font-size: 14px">
-                            <div class="card-header" style="font-weight: bold; font-size: 16px">
-                                <ul class="nav nav-pills">
+                            <div class="card-header row justify-content-between" style="font-weight: bold; font-size: 16px">
+                                <ul class="col-8 nav nav-pills">
                                     <li class="nav-item"><a class="nav-link active" href="#STORAGE_ITEM_TAB" id="storageItemTabLabel" data-toggle="tab">Hàng tồn kho</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#STORAGE_INFO_TAB" data-toggle="tab">Thông tin kho</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#IMPORT_HISTORY_TAB" id="storageImportHistoryTabLabel" data-toggle="tab">Lịch sử nhập hàng</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#EXPORT_HISTORY_TAB" id="storageExportHistoryTabLabel" data-toggle="tab">Lịch sử xuất hàng</a></li>
                                 </ul>
+                                <div class="col-4 text-right">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createTicketImportModal">
+                                        <i class="fa-solid"></i>Tạo phiếu nhập
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createTicketExportModal">
+                                        <i class="fa-solid"></i>Tạo phiếu xuất
+                                    </button>
+                                </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body" style="padding-left: 5px; padding-top: 3px; padding-right: 5px; padding-bottom: 5px; font-size: 16px">
@@ -137,6 +145,10 @@
                             </div>
                         </div>
                     </div>
+                    <!--Modal create new ticket import goods-->
+                    <div th:replace="pages/storage/fragments/storage-fragments :: createTicketImportGooodsModal"></div>
+                    <!--Modal create new ticket export goods-->
+                    <div th:replace="pages/storage/fragments/storage-fragments :: createTicketExportGooodsModal"></div>
                 </div>
             </div>
         </div>
@@ -146,6 +158,8 @@
         <aside class="control-sidebar control-sidebar-dark"></aside>
 
         <div th:replace="header :: scripts"></div>
+
+        <script th:src="@{/js/storage/LoadStorageDetailInfo.js}"></script>
     </div>
 
     <script type="text/javascript">
@@ -168,105 +182,61 @@
             $("#btnSearch").on("click", function () {
                 loadStorageItems($('#paginationInfo').attr("pageSize"), 1);
             })
+
+            createNewTicketImport();
+            createNewTicketExport();
         });
 
-        function loadStorageItems(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + '/storage/' + mvStorageId + '/items';
-            console.log("apiURL ", apiURL)
-            let params = {
-                pageSize: pageSize,
-                pageNum: pageNum,
-                searchText: $("#txtFilter").val()
-            }
-            $.get(apiURL, params, function (response) {
-                if (response.status === "OK") {
-                    let data = response.data;
-                    let pagination = response.pagination;
-                    updatePaginationUI(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
-
-                    let itemsTable = $('#storageItemsTbl');
-                    itemsTable.empty();
-                    $.each(data, function (index, d) {
-                        let itemImageSrc = `<img class="text-center" src="${d.itemImageSrc}" style="width: 60px; height: 60px; border-radius: 5px">`;
-                        if (d.itemImageSrc == null) {
-                            itemImageSrc = '';
+        function createNewTicketImport() {
+            $("#btnCreateTicketImportSubmit").on("click", function () {
+                let title = $("#titleTicketImportField").val();
+                if (title === null || title.trim() === "") {
+                    alert("Title is can not allow null value");
+                } else {
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-import/create?storageId=" + mvStorageId;
+                    $.ajax({
+                        url: apiURL,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: title,
+                        success: function (response) {
+                            if (response.status === "OK") {
+                                alert("Create successfully");
+                                window.location.reload();
+                            }
+                        },
+                        error: function (xhr) {
+                            alert("Error: " + $.parseJSON(xhr.responseText).message);
                         }
-                        itemsTable.append(`
-                            <tr>
-                                <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                <td>${itemImageSrc}</td>
-                                <td>${d.itemName}</td>
-                                <td>${d.itemType}</td>
-                                <td>${d.itemBrand}</td>
-                                <td>${d.itemSalesAvailableQty}</td>
-                                <td>${d.itemStorageQty}</td>
-                                <td>${d.lastImportTime}</td>
-                                <td>${d.firstImportTime}</td>
-                            </tr>
-                        `);
                     });
                 }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");
-            });
+            })
         }
 
-        function loadStorageImportHistory(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + "/stg/ticket-import/all";
-            let params = {pageSize: pageSize, pageNum: pageNum, storageId: mvStorageId}
-            $.get(apiURL, params, function (response) {
-                if (response.status === "OK") {
-                    let data = response.data;
-                    let pagination = response.pagination;
-                    updatePaginationUI2(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
-
-                    let contentTable = $('#storageImportHistoryTbl');
-                    contentTable.empty();
-                    $.each(data, function (index, d) {
-                        contentTable.append(`
-                                <tr>
-                                    <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                    <td><a href="/stg/ticket-import/${d.id}">${d.title}</td>
-                                    <td>${d.importer}</td>
-                                    <td>${d.importTime}</td>
-                                    <td>${d.note}</td>
-                                    <td>${mvTicketImportStatus[d.status]}</td>
-                                </tr>
-                            `);
+        function createNewTicketExport() {
+            $("#btnCreateTicketExportSubmit").on("click", function () {
+                let title = $("#titleTicketExportField").val();
+                if (title === null || title.trim() === "") {
+                    alert("Title is can not allow null value");
+                } else {
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-export/create?storageId=" + mvStorageId;
+                    $.ajax({
+                        url: apiURL,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({title: title, orderCode: $("#orderCodeField").val()}),
+                        success: function (response) {
+                            if (response.status === "OK") {
+                                alert("Create successfully");
+                                window.location.reload();
+                            }
+                        },
+                        error: function (xhr) {
+                            alert("Error: " + $.parseJSON(xhr.responseText).message);
+                        }
                     });
                 }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");
-            });
-        }
-
-        function loadStorageExportHistory(pageSize, pageNum) {
-            let apiURL = mvHostURLCallApi + "/stg/ticket-export/all";
-            let params = {pageSize: pageSize, pageNum: pageNum, storageId: mvStorageId}
-            $.get(apiURL, params, function (response) {
-                if (response.status === "OK") {
-                    let data = response.data;
-                    let pagination = response.pagination;
-                    updatePaginationUI3(pagination.pageNum, pagination.pageSize, pagination.totalPage, pagination.totalElements);
-
-                    let contentTable = $('#storageExportHistoryTbl');
-                    contentTable.empty();
-                    $.each(data, function (index, d) {
-                        contentTable.append(`
-                            <tr>
-                                <td>${(((pageNum - 1) * pageSize + 1) + index)}</td>
-                                <td><a href="/stg/ticket-export/${d.id}">${d.title}</td>
-                                <td>${d.exporter}</td>
-                                <td>${d.exportTime}</td>
-                                <td>${d.note}</td>
-                                <td>${mvTicketExportStatus[d.status]}</td>
-                            </tr>
-                        `);
-                    });
-                }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");
-            });
+            })
         }
     </script>
 </body>

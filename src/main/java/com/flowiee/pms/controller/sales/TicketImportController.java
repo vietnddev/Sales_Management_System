@@ -1,6 +1,7 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.TicketImportDTO;
@@ -65,6 +66,16 @@ public class TicketImportController extends BaseController {
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "ticket import"), ex);
         }
+    }
+
+    @Operation(summary = "Thêm mới phiếu nhập hàng")
+    @PostMapping("/create")
+    @PreAuthorize("@vldModuleSales.importGoods(true)")
+    public AppResponse<TicketImport> createTicket(@RequestParam("storageId") Integer pStorageId, @RequestBody String pTitle) {
+        TicketImportDTO dto = new TicketImportDTO();
+        dto.setTitle(pTitle);
+        dto.setStorageId(pStorageId);
+        return success(ticketImportService.createDraftTicketImport(dto));
     }
 
     @Operation(summary = "Cập nhật phiếu nhập hàng")

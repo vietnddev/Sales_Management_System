@@ -1,17 +1,21 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.sales.OrderDetail;
+import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.repository.product.ProductDetailTempRepository;
 import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.repository.sales.TicketExportRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductQuantityService;
+import com.flowiee.pms.service.sales.OrderItemsService;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.*;
@@ -36,9 +40,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TicketExportServiceImpl extends BaseService implements TicketExportService {
     OrderRepository        orderRepository;
+    OrderItemsService      orderItemsService;
     TicketExportRepository ticketExportRepo;
     ProductHistoryService  productHistoryService;
     ProductQuantityService productQuantityService;
+    ProductDetailTempRepository productVariantTempRepo;
 
     @Override
     public List<TicketExport> findAll() {
@@ -94,14 +100,49 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         if (!ObjectUtils.isNotEmpty(orderDTO) || orderRepository.findById(orderDTO.getId()).isEmpty()) {
             throw new BadRequestException("Đơn hàng không tồn tại");
         }
-        TicketExport ticketExportSaved = ticketExportRepo.save(TicketExport.builder()
+        TicketExport ticketExportSaved = this.save(TicketExport.builder()
                 .title("Xuất hàng cho đơn " + orderDTO.getCode())
                 .exporter(CommonUtils.getUserPrincipal().getUsername())
                 .exportTime(LocalDateTime.now())
                 .note(null)
-                .status("DRAFT")
+                .status(TicketExportStatus.DRAFT.name())
                 .build());
-        orderRepository.setTicketExportInfo(orderDTO.getId(), ticketExportSaved.getId());
+        orderRepository.updateTicketExportInfo(orderDTO.getId(), ticketExportSaved.getId());
+        return ticketExportSaved;
+    }
+
+    @Transactional
+    @Override
+    public TicketExport createDraftTicketExport(int storageId, String title, String orderCode) {
+        Order order = null;
+        if (ObjectUtils.isNotEmpty(orderCode)) {
+            order = orderRepository.findByOrderCode(orderCode);
+            if (order == null) {
+                throw new BadRequestException("Mã đơn hàng không tồn tại!");
+            } else {
+                if (order.getTicketExport() != null) {
+                    throw new BadRequestException("Đơn hàng này đã được tạo phiếu xuất kho!");
+                }
+            }
+        }
+        TicketExport ticketExportSaved = this.save(TicketExport.builder()
+                .title(title)
+                .status(TicketExportStatus.DRAFT.name())
+                .exporter(CommonUtils.getUserPrincipal().getUsername())
+                .exportTime(LocalDateTime.now())
+                .storage(new Storage(storageId))
+                .build());
+        if (order != null) {
+            orderRepository.updateTicketExportInfo(order.getId(), ticketExportSaved.getId());
+            List<OrderDetail> orderDetails = orderItemsService.findByOrderId(order.getId());
+            for (OrderDetail item : orderDetails) {
+                productVariantTempRepo.save(ProductVariantTemp.builder()
+                        .ticketExport(ticketExportSaved)
+                        .productVariant(item.getProductDetail())
+                        .quantity(item.getQuantity())
+                        .build());
+            }
+        }
         return ticketExportSaved;
     }
 
@@ -114,7 +155,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
             throw new BadRequestException();
         }
         TicketExport ticketExportToUpdate = ticketExportOptional.get();
-        if ("COMPLETED".equals(ticketExportToUpdate.getStatus()) || "CANCEL".equals(ticketExportToUpdate.getStatus())) {
+        if (TicketExportStatus.COMPLETED.name().equals(ticketExportToUpdate.getStatus()) || TicketExportStatus.CANCEL.name().equals(ticketExportToUpdate.getStatus())) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         ticketExportToUpdate.setTitle(ticket.getTitle());
@@ -149,7 +190,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         if (ticketExportToDelete.isEmpty()) {
             throw new ResourceNotFoundException("Ticket export not found!");
         }
-        if ("COMPLETED".equals(ticketExportToDelete.get().getStatus())) {
+        if (TicketExportStatus.COMPLETED.name().equals(ticketExportToDelete.get().getStatus())) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
 

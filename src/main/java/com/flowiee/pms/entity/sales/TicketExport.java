@@ -1,5 +1,6 @@
 package com.flowiee.pms.entity.sales;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
@@ -40,6 +41,7 @@ public class TicketExport extends BaseEntity implements Serializable {
     @Column(name = "exporter", nullable = false)
     String exporter;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @Column(name = "export_time", nullable = false)
     LocalDateTime exportTime;
 

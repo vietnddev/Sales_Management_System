@@ -9,4 +9,6 @@ public interface TicketExportService extends BaseCurdService<TicketExport> {
     Page<TicketExport> findAll(int pageSize, int pageNum, Integer storageId);
 
     TicketExport save(OrderDTO orderDTO);
+
+    TicketExport createDraftTicketExport(int storageId, String title, String orderCode);
 }

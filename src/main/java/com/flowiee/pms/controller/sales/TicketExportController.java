@@ -5,10 +5,9 @@ import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.TicketExportDTO;
 import com.flowiee.pms.entity.sales.TicketExport;
-import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.model.payload.TicketExportReq;
 import com.flowiee.pms.service.sales.TicketExportService;
-import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
@@ -46,7 +45,7 @@ public class TicketExportController extends BaseController {
     public AppResponse<TicketExportDTO> findDetail(@PathVariable("id") Integer ticketExportId) {
         Optional<TicketExport> ticketExport = ticketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
-            throw new BadRequestException();
+            throw new BadRequestException("Data does not exists!");
         }
         return success(TicketExportDTO.fromTicketExport(ticketExport.get()));
     }
@@ -56,6 +55,13 @@ public class TicketExportController extends BaseController {
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<TicketExport> createDraftTicket(@RequestBody(required = false) OrderDTO order) {
         return success(ticketExportService.save(order));
+    }
+
+    @Operation(summary = "Thêm mới phiếu xuất hàng")
+    @PostMapping("/create")
+    @PreAuthorize("@vldModuleSales.exportGoods(true)")
+    public AppResponse<TicketExport> createTicket(@RequestParam("storageId") Integer pStorageId, @RequestBody TicketExportReq ticketExportReq) {
+        return success(ticketExportService.createDraftTicketExport(pStorageId, ticketExportReq.getTitle(), ticketExportReq.getOrderCode()));
     }
 
     @Operation(summary = "Update ticket")
