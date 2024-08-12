@@ -28,10 +28,8 @@ public abstract class BaseExportService extends BaseService implements ExportSer
     public EximModel exportToExcel(TemplateExport templateExport, Object pCondition, boolean templateOnly) {
         try {
             mvEximModel = new EximModel(templateExport);
-            if (templateOnly) {
-                mvWorkbook = new XSSFWorkbook(mvEximModel.getPathSource().toFile());
-            } else {
-                mvWorkbook = new XSSFWorkbook(Files.copy(mvEximModel.getPathSource(), mvEximModel.getPathTarget(), StandardCopyOption.REPLACE_EXISTING).toFile());
+            mvWorkbook = new XSSFWorkbook(Files.copy(mvEximModel.getPathSource(), mvEximModel.getPathTarget(), StandardCopyOption.REPLACE_EXISTING).toFile());
+            if (!templateOnly) {
                 writeData(pCondition);
             }
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -78,7 +78,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Modifying
     @Query("update Order set ticketExport.id=:ticketExportId where id=:orderId")
-    void setTicketExportInfo(@Param("orderId") Integer orderId, @Param("ticketExportId") Integer ticketExportId);
+    void updateTicketExportInfo(@Param("orderId") Integer orderId, @Param("ticketExportId") Integer ticketExportId);
 
     @Query("from Order where ticketExport.id=:ticketExportId")
     Order findByTicketExport(@Param("ticketExportId") Integer ticketExportId);
@@ -97,4 +97,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
            "group by extract(year from o.orderTime), extract(month from o.orderTime) " +
            "order by extract(year from o.orderTime), extract(month from o.orderTime)")
     List<Object[]> findPurchaseHistory(@Param("customerId") Integer customerId, @Param("year") Integer year, @Param("month") Integer month);
+
+    @Query("from Order where code = :orderCode")
+    Order findByOrderCode(@Param("orderCode") String orderCode);
 }

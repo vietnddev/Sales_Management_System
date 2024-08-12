@@ -126,8 +126,16 @@ public class ProductControllerView extends BaseController {
 
     @GetMapping("/export")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ResponseEntity<?> exportData() {
-        EximModel model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_PRODUCTS, null, false);
+    public ResponseEntity<?> exportData(@RequestParam(value = "isTemplateOnly", required = false) Boolean isTemplateOnly) {
+        if (isTemplateOnly == null) {
+            isTemplateOnly = false;
+        }
+        EximModel model = null;
+        if (isTemplateOnly) {
+            model = exportService.exportToExcel(TemplateExport.IM_LIST_OF_PRODUCTS, null, true);
+        } else {
+            model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_PRODUCTS, null, false);
+        }
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

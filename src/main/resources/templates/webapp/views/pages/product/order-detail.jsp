@@ -279,11 +279,6 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <hr>
-                                                <div class="row justify-content-between">
-                                                    <div class="col-4" style="display: flex; align-items: center"></div>
-                                                    <div class="col-4 text-right"><button type="button" class="btn btn-info link-confirm" id="btnCreateTicketExport">Tạo phiếu xuất hàng</button></div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -327,12 +322,9 @@
         $(document).ready(function () {
             init();
             loadOrderDetail();
-            if (mvOrderDetail.ticketExportId != null) {
-                loadTicketExportInfo();
-            }
             doPay();
-            createTicketExport();
             updateOrder();
+            loadTicketExportInfo();
         });
 
         function init() {
@@ -355,14 +347,16 @@
 
         function loadTicketExportInfo() {
             $("#THANH_TOAN_TAB").on("click", function () {
-                let apiURL = mvHostURLCallApi + "/storage/ticket-export/" + mvOrderDetail.ticketExportId;
-                $.get(apiURL, function (response) {
-                    if (response.status === "OK") {
-                        setTicketExportTableValue(response.data);
-                    }
-                }).fail(function () {
-                    showErrorModal("Could not connect to the server");
-                });
+                if (mvOrderDetail.ticketExportId != null) {
+                    let apiURL = mvHostURLCallApi + "/stg/ticket-export/" + mvOrderDetail.ticketExportId;
+                    $.get(apiURL, function (response) {
+                        if (response.status === "OK") {
+                            setTicketExportTableValue(response.data);
+                        }
+                    }).fail(function (xhr) {
+                        showErrorModal($.parseJSON(xhr.responseText).message);
+                    });
+                }
             })
         }
 
@@ -401,19 +395,6 @@
             });
         }
 
-        function createTicketExport() {
-            $(".link-confirm").on("click", function () {
-                if (mvOrderDetail.ticketExportId != null) {
-                    showModalDialog("Thông báo", "Đơn hàng này đã được tạo phiếu xuất kho!");
-                    return;
-                }
-                $(this).attr("actionType", "create");
-                $(this).attr("entityName", "ticketExport");
-                showConfirmModal($(this), "Tạo phiếu xuất kho", "Bạn có chắc muốn tạo phiếu?");
-                submitCreateOrUpdate();
-            });
-        }
-
         function updateOrder() {
             $("#btnUpdateOrder").on("click", function () {
                 $(this).attr("actionType", "update");
@@ -425,8 +406,6 @@
 
         function submitCreateOrUpdate() {
             $("#yesButton").on("click", function () {
-                console.log("at ", $(this).attr("actionType"));
-                console.log("en ", $(this).attr("entityName"));
                 if ($(this).attr("actionType") === "update" && $(this).attr("entityName") === "order") {
                     $.ajax({
                         url: mvHostURLCallApi + "/order/update/" + [[${orderDetailId}]],
@@ -449,28 +428,6 @@
                         }
                     });
                     return
-                }
-                if ($(this).attr("actionType") === "create" && $(this).attr("entityName") === "ticketExport") {
-                    let apiURL = mvHostURLCallApi + "/stg/ticket-export/create-draft";
-                    let body = {id : mvOrderDetail.id, code : mvOrderDetail.code};
-                    $.ajax({
-                        url: apiURL,
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(body),
-                        success: function (response, textStatus, jqXHR) {
-                            if (response.status === "OK") {
-                                let data = response.data;
-                                setTicketExportTableValue(data);
-                            }
-                            alert("Tạo phiếu xuất kho thành công!");
-                            $("#confirmModal").modal("hide");
-                        },
-                        error: function (xhr, textStatus, errorThrown) {
-                            $("#confirmModal").modal("hide");
-                            showErrorModal($.parseJSON(xhr.responseText).message);
-                        }
-                    });
                 }
             });
         }

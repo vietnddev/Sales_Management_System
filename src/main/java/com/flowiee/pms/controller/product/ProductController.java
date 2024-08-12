@@ -5,11 +5,14 @@ import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.ExportService;
+import com.flowiee.pms.service.ImportService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.TemplateExport;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,8 +21,10 @@ import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,12 +37,14 @@ public class ProductController extends BaseController {
     ProductInfoService    productInfoService;
     ProductHistoryService productHistoryService;
     ExportService         exportService;
+    ImportService         importService;
 
     public ProductController(ProductInfoService productInfoService, ProductHistoryService productHistoryService,
-                             @Qualifier("productExportServiceImpl") ExportService exportService) {
+                             @Qualifier("productExportServiceImpl") ExportService exportService, @Qualifier("productImportServiceImpl") ImportService importService) {
         this.productInfoService = productInfoService;
         this.productHistoryService = productHistoryService;
         this.exportService = exportService;
+        this.importService = importService;
     }
 
     @Operation(summary = "Find all products")
@@ -110,5 +117,11 @@ public class ProductController extends BaseController {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
         return success(productHistoryService.findByProduct(productId));
+    }
+
+    @GetMapping("/import")
+    @PreAuthorize("@vldModuleProduct.insertProduct(true)")
+    public void importData(@RequestParam("file") MultipartFile file) {
+        importService.importFromExcel(TemplateExport.IM_LIST_OF_PRODUCTS, file);
     }
 }

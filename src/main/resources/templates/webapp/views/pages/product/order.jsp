@@ -42,7 +42,6 @@
                                                 <th>Số tiền</th>
                                                 <th>Kênh bán hàng</th>
                                                 <th>Thanh toán</th>
-                                                <th>Thanh toán</th>
                                                 <th>Trạng thái đơn</th>
                                                 <th>Thao tác</th>
                                             </tr>

@@ -33,9 +33,9 @@
                                             <h3 class="card-title"><strong th:text="#{pro.product.list}" class="text-uppercase"></strong></h3>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Import</button>
-                                            <a th:href="@{/san-pham/export}" class="btn btn-info"><i class="fa-solid fa-cloud-arrow-down mr-2"></i>Export</a>
-                                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insert" id="createProduct"><i class="fa-solid fa-circle-plus mr-2"></i>Thêm mới</button>
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#import"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Import</button>
+                                            <a th:href="@{/san-pham/export}" class="btn btn-info btn-sm"><i class="fa-solid fa-cloud-arrow-down mr-2"></i>Export data</a>
+                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#insert" id="createProduct"><i class="fa-solid fa-circle-plus mr-2"></i>Thêm mới</button>
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
                                 <div class="modal fade" id="import">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form th:action="@{${url_import}}" method="POST">
+                                            <form th:action="@{/api/v1/product/import}" method="POST">
                                                 <div class="modal-header">
                                                     <strong class="modal-title">Import data</strong>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -82,7 +82,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Template</label>
-                                                                <a th:href="@{${url_template}}" class="form-control link"><i class="fa-solid fa-cloud-arrow-down"></i>[[${templateImportName}]]</a>
+                                                                <a th:href="@{/san-pham/export?isTemplateOnly=true}" class="form-control link"><i class="fa-solid fa-cloud-arrow-down"></i>Download template</a>
                                                             </div>
                                                         </div>
                                                     </div>
