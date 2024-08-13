@@ -68,6 +68,9 @@
                                                             <th>Giảm thêm</th>
                                                             <th>Thành tiền</th>
                                                             <th>Ghi chú</th>
+                                                            <th style="padding-right: 12px">
+                                                                <button th:if="${allowEdit}" type="button" class="btn btn-sm btn-primary w-100" data-toggle="modal" data-target="#addProductModal" id="btnAddProduct">Thêm sản phẩm</button>
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -85,10 +88,19 @@
                                                             <td th:text="${#numbers.formatDecimal (list.extraDiscount, 0, 'COMMA', 0, 'NONE') + 'đ '}" class="text-right"></td>
                                                             <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.quantity - list.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
                                                             <td th:text="${list.note}"></td>
+                                                            <td>
+                                                                <button th:if="${allowEdit}" type="button" class="btn btn-sm btn-success" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${list.id}">Cập nhật</button>
+                                                                <button th:if="${allowEdit}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${list.id}">Xóa</button>
+                                                                <!--Modal update item-->
+                                                                <div th:replace="pages/sales/order/fragments/order-detail-fragments :: modalUpdateItem"></div>
+                                                                <!--Modal delete item-->
+                                                                <div th:replace="pages/sales/order/fragments/order-detail-fragments :: modalDeleteItem"></div>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="8"></td>
-                                                            <td th:text="${orderDetail.totalAmount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right font-weight-bold"></td>
+                                                            <td th:text="${orderDetail.totalAmountDiscount != null} ? ${#numbers.formatDecimal (orderDetail.totalAmountDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right font-weight-bold"></td>
+                                                            <td></td>
                                                             <td></td>
                                                         </tr>
                                                     </tbody>
@@ -188,7 +200,7 @@
                                                 <div class="row justify-content-between">
                                                     <div class="col-4" style="display: flex; align-items: center"></div>
                                                     <div class="col-4 text-right">
-                                                        <button type="button" class="btn btn-success" id="btnUpdateOrder">Cập nhật</button>
+                                                        <button th:if="${allowEdit}" type="button" class="btn btn-success" id="btnUpdateOrder">Cập nhật</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -234,7 +246,7 @@
                                                                         <div class="form-group row">
                                                                             <span class="col-5" style="display: flex; align-items: center">Hình thức thanh toán</span>
                                                                             <select class="custom-select col-7" data-placeholder="Chọn hình thức thanh toán" id="paymentMethodField_DoPay" required>
-                                                                                <option th:each="payType : ${listHinhThucThanhToan}"
+                                                                                <option th:each="payType : ${listPaymentMethod}"
                                                                                         th:value="${payType.id}"
                                                                                         th:text="${payType.name}">
                                                                                 </option>
@@ -287,6 +299,34 @@
                             <!--END CARD BODY-->
                         </div>
                     </div>
+
+                    <div class="modal fade" id="addProductModal">
+                        <div class="modal-dialog">
+                            <form class="row mt-3" th:action="@{/order/{orderId}/item/add(orderId=${orderDetailId})}" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <strong class="modal-title">Thêm sản phẩm</strong>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label>Chọn sản phẩm</label>
+                                                    <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;"
+                                                            id="selectedProductField" name="productVariantSelectedId"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-end">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -320,11 +360,13 @@
         let mvOrderDetail = {};
         let mvTicketExportTable= $("#tableContentTicket");
         $(document).ready(function () {
+            setupSelectMultiple();
             init();
             loadOrderDetail();
             doPay();
             updateOrder();
             loadTicketExportInfo();
+            loadItemsForSales();
         });
 
         function init() {
@@ -448,6 +490,22 @@
 
         function loadOrderInfoOnForm(orderDetail) {
             $("#orderTime").text(orderDetail.orderTime);
+        }
+
+        function loadItemsForSales() {
+            $('#btnAddProduct').on('click', function () {
+                let productVariantSelect = $('#selectedProductField');
+                productVariantSelect.empty();
+                $.get(mvHostURL + '/order/cart/product/available-sales', function (response) {
+                    if (response.status === "OK") {
+                        $.each(response.data, function (index, d) {
+                            productVariantSelect.append(`<option value="${d.itemId}">${d.itemName}</option>`);
+                        });
+                    }
+                }).fail(function () {
+                    showErrorModal("Could not connect to the server");
+                });
+            });
         }
     </script>
 </div>

@@ -26,7 +26,9 @@ public class OrderDetailDTO extends OrderDetail implements Serializable {
     public static OrderDetailDTO fromOrderDetail(OrderDetail d) {
         OrderDetailDTO dto = new OrderDetailDTO();
         dto.setId(d.getId());
+        dto.setOrder(d.getOrder());
         dto.setOrderId(d.getOrder().getId());
+        dto.setProductDetail(d.getProductDetail());
         dto.setProductVariantDTO(ProductVariantConvert.entityToDTO(d.getProductDetail()));
         dto.setPriceType(d.getPriceType());
         dto.setQuantity(d.getQuantity());

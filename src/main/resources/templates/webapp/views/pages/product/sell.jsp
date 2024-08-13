@@ -31,8 +31,8 @@
                                         <div class="col-sm-9 border">
                                             <form class="row mt-3" th:action="@{/order/ban-hang/cart/item/add}" method="POST">
                                                 <div class="col-sm-10 form-group">
-                                                    <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" id="productVariantField" required>
-                                                        <option th:each="list : ${listItems_}" th:value="${list.itemId}" th:text="${list.itemName}"></option>
+                                                    <select class="form-control select2" multiple="multiple" data-placeholder="Chọn sản phẩm" style="width: 100%;" name="bienTheSanPhamId" required>
+                                                        <option th:each="list : ${listItemsForSales}" th:value="${list.itemId}" th:text="${list.itemName}"></option>
                                                     </select>
                                                 </div>
                                                 <input type="hidden" name="cartId" th:value="${cart.id}">
@@ -62,7 +62,7 @@
                                                                 <input type="hidden" id="productVariantIdField" th:value="${item.productDetail.Id}"/>
                                                                 <a th:text="${item.productDetail.variantName}"
                                                                    th:href="@{/san-pham/variant/{id}(id=${item.productDetail.id})}"></a>
-                                                                <input class="form-control form-control-sm" name="note" th:value="${item.note}" readonly>
+                                                                <p class="font-italic" th:text="${item.note}"></p>
                                                             </td>
                                                             <td th:text="${item.priceType == 'L' ? 'Giá bán lẻ' : 'Giá sỉ'}"></td>
                                                             <td th:text="${item.priceOriginal != null} ? ${#numbers.formatDecimal (item.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>

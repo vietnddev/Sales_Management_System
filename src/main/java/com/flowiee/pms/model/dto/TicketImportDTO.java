@@ -47,7 +47,7 @@ public class TicketImportDTO extends TicketImport implements Serializable {
         dto.setStorage(ticketImport.getStorage());
         dto.setImporter(ticketImport.getImporter());
         dto.setImportTime(ticketImport.getImportTime());
-        dto.setNote(ticketImport.getNote());
+        dto.setNote(ticketImport.getNote() != null ? ticketImport.getNote() : "");
         dto.setStatus(ticketImport.getStatus());
         //dto.setListProductDTO(ProductVariantDTO.fromProductVariants(ticketImport.getListProductDetails()));
         dto.setListProductVariantTemp(ticketImport.getListProductVariantTemps());

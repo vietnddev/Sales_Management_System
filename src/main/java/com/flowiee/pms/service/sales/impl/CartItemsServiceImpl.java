@@ -46,6 +46,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         List<ProductVariantDTO> productVariantDTOs = productVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent();
         for (ProductCombo productCbo : productCombos) {
             cartItemModelList.add(CartItemModel.builder()
+                    .itemId(productCbo.getId())
                     .productComboId(productCbo.getId())
                     .productVariantId(-1)
                     .itemName(productCbo.getComboName() + " - hiện còn " + productCbo.getQuantity())
@@ -53,6 +54,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         }
         for (ProductVariantDTO productVrt : productVariantDTOs) {
             cartItemModelList.add(CartItemModel.builder()
+                    .itemId(productVrt.getId())
                     .productComboId(-1)
                     .productVariantId(productVrt.getId())
                     .itemName(productVrt.getVariantName() + " - hiện còn " + productVrt.getAvailableSalesQty())

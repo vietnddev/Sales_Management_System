@@ -43,10 +43,4 @@ public class OrderHistory extends BaseEntity implements Serializable {
     @Lob
     @Column(name = "new_value", nullable = false, length = 9999, columnDefinition = "CLOB")
     String newValue;
-
-	@Override
-	public String toString() {
-		return "OrderHistory [id=" + super.id + ", order=" + order + ", orderDetail=" + orderDetail + ", title="
-				+ title + ", fieldName=" + field + ", oldValue=" + oldValue + ", newValue=" + newValue + "]";
-	}       
 }

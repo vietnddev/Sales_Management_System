@@ -56,16 +56,10 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@Column(name = "status", nullable = false)
 	boolean status;
 
-	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<OrderHistory> listOrderHistory;
 
 	public OrderDetail(Integer id) {
 		this.id = id;
-	}
-
-	@Override
-	public String toString() {
-		return "OrderDetail [id=" + super.id + ", order=" + order + ", productVariant=" + productDetail + ", soLuong=" + quantity
-				+ ", ghiChu=" + note + ", status=" + status + ", listOrderHistory=" + listOrderHistory + "]";
 	}
 }

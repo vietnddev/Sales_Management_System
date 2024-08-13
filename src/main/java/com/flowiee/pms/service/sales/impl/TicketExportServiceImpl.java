@@ -63,6 +63,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
             ticketExport.setTotalValue(totalValueAndItems[0]);
             ticketExport.setTotalItems(totalValueAndItems[1].intValue());
             ticketExport.setStorageName(ticketExport.getStorage().getName());
+            ticketExport.setNote(ticketExport.getNote() != null ? ticketExport.getNote() : "");
         }
         return ticketExportPage;
     }
@@ -104,7 +105,6 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
                 .title("Xuất hàng cho đơn " + orderDTO.getCode())
                 .exporter(CommonUtils.getUserPrincipal().getUsername())
                 .exportTime(LocalDateTime.now())
-                .note(null)
                 .status(TicketExportStatus.DRAFT.name())
                 .build());
         orderRepository.updateTicketExportInfo(orderDTO.getId(), ticketExportSaved.getId());

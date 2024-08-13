@@ -156,7 +156,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Override
     public List<Category> findOrderStatus(Integer ignoreId) {
-        return findSubCategory(CategoryType.ORDER_STATUS, null, List.of(ignoreId), -1, -1).getContent();
+        return findSubCategory(CategoryType.ORDER_STATUS, null, ignoreId != null ? List.of(ignoreId) : null, -1, -1).getContent();
     }
 
     @Override

@@ -29,6 +29,16 @@
                             <div th:replace="fragments :: searchTool(${configSearchTool})" id="searchTool"></div>
 
                             <div class="card">
+                                <div class="card-header">
+                                    <div class="row justify-content-between">
+                                        <div class="col-4" style="display: flex; align-items: center"></div>
+                                        <div class="col-6 text-right">
+                                            <a th:href="@{/api/v1/order/export}" class="btn btn-info btn-sm">
+                                                <i class="fa-solid fa-cloud-arrow-down mr-2"></i>Xuất dữ liệu
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card-body align-items-center p-0">
                                     <table class="table table-bordered table-striped align-items-center">
                                         <thead class="align-self-center">

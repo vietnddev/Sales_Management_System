@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.CartItemModel;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.product.ProductVariantService;
@@ -13,6 +14,7 @@ import com.flowiee.pms.service.sales.CartService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.Pages;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +55,7 @@ public class CartController extends BaseController {
         modelAndView.addObject("listPaymentMethod", categoryService.findPaymentMethods());
         modelAndView.addObject("listOrderStatus", categoryService.findOrderStatus(null));
         modelAndView.addObject("listProductVariant", productVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent());
-        modelAndView.addObject("listItems_", cartItemsService.findAllItemsForSales());
+        modelAndView.addObject("listItemsForSales", cartItemsService.findAllItemsForSales());
 
         double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
         double amountDiscount = 0;
@@ -62,6 +64,13 @@ public class CartController extends BaseController {
         //modelAndView.addObject("amountDiscount", amountDiscount);
         modelAndView.addObject("totalAmountDiscount", totalAmountDiscount);
         return baseView(modelAndView);
+    }
+
+    @Operation(summary = "Get all items available for sales")
+    @GetMapping("/cart/product/available-sales")
+    @PreAuthorize("@vldModuleProduct.readProduct(true)")
+    public AppResponse<List<CartItemModel>> getAllItemsForSales() {
+        return success(cartItemsService.findAllItemsForSales());
     }
 
     @PostMapping("/ban-hang/cart/item/add")

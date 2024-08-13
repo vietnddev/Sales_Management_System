@@ -70,13 +70,14 @@ public class OrderDTO extends Order implements Serializable {
 		//dto.setCreatedAtStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getCreatedAt()));
 		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : new BigDecimal(0));
 		//dto.setTotalAmount(null);
+		BigDecimal totalAmount = BigDecimal.ZERO;
 		if (order.getListOrderDetail() != null) {
-			BigDecimal totalAmtDiscount = new BigDecimal(0);
 			for (OrderDetail d : order.getListOrderDetail()) {
-				totalAmtDiscount = totalAmtDiscount.add(d.getPrice());
+				totalAmount = totalAmount.add((d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity()))).subtract(d.getExtraDiscount()));
 			}
-			dto.setTotalAmountDiscount(totalAmtDiscount.subtract(dto.getAmountDiscount()));
 		}
+		dto.setTotalAmount(totalAmount);
+		dto.setTotalAmountDiscount(dto.getTotalAmount().subtract(dto.getAmountDiscount()));
 		//dto.setTotalAmountDiscount(null);
 		//dto.setTotalProduct(null);
 		if (ObjectUtils.isNotEmpty(order.getListImageQR())) {
@@ -96,6 +97,7 @@ public class OrderDTO extends Order implements Serializable {
 		}
 		//dto.setListOrderDetail(order.getListOrderDetail());
 		dto.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(order.getListOrderDetail()));
+		dto.setTrangThaiDonHang(order.getTrangThaiDonHang());
 		return dto;
 	}
 

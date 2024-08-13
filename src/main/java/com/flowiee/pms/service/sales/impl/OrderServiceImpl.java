@@ -81,10 +81,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         BigDecimal totalAmount = new BigDecimal(0);
         for (OrderDetail d : listOrderDetail) {
             totalProduct += d.getQuantity();
-            totalAmount = totalAmount.add(d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity())));
+            totalAmount = totalAmount.add((d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity()))).subtract(d.getExtraDiscount()));
         }
-        List<OrderDetailDTO> orderDetailDTOs = OrderDetailDTO.fromOrderDetails(listOrderDetail);;
-        order.setListOrderDetailDTO(orderDetailDTOs);
+        order.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(listOrderDetail));
         order.setTotalProduct(totalProduct);
         order.setTotalAmount(totalAmount);
         order.setTotalAmountDiscount(order.getTotalAmount().subtract(order.getAmountDiscount()));
