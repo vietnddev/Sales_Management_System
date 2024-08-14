@@ -28,12 +28,14 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
+        Pageable pageable = Pageable.unpaged();
+        if (pageSize >= 0 && pageNum >= 0) {
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
+        }
         Page<SystemLog> logs = systemLogRepo.findAll(pageable);
         for (SystemLog systemLog : logs.getContent()) {
-            if (systemLog.getAccount() != null) {
-                systemLog.setAccountName(systemLog.getAccount().getFullName());
-            }
+            systemLog.setAccountName(systemLog.getAccount() != null ? systemLog.getAccount().getFullName() : "");
+            systemLog.setContentChange(systemLog.getContentChange() != null ? systemLog.getContentChange() : "");
         }
         return logs;
     }

@@ -38,9 +38,7 @@ public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Column(name = "action_mode", nullable = false)
 	String mode;
 
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
-	@Column(name = "content", length = 4000, nullable = false, columnDefinition = "CLOB")
+	@Column(name = "content", length = 4000, nullable = false)
 	String content;
 
 	@Column(name = "content_change", length = 4000)

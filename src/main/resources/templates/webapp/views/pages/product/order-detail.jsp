@@ -69,7 +69,7 @@
                                                             <th>Thành tiền</th>
                                                             <th>Ghi chú</th>
                                                             <th style="padding-right: 12px">
-                                                                <button th:if="${allowEdit}" type="button" class="btn btn-sm btn-primary w-100" data-toggle="modal" data-target="#addProductModal" id="btnAddProduct">Thêm sản phẩm</button>
+                                                                <button th:if="${allowEditItem}" type="button" class="btn btn-sm btn-primary w-100" data-toggle="modal" data-target="#addProductModal" id="btnAddProduct">Thêm sản phẩm</button>
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -89,8 +89,8 @@
                                                             <td th:text="${list.price != null} ? ${#numbers.formatDecimal (list.price * list.quantity - list.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'" class="text-right"></td>
                                                             <td th:text="${list.note}"></td>
                                                             <td>
-                                                                <button th:if="${allowEdit}" type="button" class="btn btn-sm btn-success" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${list.id}">Cập nhật</button>
-                                                                <button th:if="${allowEdit}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${list.id}">Xóa</button>
+                                                                <button th:if="${allowEditItem}" type="button" class="btn btn-sm btn-success" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${list.id}">Cập nhật</button>
+                                                                <button th:if="${allowEditItem}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${list.id}">Xóa</button>
                                                                 <!--Modal update item-->
                                                                 <div th:replace="pages/sales/order/fragments/order-detail-fragments :: modalUpdateItem"></div>
                                                                 <!--Modal delete item-->
@@ -200,7 +200,7 @@
                                                 <div class="row justify-content-between">
                                                     <div class="col-4" style="display: flex; align-items: center"></div>
                                                     <div class="col-4 text-right">
-                                                        <button th:if="${allowEdit}" type="button" class="btn btn-success" id="btnUpdateOrder">Cập nhật</button>
+                                                        <button th:if="${allowEditGeneral}" type="button" class="btn btn-success" id="btnUpdateOrder">Cập nhật</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -222,7 +222,7 @@
                                                     <div class="col-2" style="display: flex; align-items: center"></div>
                                                     <div class="col-10 text-right">
                                                         <button type="button" class="btn btn-primary">In</button>
-                                                        <button type="button" class="btn btn-success" id="btnDoPay">
+                                                        <button th:if="${allowDoPay}" type="button" class="btn btn-success" id="btnDoPay">
                                                             Thanh toán
                                                         </button>
                                                         <!--POPUP THANH TOÁN-->
@@ -456,7 +456,8 @@
                         data: JSON.stringify(
                             {
                                 note : $("#noteField").val(),
-                                orderStatusId: $("#orderStatusField").val()
+                                orderStatusId: $("#orderStatusField").val(),
+                                orderStatusName: $("#orderStatusField option:selected").text()
                             }
                         ),
                         success: function (response, textStatus, jqXHR) {

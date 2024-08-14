@@ -1,15 +1,11 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.entity.category.Category;
-import com.flowiee.pms.entity.sales.Items;
-import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.*;
-import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.exception.ResourceNotFoundException;
@@ -40,8 +36,9 @@ public class OrderControllerView extends BaseController {
     VoucherTicketService     voucherTicketService;
     OrderPrintInvoiceService printInvoiceService;
 
-    List<String> mvOrderStatusCanModify = List.of("PRP", "W4D");
-    List<String> mvOrderStatusCanDelete = List.of("PRP");
+    List<String> mvOrderStatusCanModifyItem = List.of("PRP", "W4D");
+    List<String> mvOrderStatusCanDeleteItem = List.of("PRP");
+    List<String> mvOrderStatusDoesNotAllowModify = List.of("DONE", "CAN");
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readOrder(true)")
@@ -66,7 +63,9 @@ public class OrderControllerView extends BaseController {
         modelAndView.addObject("listOrderDetail", orderDetail.get().getListOrderDetailDTO());
         modelAndView.addObject("listPaymentMethod", categoryService.findSubCategory(CategoryType.PAYMENT_METHOD, null, null, -1, -1).getContent());
         modelAndView.addObject("orderStatus", orderStatus);
-        modelAndView.addObject("allowEdit", mvOrderStatusCanModify.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
+        modelAndView.addObject("allowEditItem", mvOrderStatusCanModifyItem.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
+        modelAndView.addObject("allowEditGeneral", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
+        modelAndView.addObject("allowDoPay", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
 
         return baseView(modelAndView);
     }
@@ -113,7 +112,7 @@ public class OrderControllerView extends BaseController {
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
         }
-        if (!mvOrderStatusCanModify.contains(orderOpt.get().getTrangThaiDonHang().getCode())) {
+        if (!mvOrderStatusCanModifyItem.contains(orderOpt.get().getTrangThaiDonHang().getCode())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép chỉnh sửa!");
         }
         if (productVariantSelectedId == null || productVariantSelectedId.length == 0) {
@@ -130,7 +129,7 @@ public class OrderControllerView extends BaseController {
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
         }
-        if (!mvOrderStatusCanModify.contains(orderOpt.get().getTrangThaiDonHang().getCode())) {
+        if (!mvOrderStatusCanModifyItem.contains(orderOpt.get().getTrangThaiDonHang().getCode())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép chỉnh sửa!");
         }
         if (item.getQuantity() == 0) {
@@ -147,7 +146,7 @@ public class OrderControllerView extends BaseController {
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
         }
-        if (!mvOrderStatusCanDelete.contains(orderOpt.get().getTrangThaiDonHang().getCode())) {
+        if (!mvOrderStatusCanDeleteItem.contains(orderOpt.get().getTrangThaiDonHang().getCode())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép xóa!");
         }
         orderItemsService.delete(itemId);

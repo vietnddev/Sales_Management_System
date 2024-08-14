@@ -189,12 +189,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
         orderToUpdate.setNote(dto.getNote());
-        orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId(), null));
+        orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId(), dto.getOrderStatusName()));
         Order orderUpdated = orderRepository.save(orderToUpdate);
 
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
         orderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", id, null);
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật đơn hàng", changeLog);
+        systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật đơn hàng", changeLog);
         logger.info("Cập nhật đơn hàng {}", dto.toString());
 
         return OrderDTO.fromOrder(orderToUpdate);

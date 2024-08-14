@@ -26,7 +26,14 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title"><strong>NHẬT KÝ HỆ THỐNG</strong></h3>
+                                    <div class="row justify-content-between">
+                                        <div class="col-4 text-bold" style="display: flex; align-items: center">NHẬT KÝ HỆ THỐNG</div>
+                                        <div class="col-6 text-right">
+                                            <a th:href="@{/api/v1/sys/log/export}" class="btn btn-info btn-sm">
+                                                <i class="fa-solid fa-cloud-arrow-down mr-2"></i>Xuất dữ liệu
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-body p-0">
                                     <table class="table table-bordered table-striped">
