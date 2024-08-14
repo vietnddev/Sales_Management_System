@@ -42,6 +42,9 @@
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createTicketExportModal">
                                         <i class="fa-solid"></i>Tạo phiếu xuất
                                     </button>
+                                    <a th:href="@{/api/v1/storage/export/{storageId}(storageId=${storageId})}" class="btn btn-info">
+                                        <i class="fa-solid fa-cloud-arrow-down mr-2"></i>Export items
+                                    </a>
                                 </div>
                             </div>
                             <!-- /.card-header -->

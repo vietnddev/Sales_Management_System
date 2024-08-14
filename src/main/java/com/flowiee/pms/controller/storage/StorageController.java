@@ -112,9 +112,9 @@ public class StorageController extends BaseController {
     }
 
     @Operation(summary = "Export storage information")
-    @GetMapping("/export")
+    @GetMapping("/export/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
-    public ResponseEntity<InputStreamResource> exportData(@RequestParam("storageId") Integer storageId) {
+    public ResponseEntity<InputStreamResource> exportData(@PathVariable("storageId") Integer storageId) {
         EximModel model = exportService.exportToExcel(TemplateExport.EX_STORAGE_ITEMS, new Storage(storageId), false);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }

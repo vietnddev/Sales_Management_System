@@ -72,8 +72,8 @@ public class StorageServiceImpl extends BaseService implements StorageService {
                     .itemId(Integer.parseInt(object[1].toString()))
                     .itemImageSrc(object[2] != null ? object[2].toString() : null)
                     .itemName(object[3].toString())
-                    .itemType(object[4] != null ? object[4].toString() : null)
-                    .itemBrand(object[5] != null ? object[5].toString() : null)
+                    .itemType(object[4] != null ? object[4].toString() : "")
+                    .itemBrand(object[5] != null ? object[5].toString() : "")
                     .build();
             if (object[6] != null) s.setItemStorageQty(Integer.parseInt(String.valueOf(object[6])));
             if (object[7] != null) s.setItemSalesAvailableQty(Integer.parseInt(String.valueOf(object[7])));
