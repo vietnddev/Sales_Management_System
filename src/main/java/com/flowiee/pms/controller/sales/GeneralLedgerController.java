@@ -3,14 +3,22 @@ package com.flowiee.pms.controller.sales;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.GeneralLedger;
+import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.sales.LedgerService;
 import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +34,10 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class GeneralLedgerController extends BaseController {
     LedgerService ledgerService;
+    @Qualifier("ledgerExportServiceImpl")
+    @NonFinal
+    @Autowired
+    ExportService exportService;
 
     @Operation(summary = "Find general ledger")
     @GetMapping
@@ -40,5 +52,13 @@ public class GeneralLedgerController extends BaseController {
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "generalLedger"), ex);
         }
+    }
+
+    @Operation(summary = "Export list transactions of general ledger")
+    @GetMapping("/export")
+    @PreAuthorize("@vldModuleSales.readGeneralLedger(true)")
+    public ResponseEntity<InputStreamResource> exportData() {
+        EximModel model = exportService.exportToExcel(TemplateExport.EX_LEDGER_TRANSACTIONS, null, false);
+        return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }
