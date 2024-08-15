@@ -106,6 +106,7 @@ public class TicketImport extends BaseEntity implements Serializable {
     public static TicketImport fromTicketImportDTO(TicketImportDTO dto) {
         TicketImport ticketImport = TicketImport.builder()
             .title(dto.getTitle())
+            .supplier((dto.getSupplierId() != null && dto.getSupplierId() > 0) ? new Supplier(dto.getSupplierId(), dto.getSupplierName()) : null)
             .importer(dto.getImporter())
             .importTime(dto.getImportTime())
             .note(dto.getNote())

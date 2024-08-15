@@ -24,7 +24,7 @@ public class MaterialConvert {
         outEntity.setId(inputDTO.getId());
 
         if (outEntity.getSupplier() == null && inputDTO.getSupplierId() != null)
-            outEntity.setSupplier(new Supplier(inputDTO.getSupplierId()));
+            outEntity.setSupplier(new Supplier(inputDTO.getSupplierId(), inputDTO.getSupplierName()));
 
         if (outEntity.getUnit() == null && inputDTO.getUnitId() != null)
             outEntity.setUnit(new Category(inputDTO.getUnitId(), inputDTO.getUnitName()));

@@ -150,24 +150,30 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public TicketImport update(TicketImport ticketImport, Integer entityId) {
-        Optional<TicketImport> ticketImportToUpdate = this.findById(entityId);
-        if (ticketImportToUpdate.isEmpty()) {
+        Optional<TicketImport> ticketImportOpt = this.findById(entityId);
+        if (ticketImportOpt.isEmpty()) {
             throw new BadRequestException();
         }
-        if (TicketImportStatus.COMPLETED.name().equals(ticketImportToUpdate.get().getStatus()) || TicketImportStatus.CANCEL.name().equals(ticketImportToUpdate.get().getStatus())) {
+        if (TicketImportStatus.COMPLETED.name().equals(ticketImportOpt.get().getStatus()) || TicketImportStatus.CANCEL.name().equals(ticketImportOpt.get().getStatus())) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        ticketImport.setId(entityId);
-        TicketImport ticketImportUpdated = ticketImportRepo.save(ticketImport);
+
+        ticketImportOpt.get().setTitle(ticketImport.getTitle());
+        ticketImportOpt.get().setSupplier(ticketImport.getSupplier());
+        ticketImportOpt.get().setImportTime(ticketImport.getImportTime());
+        ticketImportOpt.get().setNote(ticketImport.getNote());
+        ticketImportOpt.get().setStatus(ticketImport.getStatus());
+
+        TicketImport ticketImportUpdated = ticketImportRepo.save(ticketImportOpt.get());
         if (TicketImportStatus.COMPLETED.name().equals(ticketImportUpdated.getStatus())) {
-            if (ObjectUtils.isNotEmpty(ticketImport.getListProductVariantTemps())) {
-                for (ProductVariantTemp p : ticketImport.getListProductVariantTemps()) {
+            if (ObjectUtils.isNotEmpty(ticketImportUpdated.getListProductVariantTemps())) {
+                for (ProductVariantTemp p : ticketImportUpdated.getListProductVariantTemps()) {
                     productQuantityService.updateProductVariantQuantityIncrease(p.getQuantity(), p.getProductVariant().getId());
                     productVariantTempRepo.updateStorageQuantity(p.getProductVariant().getId(), p.getQuantity());
                 }
             }
             if (ObjectUtils.isNotEmpty(ticketImportUpdated.getListMaterialTemps())) {
-                for (MaterialTemp m : ticketImport.getListMaterialTemps()) {
+                for (MaterialTemp m : ticketImportUpdated.getListMaterialTemps()) {
                     materialService.updateQuantity(m.getQuantity(), m.getMaterial().getId(), "I");
                     materialTempRepo.updateStorageQuantity(m.getMaterial().getId(), m.getQuantity());
                 }

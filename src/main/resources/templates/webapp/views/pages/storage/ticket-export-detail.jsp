@@ -39,7 +39,7 @@
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="exportTimeField">Thời gian xuất</label>
-                                        <input class="form-control" type="text" id="exportTimeField" th:value="${ticketExportDetail.exportTime}" required disabled>
+                                        <input class="form-control" type="text" id="exportTimeField" th:value="${ticketExportDetail.exportTimeStr}" required disabled>
                                     </div>
                                     <div class="form-group col-12">
                                         <label for="noteField">Tổng giá trị</label>

@@ -140,7 +140,7 @@ public class ProductVariantConvert {
             outputEntity.setGarmentFactory(new GarmentFactory(inputDTO.getGarmentFactoryId()));
 
         if (outputEntity.getSupplier() == null && inputDTO.getSupplierId() != null)
-            outputEntity.setSupplier(new Supplier(inputDTO.getSupplierId()));
+            outputEntity.setSupplier(new Supplier(inputDTO.getSupplierId(), inputDTO.getSupplierName()));
 
         return outputEntity;
     }

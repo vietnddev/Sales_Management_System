@@ -162,11 +162,13 @@
                     <section class="col-12 card p-3" style="height: 716px">
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Nhà cung cấp</span>
-                            <select class="custom-select col-7" id="supplierField"></select>
+                            <select class="custom-select col-7" id="supplierField">
+                                <option th:each="list : ${listSupplier}" th:value="${list.id}" th:text="${list.name}"></option>
+                            </select>
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Thời gian nhập</span>
-                            <input class="col-7 form-control" type="date" id="orderTimeField"/>
+                            <input class="col-7 form-control" type="date" id="importTimeField"/>
                         </div>
                         <div class="form-group row" style="padding-right: 8px">
                             <span class="col-5" style="display: flex; align-items: center; font-weight: bold">Người nhận hàng</span>
@@ -205,8 +207,10 @@
         let mvProductVariantSelected = {};
         let mvMaterialSelected = {};
         let mvTitle = $("#titleField");
+        let mvImportTime = $("#importTimeField");
         let mvNote = $("#noteField");
         let mvImporter = $("#importerField");
+        let mvSupplier = $("#supplierField");
 
         $(document).ready(function () {
             init();
@@ -217,7 +221,6 @@
 
         function init() {
             findTickImportDetail();
-            loadSuppliers();
             loadPaymentMethods();
             loadPaymentStatuses();
         }
@@ -230,9 +233,13 @@
                     mvProductVariantSelected = mvTicketImportDetail.listProductVariantTemp;
                     mvMaterialSelected = mvTicketImportDetail.listMaterialTemp;
 
-                    setProductSelectedTableInfo(mvProductVariantSelected);
-                    setMaterialSelectedTableInfo(mvMaterialSelected);
+                    //setProductSelectedTableInfo(mvProductVariantSelected);
+                    //setMaterialSelectedTableInfo(mvMaterialSelected);
 
+                    let importTimeStr = mvTicketImportDetail.importTime;
+                    let parts = importTimeStr.split(' ')[0].split('/');//Chuyển đổi từ 'DD/MM/YYYY' sang 'YYYY-MM-DD'
+                    let formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                    mvImportTime.val(formattedDate);
                     mvTitle.val(mvTicketImportDetail.title);
                     mvImporter.val(mvTicketImportDetail.importer);
                     mvNote.val(mvTicketImportDetail.note);
@@ -244,20 +251,6 @@
                     } else {
                         $("#statusField").append(`<option value="DRAFT">Nháp</option><option value="COMPLETED">Hoàn thành</option><option value="CANCEL">Hủy</option>`);
                     }
-                }
-            }).fail(function () {
-                showErrorModal("Could not connect to the server");
-            });
-        }
-
-        function loadSuppliers() {
-            let apiURL = mvHostURLCallApi + "/supplier/all";
-            $.get(apiURL, function (response) {
-                if (response.status === "OK") {
-                    $('#supplierField').append(`<option>Chọn nhà cung cấp</option>`);
-                    $.each(response.data, function (index, d) {
-                        $('#supplierField').append(`<option value="${d.id}">${d.name}</option>`);
-                    });
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
@@ -292,7 +285,7 @@
             });
         }
 
-        function setProductSelectedTableInfo(productDetails) {
+        /*function setProductSelectedTableInfo(productDetails) {
             $.each(productDetails, function (index, d) {
                 console.log("4")
                 $("#productContentTable").append(`
@@ -310,9 +303,9 @@
                     </tr>
                 `);
             });
-        }
+        }*/
 
-        function setMaterialSelectedTableInfo(materials) {
+        /*function setMaterialSelectedTableInfo(materials) {
             $.each(materials, function (index, d) {
                 $("#materialContentTable").append(`
                     <tr>
@@ -330,7 +323,7 @@
                     </tr>
                 `);
             });
-        }
+        }*/
         
         function addProduct() {
             $("#btnAddProduct").on("click", function () {
@@ -396,9 +389,11 @@
                 let apiURL = mvHostURLCallApi + "/stg/ticket-import/update/" + mvTicketImportDetail.id;
                 let body = {
                     title : mvTitle.val(),
-                    importTime : $("#importTimeField").val(),
+                    supplierId : $('#supplierField option:selected').val(),
+                    importTime : moment(mvImportTime.val()).format('DD/MM/YYYY HH:mm:ss'),
                     importer : $("#importerField").val(),
                     status : $("#statusField").val(),
+                    note : mvNote.val(),
                     listProductVariantTemp : mvProductVariantSelected,
                     listMaterialTemp : mvMaterialSelected
                 };

@@ -32,10 +32,10 @@ public class SupplierController extends BaseController {
                                                @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
             if (pageSize != null && pageNum != null) {
-                Page<Supplier> suppliers = supplierService.findAll(pageSize, pageNum - 1);
+                Page<Supplier> suppliers = supplierService.findAll(pageSize, pageNum - 1, null);
                 return success(suppliers.getContent(), pageNum, pageSize, suppliers.getTotalPages(), suppliers.getTotalElements());
             } else {
-                Page<Supplier> suppliers = supplierService.findAll(null, null);
+                Page<Supplier> suppliers = supplierService.findAll(null, null, null);
                 return success(suppliers.getContent(), 1, 0, suppliers.getTotalPages(), suppliers.getTotalElements());
             }
         } catch (RuntimeException ex) {

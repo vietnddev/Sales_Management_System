@@ -33,16 +33,16 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
 
     @Override
     public List<Supplier> findAll() {
-        return this.findAll(-1, -1).getContent();
+        return this.findAll(-1, -1, null).getContent();
     }
 
     @Override
-    public Page<Supplier> findAll(Integer pageSize, Integer pageNum) {
+    public Page<Supplier> findAll(Integer pageSize, Integer pageNum, List<Integer> ignoreIds) {
         Pageable pageable = Pageable.unpaged();
         if ((pageSize != null && pageSize >= 0) || (pageNum != null && pageNum >= 0)) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
         }
-        return supplierRepo.findAll(pageable);
+        return supplierRepo.findAll(ignoreIds, pageable);
     }
 
     @Override

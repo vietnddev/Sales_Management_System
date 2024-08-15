@@ -1,7 +1,9 @@
 package com.flowiee.pms.controller.sales;
 
+import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.MaterialTemp;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.sales.Supplier;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.product.MaterialService;
@@ -49,12 +51,21 @@ public class TicketImportControllerView extends BaseController {
         if (ticketImport.isEmpty()) {
             throw new ResourceNotFoundException("Ticket import not found!");
         }
+
+        List<Supplier> suppliers = new ArrayList<>();
+        if (ticketImport.get().getSupplier() != null) {
+            suppliers.add(new Supplier(ticketImport.get().getSupplier().getId(), ticketImport.get().getSupplier().getName()));
+        } else {
+            suppliers.add(new Supplier(-1, "Chọn nhà cung cấp"));
+        }
+        suppliers.addAll(supplierService.findAll(-1, -1, ticketImport.get().getSupplier() != null ? List.of(ticketImport.get().getSupplier().getId()) : null).getContent());
+
         ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_IMPORT_DETAIL.getTemplate());
         modelAndView.addObject("ticketImportId", ticketImportId);
         modelAndView.addObject("ticketImportDetail", ticketImport.get());
         modelAndView.addObject("listProductVariant", productVariantService.findAll());
         modelAndView.addObject("listMaterial", materialService.findAll());
-        modelAndView.addObject("listSupplier", supplierService.findAll());
+        modelAndView.addObject("listSupplier", suppliers);
         modelAndView.addObject("listStorage", storageService.findAll());
         return baseView(modelAndView);
     }

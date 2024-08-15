@@ -71,4 +71,7 @@ public class TicketExport extends BaseEntity implements Serializable {
 
     @Transient
     String storageName;
+
+    @Transient
+    String exportTimeStr;
 }

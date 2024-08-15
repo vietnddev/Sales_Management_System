@@ -24,7 +24,7 @@ public class SupplierControllerView extends BaseController {
 	@PreAuthorize("@vldModuleSales.readSupplier(true)")
 	public ModelAndView viewAllSupplier() {
 		ModelAndView modelAndView = new ModelAndView(Pages.PRO_SUPPLIER.getTemplate());
-		modelAndView.addObject("listSupplier", supplierService.findAll(-1, -1).getContent());
+		modelAndView.addObject("listSupplier", supplierService.findAll(-1, -1, null).getContent());
 		return baseView(modelAndView);
 	}
 }

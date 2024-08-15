@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,9 +75,13 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         if (ticketExportOpt.isEmpty()) {
             return Optional.empty();
         }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
         BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketExportOpt.get().getListProductVariantTemp());
         ticketExportOpt.get().setTotalValue(totalValueAndItems[0]);
         ticketExportOpt.get().setTotalItems(totalValueAndItems[1].intValue());
+        ticketExportOpt.get().setExportTimeStr(ticketExportOpt.get().getExportTime().format(formatter));
         return ticketExportOpt;
     }
 
