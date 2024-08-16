@@ -65,11 +65,11 @@
                                                                 <p class="font-italic" th:text="${item.note}"></p>
                                                             </td>
                                                             <td th:text="${item.priceType == 'L' ? 'Giá bán lẻ' : 'Giá sỉ'}"></td>
-                                                            <td th:text="${item.priceOriginal != null} ? ${#numbers.formatDecimal (item.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                            <td th:text="${item.priceOriginal != null} ? ${#numbers.formatDecimal(item.priceOriginal, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                             <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
-                                                            <td th:text="${item.extraDiscount != null} ? ${#numbers.formatDecimal (item.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                            <td th:text="${item.extraDiscount != null} ? ${#numbers.formatDecimal(item.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                             <td th:text="${item.quantity}"></td>
-                                                            <td th:text="${item.price != null} ? ${#numbers.formatDecimal (item.price * item.quantity - item.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
+                                                            <td th:text="${item.price != null} ? ${#numbers.formatDecimal(item.price * item.quantity - item.extraDiscount, 0, 'COMMA', 0, 'NONE')} + ' đ' : '-'"></td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#modalUpdateItems_' + ${item.id}">Cập nhật</button>
                                                                 <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" th:data-target="'#modalDeleteItems_' + ${item.id}">Xóa</button>

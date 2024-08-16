@@ -42,6 +42,7 @@ public class OrderDTO extends Order implements Serializable {
 	Integer cartId;
 	Integer ticketExportId;
 	Boolean accumulateBonusPoints;
+	Boolean autoGenLedgerReceipt;
 	List<OrderDetailDTO> listOrderDetailDTO;
 
 	public static OrderDTO fromOrder(Order order) {

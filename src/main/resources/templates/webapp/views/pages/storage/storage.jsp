@@ -41,6 +41,7 @@
                                                 <th>Diện tích</th>
                                                 <th>Sức chứa</th>
                                                 <th>Cảnh báo sức chứa</th>
+                                                <th>Mặc định</th>
                                                 <th>Mô tả</th>
                                                 <th>Trạng thái</th>
                                                 <th></th>
@@ -56,6 +57,7 @@
                                                 <th>Diện tích</th>
                                                 <th>Sức chứa</th>
                                                 <th>Cảnh báo sức chứa</th>
+                                                <th>Mặc định</th>
                                                 <th>Mô tả</th>
                                                 <th>Trạng thái</th>
                                                 <th></th>

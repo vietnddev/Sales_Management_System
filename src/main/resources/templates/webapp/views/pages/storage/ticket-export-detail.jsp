@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="form-group col-12">
                                         <label for="noteField">Tổng giá trị</label>
-                                        <input class="form-control" type="text" id="totalValueField" th:value="${ticketExportDetail.totalValue}" disabled>
+                                        <input class="form-control" type="text" id="totalValueField" th:value="${#numbers.formatDecimal(ticketExportDetail.totalValue, 0, 'COMMA', 0, 'NONE')}" disabled>
                                     </div>
                                     <div class="form-group col-12">
                                         <label for="noteField">Ghi chú</label>
@@ -103,9 +103,9 @@
                                                 <td th:text="${index.index + 1}"></td>
                                                 <td th:text="${list.productVariant.product.productType.name}"></td>
                                                 <td th:text="${list.productVariant.variantName}">/td>
-                                                <td th:text="${list.purchasePrice}"></td>
+                                                <td th:text="${#numbers.formatDecimal(list.sellPrice, 0, 'COMMA', 0, 'NONE')}"></td>
                                                 <td th:text="${list.quantity}"></td>
-                                                <td th:text="${list.purchasePrice != null ? list.purchasePrice * list.quantity : ''}"></td>
+                                                <td th:text="${list.sellPrice != null} ? ${#numbers.formatDecimal(list.sellPrice * list.quantity, 0, 'COMMA', 0, 'NONE')} : ''"></td>
                                                 <td th:text="${list.note}"></td>
                                             </tr>
                                         </tbody>
