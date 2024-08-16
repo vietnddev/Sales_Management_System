@@ -192,6 +192,14 @@
                                                                 </select>
                                                             </td>
                                                         </tr>
+                                                        <tr>
+                                                            <td>Tự động tạo phiếu thu khi hoàn tất</td>
+                                                            <td class="form-group">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input class="" type="checkbox" id="autoGenLedgerReceiptField">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -442,11 +450,11 @@
                 $(this).attr("actionType", "update");
                 $(this).attr("entityName", "order");
                 showConfirmModal($(this), "Cập nhật đơn hàng", "Bạn có chắc muốn cập nhật đơn hàng này?");
-                submitCreateOrUpdate();
+                submitUpdate();
             });
         }
 
-        function submitCreateOrUpdate() {
+        function submitUpdate() {
             $("#yesButton").on("click", function () {
                 if ($(this).attr("actionType") === "update" && $(this).attr("entityName") === "order") {
                     $.ajax({
@@ -457,7 +465,8 @@
                             {
                                 note : $("#noteField").val(),
                                 orderStatusId: $("#orderStatusField").val(),
-                                orderStatusName: $("#orderStatusField option:selected").text()
+                                orderStatusName: $("#orderStatusField option:selected").text(),
+                                autoGenLedgerReceipt: $("#autoGenLedgerReceiptField").is(':checked')
                             }
                         ),
                         success: function (response, textStatus, jqXHR) {

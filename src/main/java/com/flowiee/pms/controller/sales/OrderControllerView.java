@@ -43,7 +43,7 @@ public class OrderControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView viewAllOrders() {
-        setupSearchTool(true, List.of("BRANCH", CategoryType.GROUP_CUSTOMER, CategoryType.PAYMENT_METHOD, CategoryType.ORDER_STATUS, CategoryType.SALES_CHANNEL));
+        setupSearchTool(true, List.of("BRANCH", CategoryType.GROUP_CUSTOMER, CategoryType.PAYMENT_METHOD, CategoryType.ORDER_STATUS, CategoryType.SALES_CHANNEL, "DATE_FILTER"));
         return baseView(new ModelAndView(Pages.PRO_ORDER.getTemplate()));
     }
 

@@ -41,7 +41,7 @@ public class ChangeLog {
                     newValueBuilder.append(field.getName()).append(" (").append(ObjectUtils.isNotEmpty(newValue) ? newValue.toString() : " ").append("); ");
                 }
             } catch (IllegalAccessException e) {
-                logger.error("Error when checking entity's fields changes {}", oldObject.getClass().getName(), e);
+                logger.error("Error checking changed entity fields {}", oldObject.getClass().getName(), e);
             }
         }
 

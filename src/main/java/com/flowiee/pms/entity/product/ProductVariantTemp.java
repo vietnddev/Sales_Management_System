@@ -51,6 +51,9 @@ public class ProductVariantTemp extends BaseEntity implements Serializable {
     @Column(name = "purchase_price")
     BigDecimal purchasePrice;
 
+    @Column(name = "sell_price")
+    BigDecimal sellPrice;
+
     @Column(name = "note")
     String note;
 

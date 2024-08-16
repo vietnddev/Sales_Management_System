@@ -21,6 +21,7 @@ function loadStorages(pageSize, pageNum) {
                         <td>${d.area}</td>
                         <td>${d.holdableQty}</td>
                         <td>${d.holdWarningPercent}</td>
+                        <td>${d.isDefault ? 'Yes' : 'No'}</td>
                         <td>${d.description}</td>
                         <td>${d.status}</td>
                         <td>

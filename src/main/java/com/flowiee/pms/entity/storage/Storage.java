@@ -47,6 +47,9 @@ public class Storage extends BaseEntity implements Serializable {
     @Column(name = "description")
     String description;
 
+    @Column(name = "is_default")
+    Boolean isDefault;
+
     @Column(name = "status", nullable = false)
     String status;
 

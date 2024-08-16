@@ -136,6 +136,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
                 .exporter(CommonUtils.getUserPrincipal().getUsername())
                 .exportTime(LocalDateTime.now())
                 .storage(new Storage(storageId))
+                .note(order != null ? "Phiếu xuất hàng cho đơn " + order.getCode() : "")
                 .build());
         if (order != null) {
             orderRepository.updateTicketExportInfo(order.getId(), ticketExportSaved.getId());
@@ -144,7 +145,9 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
                 productVariantTempRepo.save(ProductVariantTemp.builder()
                         .ticketExport(ticketExportSaved)
                         .productVariant(item.getProductDetail())
+                        .sellPrice(item.getPrice())
                         .quantity(item.getQuantity())
+                        .note(item.getNote())
                         .build());
             }
         }
@@ -216,8 +219,11 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         int totalItems = 0;
         if (pProductVariantTempList != null) {
             for (ProductVariantTemp p : pProductVariantTempList) {
-                if (p.getPurchasePrice() != null) {
+                if (p.getTicketImport() != null && p.getPurchasePrice() != null) {
                     totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
+                }
+                if (p.getTicketExport() != null && p.getSellPrice() != null) {
+                    totalValue = totalValue.add(p.getSellPrice().multiply(new BigDecimal(p.getQuantity())));
                 }
                 totalItems = totalItems + p.getQuantity();
             }

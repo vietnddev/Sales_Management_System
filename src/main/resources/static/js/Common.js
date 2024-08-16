@@ -231,12 +231,13 @@ function setupSearchTool() {
     let orderTypeFilter = $('#orderTypeFilter');
     let shipMethodFilter = $('#shipMethodFilter');
     let groupCustomerFilter = $('#groupCustomerFilter');
+    let dateFilter = $('#dateFilter');
 
     $("#btnOpenSearchAdvance").on("click", function () {
         clearSearchSelection(sizeFilter, 'Chọn kích cỡ');
         clearSearchSelection(unitFilter, 'Chọn đơn vị tính');
         clearSearchSelection(brandFilter, 'Chọn nhãn hiệu');
-        clearSearchSelection(brandFilter, 'Chọn nhãn hiệu');
+        clearSearchSelection(branchFilter, 'Chọn chi nhánh');
         clearSearchSelection(colorFilter, 'Chọn màu sắc');
         clearSearchSelection(discountFilter, 'Chọn khuyến mãi');
         clearSearchSelection(orderTypeFilter, 'Chọn loại đơn hàng');
@@ -248,6 +249,7 @@ function setupSearchTool() {
         clearSearchSelection(paymentMethodFilter, 'Chọn hình thức thanh toán');
         clearSearchSelection(paymentStatusFilter, 'Chọn trạng thái thanh toán');
         clearSearchSelection(groupCustomerFilter, 'Chọn nhóm khách hàng');
+        clearSearchSelection(dateFilter, 'Lọc theo thời gian');
 
         let keySearch = [];
         $.each($('.search-selection'), function (index, d) {
@@ -310,6 +312,13 @@ function setupSearchTool() {
                 case "PRODUCT_STATUS":
                     productStatusFilter.append(`<option value="ACTIVE">Đang kinh doanh</option>
                                                 <option value="INACTIVE">Không kinh doanh</option>`);
+                    break;
+                case "DATE_FILTER":
+                        dateFilter.append(`<option value="T0">Hôm nay</option>
+                                           <option value="T-1">Hôm qua</option>
+                                           <option value="T-7">7 ngày trước</option>
+                                           <option value="M0">Tháng này</option>
+                                           <option value="M-1">Tháng trước</option>`);
             }
         })
     })
