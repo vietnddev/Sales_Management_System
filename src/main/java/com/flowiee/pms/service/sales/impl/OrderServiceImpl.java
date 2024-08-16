@@ -30,6 +30,8 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.*;
 
 @Service
@@ -48,13 +50,13 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Override
     public List<OrderDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null, null, null, null, null, null, null, null).getContent();
+        return this.findAll(-1, -1, null, null, null, null, null, null, null, null, null, null, null, null, null).getContent();
     }
 
     @Override
     public Page<OrderDTO> findAll(int pPageSize, int pPageNum, String pTxtSearch, Integer pOrderId, Integer pPaymentMethodId,
                                   Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId,
-                                  Integer pBranchId, Integer pGroupCustomerId, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
+                                  Integer pBranchId, Integer pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
         Pageable pageable = Pageable.unpaged();
         if (pPageSize >= 0 && pPageNum >= 0) {
             pageable = PageRequest.of(pPageNum, pPageSize, Sort.by(pSortBy != null ? pSortBy : "orderTime").descending());
@@ -64,6 +66,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
         if (pOrderTimeTo == null) {
             pOrderTimeTo = LocalDateTime.of(2100, 12, 1, 0, 0, 0);
+        }
+        if (pDateFilter != null && !"".equals(pDateFilter)) {
+            LocalDateTime[] lvFromDateToDate = getFromDateToDate(pOrderTimeFrom, pOrderTimeTo, pDateFilter);
+            pOrderTimeFrom = lvFromDateToDate[0];
+            pOrderTimeTo = lvFromDateToDate[1];
         }
         Page<Order> orders = orderRepository.findAll(pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pOrderTimeFrom, pOrderTimeTo, pageable);
         return new PageImpl<>(OrderDTO.fromOrders(orders.getContent()), pageable, orders.getTotalElements());
@@ -250,5 +257,45 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         String month = String.format("%02d", currentDate.getMonthValue());
         String day = String.format("%02d", currentDate.getDayOfMonth());
         return year + month + day + String.format("%03d", orderTodayQty + 1);
+    }
+
+    private LocalDateTime[] getFromDateToDate(LocalDateTime pFromDate, LocalDateTime pToDate, String pFilterDate) {
+        LocalDateTime lvStartTime = null;
+        LocalDateTime lvEndTime = null;
+
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfToDay = today.atTime(LocalTime.MIN);
+        LocalDateTime endOfToDay = today.atTime(LocalTime.MAX);
+
+        YearMonth yearMonth = YearMonth.of(today.getYear(), today.getMonthValue());
+        LocalDateTime startDayOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
+        LocalDateTime endDayOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+
+        switch (pFilterDate) {
+            case "T0": //Today
+                pFromDate = startOfToDay;
+                pToDate = endOfToDay;
+                break;
+            case "T-1": //Previous day
+                pFromDate = startOfToDay.minusDays(1);
+                pToDate = endOfToDay.minusDays(1);
+                break;
+            case "T-7": //7 days ago
+                pFromDate = startOfToDay.minusDays(7);
+                pToDate = endOfToDay;
+                break;
+            case "M0": //This month
+                pFromDate = startDayOfMonth;
+                pToDate = endDayOfMonth;
+                break;
+            case "M-1": //Previous month
+                pFromDate = startDayOfMonth.minusMonths(1);
+                pToDate = endDayOfMonth.minusMonths(1);
+        }
+
+        lvStartTime = pFromDate;
+        lvEndTime = pToDate;
+
+        return new LocalDateTime[] {lvStartTime, lvEndTime};
     }
 }

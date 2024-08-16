@@ -103,7 +103,8 @@
                     <select class="form-control custom-select search-selection col mr-1" id="salesChannelFilter"  th:entity="SALES_CHANNEL"  th:if="${configSearch.filters.contains('SALES_CHANNEL')}"></select>
                     <select class="form-control custom-select search-selection col mr-1" id="paymentMethodFilter" th:entity="PAYMENT_METHOD" th:if="${configSearch.filters.contains('PAYMENT_METHOD')}"></select>
                     <select class="form-control custom-select search-selection col mr-1" id="branchFilter"        th:entity="BRANCH"         th:if="${configSearch.filters.contains('BRANCH')}"></select>
-                    <select class="form-control custom-select search-selection col"      id="productStatusFilter" th:entity="PRODUCT_STATUS" th:if="${configSearch.filters.contains('PRODUCT_STATUS')}"></select>
+                    <select class="form-control custom-select search-selection col mr-1" id="productStatusFilter" th:entity="PRODUCT_STATUS" th:if="${configSearch.filters.contains('PRODUCT_STATUS')}"></select>
+                    <select class="form-control custom-select search-selection col"      id="dateFilter"          th:entity="DATE_FILTER"    th:if="${configSearch.filters.contains('DATE_FILTER')}"></select>
                 </th:block>
             </div>
         </div>

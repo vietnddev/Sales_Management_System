@@ -8,7 +8,8 @@ function loadOrders(pageSize, pageNum) {
         orderStatusId: $('#orderStatusFilter').val(),
         paymentMethodId: $('#paymentMethodFilter').val(),
         branchId: $('#branchFilter').val(),
-        salesChannelId: $('#salesChannelFilter').val()
+        salesChannelId: $('#salesChannelFilter').val(),
+        dateFilter: $("#dateFilter").val()
     }
     $.get(apiURL, params, function (response) {//dùng Ajax JQuery để gọi xuống controller
         if (response.status === "OK") {
