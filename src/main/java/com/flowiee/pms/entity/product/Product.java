@@ -66,9 +66,8 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "is_machine_washable")
     Boolean isMachineWashable;
 
-    @Lob
-    @Column(name = "description", length = 30000, columnDefinition = "CLOB")
-    String description;
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    ProductDescription productDescription;
 
     @Column(name = "status", nullable = false, length = 10)
     String status;
@@ -101,6 +100,6 @@ public class Product extends BaseEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Product [id=" + super.id + ", productType=" + productType + ", brand=" + brand + ", productName=" + productName + ", unit="
-				+ unit + ", description=" + description + ", status=" + status + "]";
+				+ unit + ", status=" + status + "]";
 	}
 }

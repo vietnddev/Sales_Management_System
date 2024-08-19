@@ -16,7 +16,7 @@ public class ProductConvert {
         }
         Product outputEntity = Product.builder()
             .productName(inputDTO.getProductName())
-            .description(inputDTO.getDescription())
+            //.description(inputDTO.getDescription())
             .status(inputDTO.getStatus())
             .productType(inputDTO.getProductType())
             .brand(inputDTO.getBrand())
@@ -42,7 +42,7 @@ public class ProductConvert {
         return outputEntity;
     }
 
-    public static ProductDTO convertToDTO(Product inputEntity) {
+    public static ProductDTO convertToDTO(Product inputEntity, String description) {
         ProductDTO dto = new ProductDTO();
         if (inputEntity != null) {
             dto.setId(inputEntity.getId());
@@ -62,7 +62,7 @@ public class ProductConvert {
                 dto.setUnitId(inputEntity.getUnit().getId());
                 dto.setUnitName(inputEntity.getUnit().getName());
             }
-            dto.setDescription(inputEntity.getDescription());
+            dto.setDescription(description);
             dto.setStatus(inputEntity.getStatus());
             if (ObjectUtils.isNotEmpty(inputEntity.getListVariants())) {
                 dto.setProductVariantQty(inputEntity.getListVariants().size());
@@ -78,7 +78,7 @@ public class ProductConvert {
         List<ProductDTO> outDTOs = new ArrayList<>();
         if (inputEntities != null) {
             for (Product p : inputEntities) {
-                outDTOs.add(convertToDTO(p));
+                outDTOs.add(convertToDTO(p, null));
             }
         }
         return outDTOs;
@@ -88,7 +88,7 @@ public class ProductConvert {
         List<ProductDTO> outDTOs = new ArrayList<>();
         if (inputEntities != null) {
             for (Product p : inputEntities.getContent()) {
-                outDTOs.add(convertToDTO(p));
+                outDTOs.add(convertToDTO(p, null));
             }
         }
         return outDTOs;

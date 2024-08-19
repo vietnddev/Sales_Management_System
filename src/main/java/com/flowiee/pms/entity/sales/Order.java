@@ -138,6 +138,30 @@ public class Order extends BaseEntity implements Serializable {
 		super.id = id;
 	}
 
+	public static BigDecimal calTotalAmount(List<OrderDetail> orderItems) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		if (orderItems != null) {
+			for (OrderDetail d : orderItems) {
+				totalAmount = totalAmount.add((d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity()))).subtract(d.getExtraDiscount()));
+			}
+		}
+		return totalAmount;
+	}
+
+	public static BigDecimal calTotalAmountDiscount(BigDecimal totalAmount, BigDecimal amountDiscount) {
+		return totalAmount.subtract(amountDiscount);
+	}
+
+	public static int calTotalProduct(List<OrderDetail> orderItems) {
+		int totalItems = 0;
+		if (orderItems != null) {
+			for (OrderDetail d : orderItems) {
+				totalItems += d.getQuantity();
+			}
+		}
+		return totalItems;
+	}
+
 	@Override
 	public String toString() {
 		return "Order [id=" + super.id + ", maDonHang=" + code + ", receiverName=" + receiverName + ", receiverPhone=" + receiverPhone

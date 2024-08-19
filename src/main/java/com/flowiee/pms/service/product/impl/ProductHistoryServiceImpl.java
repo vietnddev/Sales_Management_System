@@ -75,16 +75,16 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
         List<ProductHistory> logSaved = new ArrayList<>();
         for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
             String field = entry.getKey();
-            String oldValue = entry.getValue()[0].toString();
-            String newValue = entry.getValue()[1].toString();
+            String oldValue = entry.getValue()[0] != null ? entry.getValue()[0].toString() : "-";
+            String newValue = entry.getValue()[1] != null ? entry.getValue()[1].toString() : "-";
             ProductHistory productHistory = ProductHistory.builder()
                     .title(title)
                     .product(productBaseId != null ? new Product(productBaseId) : null)
                     .productDetail(productVariantId != null ? new ProductDetail(productVariantId) : null)
                     .productAttribute(productAttributeId != null ? new ProductAttribute(productAttributeId) : null)
                     .field(field)
-                    .oldValue("null".equals(oldValue) ? null : oldValue)
-                    .newValue("null".equals(newValue) ? null : newValue)
+                    .oldValue("null".equals(oldValue) ? "-" : oldValue)
+                    .newValue("null".equals(newValue) ? "-" : newValue)
                     .build();
             logSaved.add(this.save(productHistory));
         }

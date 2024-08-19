@@ -144,7 +144,10 @@
             let params = {
                 pageSize: pageSize,
                 pageNum: pageNum,
-                txtSearch : $('#txtFilter').val()
+                txtSearch: $('#txtFilter').val(),
+                productTypeId: $("#productTypeFilter").val(),
+                colorId: $("#colorFilter").val(),
+                sizeId: $("#sizeFilter").val()
             }
             $.get(apiURL, params, function (response) {//dùng Ajax JQuery để gọi xuống controller
                 if (response.status === "OK") {

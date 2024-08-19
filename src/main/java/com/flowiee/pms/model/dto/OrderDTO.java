@@ -1,9 +1,10 @@
 package com.flowiee.pms.model.dto;
 
+import com.flowiee.pms.entity.category.Category;
+import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.entity.sales.Order;
-import com.flowiee.pms.entity.sales.OrderDetail;
+import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.utils.CommonUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,63 +44,64 @@ public class OrderDTO extends Order implements Serializable {
 	Integer cartId;
 	Integer ticketExportId;
 	Boolean accumulateBonusPoints;
-	Boolean autoGenLedgerReceipt;
 	List<OrderDetailDTO> listOrderDetailDTO;
 
+	public OrderDTO(Integer id, String code, LocalDateTime orderTime, String receiptName, String receiptPhone, String receiptEmail, String receiptAddress,
+					Customer customer, Category salesChannel, Category paymentMethod, Account cashier, Category orderStatus) {
+		this.id = id;
+		setCode(code);
+		setOrderTime(orderTime);
+		setReceiverName(receiptName);
+		setReceiverPhone(receiptPhone);
+		setReceiverEmail(receiptEmail);
+		setReceiverAddress(receiptAddress);
+		setCustomer(customer);
+		setKenhBanHang(salesChannel);
+		setPaymentMethod(paymentMethod);
+		setNhanVienBanHang(cashier);
+		setTrangThaiDonHang(orderStatus);
+	}
+
 	public static OrderDTO fromOrder(Order order) {
-		OrderDTO dto = new OrderDTO();
-		dto.setId(order.getId());
-		dto.setCode(order.getCode());
-		dto.setOrderTime(order.getOrderTime());
-		//dto.setOrderTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getThoiGianDatHang()));
-		dto.setReceiverAddress(CommonUtils.trim(order.getReceiverAddress()));
-		dto.setReceiverPhone(CommonUtils.trim(order.getReceiverPhone()));
-		dto.setReceiverEmail(CommonUtils.trim(order.getReceiverEmail()));
-		dto.setReceiverName(order.getReceiverName());
+		OrderDTO dto = new OrderDTO(order.getId(), order.getCode(), order.getOrderTime(), order.getReceiverName(), order.getReceiverPhone(), order.getReceiverEmail(), order.getReceiverAddress(),
+									order.getCustomer(), order.getKenhBanHang(), order.getPaymentMethod(), order.getNhanVienBanHang(), order.getTrangThaiDonHang());
+		dto.setCreatedAt(order.getCreatedAt());
+
 		dto.setCustomerId(order.getCustomer().getId());
 		dto.setCustomerName(order.getCustomer().getCustomerName());
+
 		dto.setSalesChannelId(order.getKenhBanHang().getId());
 		dto.setSalesChannelName(order.getKenhBanHang().getName());
-		dto.setOrderStatusId(order.getTrangThaiDonHang().getId());
-		dto.setOrderStatusName(order.getTrangThaiDonHang().getName());
-		if (order.getPaymentMethod() != null) {
-			dto.setPayMethodId(order.getPaymentMethod().getId());
-			dto.setPayMethodName(order.getPaymentMethod().getName());
-		}
+
+		dto.setOrderStatusId(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getId() : null);
+		dto.setOrderStatusName(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getName() : null);
+
+		dto.setPayMethodId(dto.getPaymentMethod() != null ? order.getPaymentMethod().getId() : null);
+		dto.setPayMethodName(dto.getPaymentMethod() != null ? order.getPaymentMethod().getName() : null);
+
 		dto.setCashierId(order.getNhanVienBanHang().getId());
 		dto.setCashierName(order.getNhanVienBanHang().getFullName());
-		dto.setCreatedAt(order.getCreatedAt());
-		//dto.setCreatedAtStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getCreatedAt()));
-		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : new BigDecimal(0));
-		//dto.setTotalAmount(null);
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		if (order.getListOrderDetail() != null) {
-			for (OrderDetail d : order.getListOrderDetail()) {
-				totalAmount = totalAmount.add((d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity()))).subtract(d.getExtraDiscount()));
-			}
-		}
-		dto.setTotalAmount(totalAmount);
-		dto.setTotalAmountDiscount(dto.getTotalAmount().subtract(dto.getAmountDiscount()));
-		//dto.setTotalAmountDiscount(null);
-		//dto.setTotalProduct(null);
+
+		dto.setTicketExportId(order.getTicketExport() != null ? order.getTicketExport().getId() : null);
+
 		if (ObjectUtils.isNotEmpty(order.getListImageQR())) {
 			FileStorage imageQRCode = order.getListImageQR().get(0);
 			dto.setQrCode(imageQRCode.getDirectoryPath() + "/" + imageQRCode.getStorageName());
 		}
+
+		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : new BigDecimal(0));
+		dto.setTotalAmount(calTotalAmount(order.getListOrderDetail()));
+		dto.setTotalAmountDiscount(calTotalAmountDiscount(dto.getTotalAmount(), dto.getAmountDiscount()));
+		dto.setTotalProduct(calTotalProduct(order.getListOrderDetail()));
 		dto.setVoucherUsedCode(order.getVoucherUsedCode());
 		dto.setPaymentStatus(order.getPaymentStatus() != null && order.getPaymentStatus());
 		dto.setPaymentTime(order.getPaymentTime());
-		//dto.setPaymentTimeStr(DateUtils.convertDateToString("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy HH:mm:ss", order.getPaymentTime()));
 		dto.setPaymentAmount(order.getPaymentAmount());
 		dto.setPaymentNote(order.getPaymentNote());
-		dto.setCartId(null);
 		dto.setNote(order.getNote());
-		if (order.getTicketExport() != null) {
-			dto.setTicketExportId(order.getTicketExport().getId());
-		}
-		//dto.setListOrderDetail(order.getListOrderDetail());
+
 		dto.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(order.getListOrderDetail()));
-		dto.setTrangThaiDonHang(order.getTrangThaiDonHang());
+
 		return dto;
 	}
 

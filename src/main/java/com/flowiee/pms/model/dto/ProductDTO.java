@@ -33,6 +33,7 @@ public class ProductDTO extends Product implements Serializable {
     Integer totalQtyAvailableSales;
     Integer productVariantQty;
     Integer soldQty;
+    String description;
     List<VoucherInfoDTO> listVoucherInfoApply;
     LinkedHashMap<String, String> productVariantInfo;
 

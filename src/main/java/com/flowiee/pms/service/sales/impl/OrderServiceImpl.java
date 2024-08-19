@@ -5,10 +5,10 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
-import com.flowiee.pms.model.dto.OrderDetailDTO;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
@@ -43,9 +43,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     CartItemsService      cartItemsService;
     OrderItemsService     orderItemsService;
     OrderQRCodeService    orderQRCodeService;
+    CategoryRepository    categoryRepository;
     CustomerRepository    customerRepository;
     OrderHistoryService   orderHistoryService;
     VoucherTicketService  voucherTicketService;
+    LedgerReceiptService  ledgerReceiptService;
     ProductVariantService productVariantService;
 
     @Override
@@ -82,19 +84,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         if (orderOptional.isEmpty()) {
             return Optional.empty();
         }
-        OrderDTO order = OrderDTO.fromOrder(orderOptional.get());
-        List<OrderDetail> listOrderDetail = orderItemsService.findByOrderId(orderId);
-        int totalProduct = 0;
-        BigDecimal totalAmount = new BigDecimal(0);
-        for (OrderDetail d : listOrderDetail) {
-            totalProduct += d.getQuantity();
-            totalAmount = totalAmount.add((d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity()))).subtract(d.getExtraDiscount()));
-        }
-        order.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(listOrderDetail));
-        order.setTotalProduct(totalProduct);
-        order.setTotalAmount(totalAmount);
-        order.setTotalAmountDiscount(order.getTotalAmount().subtract(order.getAmountDiscount()));
-        return Optional.of(order);
+        return Optional.of(OrderDTO.fromOrder(orderOptional.get()));
     }
 
     @Transactional
@@ -196,7 +186,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
         orderToUpdate.setNote(dto.getNote());
-        orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId(), dto.getOrderStatusName()));
+        orderToUpdate.setTrangThaiDonHang(categoryRepository.findById(dto.getOrderStatusId()).get());
         Order orderUpdated = orderRepository.save(orderToUpdate);
 
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
@@ -237,6 +227,20 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
         if (paymentTime == null) paymentTime = LocalDateTime.now();
         orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
+
+        logger.info("Begin generate receipt issued when completed an order");
+        Category groupObject = categoryRepository.findByTypeAndCode(CategoryType.GROUP_OBJECT.name(), "KH");//Customer
+        Category receiptType = categoryRepository.findByTypeAndCode(CategoryType.RECEIPT_TYPE.name(), "PO");//Payment for order
+        ledgerReceiptService.save(LedgerTransaction.builder()
+                .tranType(LedgerTranType.PT.name())
+                .groupObject(groupObject)
+                .tranContent(receiptType)
+                .paymentMethod(dto.get().getPaymentMethod())
+                .fromToName(dto.get().getCustomer().getCustomerName())
+                .amount(Order.calTotalAmount(dto.get().getListOrderDetail()))
+                .build());
+        logger.info("End generate receipt issued when completed an order");
+
         systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật trạng thái thanh toán đơn hàng", "Số tiền: " + CommonUtils.formatToVND(paymentAmount));
         return MessageCode.UPDATE_SUCCESS.getDescription();
     }

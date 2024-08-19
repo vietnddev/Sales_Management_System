@@ -1,5 +1,6 @@
 package com.flowiee.pms.utils;
 
+import com.flowiee.pms.entity.category.Category;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -34,8 +35,14 @@ public class ChangeLog {
             try {
                 Object oldValue = field.get(oldObject);
                 Object newValue = field.get(newObject);
+
+                if (oldValue instanceof Category) {
+                    oldValue = ((Category) oldValue).getName();
+                    newValue = ((Category) newValue).getName();
+                }
+
                 if (!Objects.equals(oldValue, newValue)) {
-                    changes.put(field.getName(), new Object[]{oldValue, newValue});
+                    changes.put(field.getName(), new Object[] {oldValue, newValue});
 
                     oldValueBuilder.append(field.getName()).append(" (").append(ObjectUtils.isNotEmpty(oldValue) ? oldValue.toString() : " ").append("); ");
                     newValueBuilder.append(field.getName()).append(" (").append(ObjectUtils.isNotEmpty(newValue) ? newValue.toString() : " ").append("); ");

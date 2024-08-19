@@ -13,22 +13,22 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-	@Query("select p " +
+	@Query("select distinct p " +
            "from Product p " +
-           //"left join ProductDetail pd on pd.product.id = p.id " +
+           "left join ProductDetail pd on pd.product.id = p.id " +
            "where 1=1 " +
            "and (:txtSearch is null or p.productName like %:txtSearch%) " +
            "and (:productTypeId is null or p.productType.id=:productTypeId) " +
            "and (:brandId is null or p.brand.id=:brandId) " +
-           //"and (:colorId is null or pd.color.id=:colorId) " +
-           //"and (:sizeId is null or pd.size.id=:sizeId) " +
+           "and (:colorId is null or pd.color.id=:colorId) " +
+           "and (:sizeId is null or pd.size.id=:sizeId) " +
            "and (:unitId is null or p.unit.id=:unitId) " +
            "and (:status is null or p.status=:status)")
     Page<Product> findAll(@Param("txtSearch") String txtSearch,
                           @Param("brandId") Integer brandId,
                           @Param("productTypeId") Integer productTypeId,
-                          //@Param("colorId") Integer colorId,
-                          //@Param("sizeId") Integer sizeId,
+                          @Param("colorId") Integer colorId,
+                          @Param("sizeId") Integer sizeId,
                           @Param("unitId") Integer unitId,
                           @Param("status") String status,
                           Pageable pageable);

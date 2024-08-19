@@ -192,14 +192,6 @@
                                                                 </select>
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>Tự động tạo phiếu thu khi hoàn tất</td>
-                                                            <td class="form-group">
-                                                                <div class="custom-control custom-checkbox">
-                                                                    <input class="" type="checkbox" id="autoGenLedgerReceiptField">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -464,9 +456,7 @@
                         data: JSON.stringify(
                             {
                                 note : $("#noteField").val(),
-                                orderStatusId: $("#orderStatusField").val(),
-                                orderStatusName: $("#orderStatusField option:selected").text(),
-                                autoGenLedgerReceipt: $("#autoGenLedgerReceiptField").is(':checked')
+                                orderStatusId: $("#orderStatusField").val()
                             }
                         ),
                         success: function (response, textStatus, jqXHR) {

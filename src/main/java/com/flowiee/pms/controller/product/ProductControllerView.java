@@ -49,7 +49,7 @@ public class ProductControllerView extends BaseController {
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView loadProductPage() {
-        setupSearchTool(true, List.of(CategoryType.UNIT, CategoryType.SIZE, CategoryType.COLOR, CategoryType.BRAND, CategoryType.PRODUCT_TYPE, "PRODUCT_STATUS"));
+        setupSearchTool(true, List.of(CategoryType.SIZE, CategoryType.COLOR, CategoryType.PRODUCT_TYPE));
         return baseView(new ModelAndView(Pages.PRO_PRODUCT.getTemplate()));
     }
 

@@ -99,7 +99,7 @@ public class ProductController extends BaseController {
         if (productInfoService.findById(productId).isEmpty()) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
-        return success(ProductConvert.convertToDTO(productInfoService.update(product, productId)));
+        return success(productInfoService.update(product, productId));
     }
 
     @Operation(summary = "Delete product")

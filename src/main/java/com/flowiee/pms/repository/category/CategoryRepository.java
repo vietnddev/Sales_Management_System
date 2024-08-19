@@ -51,4 +51,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
            "from Category c " +
            "where c.code = 'ROOT'")
     List<Object[]> totalRecordsOfEachType();
+
+    @Query("from Category c where c.type = :type and c.code = :code")
+    Category findByTypeAndCode(@Param("type") String type, @Param("code") String code);
 }
