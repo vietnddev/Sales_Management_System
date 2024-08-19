@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public class BaseService {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     SystemLogService systemLogService;

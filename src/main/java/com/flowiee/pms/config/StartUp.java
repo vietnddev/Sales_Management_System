@@ -34,6 +34,8 @@ import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.EndPoint;
 import com.opencsv.*;
 import org.jfree.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
@@ -44,6 +46,8 @@ import org.springframework.context.event.EventListener;
 
 @Configuration
 public class StartUp {
+	Logger logger = LoggerFactory.getLogger(getClass());
+
 	private final ConfigRepository configRepository;
 	private final BranchRepository branchRepository;
 	private final AccountRepository accountRepository;
@@ -73,8 +77,14 @@ public class StartUp {
 			configReport();
             configEndPoint();
             configResourcePath();
+
+			logger.info("Start downloading vi messages");
 			loadLanguageMessages("en");
+			logger.info("Finish downloading vi messages");
+			logger.info("Start downloading en message");
 			loadLanguageMessages("vi");
+			logger.info("Finish downloading en message");
+
 			CommonUtils.START_APP_TIME = LocalDateTime.now();
         };
     }
