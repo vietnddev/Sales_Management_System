@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -92,6 +93,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
             StorageDTO storage = StorageDTO.convertToDTO(storageOptional.get());
             storage.setListStorageItems(storageItemsList);
             storage.setTotalItems(storageItemsList.size());
+            storage.setTotalInventoryValue(BigDecimal.ZERO);
             return Optional.of(storage);
         }
         return Optional.empty();
@@ -106,14 +108,19 @@ public class StorageServiceImpl extends BaseService implements StorageService {
 
     @Override
     public StorageDTO update(StorageDTO inputStorageDTO, Integer storageId) {
-        Optional<StorageDTO> storageOptional = this.findById(storageId);
-        if (storageOptional.isEmpty()) {
+        Optional<Storage> storageOpt = storageRepository.findById(storageId);
+        if (storageOpt.isEmpty()) {
             throw new BadRequestException("Storage not found");
         }
-        Storage storageBefore = ObjectUtils.clone(storageOptional.get());
-        Storage storage = StorageConvert.convertToEntity(inputStorageDTO);
-        storage.setId(storageId);
-        Storage storageUpdated = storageRepository.save(storage);
+        Storage storageBefore = ObjectUtils.clone(storageOpt.get());
+
+        storageOpt.get().setName(inputStorageDTO.getName());
+        storageOpt.get().setLocation(inputStorageDTO.getLocation());
+        storageOpt.get().setDescription(inputStorageDTO.getDescription());
+        storageOpt.get().setIsDefault(inputStorageDTO.getIsDefault());
+        storageOpt.get().setStatus(inputStorageDTO.getStatus());
+
+        Storage storageUpdated = storageRepository.save(storageOpt.get());
 
         ChangeLog changeLog = new ChangeLog(storageBefore, storageUpdated);
         systemLogService.writeLogUpdate(MODULE.STORAGE, ACTION.STG_STG_U, MasterObject.Storage, "Cập nhật Kho", changeLog);

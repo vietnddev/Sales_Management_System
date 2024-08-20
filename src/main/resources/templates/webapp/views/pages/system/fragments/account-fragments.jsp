@@ -117,6 +117,21 @@
                                         <label>Email</label>
                                         <input type="email" class="form-control" placeholder="Email" name="email" th:value="${list.email}"/>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Branch</label>
+                                        <select class="custom-select" name="branch">
+                                            <option th:value="${list.branch.id}" th:text="${list.branch.branchName}" selected></option>
+                                            <option th:each="list : ${listBranch}" th:value="${list.id}" th:text="${list.branchName}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nhóm người dùng</label>
+                                        <select class="custom-select" name="groupAccount">
+                                            <option th:if="${list.groupAccount != null}" th:value="${list.groupAccount.id}" th:text="${list.groupAccount.groupName}" selected></option>
+                                            <option th:if="${list.groupAccount == null}" value="" selected>-</option>
+                                            <option th:each="gr : ${groupAccount}" th:value="${gr.id}" th:text="${gr.groupName}"></option>
+                                        </select>
+                                    </div>
                                     <div class="form-group"
                                          th:if="${list.status}">
                                         <label>Trạng thái</label>

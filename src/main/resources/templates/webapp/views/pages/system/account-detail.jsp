@@ -62,7 +62,7 @@
                                                             <div class="col-6">
                                                                 <div class="form-group">
                                                                     <label>Họ tên</label>
-                                                                    <input type="text" class="form-control" placeholder="Họ tên" name="fullName" th:value="${accountInfo.fullName}"/>
+                                                                    <input type="text" class="form-control" placeholder="Họ tên" name="fullName" th:value="${accountInfo.fullName}" readonly/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -121,6 +121,15 @@
                                                                 <div class="form-group">
                                                                     <label>Địa chỉ</label>
                                                                     <textarea class="form-control" name="address" th:text="${accountInfo.address}"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label>Cơ sở</label>
+                                                                    <select class="custom-select" name="branch">
+                                                                        <option th:value="${accountInfo.branch.id}" th:text="${accountInfo.branch.branchName}" selected></option>
+                                                                        <option th:each="list : ${listBranch}" th:value="${list.id}" th:text="${list.branchName}"></option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">

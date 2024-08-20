@@ -5,6 +5,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.AccountService;
+import com.flowiee.pms.service.system.BranchService;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.Pages;
@@ -31,6 +32,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountControllerView extends BaseController {
     RoleService         roleService;
+    BranchService       branchService;
     AccountService      accountService;
     GroupAccountService groupAccountService;
 
@@ -41,6 +43,7 @@ public class AccountControllerView extends BaseController {
         modelAndView.addObject("account", new Account());
         modelAndView.addObject("listAccount", accountService.findAll());
         modelAndView.addObject("groupAccount", groupAccountService.findAll());
+        modelAndView.addObject("listBranch", branchService.findAll());
         return baseView(modelAndView);
     }
 
@@ -56,6 +59,7 @@ public class AccountControllerView extends BaseController {
         modelAndView.addObject("listRole", roleOfAccount);
         modelAndView.addObject("accountInfo", account.get());
         modelAndView.addObject("groupAccount", groupAccountService.findAll());
+        modelAndView.addObject("listBranch", branchService.findAll());
         return baseView(modelAndView);
     }
 
@@ -84,10 +88,6 @@ public class AccountControllerView extends BaseController {
         if (acc.isEmpty()) {
             throw new BadRequestException();
         }
-        accountEntity.setId(accountId);
-        accountEntity.setUsername(acc.get().getUsername());
-        accountEntity.setPassword(acc.get().getPassword());
-        accountEntity.setLastUpdatedBy(CommonUtils.getUserPrincipal().getUsername());
         accountService.update(accountEntity, accountId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }

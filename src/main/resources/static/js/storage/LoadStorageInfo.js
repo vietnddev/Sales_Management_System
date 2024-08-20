@@ -18,14 +18,10 @@ function loadStorages(pageSize, pageNum) {
                         <td>${d.code}</td>
                         <td><a href="/storage/${d.id}">${d.name}</a></td>
                         <td>${d.location}</td>
-                        <td>${d.area}</td>
-                        <td>${d.holdableQty}</td>
-                        <td>${d.holdWarningPercent}</td>
                         <td>${d.isDefault ? 'Yes' : 'No'}</td>
                         <td>${d.description}</td>
-                        <td>${d.status}</td>
+                        <td>${mvStorageStatusInit[d.status]}</td>
                         <td>
-                            <button class="btn btn-info    btn-sm btn-update mr-1"  id="${d.id}"><i class="fa-solid fa-pencil"></i></button>
                             <button class="btn btn-danger  btn-sm btn-delete"       id="${d.id}"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>

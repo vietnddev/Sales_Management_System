@@ -26,6 +26,10 @@ mvTicketExportStatus["DRAFT"] = "Nháp";
 mvTicketExportStatus["COMPLETED"] = "Hoàn thành";
 mvTicketExportStatus["CANCEL"] = "Hủy";
 
+const mvStorageStatusInit = {};
+mvStorageStatusInit["Y"] = "Đang sử dụng";
+mvStorageStatusInit["N"] = "Không sử dụng";
+
 //Pagination
 const mvPageSizeDefault = 10;
 function updatePaginationUI(pageNum, pageSize, totalPage, totalElements) {

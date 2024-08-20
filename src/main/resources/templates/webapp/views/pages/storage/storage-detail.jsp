@@ -31,7 +31,7 @@
                             <div class="card-header row justify-content-between" style="font-weight: bold; font-size: 16px">
                                 <ul class="col-8 nav nav-pills">
                                     <li class="nav-item"><a class="nav-link active" href="#STORAGE_ITEM_TAB" id="storageItemTabLabel" data-toggle="tab">Hàng tồn kho</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#STORAGE_INFO_TAB" data-toggle="tab">Thông tin kho</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#STORAGE_INFO_TAB" id="storageInfoTabLabel" data-toggle="tab">Thông tin kho</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#IMPORT_HISTORY_TAB" id="storageImportHistoryTabLabel" data-toggle="tab">Lịch sử nhập hàng</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#EXPORT_HISTORY_TAB" id="storageExportHistoryTabLabel" data-toggle="tab">Lịch sử xuất hàng</a></li>
                                 </ul>
@@ -77,27 +77,44 @@
                                             </div>
 
                                             <div class="tab-pane" id="STORAGE_INFO_TAB">
-                                                <div class="card-body p-0">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>##</th>
-                                                                <th>Ngày</th>
-                                                                <th>Giờ vào</th>
-                                                                <th>Giờ ra</th>
-                                                                <th>Ghi chú</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>1</td>
-                                                                <td>01/01/2023</td>
-                                                                <td>08:00</td>
-                                                                <td>17:30</td>
-                                                                <td></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                <div class="card-body pl-2 pt-0 pr-2 pb-0">
+                                                    <div class="row" id="storageInfoForm">
+                                                        <div class="col-2">
+                                                            <label>Mã kho</label>
+                                                            <input type="text" class="form-control" id="stgInfoCodeField" readonly/>
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <label>Tên kho</label>
+                                                            <input type="text" class="form-control" id="stgInfoNameField"/>
+                                                        </div>
+                                                        <div class="col-6 mt-3">
+                                                            <label>Số lượng hàng hóa</label>
+                                                            <input type="text" class="form-control" id="stgInfoTotalItemsField" readonly/>
+                                                        </div>
+                                                        <div class="col-6 mt-3">
+                                                            <label>Tổng giá trị</label>
+                                                            <input type="text" class="form-control" id="stgInfoTotalValueField" readonly/>
+                                                        </div>
+                                                        <div class="col-12 mt-3">
+                                                            <label>Vị trí</label>
+                                                            <input type="text" class="form-control" id="stgInfoLocationField"/>
+                                                        </div>
+                                                        <div class="col-12 mt-3">
+                                                            <label>Mô tả</label>
+                                                            <textarea class="form-control" rows="3" id="stgInfoDescriptionField"></textarea>
+                                                        </div>
+                                                        <div class="col-6 mt-3">
+                                                            <label>Đặt làm mặc định</label>
+                                                            <select class="custom-select" id="stgInfoIsDefaultField"></select>
+                                                        </div>
+                                                        <div class="col-6 mt-3">
+                                                            <label>Trạng thái</label>
+                                                            <select class="custom-select" id="stgInfoStatusField"></select>
+                                                        </div>
+                                                        <div class="col-12 row justify-content-center mt-3">
+                                                            <button class="btn btn-success" id="stgInfoSubmitBtn">Save</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -167,11 +184,24 @@
 
     <script type="text/javascript">
         let mvStorageId = [[${storageId}]];
+        let mvStorageCode = $("#stgInfoCodeField");
+        let mvStorageName = $("#stgInfoNameField");
+        let mvStorageTotalItems = $("#stgInfoTotalItemsField");
+        let mvStorageTotalValue = $("#stgInfoTotalValueField");
+        let mvStorageLocation = $("#stgInfoLocationField");
+        let mvStorageDescription = $("#stgInfoDescriptionField");
+        let mvStorageIsDefault = $("#stgInfoIsDefaultField");
+        let mvStorageStatus = $("#stgInfoStatusField");
+
+        let mvStorageInfoSubmitBtn = $("#stgInfoSubmitBtn");
 
         $(document).ready(function() {
             loadStorageItems(mvPageSizeDefault, 1);
             $("#storageItemTabLabel").on("click", function () {
                 loadStorageItems(mvPageSizeDefault, 1);
+            })
+            $("#storageInfoTabLabel").on("click", function () {
+                loadStorageDetailInfo();
             })
             $("#storageImportHistoryTabLabel").on("click", function () {
                 loadStorageImportHistory(mvPageSizeDefault, 1);
@@ -188,6 +218,7 @@
 
             createNewTicketImport();
             createNewTicketExport();
+            updateStorageInfo();
         });
 
         function createNewTicketImport() {
@@ -240,6 +271,44 @@
                     });
                 }
             })
+        }
+
+        function updateStorageInfo() {
+            mvStorageInfoSubmitBtn.on("click", function () {
+                if (validatePreUpdate()) {
+                    let apiURL = mvHostURLCallApi + "/storage/update/" + mvStorageId;
+                    let body = {
+                        code: mvStorageCode.val(),
+                        name: mvStorageName.val(),
+                        location: mvStorageLocation.val(),
+                        //area: mvArea.val(),
+                        //holdableQty: mvHoldableQty.val(),
+                        //holdWarningPercent:
+                        description: mvStorageDescription.val(),
+                        isDefault: mvStorageIsDefault.val(),
+                        status: mvStorageStatus.val()
+                    };
+                    $.ajax({
+                        url: apiURL,
+                        type: 'PUT',
+                        contentType: "application/json",
+                        data: JSON.stringify(body),
+                        success: function(response) {
+                            if (response.status === "OK") {
+                                alert("Cập nhật thành công!");
+                                window.location.reload();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert("Error: " + $.parseJSON(xhr.responseText).message);
+                        }
+                    })
+                }
+            })
+        }
+
+        let validatePreUpdate = () => {
+            return true;
         }
     </script>
 </body>
