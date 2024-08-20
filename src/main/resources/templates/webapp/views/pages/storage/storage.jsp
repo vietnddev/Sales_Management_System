@@ -38,9 +38,6 @@
                                                 <th>Mã kho</th>
                                                 <th>Tên</th>
                                                 <th>Vị trí</th>
-                                                <th>Diện tích</th>
-                                                <th>Sức chứa</th>
-                                                <th>Cảnh báo sức chứa</th>
                                                 <th>Mặc định</th>
                                                 <th>Mô tả</th>
                                                 <th>Trạng thái</th>
@@ -54,9 +51,6 @@
                                                 <th>Mã kho</th>
                                                 <th>Tên</th>
                                                 <th>Vị trí</th>
-                                                <th>Diện tích</th>
-                                                <th>Sức chứa</th>
-                                                <th>Cảnh báo sức chứa</th>
                                                 <th>Mặc định</th>
                                                 <th>Mô tả</th>
                                                 <th>Trạng thái</th>
@@ -176,31 +170,6 @@
             });
         }
 
-        function preUpdateStorage() {
-            $(document).on("click", ".btn-update", function () {
-                let storage = mvStorages[$(this).attr("id")];
-                $("#modal_insert_update_title").text("Update Storage");
-                mvId = storage.id;
-                mvCode.val(storage.code);
-                mvName.val(storage.name);
-                mvLocation.val(storage.location);
-                mvArea.val(storage.area);
-                mvHoldableQty.val(storage.holdableQty);
-                mvDescription.val(storage.description);
-                mvStatus.empty();
-                if (storage.status === "Y") {
-                    mvStatus.append(`<option value="Y" selected>Sử dụng</option>`);
-                    mvStatus.append(`<option value="Y">Không sử dụng</option>`);
-                }
-                if (storage.status === "N") {
-                    mvStatus.append(`<option value="N" selected>Không sử dụng</option>`);
-                    mvStatus.append(`<option value="Y">Sử dụng</option>`);
-                }
-                $("#btn-insert-update-submit").attr("actionType", "update");
-                $("#modal_insert_update").modal();
-            });
-        }
-
         function submitInsertOrUpdate() {
             $("#btn-insert-update-submit").on("click", function () {
                 let actionType = $(this).attr("actionType");
@@ -223,23 +192,6 @@
                         success: function(response, a, b) {
                             if (response.status === "OK") {
                                 alert("Create successfully!");
-                                window.location.reload();
-                            }
-                        },
-                        error: function (xhr) {
-                            alert("Error: " + $.parseJSON(xhr.responseText).message);
-                        }
-                    });
-                }
-                if (actionType === "update") {
-                    $.ajax({
-                        url: mvHostURLCallApi + "/storage/update/" + mvId,
-                        type: "PUT",
-                        contentType: "application/json",
-                        data: JSON.stringify(group),
-                        success: function(response) {
-                            if (response.status === "OK") {
-                                alert("Update successfully!");
                                 window.location.reload();
                             }
                         },

@@ -41,6 +41,7 @@ public class StorageDTO extends Storage implements Serializable {
         outputDTO.setHoldableQty(inputEntity.getHoldableQty());
         outputDTO.setHoldWarningPercent(inputEntity.getHoldWarningPercent());
         outputDTO.setDescription(inputEntity.getDescription());
+        outputDTO.setIsDefault(inputEntity.getIsDefault());
         outputDTO.setStatus(inputEntity.getStatus());
         return outputDTO;
     }

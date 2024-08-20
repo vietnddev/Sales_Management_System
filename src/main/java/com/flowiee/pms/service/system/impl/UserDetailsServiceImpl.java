@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.AccountRole;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
+import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
@@ -125,13 +126,18 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 		}
 		Account accountBefore = ObjectUtils.clone(accountOpt.get());
 		try {
-			account.setId(entityId);
+			accountOpt.get().setPhoneNumber(account.getPhoneNumber());
+			accountOpt.get().setEmail(account.getEmail());
+			accountOpt.get().setAddress(account.getAddress());
+			accountOpt.get().setGroupAccount(account.getGroupAccount());
+			accountOpt.get().setBranch(account.getBranch());
+
 			if (account.getRole() != null && account.getRole().equals(AppConstants.ADMINISTRATOR)) {
-				account.setRole("ADMIN");
+				accountOpt.get().setRole("ADMIN");
 			} else {
-				account.setRole("USER");
+				accountOpt.get().setRole("USER");
 			}
-			Account accountUpdated = accountRepo.save(account);
+			Account accountUpdated = accountRepo.save(accountOpt.get());
 
 			ChangeLog changeLog = new ChangeLog(accountBefore, accountUpdated);
 			systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_ACC_U, MasterObject.Account, "Cập nhật tài khoản " + accountUpdated.getUsername(), changeLog);

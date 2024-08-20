@@ -1,6 +1,5 @@
 function loadStorageItems(pageSize, pageNum) {
     let apiURL = mvHostURLCallApi + '/storage/' + mvStorageId + '/items';
-    console.log("apiURL ", apiURL)
     let params = {
         pageSize: pageSize,
         pageNum: pageNum,
@@ -33,6 +32,38 @@ function loadStorageItems(pageSize, pageNum) {
                     </tr>
                 `);
             });
+        }
+    }).fail(function () {
+        showErrorModal("Could not connect to the server");
+    });
+}
+
+function loadStorageDetailInfo() {
+    let apiURL = mvHostURLCallApi + '/storage/' + mvStorageId;
+    let params = {}
+    $.get(apiURL, params, function (response) {
+        if (response.status === "OK") {
+            let data = response.data;
+            mvStorageCode.val(data.code);
+            mvStorageName.val(data.name);
+            mvStorageLocation.val(data.location);
+            mvStorageDescription.val(data.description);
+            mvStorageTotalItems.val(data.totalItems);
+            mvStorageTotalValue.val(data.totalInventoryValue);
+            if (data.isDefault) {
+                mvStorageIsDefault.append(`<option value="true" selected>Có</option>`);
+                mvStorageIsDefault.append(`<option value="false">Không</option>`);
+            } else {
+                mvStorageIsDefault.append(`<option value="false" selected>Không</option>`);
+                mvStorageIsDefault.append(`<option value="true">Có</option>`);
+            }
+            if (data.status === "Y") {
+                mvStorageStatus.append(`<option value="Y" selected>${mvStorageStatusInit["Y"]}</option>`);
+                mvStorageStatus.append(`<option value="N">${mvStorageStatusInit["N"]}</option>`);
+            } else {
+                mvStorageStatus.append(`<option value="N" selected>${mvStorageStatusInit["N"]}</option>`);
+                mvStorageStatus.append(`<option value="Y">${mvStorageStatusInit["Y"]}</option>`);
+            }
         }
     }).fail(function () {
         showErrorModal("Could not connect to the server");
