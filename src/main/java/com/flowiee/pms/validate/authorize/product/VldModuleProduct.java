@@ -90,4 +90,14 @@ public class VldModuleProduct extends BaseAuthorize implements IVldModuleProduct
     public boolean deleteMaterial(boolean throwException) {
         return super.isAuthorized(ACTION.STG_MAT_D.name(), throwException);
     }
+
+    @Override
+    public boolean updateReview(boolean throwException) {
+        return true;
+    }
+
+    @Override
+    public boolean deleteReview(boolean throwException) {
+        return true;
+    }
 }

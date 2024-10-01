@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.product.ProductComboService;
+import com.flowiee.pms.service.system.FileStorageService;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.system.FileStorageRepository;
@@ -36,6 +37,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductImageServiceImpl extends BaseService implements ProductImageService {
     FileStorageRepository fileRepository;
+    FileStorageService    fileStorageService;
     TicketExportService   ticketExportService;
     TicketImportService   ticketImportService;
     ProductComboService   productComboService;
@@ -55,9 +57,9 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     @Transactional
     public FileStorage saveImageProduct(MultipartFile fileUpload, int pProductId) throws IOException {
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), pProductId);
-        FileStorage imageSaved = fileRepository.save(fileInfo);
+        FileStorage imageSaved = fileStorageService.save(fileInfo);
 
-        Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + imageSaved.getStorageName());
+        Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + File.separator + imageSaved.getStorageName());
         fileUpload.transferTo(path);
 
         return imageSaved;
@@ -73,7 +75,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), productDetail.get().getProductId());
         fileInfo.setProductDetail(productDetail.get());
-        FileStorage imageSaved = fileRepository.save(fileInfo);
+        FileStorage imageSaved = fileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -90,7 +92,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), null);
         fileInfo.setProductCombo(productCombo.get());
-        FileStorage imageSaved = fileRepository.save(fileInfo);
+        FileStorage imageSaved = fileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -107,7 +109,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
         fileInfo.setTicketImport(ticketImport.get());
-        FileStorage imageSaved = fileRepository.save(fileInfo);
+        FileStorage imageSaved = fileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -124,7 +126,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
         fileInfo.setTicketExport(ticketExport.get());
-        FileStorage imageSaved = fileRepository.save(fileInfo);
+        FileStorage imageSaved = fileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -134,7 +136,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
     @Override
     public FileStorage setImageActiveOfProduct(Integer pProductId, Integer pImageId) {
-        FileStorage imageToActive = fileRepository.findById(pImageId).orElse(null);
+        FileStorage imageToActive = fileStorageService.findById(pImageId).orElse(null);
         if (imageToActive == null) {
             throw new BadRequestException();
         }
@@ -151,7 +153,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
     @Override
     public FileStorage setImageActiveOfProductVariant(Integer pProductVariantId, Integer pImageId) {
-        FileStorage imageToActive = fileRepository.findById(pImageId).orElse(null);
+        FileStorage imageToActive = fileStorageService.findById(pImageId).orElse(null);
         if (imageToActive == null) {
             throw new BadRequestException();
         }

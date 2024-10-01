@@ -40,7 +40,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
 
     @Override
     public FileStorage save(FileStorage entity) {
-        return null;
+        return fileRepository.save(entity);
     }
 
     @Override

@@ -34,4 +34,8 @@ interface IVldModuleProduct {
     boolean report(boolean throwException);
     
     boolean readGallery(boolean throwException);
+
+    boolean updateReview(boolean throwException);
+
+    boolean deleteReview(boolean throwException);
 }
