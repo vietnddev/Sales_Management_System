@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.product.impl;
 
+import com.flowiee.pms.config.StartUp;
 import com.flowiee.pms.entity.product.ProductCombo;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
@@ -57,12 +58,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     @Transactional
     public FileStorage saveImageProduct(MultipartFile fileUpload, int pProductId) throws IOException {
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), pProductId);
-        FileStorage imageSaved = fileStorageService.save(fileInfo);
-
-        Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + File.separator + imageSaved.getStorageName());
-        fileUpload.transferTo(path);
-
-        return imageSaved;
+        return fileStorageService.save(fileInfo);
     }
 
     @Override
@@ -188,7 +184,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         FileStorage fileToChange = fileOptional.get();
         //Delete file vật lý cũ
         try {
-            File file = new File(FileUtils.rootPath + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getStorageName());
+            File file = new File(StartUp.getResourceUploadPath() + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getStorageName());
             if (file.exists()) {
                 file.delete();
             }

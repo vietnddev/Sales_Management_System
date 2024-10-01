@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.flowiee.pms.config.StartUp;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
@@ -63,7 +64,7 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
         parameterMap.put("nowDate", new Date());
         FileStorage f = orderQRCodeService.findQRCodeOfOrder(dto.getId());
         if (f != null) {
-            Path barcodePath = Path.of(FileUtils.rootPath + "/" + f.getDirectoryPath() + "/" + f.getStorageName());
+            Path barcodePath = Path.of(StartUp.getResourceUploadPath() + "/" + f.getDirectoryPath() + "/" + f.getStorageName());
             if (barcodePath.toFile().exists()) {
                 parameterMap.put("barcode", barcodePath);
             }

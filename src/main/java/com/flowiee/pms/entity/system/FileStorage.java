@@ -114,6 +114,10 @@ public class FileStorage extends BaseEntity implements Serializable {
     @Transient
     String src;
 
+    @JsonIgnore
+    @Transient
+    MultipartFile fileAttach;
+
     public FileStorage(MultipartFile file, String pModule, Integer productId) {
         try {
             this.module = pModule;
@@ -129,6 +133,7 @@ public class FileStorage extends BaseEntity implements Serializable {
                 this.product = new Product(productId);
             }
             this.isActive = false;
+            this.fileAttach = file;
         } catch (Exception e) {
             e.printStackTrace();
         }

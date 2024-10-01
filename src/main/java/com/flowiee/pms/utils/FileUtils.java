@@ -1,5 +1,7 @@
 package com.flowiee.pms.utils;
 
+import com.flowiee.pms.config.StartUp;
+import com.flowiee.pms.exception.AppException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -13,12 +15,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class FileUtils {
-    public static String rootPath = "src/main/resources/static";
-    public static String fileUploadPath = rootPath + "/uploads/";
-    public static String initCsvDataPath = rootPath + "/data/csv";
-    public static String reportTemplatePath = rootPath + "/report";
-    public static String excelTemplatePath = rootPath + "/templates/excel";
-    public static Path logoPath = Paths.get(FileUtils.rootPath + "/dist/img/FlowieeLogo.png");
+    //public static String rootPath = "src/main/resources/static";
+    public static String fileUploadPath = StartUp.getResourceUploadPath() + "/uploads/";
+    public static String initCsvDataPath = StartUp.getResourceUploadPath() + "/data/csv";
+    public static String reportTemplatePath = StartUp.getResourceUploadPath() + "/report";
+    public static String excelTemplatePath = StartUp.getResourceUploadPath() + "/templates/excel";
+    public static Path logoPath = Paths.get(StartUp.getResourceUploadPath() + "/dist/img/FlowieeLogo.png");
 
     public static void createCellCombobox(XSSFWorkbook workbook, XSSFSheet sheet, XSSFSheet hsheet, List<String> listValue, int row, int column, String nameName) {
         //Put các tên danh mục vào column trong sheet danh mục ẩn
@@ -70,5 +72,12 @@ public class FileUtils {
 
     public static String genRandomFileName() {
         return UUID.randomUUID().toString();
+    }
+
+    public static String getFileUploadPath() {
+        if (StartUp.getResourceUploadPath() == null) {
+            throw new AppException("The uploaded file saving directory is not configured, please try again later!");
+        }
+        return StartUp.getResourceUploadPath() + "/uploads/";
     }
 }

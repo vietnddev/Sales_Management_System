@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.entity.product.ProductReview;
 import com.flowiee.pms.model.dto.CustomerDTO;
 
 import lombok.*;
@@ -66,6 +67,11 @@ public class Customer extends BaseEntity implements Serializable {
 	@JsonIgnoreProperties("customer")
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
 	List<Order> listOrder;
+
+	@JsonIgnore
+	@JsonIgnoreProperties("customer")
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+	List<ProductReview> listProductReviews;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
