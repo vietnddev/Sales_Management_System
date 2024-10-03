@@ -10,16 +10,25 @@ import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.service.system.FileStorageService;
 
+import com.flowiee.pms.utils.FileUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @Tag(name = "File API", description = "Quản lý file đính kèm và hình ảnh sản phẩm")
@@ -110,5 +119,31 @@ public class FileStorageControllerView extends BaseController {
         }
         productImageService.saveImageProductCombo(file, productComboId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
+    }
+
+    @GetMapping("/uploads/**")//http://host:port/uploads/product/2024/10/3/83cbb1e4-37e9-41f1-8892-1d470ceb0f7c.jpg
+    public ResponseEntity<Resource> handleFileRequest(HttpServletRequest request) throws MalformedURLException {
+        isAuthenticated();
+        //product/2024/10/3/83cbb1e4-37e9-41f1-8892-1d470ceb0f7c.jpg
+        String pathToFile = extractPathFromPattern(request);
+        //D:\Image\ uploads \ product\2024\10\3\83cbb1e4-37e9-41f1-8892-1d470ceb0f7c.jpg
+        Path filePath = Paths.get(FileUtils.getFileUploadPath() + File.separator + pathToFile);
+        //URL [file:/D:/Image/uploads/product/2024/10/3/83cbb1e4-37e9-41f1-8892-1d470ceb0f7c.jpg]
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (resource.exists() && resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"")
+                    .body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private String extractPathFromPattern(HttpServletRequest request) {
+        // Lấy URI gốc từ request
+        String fullPath = request.getRequestURI();
+        // Bỏ đi phần '/uploads/' ở đầu
+        return fullPath.substring("/uploads/".length());
     }
 }

@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
-    public static LocalDateTime START_APP_TIME = null;
     public static Map<String, String> mvEndPointHeaderConfig = new HashMap<>();
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
     public static ShopInfo mvShopInfo;
@@ -74,7 +73,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(MODULE systemModule) {
         try {
-            StringBuilder path = new StringBuilder(FileUtils.fileUploadPath);
+            StringBuilder path = new StringBuilder(FileUtils.getFileUploadPath());
             switch (systemModule) {
                 case PRODUCT:
                     path.append("product");
@@ -107,7 +106,7 @@ public class CommonUtils {
 
     public static String getPathDirectory(String systemModule) {
         try {
-            StringBuilder path = new StringBuilder(FileUtils.fileUploadPath);
+            StringBuilder path = new StringBuilder(FileUtils.getFileUploadPath());
             if (MODULE.PRODUCT.name().equals(systemModule)) {
                 path.append("product");
             } else if (MODULE.CATEGORY.name().equals(systemModule)) {

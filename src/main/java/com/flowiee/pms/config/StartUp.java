@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.flowiee.pms.utils.FileUtils;
+import com.flowiee.pms.utils.constants.ConfigCode;
 import com.flowiee.pms.utils.constants.EndPoint;
 import com.opencsv.*;
 import org.jfree.util.Log;
@@ -55,6 +56,9 @@ public class StartUp {
 	private final CustomerRepository customerRepository;
 	private final CategoryRepository categoryRepository;
 	private final GroupAccountRepository groupAccountRepository;
+
+	public static LocalDateTime START_APP_TIME;
+	public static String mvResourceUploadPath = null;
 
 	@Autowired
 	public StartUp(LanguageService languageService, ConfigRepository configRepository, @Lazy CategoryRepository categoryRepository,
@@ -85,7 +89,7 @@ public class StartUp {
 			loadLanguageMessages("vi");
 			logger.info("Finish downloading en message");
 
-			CommonUtils.START_APP_TIME = LocalDateTime.now();
+			START_APP_TIME = LocalDateTime.now();
         };
     }
 
@@ -137,7 +141,7 @@ public class StartUp {
 		Path templateExportTempPath = Paths.get(templateExportTempStr);
 		if (!Files.exists(templateExportTempPath)) {
             try {
-                Files.createDirectory(templateExportTempPath);
+                Files.createDirectories(templateExportTempPath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -158,30 +162,33 @@ public class StartUp {
 	}
 
 	private void configResourcePath() {
-		//set file upload path
+		SystemConfig systemConfig = configRepository.findByCode(ConfigCode.resourceUploadPath.name());
+		if (systemConfig != null) {
+			mvResourceUploadPath = systemConfig.getValue();
+		}
 	}
 
 	private void initData() throws Exception {
-		String flagConfigCode = "initData";
+		String flagConfigCode = ConfigCode.initData.name();
 		SystemConfig flagConfigObj = configRepository.findByCode(flagConfigCode);
 		if (flagConfigObj == null) {
-			List<SystemConfig> listConfig = new ArrayList<>();
-			listConfig.add(new SystemConfig(flagConfigCode, "Initialize initial data for the system", "N"));
-			listConfig.add(new SystemConfig("shopName", "Tên cửa hàng", "Flowiee"));
-			listConfig.add(new SystemConfig("shopEmail", "Email", "nguyenducviet0684@gmail.com"));
-			listConfig.add(new SystemConfig("shopPhoneNumber", "Số điện thoại", "(+84) 706 820 684"));
-			listConfig.add(new SystemConfig("shopAddress", "Địa chỉ", "Phường 7, Quận 8, Thành phố Hồ Chí Minh"));
-			listConfig.add(new SystemConfig("shopLogoUrl", "Logo", null));
-			listConfig.add(new SystemConfig("emailHost", "Email host", "smtp"));
-			listConfig.add(new SystemConfig("emailPort", "Email port", "587"));
-			listConfig.add(new SystemConfig("emailUser", "Email username", null));
-			listConfig.add(new SystemConfig("emailPass", "Email password", null));
-			listConfig.add(new SystemConfig("sysTimeOut", "Thời gian timeout", "3600"));
-			listConfig.add(new SystemConfig("pathFileUpload", "Thư mục lưu file upload", null));
-			listConfig.add(new SystemConfig("maxSizeFileUpload", "Dung lượng file tối đa cho phép upload", null));
-			listConfig.add(new SystemConfig("extensionAllowedFileUpload", "Định dạng file được phép upload", null));
-			listConfig.add(new SystemConfig("sendEmailReportDaily", "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
-			configRepository.saveAll(listConfig);
+			List<SystemConfig> cnf = new ArrayList<>();
+			cnf.add(initDefaultAudit(ConfigCode.initData, "Initialize initial data for the system", "Y"));
+			cnf.add(initDefaultAudit(ConfigCode.shopName, "Tên cửa hàng", "Flowiee"));
+			cnf.add(initDefaultAudit(ConfigCode.shopEmail, "Email", "nguyenducviet0684@gmail.com"));
+			cnf.add(initDefaultAudit(ConfigCode.shopPhoneNumber, "Số điện thoại", "(+84) 706 820 684"));
+			cnf.add(initDefaultAudit(ConfigCode.shopAddress, "Địa chỉ", "Phường 7, Quận 8, Thành phố Hồ Chí Minh"));
+			cnf.add(initDefaultAudit(ConfigCode.shopLogoUrl, "Logo", null));
+			cnf.add(initDefaultAudit(ConfigCode.emailHost, "Email host", "smtp"));
+			cnf.add(initDefaultAudit(ConfigCode.emailPort, "Email port", "587"));
+			cnf.add(initDefaultAudit(ConfigCode.emailUser, "Email username", null));
+			cnf.add(initDefaultAudit(ConfigCode.emailPass, "Email password", null));
+			cnf.add(initDefaultAudit(ConfigCode.sysTimeOut, "Thời gian timeout", "3600"));
+			cnf.add(initDefaultAudit(ConfigCode.maxSizeFileUpload, "Dung lượng file tối đa cho phép upload", null));
+			cnf.add(initDefaultAudit(ConfigCode.extensionAllowedFileUpload, "Định dạng file được phép upload", null));
+			cnf.add(initDefaultAudit(ConfigCode.sendEmailReportDaily, "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
+			cnf.add(initDefaultAudit(ConfigCode.resourceUploadPath, "Thư mực chứa tệp upload", null));
+			configRepository.saveAll(cnf);
 		}
 		SystemConfig systemConfigInitData = configRepository.findByCode(flagConfigCode);
 		if ("Y".equals(systemConfigInitData.getValue())) {
@@ -202,7 +209,7 @@ public class StartUp {
 			category.setIsDefault(row[4]);
 			category.setEndpoint(row[5]);
 			category.setCreatedBy(-1);
-			category.setLastUpdatedBy("-1");
+			category.setLastUpdatedBy("SA");
 			listCategory.add(category);
 		}
 		listCategory.remove(0);//header
@@ -212,17 +219,17 @@ public class StartUp {
 		//Init branch
 		Branch branch = new Branch(null, "MAIN", "Trụ sở");
 		branch.setCreatedBy(-1);
-		branch.setLastUpdatedBy("-1");
+		branch.setLastUpdatedBy("SA");
 		Branch branchSaved = branchRepository.save(branch);
 		//Init group account
 		GroupAccount groupAccountManager = new GroupAccount(null, "MANAGER", "Quản lý cửa hàng");
 		groupAccountManager.setCreatedBy(-1);
-		groupAccountManager.setLastUpdatedBy("-1");
+		groupAccountManager.setLastUpdatedBy("SA");
 		GroupAccount groupManagerSaved = groupAccountRepository.save(groupAccountManager);
 
 		GroupAccount groupAccountStaff = new GroupAccount(null, "STAFF", "Nhân viên bán hàng");
 		groupAccountStaff.setCreatedBy(-1);
-		groupAccountStaff.setLastUpdatedBy("-1");
+		groupAccountStaff.setLastUpdatedBy("SA");
 		GroupAccount groupStaffSaved = groupAccountRepository.save(groupAccountStaff);
 		//Init admin account
 		Account adminAccount = new Account();
@@ -235,7 +242,7 @@ public class StartUp {
 		adminAccount.setGroupAccount(groupManagerSaved);
 		adminAccount.setStatus(true);
 		adminAccount.setCreatedBy(-1);
-		adminAccount.setLastUpdatedBy("-1");
+		adminAccount.setLastUpdatedBy("SA");
 		accountRepository.save(adminAccount);
 
 		Account staffAccount = new Account();
@@ -248,7 +255,7 @@ public class StartUp {
 		staffAccount.setGroupAccount(groupStaffSaved);
 		staffAccount.setStatus(true);
 		staffAccount.setCreatedBy(-1);
-		staffAccount.setLastUpdatedBy("-1");
+		staffAccount.setLastUpdatedBy("SA");
 		accountRepository.save(staffAccount);
 		//Init customer
 		Customer customer = new Customer();
@@ -256,10 +263,21 @@ public class StartUp {
 		customer.setDateOfBirth(LocalDate.of(2000, 1, 8));
 		customer.setSex(true);
 		customer.setCreatedBy(-1);
-		customer.setLastUpdatedBy("-1");
+		customer.setLastUpdatedBy("SA");
 		customerRepository.save(customer);
 
 		systemConfigInitData.setValue("Y");
 		configRepository.save(systemConfigInitData);
+	}
+
+	private SystemConfig initDefaultAudit(ConfigCode code, String name, String value) {
+		SystemConfig systemConfig = new SystemConfig(code, name, value);
+		systemConfig.setCreatedBy(-1);
+		systemConfig.setLastUpdatedBy("SA");
+		return systemConfig;
+	}
+
+	public static String getResourceUploadPath() {
+		return mvResourceUploadPath;
 	}
 }

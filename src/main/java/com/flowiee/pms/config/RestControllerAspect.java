@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Aspect
 @Component
 public class RestControllerAspect {
@@ -14,26 +16,31 @@ public class RestControllerAspect {
 
     @Before("execution(* com.flowiee.pms.controller.category.*.*(..))")
     public void logBeforeCategoryControllerCall(JoinPoint joinPoint) {
-        log.info(":::::AOP Before - A method in com.flowiee.pms.controller.category package is about to be called:::::{}", joinPoint);
+        Object[] args = joinPoint.getArgs();
+        log.info("AOP Before call system controller {} with arguments: {}", joinPoint, Arrays.toString(args));
     }
 
     @Before("execution(* com.flowiee.pms.controller.product.*.*(..))")
     public void logBeforeProductControllerCall(JoinPoint joinPoint) {
-        log.info(":::::AOP Before - A method in com.flowiee.pms.controller.product package is about to be called:::::{}", joinPoint);
+        Object[] args = joinPoint.getArgs();
+        log.info("AOP Before call system controller {} with arguments: {}", joinPoint, Arrays.toString(args));
     }
 
     @Before("execution(* com.flowiee.pms.controller.sales.*.*(..))")
     public void logBeforeSalesControllerCall(JoinPoint joinPoint) {
-        log.info(":::::AOP Before - A method in com.flowiee.pms.controller.sales package is about to be called:::::{}", joinPoint);
+        Object[] args = joinPoint.getArgs();
+        log.info("AOP Before call sales controller {} with arguments: {}", joinPoint, Arrays.toString(args));
     }
 
     @Before("execution(* com.flowiee.pms.controller.storage.*.*(..))")
     public void logBeforeStorageControllerCall(JoinPoint joinPoint) {
-        log.info(":::::AOP Before - A method in com.flowiee.pms.controller.storage package is about to be called:::::{}", joinPoint);
+        Object[] args = joinPoint.getArgs();
+        log.info("AOP Before call storage controller {} with arguments: {}", joinPoint, Arrays.toString(args));
     }
 
     @Before("execution(* com.flowiee.pms.controller.system.*.*(..))")
     public void logBeforeSystemControllerCall(JoinPoint joinPoint) {
-        log.info(":::::AOP Before - A method in com.flowiee.pms.controller.system package is about to be called:::::{}", joinPoint);
+        Object[] args = joinPoint.getArgs();
+        log.info("AOP Before call system controller {} with arguments: {}", joinPoint, Arrays.toString(args));
     }
 }

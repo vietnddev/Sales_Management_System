@@ -3,6 +3,7 @@ package com.flowiee.pms.controller;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.CategoryType;
+import com.flowiee.pms.validate.authorize.BaseAuthorize;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 @Component
 @Getter
-public class BaseController {
+public class BaseController extends BaseAuthorize {
 	@Getter
 	@Setter
 	class SearchTool {

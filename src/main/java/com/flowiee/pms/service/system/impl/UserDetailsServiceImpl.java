@@ -78,7 +78,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 					.function(ACTION.SYS_LOGIN.name())
 					.object(MasterObject.Account.name())
 					.mode(LogType.LI.name())
-					.content(accountEntity.getUsername())
+					.content(accountEntity.getUsername() + " login")
 					.title("Login")
 					.ip(userPrincipal.getIp())
 					.account(accountEntity)
