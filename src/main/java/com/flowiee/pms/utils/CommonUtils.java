@@ -34,6 +34,7 @@ public class CommonUtils {
     public static Map<String, String> mvEndPointSideBarConfig = new HashMap<>();
     public static ShopInfo mvShopInfo;
     public static ServerInfo mvServerInfo;
+    public static final String productID = "SMS";
 
     public static String formatToVND(Object currency) {
         @SuppressWarnings("deprecation")
@@ -169,7 +170,9 @@ public class CommonUtils {
     public static UserPrincipal getUserPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            return (UserPrincipal) authentication.getPrincipal();
+            if (!"anonymousUser".equalsIgnoreCase(authentication.getPrincipal().toString())) {
+                return (UserPrincipal) authentication.getPrincipal();
+            }
         }
         throw new AuthenticationException();
     }
