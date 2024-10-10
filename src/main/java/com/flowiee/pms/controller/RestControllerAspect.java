@@ -65,17 +65,17 @@ public class RestControllerAspect {
                 .requestUrl(getRequestUrl(attributes))
                 .requestParam(getRequestParam(attributes))
                 .requestBody(getRequestBody(joinPoint))
-                .createdBy(CommonUtils.getUserPrincipal().getUsername())
+                .createdBy(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getUsername())
                 .createdTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(startTime), ZoneId.systemDefault()))
-                .ipAddress(CommonUtils.getUserPrincipal().getIp())
+                .ipAddress(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getIp())
                 .application(CommonUtils.productID)
                 .build());
 
         RequestContext lvRequestContext = mvRequestContext.get();
         lvRequestContext.setRequestId(eventLog.getRequestId());
         lvRequestContext.setStartTime(startTime);
-        lvRequestContext.setUsername(CommonUtils.getUserPrincipal().getUsername());
-        lvRequestContext.setIp(CommonUtils.getUserPrincipal().getIp());
+        lvRequestContext.setUsername(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getUsername());
+        lvRequestContext.setIp(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getIp());
         mvRequestContext.set(lvRequestContext);
     }
 
