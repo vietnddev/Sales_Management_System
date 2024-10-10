@@ -60,7 +60,6 @@ public class ProductVariantConvert {
         outputDTO.setColorName(inputEntity.getColor().getName());
         outputDTO.setSizeId(inputEntity.getSize().getId());
         outputDTO.setSizeName(inputEntity.getSize().getName());
-        outputDTO.setFabricTypeId(inputEntity.getFabricType().getId());
         outputDTO.setFabricTypeName(inputEntity.getFabricType().getName());
         if (ObjectUtils.isNotEmpty(inputEntity.getGarmentFactory())) {
             outputDTO.setGarmentFactoryId(inputEntity.getGarmentFactory().getId());
@@ -70,10 +69,6 @@ public class ProductVariantConvert {
             outputDTO.setSupplierId(inputEntity.getSupplier().getId());
             outputDTO.setSupplierName(inputEntity.getSupplier().getName());
         }
-        outputDTO.setOriginalPrice(inputEntity.getOriginalPrice());
-        outputDTO.setDiscountPrice(inputEntity.getDiscountPrice());
-        outputDTO.setPriceMaxDiscount(null);
-        outputDTO.setPriceAfterDiscount(null);
         outputDTO.setUnitCurrency(null);
 //        if (AppConstants.PRODUCT_STATUS.A.name().equals(inputEntity.getStatus())) {
 //            outputDTO.setStatus(AppConstants.PRODUCT_STATUS.A.getLabel());
@@ -82,12 +77,6 @@ public class ProductVariantConvert {
 //        }
         outputDTO.setDefectiveQty(inputEntity.getDefectiveQty());
         outputDTO.setAvailableSalesQty(outputDTO.getStorageQty() - outputDTO.getDefectiveQty());
-        outputDTO.setRetailPrice(inputEntity.getRetailPrice());
-        outputDTO.setRetailPriceDiscount(inputEntity.getRetailPriceDiscount());
-        outputDTO.setWholesalePrice(inputEntity.getWholesalePrice());
-        outputDTO.setWholesalePriceDiscount(inputEntity.getWholesalePriceDiscount());
-        outputDTO.setPurchasePrice(inputEntity.getPurchasePrice());
-        outputDTO.setCostPrice(inputEntity.getCostPrice());
         outputDTO.setWeight(inputEntity.getWeight());
         outputDTO.setNote(inputEntity.getNote());
         outputDTO.setStatus(inputEntity.getStatus());
@@ -110,14 +99,6 @@ public class ProductVariantConvert {
             .storageQty(inputDTO.getStorageQty())
             .soldQty(inputDTO.getSoldQty())
             .defectiveQty(inputDTO.getDefectiveQty())
-            .originalPrice(inputDTO.getOriginalPrice())//Remove in future
-            .discountPrice(inputDTO.getDiscountPrice())//Remove in future
-            .purchasePrice(inputDTO.getPurchasePrice())
-            .costPrice(inputDTO.getCostPrice())
-            .retailPrice(inputDTO.getRetailPrice())
-            .retailPriceDiscount(inputDTO.getRetailPriceDiscount())
-            .wholesalePrice(inputDTO.getWholesalePrice())
-            .wholesalePriceDiscount(inputDTO.getWholesalePriceDiscount())
             .weight(inputDTO.getWeight())
             .note(inputDTO.getNote())
             .status(inputDTO.getStatus())

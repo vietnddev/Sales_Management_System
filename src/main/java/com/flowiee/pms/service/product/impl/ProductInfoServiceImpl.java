@@ -47,21 +47,36 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public List<ProductDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null, null, null).getContent();
+        return this.findAll(null, -1, -1, null, null, null, null, null, null, null).getContent();
     }
 
     @Override
-    public Page<ProductDTO> findAll(int pageSize, int pageNum, String pTxtSearch, Integer pBrand, Integer pProductType,
+    public Page<ProductDTO> findAll(PID pPID , int pageSize, int pageNum, String pTxtSearch, Integer pBrand, Integer pProductType,
                                     Integer pColor, Integer pSize, Integer pUnit, String pStatus) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        Page<Product> products = productRepository.findAll(pTxtSearch, pBrand, pProductType, pColor, pSize, pUnit, pStatus, pageable);
+        Page<Product> products = productRepository.findAll(pPID.getId(), pTxtSearch, pBrand, pProductType, pColor, pSize, pUnit, pStatus, pageable);
         List<ProductDTO> productDTOs = ProductConvert.convertToDTOs(products);
         this.setImageActiveAndLoadVoucherApply(productDTOs);
         this.setInfoVariantOfProduct(productDTOs);
         return new PageImpl<>(productDTOs, pageable, products.getTotalElements());
+    }
+
+    @Override
+    public Page<ProductDTO> findClothes(int pageSize, int pageNum, String pTxtSearch, Integer pBrand, Integer pProductType, Integer pColor, Integer pSize, Integer pUnit, String pStatus) {
+        return findAll(PID.CLOTHES, pageSize, pageNum, pTxtSearch, pBrand, pProductType, pColor, pSize, pUnit, pStatus);
+    }
+
+    @Override
+    public Page<ProductDTO> findFruits(int pageSize, int pageNum, String pTxtSearch, String pStatus) {
+        return findAll(PID.FRUIT, pageSize, pageNum, pTxtSearch, null, null, null, null, null, pStatus);
+    }
+
+    @Override
+    public Page<ProductDTO> findSouvenirs(int pageSize, int pageNum, String pTxtSearch, Integer pColor, String pStatus) {
+        return findAll(PID.SOUVENIR, pageSize, pageNum, pTxtSearch, null, null, pColor, null, null, pStatus);
     }
 
     @Override

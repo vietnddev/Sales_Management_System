@@ -73,7 +73,7 @@
                                                                 <td th:text="${index.index + 1}"></td>
                                                                 <td></td>
                                                                 <td th:text="${d.variantName}"></td>
-                                                                <td th:text="${d.retailPriceDiscount != null ? d.retailPriceDiscount : d.retailPrice}"></td>
+                                                                <td th:text="${d.price.retailPriceDiscount != null ? d.price.retailPriceDiscount : d.price.retailPrice}"></td>
                                                                 <td th:text="${d.availableSalesQty}"></td>
                                                                 <td th:text="${d.status}"></td>
                                                             </tr>

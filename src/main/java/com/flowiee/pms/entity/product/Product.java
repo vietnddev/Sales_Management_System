@@ -30,6 +30,9 @@ public class Product extends BaseEntity implements Serializable {
     @Serial
 	static final long serialVersionUID = 1L;
 
+    @Column(name = "PID")
+    String PID;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_type_id", nullable = false)
@@ -92,6 +95,10 @@ public class Product extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     List<ProductReview> listProductPreviews;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "productBase", fetch = FetchType.LAZY)
+    List<ProductPrice> listProductBasePrice;
 
     public Product(int id) {
         super.id = id;

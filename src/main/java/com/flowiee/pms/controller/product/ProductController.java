@@ -5,13 +5,13 @@ import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
-import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.ImportService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.PID;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +21,6 @@ import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,7 +62,7 @@ public class ProductController extends BaseController {
             if (fullInfo != null && !fullInfo) {
                 return success(ProductConvert.convertToDTOs(productInfoService.findProductsIdAndProductName()));
             }
-            Page<ProductDTO> productPage = productInfoService.findAll(pageSize, pageNum - 1, txtSearch, pBrand, pProductType, pColor, pSize, pUnit, null);
+            Page<ProductDTO> productPage = productInfoService.findAll(PID.CLOTHES, pageSize, pageNum - 1, txtSearch, pBrand, pProductType, pColor, pSize, pUnit, null);
             return success(productPage.getContent(), pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"), ex);

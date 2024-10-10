@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -50,27 +49,6 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
     @Modifying
     @Query("update ProductDetail p set p.storageQty = (p.storageQty - :soldQty), p.soldQty = (p.soldQty + :soldQty) where p.id=:productVariantId")
     void updateQuantityDecrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
-
-    @Modifying
-    @Query("update ProductDetail p set " +
-           "p.originalPrice=:originalPrice, " +
-           "p.discountPrice=:discountPrice, " +
-           "p.retailPrice=:retailPrice, " +
-           "p.retailPriceDiscount=:retailPriceDiscount, " +
-           "p.wholesalePrice=:wholesalePrice, " +
-           "p.wholesalePriceDiscount=:wholesalePriceDiscount, " +
-           "p.purchasePrice=:purchasePrice, " +
-           "p.costPrice=:costPrice " +
-           "where p.id=:productVariantId")
-    void updatePrice(@Param("originalPrice") BigDecimal originalPrice,
-                     @Param("discountPrice") BigDecimal discountPrice,
-                     @Param("retailPrice") BigDecimal retailPrice,
-                     @Param("retailPriceDiscount") BigDecimal retailPriceDiscount,
-                     @Param("wholesalePrice") BigDecimal wholesalePrice,
-                     @Param("wholesalePriceDiscount") BigDecimal wholesalePriceDiscount,
-                     @Param("purchasePrice") BigDecimal purchasePrice,
-                     @Param("costPrice") BigDecimal costPrice,
-                     @Param("productVariantId") Integer productVariantId);
 
     @Query("select sum(p.storageQty) from ProductDetail p where p.status = 'A'")
     Integer countTotalQuantity();

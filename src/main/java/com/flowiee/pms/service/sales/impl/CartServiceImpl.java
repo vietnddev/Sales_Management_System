@@ -1,9 +1,12 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.product.ProductDetail;
+import com.flowiee.pms.entity.product.ProductPrice;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
+import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
@@ -32,19 +35,26 @@ public class CartServiceImpl extends BaseService implements CartService {
     CartItemsService      cartItemsService;
     CartItemsRepository   cartItemsRepository;
     ProductVariantService productVariantService;
+    ProductPriceRepository productPriceRepository;
 
     @Override
     public List<OrderCart> findCartByAccountId(Integer accountId) {
         List<OrderCart> listCart = cartRepository.findByAccountId(accountId);
         for (OrderCart cart : listCart) {
             for (Items item : cart.getListItems()) {
-                Optional<ProductVariantDTO> productDetail = productVariantService.findById(item.getProductDetail().getId());
-                if (productDetail.isPresent()) {
-                    BigDecimal originalPrice = productDetail.get().getOriginalPrice();
-                    BigDecimal discountPrice = productDetail.get().getDiscountPrice();
-                    item.setPrice(discountPrice != null ? discountPrice : originalPrice);
-                    item.getProductDetail().setAvailableSalesQty(productDetail.get().getStorageQty() - productDetail.get().getDefectiveQty());
+                ProductPrice itemPrice = productPriceRepository.findPricePresent(null, item.getProductDetail().getId());
+                if (itemPrice != null) {
+                    PriceType priceType = PriceType.valueOf(item.getPriceType());
+                    if (priceType.equals(PriceType.L)) {
+                        item.setPriceOriginal(itemPrice.getRetailPrice());
+                        item.setPrice(itemPrice.getRetailPriceDiscount());
+                    }
+                    if (priceType.equals(PriceType.S)) {
+                        item.setPriceOriginal(itemPrice.getWholesalePrice());
+                        item.setPrice(itemPrice.getWholesalePriceDiscount());
+                    }
                 }
+                item.getProductDetail().setAvailableSalesQty(item.getProductDetail().getStorageQty() - item.getProductDetail().getDefectiveQty());
             }
         }
         return listCart;
@@ -117,12 +127,16 @@ public class CartServiceImpl extends BaseService implements CartService {
                 Items items = cartItemsService.findItemByCartAndProductVariant(cartId, productVariant.get().getId());
                 cartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
             } else {
+                ProductPrice productVariantPrice = productPriceRepository.findPricePresent(null, Integer.parseInt(productVariantId));
+                if (productVariantPrice == null) {
+                    throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productVariant.get().getVariantName()));
+                }
                 Items items = Items.builder()
                     .orderCart(new OrderCart(cartId))
                     .productDetail(new ProductDetail(Integer.parseInt(productVariantId)))
                     .priceType(PriceType.L.name())
-                    .price(productVariant.get().getRetailPriceDiscount() != null ? productVariant.get().getRetailPriceDiscount() : productVariant.get().getRetailPrice())
-                    .priceOriginal(productVariant.get().getRetailPrice())
+                    .price(productVariantPrice.getRetailPriceDiscount() != null ? productVariantPrice.getRetailPriceDiscount() : productVariantPrice.getRetailPrice())
+                    .priceOriginal(productVariantPrice.getRetailPrice())
                     .extraDiscount(BigDecimal.ZERO)
                     .quantity(1)
                     .note("")
@@ -146,17 +160,18 @@ public class CartServiceImpl extends BaseService implements CartService {
             if (itemToUpdate.getQuantity() > productVariant.getAvailableSalesQty()) {
                 throw new BadRequestException("This item's quantity is over available quantity!");
             }
+            ProductPrice productVariantPrice = productPriceRepository.findPricePresent(null, productVariant.getId());
             item.setNote(itemToUpdate.getNote());
             item.setQuantity(itemToUpdate.getQuantity());
             if (itemToUpdate.getPriceType() != null && (!item.getPriceType().equals(itemToUpdate.getPriceType()))) {
                 if (itemToUpdate.getPriceType().equals(PriceType.L.name())) {
-                    item.setPrice(productVariant.getRetailPriceDiscount());
-                    item.setPriceOriginal(productVariant.getRetailPrice());
+                    item.setPrice(productVariantPrice.getRetailPriceDiscount());
+                    item.setPriceOriginal(productVariantPrice.getRetailPrice());
                     item.setPriceType(PriceType.L.name());
                 }
                 if (itemToUpdate.getPriceType().equals(PriceType.S.name())) {
-                    item.setPrice(productVariant.getWholesalePriceDiscount());
-                    item.setPriceOriginal(productVariant.getWholesalePrice());
+                    item.setPrice(productVariantPrice.getWholesalePriceDiscount());
+                    item.setPriceOriginal(productVariantPrice.getWholesalePrice());
                     item.setPriceType(PriceType.S.name());
                 }
             }

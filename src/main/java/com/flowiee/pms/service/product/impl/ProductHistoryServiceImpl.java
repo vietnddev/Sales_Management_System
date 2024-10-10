@@ -11,6 +11,7 @@ import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -83,8 +84,8 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
                     .productDetail(productVariantId != null ? new ProductDetail(productVariantId) : null)
                     .productAttribute(productAttributeId != null ? new ProductAttribute(productAttributeId) : null)
                     .field(field)
-                    .oldValue("null".equals(oldValue) ? "-" : oldValue)
-                    .newValue("null".equals(newValue) ? "-" : newValue)
+                    .oldValue("null".equals(oldValue) || ObjectUtils.isEmpty(oldValue) ? "-" : oldValue)
+                    .newValue("null".equals(newValue) || ObjectUtils.isEmpty(newValue) ? "-" : newValue)
                     .build();
             logSaved.add(this.save(productHistory));
         }

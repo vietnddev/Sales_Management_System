@@ -8,9 +8,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "product_attribute")
@@ -46,17 +44,6 @@ public class ProductAttribute extends BaseEntity implements Serializable {
 
     public ProductAttribute(Integer id) {
         this.id = id;
-    }
-
-    public Map<String, String> compareTo(ProductAttribute entityToCompare) {
-        Map<String, String> map = new HashMap<>();
-        if (!this.getAttributeName().equals(entityToCompare.getAttributeName())) {
-            map.put("Product attribute name", this.getAttributeName() + "#" + entityToCompare.getAttributeName());
-        }
-        if (!this.getAttributeValue().equals(entityToCompare.getAttributeValue())) {
-            map.put("Product attribute value", this.getAttributeValue() + "#" + entityToCompare.getAttributeValue());
-        }
-        return map;
     }
 
 	@Override

@@ -256,12 +256,12 @@ function loadProductVariantInfoOnForm(productVariantId) {
     mvSoldQtyF2.val(lvProductVariant.soldQty);
     mvStorageQtyF2.val(lvProductVariant.storageQty);
     mvAvailableSalesQtyF2.val(lvProductVariant.availableSalesQty);
-    mvPurchasePriceF2.val(lvProductVariant.purchasePrice);
-    mvCostPriceF2.val(lvProductVariant.costPrice);
-    mvRetailPriceF2.val(lvProductVariant.retailPrice);
-    mvRetailPriceDiscountF2.val(lvProductVariant.retailPriceDiscount);
-    mvWholesalePriceF2.val(lvProductVariant.wholesalePrice);
-    mvWholesalePriceDiscountF2.val(lvProductVariant.wholesalePriceDiscount);
+    mvPurchasePriceF2.val(lvProductVariant.price.purchasePrice);
+    mvCostPriceF2.val(lvProductVariant.price.costPrice);
+    mvRetailPriceF2.val(lvProductVariant.price.retailPrice);
+    mvRetailPriceDiscountF2.val(lvProductVariant.price.retailPriceDiscount);
+    mvWholesalePriceF2.val(lvProductVariant.price.wholesalePrice);
+    mvWholesalePriceDiscountF2.val(lvProductVariant.price.wholesalePriceDiscount);
     mvDefectiveQtyF2.val(lvProductVariant.defectiveQty);
     mvWeightF2.val(lvProductVariant.weight);
     mvVariantNoteF2.text(lvProductVariant.note);

@@ -4,12 +4,14 @@ function updateProductVariant(productVariantId) {
         variantName: mvVariantNameF2.val(),
         //originalPrice: $("#originalPriceField").val().replaceAll(',', ''),
         //discountPrice: $("#promotionPriceField").val().replaceAll(',', ''),
-        purchasePrice: mvPurchasePriceF2.val().replaceAll(',', ''),
-        costPrice: mvCostPriceF2.val().replaceAll(',', ''),
-        retailPrice: mvRetailPriceF2.val().replaceAll(',', ''),
-        retailPriceDiscount: mvRetailPriceDiscountF2.val().replaceAll(',', ''),
-        wholesalePrice: mvWholesalePriceF2.val().replaceAll(',', ''),
-        wholesalePriceDiscount: mvWholesalePriceDiscountF2.val().replaceAll(',', ''),
+        price: {
+            purchasePrice: mvPurchasePriceF2.val().replaceAll(',', ''),
+            costPrice: mvCostPriceF2.val().replaceAll(',', ''),
+            retailPrice: mvRetailPriceF2.val().replaceAll(',', ''),
+            retailPriceDiscount: mvRetailPriceDiscountF2.val().replaceAll(',', ''),
+            wholesalePrice: mvWholesalePriceF2.val().replaceAll(',', ''),
+            wholesalePriceDiscount: mvWholesalePriceDiscountF2.val().replaceAll(',', '')
+        },
         defectiveQty: mvDefectiveQtyF2.val(),
         weight: mvWeightF2.val(),
         note: mvVariantNoteF2.val()

@@ -32,10 +32,10 @@ function loadVariantsOfProduct() {
                             <td>${d.availableSalesQty}</td>
                             <td>${d.soldQty}</td>
                             <td>
-                                <span class="btn-view-price-history" productDetailId="${d.id}" style="color: #007bff; cursor: pointer">${formatCurrency(d.retailPriceDiscount)}</span>
+                                <span class="btn-view-price-history" productDetailId="${d.id}" style="color: #007bff; cursor: pointer">${formatCurrency(d.price.retailPriceDiscount)}</span>
                             </td>
                             <td>
-                                <span class="btn-view-price-history" productDetailId="${d.id}" style="color: #007bff; cursor: pointer">${formatCurrency(d.wholesalePriceDiscount)}</span>
+                                <span class="btn-view-price-history" productDetailId="${d.id}" style="color: #007bff; cursor: pointer">${formatCurrency(d.price.wholesalePriceDiscount)}</span>
                             </td>
                             <td>${mvProductStatus[d.status]}</td>
                                 <!--<td>

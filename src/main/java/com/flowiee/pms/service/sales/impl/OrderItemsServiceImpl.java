@@ -1,11 +1,13 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.flowiee.pms.entity.product.ProductPrice;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
+import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
@@ -42,6 +44,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     @NonFinal
     @Lazy
     private ProductVariantService productVariantService;
+    private ProductPriceRepository productPriceRepository;
 
     @Override
     public List<OrderDetail> findAll() {
@@ -69,13 +72,17 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
                     orderDetail.setQuantity(orderDetail.getQuantity() + 1);
                     itemAdded.add(orderDetailRepository.save(orderDetail));
                 } else {
+                    ProductPrice itemPrice = productPriceRepository.findPricePresent(null, productDetail.get().getId());
+                    if (itemPrice == null) {
+                        throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productDetail.get().getVariantName()));
+                    }
                     itemAdded.add(this.save(OrderDetail.builder()
                             .order(new Order(pOrderDto.getId()))
                             .productDetail(productDetail.get())
                             .quantity(1)
                             .status(true)
-                            .price(productDetail.get().getRetailPriceDiscount())
-                            .priceOriginal(productDetail.get().getRetailPrice())
+                            .price(itemPrice.getRetailPriceDiscount())
+                            .priceOriginal(itemPrice.getRetailPrice())
                             .extraDiscount(BigDecimal.ZERO)
                             .priceType("L")
                             .build()));

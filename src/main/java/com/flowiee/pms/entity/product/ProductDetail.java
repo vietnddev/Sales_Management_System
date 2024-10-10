@@ -19,7 +19,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -54,12 +53,12 @@ public class ProductDetail extends BaseEntity implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "size_id", nullable = false)
+    @JoinColumn(name = "size_id")
     Category size;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fabric_id", nullable = false)
+    @JoinColumn(name = "fabric_id")
     Category fabricType;
 
     @JsonIgnore
@@ -80,30 +79,6 @@ public class ProductDetail extends BaseEntity implements Serializable {
 
     @Column(name = "quantity_defective", nullable = false)
     Integer defectiveQty;
-
-    @Column(name = "original_price", nullable = false)
-    BigDecimal originalPrice;//Remove in future
-
-    @Column(name = "discount_price", nullable = false)
-    BigDecimal discountPrice;//Remove in future
-
-    @Column(name = "purchase_price")
-    BigDecimal purchasePrice;
-
-    @Column(name = "cost_price")
-    BigDecimal costPrice;
-
-    @Column(name = "retail_price", nullable = false)
-    BigDecimal retailPrice;
-
-    @Column(name = "retail_price_discount")
-    BigDecimal retailPriceDiscount;
-
-    @Column(name = "wholesale_price", nullable = false)
-    BigDecimal wholesalePrice;
-
-    @Column(name = "wholesale_price_discount")
-    BigDecimal wholesalePriceDiscount;
 
     @Column(name = "weight")
     String weight;
@@ -167,6 +142,10 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     List<ProductVariantTemp> listProductVariantTemp;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    List<ProductPrice> listProductVariantPrice;
+
     @Transient
     Integer availableSalesQty;
 
@@ -186,9 +165,9 @@ public class ProductDetail extends BaseEntity implements Serializable {
     public String toStringInsert() {
         return "ProductVariant [id=" + this.id + ", code=" + variantCode + ", name=" + variantName +
                              ", color=" + color.getName() + ", size=" + size.getName() +
-                             ", retailPrice=" + retailPrice + ", retailPriceDiscount=" + retailPriceDiscount +
-                             ", wholesalePrice=" + wholesalePrice + ", wholesalePriceDiscount=" + wholesalePriceDiscount +
-                             ", costPrice=" + costPrice + ", purchasePrice=" + purchasePrice +
+                             //", retailPrice=" + retailPrice + ", retailPriceDiscount=" + retailPriceDiscount +
+                             //", wholesalePrice=" + wholesalePrice + ", wholesalePriceDiscount=" + wholesalePriceDiscount +
+                             //", costPrice=" + costPrice + ", purchasePrice=" + purchasePrice +
                              ", status=" + status;
     }
 }

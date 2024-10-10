@@ -36,21 +36,18 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
     String garmentFactoryName;
     Integer supplierId;
     String supplierName;
-    //Integer ticketImportGoodsId;
-    //String ticketImportGoodsTitle;
     BigDecimal originalPrice;
     BigDecimal discountPrice;
-    Float priceMaxDiscount;
-    Float priceAfterDiscount;
     String unitCurrency;
     List<ProductHistory> listPrices;
     Integer storageIdInitStorageQty;
     Integer storageIdInitSoldQty;
+    ProductPriceDTO price;
 
 	@Override
 	public String toString() {
 		return "ProductVariantDTO [id=" + id + ", code=" + getVariantCode() + ", name=" + getVariantName()
                 + ", storageQty=" + getStorageQty() + ", soldQty=" + getSoldQty() + ", status=" + getStatus() + ", colorId=" + colorId + ", sizeId=" + sizeId
                 + ", fabricTypeId=" + fabricTypeId + ", garmentFactoryId=" + garmentFactoryId + ", supplierId=" + supplierId + "]";
-	}        
+	}
 }

@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.ProductDetail;
+import com.flowiee.pms.entity.product.ProductPrice;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
@@ -9,6 +10,8 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.model.dto.ProductPriceDTO;
+import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
@@ -36,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +52,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     TicketImportService         ticketImportService;
     TicketExportService         ticketExportService;
     ProductHistoryService       productHistoryService;
+    ProductPriceRepository      productPriceRepository;
     ProductDetailTempRepository productVariantTempRepo;
 
     @Override
@@ -62,14 +67,22 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             pageable = PageRequest.of(pageNum, pageSize);
         }
         List<ProductDetail> productVariants = productVariantRepo.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
-        return new PageImpl<>(ProductVariantConvert.entitiesToDTOs(productVariants), pageable, productVariants.size());
+        List<ProductVariantDTO> productVariantDTOs = ProductVariantConvert.entitiesToDTOs(productVariants);
+        for (ProductVariantDTO dto : productVariantDTOs) {
+            ProductPrice productPrice = productPriceRepository.findPricePresent(null, dto.getId());
+            setPriceInfo(dto, productPrice);
+        }
+        return new PageImpl<>(productVariantDTOs, pageable, productVariants.size());
     }
 
     @Override
     public Optional<ProductVariantDTO> findById(Integer pProductVariantId) {
         Optional<ProductDetail> productVariant = productVariantRepo.findById(pProductVariantId);
         if (productVariant.isPresent()) {
-            return Optional.of(ProductVariantConvert.entityToDTO(productVariant.get()));
+            ProductVariantDTO dto = ProductVariantConvert.entityToDTO(productVariant.get());
+            ProductPrice productPrice = productPriceRepository.findPricePresent(null, dto.getId());
+            setPriceInfo(dto, productPrice);
+            return Optional.of(dto);
         }
         return Optional.empty();
     }
@@ -83,9 +96,19 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             pVariant.setDefectiveQty(pVariant.getDefectiveQty() != null ? pVariant.getDefectiveQty() : 0);
             pVariant.setStatus(ProductStatus.A.name());
             pVariant.setVariantCode(ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : CommonUtils.genProductCode());
-            pVariant.setRetailPriceDiscount(inputDTO.getRetailPriceDiscount() != null ? inputDTO.getRetailPriceDiscount() : inputDTO.getRetailPrice());
-            pVariant.setWholesalePriceDiscount(inputDTO.getWholesalePriceDiscount() != null ? inputDTO.getWholesalePriceDiscount() : inputDTO.getWholesalePrice());
             ProductDetail productDetailSaved = productVariantRepo.save(pVariant);
+
+            ProductPriceDTO priceDTO = inputDTO.getPrice();
+            ProductPrice productVariantPriceSaved = productPriceRepository.save(ProductPrice.builder()
+                    .productVariant(productDetailSaved)
+                    .retailPrice(priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : BigDecimal.ZERO)
+                    .retailPriceDiscount(priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice())
+                    .wholesalePrice(priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : BigDecimal.ZERO)
+                    .wholesalePriceDiscount(priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice())
+                    .purchasePrice(priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : BigDecimal.ZERO)
+                    .costPrice(priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : BigDecimal.ZERO)
+                    .state(ProductPrice.STATE_ACTIVE)
+                    .build());
 
             if (productDetailSaved.getStorageQty() > 0) {
                 String initMessage = "Initialize storage quantity when create new products";
@@ -142,20 +165,35 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             throw new BadRequestException();
         }
         try {
+            //Product variant info
             ProductDetail productBeforeUpdate = ObjectUtils.clone(productVariantOptional.get());
             ProductDetail productToUpdate = productVariantOptional.get();
             productToUpdate.setVariantName(productDetail.getVariantName());
-            productToUpdate.setPurchasePrice(productDetail.getPurchasePrice());
-            productToUpdate.setCostPrice(productDetail.getCostPrice());
-            productToUpdate.setRetailPrice(productDetail.getRetailPrice());
-            productToUpdate.setRetailPriceDiscount(productDetail.getRetailPriceDiscount());
-            productToUpdate.setWholesalePrice(productDetail.getWholesalePrice());
-            productToUpdate.setWholesalePriceDiscount(productDetail.getWholesalePriceDiscount());
             productToUpdate.setDefectiveQty(productDetail.getDefectiveQty());
             productToUpdate.setWeight(productDetail.getWeight());
             productToUpdate.setNote(productDetail.getNote());
             ProductDetail productVariantUpdated = productVariantRepo.save(productToUpdate);
 
+            //Price
+            ProductPrice productVariantPricePresent = productPriceRepository.findPricePresent(null, productVariantUpdated.getId());
+            if (productVariantPricePresent != null) {
+                productVariantPricePresent.setState(ProductPrice.STATE_INACTIVE);
+                productPriceRepository.save(productVariantPricePresent);
+            }
+
+            ProductPriceDTO priceDTO = productDetail.getPrice();
+            productPriceRepository.save(ProductPrice.builder()
+                    .productVariant(productVariantUpdated)
+                    .retailPrice(priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : BigDecimal.ZERO)
+                    .retailPriceDiscount(priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice())
+                    .wholesalePrice(priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : BigDecimal.ZERO)
+                    .wholesalePriceDiscount(priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice())
+                    .purchasePrice(priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : BigDecimal.ZERO)
+                    .costPrice(priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : BigDecimal.ZERO)
+                    .state(ProductPrice.STATE_ACTIVE)
+                    .build());
+
+            //Log
             String logTitle = "Cập nhật thông tin sản phẩm: " + productVariantUpdated.getVariantName();
             ChangeLog changeLog = new ChangeLog(productBeforeUpdate, productVariantUpdated);
             productHistoryService.save(changeLog.getLogChanges(), logTitle, productVariantUpdated.getProduct().getId(), productVariantUpdated.getId(), null);
@@ -230,5 +268,24 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             tempDTO.setBranchName(branchName);
         }
         return storageHistoryDTOs;
+    }
+
+    private ProductVariantDTO setPriceInfo(ProductVariantDTO dto, ProductPrice productPrice) {
+        if (dto != null) {
+            if (productPrice != null) {
+                dto.setPrice(ProductPriceDTO.builder()
+                        .retailPrice(productPrice.getRetailPrice())
+                        .retailPriceDiscount(productPrice.getRetailPriceDiscount())
+                        .wholesalePrice(productPrice.getWholesalePrice())
+                        .wholesalePriceDiscount(productPrice.getWholesalePriceDiscount())
+                        .purchasePrice(productPrice.getPurchasePrice())
+                        .costPrice(productPrice.getCostPrice())
+                        .lastUpdated(productPrice.getLastUpdatedAt())
+                        .build());
+            } else {
+                dto.setPrice(new ProductPriceDTO());
+            }
+        }
+        return dto;
     }
 }
