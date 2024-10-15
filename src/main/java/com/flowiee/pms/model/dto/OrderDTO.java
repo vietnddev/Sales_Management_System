@@ -27,26 +27,26 @@ public class OrderDTO extends Order implements Serializable {
 	@Serial
 	static final long serialVersionUID = 1L;
 
-    Integer customerId;
+	Long customerId;
     String customerName;
-    Integer salesChannelId;
+	Long salesChannelId;
     String salesChannelName;
-    Integer orderStatusId;
+	Long orderStatusId;
     String orderStatusName;
-    Integer payMethodId;
+	Long payMethodId;
     String payMethodName;
-    Integer cashierId;
+	Long cashierId;
     String cashierName;
 	BigDecimal totalAmount;
 	BigDecimal totalAmountDiscount;
 	Integer totalProduct;
     String qrCode;
-	Integer cartId;
-	Integer ticketExportId;
+	Long cartId;
+	Long ticketExportId;
 	Boolean accumulateBonusPoints;
 	List<OrderDetailDTO> listOrderDetailDTO;
 
-	public OrderDTO(Integer id, String code, LocalDateTime orderTime, String receiptName, String receiptPhone, String receiptEmail, String receiptAddress,
+	public OrderDTO(Long id, String code, LocalDateTime orderTime, String receiptName, String receiptPhone, String receiptEmail, String receiptAddress,
 					Customer customer, Category salesChannel, Category paymentMethod, Account cashier, Category orderStatus) {
 		this.id = id;
 		setCode(code);

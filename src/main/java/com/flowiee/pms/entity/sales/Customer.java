@@ -78,11 +78,11 @@ public class Customer extends BaseEntity implements Serializable {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	List<CustomerContact> listCustomerContact;
 
-	public Customer(int id) {
+	public Customer(long id) {
 		super.id = id;
 	}
 
-	public Customer(int id, String customerName) {
+	public Customer(long id, String customerName) {
 		super.id = id;
 		this.customerName = customerName;
 	}

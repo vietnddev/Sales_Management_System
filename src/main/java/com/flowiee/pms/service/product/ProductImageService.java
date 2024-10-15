@@ -7,27 +7,27 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ProductImageService {
-    List<FileStorage> getImageOfProduct(Integer pProductId);
+    List<FileStorage> getImageOfProduct(Long pProductId);
 
-    List<FileStorage> getImageOfProductVariant(Integer pProductVariantId);
+    List<FileStorage> getImageOfProductVariant(Long pProductVariantId);
 
-    FileStorage saveImageProduct(MultipartFile fileUpload, int pProductId) throws IOException;
+    FileStorage saveImageProduct(MultipartFile fileUpload, long pProductId) throws IOException;
 
-    FileStorage saveImageProductVariant(MultipartFile fileUpload, int pProductId) throws IOException;
+    FileStorage saveImageProductVariant(MultipartFile fileUpload, long pProductId) throws IOException;
 
-    FileStorage saveImageProductCombo(MultipartFile fileUpload, int productComboId) throws IOException;
+    FileStorage saveImageProductCombo(MultipartFile fileUpload, long productComboId) throws IOException;
 
-    FileStorage saveImageTicketImport(MultipartFile fileUpload, int ticketImportId) throws IOException;
+    FileStorage saveImageTicketImport(MultipartFile fileUpload, long ticketImportId) throws IOException;
 
-    FileStorage saveImageTicketExport(MultipartFile fileUpload, int ticketExportId) throws IOException;
+    FileStorage saveImageTicketExport(MultipartFile fileUpload, long ticketExportId) throws IOException;
 
-    FileStorage setImageActiveOfProduct(Integer pProductId, Integer pImageId);
+    FileStorage setImageActiveOfProduct(Long pProductId, Long pImageId);
 
-    FileStorage setImageActiveOfProductVariant(Integer pProductVariantId, Integer pImageId);
+    FileStorage setImageActiveOfProductVariant(Long pProductVariantId, Long pImageId);
 
-    FileStorage findImageActiveOfProduct(int pProductId);
+    FileStorage findImageActiveOfProduct(long pProductId);
 
-    FileStorage findImageActiveOfProductVariant(int pProductVariantId);
+    FileStorage findImageActiveOfProductVariant(long pProductVariantId);
 
-    FileStorage changeImageProduct(MultipartFile fileToChange, int fileId);
+    FileStorage changeImageProduct(MultipartFile fileToChange, long fileId);
 }

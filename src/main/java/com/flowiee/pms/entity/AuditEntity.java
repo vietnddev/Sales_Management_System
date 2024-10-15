@@ -29,7 +29,7 @@ public class AuditEntity {
 
     @Column(name = "created_by", updatable = false)
     @CreatedBy
-    protected Integer createdBy;
+    protected Long createdBy;
 
     @JsonIgnore
     @Column(name = "last_updated_at", columnDefinition = "timestamp default current_timestamp")

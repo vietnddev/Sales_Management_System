@@ -149,7 +149,7 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @Transient
     Integer availableSalesQty;
 
-    public ProductDetail(int id) {
+    public ProductDetail(long id) {
         super.id = id;
     }
 

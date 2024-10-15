@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductDetailRepository extends JpaRepository <ProductDetail, Integer>{
+public interface ProductDetailRepository extends JpaRepository <ProductDetail, Long>{
     @Query("from ProductDetail v " +
            "left join Product p on p.id = v.product.id " +
            "left join GarmentFactory g on g.id = v.garmentFactory.id " +
@@ -26,29 +26,29 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, I
            "and (:fabricTypeId is null or f.id=:fabricTypeId) " +
            "and (:availableForSales is null or :availableForSales = false or v.storageQty > 0) " +
            "order by v.variantName, s.name, c.name")
-    List<ProductDetail> findAll(@Param("productId") Integer productId,
-                           @Param("colorId") Integer colorId,
-                           @Param("sizeId") Integer sizeId,
-                           @Param("fabricTypeId") Integer fabricTypeId,
+    List<ProductDetail> findAll(@Param("productId") Long productId,
+                           @Param("colorId") Long colorId,
+                           @Param("sizeId") Long sizeId,
+                           @Param("fabricTypeId") Long fabricTypeId,
                            @Param("availableForSales") Boolean availableForSales,
                            Pageable pageable);
     
     @Query("from ProductDetail b where b.product.id=:productId and b.color.id=:colorId and b.size.id=:sizeId and b.fabricType.id=:fabricTypeId")
-    ProductDetail findByColorAndSize(@Param("productId") Integer productId, @Param("colorId") Integer colorId, @Param("sizeId")  Integer sizeId, @Param("fabricTypeId")  Integer fabricTypeId);
+    ProductDetail findByColorAndSize(@Param("productId") Long productId, @Param("colorId") Long colorId, @Param("sizeId")  Long sizeId, @Param("fabricTypeId")  Long fabricTypeId);
 
     @Query("select sum(nvl(p.storageQty, 0)) from ProductDetail p where p.product.id=:productId and p.color.id=:colorId and p.size.id=:sizeId")
-    Integer findQuantityBySizeOfEachColor(@Param("productId") Integer productId, @Param("colorId") Integer colorId, @Param("sizeId") Integer sizeId);
+    Integer findQuantityBySizeOfEachColor(@Param("productId") Long productId, @Param("colorId") Long colorId, @Param("sizeId") Long sizeId);
 
     @Query("select sum(nvl(p.soldQty, 0)) as totalQtySell from ProductDetail p where p.product.id=:productId")
-    Integer findTotalQtySell(@Param("productId") Integer productId);
+    Integer findTotalQtySell(@Param("productId") Long productId);
 
     @Modifying
     @Query("update ProductDetail p set p.storageQty = (p.storageQty + :soldQty) where p.id=:productVariantId")
-    void updateQuantityIncrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
+    void updateQuantityIncrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Long productVariantId);
 
     @Modifying
     @Query("update ProductDetail p set p.storageQty = (p.storageQty - :soldQty), p.soldQty = (p.soldQty + :soldQty) where p.id=:productVariantId")
-    void updateQuantityDecrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Integer productVariantId);
+    void updateQuantityDecrease(@Param("soldQty") Integer soldQty, @Param("productVariantId") Long productVariantId);
 
     @Query("select sum(p.storageQty) from ProductDetail p where p.status = 'A'")
     Integer countTotalQuantity();

@@ -66,7 +66,7 @@ public class CartServiceImpl extends BaseService implements CartService {
     }
 
     @Override
-    public Optional<OrderCart> findById(Integer id) {
+    public Optional<OrderCart> findById(Long id) {
         return mvCartRepository.findById(id);
     }
 

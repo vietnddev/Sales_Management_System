@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
+    GET_ERROR_OCCURRED(1999, "An error occurred while get %s"),
     SEARCH_ERROR_OCCURRED(2000, "An error occurred while search %s"),
     CREATE_ERROR_OCCURRED(2001, "An error occurred while create %s"),
     UPDATE_ERROR_OCCURRED(2002, "An error occurred while update %s"),

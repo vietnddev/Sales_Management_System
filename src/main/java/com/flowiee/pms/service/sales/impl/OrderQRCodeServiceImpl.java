@@ -31,7 +31,7 @@ public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeSe
     FileStorageRepository mvFileStorageRepository;
 
     @Override
-    public String saveQRCodeOfOrder(int orderId) {
+    public String saveQRCodeOfOrder(long orderId) {
         try {
             long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
             String imageQRCodeName = "qrcode_" + orderId + ".png";
@@ -61,7 +61,7 @@ public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeSe
     }
 
     @Override
-    public FileStorage findQRCodeOfOrder(int orderId) {
+    public FileStorage findQRCodeOfOrder(long orderId) {
         return mvFileStorageRepository.findQRCodeOfOrder(orderId);
     }
 }

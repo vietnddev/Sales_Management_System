@@ -7,15 +7,15 @@ import com.flowiee.pms.service.BaseCurdService;
 import com.flowiee.pms.entity.sales.OrderCart;
 
 public interface CartService extends BaseCurdService<OrderCart> {
-    List<OrderCart> findCartByAccountId(Integer accountId);
+    List<OrderCart> findCartByAccountId(Long accountId);
 
-    Double calTotalAmountWithoutDiscount(int cartId);
+    Double calTotalAmountWithoutDiscount(long cartId);
 
-    boolean isItemExistsInCart(Integer cartId, Integer productVariantId);
+    boolean isItemExistsInCart(Long cartId, Integer productVariantId);
 
-    void resetCart(Integer cartId);
+    void resetCart(Long cartId);
 
-    void addItemsToCart(Integer cartId, String[] productVariantIds);
+    void addItemsToCart(Long cartId, String[] productVariantIds);
 
-    void updateItemsOfCart(Items items, Integer itemId);
+    void updateItemsOfCart(Items items, Long itemId);
 }

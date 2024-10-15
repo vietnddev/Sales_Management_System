@@ -39,12 +39,12 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public List<VoucherApply> findByVoucherId(Integer voucherId) {
+    public List<VoucherApply> findByVoucherId(Long voucherId) {
         return mvVoucherApplyRepository.findByVoucherId(voucherId);
     }
 
     @Override
-    public Optional<VoucherApply> findById(Integer id) {
+    public Optional<VoucherApply> findById(Long id) {
         return mvVoucherApplyRepository.findById(id);
     }
 
@@ -54,7 +54,7 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public VoucherApply update(VoucherApply voucherApply, Integer id) {
+    public VoucherApply update(VoucherApply voucherApply, Long id) {
         if (this.findById(id).isEmpty()) {
             throw new BadRequestException();
         }
@@ -63,7 +63,7 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         if (this.findById(entityId).isEmpty()) {
             mvVoucherApplyRepository.deleteById(entityId);
         }

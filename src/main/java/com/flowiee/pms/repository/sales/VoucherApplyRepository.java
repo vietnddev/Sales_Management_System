@@ -10,7 +10,7 @@ import com.flowiee.pms.entity.sales.VoucherApply;
 import java.util.List;
 
 @Repository
-public interface VoucherApplyRepository extends JpaRepository<VoucherApply, Integer> {
+public interface VoucherApplyRepository extends JpaRepository<VoucherApply, Long> {
     @Query("select " +
            "va.id as voucher_apply_id_0, " +
            "vi.id as voucher_info_id_1, " +
@@ -23,8 +23,8 @@ public interface VoucherApplyRepository extends JpaRepository<VoucherApply, Inte
            "left join VoucherInfo vi on vi.id = va.voucherId " +
            "left join Product p on p.id = va.productId " +
            "where (:productId is null or p.id=:productId) ")
-    List<Object[]> findAll(@Param("productId") Integer productId);
+    List<Object[]> findAll(@Param("productId") Long productId);
 
     @Query("from VoucherApply where voucherId=:voucherId")
-    List<VoucherApply> findByVoucherId(@Param("voucherId") Integer voucherId);
+    List<VoucherApply> findByVoucherId(@Param("voucherId") Long voucherId);
 }

@@ -118,7 +118,7 @@ public class FileStorage extends BaseEntity implements Serializable {
     @Transient
     MultipartFile fileAttach;
 
-    public FileStorage(MultipartFile file, String pModule, Integer productId) {
+    public FileStorage(MultipartFile file, String pModule, Long productId) {
         try {
             this.module = pModule;
             this.extension = FileUtils.getFileExtension(file.getOriginalFilename());

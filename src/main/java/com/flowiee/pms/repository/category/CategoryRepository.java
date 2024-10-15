@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("from Category c where c.code = 'ROOT' order by c.sort")
     List<Category> findRootCategory();
 
@@ -23,8 +23,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
            "and (coalesce(:ignoreId) is null or c.id not in (:ignoreId))" +
            "order by c.sort")
     Page<Category> findSubCategory(@Param("type") String type,
-                                   @Param("parentId") Integer parentId,
-                                   @Param("ignoreId") List<Integer> ignoreId,
+                                   @Param("parentId") Long parentId,
+                                   @Param("ignoreId") List<Long> ignoreId,
                                    Pageable pageable);
 
     @Query("from Category c where c.type in (:type) and (c.code is null or c.code <> 'ROOT') order by c.sort")
@@ -42,10 +42,10 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Category findSubCategoryDefault(@Param("type") String type);
 
     @Query("from Category c where c.id in (select p.color.id from ProductDetail p where p.product.id=:productId)")
-    List<Category> findColorOfProduct(@Param("productId") Integer productId);
+    List<Category> findColorOfProduct(@Param("productId") Long productId);
 
     @Query("from Category c where c.id in (select p.size.id from ProductDetail p where p.product.id=:productId and p.color.id=:colorId)")
-    List<Category> findSizeOfColorOfProduct(@Param("productId") Integer productId, @Param("colorId") Integer colorId);
+    List<Category> findSizeOfColorOfProduct(@Param("productId") Long productId, @Param("colorId") Long colorId);
 
     @Query("select c.type, nvl((select count(*) from Category where code <> 'ROOT' and type = c.type), 0) as total_records " +
            "from Category c " +

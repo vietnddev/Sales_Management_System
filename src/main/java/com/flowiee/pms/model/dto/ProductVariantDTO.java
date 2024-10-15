@@ -19,22 +19,22 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer productId;
-    Integer productTypeId;
+    Long productId;
+    Long productTypeId;
     String productTypeName;
-    Integer brandId;
+    Long brandId;
     String brandName;
-    Integer unitId;
+    Long unitId;
     String  unitName;
-    Integer colorId;
+    Long colorId;
     String colorName;
-    Integer sizeId;
+    Long sizeId;
     String sizeName;
-    Integer fabricTypeId;
+    Long fabricTypeId;
     String fabricTypeName;
-    Integer garmentFactoryId;
+    Long garmentFactoryId;
     String garmentFactoryName;
-    Integer supplierId;
+    Long supplierId;
     String supplierName;
     BigDecimal originalPrice;
     BigDecimal discountPrice;

@@ -131,7 +131,7 @@ public class Category extends BaseEntity implements Serializable {
 	@Transient
 	String inUse;
 
-	public Category(Integer id, String name) {
+	public Category(long id, String name) {
 		super.id = id;
 		this.name = name;
 	}

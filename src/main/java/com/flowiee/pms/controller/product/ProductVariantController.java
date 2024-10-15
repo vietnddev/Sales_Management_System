@@ -92,7 +92,7 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Get price history of product detail")
     @GetMapping(value = "/variant/price/history/{Id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<List<ProductHistory>> getHistoryPriceOfProductDetail(@PathVariable("Id") Integer productVariantId) {
+    public AppResponse<List<ProductHistory>> getHistoryPriceOfProductDetail(@PathVariable("Id") Long productVariantId) {
         if (ObjectUtils.isEmpty(mvProductVariantService.findById(productVariantId))) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
@@ -102,7 +102,7 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Update price")
     @PutMapping(value = "/variant/price/update/{productVariantId}")
     @PreAuthorize("@vldModuleProduct.priceManagement(true)")
-    public AppResponse<String> updatePrice(@PathVariable("productVariantId") Integer productVariantId,
+    public AppResponse<String> updatePrice(@PathVariable("productVariantId") Long productVariantId,
                                            @RequestParam(value = "originalPrice", required = false) BigDecimal originalPrice,
                                            @RequestParam(value = "discountPrice", required = false) BigDecimal discountPrice) {
         try {

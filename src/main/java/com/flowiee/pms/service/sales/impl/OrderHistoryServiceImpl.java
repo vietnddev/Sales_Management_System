@@ -22,7 +22,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     OrderHistoryRepository mvOrderHistoryRepository;
 
     @Override
-    public List<OrderHistory> save(Map<String, Object[]> logChanges, String title, Integer orderId, Integer orderItemId) {
+    public List<OrderHistory> save(Map<String, Object[]> logChanges, String title, Long orderId, Long orderItemId) {
         List<OrderHistory> orderHistories = new ArrayList<>();
         for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
             String field = entry.getKey();

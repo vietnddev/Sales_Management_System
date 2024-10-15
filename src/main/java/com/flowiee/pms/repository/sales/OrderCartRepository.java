@@ -10,7 +10,7 @@ import com.flowiee.pms.entity.sales.OrderCart;
 import java.util.List;
 
 @Repository
-public interface OrderCartRepository extends JpaRepository<OrderCart, Integer> {
+public interface OrderCartRepository extends JpaRepository<OrderCart, Long> {
     @Query("from OrderCart c where c.createdBy=:createdBy")
-    List<OrderCart> findByAccountId(@Param("createdBy") Integer createdBy);
+    List<OrderCart> findByAccountId(@Param("createdBy") Long createdBy);
 }

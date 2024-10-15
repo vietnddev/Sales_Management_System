@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface VoucherInfoRepository extends JpaRepository<VoucherInfo, Integer> {
+public interface VoucherInfoRepository extends JpaRepository<VoucherInfo, Long> {
     @Query("from VoucherInfo v " +
            "where 1=1 " +
            "and (:ids is null or v.id in :ids) " +
@@ -21,7 +21,7 @@ public interface VoucherInfoRepository extends JpaRepository<VoucherInfo, Intege
            "and ((:startTime is null and :endTime is null) or ((v.startTime >= :startTime) and (v.endTime <= :endTime))) " +
            "and (:status is null or (:status = 'I' or (case when ((trunc(v.startTime) <= trunc(current_date)) and (trunc(v.endTime) >= trunc(current_date))) then 'A' else 'I' end) = 'A')) " +
            "and (:status is null or (:status = 'A' or (case when ((trunc(v.startTime) <= trunc(current_date)) and (trunc(v.endTime) >= trunc(current_date))) then 'A' else 'I' end) = 'I'))")
-    Page<VoucherInfo> findAll(@Param("ids") List<Integer> voucherIds,
+    Page<VoucherInfo> findAll(@Param("ids") List<Long> voucherIds,
                               @Param("title") String title,
                               @Param("startTime") LocalDateTime startTime,
                               @Param("endTime") LocalDateTime endTime,

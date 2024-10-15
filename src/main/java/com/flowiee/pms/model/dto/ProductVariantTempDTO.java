@@ -19,9 +19,9 @@ public class ProductVariantTempDTO extends ProductVariantTemp implements Seriali
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer ticketImportId;
-    Integer ticketExportId;
-    Integer productVariantId;
+    Long ticketImportId;
+    Long ticketExportId;
+    Long productVariantId;
     String productVariantName;
     //Popup's field get import/export storage of product
     String staff;

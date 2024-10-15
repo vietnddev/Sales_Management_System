@@ -53,7 +53,7 @@ public class CustomerControllerView extends BaseController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
-    public ModelAndView findCustomerDetail(@PathVariable("id") Integer customerId) {
+    public ModelAndView findCustomerDetail(@PathVariable("id") Long customerId) {
         Optional<CustomerDTO> customerDTO = mvCustomerService.findById(customerId);
         if (customerDTO.isEmpty()) {
             throw new ResourceNotFoundException("Customer not found");
@@ -80,7 +80,7 @@ public class CustomerControllerView extends BaseController {
 
     @PostMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public ModelAndView updateCustomer(@ModelAttribute("customer") CustomerDTO customer, @PathVariable("id") Integer customerId) {
+    public ModelAndView updateCustomer(@ModelAttribute("customer") CustomerDTO customer, @PathVariable("id") Long customerId) {
         if (customer == null || customerId <= 0 || mvCustomerService.findById(customerId).isEmpty()) {
             throw new ResourceNotFoundException("Customer not found!");
         }
@@ -90,7 +90,7 @@ public class CustomerControllerView extends BaseController {
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteCustomer(true)")
-    public ModelAndView deleteCustomer(@PathVariable("id") Integer id) {
+    public ModelAndView deleteCustomer(@PathVariable("id") Long id) {
         mvCustomerService.delete(id);
         return new ModelAndView("redirect:/customer");
     }
@@ -108,7 +108,7 @@ public class CustomerControllerView extends BaseController {
     @PostMapping("/contact/update/{id}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public ModelAndView updateCustomerContact(@ModelAttribute("customerContact") CustomerContact customerContact,
-                                              @PathVariable("id") Integer customerContactId,
+                                              @PathVariable("id") Long customerContactId,
                                               HttpServletRequest request) {
         if (customerContact == null || customerContact.getCustomer() == null) {
             throw new ResourceNotFoundException("Customer not found!");
@@ -119,16 +119,16 @@ public class CustomerControllerView extends BaseController {
 
     @PostMapping("/contact/delete/{id}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public ModelAndView updateCustomerContact(@PathVariable("id") Integer customerContactId, HttpServletRequest request) {
+    public ModelAndView updateCustomerContact(@PathVariable("id") Long customerContactId, HttpServletRequest request) {
         mvCustomerContactService.delete(customerContactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/contact/use-default/{contactId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public ModelAndView setCustomerContactUseDefault(@RequestParam("customerId") Integer customerId,
+    public ModelAndView setCustomerContactUseDefault(@RequestParam("customerId") Long customerId,
                                                      @RequestParam("contactCode") String contactCode,
-                                                     @PathVariable("contactId") Integer contactId,
+                                                     @PathVariable("contactId") Long contactId,
                                                      HttpServletRequest request) {
         mvCustomerContactService.enableContactUseDefault(customerId, contactCode, contactId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
@@ -136,7 +136,7 @@ public class CustomerControllerView extends BaseController {
 
     @PostMapping("/contact/undefault/{contactId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public ModelAndView setCustomerContactUnUseDefault(@PathVariable("contactId") Integer contactId, HttpServletRequest request) {
+    public ModelAndView setCustomerContactUnUseDefault(@PathVariable("contactId") Long contactId, HttpServletRequest request) {
         if (contactId <= 0 || mvCustomerContactService.findById(contactId).isEmpty()) {
             throw new ResourceNotFoundException("Customer contact not found!");
         }

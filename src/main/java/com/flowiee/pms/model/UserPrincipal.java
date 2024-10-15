@@ -18,11 +18,11 @@ import java.util.Set;
 public class UserPrincipal extends Account implements UserDetails {
 	@Serial
 	static final long serialVersionUID = 1L;
-	
-	Integer id;
+
+    Long id;
     String username;
     String password;
-    Integer branchId;
+    Long branchId;
     String ip;
     boolean isAccountNonExpired;
     boolean isAccountNonLocked;

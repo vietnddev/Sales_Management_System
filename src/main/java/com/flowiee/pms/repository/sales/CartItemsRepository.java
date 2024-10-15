@@ -11,15 +11,15 @@ import com.flowiee.pms.entity.sales.Items;
 import java.util.List;
 
 @Repository
-public interface CartItemsRepository extends JpaRepository<Items, Integer> {
+public interface CartItemsRepository extends JpaRepository<Items, Long> {
     @Query("from Items i where i.orderCart.id=:idCart")
-    List<Items> findByCartId(@Param("idCart") Integer idCart);
+    List<Items> findByCartId(@Param("idCart") Long idCart);
 
     @Query("select i.quantity from Items i where i.orderCart.id=:cartId and i.productDetail.id=:productVariantId")
-    Integer findQuantityByProductVariantId(@Param("cartId") Integer cartId, @Param("productVariantId") Integer productVariantId);
+    Integer findQuantityByProductVariantId(@Param("cartId") Long cartId, @Param("productVariantId") Long productVariantId);
 
     @Query("from Items i where i.orderCart.id=:cartId and i.productDetail.id=:productVariantId")
-    Items findByCartAndProductVariant(@Param("cartId") Integer cartId, @Param("productVariantId") Integer productVariantId);
+    Items findByCartAndProductVariant(@Param("cartId") Long cartId, @Param("productVariantId") Long productVariantId);
 
     @Query("select nvl(sum(nvl((case when i.price is not null then i.price else i.priceOriginal end), 0) * i.quantity), 0) " +
            "from Items i " +
@@ -28,7 +28,7 @@ public interface CartItemsRepository extends JpaRepository<Items, Integer> {
 
     @Modifying
     @Query("update Items i set i.quantity=:quantity where i.id=:itemId")
-    void updateItemQty(@Param("itemId") Integer itemId, @Param("quantity") Integer quantity);
+    void updateItemQty(@Param("itemId") Long itemId, @Param("quantity") Integer quantity);
 
     @Modifying
     @Query("delete Items")
@@ -36,5 +36,5 @@ public interface CartItemsRepository extends JpaRepository<Items, Integer> {
 
     @Modifying
     @Query("delete Items where orderCart.id=:cartId")
-    void deleteAllItems(@Param("cartId") Integer cartId);
+    void deleteAllItems(@Param("cartId") Long cartId);
 }

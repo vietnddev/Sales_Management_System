@@ -66,7 +66,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     }
 
     @Override
-    public Optional<CustomerDTO> findById(Integer id) {
+    public Optional<CustomerDTO> findById(Long id) {
         Optional<Customer> customer = mvCustomerRepository.findById(id);
         if (customer.isPresent()) {
             CustomerDTO customerDTO = CustomerDTO.fromCustomer(customer.get());
@@ -183,7 +183,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     }
 
     @Override
-    public String delete(Integer id) {
+    public String delete(Long id) {
         Optional<CustomerDTO> customer = this.findById(id);
         if (customer.isEmpty()) {
             throw new BadRequestException("Customer not found!");

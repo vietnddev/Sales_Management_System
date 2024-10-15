@@ -45,25 +45,25 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     FileStorageRepository mvFileStorageRepository;
 
     @Override
-    public List<FileStorage> getImageOfProduct(Integer productId) {
+    public List<FileStorage> getImageOfProduct(Long productId) {
         return mvFileStorageRepository.findAllImages(MODULE.PRODUCT.name(), productId, null);
     }
 
     @Override
-    public List<FileStorage> getImageOfProductVariant(Integer productDetailId) {
+    public List<FileStorage> getImageOfProductVariant(Long productDetailId) {
         return mvFileStorageRepository.findAllImages(MODULE.PRODUCT.name(), null, productDetailId);
     }
 
     @Override
     @Transactional
-    public FileStorage saveImageProduct(MultipartFile fileUpload, int pProductId) throws IOException {
+    public FileStorage saveImageProduct(MultipartFile fileUpload, long pProductId) throws IOException {
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), pProductId);
         return mvFileStorageService.save(fileInfo);
     }
 
     @Override
     @Transactional
-    public FileStorage saveImageProductVariant(MultipartFile fileUpload, int pProductVariantId) throws IOException {
+    public FileStorage saveImageProductVariant(MultipartFile fileUpload, long pProductVariantId) throws IOException {
         Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(pProductVariantId);
         if (productDetail.isEmpty()) {
             throw new BadRequestException();
@@ -80,7 +80,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     }
 
     @Override
-    public FileStorage saveImageProductCombo(MultipartFile fileUpload, int productComboId) throws IOException {
+    public FileStorage saveImageProductCombo(MultipartFile fileUpload, long productComboId) throws IOException {
         Optional<ProductCombo> productCombo = mvProductComboService.findById(productComboId);
         if (productCombo.isEmpty()) {
             throw new BadRequestException();
@@ -97,7 +97,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     }
 
     @Override
-    public FileStorage saveImageTicketImport(MultipartFile fileUpload, int ticketImportId) throws IOException {
+    public FileStorage saveImageTicketImport(MultipartFile fileUpload, long ticketImportId) throws IOException {
         Optional<TicketImport> ticketImport = mvTicketImportService.findById(ticketImportId);
         if (ticketImport.isEmpty()) {
             throw new BadRequestException();
@@ -114,7 +114,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     }
 
     @Override
-    public FileStorage saveImageTicketExport(MultipartFile fileUpload, int ticketExportId) throws IOException {
+    public FileStorage saveImageTicketExport(MultipartFile fileUpload, long ticketExportId) throws IOException {
         Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
             throw new BadRequestException();
@@ -131,7 +131,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     }
 
     @Override
-    public FileStorage setImageActiveOfProduct(Integer pProductId, Integer pImageId) {
+    public FileStorage setImageActiveOfProduct(Long pProductId, Long pImageId) {
         FileStorage imageToActive = mvFileStorageService.findById(pImageId).orElse(null);
         if (imageToActive == null) {
             throw new BadRequestException();
@@ -148,7 +148,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     }
 
     @Override
-    public FileStorage setImageActiveOfProductVariant(Integer pProductVariantId, Integer pImageId) {
+    public FileStorage setImageActiveOfProductVariant(Long pProductVariantId, Long pImageId) {
         FileStorage imageToActive = mvFileStorageService.findById(pImageId).orElse(null);
         if (imageToActive == null) {
             throw new BadRequestException();
@@ -165,18 +165,18 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     }
 
     @Override
-    public FileStorage findImageActiveOfProduct(int pProductId) {
+    public FileStorage findImageActiveOfProduct(long pProductId) {
         return mvFileStorageRepository.findActiveImage(pProductId, null);
     }
 
     @Override
-    public FileStorage findImageActiveOfProductVariant(int pProductVariantId) {
+    public FileStorage findImageActiveOfProductVariant(long pProductVariantId) {
         return mvFileStorageRepository.findActiveImage(null, pProductVariantId);
     }
 
     @Transactional
     @Override
-    public FileStorage changeImageProduct(MultipartFile fileAttached, int fileId) {
+    public FileStorage changeImageProduct(MultipartFile fileAttached, long fileId) {
         Optional<FileStorage> fileOptional = mvFileStorageRepository.findById(fileId);
         if (fileOptional.isEmpty()) {
             throw new BadRequestException();

@@ -11,16 +11,16 @@ import com.flowiee.pms.entity.sales.CustomerContact;
 import java.util.List;
 
 @Repository
-public interface CustomerContactRepository extends JpaRepository<CustomerContact, Integer> {
+public interface CustomerContactRepository extends JpaRepository<CustomerContact, Long> {
     @Query("from CustomerContact c where c.customer.id=:customerId order by c.code, c.isDefault, c.status")
-    List<CustomerContact> findByCustomerId(@Param("customerId") Integer customerId);
+    List<CustomerContact> findByCustomerId(@Param("customerId") Long customerId);
 
     @Query("from CustomerContact c where c.customer.id=:customerId and c.code='P' and c.isDefault='Y' and c.status=true")
-    CustomerContact findPhoneUseDefault(@Param("customerId") Integer customerId);
+    CustomerContact findPhoneUseDefault(@Param("customerId") Long customerId);
 
     @Query("from CustomerContact c where c.customer.id=:customerId and c.code='E' and c.isDefault='Y' and c.status=true")
-    CustomerContact findEmailUseDefault(@Param("customerId") Integer customerId);
+    CustomerContact findEmailUseDefault(@Param("customerId") Long customerId);
 
     @Query("from CustomerContact c where c.customer.id=:customerId and c.code='A' and c.isDefault='Y'  and c.status=true")
-    CustomerContact findAddressUseDefault(@Param("customerId") Integer customerId);
+    CustomerContact findAddressUseDefault(@Param("customerId") Long customerId);
 }

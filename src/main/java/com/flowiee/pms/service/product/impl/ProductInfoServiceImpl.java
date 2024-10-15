@@ -89,7 +89,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
-    public Optional<ProductDTO> findById(Integer id) {
+    public Optional<ProductDTO> findById(Long id) {
         Optional<Product> product = mvProductRepository.findById(id);
         if (product.isPresent()) {
             ProductDescription productDescription = product.get().getProductDescription();
@@ -159,7 +159,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Transactional
     @Override
-    public String delete(Integer id) {
+    public String delete(Long id) {
         try {
             Optional<ProductDTO> productToDelete = this.findById(id);
             if (productToDelete.isEmpty()) {

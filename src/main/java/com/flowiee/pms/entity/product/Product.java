@@ -100,11 +100,11 @@ public class Product extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "productBase", fetch = FetchType.LAZY)
     List<ProductPrice> listProductBasePrice;
 
-    public Product(int id) {
+    public Product(long id) {
         super.id = id;
     }
 
-    public Product(Integer id, String name) {
+    public Product(long id, String name) {
         super.id = id;
         this.productName = name;
     }
