@@ -27,7 +27,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class TicketExportController extends BaseController {
-    TicketExportService ticketExportService;
+    TicketExportService mvTicketExportService;
 
     @Operation(summary = "Find all tickets")
     @GetMapping("/all")
@@ -35,7 +35,7 @@ public class TicketExportController extends BaseController {
     public AppResponse<List<TicketExport>> findAll(@RequestParam("pageSize") int pageSize,
                                                    @RequestParam("pageNum") int pageNum,
                                                    @RequestParam(value = "storageId", required = false) Integer storageId) {
-        Page<TicketExport> ticketExports = ticketExportService.findAll(pageSize, pageNum - 1, storageId);
+        Page<TicketExport> ticketExports = mvTicketExportService.findAll(pageSize, pageNum - 1, storageId);
         return success(ticketExports.getContent(), pageNum, pageSize, ticketExports.getTotalPages(), ticketExports.getTotalElements());
     }
 
@@ -43,7 +43,7 @@ public class TicketExportController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<TicketExportDTO> findDetail(@PathVariable("id") Integer ticketExportId) {
-        Optional<TicketExport> ticketExport = ticketExportService.findById(ticketExportId);
+        Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
             throw new BadRequestException("Data does not exists!");
         }
@@ -54,30 +54,30 @@ public class TicketExportController extends BaseController {
     @PostMapping("/create-draft")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<TicketExport> createDraftTicket(@RequestBody(required = false) OrderDTO order) {
-        return success(ticketExportService.save(order));
+        return success(mvTicketExportService.save(order));
     }
 
     @Operation(summary = "Thêm mới phiếu xuất hàng")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<TicketExport> createTicket(@RequestParam("storageId") Integer pStorageId, @RequestBody TicketExportReq ticketExportReq) {
-        return success(ticketExportService.createDraftTicketExport(pStorageId, ticketExportReq.getTitle(), ticketExportReq.getOrderCode()));
+        return success(mvTicketExportService.createDraftTicketExport(pStorageId, ticketExportReq.getTitle(), ticketExportReq.getOrderCode()));
     }
 
     @Operation(summary = "Update ticket")
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<TicketExportDTO> updateTicketExport(@RequestBody TicketExport ticketExport, @PathVariable("id") Integer ticketExportId) {
-        if (ObjectUtils.isEmpty(ticketExportService.findById(ticketExportId))) {
+        if (ObjectUtils.isEmpty(mvTicketExportService.findById(ticketExportId))) {
             throw new BadRequestException();
         }
-        return success(TicketExportDTO.fromTicketExport(ticketExportService.update(ticketExport, ticketExportId)));
+        return success(TicketExportDTO.fromTicketExport(mvTicketExportService.update(ticketExport, ticketExportId)));
     }
 
     @Operation(summary = "Delete ticket")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<String> deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
-        return success(ticketExportService.delete(ticketExportId));
+        return success(mvTicketExportService.delete(ticketExportId));
     }
 }

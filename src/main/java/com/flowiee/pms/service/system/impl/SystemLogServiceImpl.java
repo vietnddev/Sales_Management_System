@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class SystemLogServiceImpl extends BaseService implements SystemLogService {
-    SystemLogRepository systemLogRepo;
+    SystemLogRepository mvSystemLogRepository;
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {
@@ -32,7 +32,7 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        Page<SystemLog> logs = systemLogRepo.findAll(pageable);
+        Page<SystemLog> logs = mvSystemLogRepository.findAll(pageable);
         for (SystemLog systemLog : logs.getContent()) {
             systemLog.setAccountName(systemLog.getAccount() != null ? systemLog.getAccount().getFullName() : "");
             systemLog.setContentChange(systemLog.getContentChange() != null ? systemLog.getContentChange() : "");
@@ -67,7 +67,7 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public SystemLog writeLog(MODULE module, ACTION function, MasterObject object, LogType mode, String title, String content, String contentChange) {
-        return systemLogRepo.save(SystemLog.builder()
+        return mvSystemLogRepository.save(SystemLog.builder()
                 .module(module.name())
                 .function(function.name())
                 .object(object.name())

@@ -23,35 +23,35 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductReviewController extends BaseController {
-    ProductReviewService productReviewService;
+    ProductReviewService mvProductReviewService;
 
     @Operation(summary = "Find all product reviews")
     @GetMapping
     public AppResponse<List<ProductReview>> findByProduct(@PathVariable("productId") Integer productId) {
-        Page<ProductReview> productReview = productReviewService.findByProduct(productId);
+        Page<ProductReview> productReview = mvProductReviewService.findByProduct(productId);
         return success(productReview.getContent(), 1, -1, productReview.getTotalPages(), productReview.getTotalElements());
     }
 
     @Operation(summary = "Create product review")
     @PostMapping("/create")
     public AppResponse<ProductReview> createProductReview(@RequestBody ProductReview productReview) {
-        return success(productReviewService.save(productReview));
+        return success(mvProductReviewService.save(productReview));
     }
 
     @Operation(summary = "Update product review")
     @PutMapping("/update/{reviewId}")
     @PreAuthorize("@vldModuleProduct.updateReview(true)")
     public AppResponse<ProductReview> updateProductReview(@RequestBody ProductReview productReview, @PathVariable("reviewId") Integer reviewId) {
-        if (productReviewService.findById(reviewId).isEmpty()) {
+        if (mvProductReviewService.findById(reviewId).isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "productReview"));
         }
-        return success(productReviewService.update(productReview, reviewId));
+        return success(mvProductReviewService.update(productReview, reviewId));
     }
 
     @Operation(summary = "Delete product review")
     @DeleteMapping("/delete/{reviewId}")
     @PreAuthorize("@vldModuleProduct.deleteReview(true)")
     public AppResponse<String> deleteProductReview(@PathVariable("reviewId") Integer reviewId) {
-        return success(productReviewService.delete(reviewId));
+        return success(mvProductReviewService.delete(reviewId));
     }
 }

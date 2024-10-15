@@ -18,13 +18,13 @@ import com.flowiee.pms.service.sales.SupplierService;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class SupplierControllerView extends BaseController {
-	SupplierService supplierService;
+	SupplierService mvSupplierService;
 
 	@GetMapping
 	@PreAuthorize("@vldModuleSales.readSupplier(true)")
 	public ModelAndView viewAllSupplier() {
 		ModelAndView modelAndView = new ModelAndView(Pages.PRO_SUPPLIER.getTemplate());
-		modelAndView.addObject("listSupplier", supplierService.findAll(-1, -1, null).getContent());
+		modelAndView.addObject("listSupplier", mvSupplierService.findAll(-1, -1, null).getContent());
 		return baseView(modelAndView);
 	}
 }

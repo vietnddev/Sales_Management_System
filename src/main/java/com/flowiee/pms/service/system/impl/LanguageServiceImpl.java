@@ -21,16 +21,16 @@ import com.flowiee.pms.service.system.LanguageService;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class LanguageServiceImpl extends BaseService implements LanguageService {
-	LanguagesRepository languagesRepository;
+	LanguagesRepository mvLanguagesRepository;
 
 	@Override
 	public List<Language> findAll() {
-		return languagesRepository.findAll();
+		return mvLanguagesRepository.findAll();
 	}
 
 	@Override
 	public Optional<Language> findById(Integer langId) {
-		return languagesRepository.findById(langId);
+		return mvLanguagesRepository.findById(langId);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 
 	@Override
 	public Map<String, String> findAllLanguageMessages(String langCode) {
-		List<Language> languageList = languagesRepository.findByCode(langCode);
+		List<Language> languageList = mvLanguagesRepository.findByCode(langCode);
         Map<String, String> languageMessages = new HashMap<>();
         for (Language language : languageList) {
             languageMessages.put(language.getKey(), language.getValue());
@@ -53,7 +53,7 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 		if (langId == null || langId <= 0) {
 			throw new BadRequestException();
 		}
-		return languagesRepository.save(language);
+		return mvLanguagesRepository.save(language);
 	}
 
 	@Override

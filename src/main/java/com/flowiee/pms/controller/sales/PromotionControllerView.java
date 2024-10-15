@@ -22,7 +22,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class PromotionControllerView extends BaseController {
-    PromotionService promotionService;
+    PromotionService mvPromotionService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
@@ -33,7 +33,7 @@ public class PromotionControllerView extends BaseController {
     @GetMapping(value = "/{promotionId}")
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
     public ModelAndView findDetail(@PathVariable("promotionId") Integer promotionId) {
-        Optional<PromotionInfoDTO> promotion = promotionService.findById(promotionId);
+        Optional<PromotionInfoDTO> promotion = mvPromotionService.findById(promotionId);
         if (promotion.isEmpty()) {
             throw new ResourceNotFoundException("Promotion not found!");
         }

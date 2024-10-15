@@ -35,15 +35,15 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
-    VoucherService           voucherInfoService;
-    ProductRepository        productRepository;
-    CategoryRepository       categoryRepository;
-    VoucherApplyService      voucherApplyService;
-    ProductImageService      productImageService;
-    ProductVariantService    productVariantService;
-    ProductHistoryService    productHistoryService;
-    ProductStatisticsService productStatisticsService;
-    ProductDescriptionRepository productDescriptionRepository;
+    VoucherService mvVoucherInfoService;
+    ProductRepository mvProductRepository;
+    CategoryRepository mvCategoryRepository;
+    VoucherApplyService mvVoucherApplyService;
+    ProductImageService mvProductImageService;
+    ProductVariantService mvProductVariantService;
+    ProductHistoryService mvProductHistoryService;
+    ProductStatisticsService mvProductStatisticsService;
+    ProductDescriptionRepository mvProductDescriptionRepository;
 
     @Override
     public List<ProductDTO> findAll() {
@@ -57,7 +57,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        Page<Product> products = productRepository.findAll(pPID.getId(), pTxtSearch, pBrand, pProductType, pColor, pSize, pUnit, pStatus, pageable);
+        Page<Product> products = mvProductRepository.findAll(pPID.getId(), pTxtSearch, pBrand, pProductType, pColor, pSize, pUnit, pStatus, pageable);
         List<ProductDTO> productDTOs = ProductConvert.convertToDTOs(products);
         this.setImageActiveAndLoadVoucherApply(productDTOs);
         this.setInfoVariantOfProduct(productDTOs);
@@ -82,7 +82,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Override
     public List<Product> findProductsIdAndProductName() {
         List<Product> products = new ArrayList<>();
-        for (Object[] objects : productRepository.findIdAndName(ProductStatus.A.name())) {
+        for (Object[] objects : mvProductRepository.findIdAndName(ProductStatus.A.name())) {
             products.add(new Product(Integer.parseInt(String.valueOf(objects[0])), String.valueOf(objects[1])));
         }
         return products;
@@ -90,7 +90,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public Optional<ProductDTO> findById(Integer id) {
-        Optional<Product> product = productRepository.findById(id);
+        Optional<Product> product = mvProductRepository.findById(id);
         if (product.isPresent()) {
             ProductDescription productDescription = product.get().getProductDescription();
             return Optional.of(ProductConvert.convertToDTO(product.get(), productDescription != null ? productDescription.getDescription() : null));
@@ -104,11 +104,11 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             Product productToSave = ProductConvert.convertToEntity(product);
             productToSave.setCreatedBy(CommonUtils.getUserPrincipal().getId());
             productToSave.setStatus(ProductStatus.I.name());
-            Product productSaved = productRepository.save(productToSave);
+            Product productSaved = mvProductRepository.save(productToSave);
 
             ProductDescription productDescription = null;
             if (product.getDescription() != null) {
-                productDescription = productDescriptionRepository.save(ProductDescription.builder()
+                productDescription = mvProductDescriptionRepository.save(ProductDescription.builder()
                         .product(productSaved)
                         .description(product.getDescription()).build());
             }
@@ -124,16 +124,16 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Transactional
     @Override
     public ProductDTO update(ProductDTO productDTO, Integer productId) {
-        Optional<Product> productOpt = productRepository.findById(productId);
+        Optional<Product> productOpt = mvProductRepository.findById(productId);
         if (productOpt.isEmpty()) {
             throw new BadRequestException();
         }
         Product productBefore = ObjectUtils.clone(productOpt.get());
         productOpt.get().setId(productId);
         productOpt.get().setProductName(productDTO.getProductName());
-        productOpt.get().setProductType(categoryRepository.findById(productDTO.getProductTypeId()).get());
-        productOpt.get().setUnit(categoryRepository.findById(productDTO.getUnitId()).get());
-        productOpt.get().setBrand(categoryRepository.findById(productDTO.getBrandId()).get());
+        productOpt.get().setProductType(mvCategoryRepository.findById(productDTO.getProductTypeId()).get());
+        productOpt.get().setUnit(mvCategoryRepository.findById(productDTO.getUnitId()).get());
+        productOpt.get().setBrand(mvCategoryRepository.findById(productDTO.getBrandId()).get());
         productOpt.get().setStatus(productDTO.getStatus());
 
         ProductDescription productDescription = productOpt.get().getProductDescription();
@@ -144,14 +144,14 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
                 .product(productOpt.get())
                 .description(productDTO.getDescription()).build();
         }
-        ProductDescription productDescriptionUpdated = productDescriptionRepository.save(productDescription);
+        ProductDescription productDescriptionUpdated = mvProductDescriptionRepository.save(productDescription);
 
         productOpt.get().setProductDescription(productDescriptionUpdated);
-        Product productUpdated = productRepository.save(productOpt.get());
+        Product productUpdated = mvProductRepository.save(productOpt.get());
 
         String logTitle = "Cập nhật sản phẩm: " + productUpdated.getProductName();
         ChangeLog changeLog = new ChangeLog(productBefore, productUpdated);
-        productHistoryService.save(changeLog.getLogChanges(), logTitle, productUpdated.getId(), null, null);
+        mvProductHistoryService.save(changeLog.getLogChanges(), logTitle, productUpdated.getId(), null, null);
         systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.Product, logTitle, changeLog);
         logger.info("Update product success! productId={}", productId);
         return ProductConvert.convertToDTO(productUpdated, productDescriptionUpdated.getDescription());
@@ -168,7 +168,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             if (productInUse(id)) {
                 throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
             }
-            productRepository.deleteById(id);
+            mvProductRepository.deleteById(id);
             systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_D, MasterObject.Product, "Xóa sản phẩm", productToDelete.get().getProductName());
             logger.info("Delete product success! productId={}", id);
             return MessageCode.DELETE_SUCCESS.getDescription();
@@ -179,7 +179,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public boolean productInUse(Integer productId) throws RuntimeException {
-        return !productVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent().isEmpty();
+        return !mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent().isEmpty();
     }
 
     private void setImageActiveAndLoadVoucherApply(List<ProductDTO> products) {
@@ -187,16 +187,16 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             return;
         }
         for (ProductDTO p : products) {
-            FileStorage imageActive = productImageService.findImageActiveOfProduct(p.getId());
+            FileStorage imageActive = mvProductImageService.findImageActiveOfProduct(p.getId());
             if (imageActive != null) {
                 p.setImageActive("/" + imageActive.getDirectoryPath() + "/" + imageActive.getStorageName());
             }
             List<Integer> listVoucherInfoId = new ArrayList<>();
-            for (VoucherApplyDTO voucherApplyDTO : voucherApplyService.findByProductId(p.getId())) {
+            for (VoucherApplyDTO voucherApplyDTO : mvVoucherApplyService.findByProductId(p.getId())) {
                 listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
             }
             if (!listVoucherInfoId.isEmpty()) {
-                List<VoucherInfoDTO> voucherInfoDTOs = voucherInfoService.findAll(-1, -1, listVoucherInfoId, null, null, null, VoucherStatus.A.name()).getContent();
+                List<VoucherInfoDTO> voucherInfoDTOs = mvVoucherInfoService.findAll(-1, -1, listVoucherInfoId, null, null, null, VoucherStatus.A.name()).getContent();
                 p.setListVoucherInfoApply(voucherInfoDTOs);
             }
         }
@@ -209,11 +209,11 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         for (ProductDTO p : products) {
             LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
             int totalQtyStorage = 0;
-            for (Category color : categoryRepository.findColorOfProduct(p.getId())) {
+            for (Category color : mvCategoryRepository.findColorOfProduct(p.getId())) {
                 StringBuilder sizeName = new StringBuilder();
-                List<Category> listSize = categoryRepository.findSizeOfColorOfProduct(p.getId(), color.getId());
+                List<Category> listSize = mvCategoryRepository.findSizeOfColorOfProduct(p.getId(), color.getId());
                 for (int i = 0; i < listSize.size(); i++) {
-                    int qtyStorage = productStatisticsService.findProductVariantQuantityBySizeOfEachColor(p.getId(), color.getId(), listSize.get(i).getId());
+                    int qtyStorage = mvProductStatisticsService.findProductVariantQuantityBySizeOfEachColor(p.getId(), color.getId(), listSize.get(i).getId());
                     if (i == listSize.size() - 1) {
                         sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")");
                     } else {
@@ -225,7 +225,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             }
             p.setProductVariantInfo(variantInfo);
             p.setTotalQtyStorage(totalQtyStorage);
-            p.setTotalQtySell(productStatisticsService.findProductVariantTotalQtySell(p.getId()));
+            p.setTotalQtySell(mvProductStatisticsService.findProductVariantTotalQtySell(p.getId()));
             int totalDefective = 0;
             p.setTotalQtyAvailableSales(totalQtyStorage - totalDefective);
         }

@@ -37,42 +37,42 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderItemsServiceImpl extends BaseService implements OrderItemsService {
-    SystemLogService      systemLogService;
-    OrderHistoryService   orderHistoryService;
-    OrderDetailRepository orderDetailRepository;
+    SystemLogService       mvSystemLogService;
+    OrderHistoryService    mvOrderHistoryService;
+    OrderDetailRepository  mvOrderDetailRepository;
+    ProductPriceRepository mvProductPriceRepository;
     @Autowired
     @NonFinal
     @Lazy
-    private ProductVariantService productVariantService;
-    private ProductPriceRepository productPriceRepository;
+    ProductVariantService mvProductVariantService;
 
     @Override
     public List<OrderDetail> findAll() {
-        return orderDetailRepository.findAll();
+        return mvOrderDetailRepository.findAll();
     }
 
     @Override
     public Optional<OrderDetail> findById(Integer orderDetailId) {
-        return orderDetailRepository.findById(orderDetailId);
+        return mvOrderDetailRepository.findById(orderDetailId);
     }
 
     @Override
     public List<OrderDetail> findByOrderId(Integer orderId) {
-        return orderDetailRepository.findByOrderId(orderId);
+        return mvOrderDetailRepository.findByOrderId(orderId);
     }
 
     @Override
     public List<OrderDetail> save(OrderDTO pOrderDto, List<String> productVariantIds) {
         List<OrderDetail> itemAdded = new ArrayList<>();
         for (String productVariantId : productVariantIds) {
-            Optional<ProductVariantDTO> productDetail = productVariantService.findById(Integer.parseInt(productVariantId));
+            Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(Integer.parseInt(productVariantId));
             if (productDetail.isPresent()) {
-                OrderDetail orderDetail = orderDetailRepository.findByOrderIdAndProductVariantId(pOrderDto.getId(), productDetail.get().getId());
+                OrderDetail orderDetail = mvOrderDetailRepository.findByOrderIdAndProductVariantId(pOrderDto.getId(), productDetail.get().getId());
                 if (orderDetail != null) {
                     orderDetail.setQuantity(orderDetail.getQuantity() + 1);
-                    itemAdded.add(orderDetailRepository.save(orderDetail));
+                    itemAdded.add(mvOrderDetailRepository.save(orderDetail));
                 } else {
-                    ProductPrice itemPrice = productPriceRepository.findPricePresent(null, productDetail.get().getId());
+                    ProductPrice itemPrice = mvProductPriceRepository.findPricePresent(null, productDetail.get().getId());
                     if (itemPrice == null) {
                         throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productDetail.get().getVariantName()));
                     }
@@ -98,8 +98,8 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             if (orderDetail.getExtraDiscount() == null) {
                 orderDetail.setExtraDiscount(BigDecimal.ZERO);
             }
-            OrderDetail orderDetailSaved = orderDetailRepository.save(orderDetail);
-            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.OrderDetail, "Thêm mới item vào đơn hàng", orderDetail.toString());
+            OrderDetail orderDetailSaved = mvOrderDetailRepository.save(orderDetail);
+            mvSystemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.OrderDetail, "Thêm mới item vào đơn hàng", orderDetail.toString());
             logger.info("{}: Thêm mới item vào đơn hàng {}", OrderServiceImpl.class.getName(), orderDetail.toString());
             return orderDetailSaved;
         } catch (RuntimeException ex) {
@@ -119,12 +119,12 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             orderDetailOpt.get().setQuantity(orderDetail.getQuantity());
             orderDetailOpt.get().setExtraDiscount(orderDetail.getExtraDiscount());
             orderDetailOpt.get().setNote(orderDetail.getNote());
-            OrderDetail orderItemUpdated = orderDetailRepository.save(orderDetailOpt.get());
+            OrderDetail orderItemUpdated = mvOrderDetailRepository.save(orderDetailOpt.get());
 
             String logTitle = "Cập nhật đơn hàng " + orderItemUpdated.getOrder().getCode();
             ChangeLog changeLog = new ChangeLog(orderItemBefore, orderItemUpdated);
-            orderHistoryService.save(changeLog.getLogChanges(), logTitle, orderItemBefore.getOrder().getId(), orderItemBefore.getId());
-            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.OrderDetail, logTitle, changeLog);
+            mvOrderHistoryService.save(changeLog.getLogChanges(), logTitle, orderItemBefore.getOrder().getId(), orderItemBefore.getId());
+            mvSystemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_ORD_U, MasterObject.OrderDetail, logTitle, changeLog);
             logger.info("{}: Cập nhật item of đơn hàng {}", OrderServiceImpl.class.getName(), orderItemUpdated.toString());
 
             return orderItemUpdated;
@@ -140,8 +140,8 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             throw new BadRequestException();
         }
         try {
-            orderDetailRepository.deleteById(orderDetailId);
-            systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.OrderDetail, "Xóa item of đơn hàng", orderDetail.toString());
+            mvOrderDetailRepository.deleteById(orderDetailId);
+            mvSystemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.OrderDetail, "Xóa item of đơn hàng", orderDetail.toString());
             logger.info("{}: Xóa item of đơn hàng {}", OrderServiceImpl.class.getName(), orderDetail.toString());
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {

@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMessage;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class SendMailServiceImpl extends BaseService implements SendMailService {
-    JavaMailSender javaMailSender;
+    JavaMailSender mvJavaMailSender;
 
     @Override
     public String sendMail(String subject, String to, String body) {
@@ -28,12 +28,12 @@ public class SendMailServiceImpl extends BaseService implements SendMailService 
             throw new AppException("Invalid mail information!");
         }
         try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessage mimeMessage = mvJavaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject(subject);
             helper.setTo(to);
             helper.setText(body, true);
-            javaMailSender.send(mimeMessage);
+            mvJavaMailSender.send(mimeMessage);
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (MessagingException ex) {
             throw new AppException(ex);

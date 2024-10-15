@@ -19,21 +19,21 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ImportServiceImpl extends BaseService implements ImportService {
-    AppImportRepository appImportRepository;
+    AppImportRepository mvAppImportRepository;
 
     @Override
     public List<FileImportHistory> findAll() {
-        return appImportRepository.findAll();
+        return mvAppImportRepository.findAll();
     }
 
     @Override
     public List<FileImportHistory> findByAccountId(Integer accountId) {
-        return appImportRepository.findByAccountId(accountId);
+        return mvAppImportRepository.findByAccountId(accountId);
     }
 
     @Override
     public Optional<FileImportHistory> findById(Integer importId) {
-        return appImportRepository.findById(importId);
+        return mvAppImportRepository.findById(importId);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         if (fileImportHistory == null) {
             throw new BadRequestException();
         }
-        return appImportRepository.save(fileImportHistory);
+        return mvAppImportRepository.save(fileImportHistory);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return appImportRepository.save(entity);
+        return mvAppImportRepository.save(entity);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         if (fImport.isEmpty()) {
             throw new BadRequestException();
         }
-        appImportRepository.deleteById(entityId);
+        mvAppImportRepository.deleteById(entityId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

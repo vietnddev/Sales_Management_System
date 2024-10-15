@@ -38,17 +38,17 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderServiceImpl extends BaseService implements OrderService {
-    CartService           cartService;
-    OrderRepository       orderRepository;
-    CartItemsService      cartItemsService;
-    OrderItemsService     orderItemsService;
-    OrderQRCodeService    orderQRCodeService;
-    CategoryRepository    categoryRepository;
-    CustomerRepository    customerRepository;
-    OrderHistoryService   orderHistoryService;
-    VoucherTicketService  voucherTicketService;
-    LedgerReceiptService  ledgerReceiptService;
-    ProductVariantService productVariantService;
+    CartService mvCartService;
+    OrderRepository    mvOrderRepository;
+    CartItemsService   mvCartItemsService;
+    OrderItemsService  mvOrderItemsService;
+    OrderQRCodeService mvOrderQRCodeService;
+    CategoryRepository mvCategoryRepository;
+    CustomerRepository mvCustomerRepository;
+    OrderHistoryService   mvOrderHistoryService;
+    VoucherTicketService  mvVoucherTicketService;
+    LedgerReceiptService  mvLedgerReceiptService;
+    ProductVariantService mvProductVariantService;
 
     @Override
     public List<OrderDTO> findAll() {
@@ -74,13 +74,13 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             pOrderTimeFrom = lvFromDateToDate[0];
             pOrderTimeTo = lvFromDateToDate[1];
         }
-        Page<Order> orders = orderRepository.findAll(pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pOrderTimeFrom, pOrderTimeTo, pageable);
+        Page<Order> orders = mvOrderRepository.findAll(pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pOrderTimeFrom, pOrderTimeTo, pageable);
         return new PageImpl<>(OrderDTO.fromOrders(orders.getContent()), pageable, orders.getTotalElements());
     }
 
     @Override
     public Optional<OrderDTO> findById(Integer orderId) {
-        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        Optional<Order> orderOptional = mvOrderRepository.findById(orderId);
         if (orderOptional.isEmpty()) {
             return Optional.empty();
         }
@@ -114,22 +114,22 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .codFee(BigDecimal.ZERO)
                 .isGiftWrapped(false)
                 .build();
-            Order orderSaved = orderRepository.save(order);
+            Order orderSaved = mvOrderRepository.save(order);
 
             //QRCode
-            orderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
+            mvOrderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
 
             //Insert items detail
             BigDecimal totalAmountOfOrder = BigDecimal.ZERO;
-            Optional<OrderCart> cart = cartService.findById(request.getCartId());
+            Optional<OrderCart> cart = mvCartService.findById(request.getCartId());
             if (cart.isPresent()) {
                 for (Items items : cart.get().getListItems()) {
-                    Optional<ProductVariantDTO> productDetail = productVariantService.findById(items.getProductDetail().getId());
+                    Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(items.getProductDetail().getId());
                     if (productDetail.isPresent()) {
                         OrderDetail orderDetail = OrderDetail.builder()
                             .order(orderSaved)
                             .productDetail(productDetail.get())
-                            .quantity(cartItemsService.findQuantityOfItem(items.getOrderCart().getId() , productDetail.get().getId()))
+                            .quantity(mvCartItemsService.findQuantityOfItem(items.getOrderCart().getId() , productDetail.get().getId()))
                             .status(true)
                             .note(items.getNote())
                             .price(items.getPrice())
@@ -137,7 +137,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                             .extraDiscount(items.getExtraDiscount() != null ? items.getExtraDiscount() : BigDecimal.ZERO)
                             .priceType(items.getPriceType())
                             .build();
-                        OrderDetail orderDetailSaved = orderItemsService.save(orderDetail);
+                        OrderDetail orderDetailSaved = mvOrderItemsService.save(orderDetail);
 
                         totalAmountOfOrder = totalAmountOfOrder.add(orderDetailSaved.getPrice().multiply(BigDecimal.valueOf(orderDetailSaved.getQuantity())));
                     }
@@ -145,7 +145,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             }
 
             //Update voucher ticket used status
-            VoucherTicket voucherTicket = voucherTicketService.findTicketByCode((request.getVoucherUsedCode()));
+            VoucherTicket voucherTicket = mvVoucherTicketService.findTicketByCode((request.getVoucherUsedCode()));
             if (voucherTicket != null) {
 //                String statusCode = voucherService.checkTicketToUse(request.getVoucherUsedCode());
 //                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(statusCode)) {
@@ -155,18 +155,18 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 voucherTicket.setCustomer(orderSaved.getCustomer());
                 voucherTicket.setActiveTime(new Date());
                 voucherTicket.setUsed(true);
-                voucherTicketService.update(voucherTicket, voucherTicket.getId());
+                mvVoucherTicketService.update(voucherTicket, voucherTicket.getId());
             }
             //orderRepo.save(orderSaved);
 
             //Accumulate bonus points for customer
             if (request.getAccumulateBonusPoints() != null && request.getAccumulateBonusPoints()) {
                 BigDecimal bonusPoints = totalAmountOfOrder.subtract(orderSaved.getAmountDiscount()).divide(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN);
-                customerRepository.updateBonusPoint(orderSaved.getCustomer().getId(), bonusPoints.intValue());
+                mvCustomerRepository.updateBonusPoint(orderSaved.getCustomer().getId(), bonusPoints.intValue());
             }
 
             //Sau khi đã lưu đơn hàng thì xóa all items
-            cartItemsService.deleteAllItems();
+            mvCartItemsService.deleteAllItems();
 
             //Log
             systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.Order, "Thêm mới đơn hàng", orderSaved.getCode());
@@ -180,17 +180,17 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Override
     public OrderDTO update(OrderDTO dto, Integer id) {
-        Order orderToUpdate = orderRepository.findById(id).orElse(null);
+        Order orderToUpdate = mvOrderRepository.findById(id).orElse(null);
         if (orderToUpdate == null) {
             throw new ResourceNotFoundException("Order not found!");
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
         orderToUpdate.setNote(dto.getNote());
-        orderToUpdate.setTrangThaiDonHang(categoryRepository.findById(dto.getOrderStatusId()).get());
-        Order orderUpdated = orderRepository.save(orderToUpdate);
+        orderToUpdate.setTrangThaiDonHang(mvCategoryRepository.findById(dto.getOrderStatusId()).get());
+        Order orderUpdated = mvOrderRepository.save(orderToUpdate);
 
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
-        orderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", id, null);
+        mvOrderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", id, null);
         systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật đơn hàng", changeLog);
         logger.info("Cập nhật đơn hàng {}", dto.toString());
 
@@ -206,7 +206,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         if (order.get().getPaymentStatus()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        orderRepository.deleteById(id);
+        mvOrderRepository.deleteById(id);
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.Order, "Xóa đơn hàng", order.toString());
         logger.info("Xóa đơn hàng orderId={}", id);
         return MessageCode.DELETE_SUCCESS.getDescription();
@@ -226,12 +226,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             throw new BadRequestException("Thông tin thanh toán không hợp lệ!");
         }
         if (paymentTime == null) paymentTime = LocalDateTime.now();
-        orderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
+        mvOrderRepository.updatePaymentStatus(orderId, paymentTime, paymentMethod, paymentAmount, paymentNote);
 
         logger.info("Begin generate receipt issued when completed an order");
-        Category groupObject = categoryRepository.findByTypeAndCode(CategoryType.GROUP_OBJECT.name(), "KH");//Customer
-        Category receiptType = categoryRepository.findByTypeAndCode(CategoryType.RECEIPT_TYPE.name(), "PO");//Payment for order
-        ledgerReceiptService.save(LedgerTransaction.builder()
+        Category groupObject = mvCategoryRepository.findByTypeAndCode(CategoryType.GROUP_OBJECT.name(), "KH");//Customer
+        Category receiptType = mvCategoryRepository.findByTypeAndCode(CategoryType.RECEIPT_TYPE.name(), "PO");//Payment for order
+        mvLedgerReceiptService.save(LedgerTransaction.builder()
                 .tranType(LedgerTranType.PT.name())
                 .groupObject(groupObject)
                 .tranContent(receiptType)
@@ -247,12 +247,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Override
     public List<Order> findOrdersToday() {
-        return orderRepository.findOrdersToday();
+        return mvOrderRepository.findOrdersToday();
     }
 
     private String getNextOrderCode() {
         int orderTodayQty = 0;
-        List<Order> ordersToday = orderRepository.findOrdersToday();
+        List<Order> ordersToday = mvOrderRepository.findOrdersToday();
         if (ordersToday != null) {
             orderTodayQty = ordersToday.size();
         }

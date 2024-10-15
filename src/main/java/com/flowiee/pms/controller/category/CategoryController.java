@@ -26,13 +26,13 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryController extends BaseController {
-    CategoryService categoryService;
+    CategoryService mvCategoryService;
 
     @Operation(summary = "Find all category")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public AppResponse<List<Category>> findAll() {
-        return success(categoryService.findRootCategory());
+        return success(mvCategoryService.findRootCategory());
     }
 
     @Operation(summary = "Find by type")
@@ -47,7 +47,7 @@ public class CategoryController extends BaseController {
                 pageSize = -1;
                 pageNum = -1;
             }
-            Page<Category> categories = categoryService.findSubCategory(CommonUtils.getCategoryEnum(categoryType), parentId, null, pageSize, pageNum - 1);
+            Page<Category> categories = mvCategoryService.findSubCategory(CommonUtils.getCategoryEnum(categoryType), parentId, null, pageSize, pageNum - 1);
             return success(categories.getContent(), pageNum, pageSize, categories.getTotalPages(), categories.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"), ex);
@@ -60,7 +60,7 @@ public class CategoryController extends BaseController {
     public AppResponse<Category> createCategory(@RequestBody Category category) {
         try {
             category.setType(CommonUtils.getCategoryType(category.getType()));
-            return success(categoryService.save(category));
+            return success(mvCategoryService.save(category));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "category"), ex);
         }
@@ -70,12 +70,12 @@ public class CategoryController extends BaseController {
     @PutMapping("/update/{categoryId}")
     @PreAuthorize("@vldModuleCategory.updateCategory(true)")
     public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
-        if (categoryService.findById(categoryId).isEmpty()) {
+        if (mvCategoryService.findById(categoryId).isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"));
         }
         try {
             category.setType(CommonUtils.getCategoryType(category.getType()));
-            return success(categoryService.update(category, categoryId));
+            return success(mvCategoryService.update(category, categoryId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "category"), ex);
         }
@@ -85,6 +85,6 @@ public class CategoryController extends BaseController {
     @DeleteMapping("/delete/{categoryId}")
     @PreAuthorize("@vldModuleCategory.deleteCategory(true)")
     public AppResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
-        return success(categoryService.delete(categoryId));
+        return success(mvCategoryService.delete(categoryId));
     }
 }

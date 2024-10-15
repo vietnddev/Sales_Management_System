@@ -22,7 +22,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductComboControllerView extends BaseController {
-    ProductComboService productComboService;
+    ProductComboService mvProductComboService;
 
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
@@ -33,7 +33,7 @@ public class ProductComboControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
     public ModelAndView findDetail(@PathVariable("id") Integer productComboId) {
-        Optional<ProductCombo> productCombo = productComboService.findById(productComboId);
+        Optional<ProductCombo> productCombo = mvProductComboService.findById(productComboId);
         if (productCombo.isEmpty()) {
             throw new ResourceNotFoundException("Combo not found!");
         }

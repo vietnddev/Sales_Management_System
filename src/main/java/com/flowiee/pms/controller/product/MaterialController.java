@@ -25,7 +25,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class MaterialController extends BaseController {
-    MaterialService materialService;
+    MaterialService mvMaterialService;
 
     @Operation(summary = "Find all nguyên vật liệu")
     @GetMapping("/all")
@@ -35,7 +35,7 @@ public class MaterialController extends BaseController {
         try {
             if (pageSize == null) pageSize = -1;
             if (pageNum == null) pageNum = 1;
-            Page<Material> materials = materialService.findAll(pageSize, pageNum - 1, null, null, null, null, null, null);
+            Page<Material> materials = mvMaterialService.findAll(pageSize, pageNum - 1, null, null, null, null, null, null);
             return success(materials.getContent(), pageNum, pageSize, materials.getTotalPages(), materials.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "material"), ex);
@@ -47,7 +47,7 @@ public class MaterialController extends BaseController {
     @PreAuthorize("@vldModuleProduct.insertMaterial(true)")
     public AppResponse<MaterialDTO> insert(@RequestBody MaterialDTO materialDTO) {
         try {
-            return success(MaterialConvert.convertToDTO(materialService.save(Material.fromMaterialDTO(materialDTO))));
+            return success(MaterialConvert.convertToDTO(mvMaterialService.save(Material.fromMaterialDTO(materialDTO))));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "material"), ex);
         }

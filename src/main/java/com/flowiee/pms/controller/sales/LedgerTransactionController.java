@@ -25,15 +25,15 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class LedgerTransactionController extends BaseController {
-    LedgerReceiptService ledgerReceiptService;
-    LedgerPaymentService ledgerPaymentService;
+    LedgerReceiptService mvLedgerReceiptService;
+    LedgerPaymentService mvLedgerPaymentService;
 
     @Operation(summary = "Find all trans receipts")
     @GetMapping("/receipt/all")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
     public AppResponse<List<LedgerTransaction>> findLedgerReceipts(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                    @RequestParam(value = "pageNum", required = false) Integer pageNum) {
-        Page<LedgerTransaction> ledgerReceipts = ledgerReceiptService.findAll(pageSize, pageNum - 1, null, null);
+        Page<LedgerTransaction> ledgerReceipts = mvLedgerReceiptService.findAll(pageSize, pageNum - 1, null, null);
         return success(ledgerReceipts.getContent(), pageNum, pageSize, ledgerReceipts.getTotalPages(), ledgerReceipts.getTotalElements());
     }
 
@@ -42,7 +42,7 @@ public class LedgerTransactionController extends BaseController {
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
     public AppResponse<List<LedgerTransaction>> findLedgerPayments(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                    @RequestParam(value = "pageNum", required = false) Integer pageNum) {
-        Page<LedgerTransaction> ledgerReceipts = ledgerPaymentService.findAll(pageSize, pageNum - 1, null, null);
+        Page<LedgerTransaction> ledgerReceipts = mvLedgerPaymentService.findAll(pageSize, pageNum - 1, null, null);
         return success(ledgerReceipts.getContent(), pageNum, pageSize, ledgerReceipts.getTotalPages(), ledgerReceipts.getTotalElements());
     }
 }

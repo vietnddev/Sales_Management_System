@@ -29,7 +29,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class SupplierServiceImpl extends BaseService implements SupplierService {
-    SupplierRepository supplierRepo;
+    SupplierRepository mvSupplierRepository;
 
     @Override
     public List<Supplier> findAll() {
@@ -42,18 +42,18 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         if ((pageSize != null && pageSize >= 0) || (pageNum != null && pageNum >= 0)) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
         }
-        return supplierRepo.findAll(ignoreIds, pageable);
+        return mvSupplierRepository.findAll(ignoreIds, pageable);
     }
 
     @Override
     public Optional<Supplier> findById(Integer entityId) {
-        return supplierRepo.findById(entityId);
+        return mvSupplierRepository.findById(entityId);
     }
 
     @Override
     public Supplier save(Supplier supplier) {
         supplier.setStatus("A");
-        return supplierRepo.save(supplier);
+        return mvSupplierRepository.save(supplier);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         }
         Supplier supplierBefore =  ObjectUtils.clone(supplierOptional.get());
         entity.setId(entityId);
-        Supplier supplierUpdated = supplierRepo.save(entity);
+        Supplier supplierUpdated = mvSupplierRepository.save(entity);
 
         ChangeLog changeLog = new ChangeLog(supplierBefore, supplierUpdated);
         systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_SUP_U, MasterObject.Supplier, "Cập nhật thông tin nhà cung cấp: " + supplierUpdated.getName(), changeLog);
@@ -77,7 +77,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         if (entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
-        supplierRepo.deleteById(entityId);
+        mvSupplierRepository.deleteById(entityId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

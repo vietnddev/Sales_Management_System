@@ -35,11 +35,11 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CustomerServiceImpl extends BaseService implements CustomerService {
-    OrderService              orderService;
-    OrderRepository           orderRepository;
-    CustomerRepository        customerRepository;
-    CustomerContactService    customerContactService;
-    CustomerContactRepository customerContactRepository;
+    OrderService mvOrderService;
+    OrderRepository mvOrderRepository;
+    CustomerRepository mvCustomerRepository;
+    CustomerContactService mvCustomerContactService;
+    CustomerContactRepository mvCustomerContactRepository;
 
     @Override
     public List<CustomerDTO> findAll() {
@@ -52,7 +52,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("customerName").ascending());
         }
-        Page<Customer> customers = customerRepository.findAll(name, sex, birthday, phone, email, address, pageable);
+        Page<Customer> customers = mvCustomerRepository.findAll(name, sex, birthday, phone, email, address, pageable);
         List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(customers.getContent());
         this.setContactDefault(customerDTOs);
         return new PageImpl<>(customerDTOs, pageable, customerDTOs.size());
@@ -60,14 +60,14 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
 
     @Override
     public List<CustomerDTO> findCustomerNewInMonth() {
-        List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(customerRepository.findCustomerNewInMonth());
+        List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(mvCustomerRepository.findCustomerNewInMonth());
         this.setContactDefault(customerDTOs);
         return customerDTOs;
     }
 
     @Override
     public Optional<CustomerDTO> findById(Integer id) {
-        Optional<Customer> customer = customerRepository.findById(id);
+        Optional<Customer> customer = mvCustomerRepository.findById(id);
         if (customer.isPresent()) {
             CustomerDTO customerDTO = CustomerDTO.fromCustomer(customer.get());
             this.setContactDefault(List.of(customerDTO));
@@ -85,7 +85,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         Customer customer = Customer.fromCustomerDTO(dto);
         customer.setCreatedBy(dto.getCreatedBy() != null ? dto.getCreatedBy() : CommonUtils.getUserPrincipal().getId());
         customer.setBonusPoints(0);
-        Customer customerInserted = customerRepository.save(customer);
+        Customer customerInserted = mvCustomerRepository.save(customer);
         CustomerContact customerContact = CustomerContact.builder()
                 .customer(new Customer(customerInserted.getId()))
                 .value(dto.getPhoneDefault())
@@ -93,15 +93,15 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 .status(true).build();
         if (dto.getPhoneDefault() != null) {
             customerContact.setCode("P");
-            customerContactService.save(customerContact);
+            mvCustomerContactService.save(customerContact);
         }
         if (dto.getEmailDefault() != null) {
             customerContact.setCode("E");
-            customerContactService.save(customerContact);
+            mvCustomerContactService.save(customerContact);
         }
         if (dto.getAddressDefault() != null) {
             customerContact.setCode("A");
-            customerContactService.save(customerContact);
+            mvCustomerContactService.save(customerContact);
         }
         systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_CUS_C, MasterObject.Customer, "Thêm mới khách hàng", customer.toString());
         logger.info("Create customer: {}", customer.toString());
@@ -116,13 +116,13 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         }
         Customer customerToUpdate = Customer.fromCustomerDTO(customer);
         customerToUpdate.setId(customerId);
-        Customer customerUpdated = customerRepository.save(customerToUpdate);
+        Customer customerUpdated = mvCustomerRepository.save(customerToUpdate);
 
         CustomerContact phoneDefault = null;
         CustomerContact emailDefault = null;
         CustomerContact addressDefault = null;
         if (customer.getPhoneDefault() != null || customer.getEmailDefault() != null || customer.getAddressDefault() != null) {
-            List<CustomerContact> contacts = customerContactService.findContacts(customerId);
+            List<CustomerContact> contacts = mvCustomerContactService.findContacts(customerId);
             for (CustomerContact contact : contacts) {
                 if ("P".equals(contact.getCode()) && "Y".equals(contact.getIsDefault()) && contact.isStatus()) {
                     phoneDefault = contact;
@@ -138,7 +138,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             if (customer.getPhoneDefault() != null && phoneDefault != null) {
                 phoneDefault.setValue(customer.getPhoneDefault());
                 //customerContactService.update(phoneDefault, customerId);
-                customerContactRepository.save(phoneDefault);
+                mvCustomerContactRepository.save(phoneDefault);
             } else if (customer.getPhoneDefault() != null && !customer.getPhoneDefault().isEmpty()) {
                 phoneDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
@@ -146,13 +146,13 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                     .value(customer.getPhoneDefault())
                     .isDefault("Y")
                     .status(true).build();
-                customerContactService.save(phoneDefault);
+                mvCustomerContactService.save(phoneDefault);
             }
 
             if (customer.getEmailDefault() != null && emailDefault != null) {
                 emailDefault.setValue(customer.getEmailDefault());
                 //customerContactService.update(emailDefault, customerId);
-                customerContactRepository.save(emailDefault);
+                mvCustomerContactRepository.save(emailDefault);
             } else if (customer.getEmailDefault() != null && !customer.getEmailDefault().isEmpty()) {
                 emailDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
@@ -160,13 +160,13 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                     .value(customer.getEmailDefault())
                     .isDefault("Y")
                     .status(true).build();
-                customerContactService.save(emailDefault);
+                mvCustomerContactService.save(emailDefault);
             }
 
             if (customer.getAddressDefault() != null && addressDefault != null) {
                 addressDefault.setValue(customer.getAddressDefault());
                 //customerContactService.update(addressDefault, customerId);
-                customerContactRepository.save(addressDefault);
+                mvCustomerContactRepository.save(addressDefault);
             } else if (customer.getAddressDefault() != null && !customer.getAddressDefault().isEmpty()) {
                 addressDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
@@ -174,7 +174,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                     .value(customer.getAddressDefault())
                     .isDefault("Y")
                     .status(true).build();
-                customerContactService.save(addressDefault);
+                mvCustomerContactService.save(addressDefault);
             }
         }
         systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_CUS_U, MasterObject.Customer, "Cập nhật thông tin khách hàng", customer.toString());
@@ -188,10 +188,10 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         if (customer.isEmpty()) {
             throw new BadRequestException("Customer not found!");
         }
-        if (!orderService.findAll().isEmpty()) {
+        if (!mvOrderService.findAll().isEmpty()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        customerRepository.deleteById(id);
+        mvCustomerRepository.deleteById(id);
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CUS_D, MasterObject.Customer, "Xóa khách hàng", customer.get().getCustomerName());
         logger.info("Deleted customer id={}", id);
         return MessageCode.DELETE_SUCCESS.getDescription();
@@ -199,9 +199,9 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
 
     private void setContactDefault(List<CustomerDTO> customerDTOs) {
         for (CustomerDTO c : customerDTOs) {
-            CustomerContact phoneDefault = customerContactService.findContactPhoneUseDefault(c.getId());
-            CustomerContact emailDefault = customerContactService.findContactEmailUseDefault(c.getId());
-            CustomerContact addressDefault = customerContactService.findContactAddressUseDefault(c.getId());
+            CustomerContact phoneDefault = mvCustomerContactService.findContactPhoneUseDefault(c.getId());
+            CustomerContact emailDefault = mvCustomerContactService.findContactEmailUseDefault(c.getId());
+            CustomerContact addressDefault = mvCustomerContactService.findContactAddressUseDefault(c.getId());
             c.setPhoneDefault(phoneDefault != null ? phoneDefault.getValue() : "");
             c.setEmailDefault(emailDefault != null ? emailDefault.getValue() : "");
             c.setAddressDefault(addressDefault != null ? addressDefault.getValue() : "");
@@ -214,7 +214,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         if (year == null) {
             year = LocalDateTime.now().getYear();
         }
-        List<Object[]> purchaseHistoriesRawValue = orderRepository.findPurchaseHistory(customerId, year, month);
+        List<Object[]> purchaseHistoriesRawValue = mvOrderRepository.findPurchaseHistory(customerId, year, month);
         //col 0 -> year
         //col 1 -> month
         //col 2 -> purchase qty

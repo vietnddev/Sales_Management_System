@@ -37,9 +37,9 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl extends BaseService implements UserDetailsService, AccountService {
-	RoleService         roleService;
-	AccountRepository   accountRepo;
-	SystemLogRepository systemLogRepo;
+	RoleService mvRoleService;
+	AccountRepository mvAccountRepository;
+	SystemLogRepository mvSystemLogRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -50,11 +50,11 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 
 			Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 			grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + accountEntity.getRole()));
-			for (AccountRole right : roleService.findByAccountId(accountEntity.getId())) {
+			for (AccountRole right : mvRoleService.findByAccountId(accountEntity.getId())) {
 				grantedAuthorities.add(new SimpleGrantedAuthority(right.getAction()));
 			}
 			if (accountEntity.getGroupAccount() != null) {
-				for (AccountRole right : roleService.findByGroupId(accountEntity.getGroupAccount().getId())) {
+				for (AccountRole right : mvRoleService.findByGroupId(accountEntity.getGroupAccount().getId())) {
 					grantedAuthorities.add(new SimpleGrantedAuthority(right.getAction()));
 				}
 			}
@@ -84,7 +84,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 					.build();
 			systemLog.setCreatedBy(accountEntity.getId());
 
-			systemLogRepo.save(systemLog);
+			mvSystemLogRepository.save(systemLog);
 		} else {
             logger.error("User not found with username: {}", username);
 		}
@@ -93,7 +93,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 
 	@Override
 	public Optional<Account> findById(Integer accountId) {
-		return accountRepo.findById(accountId);
+		return mvAccountRepository.findById(accountId);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 			String password = account.getPassword();
 			account.setPassword(bCrypt.encode(password));
-			Account accountSaved = accountRepo.save(account);
+			Account accountSaved = mvAccountRepository.save(account);
 			systemLogService.writeLogCreate(MODULE.SYSTEM, ACTION.SYS_ACC_C, MasterObject.Account, "Thêm mới account", account.getUsername());
             logger.info("Insert account success! username={}", account.getUsername());
 			return accountSaved;
@@ -136,7 +136,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			} else {
 				accountOpt.get().setRole("USER");
 			}
-			Account accountUpdated = accountRepo.save(accountOpt.get());
+			Account accountUpdated = mvAccountRepository.save(accountOpt.get());
 
 			ChangeLog changeLog = new ChangeLog(accountBefore, accountUpdated);
 			systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_ACC_U, MasterObject.Account, "Cập nhật tài khoản " + accountUpdated.getUsername(), changeLog);
@@ -152,9 +152,9 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	@Override
 	public String delete(Integer accountId) {
 		try {
-			Optional<Account> account = accountRepo.findById(accountId);
+			Optional<Account> account = mvAccountRepository.findById(accountId);
 			if (account.isPresent()) {
-				accountRepo.delete(account.get());
+				mvAccountRepository.delete(account.get());
 				systemLogService.writeLogDelete(MODULE.SYSTEM, ACTION.SYS_ACC_D, MasterObject.Account, "Xóa account", account.get().getUsername());
                 logger.info("Delete account success! username={}", account.get().getUsername());
 			}
@@ -166,11 +166,11 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 
 	@Override
 	public List<Account> findAll() {
-		return accountRepo.findAll();
+		return mvAccountRepository.findAll();
 	}
 
 	@Override
 	public Account findByUsername(String username) {
-		return accountRepo.findByUsername(username);
+		return mvAccountRepository.findByUsername(username);
 	}
 }

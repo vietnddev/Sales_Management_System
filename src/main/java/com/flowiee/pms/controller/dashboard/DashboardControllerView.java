@@ -19,14 +19,14 @@ import org.springframework.web.servlet.ModelAndView;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class DashboardControllerView extends BaseController {
-    DashboardService dashboardService;
+    DashboardService mvDashboardService;
 
     @GetMapping
     @PreAuthorize("@vldDashboard.readDashboard(true)")
     public ModelAndView reportDoanhThu() {
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_DASHBOARD.getTemplate());
 
-        DashboardModel dashboardModel = dashboardService.loadDashboard();
+        DashboardModel dashboardModel = mvDashboardService.loadDashboard();
 
         //Today
         //Doanh thu hôm nay

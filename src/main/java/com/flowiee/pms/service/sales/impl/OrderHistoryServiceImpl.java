@@ -19,7 +19,7 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderHistoryServiceImpl implements OrderHistoryService {
-    OrderHistoryRepository orderHistoryRepository;
+    OrderHistoryRepository mvOrderHistoryRepository;
 
     @Override
     public List<OrderHistory> save(Map<String, Object[]> logChanges, String title, Integer orderId, Integer orderItemId) {
@@ -29,7 +29,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
             String oldValue = ObjectUtils.isNotEmpty(entry.getValue()[0]) ? entry.getValue()[0].toString() : " ";
             String newValue = ObjectUtils.isNotEmpty(entry.getValue()[1]) ? entry.getValue()[1].toString() : " ";
 
-            OrderHistory orderHistorySaved = orderHistoryRepository.save(OrderHistory.builder()
+            OrderHistory orderHistorySaved = mvOrderHistoryRepository.save(OrderHistory.builder()
                     .order(orderId != null ? new Order(orderId) : null)
                     .orderDetail(orderItemId != null ? new OrderDetail(orderItemId) : null)
                     .title(title)

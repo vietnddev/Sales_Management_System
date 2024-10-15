@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +32,9 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductComboServiceImpl extends BaseService implements ProductComboService {
-    ProductVariantService       productVariantService;
-    ProductComboRepository      productComboRepository;
-    ProductComboApplyRepository productComboApplyRepository;
+    ProductVariantService mvProductVariantService;
+    ProductComboRepository mvProductComboRepository;
+    ProductComboApplyRepository mvProductComboApplyRepository;
 
     @Override
     public Page<ProductCombo> findAll(int pageSize, int pageNum) {
@@ -43,7 +42,7 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("startDate").ascending());
         }
-        Page<ProductCombo> productComboPage = productComboRepository.findAll(pageable);
+        Page<ProductCombo> productComboPage = mvProductComboRepository.findAll(pageable);
         for (ProductCombo productCombo : productComboPage.getContent()) {
             productCombo.setAmountDiscount(BigDecimal.ZERO);
             productCombo.setTotalValue(BigDecimal.ZERO);
@@ -61,7 +60,7 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
 
     @Override
     public Optional<ProductCombo> findById(Integer comboId) {
-        Optional<ProductCombo> productCombo = productComboRepository.findById(comboId);
+        Optional<ProductCombo> productCombo = mvProductComboRepository.findById(comboId);
         if (productCombo.isPresent()) {
             List<ProductCombo> productComboList = List.of(productCombo.get());
             setProductIncludes(productComboList);
@@ -76,11 +75,11 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
         if (productCombo.getAmountDiscount() == null) {
             productCombo.setAmountDiscount(BigDecimal.ZERO);
         }
-        ProductCombo comboSaved = productComboRepository.save(productCombo);
+        ProductCombo comboSaved = mvProductComboRepository.save(productCombo);
         if (productCombo.getApplicableProducts() != null) {
             for (ProductVariantDTO productVariant : productCombo.getApplicableProducts()) {
                 if (productVariant.getId() != null) {
-                    productComboApplyRepository.save(ProductComboApply.builder().comboId(comboSaved.getId()).productVariantId(productVariant.getId()).build());
+                    mvProductComboApplyRepository.save(ProductComboApply.builder().comboId(comboSaved.getId()).productVariantId(productVariant.getId()).build());
                 }
             }
         }
@@ -97,7 +96,7 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
         ProductCombo comboBeforeChange = ObjectUtils.clone(optional.get());
 
         productCombo.setId(comboId);
-        ProductCombo comboUpdated = productComboRepository.save(productCombo);
+        ProductCombo comboUpdated = mvProductComboRepository.save(productCombo);
 
         ChangeLog changeLog = new ChangeLog(comboBeforeChange, comboUpdated);
         systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Cập nhật combo sản phẩm", changeLog);
@@ -111,7 +110,7 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
         if (comboBefore.isEmpty()) {
             throw new ResourceNotFoundException("Product combo not found!");
         }
-        productComboRepository.deleteById(comboId);
+        mvProductComboRepository.deleteById(comboId);
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Cập nhật combo sản phẩm", comboBefore.get().getComboName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -119,8 +118,8 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
     private void setProductIncludes(List<ProductCombo> productComboPage) {
         for (ProductCombo productCombo : productComboPage) {
             List<ProductVariantDTO> applicableProducts = new ArrayList<>();
-            for (ProductComboApply applicableProduct : productComboApplyRepository.findByComboId(productCombo.getId())) {
-                Optional<ProductVariantDTO> productVariantDTO = productVariantService.findById(applicableProduct.getProductVariantId());
+            for (ProductComboApply applicableProduct : mvProductComboApplyRepository.findByComboId(productCombo.getId())) {
+                Optional<ProductVariantDTO> productVariantDTO = mvProductVariantService.findById(applicableProduct.getProductVariantId());
                 if (productVariantDTO.isPresent()) {
                     applicableProducts.add(productVariantDTO.get());
                 }

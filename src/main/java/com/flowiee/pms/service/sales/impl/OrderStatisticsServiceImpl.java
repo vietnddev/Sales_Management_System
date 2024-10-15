@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderStatisticsServiceImpl extends BaseService implements OrderStatisticsService {
-    OrderRepository orderRepository;
+    OrderRepository mvOrderRepository;
 
     @Override
     public Double findRevenueToday() {
-        return orderRepository.findRevenueToday();
+        return mvOrderRepository.findRevenueToday();
     }
 
     @Override

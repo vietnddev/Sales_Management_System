@@ -34,44 +34,34 @@ import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import com.flowiee.pms.utils.constants.EndPoint;
 import com.opencsv.*;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class StartUp {
-	Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final ConfigRepository configRepository;
-	private final BranchRepository branchRepository;
-	private final AccountRepository accountRepository;
-	private final LanguageService languageService;
-	private final CustomerRepository customerRepository;
-	private final CategoryRepository categoryRepository;
-	private final GroupAccountRepository groupAccountRepository;
+	ConfigRepository mvConfigRepository;
+	BranchRepository mvBranchRepository;
+	AccountRepository mvAccountRepository;
+	LanguageService mvLanguageService;
+	CustomerRepository mvCustomerRepository;
+	CategoryRepository mvCategoryRepository;
+	GroupAccountRepository mvGroupAccountRepository;
 
 	public static LocalDateTime START_APP_TIME;
 	public static String mvResourceUploadPath = null;
-
-	@Autowired
-	public StartUp(LanguageService languageService, ConfigRepository configRepository, @Lazy CategoryRepository categoryRepository,
-				   @Lazy BranchRepository branchRepository, @Lazy AccountRepository accountRepository, @Lazy CustomerRepository customerRepository,
-				   @Lazy GroupAccountRepository groupAccountRepository) {
-		this.configRepository = configRepository;
-		this.branchRepository = branchRepository;
-		this.accountRepository = accountRepository;
-		this.languageService = languageService;
-		this.customerRepository = customerRepository;
-		this.categoryRepository = categoryRepository;
-		this.groupAccountRepository = groupAccountRepository;
-	}
 
     @Bean
     CommandLineRunner init() {
@@ -107,13 +97,13 @@ public class StartUp {
 	}
 
     private void loadLanguageMessages(String langCode) {
-        languageService.reloadMessage(langCode);
+        mvLanguageService.reloadMessage(langCode);
     }
 
 	private void loadShopInfo() {
 		ShopInfo shopInfo = new ShopInfo();
 		List<String> listCode = List.of("shopName", "shopEmail", "shopPhoneNumber", "shopAddress", "shopLogoUrl");
-		List<SystemConfig> systemConfigList = configRepository.findByCode(listCode);
+		List<SystemConfig> systemConfigList = mvConfigRepository.findByCode(listCode);
 		for (SystemConfig sysConfig : systemConfigList) {
 			switch (sysConfig.getCode()) {
 				case "shopName":
@@ -162,7 +152,7 @@ public class StartUp {
 	}
 
 	private void configResourcePath() {
-		SystemConfig systemConfig = configRepository.findByCode(ConfigCode.resourceUploadPath.name());
+		SystemConfig systemConfig = mvConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
 		if (systemConfig != null) {
 			mvResourceUploadPath = systemConfig.getValue();
 		}
@@ -170,7 +160,7 @@ public class StartUp {
 
 	private void initData() throws Exception {
 		String flagConfigCode = ConfigCode.initData.name();
-		SystemConfig flagConfigObj = configRepository.findByCode(flagConfigCode);
+		SystemConfig flagConfigObj = mvConfigRepository.findByCode(flagConfigCode);
 		if (flagConfigObj == null) {
 			List<SystemConfig> cnf = new ArrayList<>();
 			cnf.add(initDefaultAudit(ConfigCode.initData, "Initialize initial data for the system", "Y"));
@@ -188,9 +178,9 @@ public class StartUp {
 			cnf.add(initDefaultAudit(ConfigCode.extensionAllowedFileUpload, "Định dạng file được phép upload", null));
 			cnf.add(initDefaultAudit(ConfigCode.sendEmailReportDaily, "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
 			cnf.add(initDefaultAudit(ConfigCode.resourceUploadPath, "Thư mực chứa tệp upload", null));
-			configRepository.saveAll(cnf);
+			mvConfigRepository.saveAll(cnf);
 		}
-		SystemConfig systemConfigInitData = configRepository.findByCode(flagConfigCode);
+		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);
 		if ("Y".equals(systemConfigInitData.getValue())) {
 			return;
 		}
@@ -213,24 +203,24 @@ public class StartUp {
 			listCategory.add(category);
 		}
 		listCategory.remove(0);//header
-		categoryRepository.saveAll(listCategory);
+		mvCategoryRepository.saveAll(listCategory);
 		fileReader.close();
 		csvReader.close();
 		//Init branch
 		Branch branch = new Branch(null, "MAIN", "Trụ sở");
 		branch.setCreatedBy(-1);
 		branch.setLastUpdatedBy("SA");
-		Branch branchSaved = branchRepository.save(branch);
+		Branch branchSaved = mvBranchRepository.save(branch);
 		//Init group account
 		GroupAccount groupAccountManager = new GroupAccount(null, "MANAGER", "Quản lý cửa hàng");
 		groupAccountManager.setCreatedBy(-1);
 		groupAccountManager.setLastUpdatedBy("SA");
-		GroupAccount groupManagerSaved = groupAccountRepository.save(groupAccountManager);
+		GroupAccount groupManagerSaved = mvGroupAccountRepository.save(groupAccountManager);
 
 		GroupAccount groupAccountStaff = new GroupAccount(null, "STAFF", "Nhân viên bán hàng");
 		groupAccountStaff.setCreatedBy(-1);
 		groupAccountStaff.setLastUpdatedBy("SA");
-		GroupAccount groupStaffSaved = groupAccountRepository.save(groupAccountStaff);
+		GroupAccount groupStaffSaved = mvGroupAccountRepository.save(groupAccountStaff);
 		//Init admin account
 		Account adminAccount = new Account();
 		adminAccount.setUsername(AppConstants.ADMINISTRATOR);
@@ -243,7 +233,7 @@ public class StartUp {
 		adminAccount.setStatus(true);
 		adminAccount.setCreatedBy(-1);
 		adminAccount.setLastUpdatedBy("SA");
-		accountRepository.save(adminAccount);
+		mvAccountRepository.save(adminAccount);
 
 		Account staffAccount = new Account();
 		staffAccount.setUsername("staff");
@@ -256,7 +246,7 @@ public class StartUp {
 		staffAccount.setStatus(true);
 		staffAccount.setCreatedBy(-1);
 		staffAccount.setLastUpdatedBy("SA");
-		accountRepository.save(staffAccount);
+		mvAccountRepository.save(staffAccount);
 		//Init customer
 		Customer customer = new Customer();
 		customer.setCustomerName("Khách vãng lai");
@@ -264,10 +254,10 @@ public class StartUp {
 		customer.setSex(true);
 		customer.setCreatedBy(-1);
 		customer.setLastUpdatedBy("SA");
-		customerRepository.save(customer);
+		mvCustomerRepository.save(customer);
 
 		systemConfigInitData.setValue("Y");
-		configRepository.save(systemConfigInitData);
+		mvConfigRepository.save(systemConfigInitData);
 	}
 
 	private SystemConfig initDefaultAudit(ConfigCode code, String name, String value) {

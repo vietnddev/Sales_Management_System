@@ -24,9 +24,9 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class LedgerTransactionControllerView extends BaseController {
-    LedgerReceiptService ledgerReceiptService;
-    LedgerPaymentService ledgerPaymentService;
-    CategoryService      categoryService;
+    LedgerReceiptService mvLedgerReceiptService;
+    LedgerPaymentService mvLedgerPaymentService;
+    CategoryService mvCategoryService;
 
     @GetMapping("/receipt")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
@@ -53,7 +53,7 @@ public class LedgerTransactionControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
     public ModelAndView findTransactionDetail(@PathVariable("id") Integer tranId) {
-        Optional<LedgerTransaction> transaction = ledgerReceiptService.findById(tranId);
+        Optional<LedgerTransaction> transaction = mvLedgerReceiptService.findById(tranId);
         if (transaction.isEmpty()) {
             throw new ResourceNotFoundException("Ledger receipt not found!");
         }
@@ -66,24 +66,24 @@ public class LedgerTransactionControllerView extends BaseController {
     @PostMapping("/receipt/insert")
     @PreAuthorize("@vldModuleSales.insertLedgerTransaction(true)")
     public ModelAndView insertLedgerReceipt(LedgerTransaction transaction) {
-        ledgerReceiptService.save(transaction);
+        mvLedgerReceiptService.save(transaction);
         return new ModelAndView("redirect:/ledger/trans/receipt");
     }
 
     @PostMapping("/payment/insert")
     @PreAuthorize("@vldModuleSales.insertLedgerTransaction(true)")
     public ModelAndView insertLedgerPayment(LedgerTransaction transaction) {
-        ledgerPaymentService.save(transaction);
+        mvLedgerPaymentService.save(transaction);
         return new ModelAndView("redirect:/ledger/trans/payment");
     }
 
     private void getCategoryOfTransaction(ModelAndView modelAndView, String tranType) {
-        modelAndView.addObject("listGroupObjects", categoryService.findLedgerGroupObjects());
-        modelAndView.addObject("listPaymentMethods", categoryService.findPaymentMethods());
+        modelAndView.addObject("listGroupObjects", mvCategoryService.findLedgerGroupObjects());
+        modelAndView.addObject("listPaymentMethods", mvCategoryService.findPaymentMethods());
         if (LedgerTranType.PT.name().equals(tranType)) {
-            modelAndView.addObject("listTranContents", categoryService.findLedgerReceiptTypes());
+            modelAndView.addObject("listTranContents", mvCategoryService.findLedgerReceiptTypes());
         } else if (LedgerTranType.PC.name().equals(tranType)) {
-            modelAndView.addObject("listTranContents", categoryService.findLedgerPaymentTypes());
+            modelAndView.addObject("listTranContents", mvCategoryService.findLedgerPaymentTypes());
         }
     }
 }

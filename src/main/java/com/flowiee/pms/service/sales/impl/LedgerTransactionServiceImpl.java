@@ -27,7 +27,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LedgerTransactionServiceImpl extends BaseService implements LedgerTransactionService {
     @Autowired
-    LedgerTransactionRepository ledgerTransRepo;
+    LedgerTransactionRepository mvLedgerTransactionRepository;
 
     @Override
     public List<LedgerTransaction> findAll() {
@@ -40,7 +40,7 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        Page<LedgerTransaction> ledgerTransactions = ledgerTransRepo.findAll(getTranType(), null, null, pageable);
+        Page<LedgerTransaction> ledgerTransactions = mvLedgerTransactionRepository.findAll(getTranType(), null, null, pageable);
         for (LedgerTransaction trans : ledgerTransactions) {
             for (LedgerTranStatus transStatus : LedgerTranStatus.values()) {
                 if (transStatus.name().equals(trans.getStatus())) {
@@ -59,12 +59,12 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
 
     @Override
     public Optional<LedgerTransaction> findById(Integer tranId) {
-        return ledgerTransRepo.findById(tranId);
+        return mvLedgerTransactionRepository.findById(tranId);
     }
 
     @Override
     public LedgerTransaction save(LedgerTransaction transaction) {
-        Integer lastIndex = ledgerTransRepo.findLastIndex(getTranType());
+        Integer lastIndex = mvLedgerTransactionRepository.findLastIndex(getTranType());
         if (ObjectUtils.isEmpty(lastIndex)) {
             lastIndex = 1;
         } else {
@@ -76,7 +76,7 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
         transaction.setTranType(getTranType());
         transaction.setTranIndex(lastIndex);
         transaction.setStatus(LedgerTranStatus.COMPLETED.name());
-        LedgerTransaction transactionSaved = ledgerTransRepo.save(transaction);
+        LedgerTransaction transactionSaved = mvLedgerTransactionRepository.save(transaction);
 
         String logTitle = "Thêm mới phiếu thu";
         ACTION logFunc = ACTION.SLS_RCT_C;
@@ -93,7 +93,7 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
     public LedgerTransaction update(LedgerTransaction transaction, Integer tranId) {
         transaction.setId(tranId);
         transaction.setTranType(getTranType());
-        LedgerTransaction transactionUpdated = ledgerTransRepo.save(transaction);
+        LedgerTransaction transactionUpdated = mvLedgerTransactionRepository.save(transaction);
 
         String logTitle = "Cập nhật phiếu thu";
         ACTION logFunc = ACTION.SLS_RCT_U;

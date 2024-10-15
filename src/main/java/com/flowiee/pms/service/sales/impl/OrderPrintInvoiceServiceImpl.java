@@ -33,12 +33,12 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPrintInvoiceService {
-    OrderService       orderService;
-    OrderQRCodeService orderQRCodeService;
+    OrderService       mvOrderService;
+    OrderQRCodeService mvOrderQRCodeService;
 
     @Override
     public void printInvoicePDF(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response) {
-        Optional<OrderDTO> dtoOptional = orderService.findById(pOrderId);
+        Optional<OrderDTO> dtoOptional = mvOrderService.findById(pOrderId);
         if (dtoOptional.isEmpty()) {
             throw new BadRequestException();
         }
@@ -62,7 +62,7 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
         parameterMap.put("invoiceNumber", dto.getCode());
         parameterMap.put("orderDate", dto.getOrderTime());
         parameterMap.put("nowDate", new Date());
-        FileStorage f = orderQRCodeService.findQRCodeOfOrder(dto.getId());
+        FileStorage f = mvOrderQRCodeService.findQRCodeOfOrder(dto.getId());
         if (f != null) {
             Path barcodePath = Path.of(StartUp.getResourceUploadPath() + "/" + f.getDirectoryPath() + "/" + f.getStorageName());
             if (barcodePath.toFile().exists()) {

@@ -48,12 +48,12 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductVariantServiceImpl extends BaseService implements ProductVariantService {
-    ProductDetailRepository     productVariantRepo;
-    TicketImportService         ticketImportService;
-    TicketExportService         ticketExportService;
-    ProductHistoryService       productHistoryService;
-    ProductPriceRepository      productPriceRepository;
-    ProductDetailTempRepository productVariantTempRepo;
+    TicketImportService mvTicketImportService;
+    TicketExportService mvTicketExportService;
+    ProductHistoryService mvProductHistoryService;
+    ProductPriceRepository mvProductPriceRepository;
+    ProductDetailRepository mvProductVariantRepository;
+    ProductDetailTempRepository mvProductVariantTempRepository;
 
     @Override
     public List<ProductVariantDTO> findAll() {
@@ -66,10 +66,10 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize);
         }
-        List<ProductDetail> productVariants = productVariantRepo.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
+        List<ProductDetail> productVariants = mvProductVariantRepository.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
         List<ProductVariantDTO> productVariantDTOs = ProductVariantConvert.entitiesToDTOs(productVariants);
         for (ProductVariantDTO dto : productVariantDTOs) {
-            ProductPrice productPrice = productPriceRepository.findPricePresent(null, dto.getId());
+            ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
             setPriceInfo(dto, productPrice);
         }
         return new PageImpl<>(productVariantDTOs, pageable, productVariants.size());
@@ -77,10 +77,10 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Override
     public Optional<ProductVariantDTO> findById(Integer pProductVariantId) {
-        Optional<ProductDetail> productVariant = productVariantRepo.findById(pProductVariantId);
+        Optional<ProductDetail> productVariant = mvProductVariantRepository.findById(pProductVariantId);
         if (productVariant.isPresent()) {
             ProductVariantDTO dto = ProductVariantConvert.entityToDTO(productVariant.get());
-            ProductPrice productPrice = productPriceRepository.findPricePresent(null, dto.getId());
+            ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
             setPriceInfo(dto, productPrice);
             return Optional.of(dto);
         }
@@ -96,10 +96,10 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             pVariant.setDefectiveQty(pVariant.getDefectiveQty() != null ? pVariant.getDefectiveQty() : 0);
             pVariant.setStatus(ProductStatus.A.name());
             pVariant.setVariantCode(ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : CommonUtils.genProductCode());
-            ProductDetail productDetailSaved = productVariantRepo.save(pVariant);
+            ProductDetail productDetailSaved = mvProductVariantRepository.save(pVariant);
 
             ProductPriceDTO priceDTO = inputDTO.getPrice();
-            ProductPrice productVariantPriceSaved = productPriceRepository.save(ProductPrice.builder()
+            ProductPrice productVariantPriceSaved = mvProductPriceRepository.save(ProductPrice.builder()
                     .productVariant(productDetailSaved)
                     .retailPrice(priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : BigDecimal.ZERO)
                     .retailPriceDiscount(priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice())
@@ -120,14 +120,14 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                     .note(initMessage)
                     .status(TicketImportStatus.COMPLETED.name())
                     .storage(new Storage(inputDTO.getStorageIdInitStorageQty())).build();
-                TicketImport ticketImportSaved = ticketImportService.save(ticketImport);
+                TicketImport ticketImportSaved = mvTicketImportService.save(ticketImport);
 
                 ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
                     .ticketImport(ticketImportSaved)
                     .productVariant(productDetailSaved)
                     .quantity(productDetailSaved.getStorageQty())
                     .note(initMessage).build();
-                productVariantTempRepo.save(productVariantTemp);
+                mvProductVariantTempRepository.save(productVariantTemp);
             }
             if (productDetailSaved.getSoldQty() > 0) {
                 String initMessage = "Initialize storage quantity when create new products";
@@ -139,14 +139,14 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                     .note(initMessage)
                     .status(TicketExportStatus.COMPLETED.name())
                     .storage(new Storage(inputDTO.getStorageIdInitStorageQty())).build();
-                TicketExport ticketExportSaved = ticketExportService.save(ticketExport);
+                TicketExport ticketExportSaved = mvTicketExportService.save(ticketExport);
 
                 ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
                     .ticketExport(ticketExportSaved)
                     .productVariant(productDetailSaved)
                     .quantity(productDetailSaved.getStorageQty())
                     .note(initMessage).build();
-                productVariantTempRepo.save(productVariantTemp);
+                mvProductVariantTempRepository.save(productVariantTemp);
             }
 
             systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Thêm mới biến thể sản phẩm", pVariant.toStringInsert());
@@ -160,7 +160,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     @Transactional
     @Override
     public ProductVariantDTO update(ProductVariantDTO productDetail, Integer productVariantId) {
-        Optional<ProductDetail> productVariantOptional = productVariantRepo.findById(productVariantId);
+        Optional<ProductDetail> productVariantOptional = mvProductVariantRepository.findById(productVariantId);
         if (productVariantOptional.isEmpty()) {
             throw new BadRequestException();
         }
@@ -172,17 +172,17 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             productToUpdate.setDefectiveQty(productDetail.getDefectiveQty());
             productToUpdate.setWeight(productDetail.getWeight());
             productToUpdate.setNote(productDetail.getNote());
-            ProductDetail productVariantUpdated = productVariantRepo.save(productToUpdate);
+            ProductDetail productVariantUpdated = mvProductVariantRepository.save(productToUpdate);
 
             //Price
-            ProductPrice productVariantPricePresent = productPriceRepository.findPricePresent(null, productVariantUpdated.getId());
+            ProductPrice productVariantPricePresent = mvProductPriceRepository.findPricePresent(null, productVariantUpdated.getId());
             if (productVariantPricePresent != null) {
                 productVariantPricePresent.setState(ProductPrice.STATE_INACTIVE);
-                productPriceRepository.save(productVariantPricePresent);
+                mvProductPriceRepository.save(productVariantPricePresent);
             }
 
             ProductPriceDTO priceDTO = productDetail.getPrice();
-            productPriceRepository.save(ProductPrice.builder()
+            mvProductPriceRepository.save(ProductPrice.builder()
                     .productVariant(productVariantUpdated)
                     .retailPrice(priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : BigDecimal.ZERO)
                     .retailPriceDiscount(priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice())
@@ -196,7 +196,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             //Log
             String logTitle = "Cập nhật thông tin sản phẩm: " + productVariantUpdated.getVariantName();
             ChangeLog changeLog = new ChangeLog(productBeforeUpdate, productVariantUpdated);
-            productHistoryService.save(changeLog.getLogChanges(), logTitle, productVariantUpdated.getProduct().getId(), productVariantUpdated.getId(), null);
+            mvProductHistoryService.save(changeLog.getLogChanges(), logTitle, productVariantUpdated.getProduct().getId(), productVariantUpdated.getId(), null);
             systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, logTitle, changeLog.getOldValues(), changeLog.getNewValues());
             logger.info("Update productVariant success! {}", productVariantUpdated);
 
@@ -213,7 +213,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             throw new ResourceNotFoundException("Product variant not found!");
         }
         try {
-            productVariantRepo.deleteById(productVariantId);
+            mvProductVariantRepository.deleteById(productVariantId);
         } catch (ConstraintViolationException ex) {
             throw new DataInUseException("Không thể xóa sản phẩm đã được sử dụng!", ex);
         }
@@ -224,13 +224,13 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Override
     public boolean isProductVariantExists(int productId, int colorId, int sizeId, int fabricTypeId) {
-        ProductDetail productDetail = productVariantRepo.findByColorAndSize(productId, colorId, sizeId, fabricTypeId);
+        ProductDetail productDetail = mvProductVariantRepository.findByColorAndSize(productId, colorId, sizeId, fabricTypeId);
         return ObjectUtils.isNotEmpty(productDetail);
     }
 
     @Override
     public List<ProductVariantTempDTO> findStorageHistory(Integer productVariantId) {
-        List<ProductVariantTemp> storageHistory = productVariantTempRepo.findByProductVariantId(productVariantId);
+        List<ProductVariantTemp> storageHistory = mvProductVariantTempRepository.findByProductVariantId(productVariantId);
         List<ProductVariantTempDTO> storageHistoryDTOs = ProductVariantTempDTO.convertToDTOs(storageHistory);
         if (ObjectUtils.isEmpty(storageHistoryDTOs)) {
             return List.of();

@@ -17,15 +17,15 @@ import org.springframework.web.servlet.ModelAndView;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class GalleryControllerView extends BaseController {
-    ProductInfoService  productInfoService;
-    ProductImageService productImageService;
+    ProductInfoService  mvProductInfoService;
+    ProductImageService mvProductImageService;
 
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readGallery(true)")
     public ModelAndView viewGallery() {
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_GALLERY.getTemplate());
-        modelAndView.addObject("listImages", FileDTO.fromFileStorages(productImageService.getImageOfProduct(null)));
-        modelAndView.addObject("listProducts", productInfoService.findProductsIdAndProductName());
+        modelAndView.addObject("listImages", FileDTO.fromFileStorages(mvProductImageService.getImageOfProduct(null)));
+        modelAndView.addObject("listProducts", mvProductInfoService.findProductsIdAndProductName());
         return baseView(modelAndView);
     }
 }

@@ -17,8 +17,11 @@ import com.flowiee.pms.utils.converter.ProductConvert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,19 +35,18 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Product API", description = "Quản lý sản phẩm")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductController extends BaseController {
-    ProductInfoService    productInfoService;
-    ProductHistoryService productHistoryService;
-    ExportService         exportService;
-    ImportService         importService;
-
-    public ProductController(ProductInfoService productInfoService, ProductHistoryService productHistoryService,
-                             @Qualifier("productExportServiceImpl") ExportService exportService, @Qualifier("productImportServiceImpl") ImportService importService) {
-        this.productInfoService = productInfoService;
-        this.productHistoryService = productHistoryService;
-        this.exportService = exportService;
-        this.importService = importService;
-    }
+    @Autowired
+    @NonFinal
+    @Qualifier("productExportServiceImpl")
+    ExportService mvExportService;
+    @Autowired
+    @NonFinal
+    @Qualifier("productImportServiceImpl")
+    ImportService mvImportService;
+    ProductInfoService mvProductInfoService;
+    ProductHistoryService mvProductHistoryService;
 
     @Operation(summary = "Find all products")
     @GetMapping("/all")
@@ -60,9 +62,9 @@ public class ProductController extends BaseController {
                                                       @RequestParam(value = "fullInfo", required = false) Boolean fullInfo) {
         try {
             if (fullInfo != null && !fullInfo) {
-                return success(ProductConvert.convertToDTOs(productInfoService.findProductsIdAndProductName()));
+                return success(ProductConvert.convertToDTOs(mvProductInfoService.findProductsIdAndProductName()));
             }
-            Page<ProductDTO> productPage = productInfoService.findAll(PID.CLOTHES, pageSize, pageNum - 1, txtSearch, pBrand, pProductType, pColor, pSize, pUnit, null);
+            Page<ProductDTO> productPage = mvProductInfoService.findAll(PID.CLOTHES, pageSize, pageNum - 1, txtSearch, pBrand, pProductType, pColor, pSize, pUnit, null);
             return success(productPage.getContent(), pageNum, pageSize, productPage.getTotalPages(), productPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"), ex);
@@ -73,7 +75,7 @@ public class ProductController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
-        Optional<ProductDTO> product = productInfoService.findById(productId);
+        Optional<ProductDTO> product = mvProductInfoService.findById(productId);
         if (product.isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
@@ -85,7 +87,7 @@ public class ProductController extends BaseController {
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
     public AppResponse<Product> createProduct(@RequestBody ProductDTO product) {
         try {
-            return success(productInfoService.save(product));
+            return success(mvProductInfoService.save(product));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
@@ -95,32 +97,32 @@ public class ProductController extends BaseController {
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public AppResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Integer productId) {
-        if (productInfoService.findById(productId).isEmpty()) {
+        if (mvProductInfoService.findById(productId).isEmpty()) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
-        return success(productInfoService.update(product, productId));
+        return success(mvProductInfoService.update(product, productId));
     }
 
     @Operation(summary = "Delete product")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
     public AppResponse<String> deleteProduct(@PathVariable("id") Integer productId) {
-        return success(productInfoService.delete(productId));
+        return success(mvProductInfoService.delete(productId));
     }
 
     @Operation(summary = "Get histories of product")
     @GetMapping(value = "/{productId}/history")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
-        if (ObjectUtils.isEmpty(productInfoService.findById(productId))) {
+        if (ObjectUtils.isEmpty(mvProductInfoService.findById(productId))) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
-        return success(productHistoryService.findByProduct(productId));
+        return success(mvProductHistoryService.findByProduct(productId));
     }
 
     @GetMapping("/import")
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
     public void importData(@RequestParam("file") MultipartFile file) {
-        importService.importFromExcel(TemplateExport.IM_LIST_OF_PRODUCTS, file);
+        mvImportService.importFromExcel(TemplateExport.IM_LIST_OF_PRODUCTS, file);
     }
 }

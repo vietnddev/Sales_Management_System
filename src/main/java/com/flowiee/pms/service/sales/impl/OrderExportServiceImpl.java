@@ -17,13 +17,13 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderExportServiceImpl extends BaseExportService {
-    OrderService orderService;
+    OrderService mvOrderService;
 
     @Override
     protected void writeData(Object pCondition) {
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
 
-        List<OrderDTO> listData = orderService.findAll();
+        List<OrderDTO> listData = mvOrderService.findAll();
         for (int i = 0; i < listData.size(); i++) {
             XSSFRow row = sheet.createRow(i + 4);
             row.createCell(0).setCellValue(i + 1);

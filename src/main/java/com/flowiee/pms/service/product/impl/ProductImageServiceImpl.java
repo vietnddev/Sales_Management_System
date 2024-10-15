@@ -37,41 +37,41 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductImageServiceImpl extends BaseService implements ProductImageService {
-    FileStorageRepository fileRepository;
-    FileStorageService    fileStorageService;
-    TicketExportService   ticketExportService;
-    TicketImportService   ticketImportService;
-    ProductComboService   productComboService;
-    ProductVariantService productVariantService;
+    FileStorageService mvFileStorageService;
+    TicketExportService mvTicketExportService;
+    TicketImportService mvTicketImportService;
+    ProductComboService mvProductComboService;
+    ProductVariantService mvProductVariantService;
+    FileStorageRepository mvFileStorageRepository;
 
     @Override
     public List<FileStorage> getImageOfProduct(Integer productId) {
-        return fileRepository.findAllImages(MODULE.PRODUCT.name(), productId, null);
+        return mvFileStorageRepository.findAllImages(MODULE.PRODUCT.name(), productId, null);
     }
 
     @Override
     public List<FileStorage> getImageOfProductVariant(Integer productDetailId) {
-        return fileRepository.findAllImages(MODULE.PRODUCT.name(), null, productDetailId);
+        return mvFileStorageRepository.findAllImages(MODULE.PRODUCT.name(), null, productDetailId);
     }
 
     @Override
     @Transactional
     public FileStorage saveImageProduct(MultipartFile fileUpload, int pProductId) throws IOException {
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), pProductId);
-        return fileStorageService.save(fileInfo);
+        return mvFileStorageService.save(fileInfo);
     }
 
     @Override
     @Transactional
     public FileStorage saveImageProductVariant(MultipartFile fileUpload, int pProductVariantId) throws IOException {
-        Optional<ProductVariantDTO> productDetail = productVariantService.findById(pProductVariantId);
+        Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(pProductVariantId);
         if (productDetail.isEmpty()) {
             throw new BadRequestException();
         }
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), productDetail.get().getProductId());
         fileInfo.setProductDetail(productDetail.get());
-        FileStorage imageSaved = fileStorageService.save(fileInfo);
+        FileStorage imageSaved = mvFileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -81,14 +81,14 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
     @Override
     public FileStorage saveImageProductCombo(MultipartFile fileUpload, int productComboId) throws IOException {
-        Optional<ProductCombo> productCombo = productComboService.findById(productComboId);
+        Optional<ProductCombo> productCombo = mvProductComboService.findById(productComboId);
         if (productCombo.isEmpty()) {
             throw new BadRequestException();
         }
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), null);
         fileInfo.setProductCombo(productCombo.get());
-        FileStorage imageSaved = fileStorageService.save(fileInfo);
+        FileStorage imageSaved = mvFileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -98,14 +98,14 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
     @Override
     public FileStorage saveImageTicketImport(MultipartFile fileUpload, int ticketImportId) throws IOException {
-        Optional<TicketImport> ticketImport = ticketImportService.findById(ticketImportId);
+        Optional<TicketImport> ticketImport = mvTicketImportService.findById(ticketImportId);
         if (ticketImport.isEmpty()) {
             throw new BadRequestException();
         }
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
         fileInfo.setTicketImport(ticketImport.get());
-        FileStorage imageSaved = fileStorageService.save(fileInfo);
+        FileStorage imageSaved = mvFileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -115,14 +115,14 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
     @Override
     public FileStorage saveImageTicketExport(MultipartFile fileUpload, int ticketExportId) throws IOException {
-        Optional<TicketExport> ticketExport = ticketExportService.findById(ticketExportId);
+        Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
             throw new BadRequestException();
         }
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.STORAGE.name(), null);
         fileInfo.setTicketExport(ticketExport.get());
-        FileStorage imageSaved = fileStorageService.save(fileInfo);
+        FileStorage imageSaved = mvFileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.STORAGE) + "/" + imageSaved.getStorageName());
         fileUpload.transferTo(path);
@@ -132,52 +132,52 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
     @Override
     public FileStorage setImageActiveOfProduct(Integer pProductId, Integer pImageId) {
-        FileStorage imageToActive = fileStorageService.findById(pImageId).orElse(null);
+        FileStorage imageToActive = mvFileStorageService.findById(pImageId).orElse(null);
         if (imageToActive == null) {
             throw new BadRequestException();
         }
         //Bỏ image default hiện tại
-        FileStorage imageActiving = fileRepository.findActiveImage(pProductId, null);
+        FileStorage imageActiving = mvFileStorageRepository.findActiveImage(pProductId, null);
         if (imageActiving != null) {
             imageActiving.setActive(false);
-            fileRepository.save(imageActiving);
+            mvFileStorageRepository.save(imageActiving);
         }
         //Active lại image theo id được truyền vào
         imageToActive.setActive(true);
-        return fileRepository.save(imageToActive);
+        return mvFileStorageRepository.save(imageToActive);
     }
 
     @Override
     public FileStorage setImageActiveOfProductVariant(Integer pProductVariantId, Integer pImageId) {
-        FileStorage imageToActive = fileStorageService.findById(pImageId).orElse(null);
+        FileStorage imageToActive = mvFileStorageService.findById(pImageId).orElse(null);
         if (imageToActive == null) {
             throw new BadRequestException();
         }
         //Bỏ image default hiện tại
-        FileStorage imageActivating = fileRepository.findActiveImage(null, pProductVariantId);
+        FileStorage imageActivating = mvFileStorageRepository.findActiveImage(null, pProductVariantId);
         if (ObjectUtils.isNotEmpty(imageActivating)) {
             imageActivating.setActive(false);
-            fileRepository.save(imageActivating);
+            mvFileStorageRepository.save(imageActivating);
         }
         //Active lại image theo id được truyền vào
         imageToActive.setActive(true);
-        return fileRepository.save(imageToActive);
+        return mvFileStorageRepository.save(imageToActive);
     }
 
     @Override
     public FileStorage findImageActiveOfProduct(int pProductId) {
-        return fileRepository.findActiveImage(pProductId, null);
+        return mvFileStorageRepository.findActiveImage(pProductId, null);
     }
 
     @Override
     public FileStorage findImageActiveOfProductVariant(int pProductVariantId) {
-        return fileRepository.findActiveImage(null, pProductVariantId);
+        return mvFileStorageRepository.findActiveImage(null, pProductVariantId);
     }
 
     @Transactional
     @Override
     public FileStorage changeImageProduct(MultipartFile fileAttached, int fileId) {
-        Optional<FileStorage> fileOptional = fileRepository.findById(fileId);
+        Optional<FileStorage> fileOptional = mvFileStorageRepository.findById(fileId);
         if (fileOptional.isEmpty()) {
             throw new BadRequestException();
         }
@@ -200,7 +200,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         fileToChange.setContentType(fileAttached.getContentType());
         fileToChange.setDirectoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")));
         fileToChange.setAccount(CommonUtils.getUserPrincipal().toEntity());
-        FileStorage imageSaved = fileRepository.save(fileToChange);
+        FileStorage imageSaved = mvFileStorageRepository.save(fileToChange);
 
         //Lưu file mới vào thư mục chứa file upload
         try {

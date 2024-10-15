@@ -28,14 +28,14 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeService {
-    FileStorageRepository fileRepository;
+    FileStorageRepository mvFileStorageRepository;
 
     @Override
     public String saveQRCodeOfOrder(int orderId) {
         try {
             long currentTime = Instant.now(Clock.systemUTC()).toEpochMilli();
             String imageQRCodeName = "qrcode_" + orderId + ".png";
-            fileRepository.save(FileStorage.builder()
+            mvFileStorageRepository.save(FileStorage.builder()
                     .module(MODULE.PRODUCT.name())
                     .originalName(imageQRCodeName)
                     .customizeName(imageQRCodeName)
@@ -62,6 +62,6 @@ public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeSe
 
     @Override
     public FileStorage findQRCodeOfOrder(int orderId) {
-        return fileRepository.findQRCodeOfOrder(orderId);
+        return mvFileStorageRepository.findQRCodeOfOrder(orderId);
     }
 }

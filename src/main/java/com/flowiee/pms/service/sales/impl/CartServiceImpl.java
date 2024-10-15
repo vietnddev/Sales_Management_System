@@ -31,18 +31,18 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CartServiceImpl extends BaseService implements CartService {
-    OrderCartRepository   cartRepository;
-    CartItemsService      cartItemsService;
-    CartItemsRepository   cartItemsRepository;
-    ProductVariantService productVariantService;
-    ProductPriceRepository productPriceRepository;
+    CartItemsService mvCartItemsService;
+    OrderCartRepository mvCartRepository;
+    CartItemsRepository mvCartItemsRepository;
+    ProductVariantService mvProductVariantService;
+    ProductPriceRepository mvProductPriceRepository;
 
     @Override
     public List<OrderCart> findCartByAccountId(Integer accountId) {
-        List<OrderCart> listCart = cartRepository.findByAccountId(accountId);
+        List<OrderCart> listCart = mvCartRepository.findByAccountId(accountId);
         for (OrderCart cart : listCart) {
             for (Items item : cart.getListItems()) {
-                ProductPrice itemPrice = productPriceRepository.findPricePresent(null, item.getProductDetail().getId());
+                ProductPrice itemPrice = mvProductPriceRepository.findPricePresent(null, item.getProductDetail().getId());
                 if (itemPrice != null) {
                     PriceType priceType = PriceType.valueOf(item.getPriceType());
                     if (priceType.equals(PriceType.L)) {
@@ -62,12 +62,12 @@ public class CartServiceImpl extends BaseService implements CartService {
 
     @Override
     public List<OrderCart> findAll() {
-        return cartRepository.findAll();
+        return mvCartRepository.findAll();
     }
 
     @Override
     public Optional<OrderCart> findById(Integer id) {
-        return cartRepository.findById(id);
+        return mvCartRepository.findById(id);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CartServiceImpl extends BaseService implements CartService {
         if (orderCart == null) {
             throw new BadRequestException();
         }
-        return cartRepository.save(orderCart);
+        return mvCartRepository.save(orderCart);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CartServiceImpl extends BaseService implements CartService {
             throw new BadRequestException();
         }
         cart.setId(cartId);
-        return cartRepository.save(cart);
+        return mvCartRepository.save(cart);
     }
 
     @Override
@@ -92,19 +92,19 @@ public class CartServiceImpl extends BaseService implements CartService {
         if (this.findById(cartId).isEmpty()) {
             throw new BadRequestException();
         }
-        cartRepository.deleteById(cartId);
+        mvCartRepository.deleteById(cartId);
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CART_C, MasterObject.Cart, "Xóa/Reset giỏ hàng", "cartId = " + cartId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
     public Double calTotalAmountWithoutDiscount(int cartId) {
-        return cartItemsRepository.calTotalAmountWithoutDiscount(cartId);
+        return mvCartItemsRepository.calTotalAmountWithoutDiscount(cartId);
     }
 
     @Override
     public boolean isItemExistsInCart(Integer cartId, Integer productVariantId) {
-        Items item = cartItemsRepository.findByCartAndProductVariant(cartId, productVariantId);
+        Items item = mvCartItemsRepository.findByCartAndProductVariant(cartId, productVariantId);
         return item != null;
     }
 
@@ -112,22 +112,22 @@ public class CartServiceImpl extends BaseService implements CartService {
     @Override
     public void resetCart(Integer cartId) {
         Optional<OrderCart> cartOptional = this.findById(cartId);
-        cartOptional.ifPresent(orderCart -> cartItemsRepository.deleteAllItems(orderCart.getId()));
+        cartOptional.ifPresent(orderCart -> mvCartItemsRepository.deleteAllItems(orderCart.getId()));
     }
 
     @Override
     public void addItemsToCart(Integer cartId, String[] productVariantIds) {
         List<String> listProductVariantId = Arrays.stream(productVariantIds).toList();
         for (String productVariantId : listProductVariantId) {
-            Optional<ProductVariantDTO> productVariant = productVariantService.findById(Integer.parseInt(productVariantId));
+            Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(Integer.parseInt(productVariantId));
             if (productVariant.isEmpty()) {
                 continue;
             }
             if (this.isItemExistsInCart(cartId, productVariant.get().getId())) {
-                Items items = cartItemsService.findItemByCartAndProductVariant(cartId, productVariant.get().getId());
-                cartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
+                Items items = mvCartItemsService.findItemByCartAndProductVariant(cartId, productVariant.get().getId());
+                mvCartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
             } else {
-                ProductPrice productVariantPrice = productPriceRepository.findPricePresent(null, Integer.parseInt(productVariantId));
+                ProductPrice productVariantPrice = mvProductPriceRepository.findPricePresent(null, Integer.parseInt(productVariantId));
                 if (productVariantPrice == null) {
                     throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productVariant.get().getVariantName()));
                 }
@@ -141,26 +141,26 @@ public class CartServiceImpl extends BaseService implements CartService {
                     .quantity(1)
                     .note("")
                     .build();
-                cartItemsService.save(items);
+                mvCartItemsService.save(items);
             }
         }
     }
 
     @Override
     public void updateItemsOfCart(Items itemToUpdate, Integer itemId) {
-        Optional<Items> itemOptional = cartItemsService.findById(itemId);
+        Optional<Items> itemOptional = mvCartItemsService.findById(itemId);
         if (itemOptional.isEmpty()) {
             throw new BadRequestException("Item not found!");
         }
         Items item = itemOptional.get();
         if (itemToUpdate.getQuantity() <= 0) {
-            cartItemsService.delete(item.getId());
+            mvCartItemsService.delete(item.getId());
         } else {
             ProductDetail productVariant = item.getProductDetail();
             if (itemToUpdate.getQuantity() > productVariant.getAvailableSalesQty()) {
                 throw new BadRequestException("This item's quantity is over available quantity!");
             }
-            ProductPrice productVariantPrice = productPriceRepository.findPricePresent(null, productVariant.getId());
+            ProductPrice productVariantPrice = mvProductPriceRepository.findPricePresent(null, productVariant.getId());
             item.setNote(itemToUpdate.getNote());
             item.setQuantity(itemToUpdate.getQuantity());
             if (itemToUpdate.getPriceType() != null && (!item.getPriceType().equals(itemToUpdate.getPriceType()))) {
@@ -178,7 +178,7 @@ public class CartServiceImpl extends BaseService implements CartService {
             if (itemToUpdate.getExtraDiscount() != null) {
                 item.setExtraDiscount(itemToUpdate.getExtraDiscount());
             }
-            cartItemsService.update(item, item.getId());
+            mvCartItemsService.update(item, item.getId());
         }
     }
 }

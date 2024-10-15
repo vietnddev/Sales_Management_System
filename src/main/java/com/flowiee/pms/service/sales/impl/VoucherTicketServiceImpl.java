@@ -30,9 +30,9 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class VoucherTicketServiceImpl extends BaseService implements VoucherTicketService {
-    ModelMapper             modelMapper;
-    VoucherService          voucherService;
-    VoucherTicketRepository voucherTicketRepo;
+    ModelMapper             mvModelMapper;
+    VoucherService          mvVoucherService;
+    VoucherTicketRepository mvVoucherTicketRepository;
 
     @Override
     public List<VoucherTicket> findAll() {
@@ -45,12 +45,12 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("id").ascending());
         }
-        return voucherTicketRepo.findByVoucherId(voucherId, pageable);
+        return mvVoucherTicketRepository.findByVoucherId(voucherId, pageable);
     }
 
     @Override
     public Optional<VoucherTicket> findById(Integer voucherTicketId) {
-        return voucherTicketRepo.findById(voucherTicketId);
+        return mvVoucherTicketRepository.findById(voucherTicketId);
     }
 
     @Transactional
@@ -60,7 +60,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
             throw new BadRequestException();
         }
         if (this.findTicketByCode(voucherTicket.getCode()) == null) {
-            return voucherTicketRepo.save(voucherTicket);
+            return mvVoucherTicketRepository.save(voucherTicket);
         } else {
             throw new AppException();
         }
@@ -73,7 +73,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
             throw new BadRequestException();
         }
         voucherTicket.setId(voucherDetailId);
-        return voucherTicketRepo.save(voucherTicket);
+        return mvVoucherTicketRepository.save(voucherTicket);
     }
 
     @Override
@@ -82,30 +82,30 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
         if (voucherTicket.isEmpty() || voucherTicket.get().isUsed()) {
             throw new AppException();
         }
-        voucherTicketRepo.deleteById(ticketId);
+        mvVoucherTicketRepository.deleteById(ticketId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
     public List<VoucherTicket> findByVoucherId(Integer voucherId) {
-        return voucherTicketRepo.findByVoucherId(voucherId, Pageable.unpaged()).getContent();
+        return mvVoucherTicketRepository.findByVoucherId(voucherId, Pageable.unpaged()).getContent();
     }
 
     @Override
     public VoucherTicket findByCode(String code) {
-        return voucherTicketRepo.findByCode(code);
+        return mvVoucherTicketRepository.findByCode(code);
     }
 
     @Override
     public VoucherTicketDTO isAvailable(String voucherTicketCode) {
-        VoucherTicket voucherTicket = voucherTicketRepo.findByCode(voucherTicketCode);
+        VoucherTicket voucherTicket = mvVoucherTicketRepository.findByCode(voucherTicketCode);
         if (voucherTicket == null) {
 //            VoucherTicketDTO voucherTicketDTO = new VoucherTicketDTO();
 //            voucherTicketDTO.setAvailable("N");
             return new VoucherTicketDTO("N");
         }
-        VoucherTicketDTO voucherTicketDTO = modelMapper.map(voucherTicket, VoucherTicketDTO.class);
-        Optional<VoucherInfoDTO> voucherInfoDTO = voucherService.findById(voucherTicketDTO.getVoucherInfo().getId());
+        VoucherTicketDTO voucherTicketDTO = mvModelMapper.map(voucherTicket, VoucherTicketDTO.class);
+        Optional<VoucherInfoDTO> voucherInfoDTO = mvVoucherService.findById(voucherTicketDTO.getVoucherInfo().getId());
         if (voucherInfoDTO.isPresent()) {
             LocalDateTime currentTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
             LocalDateTime startTime = voucherInfoDTO.get().getStartTime().withHour(0).withMinute(0).withSecond(0);
@@ -121,15 +121,15 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
 
     @Override
     public VoucherTicket findTicketByCode(String code) {
-        return voucherTicketRepo.findByCode(code);
+        return mvVoucherTicketRepository.findByCode(code);
     }
 
     @Override
     public String checkTicketToUse(String code) {
         String statusTicket = "";
-        VoucherTicket ticket = voucherTicketRepo.findByCode(code);
+        VoucherTicket ticket = mvVoucherTicketRepository.findByCode(code);
         if (ticket != null) {
-            Optional<VoucherInfoDTO> voucherInfo = voucherService.findById(ticket.getId());
+            Optional<VoucherInfoDTO> voucherInfo = mvVoucherService.findById(ticket.getId());
             if (voucherInfo.isEmpty()) {
                 throw new AppException();
             }

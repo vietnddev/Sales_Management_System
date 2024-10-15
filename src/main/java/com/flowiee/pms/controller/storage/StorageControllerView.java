@@ -22,7 +22,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class StorageControllerView extends BaseController {
-    StorageService storageService;
+    StorageService mvStorageService;
 
     @GetMapping
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
@@ -33,7 +33,7 @@ public class StorageControllerView extends BaseController {
     @GetMapping(value = "/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
     public ModelAndView findDetail(@PathVariable("storageId") Integer storageId) {
-        Optional<StorageDTO> storage = storageService.findById(storageId);
+        Optional<StorageDTO> storage = mvStorageService.findById(storageId);
         if (storage.isEmpty()) {
             throw new ResourceNotFoundException("Storage not found!");
         }

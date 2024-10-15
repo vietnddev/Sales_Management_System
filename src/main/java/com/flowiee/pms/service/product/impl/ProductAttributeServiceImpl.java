@@ -29,8 +29,8 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductAttributeServiceImpl extends BaseService implements ProductAttributeService {
-    ProductAttributeRepository productAttributeRepo;
-    ProductHistoryService      productHistoryService;
+    ProductAttributeRepository mvProductAttributeRepository;
+    ProductHistoryService      mvProductHistoryService;
 
     @Override
     public List<ProductAttribute> findAll() {
@@ -43,17 +43,17 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("sort"));
         }
-        return productAttributeRepo.findByProductVariantId(pProductDetailId, pageable);
+        return mvProductAttributeRepository.findByProductVariantId(pProductDetailId, pageable);
     }
 
     @Override
     public Optional<ProductAttribute> findById(Integer attributeId) {
-        return productAttributeRepo.findById(attributeId);
+        return mvProductAttributeRepository.findById(attributeId);
     }
 
     @Override
     public ProductAttribute save(ProductAttribute productAttribute) {
-        ProductAttribute productAttributeSaved = productAttributeRepo.save(productAttribute);
+        ProductAttribute productAttributeSaved = mvProductAttributeRepository.save(productAttribute);
         systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductAttribute, "Thêm mới thuộc tính sản phẩm", productAttributeSaved.getAttributeName());
         return productAttributeSaved;
     }
@@ -66,11 +66,11 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
         }
         ProductAttribute attributeBefore = ObjectUtils.clone(attributeOptional.get());
         attribute.setId(attributeId);
-        ProductAttribute attributeUpdated = productAttributeRepo.save(attribute);
+        ProductAttribute attributeUpdated = mvProductAttributeRepository.save(attribute);
 
         String logTitle = "Cập nhật thuộc tính sản phẩm";
         ChangeLog changeLog = new ChangeLog(attributeBefore, attributeUpdated);
-        productHistoryService.save(changeLog.getLogChanges(), logTitle, attributeUpdated.getProductDetail().getProduct().getId(), attributeUpdated.getProductDetail().getId(), attributeUpdated.getId());
+        mvProductHistoryService.save(changeLog.getLogChanges(), logTitle, attributeUpdated.getProductDetail().getProduct().getId(), attributeUpdated.getProductDetail().getId(), attributeUpdated.getId());
         systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductAttribute, "Cập nhật thuộc tính sản phẩm", changeLog);
 
         return attributeUpdated;
@@ -82,7 +82,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
         if (attributeToDelete.isEmpty()) {
             throw new ResourceNotFoundException("Product attribute not found!");
         }
-        productAttributeRepo.deleteById(attributeId);
+        mvProductAttributeRepository.deleteById(attributeId);
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductAttribute, "Xóa thuộc tính sản phẩm", attributeToDelete.get().getAttributeName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

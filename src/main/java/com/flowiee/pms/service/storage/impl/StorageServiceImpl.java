@@ -32,7 +32,7 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class StorageServiceImpl extends BaseService implements StorageService {
-    StorageRepository storageRepository;
+    StorageRepository mvStorageRepository;
 
     @Override
     public List<StorageDTO> findAll() {
@@ -45,20 +45,20 @@ public class StorageServiceImpl extends BaseService implements StorageService {
         if (pageNum >= 0 && pageSize >= 0) {
             pageable = PageRequest.of(pageNum, pageSize);
         }
-        Page<Storage> storages = storageRepository.findAll(pageable);
+        Page<Storage> storages = mvStorageRepository.findAll(pageable);
         return new PageImpl<>(StorageDTO.convertToDTOs(storages.getContent()), pageable, storages.getTotalElements());
     }
 
     @Override
     public Page<StorageItems> findStorageItems(int pageSize, int pageNum, Integer storageId, String searchText) {
-        Optional<Storage> storage = storageRepository.findById(storageId);
+        Optional<Storage> storage = mvStorageRepository.findById(storageId);
         if (storage.isEmpty())
             throw new BadRequestException("Storage not found");
         Pageable pageable = Pageable.unpaged();
         if (pageNum >= 0 && pageSize >= 0) {
             pageable = PageRequest.of(pageNum, pageSize);
         }
-        Page<Object[]> storageItemsRawData = storageRepository.findAllItems(searchText, storageId, pageable);
+        Page<Object[]> storageItemsRawData = mvStorageRepository.findAllItems(searchText, storageId, pageable);
         List<StorageItems> storageItems = new ArrayList<>();
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                 .appendPattern("yyyy-MM-dd HH:mm:ss")
@@ -87,7 +87,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
 
     @Override
     public Optional<StorageDTO> findById(Integer storageId) {
-        Optional<Storage> storageOptional = storageRepository.findById(storageId);
+        Optional<Storage> storageOptional = mvStorageRepository.findById(storageId);
         if (storageOptional.isPresent()) {
             List<StorageItems> storageItemsList = this.findStorageItems(-1, -1, storageId, null).getContent();
             StorageDTO storage = StorageDTO.convertToDTO(storageOptional.get());
@@ -102,13 +102,13 @@ public class StorageServiceImpl extends BaseService implements StorageService {
     @Override
     public StorageDTO save(StorageDTO inputStorageDTO) {
         Storage storage = StorageConvert.convertToEntity(inputStorageDTO);
-        Storage storageSaved = storageRepository.save(storage);
+        Storage storageSaved = mvStorageRepository.save(storage);
         return StorageDTO.convertToDTO(storageSaved);
     }
 
     @Override
     public StorageDTO update(StorageDTO inputStorageDTO, Integer storageId) {
-        Optional<Storage> storageOpt = storageRepository.findById(storageId);
+        Optional<Storage> storageOpt = mvStorageRepository.findById(storageId);
         if (storageOpt.isEmpty()) {
             throw new BadRequestException("Storage not found");
         }
@@ -120,7 +120,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
         storageOpt.get().setIsDefault(inputStorageDTO.getIsDefault());
         storageOpt.get().setStatus(inputStorageDTO.getStatus());
 
-        Storage storageUpdated = storageRepository.save(storageOpt.get());
+        Storage storageUpdated = mvStorageRepository.save(storageOpt.get());
 
         ChangeLog changeLog = new ChangeLog(storageBefore, storageUpdated);
         systemLogService.writeLogUpdate(MODULE.STORAGE, ACTION.STG_STG_U, MasterObject.Storage, "Cập nhật Kho", changeLog);
@@ -138,7 +138,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
             if ("Y".equals(storage.get().getStatus())) {
                 return "This storage is in use!";
             }
-            storageRepository.deleteById(storageId);
+            mvStorageRepository.deleteById(storageId);
             systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_STORAGE, MasterObject.Storage, "Xóa kho", storage.get().getName());
             logger.info("Delete storage success! storageId={}", storageId);
             return MessageCode.DELETE_SUCCESS.getDescription();

@@ -23,7 +23,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class SupplierController extends BaseController {
-    SupplierService supplierService;
+    SupplierService mvSupplierService;
 
     @Operation(summary = "Find all nhà cung cấp")
     @GetMapping("/all")
@@ -32,10 +32,10 @@ public class SupplierController extends BaseController {
                                                @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {
             if (pageSize != null && pageNum != null) {
-                Page<Supplier> suppliers = supplierService.findAll(pageSize, pageNum - 1, null);
+                Page<Supplier> suppliers = mvSupplierService.findAll(pageSize, pageNum - 1, null);
                 return success(suppliers.getContent(), pageNum, pageSize, suppliers.getTotalPages(), suppliers.getTotalElements());
             } else {
-                Page<Supplier> suppliers = supplierService.findAll(null, null, null);
+                Page<Supplier> suppliers = mvSupplierService.findAll(null, null, null);
                 return success(suppliers.getContent(), 1, 0, suppliers.getTotalPages(), suppliers.getTotalElements());
             }
         } catch (RuntimeException ex) {
@@ -48,7 +48,7 @@ public class SupplierController extends BaseController {
     @PreAuthorize("@vldModuleSales.insertSupplier(true)")
     public AppResponse<Supplier> createNewSupplier(@RequestBody Supplier supplier) {
         try {
-            return success(supplierService.save(supplier));
+            return success(mvSupplierService.save(supplier));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "supplier"), ex);
         }
@@ -58,13 +58,13 @@ public class SupplierController extends BaseController {
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.updateSupplier(true)")
     public AppResponse<Supplier> updateSupplier(@RequestBody Supplier supplier, @PathVariable("id") Integer supplierId) {
-        return success(supplierService.update(supplier, supplierId));
+        return success(mvSupplierService.update(supplier, supplierId));
     }
 
     @Operation(summary = "Xóa nhà cung cấp")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteSupplier(true)")
     public AppResponse<String> deleteSupplier(@PathVariable("id") Integer supplierId) {
-        return success(supplierService.delete(supplierId));
+        return success(mvSupplierService.delete(supplierId));
     }
 }

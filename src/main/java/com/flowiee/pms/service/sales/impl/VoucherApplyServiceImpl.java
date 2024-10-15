@@ -21,36 +21,36 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class VoucherApplyServiceImpl extends BaseService implements VoucherApplyService {
-    VoucherApplyRepository voucherApplyRepo;
+    VoucherApplyRepository mvVoucherApplyRepository;
 
     @Override
     public List<VoucherApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
-        return this.extractDataQuery(voucherApplyRepo.findAll((Integer) null));
+        return this.extractDataQuery(mvVoucherApplyRepository.findAll((Integer) null));
     }
 
     @Override
     public List<VoucherApplyDTO> findByProductId(Integer productId) {
-        return this.extractDataQuery(voucherApplyRepo.findAll(productId));
+        return this.extractDataQuery(mvVoucherApplyRepository.findAll(productId));
     }
 
     @Override
     public List<VoucherApply> findAll() {
-        return voucherApplyRepo.findAll();
+        return mvVoucherApplyRepository.findAll();
     }
 
     @Override
     public List<VoucherApply> findByVoucherId(Integer voucherId) {
-        return voucherApplyRepo.findByVoucherId(voucherId);
+        return mvVoucherApplyRepository.findByVoucherId(voucherId);
     }
 
     @Override
     public Optional<VoucherApply> findById(Integer id) {
-        return voucherApplyRepo.findById(id);
+        return mvVoucherApplyRepository.findById(id);
     }
 
     @Override
     public VoucherApply save(VoucherApply voucherApply) {
-        return voucherApplyRepo.save(voucherApply);
+        return mvVoucherApplyRepository.save(voucherApply);
     }
 
     @Override
@@ -59,13 +59,13 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
             throw new BadRequestException();
         }
         voucherApply.setId(id);
-        return voucherApplyRepo.save(voucherApply);
+        return mvVoucherApplyRepository.save(voucherApply);
     }
 
     @Override
     public String delete(Integer entityId) {
         if (this.findById(entityId).isEmpty()) {
-            voucherApplyRepo.deleteById(entityId);
+            mvVoucherApplyRepository.deleteById(entityId);
         }
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

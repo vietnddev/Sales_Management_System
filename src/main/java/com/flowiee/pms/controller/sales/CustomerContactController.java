@@ -25,18 +25,18 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CustomerContactController extends BaseController {
-    CustomerService        customerService;
-    CustomerContactService customerContactService;
+    CustomerService mvCustomerService;
+    CustomerContactService mvCustomerContactService;
 
     @Operation(summary = "Find contacts of customer")
     @GetMapping("/{customerId}/contact")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<List<CustomerContact>> findContactsOfCustomer(@PathVariable("customerId") Integer customerId) {
         try {
-            if (customerId <= 0 || customerService.findById(customerId).isEmpty()) {
+            if (customerId <= 0 || mvCustomerService.findById(customerId).isEmpty()) {
                 throw new BadRequestException();
             }
-            List<CustomerContact> listContacts = customerContactService.findContacts(customerId);
+            List<CustomerContact> listContacts = mvCustomerContactService.findContacts(customerId);
             for (CustomerContact c : listContacts) {
                 if (ContactType.P.name().equals(c.getCode())) {
                     c.setCode(ContactType.P.getLabel());
@@ -62,7 +62,7 @@ public class CustomerContactController extends BaseController {
             if (customerContact == null || customerContact.getCustomer() == null) {
                 throw new BadRequestException();
             }
-            return success(customerContactService.save(customerContact));
+            return success(mvCustomerContactService.save(customerContact));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
@@ -73,10 +73,10 @@ public class CustomerContactController extends BaseController {
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public AppResponse<CustomerContact> updateContact(@RequestBody CustomerContact customerContact, @PathVariable("contactId") Integer contactId) {
         try {
-            if (customerContact == null || customerContact.getCustomer() == null || customerContactService.findById(contactId).isEmpty()) {
+            if (customerContact == null || customerContact.getCustomer() == null || mvCustomerContactService.findById(contactId).isEmpty()) {
                 throw new BadRequestException();
             }
-            return success(customerContactService.update(customerContact, contactId));
+            return success(mvCustomerContactService.update(customerContact, contactId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
@@ -86,7 +86,7 @@ public class CustomerContactController extends BaseController {
     @DeleteMapping("/contact/delete/{contactId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public AppResponse<String> deleteContact(@PathVariable("contactId") Integer contactId) {
-        return success(customerContactService.delete(contactId));
+        return success(mvCustomerContactService.delete(contactId));
     }
 
     @Operation(summary = "Update contact use default")
@@ -96,10 +96,10 @@ public class CustomerContactController extends BaseController {
                                                              @RequestParam("contactCode") String contactCode,
                                                              @PathVariable("contactId") Integer contactId) {
         try {
-            if (customerId <= 0 || contactId <= 0 || customerService.findById(customerId).isEmpty() || customerContactService.findById(contactId).isEmpty()) {
+            if (customerId <= 0 || contactId <= 0 || mvCustomerService.findById(customerId).isEmpty() || mvCustomerContactService.findById(contactId).isEmpty()) {
                 throw new BadRequestException();
             }
-            return success(customerContactService.enableContactUseDefault(customerId, contactCode, contactId));
+            return success(mvCustomerContactService.enableContactUseDefault(customerId, contactCode, contactId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }
@@ -110,10 +110,10 @@ public class CustomerContactController extends BaseController {
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public AppResponse<CustomerContact> setContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
         try {
-            if (contactId <= 0 || customerContactService.findById(contactId).isEmpty()) {
+            if (contactId <= 0 || mvCustomerContactService.findById(contactId).isEmpty()) {
                 throw new BadRequestException();
             }
-            return success(customerContactService.disableContactUnUseDefault(contactId));
+            return success(mvCustomerContactService.disableContactUnUseDefault(contactId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "contact"), ex);
         }

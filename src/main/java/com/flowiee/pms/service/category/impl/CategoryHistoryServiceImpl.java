@@ -18,7 +18,7 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryHistoryServiceImpl implements CategoryHistoryService {
-    CategoryHistoryRepository categoryHistoryRepository;
+    CategoryHistoryRepository mvCategoryHistoryRepository;
 
     @Override
     public List<CategoryHistory> save(Map<String, Object[]> logChanges, String title, Integer categoryId) {
@@ -36,7 +36,7 @@ public class CategoryHistoryServiceImpl implements CategoryHistoryService {
                     .newValue(newValue)
                     .build();
 
-            categoryHistories.add(categoryHistoryRepository.save(categoryHistory));
+            categoryHistories.add(mvCategoryHistoryRepository.save(categoryHistory));
         }
         return categoryHistories;
     }

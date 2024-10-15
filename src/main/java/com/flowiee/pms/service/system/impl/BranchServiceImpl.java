@@ -17,32 +17,32 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class BranchServiceImpl extends BaseService implements BranchService {
-    BranchRepository branchRepository;
+    BranchRepository mvBranchRepository;
 
     @Override
     public List<Branch> findAll() {
-        return branchRepository.findAll();
+        return mvBranchRepository.findAll();
     }
 
     @Override
     public Optional<Branch> findById(Integer branchId) {
-        return branchRepository.findById(branchId);
+        return mvBranchRepository.findById(branchId);
     }
 
     @Override
     public Branch save(Branch branch) {
-        return branchRepository.save(branch);
+        return mvBranchRepository.save(branch);
     }
 
     @Override
     public Branch update(Branch branch, Integer branchId) {
         branch.setId(branchId);
-        return branchRepository.save(branch);
+        return mvBranchRepository.save(branch);
     }
 
     @Override
     public String delete(Integer branchId) {
-        branchRepository.deleteById(branchId);
+        mvBranchRepository.deleteById(branchId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

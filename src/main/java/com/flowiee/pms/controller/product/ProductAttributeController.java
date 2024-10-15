@@ -3,7 +3,6 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductAttributeService;
 import com.flowiee.pms.utils.constants.ErrorCode;
@@ -21,14 +20,14 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductAttributeController extends BaseController {
-    ProductAttributeService productAttributeService;
+    ProductAttributeService mvProductAttributeService;
 
     @Operation(summary = "Create product attribute")
     @PostMapping("/attribute/create")
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
     public AppResponse<ProductAttribute> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
         try {
-            return success(productAttributeService.save(productAttribute));
+            return success(mvProductAttributeService.save(productAttribute));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product attribute"), ex);
         }
@@ -39,7 +38,7 @@ public class ProductAttributeController extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public AppResponse<ProductAttribute> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
         try {
-            return success(productAttributeService.update(productAttribute, productAttributeId));
+            return success(mvProductAttributeService.update(productAttribute, productAttributeId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product attribute"), ex);
         }
@@ -49,6 +48,6 @@ public class ProductAttributeController extends BaseController {
     @DeleteMapping("/attribute/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
     public AppResponse<String> deleteProductAttribute(@PathVariable("id") Integer productAttributeId) {
-        return success(productAttributeService.delete(productAttributeId));
+        return success(mvProductAttributeService.delete(productAttributeId));
     }
 }

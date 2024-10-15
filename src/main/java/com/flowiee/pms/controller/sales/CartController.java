@@ -31,33 +31,33 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CartController extends BaseController {
-    CartService           cartService;
-    AccountService        accountService;
-    CategoryService       categoryService;
-    CartItemsService      cartItemsService;
-    ProductVariantService productVariantService;
+    CartService mvCartService;
+    AccountService mvAccountService;
+    CategoryService mvCategoryService;
+    CartItemsService mvCartItemsService;
+    ProductVariantService mvProductVariantService;
 
     @GetMapping("/ban-hang")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView showPageBanHang() {
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_SELL.getTemplate());
-        List<OrderCart> orderCartCurrent = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
+        List<OrderCart> orderCartCurrent = mvCartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
         if (orderCartCurrent.isEmpty()) {
             OrderCart orderCart = new OrderCart();
             orderCart.setCreatedBy(CommonUtils.getUserPrincipal().getId());
-            cartService.save(orderCart);
+            mvCartService.save(orderCart);
         }
 
-        List<OrderCart> listOrderCart = cartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
+        List<OrderCart> listOrderCart = mvCartService.findCartByAccountId(CommonUtils.getUserPrincipal().getId());
         modelAndView.addObject("listCart", listOrderCart);
-        modelAndView.addObject("listAccount", accountService.findAll());
-        modelAndView.addObject("listSalesChannel", categoryService.findSalesChannels());
-        modelAndView.addObject("listPaymentMethod", categoryService.findPaymentMethods());
-        modelAndView.addObject("listOrderStatus", categoryService.findOrderStatus(null));
-        modelAndView.addObject("listProductVariant", productVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent());
-        modelAndView.addObject("listItemsForSales", cartItemsService.findAllItemsForSales());
+        modelAndView.addObject("listAccount", mvAccountService.findAll());
+        modelAndView.addObject("listSalesChannel", mvCategoryService.findSalesChannels());
+        modelAndView.addObject("listPaymentMethod", mvCategoryService.findPaymentMethods());
+        modelAndView.addObject("listOrderStatus", mvCategoryService.findOrderStatus(null));
+        modelAndView.addObject("listProductVariant", mvProductVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent());
+        modelAndView.addObject("listItemsForSales", mvCartItemsService.findAllItemsForSales());
 
-        double totalAmountWithoutDiscount = cartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
+        double totalAmountWithoutDiscount = mvCartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
         double amountDiscount = 0;
         double totalAmountDiscount = totalAmountWithoutDiscount - amountDiscount;
         modelAndView.addObject("totalAmountWithoutDiscount", totalAmountWithoutDiscount);
@@ -70,16 +70,16 @@ public class CartController extends BaseController {
     @GetMapping("/cart/product/available-sales")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<CartItemModel>> getAllItemsForSales() {
-        return success(cartItemsService.findAllItemsForSales());
+        return success(mvCartItemsService.findAllItemsForSales());
     }
 
     @PostMapping("/ban-hang/cart/item/add")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
-        if (cartId <= 0 || cartService.findById(cartId).isEmpty()) {
+        if (cartId <= 0 || mvCartService.findById(cartId).isEmpty()) {
             throw new ResourceNotFoundException("Cart not found!");
         }
-        cartService.addItemsToCart(cartId, bienTheSanPhamId);
+        mvCartService.addItemsToCart(cartId, bienTheSanPhamId);
         return new ModelAndView("redirect:/order/ban-hang");
     }
 
@@ -88,30 +88,30 @@ public class CartController extends BaseController {
     public ModelAndView updateItemsOfCart(@RequestParam("cartId") Integer cartId,
                                           @ModelAttribute("items") Items items,
                                           @PathVariable("itemId") Integer itemId) {
-        if (cartService.findById(cartId).isEmpty()) {
+        if (mvCartService.findById(cartId).isEmpty()) {
             throw new ResourceNotFoundException("Cart not found!");
         }
-        cartService.updateItemsOfCart(items, itemId);
+        mvCartService.updateItemsOfCart(items, itemId);
         return new ModelAndView("redirect:/order/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView deleteItemsOfCart(@RequestParam("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
-        if (cartService.findById(cartId).isEmpty()) {
+        if (mvCartService.findById(cartId).isEmpty()) {
             throw new BadRequestException("Sản phẩm cần xóa trong giỏ hàng không tồn tại! cartId=" + cartId + ", itemId=" + itemId);
         }
-        cartItemsService.delete(itemId);
+        mvCartItemsService.delete(itemId);
         return new ModelAndView("redirect:/order/ban-hang");
     }
 
     @PostMapping("/ban-hang/cart/{cartId}/reset")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView resetCart(@PathVariable("cartId") Integer cartId) {
-        if (cartService.findById(cartId).isEmpty()) {
+        if (mvCartService.findById(cartId).isEmpty()) {
             throw new BadRequestException("Cart not found! cartId=" + cartId);
         }
-        cartService.resetCart(cartId);
+        mvCartService.resetCart(cartId);
         return new ModelAndView("redirect:/order/ban-hang");
     }
 

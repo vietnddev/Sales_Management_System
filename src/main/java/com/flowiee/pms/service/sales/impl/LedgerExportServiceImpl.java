@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class LedgerExportServiceImpl extends BaseExportService {
-    LedgerService ledgerService;
+    LedgerService mvLedgerService;
 
     @Override
     protected void writeData(Object pCondition) {
-        GeneralLedger lvData = ledgerService.findGeneralLedger(-1, -1, null, null);
+        GeneralLedger lvData = mvLedgerService.findGeneralLedger(-1, -1, null, null);
         XSSFSheet lvSheet = mvWorkbook.getSheetAt(0);
         for (int i = 0; i < lvData.getListTransactions().size(); i++) {
             LedgerTransaction t = lvData.getListTransactions().get(i);

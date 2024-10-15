@@ -30,8 +30,8 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class MaterialServiceImpl extends BaseService implements MaterialService {
-    MaterialRepository     materialRepository;
-    MaterialHistoryService materialHistoryService;
+    MaterialRepository     mvMaterialRepository;
+    MaterialHistoryService mvMaterialHistoryService;
 
     @Override
     public List<Material> findAll() {
@@ -44,17 +44,17 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
         }
-        return materialRepository.findAll(supplierId, unitId, code, name, location, status, pageable);
+        return mvMaterialRepository.findAll(supplierId, unitId, code, name, location, status, pageable);
     }
 
     @Override
     public Optional<Material> findById(Integer entityId) {
-        return materialRepository.findById(entityId);
+        return mvMaterialRepository.findById(entityId);
     }
 
     @Override
     public Material save(Material entity) {
-        Material materialSaved = materialRepository.save(entity);
+        Material materialSaved = mvMaterialRepository.save(entity);
         systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.STG_MAT_C, MasterObject.Material, "Thêm mới nguyên vật liệu", materialSaved.getName());
         return materialSaved;
     }
@@ -70,11 +70,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         }
         Material materialBefore = ObjectUtils.clone(materialOptional.get());
         entity.setId(materialId);
-        Material materialUpdated = materialRepository.save(entity);
+        Material materialUpdated = mvMaterialRepository.save(entity);
 
         String logTitle = "Cập nhật nguyên vật liệu: " + materialUpdated.getName();
         ChangeLog changeLog = new ChangeLog(materialBefore, materialUpdated);
-        materialHistoryService.save(changeLog.getLogChanges(), logTitle, materialId);
+        mvMaterialHistoryService.save(changeLog.getLogChanges(), logTitle, materialId);
         systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, logTitle, changeLog);
         logger.info(logTitle);
 
@@ -87,7 +87,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         if (materialToDelete.isEmpty()) {
             throw new BadRequestException("Material not found!");
         }
-        materialRepository.deleteById(entityId);
+        mvMaterialRepository.deleteById(entityId);
 
         String logTitle = "Xóa nguyên vật liệu";
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, "Xóa nguyên vật liệu", materialToDelete.get().getName());
@@ -101,10 +101,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     public void updateQuantity(Integer quantity, Integer materialId, String type) {
         String logTitle = "Cập nhật số lượng nguyên vật liệu";
         if ("I".equals(type)) {
-            materialRepository.updateQuantityIncrease(quantity, materialId);
+            mvMaterialRepository.updateQuantityIncrease(quantity, materialId);
             systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, logTitle, " + " + quantity);
         } else if ("D".equals(type)) {
-            materialRepository.updateQuantityDecrease(quantity, materialId);
+            mvMaterialRepository.updateQuantityDecrease(quantity, materialId);
             systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, logTitle, " - " + quantity);
         }
     }

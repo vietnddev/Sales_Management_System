@@ -1,6 +1,5 @@
 package com.flowiee.pms.service.sales.impl;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
@@ -19,16 +18,18 @@ import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Column;
 import java.lang.reflect.Type;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -37,18 +38,15 @@ import java.util.*;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class VoucherInfoServiceImpl extends BaseService implements VoucherService {
-    ModelMapper           modelMapper;
-    VoucherInfoRepository voucherInfoRepo;
-    VoucherApplyService   voucherApplyService;
-    VoucherTicketService  voucherTicketService;
-
-    public VoucherInfoServiceImpl(VoucherInfoRepository voucherInfoRepo, VoucherApplyService voucherApplyService, @Lazy VoucherTicketService voucherTicketService, ModelMapper modelMapper) {
-        this.voucherInfoRepo = voucherInfoRepo;
-        this.voucherApplyService = voucherApplyService;
-        this.voucherTicketService = voucherTicketService;
-        this.modelMapper = modelMapper;
-    }
+    ModelMapper           mvModelMapper;
+    VoucherApplyService   mvVoucherApplyService;
+    VoucherInfoRepository mvVoucherInfoRepository;
+    @Autowired
+    @NonFinal
+    @Lazy
+    VoucherTicketService  mvVoucherTicketService;
 
     @Override
     public List<VoucherInfoDTO> findAll() {
@@ -68,10 +66,10 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
         if (pStartTime == null) {
             pStartTime = LocalDateTime.of(1900, 1, 1, 0, 0);
         }
-        Page<VoucherInfo> pageVoucherInfoDTOs = voucherInfoRepo.findAll(null, pTitle, pStartTime, pEndTime, pStatus, pageable);
+        Page<VoucherInfo> pageVoucherInfoDTOs = mvVoucherInfoRepository.findAll(null, pTitle, pStartTime, pEndTime, pStatus, pageable);
 
         Type listType = new TypeToken<List<VoucherInfoDTO>>() {}.getType();
-        List<VoucherInfoDTO> voucherInfoDTOs = modelMapper.map(pageVoucherInfoDTOs.getContent(), listType);
+        List<VoucherInfoDTO> voucherInfoDTOs = mvModelMapper.map(pageVoucherInfoDTOs.getContent(), listType);
 
         for (VoucherInfoDTO v : voucherInfoDTOs) {
             v.setStatus(genVoucherStatus(v.getStartTime(), v.getEndTime()));
@@ -82,9 +80,9 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
 
     @Override
     public Optional<VoucherInfoDTO> findById(Integer entityId) {
-        Optional<VoucherInfo> voucherInfo = voucherInfoRepo.findById(entityId);
+        Optional<VoucherInfo> voucherInfo = mvVoucherInfoRepository.findById(entityId);
         if (voucherInfo.isPresent()) {
-            VoucherInfoDTO dto = modelMapper.map(voucherInfo.get(), VoucherInfoDTO.class);
+            VoucherInfoDTO dto = mvModelMapper.map(voucherInfo.get(), VoucherInfoDTO.class);
             dto.setStatus(genVoucherStatus(dto.getStartTime(), dto.getEndTime()));
             return Optional.of(dto);
         }
@@ -101,10 +99,10 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             voucherInfo.setStartTime(LocalDateTime.parse(voucherInfo.getStartTimeStr() + " 00:00:00", formatter));
             voucherInfo.setEndTime(LocalDateTime.parse(voucherInfo.getEndTimeStr() + " 00:00:00", formatter));
 
-            VoucherInfo voucherSaved = voucherInfoRepo.save(VoucherInfo.fromVoucherDTO(voucherInfo));
+            VoucherInfo voucherSaved = mvVoucherInfoRepository.save(VoucherInfo.fromVoucherDTO(voucherInfo));
             //
             for (ProductDTO product : voucherInfo.getApplicableProducts()) {
-                voucherApplyService.save(VoucherApply.builder()
+                mvVoucherApplyService.save(VoucherApply.builder()
                         .voucherId(voucherSaved.getId())
                         .productId(product.getId())
                         .build());
@@ -115,12 +113,12 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
                 String randomKey = "";
                 while (randomKey.isEmpty()) {
                     String tempKey = generateRandomKeyVoucher(voucherInfo.getLength(), voucherInfo.getVoucherType());
-                    if (voucherTicketService.findByCode(tempKey) == null) {
+                    if (mvVoucherTicketService.findByCode(tempKey) == null) {
                         randomKey = tempKey;
                     }
                 }
                 if (!listKeyVoucher.contains(randomKey)) {
-                    VoucherTicket voucherTicketSaved = voucherTicketService.save(VoucherTicket.builder()
+                    VoucherTicket voucherTicketSaved = mvVoucherTicketService.save(VoucherTicket.builder()
                             .code(randomKey)
                             .length(voucherInfo.getLength())
                             .voucherInfo(voucherSaved)
@@ -131,7 +129,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
                     }
                 }
             }
-            VoucherInfoDTO dto = modelMapper.map(voucherSaved, VoucherInfoDTO.class);
+            VoucherInfoDTO dto = mvModelMapper.map(voucherSaved, VoucherInfoDTO.class);
             dto.setStatus(genVoucherStatus(dto.getStartTime(), dto.getEndTime()));
             systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_VOU_C, MasterObject.VoucherInfo, "Thêm mới voucher", dto.getTitle());
             return dto;
@@ -149,12 +147,12 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             }
             VoucherInfoDTO voucherInfoBefore = ObjectUtils.clone(voucherOpt.get());
             voucherInfo.setId(voucherId);
-            VoucherInfo voucherInfoUpdated = voucherInfoRepo.save(voucherInfo);
+            VoucherInfo voucherInfoUpdated = mvVoucherInfoRepository.save(voucherInfo);
 
             ChangeLog changeLog = new ChangeLog(voucherInfoBefore, voucherInfoUpdated);
             systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_VOU_U, MasterObject.VoucherInfo, "Cập nhật voucher " + voucherInfoUpdated.getTitle(), changeLog.getOldValues(), changeLog.getNewValues());
 
-            return modelMapper.map(voucherInfoUpdated, VoucherInfoDTO.class);
+            return mvModelMapper.map(voucherInfoUpdated, VoucherInfoDTO.class);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "voucher"), ex);
         }
@@ -166,10 +164,10 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
         if (voucherInfoBefore.isEmpty()) {
             throw new BadRequestException("Voucher not found!");
         }
-        if (!voucherApplyService.findByVoucherId(voucherId).isEmpty()) {
+        if (!mvVoucherApplyService.findByVoucherId(voucherId).isEmpty()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        voucherInfoRepo.deleteById(voucherId);
+        mvVoucherInfoRepository.deleteById(voucherId);
         systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_VOU_D, MasterObject.VoucherInfo, "Xóa voucher", voucherInfoBefore.get().getTitle());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

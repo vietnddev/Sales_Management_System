@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +29,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CustomerController extends BaseController {
-    CustomerService customerService;
+    CustomerService mvCustomerService;
 
     @Operation(summary = "Find all customers")
     @GetMapping("/all")
@@ -46,7 +45,7 @@ public class CustomerController extends BaseController {
         try {
             if (pageSize == null) pageSize = -1;
             if (pageNum == null) pageNum = 1;
-            Page<CustomerDTO> customers = customerService.findAll(pageSize, pageNum - 1, pName, pSex, pBirthday, pPhone, pEmail, pAddress);
+            Page<CustomerDTO> customers = mvCustomerService.findAll(pageSize, pageNum - 1, pName, pSex, pBirthday, pPhone, pEmail, pAddress);
             return success(customers.getContent(), pageNum, pageSize, customers.getTotalPages(), customers.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"), ex);
@@ -57,7 +56,7 @@ public class CustomerController extends BaseController {
     @GetMapping("/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Integer customerId) {
-        Optional<CustomerDTO> customer = customerService.findById(customerId);
+        Optional<CustomerDTO> customer = mvCustomerService.findById(customerId);
         if (customer.isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"));
         }
@@ -72,7 +71,7 @@ public class CustomerController extends BaseController {
             if (customer == null) {
                 throw new BadRequestException();
             }
-            customerService.save(customer);
+            mvCustomerService.save(customer);
             return success(MessageCode.CREATE_SUCCESS.getDescription());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "customer"), ex);
@@ -83,23 +82,23 @@ public class CustomerController extends BaseController {
     @PutMapping("/update/{customerId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public AppResponse<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
-        return success(customerService.update(customer, customerId));
+        return success(mvCustomerService.update(customer, customerId));
     }
 
     @Operation(summary = "Delete customer")
     @DeleteMapping("/delete/{customerId}")
     @PreAuthorize("@vldModuleSales.deleteCustomer(true)")
     public AppResponse<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
-        return success(customerService.delete(customerId));
+        return success(mvCustomerService.delete(customerId));
     }
 
     @Operation(summary = "Find the number of purchase of customer per month")
     @GetMapping("/purchase-history/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<List<PurchaseHistory>> findPurchaseHistory(@PathVariable("customerId") Integer customerId, @RequestParam(value = "year", required = false) Integer year) {
-        if (customerService.findById(customerId).isEmpty()) {
+        if (mvCustomerService.findById(customerId).isEmpty()) {
             throw new BadRequestException("Customer not found");
         }
-        return success(customerService.findPurchaseHistory(customerId, year, null));
+        return success(mvCustomerService.findPurchaseHistory(customerId, year, null));
     }
 }

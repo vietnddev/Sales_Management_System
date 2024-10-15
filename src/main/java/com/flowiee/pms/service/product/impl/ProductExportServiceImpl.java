@@ -17,12 +17,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductExportServiceImpl extends BaseExportService {
-    ProductVariantService productVariantService;
+    ProductVariantService mvProductVariantService;
 
     @Override
     protected void writeData(Object pCondition) {
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
-        List<ProductVariantDTO> listDataVariant = productVariantService.findAll();
+        List<ProductVariantDTO> listDataVariant = mvProductVariantService.findAll();
         for (int i = 0; i < listDataVariant.size(); i++) {
             ProductVariantDTO productVariant = listDataVariant.get(i);
             XSSFRow row = sheet.createRow(i + 3);

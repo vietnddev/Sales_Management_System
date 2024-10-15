@@ -31,7 +31,7 @@ public class BaseController extends BaseAuthorize {
 		}
 	}
 
-	protected Logger logger = LoggerFactory.getLogger(getClass());
+	protected Logger   mvLogger = LoggerFactory.getLogger(getClass());
 	private SearchTool searchTool;
 
 	protected ModelAndView baseView(ModelAndView modelAndView) {

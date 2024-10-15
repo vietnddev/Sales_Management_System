@@ -40,12 +40,12 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class TicketExportServiceImpl extends BaseService implements TicketExportService {
-    OrderRepository        orderRepository;
-    OrderItemsService      orderItemsService;
-    TicketExportRepository ticketExportRepo;
-    ProductHistoryService  productHistoryService;
-    ProductQuantityService productQuantityService;
-    ProductDetailTempRepository productVariantTempRepo;
+    OrderRepository        mvOrderRepository;
+    OrderItemsService      mvOrderItemsService;
+    TicketExportRepository mvTicketExportRepository;
+    ProductHistoryService       mvProductHistoryService;
+    ProductQuantityService      mvProductQuantityService;
+    ProductDetailTempRepository mvProductVariantTempRepository;
 
     @Override
     public List<TicketExport> findAll() {
@@ -58,7 +58,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("exportTime").descending());
         }
-        Page<TicketExport> ticketExportPage = ticketExportRepo.findAll(storageId, pageable);
+        Page<TicketExport> ticketExportPage = mvTicketExportRepository.findAll(storageId, pageable);
         for (TicketExport ticketExport : ticketExportPage.getContent()) {
             BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketExport.getListProductVariantTemp());
             ticketExport.setTotalValue(totalValueAndItems[0]);
@@ -71,7 +71,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 
     @Override
     public Optional<TicketExport> findById(Integer entityId) {
-        Optional<TicketExport> ticketExportOpt = ticketExportRepo.findById(entityId);
+        Optional<TicketExport> ticketExportOpt = mvTicketExportRepository.findById(entityId);
         if (ticketExportOpt.isEmpty()) {
             return Optional.empty();
         }
@@ -97,13 +97,13 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 //        orderService.findOrderDetailsByOrderId(ticket.getOrderId()).forEach(d -> {
 //            productService.updateProductVariantQuantity(productService.findProductVariantById(d.getProductVariant().getId()).getSoLuongKho() - d.getSoLuong(), d.getProductVariant().getId());
 //        });
-        return ticketExportRepo.save(ticket);
+        return mvTicketExportRepository.save(ticket);
     }
 
     @Transactional
     @Override
     public TicketExport save(OrderDTO orderDTO) {
-        if (!ObjectUtils.isNotEmpty(orderDTO) || orderRepository.findById(orderDTO.getId()).isEmpty()) {
+        if (!ObjectUtils.isNotEmpty(orderDTO) || mvOrderRepository.findById(orderDTO.getId()).isEmpty()) {
             throw new BadRequestException("Đơn hàng không tồn tại");
         }
         TicketExport ticketExportSaved = this.save(TicketExport.builder()
@@ -112,7 +112,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
                 .exportTime(LocalDateTime.now())
                 .status(TicketExportStatus.DRAFT.name())
                 .build());
-        orderRepository.updateTicketExportInfo(orderDTO.getId(), ticketExportSaved.getId());
+        mvOrderRepository.updateTicketExportInfo(orderDTO.getId(), ticketExportSaved.getId());
         return ticketExportSaved;
     }
 
@@ -121,7 +121,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
     public TicketExport createDraftTicketExport(int storageId, String title, String orderCode) {
         Order order = null;
         if (ObjectUtils.isNotEmpty(orderCode)) {
-            order = orderRepository.findByOrderCode(orderCode);
+            order = mvOrderRepository.findByOrderCode(orderCode);
             if (order == null) {
                 throw new BadRequestException("Mã đơn hàng không tồn tại!");
             } else {
@@ -139,10 +139,10 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
                 .note(order != null ? "Phiếu xuất hàng cho đơn " + order.getCode() : "")
                 .build());
         if (order != null) {
-            orderRepository.updateTicketExportInfo(order.getId(), ticketExportSaved.getId());
-            List<OrderDetail> orderDetails = orderItemsService.findByOrderId(order.getId());
+            mvOrderRepository.updateTicketExportInfo(order.getId(), ticketExportSaved.getId());
+            List<OrderDetail> orderDetails = mvOrderItemsService.findByOrderId(order.getId());
             for (OrderDetail item : orderDetails) {
-                productVariantTempRepo.save(ProductVariantTemp.builder()
+                mvProductVariantTempRepository.save(ProductVariantTemp.builder()
                         .ticketExport(ticketExportSaved)
                         .productVariant(item.getProductDetail())
                         .sellPrice(item.getPrice())
@@ -169,12 +169,12 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         ticketExportToUpdate.setTitle(ticket.getTitle());
         ticketExportToUpdate.setNote(ticket.getNote());
         ticketExportToUpdate.setStatus(ticket.getStatus());
-        TicketExport ticketExportUpdated = ticketExportRepo.save(ticketExportToUpdate);
+        TicketExport ticketExportUpdated = mvTicketExportRepository.save(ticketExportToUpdate);
 
         if (TicketExportStatus.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
             for (ProductVariantTemp productVariantTemp : ticketExportUpdated.getListProductVariantTemp()) {
                 int soldQtyInOrder = productVariantTemp.getQuantity();
-                productQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, productVariantTemp.getProductVariant().getId());
+                mvProductQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, productVariantTemp.getProductVariant().getId());
                 //Save log
                 int storageQty = productVariantTemp.getProductVariant().getStorageQty();
                 int soldQty = productVariantTemp.getProductVariant().getSoldQty();
@@ -186,7 +186,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
                     .oldValue(storageQty + " | " + soldQty)
                     .newValue((storageQty - soldQtyInOrder) +  " | " + (soldQty + soldQtyInOrder))
                     .build();
-                productHistoryService.save(productHistory);
+                mvProductHistoryService.save(productHistory);
             }
         }
         return ticketExportUpdated;
@@ -202,12 +202,12 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
 
-        Order order = orderRepository.findByTicketExport(ticketExportId);
+        Order order = mvOrderRepository.findByTicketExport(ticketExportId);
         if (order != null) {
             order.setTicketExport(null);
-            orderRepository.save(order);
+            mvOrderRepository.save(order);
         }
-        ticketExportRepo.deleteById(ticketExportId);
+        mvTicketExportRepository.deleteById(ticketExportId);
 
         systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_EX, MasterObject.TicketExport, "Xóa phiếu xuất hàng", ticketExportToDelete.get().getTitle());
 

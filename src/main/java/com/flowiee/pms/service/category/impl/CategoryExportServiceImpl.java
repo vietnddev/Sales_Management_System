@@ -16,19 +16,20 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryExportServiceImpl extends BaseExportService {
-    CategoryService categoryService;
+    CategoryService mvCategoryService;
 
     @Override
     protected void writeData(Object pCondition) {
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
-        List<Category> listData = categoryService.findAll();
+        List<Category> listData = mvCategoryService.findAll();
         for (int i = 0; i < listData.size(); i++) {
+            Category model = listData.get(i);
             
             XSSFRow row = sheet.createRow(i + 3);
             row.createCell(0).setCellValue(i + 1);
-            row.createCell(1).setCellValue(listData.get(i).getCode());
-            row.createCell(2).setCellValue(listData.get(i).getName());
-            row.createCell(3).setCellValue(listData.get(i).getNote());
+            row.createCell(1).setCellValue(model.getCode());
+            row.createCell(2).setCellValue(model.getName());
+            row.createCell(3).setCellValue(model.getNote());
 
             setBorderCell(row, 0, 3);
         }

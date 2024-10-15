@@ -17,13 +17,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class LogExportServiceImpl extends BaseExportService {
-    SystemLogService systemLogService;
+    SystemLogService mvSystemLogService;
 
     @Override
     protected void writeData(Object pCondition) {
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
 
-        List<SystemLog> listData = systemLogService.findAll(-1, -1).getContent();
+        List<SystemLog> listData = mvSystemLogService.findAll(-1, -1).getContent();
         for (int i = 0; i < listData.size(); i++) {
             SystemLog systemLog = listData.get(i);
 

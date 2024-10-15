@@ -22,8 +22,8 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class PromotionApplyServiceImpl extends BaseService implements PromotionApplyService {
-    ModelMapper              modelMapper;
-    PromotionApplyRepository promotionApplyRepository;
+    ModelMapper              mvModelMapper;
+    PromotionApplyRepository mvPromotionApplyRepository;
 
     @Override
     public List<PromotionApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
@@ -37,16 +37,16 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
 
     @Override
     public List<PromotionApplyDTO> findByPromotionId(Integer voucherId) {
-        List<PromotionApply> promotionApply = promotionApplyRepository.findByPromotionId(voucherId);
+        List<PromotionApply> promotionApply = mvPromotionApplyRepository.findByPromotionId(voucherId);
         Type listType = new TypeToken<List<PromotionApplyDTO>>() {}.getType();
-        return modelMapper.map(promotionApply, listType);
+        return mvModelMapper.map(promotionApply, listType);
     }
 
     @Override
     public Optional<PromotionApplyDTO> findById(Integer promotionId) {
-        Optional<PromotionApply> promotionApply = promotionApplyRepository.findById(promotionId);
+        Optional<PromotionApply> promotionApply = mvPromotionApplyRepository.findById(promotionId);
         if (promotionApply.isPresent()) {
-            PromotionApplyDTO dto = modelMapper.map(promotionApply.get(), PromotionApplyDTO.class);
+            PromotionApplyDTO dto = mvModelMapper.map(promotionApply.get(), PromotionApplyDTO.class);
             return Optional.of(dto);
         }
         return Optional.empty();
@@ -55,8 +55,8 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     @Override
     public PromotionApplyDTO save(PromotionApplyDTO promotionApplyDTO) {
         PromotionApply promotionApply = PromotionApply.fromDTO(promotionApplyDTO);
-        PromotionApply promotionApplySaved = promotionApplyRepository.save(promotionApply);
-        return modelMapper.map(promotionApplySaved, PromotionApplyDTO.class);
+        PromotionApply promotionApplySaved = mvPromotionApplyRepository.save(promotionApply);
+        return mvModelMapper.map(promotionApplySaved, PromotionApplyDTO.class);
     }
 
     @Override
@@ -65,13 +65,13 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
             throw new BadRequestException();
         }
         PromotionApplyDTO.setId(id);
-        return promotionApplyRepository.save(PromotionApplyDTO);
+        return mvPromotionApplyRepository.save(PromotionApplyDTO);
     }
 
     @Override
     public String delete(Integer entityId) {
         if (this.findById(entityId).isEmpty()) {
-            promotionApplyRepository.deleteById(entityId);
+            mvPromotionApplyRepository.deleteById(entityId);
         }
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

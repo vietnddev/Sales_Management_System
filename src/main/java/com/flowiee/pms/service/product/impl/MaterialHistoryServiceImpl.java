@@ -21,16 +21,16 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class MaterialHistoryServiceImpl implements MaterialHistoryService {
-    MaterialHistoryRepository materialHistoryRepo;
+    MaterialHistoryRepository mvMaterialHistoryRepository;
 
     @Override
     public List<MaterialHistory> findAll() {
-        return materialHistoryRepo.findAll();
+        return mvMaterialHistoryRepository.findAll();
     }
 
     @Override
     public Optional<MaterialHistory> findById(Integer entityId) {
-        return materialHistoryRepo.findById(entityId);
+        return mvMaterialHistoryRepository.findById(entityId);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
         if (entity == null) {
             throw new BadRequestException();
         }
-        return materialHistoryRepo.save(entity);
+        return mvMaterialHistoryRepository.save(entity);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return materialHistoryRepo.save(entity);
+        return mvMaterialHistoryRepository.save(entity);
     }
 
     @Override
@@ -55,18 +55,18 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
         if (entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
-        materialHistoryRepo.deleteById(entityId);
+        mvMaterialHistoryRepository.deleteById(entityId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
     public List<MaterialHistory> findByMaterialId(Integer materialId) {
-        return materialHistoryRepo.findByMaterialId(materialId);
+        return mvMaterialHistoryRepository.findByMaterialId(materialId);
     }
 
     @Override
     public List<MaterialHistory> findByFieldName(String fieldName) {
-        return materialHistoryRepo.findByFieldName(fieldName);
+        return mvMaterialHistoryRepository.findByFieldName(fieldName);
     }
 
     @Override

@@ -21,13 +21,13 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class StorageExportServiceImpl extends BaseExportService {
-    StorageService storageService;
+    StorageService mvStorageService;
 
     @Override
     protected void writeData(Object pCondition) {
         Storage lvCondition = (Storage) pCondition;
 
-        Optional<StorageDTO> storage = storageService.findById(lvCondition.getId());
+        Optional<StorageDTO> storage = mvStorageService.findById(lvCondition.getId());
         if (storage.isEmpty()) return;
 
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
@@ -35,7 +35,7 @@ public class StorageExportServiceImpl extends BaseExportService {
         XSSFCell cellTitleStorage = sheet.getRow(1).getCell(0);
         cellTitleStorage.setCellValue(cellTitleStorage.getStringCellValue().replace("{storageName}", storage.get().getName()));
 
-        List<StorageItems> listData = storageService.findStorageItems( -1, -1, storage.get().getId(), null).getContent();
+        List<StorageItems> listData = mvStorageService.findStorageItems( -1, -1, storage.get().getId(), null).getContent();
         for (int i = 0; i < listData.size(); i++) {
             StorageItems storageItems = listData.get(i);
 

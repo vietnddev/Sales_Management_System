@@ -35,10 +35,10 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class PromotionInfoServiceImpl extends BaseService implements PromotionService {
-    ModelMapper             modelMapper;
-    ProductInfoService      productInfoService;
-    PromotionInfoRepository promotionInfoRepository;
-    PromotionApplyService   promotionApplyService;
+    ModelMapper             mvModelMapper;
+    ProductInfoService      mvProductInfoService;
+    PromotionApplyService   mvPromotionApplyService;
+    PromotionInfoRepository mvPromotionInfoRepository;
 
     @Override
     public List<PromotionInfoDTO> findAll() {
@@ -58,15 +58,15 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
         if (pStartTime == null) {
             pStartTime = LocalDateTime.of(1900, 1, 1, 0, 0);
         }
-        Page<PromotionInfo> pagePromotionInfos = promotionInfoRepository.findAll(pTitle, pStartTime, pEndTime, pStatus, pageable);
+        Page<PromotionInfo> pagePromotionInfos = mvPromotionInfoRepository.findAll(pTitle, pStartTime, pEndTime, pStatus, pageable);
 
         Type listType = new TypeToken<List<PromotionInfoDTO>>() {}.getType();
-        List<PromotionInfoDTO> promotionInfoDTOs = modelMapper.map(pagePromotionInfos.getContent(), listType);
+        List<PromotionInfoDTO> promotionInfoDTOs = mvModelMapper.map(pagePromotionInfos.getContent(), listType);
 
         for (PromotionInfoDTO p : promotionInfoDTOs) {
             List<ProductDTO> productDTOs = new ArrayList<>();
-            for (PromotionApplyDTO promotionApplyDTO : promotionApplyService.findByPromotionId(p.getId())) {
-                Optional<ProductDTO> productDTOOptional = productInfoService.findById(promotionApplyDTO.getProductId());
+            for (PromotionApplyDTO promotionApplyDTO : mvPromotionApplyService.findByPromotionId(p.getId())) {
+                Optional<ProductDTO> productDTOOptional = mvProductInfoService.findById(promotionApplyDTO.getProductId());
                 productDTOOptional.ifPresent(productDTOs::add);
             }
             p.setApplicableProducts(productDTOs);
@@ -78,9 +78,9 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
 
     @Override
     public Optional<PromotionInfoDTO> findById(Integer entityId) {
-        Optional<PromotionInfo> promotionInfo = promotionInfoRepository.findById(entityId);
+        Optional<PromotionInfo> promotionInfo = mvPromotionInfoRepository.findById(entityId);
         if (promotionInfo.isPresent()) {
-            PromotionInfoDTO dto = modelMapper.map(promotionInfo.get(), PromotionInfoDTO.class);
+            PromotionInfoDTO dto = mvModelMapper.map(promotionInfo.get(), PromotionInfoDTO.class);
             dto.setStatus(genPromotionStatus(dto.getStartTime(), dto.getEndTime()));
             return Optional.of(dto);
         }
@@ -98,14 +98,14 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             promotionInfo.setStartTime(LocalDateTime.parse(promotionInfoDTO.getStartTimeStr() + "T00:00"));
             promotionInfo.setEndTime(LocalDateTime.parse(promotionInfoDTO.getEndTimeStr() + "T00:00"));
 
-            PromotionInfo promotionInfoSaved = promotionInfoRepository.save(promotionInfo);
+            PromotionInfo promotionInfoSaved = mvPromotionInfoRepository.save(promotionInfo);
             for (ProductDTO product : promotionInfoDTO.getApplicableProducts()) {
                 PromotionApplyDTO promotionApply = new PromotionApplyDTO();
                 promotionApply.setPromotionId(promotionInfoSaved.getId());
                 promotionApply.setProductId(product.getId());
-                promotionApplyService.save(promotionApply);
+                mvPromotionApplyService.save(promotionApply);
             }
-            PromotionInfoDTO dto = modelMapper.map(promotionInfoSaved, PromotionInfoDTO.class);
+            PromotionInfoDTO dto = mvModelMapper.map(promotionInfoSaved, PromotionInfoDTO.class);
             dto.setStatus(genPromotionStatus(dto.getStartTime(), dto.getEndTime()));
             return dto;
         } catch (RuntimeException ex) {
@@ -123,8 +123,8 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             promotionInfo.setStartTime(LocalDateTime.parse(inputDTO.getStartTimeStr() + "T00:00"));
             promotionInfo.setEndTime(LocalDateTime.parse(inputDTO.getEndTimeStr() + "T00:00"));
             promotionInfo.setId(promotionId);
-            PromotionInfo promotionInfoSaved = promotionInfoRepository.save(promotionInfo);
-            return modelMapper.map(promotionInfoSaved, PromotionInfoDTO.class);
+            PromotionInfo promotionInfoSaved = mvPromotionInfoRepository.save(promotionInfo);
+            return mvModelMapper.map(promotionInfoSaved, PromotionInfoDTO.class);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "promotion"), ex);
         }
@@ -135,10 +135,10 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
         if (this.findById(promotionId).isEmpty()) {
             throw new ResourceNotFoundException("Promotion not found!");
         }
-        if (!promotionApplyService.findByPromotionId(promotionId).isEmpty()) {
+        if (!mvPromotionApplyService.findByPromotionId(promotionId).isEmpty()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        promotionInfoRepository.deleteById(promotionId);
+        mvPromotionInfoRepository.deleteById(promotionId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 

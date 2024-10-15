@@ -30,11 +30,11 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderControllerView extends BaseController {
-    OrderService             orderService;
-    CategoryService          categoryService;
-    OrderItemsService        orderItemsService;
-    VoucherTicketService     voucherTicketService;
-    OrderPrintInvoiceService printInvoiceService;
+    OrderService mvOrderService;
+    CategoryService mvCategoryService;
+    OrderItemsService mvOrderItemsService;
+    VoucherTicketService mvVoucherTicketService;
+    OrderPrintInvoiceService mvPrintInvoiceService;
 
     List<String> mvOrderStatusCanModifyItem = List.of("PRP", "W4D");
     List<String> mvOrderStatusCanDeleteItem = List.of("PRP");
@@ -50,18 +50,18 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) {
-        Optional<OrderDTO> orderDetail = orderService.findById(orderId);
+        Optional<OrderDTO> orderDetail = mvOrderService.findById(orderId);
         if (orderId <= 0 || orderDetail.isEmpty()) {
             throw new ResourceNotFoundException("Order not found!");
         }
         List<Category> orderStatus = new ArrayList<>(List.of(new Category(orderDetail.get().getOrderStatusId(), orderDetail.get().getOrderStatusName())));
-        orderStatus.addAll(categoryService.findOrderStatus(orderDetail.get().getOrderStatusId()));
+        orderStatus.addAll(mvCategoryService.findOrderStatus(orderDetail.get().getOrderStatusId()));
 
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_DETAIL.getTemplate());
         modelAndView.addObject("orderDetailId", orderId);
         modelAndView.addObject("orderDetail", orderDetail.get());
         modelAndView.addObject("listOrderDetail", orderDetail.get().getListOrderDetailDTO());
-        modelAndView.addObject("listPaymentMethod", categoryService.findSubCategory(CategoryType.PAYMENT_METHOD, null, null, -1, -1).getContent());
+        modelAndView.addObject("listPaymentMethod", mvCategoryService.findSubCategory(CategoryType.PAYMENT_METHOD, null, null, -1, -1).getContent());
         modelAndView.addObject("orderStatus", orderStatus);
         modelAndView.addObject("allowEditItem", mvOrderStatusCanModifyItem.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
         modelAndView.addObject("allowEditGeneral", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
@@ -75,15 +75,15 @@ public class OrderControllerView extends BaseController {
     public ModelAndView checkToUse(@PathVariable("code") String code) {
         ModelAndView modelAndView = new ModelAndView("redirect:/order/ban-hang");
         modelAndView.addObject("ticket_code", code);
-        modelAndView.addObject("ticket_status", voucherTicketService.checkTicketToUse(code));
-        modelAndView.addObject("ticket_info", voucherTicketService.findTicketByCode(code));
+        modelAndView.addObject("ticket_status", mvVoucherTicketService.checkTicketToUse(code));
+        modelAndView.addObject("ticket_info", mvVoucherTicketService.findTicketByCode(code));
         return modelAndView;
     }
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
     public ModelAndView delete(@PathVariable("id") Integer orderId) {
-        orderService.delete(orderId);
+        mvOrderService.delete(orderId);
         return new ModelAndView("redirect:/order");
     }
 
@@ -95,11 +95,11 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/print-invoice/{id}")
     public void exportToPDF(@PathVariable("id") Integer orderId, HttpServletResponse response) {
         try {
-            Optional<OrderDTO> orderDTO = orderService.findById(orderId);
+            Optional<OrderDTO> orderDTO = mvOrderService.findById(orderId);
             if (orderDTO.isEmpty()) {
                 throw new BadRequestException();
             }
-            printInvoiceService.printInvoicePDF(orderId, null, true, response);
+            mvPrintInvoiceService.printInvoicePDF(orderId, null, true, response);
         } catch (RuntimeException ex) {
             throw new AppException(ex);
         }
@@ -108,7 +108,7 @@ public class OrderControllerView extends BaseController {
     @PostMapping("/{orderId}/item/add")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView addItem(@PathVariable("orderId") int orderId, @RequestParam("productVariantSelectedId") String[] productVariantSelectedId) {
-        Optional<OrderDTO> orderOpt = orderService.findById(orderId);
+        Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
         }
@@ -118,14 +118,14 @@ public class OrderControllerView extends BaseController {
         if (productVariantSelectedId == null || productVariantSelectedId.length == 0) {
             throw new BadRequestException("Vui lòng chọn sản phẩm!");
         }
-        orderItemsService.save(orderOpt.get(), Arrays.stream(productVariantSelectedId).toList());
+        mvOrderItemsService.save(orderOpt.get(), Arrays.stream(productVariantSelectedId).toList());
         return new ModelAndView("redirect:/order/" + orderId);
     }
 
     @PostMapping("/{orderId}/item/update/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView updateItem(@PathVariable("orderId") int orderId, @PathVariable("itemId") int itemId, @ModelAttribute("items") OrderDetail item) {
-        Optional<OrderDTO> orderOpt = orderService.findById(orderId);
+        Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
         }
@@ -135,21 +135,21 @@ public class OrderControllerView extends BaseController {
         if (item.getQuantity() == 0) {
             throw new BadRequestException("Số lượng không được nhỏ hơn 1!");
         }
-        orderItemsService.update(item, itemId);
+        mvOrderItemsService.update(item, itemId);
         return new ModelAndView("redirect:/order/" + orderId);
     }
 
     @PostMapping("/{orderId}/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView deleteItem(@PathVariable("orderId") int orderId, @PathVariable("itemId") int itemId) {
-        Optional<OrderDTO> orderOpt = orderService.findById(orderId);
+        Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
         }
         if (!mvOrderStatusCanDeleteItem.contains(orderOpt.get().getTrangThaiDonHang().getCode())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép xóa!");
         }
-        orderItemsService.delete(itemId);
+        mvOrderItemsService.delete(itemId);
         return new ModelAndView("redirect:/order/" + orderId);
     }
 }

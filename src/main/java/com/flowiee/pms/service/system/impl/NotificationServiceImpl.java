@@ -19,29 +19,29 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class NotificationServiceImpl extends BaseService implements NotificationService {
-    NotificationRepository notificationRepository;
+    NotificationRepository mvNotificationRepository;
 
     @Override
     public List<Notification> findAll() {
-        return notificationRepository.findAll();
+        return mvNotificationRepository.findAll();
     }
 
     @Override
     public List<Notification> findAllByReceiveId(Integer pageSize, Integer pageNum, Integer totalRecord, Integer accountId) {
         if (totalRecord != null) {
-            return notificationRepository.findLimitByReceiveId(accountId, totalRecord);
+            return mvNotificationRepository.findLimitByReceiveId(accountId, totalRecord);
         }
-        return notificationRepository.findAllByReceiveId(accountId);
+        return mvNotificationRepository.findAllByReceiveId(accountId);
     }
 
     @Override
     public List<Notification> findLimitByReceiveId(Integer accountId, Integer limit) {
-        return notificationRepository.findLimitByReceiveId(accountId, limit);
+        return mvNotificationRepository.findLimitByReceiveId(accountId, limit);
     }
 
     @Override
     public Optional<Notification> findById(Integer notificationId) {
-        return notificationRepository.findById(notificationId);
+        return mvNotificationRepository.findById(notificationId);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
         if (notification == null) {
             throw new BadRequestException();
         }
-        Notification notificationSaved = notificationRepository.save(notification);
+        Notification notificationSaved = mvNotificationRepository.save(notification);
         logger.info(NotificationServiceImpl.class.getName() + ": Insert notification " + notification.toString());
         return notificationSaved;
     }
@@ -60,7 +60,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return notificationRepository.save(entity);
+        return mvNotificationRepository.save(entity);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
         if (notification.isEmpty()) {
             throw new BadRequestException();
         }
-        notificationRepository.deleteById(entityId);
+        mvNotificationRepository.deleteById(entityId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

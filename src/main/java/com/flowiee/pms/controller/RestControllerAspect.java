@@ -32,8 +32,8 @@ import java.util.Enumeration;
 @Component
 @RequiredArgsConstructor
 public class RestControllerAspect {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private final EventLogRepository eventLogRepository;
+    private final Logger mvLogger = LoggerFactory.getLogger(getClass());
+    private final EventLogRepository mvEventLogRepository;
     private ThreadLocal<RequestContext> mvRequestContext = ThreadLocal.withInitial(RequestContext::new); // Tạo ThreadLocal để lưu thông tin của request
 
     @Getter
@@ -53,12 +53,12 @@ public class RestControllerAspect {
     public void beforeCall(JoinPoint joinPoint) {
         long startTime = System.currentTimeMillis();
         Object[] args = joinPoint.getArgs();
-        log.info("AOP Before call system controller {} with arguments: {}", joinPoint, Arrays.toString(args));
+        mvLogger.info("AOP Before call system controller {} with arguments: {}", joinPoint, Arrays.toString(args));
 
         //Save request info into db
         Signature signature = joinPoint.getSignature();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        EventLog eventLog = eventLogRepository.save(EventLog.builder()
+        EventLog eventLog = mvEventLogRepository.save(EventLog.builder()
                 .httpMethod(getHttpMethod(attributes))// Lấy tên HTTP method (GET, POST, etc.)
                 .processClass(signature.getDeclaringTypeName())
                 .processMethod(signature.getName())
@@ -85,13 +85,13 @@ public class RestControllerAspect {
         long duration = System.currentTimeMillis() - lvRequestContext.getStartTime();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-        EventLog eventLog = eventLogRepository.find(lvRequestContext.getRequestId(),
+        EventLog eventLog = mvEventLogRepository.find(lvRequestContext.getRequestId(),
                 null,//getHttpMethod(attributes)
                 null,//getRequestUrl(attributes)
                 null);//LocalDateTime.ofInstant(Instant.ofEpochMilli(lvRequestContext.getStartTime()), ZoneId.systemDefault())
         if (eventLog != null) {
             eventLog.setDuration(duration);
-            eventLogRepository.save(eventLog);
+            mvEventLogRepository.save(eventLog);
         }
         mvRequestContext.remove();
     }

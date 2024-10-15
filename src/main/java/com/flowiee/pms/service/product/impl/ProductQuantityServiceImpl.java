@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductQuantityServiceImpl extends BaseService implements ProductQuantityService {
-    ProductDetailRepository productVariantRepo;
-    SystemLogService        systemLogService;
+    SystemLogService mvSystemLogService;
+    ProductDetailRepository mvProductVariantRepository;
 
     @Transactional
     @Override
@@ -37,11 +37,11 @@ public class ProductQuantityServiceImpl extends BaseService implements ProductQu
     private void updateProductVariantQuantity(Integer quantity, Integer productVariantId, String type) {
         try {
             if ("I".equals(type)) {
-                productVariantRepo.updateQuantityIncrease(quantity, productVariantId);
+                mvProductVariantRepository.updateQuantityIncrease(quantity, productVariantId);
             } else if ("D".equals(type)) {
-                productVariantRepo.updateQuantityDecrease(quantity, productVariantId);
+                mvProductVariantRepository.updateQuantityDecrease(quantity, productVariantId);
             }
-            systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Cập nhật số lượng sản phẩm", "productVariantId = " + productVariantId);
+            mvSystemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Cập nhật số lượng sản phẩm", "productVariantId = " + productVariantId);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product quantity"), ex);
         }

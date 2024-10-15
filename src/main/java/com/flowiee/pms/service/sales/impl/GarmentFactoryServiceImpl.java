@@ -19,16 +19,16 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class GarmentFactoryServiceImpl extends BaseService implements GarmentFactoryService {
-    GarmentFactoryRepository garmentFactoryRepo;
+    GarmentFactoryRepository mvGarmentFactoryRepository;
 
     @Override
     public List<GarmentFactory> findAll() {
-        return garmentFactoryRepo.findAll();
+        return mvGarmentFactoryRepository.findAll();
     }
 
     @Override
     public Optional<GarmentFactory> findById(Integer entityId) {
-        return garmentFactoryRepo.findById(entityId);
+        return mvGarmentFactoryRepository.findById(entityId);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
         if (entity == null) {
             throw new BadRequestException();
         }
-        return garmentFactoryRepo.save(entity);
+        return mvGarmentFactoryRepository.save(entity);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return garmentFactoryRepo.save(entity);
+        return mvGarmentFactoryRepository.save(entity);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
         if (this.findById(entityId).isEmpty()) {
             throw new BadRequestException();
         }
-        garmentFactoryRepo.deleteById(entityId);
+        mvGarmentFactoryRepository.deleteById(entityId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

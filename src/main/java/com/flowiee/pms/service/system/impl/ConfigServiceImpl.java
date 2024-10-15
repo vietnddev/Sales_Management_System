@@ -29,18 +29,18 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ConfigServiceImpl extends BaseService implements ConfigService {
-    ConfigRepository sysConfigRepo;
-    CategoryService  categoryService;
-    LanguageService  languageService;
+    CategoryService mvCategoryService;
+    LanguageService mvLanguageService;
+    ConfigRepository mvSysConfigRepository;
 
     @Override
     public Optional<SystemConfig> findById(Integer id) {
-        return sysConfigRepo.findById(id);
+        return mvSysConfigRepository.findById(id);
     }
 
     @Override
     public List<SystemConfig> findAll() {
-        return sysConfigRepo.findAll();
+        return mvSysConfigRepository.findAll();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
         SystemConfig configBefore = ObjectUtils.clone(configOpt.get());
 
         systemConfig.setId(id);
-        SystemConfig configUpdated = sysConfigRepo.save(systemConfig);
+        SystemConfig configUpdated = mvSysConfigRepository.save(systemConfig);
 
         ChangeLog changeLog = new ChangeLog(configBefore, configUpdated);
         systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_CNF_U, MasterObject.SystemConfig, "Cập nhật cấu hình hệ thống", changeLog);
@@ -66,15 +66,15 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
     public String refreshApp() {
         try {
             //
-            List<Category> rootCategories = categoryService.findRootCategory();
+            List<Category> rootCategories = mvCategoryService.findRootCategory();
             for (Category c : rootCategories) {
                 if (c.getType() != null && !c.getType().trim().isEmpty()) {
                     CategoryType.valueOf(c.getType()).setLabel(c.getName());
                 }
             }
             //
-            languageService.reloadMessage("vi");
-            languageService.reloadMessage("en");
+            mvLanguageService.reloadMessage("vi");
+            mvLanguageService.reloadMessage("en");
             //Reload shopInfo
 
             return "Completed";
@@ -90,11 +90,11 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
 
     @Override
     public SystemConfig getSystemConfig(String configCode) {
-        return sysConfigRepo.findByCode(configCode);
+        return mvSysConfigRepository.findByCode(configCode);
     }
 
     @Override
     public List<SystemConfig> getSystemConfigs(List<String> configCodes) {
-        return sysConfigRepo.findByCode(configCodes);
+        return mvSysConfigRepository.findByCode(configCodes);
     }
 }

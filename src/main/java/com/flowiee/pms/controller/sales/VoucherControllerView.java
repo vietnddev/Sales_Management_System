@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class VoucherControllerView extends BaseController {
-    VoucherService voucherService;
+    VoucherService mvVoucherService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
@@ -42,17 +42,17 @@ public class VoucherControllerView extends BaseController {
         if (voucherInfo == null) {
             throw new BadRequestException("Voucher to update not null!");
         }
-        if (voucherInfoId <= 0 || voucherService.findById(voucherInfoId).isEmpty()) {
+        if (voucherInfoId <= 0 || mvVoucherService.findById(voucherInfoId).isEmpty()) {
             throw new ResourceNotFoundException("VoucherId invalid!");
         }
-        voucherService.update(voucherInfo ,voucherInfoId);
+        mvVoucherService.update(voucherInfo ,voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");
     }
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteVoucher(true)")
     public ModelAndView deleteVoucher(@PathVariable("id") Integer voucherInfoId) {
-        voucherService.delete(voucherInfoId);
+        mvVoucherService.delete(voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");
     }
 }

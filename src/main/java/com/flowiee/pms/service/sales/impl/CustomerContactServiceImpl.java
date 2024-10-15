@@ -5,16 +5,16 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
+import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
-import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.utils.constants.MasterObject;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,18 +22,14 @@ import java.util.Optional;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CustomerContactServiceImpl extends BaseService implements CustomerContactService {
-    CustomerContactRepository customerContactRepo;
-    CustomerService           customerService;
-
-    public CustomerContactServiceImpl(CustomerContactRepository customerContactRepo, @Lazy CustomerService customerService) {
-        this.customerContactRepo = customerContactRepo;
-        this.customerService = customerService;
-    }
+    CustomerContactRepository mvCustomerContactRepository;
+    CustomerRepository mvCustomerRepository;
 
     @Override
     public List<CustomerContact> findAll() {
-        return customerContactRepo.findAll();
+        return mvCustomerContactRepository.findAll();
     }
 
     @Override
@@ -41,11 +37,11 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
         if (customerContact == null || customerContact.getCustomer() == null) {
             throw new BadRequestException();
         }
-        if (customerService.findById(customerContact.getCustomer().getId()).isEmpty()) {
-            throw new BadRequestException();
+        if (mvCustomerRepository.findById(customerContact.getCustomer().getId()).isEmpty()) {
+            throw new BadRequestException("Customer contact not found!");
         }
         customerContact.setUsed(false);
-        return customerContactRepo.save(customerContact);
+        return mvCustomerContactRepository.save(customerContact);
     }
 
     @Override
@@ -61,7 +57,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
         contact.get().setValue(pContact.getValue());
         contact.get().setNote(pContact.getNote());
         contact.get().setIsDefault(pContact.getIsDefault());
-        return customerContactRepo.save(contact.get());
+        return mvCustomerContactRepository.save(contact.get());
     }
 
     @Override
@@ -73,7 +69,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
         if (customerContact.get().isUsed()) {
             throw new DataInUseException("This contact has been used!");
         }
-        customerContactRepo.deleteById(contactId);
+        mvCustomerContactRepository.deleteById(contactId);
 
         String contactCode = customerContact.get().getCode();
         String customerName = customerContact.get().getCustomer().getCustomerName();
@@ -84,49 +80,49 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
 
     @Override
     public List<CustomerContact> findContacts(Integer customerId) {
-        if (customerService.findById(customerId).isEmpty()) {
+        if (mvCustomerRepository.findById(customerId).isEmpty()) {
             throw new ResourceNotFoundException("Customer not found!");
         }
-        return customerContactRepo.findByCustomerId(customerId);
+        return mvCustomerContactRepository.findByCustomerId(customerId);
     }
 
     @Override
     public Optional<CustomerContact> findById(Integer contactId) {
-        return customerContactRepo.findById(contactId);
+        return mvCustomerContactRepository.findById(contactId);
     }
 
     @Override
     public CustomerContact findContactPhoneUseDefault(Integer customerId) {
-        return customerContactRepo.findPhoneUseDefault(customerId);
+        return mvCustomerContactRepository.findPhoneUseDefault(customerId);
     }
 
     @Override
     public CustomerContact findContactEmailUseDefault(Integer customerId) {
-        return customerContactRepo.findEmailUseDefault(customerId);
+        return mvCustomerContactRepository.findEmailUseDefault(customerId);
     }
 
     @Override
     public CustomerContact findContactAddressUseDefault(Integer customerId) {
-        return customerContactRepo.findAddressUseDefault(customerId);
+        return mvCustomerContactRepository.findAddressUseDefault(customerId);
     }
 
     @Override
     public CustomerContact enableContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
-        if (customerService.findById(customerId).isEmpty()) {
+        if (mvCustomerRepository.findById(customerId).isEmpty()) {
             throw new ResourceNotFoundException("Customer not found!");
         }
         if (this.findById(contactId).isEmpty()) {
             throw new ResourceNotFoundException("Customer contact not found!");
         }
         CustomerContact customerContactUsingDefault = switch (contactCode) {
-            case "P" -> customerContactRepo.findPhoneUseDefault(customerId);
-            case "E" -> customerContactRepo.findEmailUseDefault(customerId);
-            case "A" -> customerContactRepo.findAddressUseDefault(customerId);
+            case "P" -> mvCustomerContactRepository.findPhoneUseDefault(customerId);
+            case "E" -> mvCustomerContactRepository.findEmailUseDefault(customerId);
+            case "A" -> mvCustomerContactRepository.findAddressUseDefault(customerId);
             default -> throw new IllegalStateException("Unexpected value: " + contactCode);
         };
         if (customerContactUsingDefault != null) {
             customerContactUsingDefault.setIsDefault("N");
-            customerContactRepo.save(customerContactUsingDefault);
+            mvCustomerContactRepository.save(customerContactUsingDefault);
         }
         Optional<CustomerContact> customerContactToUseDefault = this.findById(contactId);
         if (customerContactToUseDefault.isEmpty()) {

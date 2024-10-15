@@ -25,14 +25,14 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductComboController extends BaseController {
-    ProductComboService productComboService;
+    ProductComboService mvProductComboService;
 
     @Operation(summary = "Find all combos")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
     public AppResponse<List<ProductCombo>> findProductCombos(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                              @RequestParam(value = "pageNum", required = false) Integer pageNum) {
-        Page<ProductCombo> productComboPage = productComboService.findAll(pageSize, pageNum - 1);
+        Page<ProductCombo> productComboPage = mvProductComboService.findAll(pageSize, pageNum - 1);
         return success(productComboPage.getContent(), pageNum, pageSize, productComboPage.getTotalPages(), productComboPage.getTotalElements());
     }
 
@@ -40,7 +40,7 @@ public class ProductComboController extends BaseController {
     @GetMapping("/{comboId}")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
     public AppResponse<ProductCombo> findDetailCombo(@PathVariable("comboId") Integer comboId) {
-        Optional<ProductCombo> productCombo = productComboService.findById(comboId);
+        Optional<ProductCombo> productCombo = mvProductComboService.findById(comboId);
         if (productCombo.isEmpty()) {
             throw new BadRequestException("productCombo not found");
         }
@@ -52,7 +52,7 @@ public class ProductComboController extends BaseController {
     @PreAuthorize("@vldModuleProduct.insertCombo(true)")
     public AppResponse<ProductCombo> createCombo(@RequestBody ProductCombo productCombo) {
         try {
-            return success(productComboService.save(productCombo));
+            return success(mvProductComboService.save(productCombo));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product combo"), ex);
         }
@@ -63,7 +63,7 @@ public class ProductComboController extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateCombo(true)")
     public AppResponse<ProductCombo> updateProductCombo(@RequestBody ProductCombo productCombo, @PathVariable("comboId") Integer comboId) {
         try {
-            return success(productComboService.update(productCombo, comboId));
+            return success(mvProductComboService.update(productCombo, comboId));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "product combo"), ex);
         }
@@ -73,6 +73,6 @@ public class ProductComboController extends BaseController {
     @DeleteMapping("/delete/{comboId}")
     @PreAuthorize("@vldModuleProduct.deleteCombo(true)")
     public AppResponse<String> deleteCombo(@PathVariable("comboId") Integer comboId) {
-        return success(productComboService.delete(comboId));
+        return success(mvProductComboService.delete(comboId));
     }
 }

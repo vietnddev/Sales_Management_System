@@ -25,25 +25,25 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CartItemsServiceImpl extends BaseService implements CartItemsService {
-    CartItemsRepository   cartItemsRepository;
-    ProductComboService   productComboService;
-    ProductVariantService productVariantService;
+    CartItemsRepository mvCartItemsRepository;
+    ProductComboService mvProductComboService;
+    ProductVariantService mvProductVariantService;
 
     @Override
     public List<Items> findAll() {
-        return cartItemsRepository.findAll();
+        return mvCartItemsRepository.findAll();
     }
 
     @Override
     public Optional<Items> findById(Integer itemId) {
-        return cartItemsRepository.findById(itemId);
+        return mvCartItemsRepository.findById(itemId);
     }
 
     @Override
     public List<CartItemModel> findAllItemsForSales() {
         List<CartItemModel> cartItemModelList = new ArrayList<>();
-        List<ProductCombo> productCombos = productComboService.findAll();
-        List<ProductVariantDTO> productVariantDTOs = productVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent();
+        List<ProductCombo> productCombos = mvProductComboService.findAll();
+        List<ProductVariantDTO> productVariantDTOs = mvProductVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent();
         for (ProductCombo productCbo : productCombos) {
             cartItemModelList.add(CartItemModel.builder()
                     .itemId(productCbo.getId())
@@ -65,12 +65,12 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
 
     @Override
     public Integer findQuantityOfItem(Integer cartId, Integer productVariantId) {
-        return cartItemsRepository.findQuantityByProductVariantId(cartId, productVariantId);
+        return mvCartItemsRepository.findQuantityByProductVariantId(cartId, productVariantId);
     }
 
     @Override
     public Items findItemByCartAndProductVariant(Integer cartId, Integer productVariantId) {
-        return cartItemsRepository.findByCartAndProductVariant(cartId, productVariantId);
+        return mvCartItemsRepository.findByCartAndProductVariant(cartId, productVariantId);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         if (items == null || items.getOrderCart() == null || items.getProductDetail() == null) {
             throw new BadRequestException();
         }
-        return cartItemsRepository.save(items);
+        return mvCartItemsRepository.save(items);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
             throw new BadRequestException();
         }
         entity.setId(entityId);
-        return cartItemsRepository.save(entity);
+        return mvCartItemsRepository.save(entity);
     }
 
     @Override
@@ -95,19 +95,19 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         if (this.findById(itemId).isEmpty()) {
             throw new BadRequestException();
         }
-        cartItemsRepository.deleteById(itemId);
+        mvCartItemsRepository.deleteById(itemId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Transactional
     @Override
     public void increaseItemQtyInCart(Integer itemId, int quantity) {
-        cartItemsRepository.updateItemQty(itemId, quantity);
+        mvCartItemsRepository.updateItemQty(itemId, quantity);
     }
 
     @Transactional
     @Override
     public void deleteAllItems() {
-        cartItemsRepository.deleteAllItems();
+        mvCartItemsRepository.deleteAllItems();
     }
 }

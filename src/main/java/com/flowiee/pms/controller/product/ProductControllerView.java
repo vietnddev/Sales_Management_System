@@ -37,14 +37,14 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductControllerView extends BaseController {
-    ProductInfoService      productInfoService;
-    ProductVariantService   productVariantService;
-    ProductAttributeService productAttributeService;
-    ProductImageService     productImageService;
+    ProductInfoService mvProductInfoService;
+    ProductImageService mvProductImageService;
+    ProductVariantService mvProductVariantService;
+    ProductAttributeService mvProductAttributeService;
     @Autowired
     @Qualifier("productExportServiceImpl")
     @NonFinal
-    ExportService           exportService;
+    ExportService exportService;
 
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
@@ -56,7 +56,7 @@ public class ProductControllerView extends BaseController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
-        Optional<ProductDTO> product = productInfoService.findById(productId);
+        Optional<ProductDTO> product = mvProductInfoService.findById(productId);
         if (product.isEmpty()) {
             throw new ResourceNotFoundException("Product not found!");
         }
@@ -69,16 +69,16 @@ public class ProductControllerView extends BaseController {
     @GetMapping(value = "/variant/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
-        Optional<ProductVariantDTO> productVariant = productVariantService.findById(variantId);
+        Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(variantId);
         if (productVariant.isEmpty()) {
             throw new BadRequestException();
         }
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_PRODUCT_VARIANT.getTemplate());
-        modelAndView.addObject("listAttributes", productAttributeService.findAll(-1, -1, variantId).getContent());
+        modelAndView.addObject("listAttributes", mvProductAttributeService.findAll(-1, -1, variantId).getContent());
         modelAndView.addObject("bienTheSanPhamId", variantId);
         modelAndView.addObject("bienTheSanPham", productVariant.get());
-        modelAndView.addObject("listImageOfSanPhamBienThe", productImageService.getImageOfProductVariant(variantId));
-        FileStorage imageActive = productImageService.findImageActiveOfProductVariant(variantId);
+        modelAndView.addObject("listImageOfSanPhamBienThe", mvProductImageService.getImageOfProductVariant(variantId));
+        FileStorage imageActive = mvProductImageService.findImageActiveOfProductVariant(variantId);
         if (imageActive == null) {
             imageActive = new FileStorage();
         }
@@ -89,7 +89,7 @@ public class ProductControllerView extends BaseController {
     @PostMapping("/attribute/insert")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
-        productAttributeService.save(productAttribute);
+        mvProductAttributeService.save(productAttribute);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
@@ -98,18 +98,18 @@ public class ProductControllerView extends BaseController {
     public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
                                                @PathVariable("id") Integer attributeId,
                                                HttpServletRequest request) {
-        if (productAttributeService.findById(attributeId).isEmpty()) {
+        if (mvProductAttributeService.findById(attributeId).isEmpty()) {
             throw new ResourceNotFoundException("Product attribute not found!");
         }
         attribute.setId(attributeId);
-        productAttributeService.update(attribute, attributeId);
+        mvProductAttributeService.update(attribute, attributeId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @DeleteMapping(value = "/attribute/delete/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public ResponseEntity<String> deleteAttribute(@PathVariable("id") Integer attributeId) {
-        return ResponseEntity.ok().body(productAttributeService.delete(attributeId));
+        return ResponseEntity.ok().body(mvProductAttributeService.delete(attributeId));
     }
 
     @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
@@ -120,7 +120,7 @@ public class ProductControllerView extends BaseController {
         if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
             throw new ResourceNotFoundException("Product variant or image not found!");
         }
-        productImageService.setImageActiveOfProductVariant(productVariantId, imageId);
+        mvProductImageService.setImageActiveOfProductVariant(productVariantId, imageId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 

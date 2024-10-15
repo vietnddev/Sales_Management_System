@@ -11,10 +11,8 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.FileStorageService;
 
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import com.flowiee.pms.utils.constants.ErrorCode;
-import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,23 +33,23 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class FileStorageServiceImpl extends BaseService implements FileStorageService {
-    FileStorageRepository fileRepository;
-    ConfigRepository configRepository;
+    FileStorageRepository mvFileRepository;
+    ConfigRepository mvConfigRepository;
 
     @Override
     public List<FileStorage> findAll() {
-        return fileRepository.findAll();
+        return mvFileRepository.findAll();
     }
 
     @Override
     public Optional<FileStorage> findById(Integer fileId) {
-        return fileRepository.findById(fileId);
+        return mvFileRepository.findById(fileId);
     }
 
     @Transactional
     @Override
     public FileStorage save(FileStorage fileStorage) {
-        FileStorage fileStorageSaved = fileRepository.save(fileStorage);
+        FileStorage fileStorageSaved = mvFileRepository.save(fileStorage);
 
         vldResourceUploadPath(true);
         Path pathDest = Paths.get(CommonUtils.getPathDirectory(fileStorageSaved.getModule().toUpperCase()) + File.separator + fileStorageSaved.getStorageName());
@@ -71,7 +69,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
 
     @Override
     public String saveFileOfImport(MultipartFile fileImport, FileStorage fileInfo) throws IOException {
-        fileRepository.save(fileInfo);
+        mvFileRepository.save(fileInfo);
         Path dest = Paths.get(CommonUtils.getPathDirectory(fileInfo.getModule()) + "/" + "I_" + fileInfo.getStorageName());
         saveFileAttach(fileImport, dest);
         return "OK";
@@ -86,11 +84,11 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
 
     @Override
     public String delete(Integer fileId) {
-        Optional<FileStorage> fileStorage = fileRepository.findById(fileId);
+        Optional<FileStorage> fileStorage = mvFileRepository.findById(fileId);
         if (fileStorage.isEmpty()) {
             throw new BadRequestException("File not found!");
         }
-        fileRepository.deleteById(fileId);
+        mvFileRepository.deleteById(fileId);
         File file = new File(StartUp.getResourceUploadPath() + "/" + fileStorage.get().getDirectoryPath() + "/" + fileStorage.get().getStorageName());
         if (file.exists() && file.delete()) {
             return MessageCode.DELETE_SUCCESS.getDescription();
@@ -100,7 +98,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
 
     private boolean vldResourceUploadPath(boolean throwException) {
         if (StartUp.getResourceUploadPath() == null) {
-            SystemConfig resourceUploadPathConfig = configRepository.findByCode(ConfigCode.resourceUploadPath.name());
+            SystemConfig resourceUploadPathConfig = mvConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
             if (resourceUploadPathConfig != null && ObjectUtils.isNotEmpty(resourceUploadPathConfig.getValue())) {
                 StartUp.mvResourceUploadPath = resourceUploadPathConfig.getValue();
                 return true;

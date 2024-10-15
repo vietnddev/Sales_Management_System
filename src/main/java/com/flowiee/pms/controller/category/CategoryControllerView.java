@@ -32,22 +32,22 @@ import org.springframework.web.servlet.ModelAndView;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryControllerView extends BaseController {
-    CategoryService categoryService;
+    CategoryService mvCategoryService;
     @Autowired
     @Qualifier("categoryExportServiceImpl")
     @NonFinal
-    ExportService   exportService;
+    ExportService mvExportService;
     @Autowired
     @Qualifier("categoryImportServiceImpl")
     @NonFinal
-    ImportService   importService;
+    ImportService mvImportService;
 
     @GetMapping
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public ModelAndView viewRootCategory() {
         ModelAndView modelAndView = new ModelAndView(Pages.CTG_CATEGORY.getTemplate());
         modelAndView.addObject("category", new Category());
-        modelAndView.addObject("listCategory", categoryService.findRootCategory());
+        modelAndView.addObject("listCategory", mvCategoryService.findRootCategory());
         return baseView(modelAndView);
     }
 
@@ -70,7 +70,7 @@ public class CategoryControllerView extends BaseController {
     @GetMapping("/{type}/template")
     @PreAuthorize("@vldModuleCategory.importCategory(true)")
     public ResponseEntity<InputStreamResource> exportTemplate(@PathVariable("type") String categoryType) {
-        EximModel model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_CATEGORIES, null, true);
+        EximModel model = mvExportService.exportToExcel(TemplateExport.EX_LIST_OF_CATEGORIES, null, true);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 
@@ -80,14 +80,14 @@ public class CategoryControllerView extends BaseController {
         if (CommonUtils.getCategoryType(categoryType) == null) {
             throw new ResourceNotFoundException("Category not found!");
         }
-        importService.importFromExcel(TemplateExport.IM_LIST_OF_CATEGORIES, file);
+        mvImportService.importFromExcel(TemplateExport.IM_LIST_OF_CATEGORIES, file);
         return new ModelAndView("redirect:/{type}");
     }
 
     @GetMapping("/{type}/export")
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public ResponseEntity<InputStreamResource> exportData(@PathVariable("type") String categoryType) {
-        EximModel model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_CATEGORIES, null, false);
+        EximModel model = mvExportService.exportToExcel(TemplateExport.EX_LIST_OF_CATEGORIES, null, false);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

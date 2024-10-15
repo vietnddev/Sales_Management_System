@@ -23,43 +23,43 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductHistoryServiceImpl extends BaseService implements ProductHistoryService {
-    ProductHistoryRepository productHistoryRepo;
+    ProductHistoryRepository mvProductHistoryRepository;
 
     @Override
     public List<ProductHistory> findAll() {
-        return productHistoryRepo.findAll();
+        return mvProductHistoryRepository.findAll();
     }
 
     @Override
     public Optional<ProductHistory> findById(Integer productHistoryId) {
-        return productHistoryRepo.findById(productHistoryId);
+        return mvProductHistoryRepository.findById(productHistoryId);
     }
 
     @Override
     public ProductHistory save(ProductHistory productHistory) {
-        return productHistoryRepo.save(productHistory);
+        return mvProductHistoryRepository.save(productHistory);
     }
 
     @Override
     public ProductHistory update(ProductHistory productHistory, Integer productHistoryId) {
         productHistory.setId(productHistoryId);
-        return productHistoryRepo.save(productHistory);
+        return mvProductHistoryRepository.save(productHistory);
     }
 
     @Override
     public String delete(Integer productHistoryId) {
-        productHistoryRepo.deleteById(productHistoryId);
+        mvProductHistoryRepository.deleteById(productHistoryId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
     public List<ProductHistory> findByProduct(Integer productId) {
-        return productHistoryRepo.findByProductId(productId);
+        return mvProductHistoryRepository.findByProductId(productId);
     }
 
     @Override
     public List<ProductHistory> findPriceChange(Integer productDetailId) {
-        List<ProductHistory> prices =  productHistoryRepo.findHistoryChangeOfProductDetail(productDetailId, "PRICE");
+        List<ProductHistory> prices =  mvProductHistoryRepository.findHistoryChangeOfProductDetail(productDetailId, "PRICE");
         for (ProductHistory priceChange : prices) {
             if (priceChange.getProduct() != null) {
                 priceChange.setProductId(priceChange.getProduct().getId());

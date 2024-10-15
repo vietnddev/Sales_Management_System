@@ -27,18 +27,18 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryServiceImpl extends BaseService implements CategoryService {
-    CategoryRepository        categoryRepository;
-    CategoryHistoryService    categoryHistoryService;
-    CategoryHistoryRepository categoryHistoryRepository;
+    CategoryRepository mvCategoryRepository;
+    CategoryHistoryService mvCategoryHistoryService;
+    CategoryHistoryRepository mvCategoryHistoryRepository;
 
     @Override
     public List<Category> findAll() {
-        return categoryRepository.findAll();
+        return mvCategoryRepository.findAll();
     }
 
     @Override
     public Optional<Category> findById(Integer entityId) {
-        return categoryRepository.findById(entityId);
+        return mvCategoryRepository.findById(entityId);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         if (entity == null) {
             throw new BadRequestException();
         }
-        Category categorySaved = categoryRepository.save(entity);
+        Category categorySaved = mvCategoryRepository.save(entity);
         systemLogService.writeLogCreate(MODULE.CATEGORY, ACTION.CTG_I, MasterObject.Category, "Thêm mới danh mục " + categorySaved.getType(), categorySaved.getName());
         return categorySaved;
     }
@@ -64,11 +64,11 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         categoryOptional.get().setNote(inputCategory.getNote());
         if (inputCategory.getSort() != null) categoryOptional.get().setSort(inputCategory.getSort());
 
-        Category categorySaved = categoryRepository.save(categoryOptional.get());
+        Category categorySaved = mvCategoryRepository.save(categoryOptional.get());
 
         String logTitle = "Cập nhật thông tin danh mục " + categorySaved.getType() + ": " + categorySaved.getName();
         ChangeLog changeLog = new ChangeLog(categoryBefore, categorySaved);
-        categoryHistoryService.save(changeLog.getLogChanges(), logTitle, categoryId);
+        mvCategoryHistoryService.save(changeLog.getLogChanges(), logTitle, categoryId);
         systemLogService.writeLogUpdate(MODULE.CATEGORY, ACTION.CTG_U, MasterObject.Category, logTitle, changeLog.getOldValues(), changeLog.getNewValues());
         logger.info("Update Category success! {}", categorySaved);
 
@@ -85,8 +85,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         if (categoryInUse(categoryId)) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        categoryHistoryRepository.deleteAllByCategory(categoryId);
-        categoryRepository.deleteById(categoryId);
+        mvCategoryHistoryRepository.deleteAllByCategory(categoryId);
+        mvCategoryRepository.deleteById(categoryId);
         systemLogService.writeLogDelete(MODULE.CATEGORY, ACTION.CTG_D, MasterObject.Category, "Xóa danh mục " + categoryToDelete.get().getType(), categoryToDelete.get().getName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -94,8 +94,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     @Override
     public List<Category> findRootCategory() {
         try {
-            List<Category> roots = categoryRepository.findRootCategory();
-            List<Object[]> recordsOfEachType = categoryRepository.totalRecordsOfEachType();
+            List<Category> roots = mvCategoryRepository.findRootCategory();
+            List<Object[]> recordsOfEachType = mvCategoryRepository.totalRecordsOfEachType();
             for (Category c : roots) {
                 for (Object[] o : recordsOfEachType) {
                     if (c.getType().equals(o[0])) {
@@ -116,7 +116,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        Page<Category> categoryPage = categoryRepository.findSubCategory(categoryType.name(), parentId, ignoreIds, pageable);
+        Page<Category> categoryPage = mvCategoryRepository.findSubCategory(categoryType.name(), parentId, ignoreIds, pageable);
         for (Category c : categoryPage.getContent()) {
             String statusName = CategoryStatus.I.getLabel();
             if (c.getStatus()) {

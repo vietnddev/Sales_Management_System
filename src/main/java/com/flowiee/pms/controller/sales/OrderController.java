@@ -13,7 +13,10 @@ import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -31,14 +34,13 @@ import java.util.Optional;
 @RequestMapping("${app.api.prefix}/order")
 @Tag(name = "Order API", description = "Quản lý đơn hàng")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OrderController extends BaseController {
-     OrderService orderService;
-     ExportService exportService;
-
-    public OrderController(OrderService orderService, @Qualifier("orderExportServiceImpl") ExportService exportService) {
-        this.orderService = orderService;
-        this.exportService = exportService;
-    }
+    OrderService  mvOrderService;
+    @Autowired
+    @NonFinal
+    @Qualifier("orderExportServiceImpl")
+    ExportService mvExportService;
 
     @Operation(summary = "Find all orders")
     @GetMapping("/all")
@@ -56,7 +58,7 @@ public class OrderController extends BaseController {
                                                      @RequestParam("pageSize") int pageSize,
                                                      @RequestParam("pageNum") int pageNum) {
         try {
-            Page<OrderDTO> orderPage = orderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
+            Page<OrderDTO> orderPage = mvOrderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
             return success(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "order"), ex);
@@ -67,7 +69,7 @@ public class OrderController extends BaseController {
     @GetMapping("/{orderId}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Integer orderId) {
-        Optional<OrderDTO> orderDTO = orderService.findById(orderId);
+        Optional<OrderDTO> orderDTO = mvOrderService.findById(orderId);
         if (orderDTO.isEmpty()) {
             throw new ResourceNotFoundException("Order not found!");
         }
@@ -78,7 +80,7 @@ public class OrderController extends BaseController {
     @PostMapping("/insert")
     public AppResponse<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         try {
-            return success(orderService.save(orderDTO));
+            return success(mvOrderService.save(orderDTO));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "order"), ex);
         }
@@ -88,14 +90,14 @@ public class OrderController extends BaseController {
     @PutMapping("/update/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public AppResponse<OrderDTO> update(@RequestBody OrderDTO order, @PathVariable("orderId") Integer orderId) {
-        return success(orderService.update(order, orderId));
+        return success(mvOrderService.update(order, orderId));
     }
 
     @DeleteMapping("/delete/{orderId}")
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
     public AppResponse<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
         //Check them trang thai
-        return success(orderService.delete(orderId));
+        return success(mvOrderService.delete(orderId));
     }
 
     @PutMapping("/do-pay/{orderId}")
@@ -106,13 +108,13 @@ public class OrderController extends BaseController {
                                           @RequestParam("paymentAmount") Float paymentAmount,
                                           @RequestParam(value = "paymentNote", required = false) String paymentNote) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
-        return success(orderService.doPay(orderId, LocalDateTime.parse(paymentTime, formatter), paymentMethod, paymentAmount, paymentNote));
+        return success(mvOrderService.doPay(orderId, LocalDateTime.parse(paymentTime, formatter), paymentMethod, paymentAmount, paymentNote));
     }
 
     @GetMapping("/export")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ResponseEntity<InputStreamResource> exportToExcel() {
-        EximModel model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_ORDERS, null, false);
+        EximModel model = mvExportService.exportToExcel(TemplateExport.EX_LIST_OF_ORDERS, null, false);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 
@@ -120,7 +122,7 @@ public class OrderController extends BaseController {
     public ModelAndView findOrderInfoByQRCode(@PathVariable("code") String code) {
         try {
             //Xử lý code thành id
-            return new ModelAndView().addObject("orderInfo", orderService.findById(null));
+            return new ModelAndView().addObject("orderInfo", mvOrderService.findById(null));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "scan order"), ex);
         }

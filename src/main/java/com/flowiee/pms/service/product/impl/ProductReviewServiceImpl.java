@@ -20,39 +20,39 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductReviewServiceImpl extends BaseService implements ProductReviewService {
-    ProductReviewRepository productReviewRepository;
+    ProductReviewRepository mvProductReviewRepository;
 
     @Override
     public List<ProductReview> findAll() {
-        return productReviewRepository.findAll();
+        return mvProductReviewRepository.findAll();
     }
 
     @Override
     public Optional<ProductReview> findById(Integer productReviewId) {
-        return productReviewRepository.findById(productReviewId);
+        return mvProductReviewRepository.findById(productReviewId);
     }
 
     @Override
     public ProductReview save(ProductReview productReview) {
-        return productReviewRepository.save(productReview);
+        return mvProductReviewRepository.save(productReview);
     }
 
     @Override
     public ProductReview update(ProductReview productReview, Integer productReviewId) {
-        ProductReview existingReview = productReviewRepository.findById(productReviewId).orElseThrow(() -> new ResourceNotFoundException("Review not found!"));
+        ProductReview existingReview = mvProductReviewRepository.findById(productReviewId).orElseThrow(() -> new ResourceNotFoundException("Review not found!"));
         existingReview.setReviewContent(productReview.getReviewContent());
         existingReview.setRating(productReview.getRating());
-        return productReviewRepository.save(existingReview);
+        return mvProductReviewRepository.save(existingReview);
     }
 
     @Override
     public String delete(Integer productReviewId) {
-        productReviewRepository.deleteById(productReviewId);
+        mvProductReviewRepository.deleteById(productReviewId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
     public Page<ProductReview> findByProduct(Integer pProductId) {
-        return productReviewRepository.findByProduct(pProductId, Pageable.unpaged());
+        return mvProductReviewRepository.findByProduct(pProductId, Pageable.unpaged());
     }
 }

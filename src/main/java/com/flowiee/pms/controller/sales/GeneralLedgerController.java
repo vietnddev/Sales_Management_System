@@ -33,11 +33,11 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class GeneralLedgerController extends BaseController {
-    LedgerService ledgerService;
+    LedgerService mvLedgerService;
     @Qualifier("ledgerExportServiceImpl")
     @NonFinal
     @Autowired
-    ExportService exportService;
+    ExportService mvExportService;
 
     @Operation(summary = "Find general ledger")
     @GetMapping
@@ -47,7 +47,7 @@ public class GeneralLedgerController extends BaseController {
                                                         @RequestParam(value = "fromDate", required = false) LocalDate fromDate,
                                                         @RequestParam(value = "toDate", required = false) LocalDate toDate) {
         try {
-            GeneralLedger generalLedger = ledgerService.findGeneralLedger(pageSize, pageNum -1, fromDate, toDate);
+            GeneralLedger generalLedger = mvLedgerService.findGeneralLedger(pageSize, pageNum -1, fromDate, toDate);
             return success(generalLedger, pageNum, pageSize, generalLedger.getTotalPages(), generalLedger.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "generalLedger"), ex);
@@ -58,7 +58,7 @@ public class GeneralLedgerController extends BaseController {
     @GetMapping("/export")
     @PreAuthorize("@vldModuleSales.readGeneralLedger(true)")
     public ResponseEntity<InputStreamResource> exportData() {
-        EximModel model = exportService.exportToExcel(TemplateExport.EX_LEDGER_TRANSACTIONS, null, false);
+        EximModel model = mvExportService.exportToExcel(TemplateExport.EX_LEDGER_TRANSACTIONS, null, false);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }
 }

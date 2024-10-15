@@ -28,7 +28,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class GroupAccountServiceImpl extends BaseService implements GroupAccountService {
-    GroupAccountRepository groupAccountRepository;
+    GroupAccountRepository mvGroupAccountRepository;
 
     @Override
     public List<GroupAccount> findAll() {
@@ -41,7 +41,7 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("groupName").ascending());
         }
-        return groupAccountRepository.findAll(pageable);
+        return mvGroupAccountRepository.findAll(pageable);
     }
 
     @Override
@@ -49,12 +49,12 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
         if (groupId == null || groupId <= 0) {
             return Optional.empty();
         }
-        return groupAccountRepository.findById(groupId);
+        return mvGroupAccountRepository.findById(groupId);
     }
 
     @Override
     public GroupAccount save(GroupAccount groupAccount) {
-        return groupAccountRepository.save(groupAccount);
+        return mvGroupAccountRepository.save(groupAccount);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
         GroupAccount groupAccountBefore = ObjectUtils.clone(groupAccountOpt.get());
 
         groupAccount.setId(groupId);
-        GroupAccount groupAccountUpdated = groupAccountRepository.save(groupAccount);
+        GroupAccount groupAccountUpdated = mvGroupAccountRepository.save(groupAccount);
 
         ChangeLog changeLog = new ChangeLog(groupAccountBefore, groupAccountUpdated);
         systemLogService.writeLogUpdate(MODULE.SYSTEM, ACTION.SYS_GR_ACC_U, MasterObject.GroupAccount, "Cập nhật thông tin nhóm người dùng", changeLog.getOldValues(), changeLog.getNewValues());
@@ -79,7 +79,7 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
         if (this.findById(groupId).isEmpty()) {
             throw new BadRequestException();
         }
-        groupAccountRepository.deleteById(groupId);
+        mvGroupAccountRepository.deleteById(groupId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

@@ -1,7 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.constants.Pages;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
@@ -25,20 +23,20 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class TicketExportControllerView extends BaseController {
-    TicketExportService ticketExportService;
+    TicketExportService mvTicketExportService;
 
     @GetMapping
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public ModelAndView viewAllTicketExport() {
         ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_EXPORT.getTemplate());
-        modelAndView.addObject("listTicketExport", ticketExportService.findAll(-1, -1, null));
+        modelAndView.addObject("listTicketExport", mvTicketExportService.findAll(-1, -1, null));
         return baseView(modelAndView);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public ModelAndView viewDetail(@PathVariable("id") Integer ticketExportId) {
-        Optional<TicketExport> ticketExport = ticketExportService.findById(ticketExportId);
+        Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
             throw new ResourceNotFoundException("Ticket export not found!");
         }

@@ -8,7 +8,9 @@ import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,19 +21,17 @@ import java.util.List;
 @RestController
 @RequestMapping("${app.api.prefix}/product")
 @Tag(name = "Gallery API", description = "Gallery management")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class GalleryController extends BaseController {
-    private final ProductImageService productImageService;
-
-    public GalleryController(ProductImageService productImageService) {
-        this.productImageService = productImageService;
-    }
+    ProductImageService mvProductImageService;
 
     @Operation(summary = "Find images of all products")
     @GetMapping("/images/all")
     @PreAuthorize("@vldModuleProduct.readGallery(true)")
     public AppResponse<List<FileStorage>> viewGallery() {
         try {
-            return success(productImageService.getImageOfProduct(null));
+            return success(mvProductImageService.getImageOfProduct(null));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "gallery"), ex);
         }

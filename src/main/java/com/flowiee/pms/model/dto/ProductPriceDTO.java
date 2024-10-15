@@ -1,15 +1,14 @@
 package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.product.ProductPrice;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
+@AllArgsConstructor
 @Getter
 @Setter
 public class ProductPriceDTO implements Serializable {

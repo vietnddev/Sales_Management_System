@@ -25,11 +25,11 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class DashboardServiceImpl extends BaseService implements DashboardService {
-    EntityManager            entityManager;
-    OrderService             orderService;
-    CustomerService          customerService;
-    OrderStatisticsService   orderStatisticsService;
-    ProductStatisticsService productStatisticsService;
+    EntityManager mvEntityManager;
+    OrderService mvOrderService;
+    CustomerService mvCustomerService;
+    OrderStatisticsService mvOrderStatisticsService;
+    ProductStatisticsService mvProductStatisticsService;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -76,13 +76,13 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
                                     "ORDER BY total DESC) " +
                                     "WHERE ROWNUM <= 10";
         logger.info("[getProductsTopSell() - SQL findData]: ");
-        Query productsTopSellSQLQuery = entityManager.createNativeQuery(productsTopSellSQL);
+        Query productsTopSellSQLQuery = mvEntityManager.createNativeQuery(productsTopSellSQL);
         List<Object[]> productsTopSellResultList = productsTopSellSQLQuery.getResultList();
         LinkedHashMap<String, Integer> productsTopSell = new LinkedHashMap<>();
         for (Object[] data : productsTopSellResultList) {
             productsTopSell.put(String.valueOf(data[0]), Integer.parseInt(String.valueOf(data[1])));
         }
-        entityManager.close();
+        mvEntityManager.close();
 
         //Revenue month of year
         String revenueMonthOfYearSQL = "SELECT " +
@@ -103,14 +103,14 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
                                        "ORDER BY " +
                                        "    TO_CHAR(MONTHS.MONTH, 'MM')";
         logger.info("[getRevenueMonthOfYearSQL() - SQL findData]: ");
-        Query revenueMonthOfYearSQLQuery = entityManager.createNativeQuery(revenueMonthOfYearSQL);
+        Query revenueMonthOfYearSQLQuery = mvEntityManager.createNativeQuery(revenueMonthOfYearSQL);
         revenueMonthOfYearSQLQuery.setParameter(1, currentYear);
         List<Object[]> revenueMonthOfYearSQLResultList = revenueMonthOfYearSQLQuery.getResultList();
         LinkedHashMap<Integer, Float> revenueMonthOfYear = new LinkedHashMap<>();
         for (int i = 0; i < revenueMonthOfYearSQLResultList.size(); i++) {
             revenueMonthOfYear.put(Integer.parseInt(String.valueOf(revenueMonthOfYearSQLResultList.get(i)[0])), Float.parseFloat(String.valueOf(revenueMonthOfYearSQLResultList.get(i)[1] != null ? revenueMonthOfYearSQLResultList.get(i)[1] : 0)));
         }
-        entityManager.close();
+        mvEntityManager.close();
 
         //Revenue day of month
         String revenueDaysOfMonthSQL = "WITH MONTH_DAYS AS ( " +
@@ -135,7 +135,7 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
                                        "ORDER BY " +
                                        "  TO_CHAR(MD.MONTH_DAY, 'DD')";
         logger.info("[getRevenueDayOfMonth() - SQL findData]: ");
-        Query revenueDayOfMonthSQLQuery = entityManager.createNativeQuery(revenueDaysOfMonthSQL);
+        Query revenueDayOfMonthSQLQuery = mvEntityManager.createNativeQuery(revenueDaysOfMonthSQL);
         revenueDayOfMonthSQLQuery.setParameter(1, currentMonth);
         revenueDayOfMonthSQLQuery.setParameter(2, currentYear);
         List<Object[]> revenueDayOfMonthSQLResultList = revenueDayOfMonthSQLQuery.getResultList();
@@ -143,7 +143,7 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
         for (int i = 0; i < revenueDayOfMonthSQLResultList.size(); i++) {
             revenueDayOfMonth.put("Day " + (i + 1), Float.parseFloat(String.valueOf(revenueDayOfMonthSQLResultList.get(i)[1])));
         }
-        entityManager.close();
+        mvEntityManager.close();
 
         //Revenue by sales channel
         String revenueBySalesChannelSQL = "SELECT " +
@@ -155,26 +155,26 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
                                           "LEFT JOIN ORDER_DETAIL d ON o.ID = d.ORDER_ID " +
                                           "GROUP BY c.NAME, c.COLOR";
         logger.info("[getRevenueBySalesChannel() - SQL findData]: ");
-        Query revenueBySalesChannelQuery = entityManager.createNativeQuery(revenueBySalesChannelSQL);
+        Query revenueBySalesChannelQuery = mvEntityManager.createNativeQuery(revenueBySalesChannelSQL);
         List<Object[]> revenueBySalesChannelResultList = revenueBySalesChannelQuery.getResultList();
         LinkedHashMap<String, Float> revenueSalesChannel = new LinkedHashMap<>();
         for (Object[] data : revenueBySalesChannelResultList) {
             revenueSalesChannel.put(String.valueOf(data[0]), Float.parseFloat(String.valueOf(data[2])));
         }
-        entityManager.close();
+        mvEntityManager.close();
 
         //Revenue by products
 
 
-        String revenueToday = CommonUtils.formatToVND(orderStatisticsService.findRevenueToday());
-        String revenueThisMonth = CommonUtils.formatToVND(orderStatisticsService.findRevenueThisMonth());
-        List<CustomerDTO> customersNew = customerService.findCustomerNewInMonth();
-        List<Order> ordersToday = orderService.findOrdersToday();
+        String revenueToday = CommonUtils.formatToVND(mvOrderStatisticsService.findRevenueToday());
+        String revenueThisMonth = CommonUtils.formatToVND(mvOrderStatisticsService.findRevenueThisMonth());
+        List<CustomerDTO> customersNew = mvCustomerService.findCustomerNewInMonth();
+        List<Order> ordersToday = mvOrderService.findOrdersToday();
 
         logger.info("Finished loadDashboard(): " + CommonUtils.now("YYYY/MM/dd HH:mm:ss"));
 
         return DashboardModel.builder()
-                .totalProducts(productStatisticsService.countTotalProductsInStorage())
+                .totalProducts(mvProductStatisticsService.countTotalProductsInStorage())
                 .revenueToday(revenueToday)
                 .revenueThisMonth(revenueThisMonth)
                 .ordersNewTodayQty(ordersToday.size())

@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class MaterialControllerView extends BaseController {
-    MaterialService materialService;
+    MaterialService mvMaterialService;
 
     @GetMapping
     @PreAuthorize("@vldModuleProduct.readMaterial(true)")
@@ -40,7 +40,7 @@ public class MaterialControllerView extends BaseController {
     @PreAuthorize("@vldModuleProduct.insertMaterial(true)")
     public ModelAndView insert(@ModelAttribute("material") Material material) {
         material.setStatus(true);
-        materialService.save(material);
+        mvMaterialService.save(material);
         return new ModelAndView("redirect:");
     }
 
@@ -49,17 +49,17 @@ public class MaterialControllerView extends BaseController {
     public ModelAndView update(@ModelAttribute("material") Material material,
                                                @PathVariable("id") Integer materialId,
                                                HttpServletRequest request) {
-        if (materialService.findById(materialId).isEmpty()) {
+        if (mvMaterialService.findById(materialId).isEmpty()) {
             throw new ResourceNotFoundException("Material not found!");
         }
-        materialService.update(material, materialId);
+        mvMaterialService.update(material, materialId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteMaterial(true)")
     public ModelAndView delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
-        materialService.delete(materialId);
+        mvMaterialService.delete(materialId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
