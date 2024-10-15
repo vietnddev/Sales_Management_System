@@ -58,17 +58,17 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
     }
 
     @Override
-    public Optional<LedgerTransaction> findById(Integer tranId) {
+    public Optional<LedgerTransaction> findById(Long tranId) {
         return mvLedgerTransactionRepository.findById(tranId);
     }
 
     @Override
     public LedgerTransaction save(LedgerTransaction transaction) {
-        Integer lastIndex = mvLedgerTransactionRepository.findLastIndex(getTranType());
+        Long lastIndex = mvLedgerTransactionRepository.findLastIndex(getTranType());
         if (ObjectUtils.isEmpty(lastIndex)) {
-            lastIndex = 1;
+            lastIndex = 1l;
         } else {
-            lastIndex += 1;
+            lastIndex += 1l;
         }
         if (ObjectUtils.isEmpty(transaction.getTranCode())) {
             transaction.setTranCode(getNextTranCode(lastIndex));
@@ -90,7 +90,7 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
     }
 
     @Override
-    public LedgerTransaction update(LedgerTransaction transaction, Integer tranId) {
+    public LedgerTransaction update(LedgerTransaction transaction, Long tranId) {
         transaction.setId(tranId);
         transaction.setTranType(getTranType());
         LedgerTransaction transactionUpdated = mvLedgerTransactionRepository.save(transaction);
@@ -107,7 +107,7 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
     }
 
     @Override
-    public String delete(Integer tranId) {
+    public String delete(Long tranId) {
         throw new AppException("Method dose not support!");
     }
 
@@ -115,7 +115,7 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
         return null;
     }
 
-    public String getNextTranCode(int lastIndex) {
+    public String getNextTranCode(long lastIndex) {
         return getTranType() + String.format("%05d", lastIndex);
     }
 }

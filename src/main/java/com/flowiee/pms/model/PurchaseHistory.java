@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PurchaseHistory {
-    int customerId;
+    long customerId;
     int year;
     int month;
     int purchaseQty;

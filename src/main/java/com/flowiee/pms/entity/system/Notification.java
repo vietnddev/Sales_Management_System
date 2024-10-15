@@ -21,10 +21,10 @@ public class Notification extends BaseEntity implements Serializable {
 	static final long serialVersionUID = 1L;
 
 	@Column(name = "send", nullable = false)
-    Integer send;
+    Long send;
 
     @Column(name = "receive", nullable = false)
-    Integer receive;
+    Long receive;
 
     @Column(name = "type", nullable = false)
     String type;
@@ -39,7 +39,7 @@ public class Notification extends BaseEntity implements Serializable {
     Boolean readed;
 
     @Column(name = "import_id")
-    Integer importId;
+    Long importId;
 
 	@Override
 	public String toString() {

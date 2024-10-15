@@ -39,7 +39,7 @@ public class NotificationController extends BaseController {
     public AppResponse<List<Notification>> findByAccount(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                          @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                          @RequestParam(value = "totalRecord", required = false) Integer totalRecord,
-                                                         @PathVariable("accountId") int accountId) {
+                                                         @PathVariable("accountId") long accountId) {
         try {
             return success(notificationService.findAllByReceiveId(pageSize, pageNum, totalRecord, accountId));
         } catch (RuntimeException ex) {

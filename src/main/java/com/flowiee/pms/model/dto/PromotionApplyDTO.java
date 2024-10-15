@@ -16,10 +16,10 @@ public class PromotionApplyDTO extends PromotionApply implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer promotionApplyId;
-    Integer promotionInfoId;
+    Long promotionApplyId;
+    Long promotionInfoId;
     String promotionInfoTitle;
-    Integer productId;
+    Long productId;
     String productName;
     String appliedAt;
     Integer appliedBy;

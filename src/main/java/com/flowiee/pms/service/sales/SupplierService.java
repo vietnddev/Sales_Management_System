@@ -7,5 +7,5 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface SupplierService extends BaseCurdService<Supplier> {
-    Page<Supplier> findAll(Integer pageSize, Integer pageNum, List<Integer> igroneIds);
+    Page<Supplier> findAll(Integer pageSize, Integer pageNum, List<Long> igroneIds);
 }

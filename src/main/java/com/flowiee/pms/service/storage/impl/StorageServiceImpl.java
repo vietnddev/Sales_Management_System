@@ -50,7 +50,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
     }
 
     @Override
-    public Page<StorageItems> findStorageItems(int pageSize, int pageNum, Integer storageId, String searchText) {
+    public Page<StorageItems> findStorageItems(int pageSize, int pageNum, Long storageId, String searchText) {
         Optional<Storage> storage = mvStorageRepository.findById(storageId);
         if (storage.isEmpty())
             throw new BadRequestException("Storage not found");
@@ -70,7 +70,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
             StorageItems s = StorageItems.builder()
                     .storageId(storageId)
                     .isProduct(object[0].toString())
-                    .itemId(Integer.parseInt(object[1].toString()))
+                    .itemId(Long.parseLong(object[1].toString()))
                     .itemImageSrc(object[2] != null ? object[2].toString() : null)
                     .itemName(object[3].toString())
                     .itemType(object[4] != null ? object[4].toString() : "")
@@ -86,7 +86,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
     }
 
     @Override
-    public Optional<StorageDTO> findById(Integer storageId) {
+    public Optional<StorageDTO> findById(Long storageId) {
         Optional<Storage> storageOptional = mvStorageRepository.findById(storageId);
         if (storageOptional.isPresent()) {
             List<StorageItems> storageItemsList = this.findStorageItems(-1, -1, storageId, null).getContent();
@@ -107,7 +107,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
     }
 
     @Override
-    public StorageDTO update(StorageDTO inputStorageDTO, Integer storageId) {
+    public StorageDTO update(StorageDTO inputStorageDTO, Long storageId) {
         Optional<Storage> storageOpt = mvStorageRepository.findById(storageId);
         if (storageOpt.isEmpty()) {
             throw new BadRequestException("Storage not found");
@@ -129,7 +129,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
     }
 
     @Override
-    public String delete(Integer storageId) {
+    public String delete(Long storageId) {
         try {
             Optional<StorageDTO> storage = this.findById(storageId);
             if (storage.isEmpty()) {

@@ -28,7 +28,7 @@ public class ProductReviewServiceImpl extends BaseService implements ProductRevi
     }
 
     @Override
-    public Optional<ProductReview> findById(Integer productReviewId) {
+    public Optional<ProductReview> findById(Long productReviewId) {
         return mvProductReviewRepository.findById(productReviewId);
     }
 
@@ -38,7 +38,7 @@ public class ProductReviewServiceImpl extends BaseService implements ProductRevi
     }
 
     @Override
-    public ProductReview update(ProductReview productReview, Integer productReviewId) {
+    public ProductReview update(ProductReview productReview, Long productReviewId) {
         ProductReview existingReview = mvProductReviewRepository.findById(productReviewId).orElseThrow(() -> new ResourceNotFoundException("Review not found!"));
         existingReview.setReviewContent(productReview.getReviewContent());
         existingReview.setRating(productReview.getRating());
@@ -46,13 +46,13 @@ public class ProductReviewServiceImpl extends BaseService implements ProductRevi
     }
 
     @Override
-    public String delete(Integer productReviewId) {
+    public String delete(Long productReviewId) {
         mvProductReviewRepository.deleteById(productReviewId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
-    public Page<ProductReview> findByProduct(Integer pProductId) {
+    public Page<ProductReview> findByProduct(Long pProductId) {
         return mvProductReviewRepository.findByProduct(pProductId, Pageable.unpaged());
     }
 }

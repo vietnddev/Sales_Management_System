@@ -75,7 +75,7 @@ public class Supplier extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     List<Material> listMaterial;
 
-    public Supplier(Integer id, String name) {
+    public Supplier(long id, String name) {
         this.id = id;
         this.name = name;
     }

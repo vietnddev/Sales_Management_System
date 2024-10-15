@@ -80,7 +80,7 @@ public class Material extends BaseEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     List<MaterialTemp> listMaterialTemp;
 
-    public Material(int id) {
+    public Material(long id) {
         super.id = id;
     }
 

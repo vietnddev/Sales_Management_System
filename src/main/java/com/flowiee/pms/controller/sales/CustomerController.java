@@ -55,7 +55,7 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Find detail customer")
     @GetMapping("/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
-    public AppResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Integer customerId) {
+    public AppResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Long customerId) {
         Optional<CustomerDTO> customer = mvCustomerService.findById(customerId);
         if (customer.isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"));
@@ -81,21 +81,21 @@ public class CustomerController extends BaseController {
     @Operation(summary = "Update customer")
     @PutMapping("/update/{customerId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public AppResponse<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Integer customerId) {
+    public AppResponse<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customer, @PathVariable("customerId") Long customerId) {
         return success(mvCustomerService.update(customer, customerId));
     }
 
     @Operation(summary = "Delete customer")
     @DeleteMapping("/delete/{customerId}")
     @PreAuthorize("@vldModuleSales.deleteCustomer(true)")
-    public AppResponse<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
+    public AppResponse<String> deleteCustomer(@PathVariable("customerId") Long customerId) {
         return success(mvCustomerService.delete(customerId));
     }
 
     @Operation(summary = "Find the number of purchase of customer per month")
     @GetMapping("/purchase-history/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
-    public AppResponse<List<PurchaseHistory>> findPurchaseHistory(@PathVariable("customerId") Integer customerId, @RequestParam(value = "year", required = false) Integer year) {
+    public AppResponse<List<PurchaseHistory>> findPurchaseHistory(@PathVariable("customerId") Long customerId, @RequestParam(value = "year", required = false) Integer year) {
         if (mvCustomerService.findById(customerId).isEmpty()) {
             throw new BadRequestException("Customer not found");
         }

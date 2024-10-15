@@ -39,7 +39,7 @@ public class ProductImageController extends BaseController {
     @Operation(summary = "Upload images of product")
     @PostMapping(value = "/{productId}/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<FileStorage> uploadImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productId) {
+    public AppResponse<FileStorage> uploadImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("productId") Long productId) {
         try {
             if (productId <= 0 || mvProductInfoService.findById(productId).isEmpty()) {
                 throw new BadRequestException();
@@ -58,7 +58,7 @@ public class ProductImageController extends BaseController {
     @Operation(summary = "Upload images of product variant")
     @PostMapping(value = "/{productId}/variant/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productVariantId) {
+    public AppResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Long productVariantId) {
         try {
             if (productVariantId <= 0 || mvProductVariantService.findById(productVariantId).isEmpty()) {
                 throw new BadRequestException();
@@ -77,7 +77,7 @@ public class ProductImageController extends BaseController {
     @Operation(summary = "Update product image is use default")
     @PutMapping(value = "/{productId}/active-image/{imageId}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<FileStorage> activeImageOfProduct(@PathVariable("productId") Integer productId, @PathVariable("imageId") Integer imageId) {
+    public AppResponse<FileStorage> activeImageOfProduct(@PathVariable("productId") Long productId, @PathVariable("imageId") Long imageId) {
         try {
             if (productId == null || productId <= 0 || imageId == null || imageId <= 0) {
                 throw new BadRequestException();
@@ -91,7 +91,7 @@ public class ProductImageController extends BaseController {
     @Operation(summary = "Change image of product")
     @PutMapping(value = "/{productId}/change-image/{imageId}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<FileStorage> changeImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("imageId") Integer imageId) {
+    public AppResponse<FileStorage> changeImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("imageId") Long imageId) {
         try {
             if (imageId <= 0 || mvFileStorageService.findById(imageId).isEmpty()) {
                 throw new BadRequestException("Image not found");
@@ -108,7 +108,7 @@ public class ProductImageController extends BaseController {
     @Operation(summary = "Update variant image is use default")
     @PutMapping(value = "/variant/{productVariantId}/active-image/{imageId}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<FileStorage> activeImageOfProductVariant(@PathVariable("productVariantId") Integer productVariantId, @PathVariable("imageId") Integer imageId) {
+    public AppResponse<FileStorage> activeImageOfProductVariant(@PathVariable("productVariantId") Long productVariantId, @PathVariable("imageId") Long imageId) {
         try {
             if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
                 throw new BadRequestException();
@@ -121,7 +121,7 @@ public class ProductImageController extends BaseController {
 
     @PostMapping(value = "/change-image/{imageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<FileStorage> changeFile(@RequestParam("file") MultipartFile fileUpload, @PathVariable("imageId") Integer imageId) {
+    public AppResponse<FileStorage> changeFile(@RequestParam("file") MultipartFile fileUpload, @PathVariable("imageId") Long imageId) {
         try {
             if (imageId <= 0 || mvFileStorageService.findById(imageId).isEmpty()) {
                 throw new BadRequestException();
@@ -138,7 +138,7 @@ public class ProductImageController extends BaseController {
     @Operation(summary = "Find images of product")
     @GetMapping("{productId}/images")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<List<FileDTO>> getImagesOfProduct(@PathVariable("productId") Integer productId) {
+    public AppResponse<List<FileDTO>> getImagesOfProduct(@PathVariable("productId") Long productId) {
         try {
             List<FileStorage> images = mvProductImageService.getImageOfProduct(productId);
             return success(FileDTO.fromFileStorages(images), 1, 0, 1, images.size());

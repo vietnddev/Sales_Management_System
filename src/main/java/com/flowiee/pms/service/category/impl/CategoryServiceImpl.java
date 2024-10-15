@@ -37,7 +37,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
-    public Optional<Category> findById(Integer entityId) {
+    public Optional<Category> findById(Long entityId) {
         return mvCategoryRepository.findById(entityId);
     }
 
@@ -53,7 +53,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Transactional
     @Override
-    public Category update(Category inputCategory, Integer categoryId) {
+    public Category update(Category inputCategory, Long categoryId) {
         Optional<Category> categoryOptional = this.findById(categoryId);
         if (categoryOptional.isEmpty()) {
             throw new BadRequestException();
@@ -77,7 +77,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Transactional
     @Override
-    public String delete(Integer categoryId) {
+    public String delete(Long categoryId) {
         Optional<Category> categoryToDelete = this.findById(categoryId);
         if (categoryToDelete.isEmpty()) {
             throw new ResourceNotFoundException("Category not found!");
@@ -111,7 +111,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
-    public Page<Category> findSubCategory(CategoryType categoryType, Integer parentId, List<Integer> ignoreIds, int pageSize, int pageNum) {
+    public Page<Category> findSubCategory(CategoryType categoryType, Long parentId, List<Long> ignoreIds, int pageSize, int pageNum) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
@@ -155,7 +155,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
-    public List<Category> findOrderStatus(Integer ignoreId) {
+    public List<Category> findOrderStatus(Long ignoreId) {
         return findSubCategory(CategoryType.ORDER_STATUS, null, ignoreId != null ? List.of(ignoreId) : null, -1, -1).getContent();
     }
 
@@ -175,7 +175,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
 
     @Override
-    public boolean categoryInUse(Integer categoryId) {
+    public boolean categoryInUse(Long categoryId) {
         Optional<Category> category = this.findById(categoryId);
         if (category.isEmpty()) {
             throw new BadRequestException("Category not found!");

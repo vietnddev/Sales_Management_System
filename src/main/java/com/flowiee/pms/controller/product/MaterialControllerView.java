@@ -47,7 +47,7 @@ public class MaterialControllerView extends BaseController {
     @PostMapping("/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateMaterial(true)")
     public ModelAndView update(@ModelAttribute("material") Material material,
-                                               @PathVariable("id") Integer materialId,
+                                               @PathVariable("id") Long materialId,
                                                HttpServletRequest request) {
         if (mvMaterialService.findById(materialId).isEmpty()) {
             throw new ResourceNotFoundException("Material not found!");
@@ -58,7 +58,7 @@ public class MaterialControllerView extends BaseController {
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteMaterial(true)")
-    public ModelAndView delete(@PathVariable("id") Integer materialId, HttpServletRequest request) {
+    public ModelAndView delete(@PathVariable("id") Long materialId, HttpServletRequest request) {
         mvMaterialService.delete(materialId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }

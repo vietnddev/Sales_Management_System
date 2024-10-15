@@ -27,7 +27,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
     }
 
     @Override
-    public List<Notification> findAllByReceiveId(Integer pageSize, Integer pageNum, Integer totalRecord, Integer accountId) {
+    public List<Notification> findAllByReceiveId(Integer pageSize, Integer pageNum, Integer totalRecord, Long accountId) {
         if (totalRecord != null) {
             return mvNotificationRepository.findLimitByReceiveId(accountId, totalRecord);
         }
@@ -35,12 +35,12 @@ public class NotificationServiceImpl extends BaseService implements Notification
     }
 
     @Override
-    public List<Notification> findLimitByReceiveId(Integer accountId, Integer limit) {
+    public List<Notification> findLimitByReceiveId(Long accountId, Integer limit) {
         return mvNotificationRepository.findLimitByReceiveId(accountId, limit);
     }
 
     @Override
-    public Optional<Notification> findById(Integer notificationId) {
+    public Optional<Notification> findById(Long notificationId) {
         return mvNotificationRepository.findById(notificationId);
     }
 
@@ -55,7 +55,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
     }
 
     @Override
-    public Notification update(Notification entity, Integer entityId) {
+    public Notification update(Notification entity, Long entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
@@ -64,7 +64,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         Optional<Notification> notification = this.findById(entityId);
         if (notification.isEmpty()) {
             throw new BadRequestException();

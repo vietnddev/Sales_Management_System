@@ -42,7 +42,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     }
 
     @Override
-    public Optional<FileStorage> findById(Integer fileId) {
+    public Optional<FileStorage> findById(Long fileId) {
         return mvFileRepository.findById(fileId);
     }
 
@@ -63,7 +63,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     }
 
     @Override
-    public FileStorage update(FileStorage entity, Integer entityId) {
+    public FileStorage update(FileStorage entity, Long entityId) {
         return null;
     }
 
@@ -83,7 +83,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     }
 
     @Override
-    public String delete(Integer fileId) {
+    public String delete(Long fileId) {
         Optional<FileStorage> fileStorage = mvFileRepository.findById(fileId);
         if (fileStorage.isEmpty()) {
             throw new BadRequestException("File not found!");

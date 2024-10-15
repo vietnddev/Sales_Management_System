@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 public interface CategoryService extends BaseCurdService<Category> {
     List<Category> findRootCategory();
 
-    Page<Category> findSubCategory(CategoryType categoryType, Integer parentId, List<Integer> ignoreIds, int pageSize, int pageNum);
+    Page<Category> findSubCategory(CategoryType categoryType, Long parentId, List<Long> ignoreIds, int pageSize, int pageNum);
 
     List<Category> findUnits();
 
@@ -23,7 +23,7 @@ public interface CategoryService extends BaseCurdService<Category> {
 
     List<Category> findPaymentMethods();
 
-    List<Category> findOrderStatus(Integer ignoreId);
+    List<Category> findOrderStatus(Long ignoreId);
 
     List<Category> findLedgerGroupObjects();
 
@@ -31,5 +31,5 @@ public interface CategoryService extends BaseCurdService<Category> {
 
     List<Category> findLedgerPaymentTypes();
 
-    boolean categoryInUse(Integer categoryId);
+    boolean categoryInUse(Long categoryId);
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface FileStorageRepository extends JpaRepository<FileStorage, Integer> {
+public interface FileStorageRepository extends JpaRepository<FileStorage, Long> {
     @Query("from FileStorage f " +
            "where 1=1 " +
            "and (:module is null or f.module=:module) " +
@@ -21,8 +21,8 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Intege
            "and (:productVariantId is null or f.productDetail.id=:productVariantId) " +
            "order by f.createdAt")
     List<FileStorage> findAllImages(@Param("module") String module,
-                                    @Param("productId") Integer productId,
-                                    @Param("productVariantId") Integer productVariantId);
+                                    @Param("productId") Long productId,
+                                    @Param("productVariantId") Long productVariantId);
 
     @Query("from FileStorage f " +
            "where 1=1 " +
@@ -30,11 +30,11 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Intege
            "and (:productVariantId is null or f.productDetail.id=:productVariantId) " +
            "and f.isActive is true " +
            "order by f.createdAt")
-    FileStorage findActiveImage(@Param("productId") Integer productId, @Param("productVariantId") Integer productVariantId);
+    FileStorage findActiveImage(@Param("productId") Long productId, @Param("productVariantId") Long productVariantId);
 
     @Query("from FileStorage f where f.createdAt=:createdTime")
     FileStorage findByCreatedTime(@Param("createdTime") LocalDateTime createdTime);
 
     @Query("from FileStorage f where f.order.id=:orderId")
-    FileStorage findQRCodeOfOrder(@Param("orderId") Integer orderId);
+    FileStorage findQRCodeOfOrder(@Param("orderId") Long orderId);
 }

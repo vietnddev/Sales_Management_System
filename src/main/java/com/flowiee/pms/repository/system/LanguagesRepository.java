@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.flowiee.pms.entity.system.Language;
 
 @Repository
-public interface LanguagesRepository extends JpaRepository<Language, Integer> {	
+public interface LanguagesRepository extends JpaRepository<Language, Long> {
 	List<Language> findByCode(String code);	
 }

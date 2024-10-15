@@ -10,9 +10,9 @@ import com.flowiee.pms.entity.product.MaterialHistory;
 import java.util.List;
 
 @Repository
-public interface MaterialHistoryRepository extends JpaRepository<MaterialHistory, Integer> {
+public interface MaterialHistoryRepository extends JpaRepository<MaterialHistory, Long> {
     @Query("from MaterialHistory m where m.material.id=:materialId")
-    List<MaterialHistory> findByMaterialId(@Param("materialId") Integer materialId);
+    List<MaterialHistory> findByMaterialId(@Param("materialId") Long materialId);
 
     @Query("from MaterialHistory m where m.fieldName=:fieldName")
     List<MaterialHistory> findByFieldName(@Param("fieldName") String fieldName);

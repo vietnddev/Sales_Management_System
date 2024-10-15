@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface LedgerTransactionRepository extends JpaRepository<LedgerTransaction, Integer> {
+public interface LedgerTransactionRepository extends JpaRepository<LedgerTransaction, Long> {
     @Query("from LedgerTransaction t " +
            "where 1=1 " +
            "and (:type is null or t.tranType=:type) " +
@@ -21,7 +21,7 @@ public interface LedgerTransactionRepository extends JpaRepository<LedgerTransac
     Page<LedgerTransaction> findAll(@Param("type") String type, @Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate, Pageable pageable);
 
     @Query(value = "select tran_index from ledger_transaction where tran_type = :type order by id desc fetch first 1 rows only", nativeQuery = true)
-    Integer findLastIndex(@Param("type") String type);
+    Long findLastIndex(@Param("type") String type);
 
     @Query("select nvl(sum((case when t.tranType = 'PT' then t.amount else 0 end) - (case when t.tranType = 'PC' then t.amount else 0 end)), 0) as beginBal " +
            "from LedgerTransaction t " +

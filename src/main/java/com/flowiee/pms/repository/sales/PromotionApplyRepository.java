@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PromotionApplyRepository extends JpaRepository<PromotionApply, Integer> {
+public interface PromotionApplyRepository extends JpaRepository<PromotionApply, Long> {
     @Query("select " +
             "pa.id as promotion_apply_id_0, " +
             "vi.id as promotion_info_id_1, " +
@@ -24,8 +24,8 @@ public interface PromotionApplyRepository extends JpaRepository<PromotionApply, 
             "where 1=1" +
             "and (:productId is null or pa.productId=:productId) " +
             "and (:promotionId is null or pa.promotionId=:promotionId) ")
-    List<Object[]> findAll(@Param("productId") Integer productId, @Param("promotionId") Integer promotionId);
+    List<Object[]> findAll(@Param("productId") Long productId, @Param("promotionId") Long promotionId);
 
     @Query("from PromotionApply where promotionId=:promotionId")
-    List<PromotionApply> findByPromotionId(@Param("promotionId") Integer promotionId);
+    List<PromotionApply> findByPromotionId(@Param("promotionId") Long promotionId);
 }

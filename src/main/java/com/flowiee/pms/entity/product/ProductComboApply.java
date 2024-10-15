@@ -25,10 +25,10 @@ public class ProductComboApply extends BaseEntity implements Serializable {
     static final long serialVersionUID = 1L;
 
     @Column(name = "product_variant_id", nullable = false)
-    Integer productVariantId;
+    Long productVariantId;
 
     @Column(name = "combo_id", nullable = false)
-    Integer comboId;
+    Long comboId;
 
     @Override
     public String toString() {

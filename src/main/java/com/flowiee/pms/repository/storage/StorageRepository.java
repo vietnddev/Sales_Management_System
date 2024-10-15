@@ -9,11 +9,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StorageRepository extends JpaRepository<Storage, Integer> {
+public interface StorageRepository extends JpaRepository<Storage, Long> {
     @Query(value = "select * from VW_STORAGE_ITEMS " +
                    "where 1=1 " +
                    "and (:searchText is null or NAME like %:searchText%) " +
                    "and (:storageId is null or STORAGE_ID = :storageId) " +
                    "order by IS_PRODUCT desc", nativeQuery = true)
-    Page<Object[]> findAllItems(@Param("searchText") String searchText, @Param("storageId") Integer storageId, Pageable pageable);
+    Page<Object[]> findAllItems(@Param("searchText") String searchText, @Param("storageId") Long storageId, Pageable pageable);
 }

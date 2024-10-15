@@ -7,7 +7,7 @@ import com.flowiee.pms.entity.sales.OrderDetail;
 import java.util.List;
 
 public interface OrderItemsService extends BaseCurdService<OrderDetail> {
-    List<OrderDetail> findByOrderId(Integer pOrderId);
+    List<OrderDetail> findByOrderId(Long pOrderId);
 
     List<OrderDetail> save(OrderDTO orderDto, List<String> productVariantIds);
 }

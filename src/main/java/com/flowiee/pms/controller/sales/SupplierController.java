@@ -57,14 +57,14 @@ public class SupplierController extends BaseController {
     @Operation(summary = "Cập nhật nhà cung cấp")
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.updateSupplier(true)")
-    public AppResponse<Supplier> updateSupplier(@RequestBody Supplier supplier, @PathVariable("id") Integer supplierId) {
+    public AppResponse<Supplier> updateSupplier(@RequestBody Supplier supplier, @PathVariable("id") Long supplierId) {
         return success(mvSupplierService.update(supplier, supplierId));
     }
 
     @Operation(summary = "Xóa nhà cung cấp")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteSupplier(true)")
-    public AppResponse<String> deleteSupplier(@PathVariable("id") Integer supplierId) {
+    public AppResponse<String> deleteSupplier(@PathVariable("id") Long supplierId) {
         return success(mvSupplierService.delete(supplierId));
     }
 }

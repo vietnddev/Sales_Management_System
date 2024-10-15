@@ -134,7 +134,7 @@ public class Order extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	List<FileStorage> listImageQR;
 
-	public Order(int id) {
+	public Order(long id) {
 		super.id = id;
 	}
 

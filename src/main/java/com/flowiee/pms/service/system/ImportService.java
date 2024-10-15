@@ -8,5 +8,5 @@ import java.util.List;
 public interface ImportService extends BaseCurdService<FileImportHistory> {
     List<FileImportHistory> findAll();
 
-    List<FileImportHistory> findByAccountId(Integer accountId);
+    List<FileImportHistory> findByAccountId(Long accountId);
 }

@@ -31,7 +31,7 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
     }
 
     @Override
-    public Optional<ProductHistory> findById(Integer productHistoryId) {
+    public Optional<ProductHistory> findById(Long productHistoryId) {
         return mvProductHistoryRepository.findById(productHistoryId);
     }
 
@@ -41,24 +41,24 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
     }
 
     @Override
-    public ProductHistory update(ProductHistory productHistory, Integer productHistoryId) {
+    public ProductHistory update(ProductHistory productHistory, Long productHistoryId) {
         productHistory.setId(productHistoryId);
         return mvProductHistoryRepository.save(productHistory);
     }
 
     @Override
-    public String delete(Integer productHistoryId) {
+    public String delete(Long productHistoryId) {
         mvProductHistoryRepository.deleteById(productHistoryId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
     @Override
-    public List<ProductHistory> findByProduct(Integer productId) {
+    public List<ProductHistory> findByProduct(Long productId) {
         return mvProductHistoryRepository.findByProductId(productId);
     }
 
     @Override
-    public List<ProductHistory> findPriceChange(Integer productDetailId) {
+    public List<ProductHistory> findPriceChange(Long productDetailId) {
         List<ProductHistory> prices =  mvProductHistoryRepository.findHistoryChangeOfProductDetail(productDetailId, "PRICE");
         for (ProductHistory priceChange : prices) {
             if (priceChange.getProduct() != null) {
@@ -72,7 +72,7 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
     }
 
     @Override
-    public List<ProductHistory> save(Map<String, Object[]> logChanges, String title, Integer productBaseId, Integer productVariantId, Integer productAttributeId) {
+    public List<ProductHistory> save(Map<String, Object[]> logChanges, String title, Long productBaseId, Long productVariantId, Long productAttributeId) {
         List<ProductHistory> logSaved = new ArrayList<>();
         for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
             String field = entry.getKey();

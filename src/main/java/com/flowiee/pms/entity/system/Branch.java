@@ -45,7 +45,7 @@ public class Branch extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "branch", fetch = FetchType.LAZY)
     List<Account> listAccount;
 
-    public Branch(Integer id, String branchCode, String branchName) {
+    public Branch(Long id, String branchCode, String branchName) {
         this.id = id;
         this.branchCode = branchCode;
         this.branchName = branchName;

@@ -23,7 +23,7 @@ public class OrderCart extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "orderCart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Items> listItems;
 
-	public OrderCart(int id) {
+	public OrderCart(long id) {
 		super.id = id;
 	}
 

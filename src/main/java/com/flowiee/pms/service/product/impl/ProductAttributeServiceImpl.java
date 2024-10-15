@@ -38,7 +38,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     }
 
     @Override
-    public Page<ProductAttribute> findAll(int pageSize, int pageNum, Integer pProductDetailId) {
+    public Page<ProductAttribute> findAll(int pageSize, int pageNum, Long pProductDetailId) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("sort"));
@@ -47,7 +47,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     }
 
     @Override
-    public Optional<ProductAttribute> findById(Integer attributeId) {
+    public Optional<ProductAttribute> findById(Long attributeId) {
         return mvProductAttributeRepository.findById(attributeId);
     }
 
@@ -59,7 +59,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     }
 
     @Override
-    public ProductAttribute update(ProductAttribute attribute, Integer attributeId) {
+    public ProductAttribute update(ProductAttribute attribute, Long attributeId) {
         Optional<ProductAttribute> attributeOptional = this.findById(attributeId);
         if (attributeOptional.isEmpty()) {
             throw new BadRequestException();
@@ -77,7 +77,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     }
 
     @Override
-    public String delete(Integer attributeId) {
+    public String delete(Long attributeId) {
         Optional<ProductAttribute> attributeToDelete = this.findById(attributeId);
         if (attributeToDelete.isEmpty()) {
             throw new ResourceNotFoundException("Product attribute not found!");

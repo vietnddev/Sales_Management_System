@@ -23,10 +23,10 @@ public class VoucherApply extends BaseEntity implements Serializable {
 	static final long serialVersionUID = 1L;
 
 	@Column(name = "product_id", nullable = false)
-    Integer productId;
+	Long productId;
 
     @Column(name = "voucher_id", nullable = false)
-    Integer voucherId;
+	Long voucherId;
 
 	@Override
 	public String toString() {

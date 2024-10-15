@@ -20,12 +20,12 @@ public class ProductStatisticsServiceImpl extends BaseService implements Product
     }
 
     @Override
-    public Integer findProductVariantTotalQtySell(Integer productId) {
+    public Integer findProductVariantTotalQtySell(Long productId) {
         return mvProductVariantRepository.findTotalQtySell(productId);
     }
 
     @Override
-    public Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId) {
+    public Integer findProductVariantQuantityBySizeOfEachColor(Long productId, Long colorId, Long sizeId) {
         try {
             return mvProductVariantRepository.findQuantityBySizeOfEachColor(productId, colorId, sizeId);
         } catch (RuntimeException ex) {

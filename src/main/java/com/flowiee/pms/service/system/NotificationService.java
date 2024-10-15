@@ -6,7 +6,7 @@ import com.flowiee.pms.entity.system.Notification;
 import java.util.List;
 
 public interface NotificationService extends BaseCurdService<Notification> {
-    List<Notification> findAllByReceiveId(Integer pageSize, Integer pageNum, Integer totalRecord, Integer accountId);
+    List<Notification> findAllByReceiveId(Integer pageSize, Integer pageNum, Integer totalRecord, Long accountId);
 
-    List<Notification> findLimitByReceiveId(Integer accountId, Integer limit);
+    List<Notification> findLimitByReceiveId(Long accountId, Integer limit);
 }

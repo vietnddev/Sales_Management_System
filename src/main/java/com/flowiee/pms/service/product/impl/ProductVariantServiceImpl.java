@@ -61,7 +61,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     }
 
     @Override
-    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Integer pProductId, Integer pTicketImport, Integer pColor, Integer pSize, Integer pFabricType, Boolean pAvailableForSales) {
+    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Long pProductId, Long pTicketImport, Long pColor, Long pSize, Long pFabricType, Boolean pAvailableForSales) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize);
@@ -76,7 +76,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     }
 
     @Override
-    public Optional<ProductVariantDTO> findById(Integer pProductVariantId) {
+    public Optional<ProductVariantDTO> findById(Long pProductVariantId) {
         Optional<ProductDetail> productVariant = mvProductVariantRepository.findById(pProductVariantId);
         if (productVariant.isPresent()) {
             ProductVariantDTO dto = ProductVariantConvert.entityToDTO(productVariant.get());
@@ -159,7 +159,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Transactional
     @Override
-    public ProductVariantDTO update(ProductVariantDTO productDetail, Integer productVariantId) {
+    public ProductVariantDTO update(ProductVariantDTO productDetail, Long productVariantId) {
         Optional<ProductDetail> productVariantOptional = mvProductVariantRepository.findById(productVariantId);
         if (productVariantOptional.isEmpty()) {
             throw new BadRequestException();
@@ -207,7 +207,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     }
 
     @Override
-    public String delete(Integer productVariantId) {
+    public String delete(Long productVariantId) {
         Optional<ProductVariantDTO> productDetailToDelete = this.findById(productVariantId);
         if (productDetailToDelete.isEmpty()) {
             throw new ResourceNotFoundException("Product variant not found!");
@@ -223,13 +223,13 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     }
 
     @Override
-    public boolean isProductVariantExists(int productId, int colorId, int sizeId, int fabricTypeId) {
+    public boolean isProductVariantExists(long productId, long colorId, long sizeId, long fabricTypeId) {
         ProductDetail productDetail = mvProductVariantRepository.findByColorAndSize(productId, colorId, sizeId, fabricTypeId);
         return ObjectUtils.isNotEmpty(productDetail);
     }
 
     @Override
-    public List<ProductVariantTempDTO> findStorageHistory(Integer productVariantId) {
+    public List<ProductVariantTempDTO> findStorageHistory(Long productVariantId) {
         List<ProductVariantTemp> storageHistory = mvProductVariantTempRepository.findByProductVariantId(productVariantId);
         List<ProductVariantTempDTO> storageHistoryDTOs = ProductVariantTempDTO.convertToDTOs(storageHistory);
         if (ObjectUtils.isEmpty(storageHistoryDTOs)) {

@@ -98,4 +98,20 @@ public class BaseController extends BaseAuthorize {
 	protected static <T> AppResponse<T> fail(@NonNull HttpStatus httpStatus, @NonNull String message) {
 		return new AppResponse<>(false, httpStatus, message, null, null);
 	}
+
+	protected static <T> AppResponse<T> badRequest(String message) {
+		return new AppResponse<>(false, HttpStatus.BAD_REQUEST, message, null, null);
+	}
+
+	protected static <T> AppResponse<T> internalServer(String message) {
+		return new AppResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, message, null, null);
+	}
+
+	protected static <T> AppResponse<T> internalServer(String message, Throwable trace) {
+		if (trace == null) {
+			return internalServer(message);
+		}
+		trace.printStackTrace();
+		return new AppResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, message, null, null);
+	}
 }

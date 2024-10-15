@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface MaterialHistoryService extends BaseCurdService<MaterialHistory> {
-    List<MaterialHistory> findByMaterialId(Integer materialId);
+    List<MaterialHistory> findByMaterialId(Long materialId);
 
     List<MaterialHistory> findByFieldName(String action);
 
-    List<MaterialHistory> save(Map<String, Object[]> logChanges, String title, Integer materialId);
+    List<MaterialHistory> save(Map<String, Object[]> logChanges, String title, Long materialId);
 }

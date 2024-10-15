@@ -35,7 +35,7 @@ public class TicketExportControllerView extends BaseController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
-    public ModelAndView viewDetail(@PathVariable("id") Integer ticketExportId) {
+    public ModelAndView viewDetail(@PathVariable("id") Long ticketExportId) {
         Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
             throw new ResourceNotFoundException("Ticket export not found!");

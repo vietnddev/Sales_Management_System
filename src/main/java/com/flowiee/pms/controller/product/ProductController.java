@@ -54,11 +54,11 @@ public class ProductController extends BaseController {
     public AppResponse<List<ProductDTO>> findProducts(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                       @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                       @RequestParam(value = "txtSearch", required = false) String txtSearch,
-                                                      @RequestParam(value = "brandId", required = false) Integer pBrand,
-                                                      @RequestParam(value = "productTypeId", required = false) Integer pProductType,
-                                                      @RequestParam(value = "colorId", required = false) Integer pColor,
-                                                      @RequestParam(value = "sizeId", required = false) Integer pSize,
-                                                      @RequestParam(value = "unitId", required = false) Integer pUnit,
+                                                      @RequestParam(value = "brandId", required = false) Long pBrand,
+                                                      @RequestParam(value = "productTypeId", required = false) Long pProductType,
+                                                      @RequestParam(value = "colorId", required = false) Long pColor,
+                                                      @RequestParam(value = "sizeId", required = false) Long pSize,
+                                                      @RequestParam(value = "unitId", required = false) Long pUnit,
                                                       @RequestParam(value = "fullInfo", required = false) Boolean fullInfo) {
         try {
             if (fullInfo != null && !fullInfo) {
@@ -74,7 +74,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Find detail products")
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<ProductDTO> findDetailProduct(@PathVariable("id") Integer productId) {
+    public AppResponse<ProductDTO> findDetailProduct(@PathVariable("id") Long productId) {
         Optional<ProductDTO> product = mvProductInfoService.findById(productId);
         if (product.isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
@@ -96,7 +96,7 @@ public class ProductController extends BaseController {
     @Operation(summary = "Update product")
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
-    public AppResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Integer productId) {
+    public AppResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Long productId) {
         if (mvProductInfoService.findById(productId).isEmpty()) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
@@ -106,14 +106,14 @@ public class ProductController extends BaseController {
     @Operation(summary = "Delete product")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
-    public AppResponse<String> deleteProduct(@PathVariable("id") Integer productId) {
+    public AppResponse<String> deleteProduct(@PathVariable("id") Long productId) {
         return success(mvProductInfoService.delete(productId));
     }
 
     @Operation(summary = "Get histories of product")
     @GetMapping(value = "/{productId}/history")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Integer productId) {
+    public AppResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Long productId) {
         if (ObjectUtils.isEmpty(mvProductInfoService.findById(productId))) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }

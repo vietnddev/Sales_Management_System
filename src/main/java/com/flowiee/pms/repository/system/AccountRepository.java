@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.flowiee.pms.entity.system.Account;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Integer>{
+public interface AccountRepository extends JpaRepository<Account, Long>{
     @Query("from Account a where a.username=:username")
     Account findByUsername(@Param("username") String username);
 }

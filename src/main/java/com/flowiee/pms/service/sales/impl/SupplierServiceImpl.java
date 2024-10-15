@@ -37,7 +37,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     }
 
     @Override
-    public Page<Supplier> findAll(Integer pageSize, Integer pageNum, List<Integer> ignoreIds) {
+    public Page<Supplier> findAll(Integer pageSize, Integer pageNum, List<Long> ignoreIds) {
         Pageable pageable = Pageable.unpaged();
         if ((pageSize != null && pageSize >= 0) || (pageNum != null && pageNum >= 0)) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
@@ -46,7 +46,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     }
 
     @Override
-    public Optional<Supplier> findById(Integer entityId) {
+    public Optional<Supplier> findById(Long entityId) {
         return mvSupplierRepository.findById(entityId);
     }
 
@@ -57,7 +57,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     }
 
     @Override
-    public Supplier update(Supplier entity, Integer entityId) {
+    public Supplier update(Supplier entity, Long entityId) {
         Optional<Supplier> supplierOptional = this.findById(entityId);
         if (supplierOptional.isEmpty()) {
             throw new ResourceNotFoundException("Supplier not found!");
@@ -73,7 +73,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         if (entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }

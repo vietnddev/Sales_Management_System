@@ -61,7 +61,7 @@ public class Storage extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY)
     List<TicketExport> listTicketExports;
 
-    public Storage(Integer id) {
+    public Storage(Long id) {
         this.id = id;
     }
 }

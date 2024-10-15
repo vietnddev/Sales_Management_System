@@ -44,7 +44,7 @@ public class GarmentFactory extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "garmentFactory", fetch = FetchType.LAZY)
     List<ProductDetail> listProductDetail;
 
-    public GarmentFactory(Integer id) {
+    public GarmentFactory(long id) {
         this.id = id;
     }
 

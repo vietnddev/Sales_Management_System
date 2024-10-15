@@ -26,7 +26,7 @@ public class LedgerTransaction extends BaseEntity implements Serializable {
     static final long serialVersionUID = 1L;
 
     @Column(name = "tran_index", nullable = false)
-    Integer tranIndex;
+    Long tranIndex;
 
     @Column(name = "tran_code", nullable = false)
     String tranCode;

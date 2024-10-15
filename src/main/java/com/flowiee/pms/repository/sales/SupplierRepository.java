@@ -12,9 +12,9 @@ import com.flowiee.pms.entity.sales.Supplier;
 import java.util.List;
 
 @Repository
-public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
+public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query("from Supplier s " +
            "where 1=1 " +
            "and (coalesce(:ignoreIds) is null or s.id not in (:ignoreIds))")
-    Page<Supplier> findAll(@Param("ignoreIds") List<Integer> ignoreIds, Pageable pageable);
+    Page<Supplier> findAll(@Param("ignoreIds") List<Long> ignoreIds, Pageable pageable);
 }

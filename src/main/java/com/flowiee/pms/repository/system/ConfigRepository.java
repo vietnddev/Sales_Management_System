@@ -10,7 +10,7 @@ import com.flowiee.pms.entity.system.SystemConfig;
 import java.util.List;
 
 @Repository
-public interface ConfigRepository extends JpaRepository<SystemConfig, Integer> {
+public interface ConfigRepository extends JpaRepository<SystemConfig, Long> {
     @Query("from SystemConfig order by sort")
     List<SystemConfig> findAll();
 

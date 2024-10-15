@@ -53,7 +53,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
     }
 
     @Override
-    public Page<TicketExport> findAll(int pageSize, int pageNum, Integer storageId) {
+    public Page<TicketExport> findAll(int pageSize, int pageNum, Long storageId) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("exportTime").descending());
@@ -70,7 +70,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
     }
 
     @Override
-    public Optional<TicketExport> findById(Integer entityId) {
+    public Optional<TicketExport> findById(Long entityId) {
         Optional<TicketExport> ticketExportOpt = mvTicketExportRepository.findById(entityId);
         if (ticketExportOpt.isEmpty()) {
             return Optional.empty();
@@ -118,7 +118,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 
     @Transactional
     @Override
-    public TicketExport createDraftTicketExport(int storageId, String title, String orderCode) {
+    public TicketExport createDraftTicketExport(long storageId, String title, String orderCode) {
         Order order = null;
         if (ObjectUtils.isNotEmpty(orderCode)) {
             order = mvOrderRepository.findByOrderCode(orderCode);
@@ -156,7 +156,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 
     @Transactional
     @Override
-    public TicketExport update(TicketExport ticket, Integer ticketExportId) {
+    public TicketExport update(TicketExport ticket, Long ticketExportId) {
         ticket.setId(ticketExportId);
         Optional<TicketExport> ticketExportOptional = this.findById(ticketExportId);
         if (ticketExportOptional.isEmpty()) {
@@ -193,7 +193,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
     }
 
     @Override
-    public String delete(Integer ticketExportId) {
+    public String delete(Long ticketExportId) {
         Optional<TicketExport> ticketExportToDelete = this.findById(ticketExportId);
         if (ticketExportToDelete.isEmpty()) {
             throw new ResourceNotFoundException("Ticket export not found!");

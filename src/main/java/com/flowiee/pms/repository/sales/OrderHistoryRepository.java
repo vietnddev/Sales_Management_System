@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderHistoryRepository extends JpaRepository<OrderHistory, Integer> {
+public interface OrderHistoryRepository extends JpaRepository<OrderHistory, Long> {
     @Query("from OrderHistory o where o.order.id=:orderId")
-    List<OrderHistory> findByOrderId(@Param("orderId") Integer orderId);
+    List<OrderHistory> findByOrderId(@Param("orderId") Long orderId);
 
     @Query("from OrderHistory o where o.orderDetail.id=:orderDetailId")
-    List<OrderHistory> findByOrderDetailId(@Param("orderDetailId") Integer orderDetailId);
+    List<OrderHistory> findByOrderDetailId(@Param("orderDetailId") Long orderDetailId);
 }

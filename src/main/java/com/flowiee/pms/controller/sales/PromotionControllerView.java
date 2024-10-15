@@ -32,7 +32,7 @@ public class PromotionControllerView extends BaseController {
 
     @GetMapping(value = "/{promotionId}")
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
-    public ModelAndView findDetail(@PathVariable("promotionId") Integer promotionId) {
+    public ModelAndView findDetail(@PathVariable("promotionId") Long promotionId) {
         Optional<PromotionInfoDTO> promotion = mvPromotionService.findById(promotionId);
         if (promotion.isEmpty()) {
             throw new ResourceNotFoundException("Promotion not found!");

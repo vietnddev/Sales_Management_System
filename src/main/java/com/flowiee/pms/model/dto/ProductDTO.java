@@ -18,11 +18,11 @@ public class ProductDTO extends Product implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer productTypeId;
+    Long productTypeId;
     String productTypeName;
-    Integer brandId;
+    Long brandId;
     String brandName;
-    Integer unitId;
+    Long unitId;
     String unitName;
     String imageActive;
     Integer totalQtySell;

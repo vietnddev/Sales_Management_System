@@ -10,10 +10,10 @@ import com.flowiee.pms.entity.system.Notification;
 import java.util.List;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, Integer> {
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
     @Query("from Notification n where n.receive=:accountId order by n.id desc")
-    List<Notification> findAllByReceiveId(@Param("accountId") Integer accountId);
+    List<Notification> findAllByReceiveId(@Param("accountId") Long accountId);
 
     @Query(value = "select * from notification n where n.receive=:accountId order by n.id desc fetch next :limit row only", nativeQuery = true)
-    List<Notification> findLimitByReceiveId(@Param("accountId") Integer accountId, @Param("limit") Integer limit);
+    List<Notification> findLimitByReceiveId(@Param("accountId") Long accountId, @Param("limit") Integer limit);
 }

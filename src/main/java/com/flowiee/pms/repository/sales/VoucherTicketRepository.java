@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VoucherTicketRepository extends JpaRepository<VoucherTicket, Integer> {
+public interface VoucherTicketRepository extends JpaRepository<VoucherTicket, Long> {
     @Query("from VoucherTicket v where v.voucherInfo.id=:voucherId")
-    Page<VoucherTicket> findByVoucherId(@Param("voucherId") Integer voucherId, Pageable pageable);
+    Page<VoucherTicket> findByVoucherId(@Param("voucherId") Long voucherId, Pageable pageable);
     
     @Query("from VoucherTicket v where v.code=:code")
     VoucherTicket findByCode(@Param("code") String code);

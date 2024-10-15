@@ -6,11 +6,11 @@ import java.util.Optional;
 public interface BaseCurdService<T> {
     List<T> findAll();
 
-    Optional<T> findById(Integer entityId);
+    Optional<T> findById(Long entityId);
 
     T save(T entity);
 
-    T update(T entity, Integer entityId);
+    T update(T entity, Long entityId);
 
-    String delete(Integer entityId);
+    String delete(Long entityId);
 }

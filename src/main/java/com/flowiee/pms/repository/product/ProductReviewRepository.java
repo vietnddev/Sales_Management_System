@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductReviewRepository extends JpaRepository<ProductReview, Integer> {
-    Page<ProductReview> findByProduct(Integer productId, Pageable pageable);
+public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
+    Page<ProductReview> findByProduct(Long productId, Pageable pageable);
 }

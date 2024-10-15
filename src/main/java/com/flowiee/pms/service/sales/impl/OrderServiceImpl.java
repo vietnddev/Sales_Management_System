@@ -56,9 +56,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     }
 
     @Override
-    public Page<OrderDTO> findAll(int pPageSize, int pPageNum, String pTxtSearch, Integer pOrderId, Integer pPaymentMethodId,
-                                  Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId,
-                                  Integer pBranchId, Integer pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
+    public Page<OrderDTO> findAll(int pPageSize, int pPageNum, String pTxtSearch, Long pOrderId, Long pPaymentMethodId,
+                                  Long pOrderStatusId, Long pSalesChannelId, Long pSellerId, Long pCustomerId,
+                                  Long pBranchId, Long pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
         Pageable pageable = Pageable.unpaged();
         if (pPageSize >= 0 && pPageNum >= 0) {
             pageable = PageRequest.of(pPageNum, pPageSize, Sort.by(pSortBy != null ? pSortBy : "orderTime").descending());
@@ -79,7 +79,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     }
 
     @Override
-    public Optional<OrderDTO> findById(Integer orderId) {
+    public Optional<OrderDTO> findById(Long orderId) {
         Optional<Order> orderOptional = mvOrderRepository.findById(orderId);
         if (orderOptional.isEmpty()) {
             return Optional.empty();
@@ -179,7 +179,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     }
 
     @Override
-    public OrderDTO update(OrderDTO dto, Integer id) {
+    public OrderDTO update(OrderDTO dto, Long id) {
         Order orderToUpdate = mvOrderRepository.findById(id).orElse(null);
         if (orderToUpdate == null) {
             throw new ResourceNotFoundException("Order not found!");
@@ -198,7 +198,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     }
 
     @Override
-    public String delete(Integer id) {
+    public String delete(Long id) {
         Optional<OrderDTO> order = this.findById(id);
         if (order.isEmpty()) {
             throw new ResourceNotFoundException("Order not found!");
@@ -214,7 +214,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Transactional
     @Override
-    public String doPay(Integer orderId, LocalDateTime paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote) {
+    public String doPay(Long orderId, LocalDateTime paymentTime, Long paymentMethod, Float paymentAmount, String paymentNote) {
         Optional<OrderDTO> dto = this.findById(orderId);
         if (dto.isEmpty()) {
             throw new ResourceNotFoundException("Order not found!");

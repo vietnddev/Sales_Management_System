@@ -26,7 +26,7 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     PromotionApplyRepository mvPromotionApplyRepository;
 
     @Override
-    public List<PromotionApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
+    public List<PromotionApplyDTO> findAll(Long voucherInfoId , Long productId) {
         return List.of();
     }
 
@@ -36,14 +36,14 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     }
 
     @Override
-    public List<PromotionApplyDTO> findByPromotionId(Integer voucherId) {
+    public List<PromotionApplyDTO> findByPromotionId(Long voucherId) {
         List<PromotionApply> promotionApply = mvPromotionApplyRepository.findByPromotionId(voucherId);
         Type listType = new TypeToken<List<PromotionApplyDTO>>() {}.getType();
         return mvModelMapper.map(promotionApply, listType);
     }
 
     @Override
-    public Optional<PromotionApplyDTO> findById(Integer promotionId) {
+    public Optional<PromotionApplyDTO> findById(Long promotionId) {
         Optional<PromotionApply> promotionApply = mvPromotionApplyRepository.findById(promotionId);
         if (promotionApply.isPresent()) {
             PromotionApplyDTO dto = mvModelMapper.map(promotionApply.get(), PromotionApplyDTO.class);
@@ -60,7 +60,7 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     }
 
     @Override
-    public PromotionApplyDTO update(PromotionApplyDTO PromotionApplyDTO, Integer id) {
+    public PromotionApplyDTO update(PromotionApplyDTO PromotionApplyDTO, Long id) {
         if (this.findById(id).isEmpty()) {
             throw new BadRequestException();
         }
@@ -69,7 +69,7 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         if (this.findById(entityId).isEmpty()) {
             mvPromotionApplyRepository.deleteById(entityId);
         }

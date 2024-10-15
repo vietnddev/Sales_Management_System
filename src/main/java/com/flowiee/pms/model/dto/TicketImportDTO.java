@@ -20,11 +20,11 @@ public class TicketImportDTO extends TicketImport implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer supplierId;
+    Long supplierId;
     String supplierName;
-    Integer paymentMethodId;
+    Long paymentMethodId;
     String paymentMethodName;
-    Integer storageId;
+    Long storageId;
     String storageName;
     List<ProductVariantTemp> listProductVariantTemp;
     List<MaterialTemp> listMaterialTemp;
