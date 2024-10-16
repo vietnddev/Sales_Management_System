@@ -36,7 +36,7 @@ public class TicketImportController extends BaseController {
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public AppResponse<List<TicketImportDTO>> findAll(@RequestParam("pageSize") int pageSize,
                                                       @RequestParam("pageNum") int pageNum,
-                                                      @RequestParam(value = "storageId", required = false) Integer storageId) {
+                                                      @RequestParam(value = "storageId", required = false) Long storageId) {
         try {
             Page<TicketImport> ticketImports = mvTicketImportService.findAll(pageSize, pageNum - 1, null, null, null, null, null, storageId);
             return success(TicketImportDTO.fromTicketImports(ticketImports.getContent()), pageNum, pageSize, ticketImports.getTotalPages(), ticketImports.getTotalElements());
@@ -48,7 +48,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Find detail phiếu nhập")
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<TicketImportDTO> findDetail(@PathVariable("id") Integer ticketImportId) {
+    public AppResponse<TicketImportDTO> findDetail(@PathVariable("id") Long ticketImportId) {
         Optional<TicketImport> ticketImport = mvTicketImportService.findById(ticketImportId);
         if (ticketImport.isEmpty()) {
             throw new ResourceNotFoundException("Ticket import goods not found!");
@@ -70,7 +70,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Thêm mới phiếu nhập hàng")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<TicketImport> createTicket(@RequestParam("storageId") Integer pStorageId, @RequestBody String pTitle) {
+    public AppResponse<TicketImport> createTicket(@RequestParam("storageId") Long pStorageId, @RequestBody String pTitle) {
         TicketImportDTO dto = new TicketImportDTO();
         dto.setTitle(pTitle);
         dto.setStorageId(pStorageId);
@@ -80,7 +80,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Cập nhật phiếu nhập hàng")
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<TicketImportDTO> updateTicket(@RequestBody TicketImportDTO ticketImportDTO, @PathVariable("id") Integer ticketImportId) {
+    public AppResponse<TicketImportDTO> updateTicket(@RequestBody TicketImportDTO ticketImportDTO, @PathVariable("id") Long ticketImportId) {
         try {
             return success(TicketImportDTO.fromTicketImport(mvTicketImportService.update(TicketImport.fromTicketImportDTO(ticketImportDTO), ticketImportId)));
         } catch (RuntimeException ex) {
@@ -91,23 +91,23 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Xóa phiếu nhập hàng")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<String> deleteTicket(@PathVariable("id") Integer ticketImportId) {
+    public AppResponse<String> deleteTicket(@PathVariable("id") Long ticketImportId) {
         return success(mvTicketImportService.delete(ticketImportId));
     }
 
     @Operation(summary = "Add sản phẩm vào phiếu nhập hàng")
     @PostMapping("/{id}/add-product")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<List<ProductVariantTemp>> addProductVariantToTicket(@PathVariable("id") Integer ticketImportId,
-                                                                           @RequestBody List<Integer> productVariantIds) {
+    public AppResponse<List<ProductVariantTemp>> addProductVariantToTicket(@PathVariable("id") Long ticketImportId,
+                                                                           @RequestBody List<Long> productVariantIds) {
         return success(mvTicketImportService.addProductToTicket(ticketImportId, productVariantIds));
     }
 
     @Operation(summary = "Add nguyên vật liệu vào phiếu nhập hàng")
     @PostMapping("/{id}/add-material")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<List<MaterialTemp>> addMaterialToTicket(@PathVariable("id") Integer ticketImportId,
-                                                               @RequestBody List<Integer> materialIds) {
+    public AppResponse<List<MaterialTemp>> addMaterialToTicket(@PathVariable("id") Long ticketImportId,
+                                                               @RequestBody List<Long> materialIds) {
         if (ticketImportId <= 0 || mvTicketImportService.findById(ticketImportId).isEmpty()) {
             throw new BadRequestException("Goods import to add product not found!");
         }

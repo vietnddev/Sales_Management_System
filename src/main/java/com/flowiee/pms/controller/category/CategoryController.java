@@ -39,7 +39,7 @@ public class CategoryController extends BaseController {
     @GetMapping("/{type}")
     @PreAuthorize("@vldModuleCategory.readCategory(true)")
     public AppResponse<List<Category>> findByType(@PathVariable("type") String categoryType,
-                                                  @RequestParam(name = "parentId", required = false) Integer parentId,
+                                                  @RequestParam(name = "parentId", required = false) Long parentId,
                                                   @RequestParam(name = "pageSize", required = false) Integer pageSize,
                                                   @RequestParam(name = "pageNum", required = false) Integer pageNum) {
         try {
@@ -69,7 +69,7 @@ public class CategoryController extends BaseController {
     @Operation(summary = "Update category")
     @PutMapping("/update/{categoryId}")
     @PreAuthorize("@vldModuleCategory.updateCategory(true)")
-    public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Integer categoryId) {
+    public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Long categoryId) {
         if (mvCategoryService.findById(categoryId).isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"));
         }
@@ -84,7 +84,7 @@ public class CategoryController extends BaseController {
     @Operation(summary = "Delete category")
     @DeleteMapping("/delete/{categoryId}")
     @PreAuthorize("@vldModuleCategory.deleteCategory(true)")
-    public AppResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
+    public AppResponse<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         return success(mvCategoryService.delete(categoryId));
     }
 }

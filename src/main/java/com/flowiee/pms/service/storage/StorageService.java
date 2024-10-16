@@ -8,5 +8,5 @@ import org.springframework.data.domain.Page;
 public interface StorageService extends BaseCurdService<StorageDTO> {
     Page<StorageDTO> findAll(int pageSize, int pageNum);
 
-    Page<StorageItems> findStorageItems(int pageSize, int pageNum, Integer storageId, String searchText);
+    Page<StorageItems> findStorageItems(int pageSize, int pageNum, Long storageId, String searchText);
 }

@@ -59,7 +59,7 @@ public class OrderDetail extends BaseEntity implements java.io.Serializable {
 	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<OrderHistory> listOrderHistory;
 
-	public OrderDetail(Integer id) {
+	public OrderDetail(Long id) {
 		this.id = id;
 	}
 }

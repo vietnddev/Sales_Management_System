@@ -17,13 +17,13 @@ public class VoucherApplyDTO implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer voucherApplyId;
-    Integer voucherInfoId;
+    Long voucherApplyId;
+    Long voucherInfoId;
     String voucherInfoTitle;
-    Integer productId;
+    Long productId;
     String productName;
     String appliedAt;
-    Integer appliedBy;
+    Long appliedBy;
     
 	@Override
 	public String toString() {

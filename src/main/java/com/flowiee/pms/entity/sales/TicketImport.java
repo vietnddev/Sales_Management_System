@@ -94,11 +94,11 @@ public class TicketImport extends BaseEntity implements Serializable {
     @Transient
     Integer totalItems;
 
-    public TicketImport(Integer id) {
+    public TicketImport(Long id) {
         super.id = id;
     }
 
-    public TicketImport(Integer id, String title) {
+    public TicketImport(Long id, String title) {
         super.id = id;
         this.title = title;
     }

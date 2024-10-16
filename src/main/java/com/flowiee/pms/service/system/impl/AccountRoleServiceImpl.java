@@ -30,7 +30,7 @@ public class AccountRoleServiceImpl implements RoleService {
     AccountRoleRepository mvAccountRoleRepository;
 
     @Override
-    public List<RoleModel> findAllRoleByAccountId(Integer accountId) {
+    public List<RoleModel> findAllRoleByAccountId(Long accountId) {
         Optional<Account> account = mvAccountRepository.findById(accountId);
         if (account.isEmpty()) {
             return List.of();
@@ -43,7 +43,7 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleModel> findAllRoleByGroupId(Integer groupId) {
+    public List<RoleModel> findAllRoleByGroupId(Long groupId) {
         Optional<GroupAccount> groupAcc = mvGroupAccountService.findById(groupId);
         if (groupAcc.isEmpty()) {
             return List.of();
@@ -69,22 +69,22 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     @Override
-    public AccountRole findById(Integer id) {
+    public AccountRole findById(Long id) {
         return mvAccountRoleRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<AccountRole> findByAccountId(Integer accountId) {
+    public List<AccountRole> findByAccountId(Long accountId) {
         return mvAccountRoleRepository.findByAccountId(accountId);
     }
 
     @Override
-    public List<AccountRole> findByGroupId(Integer accountId) {
+    public List<AccountRole> findByGroupId(Long accountId) {
         return mvAccountRoleRepository.findByGroupId(accountId);
     }
 
     @Override
-    public String updatePermission(String moduleKey, String actionKey, Integer accountId) {
+    public String updatePermission(String moduleKey, String actionKey, Long accountId) {
         mvAccountRoleRepository.save(AccountRole.builder()
                 .module(moduleKey)
                 .action(actionKey)
@@ -94,12 +94,12 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean isAuthorized(int accountId, String module, String action) {
+    public boolean isAuthorized(long accountId, String module, String action) {
         return mvAccountRoleRepository.isAuthorized(null, accountId, module, action) != null;
     }
 
     @Override
-    public String deleteAllRole(Integer groupId, Integer accountId) {
+    public String deleteAllRole(Long groupId, Long accountId) {
         if (groupId == null && accountId == null) {
             throw new IllegalArgumentException("groupId and accountId cannot be null");
         }
@@ -108,7 +108,7 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleModel> updateRightsOfGroup(List<RoleModel> rights, Integer groupId) {
+    public List<RoleModel> updateRightsOfGroup(List<RoleModel> rights, Long groupId) {
         this.deleteAllRole(groupId, null);
         List<RoleModel> list = new ArrayList<>();
         if (ObjectUtils.isEmpty(rights)) {
@@ -136,7 +136,7 @@ public class AccountRoleServiceImpl implements RoleService {
         return mvAccountRoleRepository.findByModuleAndAction(action.getModuleKey(), action.getActionKey());
     }
 
-    private RoleModel initRoleModel(Integer pGroupId, Integer pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
+    private RoleModel initRoleModel(Long pGroupId, Long pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
         return RoleModel.builder()
                 .module(ModuleModel.builder().moduleKey(pModuleKey).moduleLabel(pModuleLabel).build())
                 .action(ActionModel.builder().moduleKey(pModuleKey).actionKey(pActionKey).actionLabel(pActionLabel).build())

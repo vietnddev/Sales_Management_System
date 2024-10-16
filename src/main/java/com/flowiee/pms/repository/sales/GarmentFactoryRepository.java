@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.flowiee.pms.entity.sales.GarmentFactory;
 
 @Repository
-public interface GarmentFactoryRepository extends JpaRepository<GarmentFactory, Integer> {
+public interface GarmentFactoryRepository extends JpaRepository<GarmentFactory, Long> {
 }

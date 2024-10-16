@@ -31,7 +31,7 @@ public class CustomerContactController extends BaseController {
     @Operation(summary = "Find contacts of customer")
     @GetMapping("/{customerId}/contact")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
-    public AppResponse<List<CustomerContact>> findContactsOfCustomer(@PathVariable("customerId") Integer customerId) {
+    public AppResponse<List<CustomerContact>> findContactsOfCustomer(@PathVariable("customerId") Long customerId) {
         try {
             if (customerId <= 0 || mvCustomerService.findById(customerId).isEmpty()) {
                 throw new BadRequestException();
@@ -71,7 +71,7 @@ public class CustomerContactController extends BaseController {
     @Operation(summary = "Update contact")
     @PutMapping("/contact/update/{contactId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public AppResponse<CustomerContact> updateContact(@RequestBody CustomerContact customerContact, @PathVariable("contactId") Integer contactId) {
+    public AppResponse<CustomerContact> updateContact(@RequestBody CustomerContact customerContact, @PathVariable("contactId") Long contactId) {
         try {
             if (customerContact == null || customerContact.getCustomer() == null || mvCustomerContactService.findById(contactId).isEmpty()) {
                 throw new BadRequestException();
@@ -85,16 +85,16 @@ public class CustomerContactController extends BaseController {
     @Operation(summary = "Delete contact")
     @DeleteMapping("/contact/delete/{contactId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public AppResponse<String> deleteContact(@PathVariable("contactId") Integer contactId) {
+    public AppResponse<String> deleteContact(@PathVariable("contactId") Long contactId) {
         return success(mvCustomerContactService.delete(contactId));
     }
 
     @Operation(summary = "Update contact use default")
     @PatchMapping("/contact/use-default/{contactId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public AppResponse<CustomerContact> setContactUseDefault(@RequestParam("customerId") Integer customerId,
+    public AppResponse<CustomerContact> setContactUseDefault(@RequestParam("customerId") Long customerId,
                                                              @RequestParam("contactCode") String contactCode,
-                                                             @PathVariable("contactId") Integer contactId) {
+                                                             @PathVariable("contactId") Long contactId) {
         try {
             if (customerId <= 0 || contactId <= 0 || mvCustomerService.findById(customerId).isEmpty() || mvCustomerContactService.findById(contactId).isEmpty()) {
                 throw new BadRequestException();
@@ -108,7 +108,7 @@ public class CustomerContactController extends BaseController {
     @Operation(summary = "Update contact un-use default")
     @PatchMapping("/contact/undefault/{contactId}")
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
-    public AppResponse<CustomerContact> setContactUnUseDefault(@PathVariable("contactId") Integer contactId) {
+    public AppResponse<CustomerContact> setContactUnUseDefault(@PathVariable("contactId") Long contactId) {
         try {
             if (contactId <= 0 || mvCustomerContactService.findById(contactId).isEmpty()) {
                 throw new BadRequestException();

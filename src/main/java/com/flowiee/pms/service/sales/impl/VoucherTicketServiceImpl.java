@@ -40,7 +40,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
     }
 
     @Override
-    public Page<VoucherTicket> findAll(int pageSize, int pageNum, Integer voucherId) {
+    public Page<VoucherTicket> findAll(int pageSize, int pageNum, Long voucherId) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("id").ascending());
@@ -49,7 +49,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
     }
 
     @Override
-    public Optional<VoucherTicket> findById(Integer voucherTicketId) {
+    public Optional<VoucherTicket> findById(Long voucherTicketId) {
         return mvVoucherTicketRepository.findById(voucherTicketId);
     }
 
@@ -68,7 +68,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
 
     @Transactional
     @Override
-    public VoucherTicket update(VoucherTicket voucherTicket, Integer voucherDetailId) {
+    public VoucherTicket update(VoucherTicket voucherTicket, Long voucherDetailId) {
         if (voucherTicket == null || voucherDetailId == null || voucherDetailId <= 0) {
             throw new BadRequestException();
         }
@@ -77,7 +77,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
     }
 
     @Override
-    public String delete(Integer ticketId) {
+    public String delete(Long ticketId) {
         Optional<VoucherTicket> voucherTicket = this.findById(ticketId);
         if (voucherTicket.isEmpty() || voucherTicket.get().isUsed()) {
             throw new AppException();
@@ -87,7 +87,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
     }
 
     @Override
-    public List<VoucherTicket> findByVoucherId(Integer voucherId) {
+    public List<VoucherTicket> findByVoucherId(Long voucherId) {
         return mvVoucherTicketRepository.findByVoucherId(voucherId, Pageable.unpaged()).getContent();
     }
 

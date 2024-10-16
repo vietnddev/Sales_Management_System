@@ -55,7 +55,7 @@ public class ProductControllerView extends BaseController {
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ModelAndView viewGeneralProduct(@PathVariable("id") Integer productId) {
+    public ModelAndView viewGeneralProduct(@PathVariable("id") Long productId) {
         Optional<ProductDTO> product = mvProductInfoService.findById(productId);
         if (product.isEmpty()) {
             throw new ResourceNotFoundException("Product not found!");
@@ -68,7 +68,7 @@ public class ProductControllerView extends BaseController {
 
     @GetMapping(value = "/variant/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public ModelAndView viewDetailProduct(@PathVariable("id") Integer variantId) {
+    public ModelAndView viewDetailProduct(@PathVariable("id") Long variantId) {
         Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(variantId);
         if (productVariant.isEmpty()) {
             throw new BadRequestException();
@@ -96,7 +96,7 @@ public class ProductControllerView extends BaseController {
     @PostMapping(value = "/attribute/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
-                                               @PathVariable("id") Integer attributeId,
+                                               @PathVariable("id") Long attributeId,
                                                HttpServletRequest request) {
         if (mvProductAttributeService.findById(attributeId).isEmpty()) {
             throw new ResourceNotFoundException("Product attribute not found!");
@@ -108,15 +108,15 @@ public class ProductControllerView extends BaseController {
 
     @DeleteMapping(value = "/attribute/delete/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
-    public ResponseEntity<String> deleteAttribute(@PathVariable("id") Integer attributeId) {
+    public ResponseEntity<String> deleteAttribute(@PathVariable("id") Long attributeId) {
         return ResponseEntity.ok().body(mvProductAttributeService.delete(attributeId));
     }
 
     @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView activeImageOfProductVariant(HttpServletRequest request,
-                                                    @PathVariable("sanPhamBienTheId") Integer productVariantId,
-                                                    @RequestParam("imageId") Integer imageId) {
+                                                    @PathVariable("sanPhamBienTheId") Long productVariantId,
+                                                    @RequestParam("imageId") Long imageId) {
         if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
             throw new ResourceNotFoundException("Product variant or image not found!");
         }

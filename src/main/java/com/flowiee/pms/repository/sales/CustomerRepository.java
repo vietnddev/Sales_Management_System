@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("select distinct c from Customer c " +
            "left join CustomerContact cc on c.id = cc.customer.id " +
            "where (:name is null or c.customerName like %:name%) " +
@@ -38,5 +38,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     @Modifying
     @Query("update Customer c set c.bonusPoints = (c.bonusPoints + :bnsPoints) where c.id = :customerId")
-    void updateBonusPoint(@Param("customerId") int customerId, @Param("bnsPoints") int bonusPoints);
+    void updateBonusPoint(@Param("customerId") Long customerId, @Param("bnsPoints") int bonusPoints);
 }

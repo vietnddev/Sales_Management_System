@@ -24,12 +24,12 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     VoucherApplyRepository mvVoucherApplyRepository;
 
     @Override
-    public List<VoucherApplyDTO> findAll(Integer voucherInfoId , Integer productId) {
-        return this.extractDataQuery(mvVoucherApplyRepository.findAll((Integer) null));
+    public List<VoucherApplyDTO> findAll(Long voucherInfoId , Long productId) {
+        return this.extractDataQuery(mvVoucherApplyRepository.findAll((Long) null));
     }
 
     @Override
-    public List<VoucherApplyDTO> findByProductId(Integer productId) {
+    public List<VoucherApplyDTO> findByProductId(Long productId) {
         return this.extractDataQuery(mvVoucherApplyRepository.findAll(productId));
     }
 
@@ -39,12 +39,12 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public List<VoucherApply> findByVoucherId(Integer voucherId) {
+    public List<VoucherApply> findByVoucherId(Long voucherId) {
         return mvVoucherApplyRepository.findByVoucherId(voucherId);
     }
 
     @Override
-    public Optional<VoucherApply> findById(Integer id) {
+    public Optional<VoucherApply> findById(Long id) {
         return mvVoucherApplyRepository.findById(id);
     }
 
@@ -54,7 +54,7 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public VoucherApply update(VoucherApply voucherApply, Integer id) {
+    public VoucherApply update(VoucherApply voucherApply, Long id) {
         if (this.findById(id).isEmpty()) {
             throw new BadRequestException();
         }
@@ -63,7 +63,7 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         if (this.findById(entityId).isEmpty()) {
             mvVoucherApplyRepository.deleteById(entityId);
         }
@@ -74,13 +74,13 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
         List<VoucherApplyDTO> dataResponse = new ArrayList<>();
         for (Object[] data : objects) {
             dataResponse.add(VoucherApplyDTO.builder()
-                    .voucherApplyId(Integer.parseInt(String.valueOf(data[0])))
-                    .voucherInfoId(Integer.parseInt(String.valueOf(data[1])))
+                    .voucherApplyId(Long.parseLong(String.valueOf(data[0])))
+                    .voucherInfoId(Long.parseLong(String.valueOf(data[1])))
                     .voucherInfoTitle(String.valueOf(data[2]))
-                    .productId(Integer.parseInt(String.valueOf(data[3])))
+                    .productId(Long.parseLong(String.valueOf(data[3])))
                     .productName(String.valueOf(data[4]))
                     .appliedAt((String.valueOf(data[5])).substring(0, 10))
-                    .appliedBy(Integer.parseInt(String.valueOf(data[6])))
+                    .appliedBy(Long.parseLong(String.valueOf(data[6])))
                     .build());
         }
         return dataResponse;

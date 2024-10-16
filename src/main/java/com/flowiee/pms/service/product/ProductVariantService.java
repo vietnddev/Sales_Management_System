@@ -8,9 +8,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProductVariantService extends BaseCurdService<ProductVariantDTO> {
-    Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Integer pProductId, Integer pTicketImport, Integer pColor, Integer pSize, Integer pFabricType, Boolean pAvailableForSales);
+    Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Long pProductId, Long pTicketImport, Long pColor, Long pSize, Long pFabricType, Boolean pAvailableForSales);
 
-    boolean isProductVariantExists(int productId, int colorId, int sizeId, int fabricTypeId);
+    boolean isProductVariantExists(long productId, long colorId, long sizeId, long fabricTypeId);
 
-    List<ProductVariantTempDTO> findStorageHistory(Integer productVariantId);
+    List<ProductVariantTempDTO> findStorageHistory(Long productVariantId);
 }

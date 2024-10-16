@@ -21,9 +21,9 @@ public class FileDTO extends FileStorage implements Serializable{
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer productId;
-    Integer productVariantId;
-    Integer orderId;
+    Long productId;
+    Long productVariantId;
+    Long orderId;
     String name;
     String uploadBy;
     String src;

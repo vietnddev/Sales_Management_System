@@ -75,7 +75,7 @@ public class CartController extends BaseController {
 
     @PostMapping("/ban-hang/cart/item/add")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ModelAndView addItemsToCart(@RequestParam("cartId") Integer cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
+    public ModelAndView addItemsToCart(@RequestParam("cartId") Long cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
         if (cartId <= 0 || mvCartService.findById(cartId).isEmpty()) {
             throw new ResourceNotFoundException("Cart not found!");
         }
@@ -85,9 +85,9 @@ public class CartController extends BaseController {
 
     @PostMapping("/ban-hang/cart/item/update/{itemId}")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ModelAndView updateItemsOfCart(@RequestParam("cartId") Integer cartId,
+    public ModelAndView updateItemsOfCart(@RequestParam("cartId") Long cartId,
                                           @ModelAttribute("items") Items items,
-                                          @PathVariable("itemId") Integer itemId) {
+                                          @PathVariable("itemId") Long itemId) {
         if (mvCartService.findById(cartId).isEmpty()) {
             throw new ResourceNotFoundException("Cart not found!");
         }
@@ -97,7 +97,7 @@ public class CartController extends BaseController {
 
     @PostMapping("/ban-hang/cart/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ModelAndView deleteItemsOfCart(@RequestParam("cartId") Integer cartId, @PathVariable("itemId") Integer itemId) {
+    public ModelAndView deleteItemsOfCart(@RequestParam("cartId") Long cartId, @PathVariable("itemId") Long itemId) {
         if (mvCartService.findById(cartId).isEmpty()) {
             throw new BadRequestException("Sản phẩm cần xóa trong giỏ hàng không tồn tại! cartId=" + cartId + ", itemId=" + itemId);
         }
@@ -107,7 +107,7 @@ public class CartController extends BaseController {
 
     @PostMapping("/ban-hang/cart/{cartId}/reset")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
-    public ModelAndView resetCart(@PathVariable("cartId") Integer cartId) {
+    public ModelAndView resetCart(@PathVariable("cartId") Long cartId) {
         if (mvCartService.findById(cartId).isEmpty()) {
             throw new BadRequestException("Cart not found! cartId=" + cartId);
         }

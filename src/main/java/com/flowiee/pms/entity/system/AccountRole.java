@@ -32,10 +32,10 @@ public class AccountRole extends BaseEntity implements Serializable {
 	String action;
 
 	@Column(name = "account_id")
-	Integer accountId;
+	Long accountId;
 
 	@Column(name = "group_id")
-	Integer groupId;
+	Long groupId;
 
 	@Override
 	public String toString() {

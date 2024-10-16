@@ -12,7 +12,7 @@ import com.flowiee.pms.entity.product.Product;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("select distinct p " +
            "from Product p " +
            "left join ProductDetail pd on pd.product.id = p.id " +
@@ -27,11 +27,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
            "and (:status is null or p.status=:status)")
     Page<Product> findAll(@Param("pid") String pid,
                           @Param("txtSearch") String txtSearch,
-                          @Param("brandId") Integer brandId,
-                          @Param("productTypeId") Integer productTypeId,
-                          @Param("colorId") Integer colorId,
-                          @Param("sizeId") Integer sizeId,
-                          @Param("unitId") Integer unitId,
+                          @Param("brandId") Long brandId,
+                          @Param("productTypeId") Long productTypeId,
+                          @Param("colorId") Long colorId,
+                          @Param("sizeId") Long sizeId,
+                          @Param("unitId") Long unitId,
                           @Param("status") String status,
                           Pageable pageable);
 

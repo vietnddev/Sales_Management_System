@@ -34,7 +34,7 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
     ConfigRepository mvSysConfigRepository;
 
     @Override
-    public Optional<SystemConfig> findById(Integer id) {
+    public Optional<SystemConfig> findById(Long id) {
         return mvSysConfigRepository.findById(id);
     }
 
@@ -44,7 +44,7 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
     }
 
     @Override
-    public SystemConfig update(SystemConfig systemConfig, Integer id) {
+    public SystemConfig update(SystemConfig systemConfig, Long id) {
         Optional<SystemConfig> configOpt = this.findById(id);
         if (configOpt.isEmpty()) {
             throw new BadRequestException();

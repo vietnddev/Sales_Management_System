@@ -45,14 +45,14 @@ public class OrderController extends BaseController {
     @Operation(summary = "Find all orders")
     @GetMapping("/all")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public AppResponse<List<OrderDTO>> findAllOrders(@RequestParam(value = "orderId", required = false) Integer pOrderId,
-                                                     @RequestParam(value = "paymentMethodId", required = false) Integer pPaymentMethodId,
-                                                     @RequestParam(value = "orderStatusId", required = false) Integer pOrderStatusId,
-                                                     @RequestParam(value = "salesChannelId", required = false) Integer pSalesChannelId,
-                                                     @RequestParam(value = "groupCustomerId", required = false) Integer pGroupCustomerId,
-                                                     @RequestParam(value = "sellerId", required = false) Integer pSellerId,
-                                                     @RequestParam(value = "customerId", required = false) Integer pCustomerId,
-                                                     @RequestParam(value = "branchId", required = false) Integer pBranchId,
+    public AppResponse<List<OrderDTO>> findAllOrders(@RequestParam(value = "orderId", required = false) Long pOrderId,
+                                                     @RequestParam(value = "paymentMethodId", required = false) Long pPaymentMethodId,
+                                                     @RequestParam(value = "orderStatusId", required = false) Long pOrderStatusId,
+                                                     @RequestParam(value = "salesChannelId", required = false) Long pSalesChannelId,
+                                                     @RequestParam(value = "groupCustomerId", required = false) Long pGroupCustomerId,
+                                                     @RequestParam(value = "sellerId", required = false) Long pSellerId,
+                                                     @RequestParam(value = "customerId", required = false) Long pCustomerId,
+                                                     @RequestParam(value = "branchId", required = false) Long pBranchId,
                                                      @RequestParam(value = "dateFilter", required = false) String pDateFilter,
                                                      @RequestParam(value = "txtSearch", required = false) String pTxtSearch,
                                                      @RequestParam("pageSize") int pageSize,
@@ -68,7 +68,7 @@ public class OrderController extends BaseController {
     @Operation(summary = "Find detail order")
     @GetMapping("/{orderId}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Integer orderId) {
+    public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Long orderId) {
         Optional<OrderDTO> orderDTO = mvOrderService.findById(orderId);
         if (orderDTO.isEmpty()) {
             throw new ResourceNotFoundException("Order not found!");
@@ -89,22 +89,22 @@ public class OrderController extends BaseController {
     @Operation(summary = "Update order")
     @PutMapping("/update/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public AppResponse<OrderDTO> update(@RequestBody OrderDTO order, @PathVariable("orderId") Integer orderId) {
+    public AppResponse<OrderDTO> update(@RequestBody OrderDTO order, @PathVariable("orderId") Long orderId) {
         return success(mvOrderService.update(order, orderId));
     }
 
     @DeleteMapping("/delete/{orderId}")
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
-    public AppResponse<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
+    public AppResponse<String> deleteOrder(@PathVariable("orderId") Long orderId) {
         //Check them trang thai
         return success(mvOrderService.delete(orderId));
     }
 
     @PutMapping("/do-pay/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public AppResponse<String> doPayOrder(@PathVariable("orderId") Integer orderId,
+    public AppResponse<String> doPayOrder(@PathVariable("orderId") Long orderId,
                                           @RequestParam(value = "paymentTime", required = false) String paymentTime,
-                                          @RequestParam("paymentMethod") Integer paymentMethod,
+                                          @RequestParam("paymentMethod") Long paymentMethod,
                                           @RequestParam("paymentAmount") Float paymentAmount,
                                           @RequestParam(value = "paymentNote", required = false) String paymentNote) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");

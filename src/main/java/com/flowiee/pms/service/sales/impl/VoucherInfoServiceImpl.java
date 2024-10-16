@@ -55,7 +55,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     }
 
     @Override
-    public Page<VoucherInfoDTO> findAll(int pageSize, int pageNum, List<Integer> pIds, String pTitle, LocalDateTime pStartTime, LocalDateTime pEndTime, String pStatus) {
+    public Page<VoucherInfoDTO> findAll(int pageSize, int pageNum, List<Long> pIds, String pTitle, LocalDateTime pStartTime, LocalDateTime pEndTime, String pStatus) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
@@ -79,7 +79,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     }
 
     @Override
-    public Optional<VoucherInfoDTO> findById(Integer entityId) {
+    public Optional<VoucherInfoDTO> findById(Long entityId) {
         Optional<VoucherInfo> voucherInfo = mvVoucherInfoRepository.findById(entityId);
         if (voucherInfo.isPresent()) {
             VoucherInfoDTO dto = mvModelMapper.map(voucherInfo.get(), VoucherInfoDTO.class);
@@ -139,7 +139,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     }
 
     @Override
-    public VoucherInfoDTO update(VoucherInfoDTO voucherInfo, Integer voucherId) {
+    public VoucherInfoDTO update(VoucherInfoDTO voucherInfo, Long voucherId) {
         try {
             Optional<VoucherInfoDTO> voucherOpt = this.findById(voucherId);
             if (voucherOpt.isEmpty()) {
@@ -159,7 +159,7 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     }
 
     @Override
-    public String delete(Integer voucherId) {
+    public String delete(Long voucherId) {
         Optional<VoucherInfoDTO> voucherInfoBefore = this.findById(voucherId);
         if (voucherInfoBefore.isEmpty()) {
             throw new BadRequestException("Voucher not found!");

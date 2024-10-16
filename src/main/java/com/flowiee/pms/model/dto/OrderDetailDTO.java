@@ -20,7 +20,7 @@ public class OrderDetailDTO extends OrderDetail implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer orderId;
+    Long orderId;
     ProductVariantDTO productVariantDTO;
 
     public static OrderDetailDTO fromOrderDetail(OrderDetail d) {

@@ -49,7 +49,7 @@ public class OrderControllerView extends BaseController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public ModelAndView findDonHangDetail(@PathVariable("id") Integer orderId) {
+    public ModelAndView findDonHangDetail(@PathVariable("id") Long orderId) {
         Optional<OrderDTO> orderDetail = mvOrderService.findById(orderId);
         if (orderId <= 0 || orderDetail.isEmpty()) {
             throw new ResourceNotFoundException("Order not found!");
@@ -82,7 +82,7 @@ public class OrderControllerView extends BaseController {
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
-    public ModelAndView delete(@PathVariable("id") Integer orderId) {
+    public ModelAndView delete(@PathVariable("id") Long orderId) {
         mvOrderService.delete(orderId);
         return new ModelAndView("redirect:/order");
     }
@@ -93,7 +93,7 @@ public class OrderControllerView extends BaseController {
     }
 
     @GetMapping("/print-invoice/{id}")
-    public void exportToPDF(@PathVariable("id") Integer orderId, HttpServletResponse response) {
+    public void exportToPDF(@PathVariable("id") Long orderId, HttpServletResponse response) {
         try {
             Optional<OrderDTO> orderDTO = mvOrderService.findById(orderId);
             if (orderDTO.isEmpty()) {
@@ -107,7 +107,7 @@ public class OrderControllerView extends BaseController {
 
     @PostMapping("/{orderId}/item/add")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public ModelAndView addItem(@PathVariable("orderId") int orderId, @RequestParam("productVariantSelectedId") String[] productVariantSelectedId) {
+    public ModelAndView addItem(@PathVariable("orderId") long orderId, @RequestParam("productVariantSelectedId") String[] productVariantSelectedId) {
         Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
@@ -124,7 +124,7 @@ public class OrderControllerView extends BaseController {
 
     @PostMapping("/{orderId}/item/update/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public ModelAndView updateItem(@PathVariable("orderId") int orderId, @PathVariable("itemId") int itemId, @ModelAttribute("items") OrderDetail item) {
+    public ModelAndView updateItem(@PathVariable("orderId") long orderId, @PathVariable("itemId") long itemId, @ModelAttribute("items") OrderDetail item) {
         Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
@@ -141,7 +141,7 @@ public class OrderControllerView extends BaseController {
 
     @PostMapping("/{orderId}/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public ModelAndView deleteItem(@PathVariable("orderId") int orderId, @PathVariable("itemId") int itemId) {
+    public ModelAndView deleteItem(@PathVariable("orderId") long orderId, @PathVariable("itemId") long itemId) {
         Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
         if (orderOpt.isEmpty()) {
             throw new ResourceNotFoundException("Đơn hàng không tồn tại!");

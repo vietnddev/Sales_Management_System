@@ -11,9 +11,9 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface AppImportRepository extends JpaRepository<FileImportHistory, Integer> {
+public interface AppImportRepository extends JpaRepository<FileImportHistory, Long> {
     @Query("from FileImportHistory i where i.account.id=:accountId")
-    List<FileImportHistory> findByAccountId(@Param("accountId") Integer accountId);
+    List<FileImportHistory> findByAccountId(@Param("accountId") long accountId);
 
     @Query("from FileImportHistory i where i.beginTime=:startTime")
     FileImportHistory findByStartTime(@Param("startTime") Date startTime);

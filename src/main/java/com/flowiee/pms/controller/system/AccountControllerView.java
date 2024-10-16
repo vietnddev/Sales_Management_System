@@ -49,7 +49,7 @@ public class AccountControllerView extends BaseController {
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
-    public ModelAndView findDetailAccountById(@PathVariable("id") Integer accountId) {
+    public ModelAndView findDetailAccountById(@PathVariable("id") Long accountId) {
         Optional<Account> account = accountService.findById(accountId);
         if (accountId <= 0 || account.isEmpty()) {
             throw new ResourceNotFoundException("Account not found!");
@@ -79,7 +79,7 @@ public class AccountControllerView extends BaseController {
     @PostMapping(value = "/update/{id}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
     public ModelAndView update(@ModelAttribute("account") Account accountEntity,
-                               @PathVariable("id") Integer accountId,
+                               @PathVariable("id") Long accountId,
                                HttpServletRequest request) {
         if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
             throw new ResourceNotFoundException("Account not found!");
@@ -94,7 +94,7 @@ public class AccountControllerView extends BaseController {
 
     @PostMapping(value = "/delete/{id}")
     @PreAuthorize("@vldModuleSystem.deleteAccount(true)")
-    public ModelAndView deleteAccount(@PathVariable("id") Integer accountId) {
+    public ModelAndView deleteAccount(@PathVariable("id") Long accountId) {
         Optional<Account> account = accountService.findById(accountId);
         if (account.isEmpty()) {
             throw new ResourceNotFoundException("Account not found!");
@@ -106,7 +106,7 @@ public class AccountControllerView extends BaseController {
 
     @PostMapping("/update-permission/{id}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
-    public ModelAndView updatePermission(@PathVariable("id") Integer accountId, HttpServletRequest request) {
+    public ModelAndView updatePermission(@PathVariable("id") Long accountId, HttpServletRequest request) {
         if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
             throw new ResourceNotFoundException("Account not found!");
         }

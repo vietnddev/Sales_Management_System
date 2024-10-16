@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.flowiee.pms.entity.product.ProductAttribute;
 
 @Repository
-public interface ProductAttributeRepository extends JpaRepository<ProductAttribute, Integer> {
+public interface ProductAttributeRepository extends JpaRepository<ProductAttribute, Long> {
     @Query(value = "from ProductAttribute t where t.productDetail.id=:productVariantId order by t.sort asc")
-    Page<ProductAttribute> findByProductVariantId(@Param("productVariantId") Integer productDetailId, Pageable pageable);
+    Page<ProductAttribute> findByProductVariantId(@Param("productVariantId") Long productDetailId, Pageable pageable);
 }

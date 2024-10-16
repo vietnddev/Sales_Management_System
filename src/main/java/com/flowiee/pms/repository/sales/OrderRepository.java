@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select distinct o from Order o " +
            "left join Customer c on c.id = o.customer.id " +
            "left join Category sc on sc.id = o.kenhBanHang.id and sc.type = 'SALES_CHANNEL' " +
@@ -34,14 +34,14 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
            "and (:groupCustomerId is null or 1=1) " +
            "and ((trunc(o.orderTime) >= trunc(:orderTimeFrom)) and (trunc(o.orderTime) <= trunc(:orderTimeTo)))")
     Page<Order> findAll(@Param("txtSearch") String txtSearch,
-                        @Param("orderId") Integer orderId,
-                        @Param("paymentMethodId") Integer paymentMethodId,
-                        @Param("orderStatusId") Integer orderStatusId,
-                        @Param("salesChannelId") Integer salesChannelId,
-                        @Param("sellerId") Integer sellerId,
-                        @Param("customerId") Integer customerId,
-                        @Param("branchId") Integer branchId,
-                        @Param("groupCustomerId") Integer groupCustomerId,
+                        @Param("orderId") Long orderId,
+                        @Param("paymentMethodId") Long paymentMethodId,
+                        @Param("orderStatusId") Long orderStatusId,
+                        @Param("salesChannelId") Long salesChannelId,
+                        @Param("sellerId") Long sellerId,
+                        @Param("customerId") Long customerId,
+                        @Param("branchId") Long branchId,
+                        @Param("groupCustomerId") Long groupCustomerId,
                         @Param("orderTimeFrom") LocalDateTime orderTimeFrom,
                         @Param("orderTimeTo") LocalDateTime orderTimeTo,
                         Pageable pageable);
@@ -57,7 +57,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Modifying
     @Query("update Order set paymentTime=:paymentTime, paymentMethod.id=:paymentMethod, paymentAmount=:paymentAmount, paymentNote=:paymentNote, paymentStatus = true where id=:orderId")
-    void updatePaymentStatus(@Param("orderId") Integer orderId, @Param("paymentTime") LocalDateTime paymentTime, @Param("paymentMethod") Integer paymentMethod, @Param("paymentAmount") Float paymentAmount, @Param("paymentNote") String paymentNote);
+    void updatePaymentStatus(@Param("orderId") Long orderId, @Param("paymentTime") LocalDateTime paymentTime, @Param("paymentMethod") Long paymentMethod, @Param("paymentAmount") Float paymentAmount, @Param("paymentNote") String paymentNote);
 
 //    @Query("select " +
 //           "sum(case when extract(month from o.thoiGianDatHang) = 1 then o.totalAmountDiscount else 0 end) as JAN, " +
@@ -78,10 +78,10 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Modifying
     @Query("update Order set ticketExport.id=:ticketExportId where id=:orderId")
-    void updateTicketExportInfo(@Param("orderId") Integer orderId, @Param("ticketExportId") Integer ticketExportId);
+    void updateTicketExportInfo(@Param("orderId") Long orderId, @Param("ticketExportId") Long ticketExportId);
 
     @Query("from Order where ticketExport.id=:ticketExportId")
-    Order findByTicketExport(@Param("ticketExportId") Integer ticketExportId);
+    Order findByTicketExport(@Param("ticketExportId") Long ticketExportId);
 
     @Query("select " +
            "    extract(year from o.orderTime) AS year, " +
@@ -96,7 +96,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
            "    and (:month is null or (extract(month from o.orderTime) = :month)) " +
            "group by extract(year from o.orderTime), extract(month from o.orderTime) " +
            "order by extract(year from o.orderTime), extract(month from o.orderTime)")
-    List<Object[]> findPurchaseHistory(@Param("customerId") Integer customerId, @Param("year") Integer year, @Param("month") Integer month);
+    List<Object[]> findPurchaseHistory(@Param("customerId") Long customerId, @Param("year") Integer year, @Param("month") Integer month);
 
     @Query("from Order where code = :orderCode")
     Order findByOrderCode(@Param("orderCode") String orderCode);

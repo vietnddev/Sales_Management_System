@@ -57,7 +57,7 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Find detail voucher")
     @GetMapping("/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
-    public AppResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId) {
+    public AppResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Long voucherInfoId) {
         Optional<VoucherInfoDTO> voucherInfoDTO = mvVoucherService.findById(voucherInfoId);
         if (voucherInfoDTO.isEmpty()) {
             throw new ResourceNotFoundException("Voucher not found!");
@@ -78,14 +78,14 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Update voucher")
     @PutMapping("/update/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.updateVoucher(true)")
-    public AppResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfoDTO voucherInfo, @PathVariable("voucherInfoId") Integer voucherInfoId) {
+    public AppResponse<VoucherInfoDTO> updateVoucher(@RequestBody VoucherInfoDTO voucherInfo, @PathVariable("voucherInfoId") Long voucherInfoId) {
         return success(mvVoucherService.update(voucherInfo ,voucherInfoId));
     }
 
     @Operation(summary = "Delete voucher")
     @DeleteMapping("/delete/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.deleteVoucher(true)")
-    public AppResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Integer voucherInfoId) {
+    public AppResponse<String> deleteVoucher(@PathVariable("voucherInfoId") Long voucherInfoId) {
         return success(mvVoucherService.delete(voucherInfoId));
     }
 
@@ -107,7 +107,7 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Get tickets of voucher by voucherId")
     @GetMapping("/{voucherInfoId}/tickets")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
-    public AppResponse<List<VoucherTicket>> getTicketsByVoucherInfo(@PathVariable("voucherInfoId") Integer voucherInfoId,
+    public AppResponse<List<VoucherTicket>> getTicketsByVoucherInfo(@PathVariable("voucherInfoId") Long voucherInfoId,
                                                                     @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                     @RequestParam(value = "pageNum", required = false) Integer pageNum) {
         try {

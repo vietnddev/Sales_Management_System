@@ -74,7 +74,7 @@ public class SystemController extends BaseController {
     @Operation(summary = "Update config")
     @PutMapping("/config/update/{id}")
     @PreAuthorize("@vldModuleSystem.updateConfig(true)")
-    public AppResponse<SystemConfig> updateConfig(@RequestBody SystemConfig config, @PathVariable("id") Integer configId) {
+    public AppResponse<SystemConfig> updateConfig(@RequestBody SystemConfig config, @PathVariable("id") Long configId) {
         return success(configService.update(config, configId));
     }
 

@@ -9,17 +9,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductPriceRepository extends JpaRepository<ProductPrice, Integer> {
+public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long> {
     @Query("from ProductPrice pp " +
            "where 1=1 " +
            "    and (:productBaseId is null or pp.productBase.id = :productBaseId) " +
            "    and (:productVariantId is null or pp.productVariant.id = :productVariantId) " +
            "    and pp.state = 'A'")
-    ProductPrice findPricePresent(@Param("productBaseId") Integer productBaseId, @Param("productVariantId") Integer productVariantId);
+    ProductPrice findPricePresent(@Param("productBaseId") Long productBaseId, @Param("productVariantId") Long productVariantId);
 
     @Query("from ProductPrice pp " +
            "where 1=1 " +
            "    and (:productBaseId is null or pp.productBase.id = :productBaseId) " +
            "    and (:productVariantId is null or pp.productVariant.id = :productVariantId) ")
-    List<ProductPrice> findPrices(@Param("productBaseId") Integer productBaseId, @Param("productVariantId") Integer productVariantId);
+    List<ProductPrice> findPrices(@Param("productBaseId") Long productBaseId, @Param("productVariantId") Long productVariantId);
 }

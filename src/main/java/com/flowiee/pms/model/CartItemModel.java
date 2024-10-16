@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CartItemModel {
-    private Integer cartId;
-    private Integer itemId;
+    private Long cartId;
+    private Long itemId;
     private String itemName;
-    private Integer productComboId;
-    private Integer productVariantId;
+    private Long productComboId;
+    private Long productVariantId;
 }

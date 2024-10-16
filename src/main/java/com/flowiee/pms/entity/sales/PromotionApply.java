@@ -26,10 +26,10 @@ public class PromotionApply extends BaseEntity implements Serializable {
 	static final long serialVersionUID = 1L;
 
 	@Column(name = "product_id", nullable = false)
-    Integer productId;
+	Long productId;
 
     @Column(name = "promotion_id", nullable = false)
-    Integer promotionId;
+	Long promotionId;
 
 	@Override
 	public String toString() {

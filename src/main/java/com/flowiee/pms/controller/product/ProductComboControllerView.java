@@ -32,7 +32,7 @@ public class ProductComboControllerView extends BaseController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
-    public ModelAndView findDetail(@PathVariable("id") Integer productComboId) {
+    public ModelAndView findDetail(@PathVariable("id") Long productComboId) {
         Optional<ProductCombo> productCombo = mvProductComboService.findById(productComboId);
         if (productCombo.isEmpty()) {
             throw new ResourceNotFoundException("Combo not found!");

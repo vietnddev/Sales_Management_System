@@ -39,7 +39,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     }
 
     @Override
-    public Page<Material> findAll(int pageSize, int pageNum, Integer supplierId, Integer unitId, String code, String name, String location, String status) {
+    public Page<Material> findAll(int pageSize, int pageNum, Long supplierId, Long unitId, String code, String name, String location, String status) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
@@ -48,7 +48,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     }
 
     @Override
-    public Optional<Material> findById(Integer entityId) {
+    public Optional<Material> findById(Long entityId) {
         return mvMaterialRepository.findById(entityId);
     }
 
@@ -60,7 +60,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     }
 
     @Override
-    public Material update(Material entity, Integer materialId) {
+    public Material update(Material entity, Long materialId) {
         if (entity == null || materialId == null || materialId <= 0) {
             throw new BadRequestException();
         }
@@ -82,7 +82,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         Optional<Material> materialToDelete = this.findById(entityId);
         if (materialToDelete.isEmpty()) {
             throw new BadRequestException("Material not found!");
@@ -98,7 +98,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
     @Transactional
     @Override
-    public void updateQuantity(Integer quantity, Integer materialId, String type) {
+    public void updateQuantity(Integer quantity, long materialId, String type) {
         String logTitle = "Cập nhật số lượng nguyên vật liệu";
         if ("I".equals(type)) {
             mvMaterialRepository.updateQuantityIncrease(quantity, materialId);

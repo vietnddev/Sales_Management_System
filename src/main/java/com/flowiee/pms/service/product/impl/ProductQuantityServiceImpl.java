@@ -24,17 +24,17 @@ public class ProductQuantityServiceImpl extends BaseService implements ProductQu
 
     @Transactional
     @Override
-    public void updateProductVariantQuantityIncrease(Integer pQuantity, Integer pProductVariantId) {
+    public void updateProductVariantQuantityIncrease(Integer pQuantity, Long pProductVariantId) {
         this.updateProductVariantQuantity(pQuantity, pProductVariantId, "I");
     }
 
     @Transactional
     @Override
-    public void updateProductVariantQuantityDecrease(Integer pQuantity, Integer pProductVariantId) {
+    public void updateProductVariantQuantityDecrease(Integer pQuantity, Long pProductVariantId) {
         this.updateProductVariantQuantity(pQuantity, pProductVariantId, "D");
     }
 
-    private void updateProductVariantQuantity(Integer quantity, Integer productVariantId, String type) {
+    private void updateProductVariantQuantity(Integer quantity, Long productVariantId, String type) {
         try {
             if ("I".equals(type)) {
                 mvProductVariantRepository.updateQuantityIncrease(quantity, productVariantId);

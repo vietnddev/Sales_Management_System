@@ -45,7 +45,7 @@ public class GroupAccountController extends BaseController {
     @Operation(summary = "Find detail group")
     @GetMapping("/{groupId}")
     @PreAuthorize("@vldModuleSystem.readGroupAccount(true)")
-    public AppResponse<GroupAccount> findDetailAccount(@PathVariable("groupId") Integer groupId) {
+    public AppResponse<GroupAccount> findDetailAccount(@PathVariable("groupId") Long groupId) {
         Optional<GroupAccount> groupAcc = groupAccountService.findById(groupId);
         if (groupAcc.isEmpty()) {
             throw new BadRequestException("Group account not found");
@@ -70,21 +70,21 @@ public class GroupAccountController extends BaseController {
     @Operation(summary = "Update group account")
     @PutMapping(value = "/update/{groupId}")
     @PreAuthorize("@vldModuleSystem.updateGroupAccount(true)")
-    public AppResponse<GroupAccount> update(@RequestBody GroupAccount groupAccount, @PathVariable("groupId") Integer groupId) {
+    public AppResponse<GroupAccount> update(@RequestBody GroupAccount groupAccount, @PathVariable("groupId") Long groupId) {
         return success(groupAccountService.update(groupAccount, groupId));
     }
 
     @Operation(summary = "Delete group account")
     @DeleteMapping(value = "/delete/{groupId}")
     @PreAuthorize("@vldModuleSystem.deleteGroupAccount(true)")
-    public AppResponse<String> delete(@PathVariable("groupId") Integer groupId) {
+    public AppResponse<String> delete(@PathVariable("groupId") Long groupId) {
         return success(groupAccountService.delete(groupId));
     }
 
     @Operation(summary = "Find rights of group")
     @GetMapping("/{groupId}/rights")
     @PreAuthorize("@vldModuleSystem.readGroupAccount(true)")
-    public AppResponse<List<RoleModel>> findRights(@PathVariable("groupId") Integer groupId) {
+    public AppResponse<List<RoleModel>> findRights(@PathVariable("groupId") Long groupId) {
         try {
             return success(roleService.findAllRoleByGroupId(groupId));
         } catch (RuntimeException ex) {
@@ -95,7 +95,7 @@ public class GroupAccountController extends BaseController {
     @Operation(summary = "Grant rights to group")
     @PutMapping(value = "/grant-rights/{groupId}")
     @PreAuthorize("@vldModuleSystem.updateGroupAccount(true)")
-    public AppResponse<List<RoleModel>> update(@RequestBody List<RoleModel> rights, @PathVariable("groupId") Integer groupId) {
+    public AppResponse<List<RoleModel>> update(@RequestBody List<RoleModel> rights, @PathVariable("groupId") Long groupId) {
         try {
             if (groupAccountService.findById(groupId).isEmpty()) {
                 throw new BadRequestException("Group not found");

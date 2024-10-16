@@ -9,11 +9,11 @@ import java.util.List;
 public interface CartItemsService extends BaseCurdService<Items> {
     List<CartItemModel> findAllItemsForSales();
 
-    Integer findQuantityOfItem(Integer cartId, Integer productVariantId);
+    Integer findQuantityOfItem(Long cartId, Long productVariantId);
 
-    Items findItemByCartAndProductVariant(Integer cartId, Integer productVariantId);
+    Items findItemByCartAndProductVariant(Long cartId, Long productVariantId);
 
-    void increaseItemQtyInCart(Integer itemId, int quantity);
+    void increaseItemQtyInCart(Long itemId, int quantity);
 
     void deleteAllItems();
 }

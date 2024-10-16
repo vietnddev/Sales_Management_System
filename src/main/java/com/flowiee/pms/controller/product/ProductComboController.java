@@ -39,7 +39,7 @@ public class ProductComboController extends BaseController {
     @Operation(summary = "Find detail combo")
     @GetMapping("/{comboId}")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
-    public AppResponse<ProductCombo> findDetailCombo(@PathVariable("comboId") Integer comboId) {
+    public AppResponse<ProductCombo> findDetailCombo(@PathVariable("comboId") Long comboId) {
         Optional<ProductCombo> productCombo = mvProductComboService.findById(comboId);
         if (productCombo.isEmpty()) {
             throw new BadRequestException("productCombo not found");
@@ -61,7 +61,7 @@ public class ProductComboController extends BaseController {
     @Operation(summary = "Update combo")
     @PutMapping("/update/{comboId}")
     @PreAuthorize("@vldModuleProduct.updateCombo(true)")
-    public AppResponse<ProductCombo> updateProductCombo(@RequestBody ProductCombo productCombo, @PathVariable("comboId") Integer comboId) {
+    public AppResponse<ProductCombo> updateProductCombo(@RequestBody ProductCombo productCombo, @PathVariable("comboId") Long comboId) {
         try {
             return success(mvProductComboService.update(productCombo, comboId));
         } catch (RuntimeException ex) {
@@ -72,7 +72,7 @@ public class ProductComboController extends BaseController {
     @Operation(summary = "Delete product combo")
     @DeleteMapping("/delete/{comboId}")
     @PreAuthorize("@vldModuleProduct.deleteCombo(true)")
-    public AppResponse<String> deleteCombo(@PathVariable("comboId") Integer comboId) {
+    public AppResponse<String> deleteCombo(@PathVariable("comboId") Long comboId) {
         return success(mvProductComboService.delete(comboId));
     }
 }

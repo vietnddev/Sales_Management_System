@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderHistoryService {
-    List<OrderHistory> save(Map<String, Object[]> logChanges, String title, Integer orderId, Integer orderItemId);
+    List<OrderHistory> save(Map<String, Object[]> logChanges, String title, Long orderId, Long orderItemId);
 }

@@ -42,7 +42,7 @@ public class TicketImportControllerView extends BaseController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public ModelAndView viewDetail(@PathVariable("id") Integer ticketImportId) {
+    public ModelAndView viewDetail(@PathVariable("id") Long ticketImportId) {
         Optional<TicketImport> ticketImport = mvTicketImportService.findById(ticketImportId);
         if (ticketImport.isEmpty()) {
             throw new ResourceNotFoundException("Ticket import not found!");
@@ -92,7 +92,7 @@ public class TicketImportControllerView extends BaseController {
 
     @GetMapping("/reset/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public ModelAndView clear(@PathVariable("id") Integer draftImportId) {
+    public ModelAndView clear(@PathVariable("id") Long draftImportId) {
         if (draftImportId <= 0 || mvTicketImportService.findById(draftImportId).isEmpty()) {
             throw new ResourceNotFoundException("Goods import not found!");
         }
@@ -102,7 +102,7 @@ public class TicketImportControllerView extends BaseController {
 
     @PostMapping("/send-approval/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public ModelAndView sendApproval(@PathVariable("id") Integer importId) {
+    public ModelAndView sendApproval(@PathVariable("id") Long importId) {
         if (importId <= 0 || mvTicketImportService.findById(importId).isEmpty()) {
             throw new ResourceNotFoundException("Goods import not found!");
         }
@@ -112,7 +112,7 @@ public class TicketImportControllerView extends BaseController {
 
     @PostMapping("/approve/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public ModelAndView approve(@PathVariable("id") Integer importId) {
+    public ModelAndView approve(@PathVariable("id") Long importId) {
         if (importId <= 0 || mvTicketImportService.findById(importId).isEmpty()) {
             throw new ResourceNotFoundException("Goods import not found!");
         }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.flowiee.pms.entity.system.SystemLog;
 
 @Repository
-public interface SystemLogRepository extends JpaRepository<SystemLog, Integer> {
+public interface SystemLogRepository extends JpaRepository<SystemLog, Long> {
     @Query("from SystemLog s order by s.createdAt desc")
     Page<SystemLog> findAll(Pageable pageable);
 }

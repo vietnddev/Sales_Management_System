@@ -42,7 +42,7 @@ public class ProductAttribute extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "productAttribute", fetch = FetchType.LAZY)
     List<ProductHistory> listProductHistory;
 
-    public ProductAttribute(Integer id) {
+    public ProductAttribute(Long id) {
         this.id = id;
     }
 

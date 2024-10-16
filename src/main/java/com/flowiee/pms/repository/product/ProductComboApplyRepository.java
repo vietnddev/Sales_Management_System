@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductComboApplyRepository extends JpaRepository<ProductComboApply, Integer> {
+public interface ProductComboApplyRepository extends JpaRepository<ProductComboApply, Long> {
     @Query("from ProductComboApply p where p.comboId = :comboId")
-    List<ProductComboApply> findByComboId(@Param("comboId") Integer comboId);
+    List<ProductComboApply> findByComboId(@Param("comboId") Long comboId);
 }

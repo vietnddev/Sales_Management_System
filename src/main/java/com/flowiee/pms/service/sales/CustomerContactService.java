@@ -6,15 +6,15 @@ import com.flowiee.pms.entity.sales.CustomerContact;
 import java.util.List;
 
 public interface CustomerContactService extends BaseCurdService<CustomerContact> {
-    List<CustomerContact> findContacts(Integer customerId);
+    List<CustomerContact> findContacts(Long customerId);
 
-    CustomerContact findContactPhoneUseDefault(Integer customerId);
+    CustomerContact findContactPhoneUseDefault(Long customerId);
 
-    CustomerContact findContactEmailUseDefault(Integer customerId);
+    CustomerContact findContactEmailUseDefault(Long customerId);
 
-    CustomerContact findContactAddressUseDefault(Integer customerId);
+    CustomerContact findContactAddressUseDefault(Long customerId);
 
-    CustomerContact enableContactUseDefault(Integer customerId, String type, Integer contactId);
+    CustomerContact enableContactUseDefault(Long customerId, String type, Long contactId);
 
-    CustomerContact disableContactUnUseDefault(Integer contactId);
+    CustomerContact disableContactUnUseDefault(Long contactId);
 }

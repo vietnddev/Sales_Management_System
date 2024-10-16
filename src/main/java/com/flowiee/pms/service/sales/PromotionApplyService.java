@@ -6,7 +6,7 @@ import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import java.util.List;
 
 public interface PromotionApplyService extends BaseCurdService<PromotionApplyDTO> {
-    List<PromotionApplyDTO> findAll(Integer promotionId , Integer productId);
+    List<PromotionApplyDTO> findAll(Long promotionId , Long productId);
 
-    List<PromotionApplyDTO> findByPromotionId(Integer promotionId);
+    List<PromotionApplyDTO> findByPromotionId(Long promotionId);
 }

@@ -53,13 +53,13 @@ public class ProductHistory extends BaseEntity implements Serializable {
     String newValue;
 
     @Transient
-    Integer productId;
+    Long productId;
 
     @Transient
-    Integer productVariantId;
+    Long productVariantId;
 
     @Transient
-    Integer productAttributeId;
+    Long productAttributeId;
 
 	@Override
 	public String toString() {

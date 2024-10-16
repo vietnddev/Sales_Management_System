@@ -52,12 +52,12 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     }
 
     @Override
-    public Optional<OrderDetail> findById(Integer orderDetailId) {
+    public Optional<OrderDetail> findById(Long orderDetailId) {
         return mvOrderDetailRepository.findById(orderDetailId);
     }
 
     @Override
-    public List<OrderDetail> findByOrderId(Integer orderId) {
+    public List<OrderDetail> findByOrderId(Long orderId) {
         return mvOrderDetailRepository.findByOrderId(orderId);
     }
 
@@ -65,7 +65,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     public List<OrderDetail> save(OrderDTO pOrderDto, List<String> productVariantIds) {
         List<OrderDetail> itemAdded = new ArrayList<>();
         for (String productVariantId : productVariantIds) {
-            Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(Integer.parseInt(productVariantId));
+            Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(Long.parseLong(productVariantId));
             if (productDetail.isPresent()) {
                 OrderDetail orderDetail = mvOrderDetailRepository.findByOrderIdAndProductVariantId(pOrderDto.getId(), productDetail.get().getId());
                 if (orderDetail != null) {
@@ -108,7 +108,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     }
 
     @Override
-    public OrderDetail update(OrderDetail orderDetail, Integer orderDetailId) {
+    public OrderDetail update(OrderDetail orderDetail, Long orderDetailId) {
         try {
             Optional<OrderDetail> orderDetailOpt = this.findById(orderDetailId);
             if (orderDetailOpt.isEmpty()) {
@@ -134,7 +134,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     }
 
     @Override
-    public String delete(Integer orderDetailId) {
+    public String delete(Long orderDetailId) {
         Optional<OrderDetail> orderDetail = this.findById(orderDetailId);
         if (orderDetail.isEmpty()) {
             throw new BadRequestException();

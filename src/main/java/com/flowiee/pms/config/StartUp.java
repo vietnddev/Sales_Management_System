@@ -198,7 +198,7 @@ public class StartUp {
 			category.setStatus(Boolean.parseBoolean(row[3]));
 			category.setIsDefault(row[4]);
 			category.setEndpoint(row[5]);
-			category.setCreatedBy(-1);
+			category.setCreatedBy(-1l);
 			category.setLastUpdatedBy("SA");
 			listCategory.add(category);
 		}
@@ -208,17 +208,17 @@ public class StartUp {
 		csvReader.close();
 		//Init branch
 		Branch branch = new Branch(null, "MAIN", "Trụ sở");
-		branch.setCreatedBy(-1);
+		branch.setCreatedBy(-1l);
 		branch.setLastUpdatedBy("SA");
 		Branch branchSaved = mvBranchRepository.save(branch);
 		//Init group account
 		GroupAccount groupAccountManager = new GroupAccount(null, "MANAGER", "Quản lý cửa hàng");
-		groupAccountManager.setCreatedBy(-1);
+		groupAccountManager.setCreatedBy(-1l);
 		groupAccountManager.setLastUpdatedBy("SA");
 		GroupAccount groupManagerSaved = mvGroupAccountRepository.save(groupAccountManager);
 
 		GroupAccount groupAccountStaff = new GroupAccount(null, "STAFF", "Nhân viên bán hàng");
-		groupAccountStaff.setCreatedBy(-1);
+		groupAccountStaff.setCreatedBy(-1l);
 		groupAccountStaff.setLastUpdatedBy("SA");
 		GroupAccount groupStaffSaved = mvGroupAccountRepository.save(groupAccountStaff);
 		//Init admin account
@@ -231,7 +231,7 @@ public class StartUp {
 		adminAccount.setBranch(branchSaved);
 		adminAccount.setGroupAccount(groupManagerSaved);
 		adminAccount.setStatus(true);
-		adminAccount.setCreatedBy(-1);
+		adminAccount.setCreatedBy(-1l);
 		adminAccount.setLastUpdatedBy("SA");
 		mvAccountRepository.save(adminAccount);
 
@@ -244,7 +244,7 @@ public class StartUp {
 		staffAccount.setBranch(branchSaved);
 		staffAccount.setGroupAccount(groupStaffSaved);
 		staffAccount.setStatus(true);
-		staffAccount.setCreatedBy(-1);
+		staffAccount.setCreatedBy(-1l);
 		staffAccount.setLastUpdatedBy("SA");
 		mvAccountRepository.save(staffAccount);
 		//Init customer
@@ -252,7 +252,7 @@ public class StartUp {
 		customer.setCustomerName("Khách vãng lai");
 		customer.setDateOfBirth(LocalDate.of(2000, 1, 8));
 		customer.setSex(true);
-		customer.setCreatedBy(-1);
+		customer.setCreatedBy(-1l);
 		customer.setLastUpdatedBy("SA");
 		mvCustomerRepository.save(customer);
 
@@ -262,7 +262,7 @@ public class StartUp {
 
 	private SystemConfig initDefaultAudit(ConfigCode code, String name, String value) {
 		SystemConfig systemConfig = new SystemConfig(code, name, value);
-		systemConfig.setCreatedBy(-1);
+		systemConfig.setCreatedBy(-1l);
 		systemConfig.setLastUpdatedBy("SA");
 		return systemConfig;
 	}

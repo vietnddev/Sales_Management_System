@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface ConfigService {
     List<SystemConfig> findAll();
 
-    Optional<SystemConfig> findById(Integer configId);
+    Optional<SystemConfig> findById(Long configId);
 
-    SystemConfig update(SystemConfig systemConfig, Integer configId);
+    SystemConfig update(SystemConfig systemConfig, Long configId);
 
     String refreshApp();
 

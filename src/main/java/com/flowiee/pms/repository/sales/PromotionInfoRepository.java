@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 
 @Repository
-public interface PromotionInfoRepository extends JpaRepository<PromotionInfo, Integer> {
+public interface PromotionInfoRepository extends JpaRepository<PromotionInfo, Long> {
     @Query("from PromotionInfo p " +
             "where 1=1 " +
             "and (:title is null or p.title like %:title%) " +

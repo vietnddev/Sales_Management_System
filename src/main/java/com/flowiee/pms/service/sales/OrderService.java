@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderService extends BaseCurdService<OrderDTO> {
-    Page<OrderDTO> findAll(int pageSize, int pageNum, String pTxtSearch, Integer pOrderId, Integer pPaymentMethodId,
-                           Integer pOrderStatusId, Integer pSalesChannelId, Integer pSellerId, Integer pCustomerId,
-                           Integer pBranchId, Integer pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy);
+    Page<OrderDTO> findAll(int pageSize, int pageNum, String pTxtSearch, Long pOrderId, Long pPaymentMethodId,
+                           Long pOrderStatusId, Long pSalesChannelId, Long pSellerId, Long pCustomerId,
+                           Long pBranchId, Long pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy);
 
-    Optional<OrderDTO> findById(Integer orderId);
+    Optional<OrderDTO> findById(Long orderId);
 
-    String doPay(Integer orderId, LocalDateTime paymentTime, Integer paymentMethod, Float paymentAmount, String paymentNote);
+    String doPay(Long orderId, LocalDateTime paymentTime, Long paymentMethod, Float paymentAmount, String paymentNote);
 
     List<Order> findOrdersToday();
 }

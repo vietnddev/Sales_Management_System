@@ -25,7 +25,7 @@ public class BranchServiceImpl extends BaseService implements BranchService {
     }
 
     @Override
-    public Optional<Branch> findById(Integer branchId) {
+    public Optional<Branch> findById(Long branchId) {
         return mvBranchRepository.findById(branchId);
     }
 
@@ -35,13 +35,13 @@ public class BranchServiceImpl extends BaseService implements BranchService {
     }
 
     @Override
-    public Branch update(Branch branch, Integer branchId) {
+    public Branch update(Branch branch, Long branchId) {
         branch.setId(branchId);
         return mvBranchRepository.save(branch);
     }
 
     @Override
-    public String delete(Integer branchId) {
+    public String delete(Long branchId) {
         mvBranchRepository.deleteById(branchId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

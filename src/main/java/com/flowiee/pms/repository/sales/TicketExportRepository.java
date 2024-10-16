@@ -9,11 +9,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TicketExportRepository extends JpaRepository<TicketExport, Integer> {
+public interface TicketExportRepository extends JpaRepository<TicketExport, Long> {
     @Query("from TicketExport t " +
            "where 1=1 " +
            "and (:storageId is null or t.storage.id=:storageId)")
-    Page<TicketExport> findAll(@Param("storageId") Integer storageId, Pageable pageable);
+    Page<TicketExport> findAll(@Param("storageId") Long storageId, Pageable pageable);
 
 //    @Modifying
 //    @Query("update TicketExport set title=:title, note=:note, status=:status where id=:ticketExportId")

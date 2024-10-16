@@ -92,7 +92,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	}
 
 	@Override
-	public Optional<Account> findById(Integer accountId) {
+	public Optional<Account> findById(Long accountId) {
 		return mvAccountRepository.findById(accountId);
 	}
 
@@ -118,7 +118,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 
 	@Transactional
 	@Override
-	public Account update(Account account, Integer entityId) {
+	public Account update(Account account, Long entityId) {
 		Optional<Account> accountOpt = this.findById(entityId);
 		if (accountOpt.isEmpty()) {
 			throw new ResourceNotFoundException("Account not found!");
@@ -150,7 +150,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 
 	@Transactional
 	@Override
-	public String delete(Integer accountId) {
+	public String delete(Long accountId) {
 		try {
 			Optional<Account> account = mvAccountRepository.findById(accountId);
 			if (account.isPresent()) {

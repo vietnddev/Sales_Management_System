@@ -40,7 +40,7 @@ public class PromotionController extends BaseController {
     @Operation(summary = "Find detail promotion")
     @GetMapping("/{promotionId}")
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
-    public AppResponse<PromotionInfo> findDetailPromotion(@PathVariable("promotionId") Integer promotionId) {
+    public AppResponse<PromotionInfo> findDetailPromotion(@PathVariable("promotionId") Long promotionId) {
         Optional<PromotionInfoDTO> promotion = mvPromotionService.findById(promotionId);
         if (promotion.isEmpty()) {
             throw new BadRequestException("Promotion not found");
@@ -62,14 +62,14 @@ public class PromotionController extends BaseController {
     @Operation(summary = "Update promotion")
     @PutMapping("/update/{promotionId}")
     @PreAuthorize("@vldModuleSales.updatePromotion(true)")
-    public AppResponse<PromotionInfoDTO> updatePromotion(@RequestBody PromotionInfoDTO promotion, @PathVariable("promotionId") Integer promotionId) {
+    public AppResponse<PromotionInfoDTO> updatePromotion(@RequestBody PromotionInfoDTO promotion, @PathVariable("promotionId") Long promotionId) {
         return success(mvPromotionService.update(promotion, promotionId));
     }
 
     @Operation(summary = "Delete promotion")
     @DeleteMapping("/delete/{promotionId}")
     @PreAuthorize("@vldModuleSales.deletePromotion(true)")
-    public AppResponse<String> deletePromotion(@PathVariable("promotionId") Integer promotionId) {
+    public AppResponse<String> deletePromotion(@PathVariable("promotionId") Long promotionId) {
         return success(mvPromotionService.delete(promotionId));
     }
 }

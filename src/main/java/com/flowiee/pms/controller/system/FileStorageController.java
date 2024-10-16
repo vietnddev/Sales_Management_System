@@ -23,7 +23,7 @@ public class FileStorageController extends BaseController {
     @Operation(summary = "Xóa file", description = "Xóa theo id")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<String> delete(@PathVariable("id") Integer fileId) {
+    public AppResponse<String> delete(@PathVariable("id") Long fileId) {
         return success(fileService.delete(fileId));
     }
 }
