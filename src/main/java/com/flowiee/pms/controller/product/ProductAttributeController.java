@@ -36,7 +36,7 @@ public class ProductAttributeController extends BaseController {
     @Operation(summary = "Update product attribute")
     @PutMapping("/attribute/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
-    public AppResponse<ProductAttribute> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Integer productAttributeId) {
+    public AppResponse<ProductAttribute> updateProductAttribute(@RequestBody ProductAttribute productAttribute, @PathVariable("id") Long productAttributeId) {
         try {
             return success(mvProductAttributeService.update(productAttribute, productAttributeId));
         } catch (RuntimeException ex) {
@@ -47,7 +47,7 @@ public class ProductAttributeController extends BaseController {
     @Operation(summary = "Delete product attribute")
     @DeleteMapping("/attribute/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
-    public AppResponse<String> deleteProductAttribute(@PathVariable("id") Integer productAttributeId) {
+    public AppResponse<String> deleteProductAttribute(@PathVariable("id") Long productAttributeId) {
         return success(mvProductAttributeService.delete(productAttributeId));
     }
 }

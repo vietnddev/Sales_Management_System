@@ -38,7 +38,7 @@ public class CartServiceImpl extends BaseService implements CartService {
     ProductPriceRepository mvProductPriceRepository;
 
     @Override
-    public List<OrderCart> findCartByAccountId(Integer accountId) {
+    public List<OrderCart> findCartByAccountId(Long accountId) {
         List<OrderCart> listCart = mvCartRepository.findByAccountId(accountId);
         for (OrderCart cart : listCart) {
             for (Items item : cart.getListItems()) {
@@ -79,7 +79,7 @@ public class CartServiceImpl extends BaseService implements CartService {
     }
 
     @Override
-    public OrderCart update(OrderCart cart, Integer cartId) {
+    public OrderCart update(OrderCart cart, Long cartId) {
         if (this.findById(cartId).isEmpty()) {
             throw new BadRequestException();
         }
@@ -88,7 +88,7 @@ public class CartServiceImpl extends BaseService implements CartService {
     }
 
     @Override
-    public String delete(Integer cartId) {
+    public String delete(Long cartId) {
         if (this.findById(cartId).isEmpty()) {
             throw new BadRequestException();
         }
@@ -98,28 +98,28 @@ public class CartServiceImpl extends BaseService implements CartService {
     }
 
     @Override
-    public Double calTotalAmountWithoutDiscount(int cartId) {
+    public Double calTotalAmountWithoutDiscount(long cartId) {
         return mvCartItemsRepository.calTotalAmountWithoutDiscount(cartId);
     }
 
     @Override
-    public boolean isItemExistsInCart(Integer cartId, Integer productVariantId) {
+    public boolean isItemExistsInCart(Long cartId, Long productVariantId) {
         Items item = mvCartItemsRepository.findByCartAndProductVariant(cartId, productVariantId);
         return item != null;
     }
 
     @Transactional
     @Override
-    public void resetCart(Integer cartId) {
+    public void resetCart(Long cartId) {
         Optional<OrderCart> cartOptional = this.findById(cartId);
         cartOptional.ifPresent(orderCart -> mvCartItemsRepository.deleteAllItems(orderCart.getId()));
     }
 
     @Override
-    public void addItemsToCart(Integer cartId, String[] productVariantIds) {
+    public void addItemsToCart(Long cartId, String[] productVariantIds) {
         List<String> listProductVariantId = Arrays.stream(productVariantIds).toList();
         for (String productVariantId : listProductVariantId) {
-            Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(Integer.parseInt(productVariantId));
+            Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(Long.parseLong(productVariantId));
             if (productVariant.isEmpty()) {
                 continue;
             }
@@ -127,7 +127,7 @@ public class CartServiceImpl extends BaseService implements CartService {
                 Items items = mvCartItemsService.findItemByCartAndProductVariant(cartId, productVariant.get().getId());
                 mvCartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
             } else {
-                ProductPrice productVariantPrice = mvProductPriceRepository.findPricePresent(null, Integer.parseInt(productVariantId));
+                ProductPrice productVariantPrice = mvProductPriceRepository.findPricePresent(null, Long.parseLong(productVariantId));
                 if (productVariantPrice == null) {
                     throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productVariant.get().getVariantName()));
                 }
@@ -147,7 +147,7 @@ public class CartServiceImpl extends BaseService implements CartService {
     }
 
     @Override
-    public void updateItemsOfCart(Items itemToUpdate, Integer itemId) {
+    public void updateItemsOfCart(Items itemToUpdate, Long itemId) {
         Optional<Items> itemOptional = mvCartItemsService.findById(itemId);
         if (itemOptional.isEmpty()) {
             throw new BadRequestException("Item not found!");

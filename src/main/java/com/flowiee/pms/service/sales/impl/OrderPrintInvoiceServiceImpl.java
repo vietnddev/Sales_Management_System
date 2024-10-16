@@ -37,7 +37,7 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
     OrderQRCodeService mvOrderQRCodeService;
 
     @Override
-    public void printInvoicePDF(Integer pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response) {
+    public void printInvoicePDF(Long pOrderId, List<Integer> pOrderIds, boolean isExportAll, HttpServletResponse response) {
         Optional<OrderDTO> dtoOptional = mvOrderService.findById(pOrderId);
         if (dtoOptional.isEmpty()) {
             throw new BadRequestException();

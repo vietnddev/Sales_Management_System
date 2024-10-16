@@ -110,7 +110,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
 
     @Transactional
     @Override
-    public CustomerDTO update(CustomerDTO customer, Integer customerId) {
+    public CustomerDTO update(CustomerDTO customer, Long customerId) {
         if (customer == null || customerId <= 0 || this.findById(customerId).isEmpty()) {
             throw new ResourceNotFoundException("Customer not found!");
         }
@@ -209,7 +209,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     }
 
     @Override
-    public List<PurchaseHistory> findPurchaseHistory(Integer customerId, Integer year, Integer month) {
+    public List<PurchaseHistory> findPurchaseHistory(Long customerId, Integer year, Integer month) {
         List<PurchaseHistory> purchaseHistories = new ArrayList<>();
         if (year == null) {
             year = LocalDateTime.now().getYear();

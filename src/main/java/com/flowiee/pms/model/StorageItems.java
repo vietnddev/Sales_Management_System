@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StorageItems {
-    Integer storageId;
-    Integer itemId;
+    Long storageId;
+    Long itemId;
     String itemImageSrc;
     String itemName;
     String itemType;

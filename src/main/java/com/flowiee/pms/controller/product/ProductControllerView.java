@@ -115,8 +115,8 @@ public class ProductControllerView extends BaseController {
     @PostMapping(value = "/variant/active-image/{sanPhamBienTheId}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView activeImageOfProductVariant(HttpServletRequest request,
-                                                    @PathVariable("sanPhamBienTheId") Integer productVariantId,
-                                                    @RequestParam("imageId") Integer imageId) {
+                                                    @PathVariable("sanPhamBienTheId") Long productVariantId,
+                                                    @RequestParam("imageId") Long imageId) {
         if (productVariantId == null || productVariantId <= 0 || imageId == null || imageId <= 0) {
             throw new ResourceNotFoundException("Product variant or image not found!");
         }

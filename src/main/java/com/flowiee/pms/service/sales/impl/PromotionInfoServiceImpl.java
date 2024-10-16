@@ -77,7 +77,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
     }
 
     @Override
-    public Optional<PromotionInfoDTO> findById(Integer entityId) {
+    public Optional<PromotionInfoDTO> findById(Long entityId) {
         Optional<PromotionInfo> promotionInfo = mvPromotionInfoRepository.findById(entityId);
         if (promotionInfo.isPresent()) {
             PromotionInfoDTO dto = mvModelMapper.map(promotionInfo.get(), PromotionInfoDTO.class);
@@ -114,7 +114,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
     }
 
     @Override
-    public PromotionInfoDTO update(PromotionInfoDTO inputDTO, Integer promotionId) {
+    public PromotionInfoDTO update(PromotionInfoDTO inputDTO, Long promotionId) {
         try {
             if (inputDTO == null || promotionId == null || this.findById(promotionId).isEmpty()) {
                 throw new ResourceNotFoundException("Product promotion not found!");
@@ -131,7 +131,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
     }
 
     @Override
-    public String delete(Integer promotionId) {
+    public String delete(Long promotionId) {
         if (this.findById(promotionId).isEmpty()) {
             throw new ResourceNotFoundException("Promotion not found!");
         }

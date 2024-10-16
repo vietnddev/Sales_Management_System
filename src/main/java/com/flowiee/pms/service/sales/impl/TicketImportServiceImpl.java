@@ -63,7 +63,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public Page<TicketImport> findAll(int pageSize, int pageNum, String pText, Integer pSupplierId, Integer pPaymentMethod, String pPayStatus, String pImportStatus, Integer pStorageId) {
+    public Page<TicketImport> findAll(int pageSize, int pageNum, String pText, Long pSupplierId, Long pPaymentMethod, String pPayStatus, String pImportStatus, Long pStorageId) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
@@ -78,7 +78,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public Optional<TicketImport> findById(Integer entityId) {
+    public Optional<TicketImport> findById(Long entityId) {
         Optional<TicketImport> ticketImport = mvTicketImportRepo.findById(entityId);
         if (ticketImport.isEmpty()) {
             return Optional.empty();
@@ -120,7 +120,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                         }
                         for (Account a : stgManagersReceiveNtfs) {
                             mvNotificationService.save(Notification.builder()
-                                .send(0)
+                                .send(0l)
                                 .receive(a.getId())
                                 .type("WARNING")
                                 .title("Sức chứa của kho " + storage.getName() + " đã chạm mốc cảnh báo!")
@@ -137,7 +137,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public TicketImport update(TicketImport ticketImport, Integer entityId) {
+    public TicketImport update(TicketImport ticketImport, Long entityId) {
         Optional<TicketImport> ticketImportOpt = this.findById(entityId);
         if (ticketImportOpt.isEmpty()) {
             throw new BadRequestException();
@@ -171,7 +171,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         Optional<TicketImport> ticketImport = this.findById(entityId);
         if (ticketImport.isEmpty()) {
             throw new BadRequestException("Ticket import not found!");
@@ -184,7 +184,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public TicketImport findDraftImportPresent(Integer createdBy) {
+    public TicketImport findDraftImportPresent(Long createdBy) {
         return mvTicketImportRepo.findDraftGoodsImportPresent(TicketImportStatus.DRAFT.name(), createdBy);
     }
 
@@ -202,7 +202,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public TicketImport updateStatus(Integer entityId, String status) {
+    public TicketImport updateStatus(Long entityId, String status) {
         if (entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
@@ -215,12 +215,12 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public List<ProductVariantTemp> addProductToTicket(Integer ticketImportId, List<Integer> productVariantIds) {
+    public List<ProductVariantTemp> addProductToTicket(Long ticketImportId, List<Long> productVariantIds) {
         if (this.findById(ticketImportId).isEmpty()) {
             throw new ResourceNotFoundException("Ticket import goods not found!");
         }
         List<ProductVariantTemp> listAdded = new ArrayList<>();
-        for (Integer productVariantId : productVariantIds) {
+        for (Long productVariantId : productVariantIds) {
             Optional<ProductDetail> productDetail = mvProductVariantRepository.findById(productVariantId);
             if (productDetail.isEmpty()) {
                 logger.error(String.format("Product variant with id %s not found in database!", productVariantId));
@@ -243,9 +243,9 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public List<MaterialTemp> addMaterialToTicket(Integer ticketImportId, List<Integer> materialIds) {
+    public List<MaterialTemp> addMaterialToTicket(Long ticketImportId, List<Long> materialIds) {
         List<MaterialTemp> listAdded = new ArrayList<>();
-        for (Integer materialId : materialIds) {
+        for (Long materialId : materialIds) {
             Optional<Material> material = mvMaterialService.findById(materialId);
             if (material.isEmpty()) {
                 continue;

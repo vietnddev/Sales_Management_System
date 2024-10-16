@@ -34,7 +34,7 @@ public class TicketExportController extends BaseController {
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<List<TicketExport>> findAll(@RequestParam("pageSize") int pageSize,
                                                    @RequestParam("pageNum") int pageNum,
-                                                   @RequestParam(value = "storageId", required = false) Integer storageId) {
+                                                   @RequestParam(value = "storageId", required = false) Long storageId) {
         Page<TicketExport> ticketExports = mvTicketExportService.findAll(pageSize, pageNum - 1, storageId);
         return success(ticketExports.getContent(), pageNum, pageSize, ticketExports.getTotalPages(), ticketExports.getTotalElements());
     }
@@ -42,7 +42,7 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Find detail")
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
-    public AppResponse<TicketExportDTO> findDetail(@PathVariable("id") Integer ticketExportId) {
+    public AppResponse<TicketExportDTO> findDetail(@PathVariable("id") Long ticketExportId) {
         Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
         if (ticketExport.isEmpty()) {
             throw new BadRequestException("Data does not exists!");
@@ -67,7 +67,7 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Update ticket")
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
-    public AppResponse<TicketExportDTO> updateTicketExport(@RequestBody TicketExport ticketExport, @PathVariable("id") Integer ticketExportId) {
+    public AppResponse<TicketExportDTO> updateTicketExport(@RequestBody TicketExport ticketExport, @PathVariable("id") Long ticketExportId) {
         if (ObjectUtils.isEmpty(mvTicketExportService.findById(ticketExportId))) {
             throw new BadRequestException();
         }
@@ -77,7 +77,7 @@ public class TicketExportController extends BaseController {
     @Operation(summary = "Delete ticket")
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
-    public AppResponse<String> deleteTicketExport(@PathVariable("id") Integer ticketExportId) {
+    public AppResponse<String> deleteTicketExport(@PathVariable("id") Long ticketExportId) {
         return success(mvTicketExportService.delete(ticketExportId));
     }
 }

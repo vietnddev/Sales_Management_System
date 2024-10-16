@@ -52,7 +52,7 @@ public class LedgerTransactionControllerView extends BaseController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
-    public ModelAndView findTransactionDetail(@PathVariable("id") Integer tranId) {
+    public ModelAndView findTransactionDetail(@PathVariable("id") Long tranId) {
         Optional<LedgerTransaction> transaction = mvLedgerReceiptService.findById(tranId);
         if (transaction.isEmpty()) {
             throw new ResourceNotFoundException("Ledger receipt not found!");

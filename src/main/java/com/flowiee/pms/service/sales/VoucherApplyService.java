@@ -7,9 +7,9 @@ import com.flowiee.pms.entity.sales.VoucherApply;
 import java.util.List;
 
 public interface VoucherApplyService extends BaseCurdService<VoucherApply> {
-    List<VoucherApplyDTO> findAll(Integer voucherInfoId , Integer productId);
+    List<VoucherApplyDTO> findAll(Long voucherInfoId , Long productId);
 
-    List<VoucherApplyDTO> findByProductId(Integer productId);
+    List<VoucherApplyDTO> findByProductId(Long productId);
 
-    List<VoucherApply> findByVoucherId(Integer voucherId);
+    List<VoucherApply> findByVoucherId(Long voucherId);
 }

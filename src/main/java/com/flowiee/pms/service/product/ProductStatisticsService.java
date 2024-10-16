@@ -3,7 +3,7 @@ package com.flowiee.pms.service.product;
 public interface ProductStatisticsService {
     Integer countTotalProductsInStorage();
 
-    Integer findProductVariantTotalQtySell(Integer productId);
+    Integer findProductVariantTotalQtySell(Long productId);
 
-    Integer findProductVariantQuantityBySizeOfEachColor(Integer productId, Integer colorId, Integer sizeId);
+    Integer findProductVariantQuantityBySizeOfEachColor(Long productId, Long colorId, Long sizeId);
 }

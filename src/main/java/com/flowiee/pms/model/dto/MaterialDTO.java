@@ -16,8 +16,8 @@ public class MaterialDTO extends Material implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    Integer supplierId;
+    Long supplierId;
     String supplierName;
-    Integer unitId;
+    Long unitId;
     String unitName;
 }

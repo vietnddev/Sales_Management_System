@@ -11,7 +11,7 @@ public interface CartService extends BaseCurdService<OrderCart> {
 
     Double calTotalAmountWithoutDiscount(long cartId);
 
-    boolean isItemExistsInCart(Long cartId, Integer productVariantId);
+    boolean isItemExistsInCart(Long cartId, Long productVariantId);
 
     void resetCart(Long cartId);
 

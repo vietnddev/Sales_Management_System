@@ -21,7 +21,7 @@ public class CategoryHistoryServiceImpl implements CategoryHistoryService {
     CategoryHistoryRepository mvCategoryHistoryRepository;
 
     @Override
-    public List<CategoryHistory> save(Map<String, Object[]> logChanges, String title, Integer categoryId) {
+    public List<CategoryHistory> save(Map<String, Object[]> logChanges, String title, Long categoryId) {
         List<CategoryHistory> categoryHistories = new ArrayList<>();
         for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
             String field = entry.getKey();

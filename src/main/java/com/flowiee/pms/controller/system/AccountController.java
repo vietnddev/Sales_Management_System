@@ -45,7 +45,7 @@ public class AccountController extends BaseController {
     @Operation(summary = "Find detail account")
     @GetMapping("/{accountId}")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
-    public AppResponse<Account> findDetailAccount(@PathVariable("accountId") Integer accountId) {
+    public AppResponse<Account> findDetailAccount(@PathVariable("accountId") Long accountId) {
         Optional<Account> account = accountService.findById(accountId);
         if (account.isEmpty()) {
             throw new ResourceNotFoundException("Account not found!");
@@ -73,13 +73,13 @@ public class AccountController extends BaseController {
     @Operation(summary = "Update account")
     @PutMapping(value = "/update/{accountId}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
-    public AppResponse<Account> update(@RequestBody Account account, @PathVariable("accountId") Integer accountId) {
+    public AppResponse<Account> update(@RequestBody Account account, @PathVariable("accountId") Long accountId) {
         return success(accountService.update(account, accountId));
     }
 
     @PutMapping("/update-permission/{accountId}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
-    public AppResponse<List<RoleModel>> updatePermission(@RequestBody String[] actions, @PathVariable("accountId") Integer accountId) {
+    public AppResponse<List<RoleModel>> updatePermission(@RequestBody String[] actions, @PathVariable("accountId") Long accountId) {
         try {
             if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
                 throw new BadRequestException();
@@ -104,14 +104,14 @@ public class AccountController extends BaseController {
     @Operation(summary = "Delete account")
     @DeleteMapping(value = "/delete/{accountId}")
     @PreAuthorize("@vldModuleSystem.deleteAccount(true)")
-    public AppResponse<String> deleteAccount(@PathVariable("accountId") Integer accountId) {
+    public AppResponse<String> deleteAccount(@PathVariable("accountId") Long accountId) {
         return success(accountService.delete(accountId));
     }
 
     @Operation(summary = "Find roles of account")
     @GetMapping("/{accountId}/role")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
-    public AppResponse<List<RoleModel>> findRolesOfAccount(@PathVariable("accountId") Integer accountId) {
+    public AppResponse<List<RoleModel>> findRolesOfAccount(@PathVariable("accountId") Long accountId) {
         try {
             return success(roleService.findAllRoleByAccountId(accountId));
         } catch (RuntimeException ex) {

@@ -46,14 +46,14 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Find all variants of product")
     @GetMapping("/{productId}/variants")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Integer productId) {
+    public AppResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Long productId) {
         return success(mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent());
     }
 
     @Operation(summary = "Find detail product variant")
     @GetMapping("/variant/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Integer productVariantId) {
+    public AppResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Long productVariantId) {
         Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(productVariantId);
         if (productVariant.isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
@@ -75,7 +75,7 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Update product variant")
     @PutMapping("/variant/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
-    public AppResponse<ProductDetail> updateProductVariant(@RequestBody ProductVariantDTO productVariant, @PathVariable("id") Integer productVariantId) {
+    public AppResponse<ProductDetail> updateProductVariant(@RequestBody ProductVariantDTO productVariant, @PathVariable("id") Long productVariantId) {
         if (mvProductVariantService.findById(productVariantId).isEmpty()) {
             throw new ResourceNotFoundException("Product variant not found!");
         }
@@ -85,7 +85,7 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Delete product variant")
     @DeleteMapping("/variant/delete/{id}")
     @PreAuthorize("@vldModuleProduct.deleteProduct(true)")
-    public AppResponse<String> deleteProductVariant(@PathVariable("id") Integer productVariantId) {
+    public AppResponse<String> deleteProductVariant(@PathVariable("id") Long productVariantId) {
         return success(mvProductVariantService.delete(productVariantId));
     }
 
@@ -118,10 +118,10 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Check product variant already exists")
     @GetMapping("/variant/exists")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<Boolean> checkProductVariantAlreadyExists(@RequestParam("productId") Integer productId,
-                                                                 @RequestParam("colorId") Integer colorId,
-                                                                 @RequestParam("sizeId") Integer sizeId,
-                                                                 @RequestParam("fabricTypeId") Integer fabricTypeId) {
+    public AppResponse<Boolean> checkProductVariantAlreadyExists(@RequestParam("productId") Long productId,
+                                                                 @RequestParam("colorId") Long colorId,
+                                                                 @RequestParam("sizeId") Long sizeId,
+                                                                 @RequestParam("fabricTypeId") Long fabricTypeId) {
         try {
             return success(mvProductVariantService.isProductVariantExists(productId, colorId, sizeId, fabricTypeId));
         } catch (RuntimeException ex) {
@@ -132,7 +132,7 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Get history import/export storage of product variant")
     @GetMapping("/variant/{productVariantId}/storage-history")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<List<ProductVariantTempDTO>> getStorageHistoryOfProduct(@PathVariable("productVariantId") Integer productVariantId) {
+    public AppResponse<List<ProductVariantTempDTO>> getStorageHistoryOfProduct(@PathVariable("productVariantId") Long productVariantId) {
         try {
             return success(mvProductVariantService.findStorageHistory(productVariantId));
         } catch (RuntimeException ex) {

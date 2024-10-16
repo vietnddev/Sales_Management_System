@@ -24,7 +24,7 @@ public interface CartItemsRepository extends JpaRepository<Items, Long> {
     @Query("select nvl(sum(nvl((case when i.price is not null then i.price else i.priceOriginal end), 0) * i.quantity), 0) " +
            "from Items i " +
            "where i.orderCart.id=:cartId")
-    Double calTotalAmountWithoutDiscount(@Param("cartId") int cartId);
+    Double calTotalAmountWithoutDiscount(@Param("cartId") long cartId);
 
     @Modifying
     @Query("update Items i set i.quantity=:quantity where i.id=:itemId")

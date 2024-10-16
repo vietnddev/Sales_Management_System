@@ -45,7 +45,7 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/uploads/san-pham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView uploadImageOfProductBase(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productId) throws Exception {
+    public ModelAndView uploadImageOfProductBase(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long productId) throws Exception {
         if (productId <= 0 || productInfoService.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException("Product not found!");
         }
@@ -58,7 +58,7 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/uploads/bien-the-san-pham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productVariantId) throws Exception {
+    public ModelAndView uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long productVariantId) throws Exception {
         if (productVariantId <= 0 || productVariantService.findById(productVariantId).isEmpty()) {
             throw new ResourceNotFoundException("Product variant not found!");
         }
@@ -71,7 +71,7 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/file/change-image-sanpham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") Integer fileId, HttpServletRequest request) {
+    public ModelAndView changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") Long fileId, HttpServletRequest request) {
         if (fileId <= 0 || fileService.findById(fileId).isEmpty()) {
             throw new ResourceNotFoundException("Image not found");
         }
@@ -84,7 +84,7 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/uploads/ticket-import/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView uploadImageOfTicketImport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer ticketImportId) throws Exception {
+    public ModelAndView uploadImageOfTicketImport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long ticketImportId) throws Exception {
         if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId).isEmpty()) {
             throw new ResourceNotFoundException("Ticket import not found!");
         }
@@ -97,7 +97,7 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/uploads/ticket-export/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView uploadImageOfTicketExport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer ticketExportId) throws Exception {
+    public ModelAndView uploadImageOfTicketExport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long ticketExportId) throws Exception {
         if (ticketExportId <= 0 || ticketExportService.findById(ticketExportId).isEmpty()) {
             throw new ResourceNotFoundException("Ticket export not found!");
         }
@@ -110,7 +110,7 @@ public class FileStorageControllerView extends BaseController {
 
     @PostMapping("/uploads/product-combo/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public ModelAndView uploadImageOfProductCombo(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Integer productComboId) throws Exception {
+    public ModelAndView uploadImageOfProductCombo(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long productComboId) throws Exception {
         if (productComboService.findById(productComboId).isEmpty()) {
             throw new ResourceNotFoundException("Combo not found!");
         }

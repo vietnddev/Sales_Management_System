@@ -29,7 +29,7 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 	}
 
 	@Override
-	public Optional<Language> findById(Integer langId) {
+	public Optional<Language> findById(Long langId) {
 		return mvLanguagesRepository.findById(langId);
 	}
 
@@ -49,7 +49,7 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 	}
 
 	@Override
-	public Language update(Language language, Integer langId) {
+	public Language update(Language language, Long langId) {
 		if (langId == null || langId <= 0) {
 			throw new BadRequestException();
 		}
@@ -57,7 +57,7 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 	}
 
 	@Override
-	public String delete(Integer entityId) {
+	public String delete(Long entityId) {
 		return null;
 	}
 

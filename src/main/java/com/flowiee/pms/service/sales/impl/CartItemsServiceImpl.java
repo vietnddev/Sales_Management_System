@@ -35,7 +35,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
     }
 
     @Override
-    public Optional<Items> findById(Integer itemId) {
+    public Optional<Items> findById(Long itemId) {
         return mvCartItemsRepository.findById(itemId);
     }
 
@@ -48,14 +48,14 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
             cartItemModelList.add(CartItemModel.builder()
                     .itemId(productCbo.getId())
                     .productComboId(productCbo.getId())
-                    .productVariantId(-1)
+                    .productVariantId(-1l)
                     .itemName(productCbo.getComboName() + " - hiện còn " + productCbo.getQuantity())
                     .build());
         }
         for (ProductVariantDTO productVrt : productVariantDTOs) {
             cartItemModelList.add(CartItemModel.builder()
                     .itemId(productVrt.getId())
-                    .productComboId(-1)
+                    .productComboId(-1l)
                     .productVariantId(productVrt.getId())
                     .itemName(productVrt.getVariantName() + " - hiện còn " + productVrt.getAvailableSalesQty())
                     .build());
@@ -64,12 +64,12 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
     }
 
     @Override
-    public Integer findQuantityOfItem(Integer cartId, Integer productVariantId) {
+    public Integer findQuantityOfItem(Long cartId, Long productVariantId) {
         return mvCartItemsRepository.findQuantityByProductVariantId(cartId, productVariantId);
     }
 
     @Override
-    public Items findItemByCartAndProductVariant(Integer cartId, Integer productVariantId) {
+    public Items findItemByCartAndProductVariant(Long cartId, Long productVariantId) {
         return mvCartItemsRepository.findByCartAndProductVariant(cartId, productVariantId);
     }
 
@@ -82,7 +82,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
     }
 
     @Override
-    public Items update(Items entity, Integer entityId) {
+    public Items update(Items entity, Long entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
@@ -91,7 +91,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
     }
 
     @Override
-    public String delete(Integer itemId) {
+    public String delete(Long itemId) {
         if (this.findById(itemId).isEmpty()) {
             throw new BadRequestException();
         }
@@ -101,7 +101,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
 
     @Transactional
     @Override
-    public void increaseItemQtyInCart(Integer itemId, int quantity) {
+    public void increaseItemQtyInCart(Long itemId, int quantity) {
         mvCartItemsRepository.updateItemQty(itemId, quantity);
     }
 

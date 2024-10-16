@@ -45,7 +45,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     }
 
     @Override
-    public CustomerContact update(CustomerContact pContact, Integer contactId) {
+    public CustomerContact update(CustomerContact pContact, Long contactId) {
         if (pContact == null || pContact.getCustomer() == null) {
             throw new ResourceNotFoundException("Customer not found!");
         }
@@ -61,7 +61,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     }
 
     @Override
-    public String delete(Integer contactId) {
+    public String delete(Long contactId) {
         Optional<CustomerContact> customerContact = this.findById(contactId);
         if (customerContact.isEmpty()) {
             throw new BadRequestException();
@@ -79,7 +79,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     }
 
     @Override
-    public List<CustomerContact> findContacts(Integer customerId) {
+    public List<CustomerContact> findContacts(Long customerId) {
         if (mvCustomerRepository.findById(customerId).isEmpty()) {
             throw new ResourceNotFoundException("Customer not found!");
         }
@@ -87,27 +87,27 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     }
 
     @Override
-    public Optional<CustomerContact> findById(Integer contactId) {
+    public Optional<CustomerContact> findById(Long contactId) {
         return mvCustomerContactRepository.findById(contactId);
     }
 
     @Override
-    public CustomerContact findContactPhoneUseDefault(Integer customerId) {
+    public CustomerContact findContactPhoneUseDefault(Long customerId) {
         return mvCustomerContactRepository.findPhoneUseDefault(customerId);
     }
 
     @Override
-    public CustomerContact findContactEmailUseDefault(Integer customerId) {
+    public CustomerContact findContactEmailUseDefault(Long customerId) {
         return mvCustomerContactRepository.findEmailUseDefault(customerId);
     }
 
     @Override
-    public CustomerContact findContactAddressUseDefault(Integer customerId) {
+    public CustomerContact findContactAddressUseDefault(Long customerId) {
         return mvCustomerContactRepository.findAddressUseDefault(customerId);
     }
 
     @Override
-    public CustomerContact enableContactUseDefault(Integer customerId, String contactCode, Integer contactId) {
+    public CustomerContact enableContactUseDefault(Long customerId, String contactCode, Long contactId) {
         if (mvCustomerRepository.findById(customerId).isEmpty()) {
             throw new ResourceNotFoundException("Customer not found!");
         }
@@ -133,7 +133,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     }
 
     @Override
-    public CustomerContact disableContactUnUseDefault(Integer contactId) {
+    public CustomerContact disableContactUnUseDefault(Long contactId) {
         Optional<CustomerContact> customerContact = this.findById(contactId);
         if (customerContact.isEmpty()) {
             throw new BadRequestException();

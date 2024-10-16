@@ -29,7 +29,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public Optional<MaterialHistory> findById(Integer entityId) {
+    public Optional<MaterialHistory> findById(Long entityId) {
         return mvMaterialHistoryRepository.findById(entityId);
     }
 
@@ -42,7 +42,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public MaterialHistory update(MaterialHistory entity, Integer entityId) {
+    public MaterialHistory update(MaterialHistory entity, Long entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
@@ -51,7 +51,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         if (entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
@@ -60,7 +60,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public List<MaterialHistory> findByMaterialId(Integer materialId) {
+    public List<MaterialHistory> findByMaterialId(Long materialId) {
         return mvMaterialHistoryRepository.findByMaterialId(materialId);
     }
 
@@ -70,7 +70,7 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public List<MaterialHistory> save(Map<String, Object[]> logChanges, String title, Integer materialId) {
+    public List<MaterialHistory> save(Map<String, Object[]> logChanges, String title, Long materialId) {
         List<MaterialHistory> materialHistories = new ArrayList<>();
         for (Map.Entry<String, Object[]> entry : logChanges.entrySet()) {
             String field = entry.getKey();

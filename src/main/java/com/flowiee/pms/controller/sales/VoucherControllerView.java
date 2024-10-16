@@ -38,7 +38,7 @@ public class VoucherControllerView extends BaseController {
 
     @PostMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.updateVoucher(true)")
-    public ModelAndView deleteVoucher(@ModelAttribute("voucherInfo") VoucherInfoDTO voucherInfo, @PathVariable("id") Integer voucherInfoId) {
+    public ModelAndView deleteVoucher(@ModelAttribute("voucherInfo") VoucherInfoDTO voucherInfo, @PathVariable("id") Long voucherInfoId) {
         if (voucherInfo == null) {
             throw new BadRequestException("Voucher to update not null!");
         }
@@ -51,7 +51,7 @@ public class VoucherControllerView extends BaseController {
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("@vldModuleSales.deleteVoucher(true)")
-    public ModelAndView deleteVoucher(@PathVariable("id") Integer voucherInfoId) {
+    public ModelAndView deleteVoucher(@PathVariable("id") Long voucherInfoId) {
         mvVoucherService.delete(voucherInfoId);
         return new ModelAndView("redirect:/san-pham/voucher");
     }

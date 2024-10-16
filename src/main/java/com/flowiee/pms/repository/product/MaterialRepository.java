@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.flowiee.pms.entity.product.Material;
 
 @Repository
-public interface MaterialRepository extends JpaRepository<Material, Integer> {
+public interface MaterialRepository extends JpaRepository<Material, Long> {
     @Query("from Material m " +
            "where 1=1 " +
            "and (:supplierId is null or m.supplier.id=:supplierId) " +
@@ -20,8 +20,8 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
            "and (:name is null or m.name like %:name%) " +
            "and (:location is null or m.location like %:location%) " +
            "and (:status is null or m.status=:status)")
-    Page<Material> findAll(@Param("supplierId") Integer supplierId,
-                           @Param("unitId") Integer unitId,
+    Page<Material> findAll(@Param("supplierId") Long supplierId,
+                           @Param("unitId") Long unitId,
                            @Param("code") String code,
                            @Param("name") String name,
                            @Param("location") String location,
@@ -30,9 +30,9 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
 
     @Modifying
     @Query("update Material m set m.quantity = (m.quantity + :quantity) where m.id=:materialId")
-    void updateQuantityIncrease(@Param("quantity") Integer quantity, @Param("materialId") Integer materialId);
+    void updateQuantityIncrease(@Param("quantity") Integer quantity, @Param("materialId") long materialId);
 
     @Modifying
     @Query("update Material m set m.quantity = (m.quantity - :quantity) where m.id=:materialId")
-    void updateQuantityDecrease(@Param("quantity") Integer quantity, @Param("materialId") Integer materialId);
+    void updateQuantityDecrease(@Param("quantity") Integer quantity, @Param("materialId") long materialId);
 }

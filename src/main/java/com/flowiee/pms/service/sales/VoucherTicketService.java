@@ -8,9 +8,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface VoucherTicketService extends BaseCurdService<VoucherTicket> {
-    Page<VoucherTicket> findAll(int pageSize, int pageNum, Integer voucherId);
+    Page<VoucherTicket> findAll(int pageSize, int pageNum, Long voucherId);
 
-    List<VoucherTicket> findByVoucherId(Integer voucherId);
+    List<VoucherTicket> findByVoucherId(Long voucherId);
 
     VoucherTicket findByCode(String code);
 

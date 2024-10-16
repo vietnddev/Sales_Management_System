@@ -40,8 +40,8 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
     BigDecimal discountPrice;
     String unitCurrency;
     List<ProductHistory> listPrices;
-    Integer storageIdInitStorageQty;
-    Integer storageIdInitSoldQty;
+    Long storageIdInitStorageQty;
+    Long storageIdInitSoldQty;
     ProductPriceDTO price;
 
 	@Override

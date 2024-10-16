@@ -60,7 +60,7 @@ public class StorageController extends BaseController {
     @Operation(summary = "Find detail storage")
     @GetMapping("/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
-    public AppResponse<StorageDTO> findDetailStorage(@PathVariable("storageId") Integer storageId) {
+    public AppResponse<StorageDTO> findDetailStorage(@PathVariable("storageId") Long storageId) {
         Optional<StorageDTO> storage = mvStorageService.findById(storageId);
         if (storage.isEmpty()) {
             throw new ResourceNotFoundException("Storage not found");
@@ -82,7 +82,7 @@ public class StorageController extends BaseController {
     @Operation(summary = "Update storage")
     @PutMapping("/update/{storageId}")
     @PreAuthorize("@vldModuleStorage.updateStorage(true)")
-    public AppResponse<StorageDTO> updateStorage(@RequestBody StorageDTO storage, @PathVariable("storageId") Integer storageId) {
+    public AppResponse<StorageDTO> updateStorage(@RequestBody StorageDTO storage, @PathVariable("storageId") Long storageId) {
         try {
             return success(mvStorageService.update(storage, storageId));
         } catch (RuntimeException ex) {
@@ -93,14 +93,14 @@ public class StorageController extends BaseController {
     @Operation(summary = "Delete storage")
     @DeleteMapping("/delete/{storageId}")
     @PreAuthorize("@vldModuleStorage.deleteStorage(true)")
-    public AppResponse<String> deleteStorage(@PathVariable("storageId") Integer storageId) {
+    public AppResponse<String> deleteStorage(@PathVariable("storageId") Long storageId) {
         return success(mvStorageService.delete(storageId));
     }
 
     @Operation(summary = "Find detail storage")
     @GetMapping("/{storageId}/items")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
-    public AppResponse<List<StorageItems>> findStorageItems(@PathVariable("storageId") Integer storageId,
+    public AppResponse<List<StorageItems>> findStorageItems(@PathVariable("storageId") Long storageId,
                                                             @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                             @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                             @RequestParam(value = "searchText", required = false) String searchText) {
@@ -115,7 +115,7 @@ public class StorageController extends BaseController {
     @Operation(summary = "Export storage information")
     @GetMapping("/export/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
-    public ResponseEntity<InputStreamResource> exportData(@PathVariable("storageId") Integer storageId) {
+    public ResponseEntity<InputStreamResource> exportData(@PathVariable("storageId") Long storageId) {
         EximModel model = mvExportService.exportToExcel(TemplateExport.EX_STORAGE_ITEMS, new Storage(storageId), false);
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
     }

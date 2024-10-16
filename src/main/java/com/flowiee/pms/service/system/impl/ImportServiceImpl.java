@@ -27,12 +27,12 @@ public class ImportServiceImpl extends BaseService implements ImportService {
     }
 
     @Override
-    public List<FileImportHistory> findByAccountId(Integer accountId) {
+    public List<FileImportHistory> findByAccountId(Long accountId) {
         return mvAppImportRepository.findByAccountId(accountId);
     }
 
     @Override
-    public Optional<FileImportHistory> findById(Integer importId) {
+    public Optional<FileImportHistory> findById(Long importId) {
         return mvAppImportRepository.findById(importId);
     }
 
@@ -45,7 +45,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
     }
 
     @Override
-    public FileImportHistory update(FileImportHistory entity, Integer entityId) {
+    public FileImportHistory update(FileImportHistory entity, Long entityId) {
         if (entity == null || entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
@@ -54,7 +54,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         Optional<FileImportHistory> fImport = this.findById(entityId);
         if (fImport.isEmpty()) {
             throw new BadRequestException();

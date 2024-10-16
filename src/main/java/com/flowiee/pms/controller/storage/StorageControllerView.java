@@ -32,7 +32,7 @@ public class StorageControllerView extends BaseController {
 
     @GetMapping(value = "/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
-    public ModelAndView findDetail(@PathVariable("storageId") Integer storageId) {
+    public ModelAndView findDetail(@PathVariable("storageId") Long storageId) {
         Optional<StorageDTO> storage = mvStorageService.findById(storageId);
         if (storage.isEmpty()) {
             throw new ResourceNotFoundException("Storage not found!");

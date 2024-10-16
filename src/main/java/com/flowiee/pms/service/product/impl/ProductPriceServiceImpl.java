@@ -17,7 +17,7 @@ public class ProductPriceServiceImpl extends BaseService implements ProductPrice
 
     @Transactional
     @Override
-    public String updateProductPrice(Integer variantId, BigDecimal pOriginalPrice, BigDecimal pDiscountPrice) {
+    public String updateProductPrice(Long variantId, BigDecimal pOriginalPrice, BigDecimal pDiscountPrice) {
         return "";
     }
 }

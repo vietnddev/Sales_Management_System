@@ -27,7 +27,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
     }
 
     @Override
-    public Optional<GarmentFactory> findById(Integer entityId) {
+    public Optional<GarmentFactory> findById(Long entityId) {
         return mvGarmentFactoryRepository.findById(entityId);
     }
 
@@ -40,7 +40,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
     }
 
     @Override
-    public GarmentFactory update(GarmentFactory entity, Integer entityId) {
+    public GarmentFactory update(GarmentFactory entity, Long entityId) {
         if (this.findById(entityId).isEmpty()) {
             throw new BadRequestException();
         }
@@ -49,7 +49,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
     }
 
     @Override
-    public String delete(Integer entityId) {
+    public String delete(Long entityId) {
         if (this.findById(entityId).isEmpty()) {
             throw new BadRequestException();
         }

@@ -27,7 +27,7 @@ public class ProductReviewController extends BaseController {
 
     @Operation(summary = "Find all product reviews")
     @GetMapping
-    public AppResponse<List<ProductReview>> findByProduct(@PathVariable("productId") Integer productId) {
+    public AppResponse<List<ProductReview>> findByProduct(@PathVariable("productId") Long productId) {
         Page<ProductReview> productReview = mvProductReviewService.findByProduct(productId);
         return success(productReview.getContent(), 1, -1, productReview.getTotalPages(), productReview.getTotalElements());
     }
@@ -41,7 +41,7 @@ public class ProductReviewController extends BaseController {
     @Operation(summary = "Update product review")
     @PutMapping("/update/{reviewId}")
     @PreAuthorize("@vldModuleProduct.updateReview(true)")
-    public AppResponse<ProductReview> updateProductReview(@RequestBody ProductReview productReview, @PathVariable("reviewId") Integer reviewId) {
+    public AppResponse<ProductReview> updateProductReview(@RequestBody ProductReview productReview, @PathVariable("reviewId") Long reviewId) {
         if (mvProductReviewService.findById(reviewId).isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "productReview"));
         }
@@ -51,7 +51,7 @@ public class ProductReviewController extends BaseController {
     @Operation(summary = "Delete product review")
     @DeleteMapping("/delete/{reviewId}")
     @PreAuthorize("@vldModuleProduct.deleteReview(true)")
-    public AppResponse<String> deleteProductReview(@PathVariable("reviewId") Integer reviewId) {
+    public AppResponse<String> deleteProductReview(@PathVariable("reviewId") Long reviewId) {
         return success(mvProductReviewService.delete(reviewId));
     }
 }

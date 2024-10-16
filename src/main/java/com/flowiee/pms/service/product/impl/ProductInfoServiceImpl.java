@@ -51,8 +51,8 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
-    public Page<ProductDTO> findAll(PID pPID , int pageSize, int pageNum, String pTxtSearch, Integer pBrand, Integer pProductType,
-                                    Integer pColor, Integer pSize, Integer pUnit, String pStatus) {
+    public Page<ProductDTO> findAll(PID pPID , int pageSize, int pageNum, String pTxtSearch, Long pBrand, Long pProductType,
+                                    Long pColor, Long pSize, Long pUnit, String pStatus) {
         Pageable pageable = Pageable.unpaged();
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
@@ -65,7 +65,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
-    public Page<ProductDTO> findClothes(int pageSize, int pageNum, String pTxtSearch, Integer pBrand, Integer pProductType, Integer pColor, Integer pSize, Integer pUnit, String pStatus) {
+    public Page<ProductDTO> findClothes(int pageSize, int pageNum, String pTxtSearch, Long pBrand, Long pProductType, Long pColor, Long pSize, Long pUnit, String pStatus) {
         return findAll(PID.CLOTHES, pageSize, pageNum, pTxtSearch, pBrand, pProductType, pColor, pSize, pUnit, pStatus);
     }
 
@@ -75,7 +75,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
-    public Page<ProductDTO> findSouvenirs(int pageSize, int pageNum, String pTxtSearch, Integer pColor, String pStatus) {
+    public Page<ProductDTO> findSouvenirs(int pageSize, int pageNum, String pTxtSearch, Long pColor, String pStatus) {
         return findAll(PID.SOUVENIR, pageSize, pageNum, pTxtSearch, null, null, pColor, null, null, pStatus);
     }
 
@@ -123,7 +123,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Transactional
     @Override
-    public ProductDTO update(ProductDTO productDTO, Integer productId) {
+    public ProductDTO update(ProductDTO productDTO, Long productId) {
         Optional<Product> productOpt = mvProductRepository.findById(productId);
         if (productOpt.isEmpty()) {
             throw new BadRequestException();
@@ -178,7 +178,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
-    public boolean productInUse(Integer productId) throws RuntimeException {
+    public boolean productInUse(Long productId) throws RuntimeException {
         return !mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent().isEmpty();
     }
 
@@ -191,7 +191,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             if (imageActive != null) {
                 p.setImageActive("/" + imageActive.getDirectoryPath() + "/" + imageActive.getStorageName());
             }
-            List<Integer> listVoucherInfoId = new ArrayList<>();
+            List<Long> listVoucherInfoId = new ArrayList<>();
             for (VoucherApplyDTO voucherApplyDTO : mvVoucherApplyService.findByProductId(p.getId())) {
                 listVoucherInfoId.add(voucherApplyDTO.getVoucherInfoId());
             }

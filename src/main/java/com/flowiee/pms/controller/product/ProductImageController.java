@@ -58,7 +58,7 @@ public class ProductImageController extends BaseController {
     @Operation(summary = "Upload images of product variant")
     @PostMapping(value = "/{productId}/variant/uploads-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
-    public AppResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Integer productVariantId) {
+    public AppResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Long productVariantId) {
         try {
             if (productVariantId <= 0 || mvProductVariantService.findById(productVariantId).isEmpty()) {
                 throw new BadRequestException();

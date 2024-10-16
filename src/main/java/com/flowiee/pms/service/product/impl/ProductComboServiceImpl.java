@@ -59,7 +59,7 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
     }
 
     @Override
-    public Optional<ProductCombo> findById(Integer comboId) {
+    public Optional<ProductCombo> findById(Long comboId) {
         Optional<ProductCombo> productCombo = mvProductComboRepository.findById(comboId);
         if (productCombo.isPresent()) {
             List<ProductCombo> productComboList = List.of(productCombo.get());
@@ -88,7 +88,7 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
     }
 
     @Override
-    public ProductCombo update(ProductCombo productCombo, Integer comboId) {
+    public ProductCombo update(ProductCombo productCombo, Long comboId) {
         Optional<ProductCombo> optional = this.findById(comboId);
         if (optional.isEmpty()) {
             throw new ResourceNotFoundException("Combo not found");
@@ -105,7 +105,7 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
     }
 
     @Override
-    public String delete(Integer comboId) {
+    public String delete(Long comboId) {
         Optional<ProductCombo> comboBefore = this.findById(comboId);
         if (comboBefore.isEmpty()) {
             throw new ResourceNotFoundException("Product combo not found!");
