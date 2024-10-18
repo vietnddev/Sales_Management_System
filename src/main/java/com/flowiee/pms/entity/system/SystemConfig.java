@@ -24,7 +24,7 @@ public class SystemConfig extends BaseEntity implements Serializable {
 	@Serial
 	static final long serialVersionUID = 1L;
 
-	@Column(name = "code", nullable = false)
+	@Column(name = "code", nullable = false, unique = true)
 	String code;
 
 	@Column(name = "name", nullable = false)

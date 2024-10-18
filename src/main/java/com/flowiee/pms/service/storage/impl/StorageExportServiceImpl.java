@@ -23,6 +23,8 @@ import java.util.Optional;
 public class StorageExportServiceImpl extends BaseExportService {
     StorageService mvStorageService;
 
+    private DateTimeFormatter DF_DDMMYYYY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     @Override
     protected void writeData(Object pCondition) {
         Storage lvCondition = (Storage) pCondition;
@@ -46,8 +48,8 @@ public class StorageExportServiceImpl extends BaseExportService {
             row.createCell(3).setCellValue(storageItems.getItemBrand());
             row.createCell(4).setCellValue(storageItems.getItemSalesAvailableQty());
             row.createCell(5).setCellValue(storageItems.getItemStorageQty());
-            row.createCell(6).setCellValue(storageItems.getLastImportTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            row.createCell(7).setCellValue(storageItems.getFirstImportTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            row.createCell(6).setCellValue(storageItems.getLastImportTime().format(DF_DDMMYYYY));
+            row.createCell(7).setCellValue(storageItems.getFirstImportTime().format(DF_DDMMYYYY));
 
             setBorderCell(row, 0, 7);
         }

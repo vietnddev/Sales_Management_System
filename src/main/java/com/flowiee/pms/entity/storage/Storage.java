@@ -29,7 +29,7 @@ public class Storage extends BaseEntity implements Serializable {
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "code")
+    @Column(name = "code", unique = true)
     String code;
 
     @Column(name = "location")

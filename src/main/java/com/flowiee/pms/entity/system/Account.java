@@ -73,7 +73,7 @@ public class Account extends BaseEntity implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-	List<FileStorage> listFileStorage;
+	List<FileStorage> listImages;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "nhanVienBanHang", fetch = FetchType.LAZY)
@@ -102,6 +102,27 @@ public class Account extends BaseEntity implements Serializable {
 		super.id = id;
 		this.username = username;
 		this.fullName = fullName;
+	}
+
+	public FileStorage getAvatar(Long pImageId) {
+		if (getListImages() != null) {
+			return getListImages().stream()
+					.filter(avatar -> avatar.getId().equals(pImageId))
+					.findAny()
+					.orElse(null);
+		}
+		return null;
+	}
+
+	public FileStorage getAvatar() {
+		if (getListImages() != null) {
+			for (FileStorage avatar : getListImages()) {
+				if (avatar.isActive())
+					return avatar;
+			}
+			return null;
+		}
+		return null;
 	}
 
 	@Override

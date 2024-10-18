@@ -96,8 +96,10 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
             throw new BadRequestException();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         try {
-            voucherInfo.setStartTime(LocalDateTime.parse(voucherInfo.getStartTimeStr() + " 00:00:00", formatter));
-            voucherInfo.setEndTime(LocalDateTime.parse(voucherInfo.getEndTimeStr() + " 00:00:00", formatter));
+            LocalDateTime lvStartTime = LocalDateTime.parse(voucherInfo.getStartTimeStr() + " 00:00:00", formatter);
+            LocalDateTime lvEndTime = LocalDateTime.parse(voucherInfo.getEndTimeStr() + " 00:00:00", formatter);
+            voucherInfo.setStartTime(lvStartTime);
+            voucherInfo.setEndTime(lvEndTime);
 
             VoucherInfo voucherSaved = mvVoucherInfoRepository.save(VoucherInfo.fromVoucherDTO(voucherInfo));
             //

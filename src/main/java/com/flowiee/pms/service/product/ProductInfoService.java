@@ -19,5 +19,11 @@ public interface ProductInfoService extends BaseCurdService<ProductDTO> {
 
     List<Product> findProductsIdAndProductName();
 
+    ProductDTO saveClothes(ProductDTO productDTO);
+
+    ProductDTO saveSouvenir(ProductDTO productDTO);
+
+    ProductDTO saveFruit(ProductDTO productDTO);
+
     boolean productInUse(Long productId);
 }

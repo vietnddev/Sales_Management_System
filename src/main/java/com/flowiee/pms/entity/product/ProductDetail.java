@@ -40,7 +40,7 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
     
-    @Column(name = "variant_code", length = 50, nullable = false)
+    @Column(name = "variant_code", length = 50, nullable = false, unique = true)
     String variantCode;
     
     @Column(name = "variant_name")
@@ -155,6 +155,50 @@ public class ProductDetail extends BaseEntity implements Serializable {
 
     public int getAvailableSalesQty() {
         return storageQty - defectiveQty;
+    }
+
+    public ProductPrice getVariantPrice(Long pPriceId) {
+        if (getListProductVariantPrice() != null) {
+            for (ProductPrice price : getListProductVariantPrice()) {
+                Long lvPriceId = price.getId();
+                if (lvPriceId.equals(pPriceId))
+                    return price;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public ProductPrice getVariantPrice() {
+        if (getListProductVariantPrice() != null) {
+            for (ProductPrice price : getListProductVariantPrice()) {
+                if (ProductPrice.STATE_ACTIVE.equals(price.getState()))
+                    return price;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public FileStorage getImage(Long pImageId) {
+        if (getListImages() != null) {
+            return getListImages().stream()
+                    .filter(image -> image.getId().equals(pImageId))
+                    .findAny()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    public FileStorage getImage() {
+        if (getListImages() != null) {
+            for (FileStorage image : getListImages()) {
+                if (image.isActive())
+                    return image;
+            }
+            return null;
+        }
+        return null;
     }
 
 	@Override

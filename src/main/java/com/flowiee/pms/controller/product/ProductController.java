@@ -3,8 +3,10 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductHistory;
+import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.ExportService;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -82,14 +85,26 @@ public class ProductController extends BaseController {
         return success(product.get());
     }
 
-    @Operation(summary = "Create product")
+    @Operation(summary = "Create clothes product")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
-    public AppResponse<Product> createProduct(@RequestBody ProductDTO product) {
-        try {
-            return success(mvProductInfoService.save(product));
-        } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product"), ex);
+    public AppResponse<Product> createProduct(@RequestBody ProductDTO product, @RequestParam("PID") String pPID) {
+        PID lvPID = null;
+        for (PID cst : PID.values()) {
+            if (cst.getId().equals(pPID)) {
+                lvPID = cst;
+                break;
+            }
+        }
+        switch (lvPID) {
+            case CLOTHES:
+                return success(mvProductInfoService.saveClothes(product));
+            case SOUVENIR:
+                return success(mvProductInfoService.saveSouvenir(product));
+            case FRUIT:
+                return success(mvProductInfoService.saveFruit(product));
+            default:
+                throw new BadRequestException("PID invalid!");
         }
     }
 

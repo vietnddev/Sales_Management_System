@@ -76,11 +76,13 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
         // orderDetails
         List<OrderDetailRpt> listDetail = new ArrayList<>();
         for (OrderDetailDTO detailDTO : dto.getListOrderDetailDTO()) {
+            BigDecimal lvUnitPrice = detailDTO.getPrice();
+            int lvQuantity = detailDTO.getQuantity();
             OrderDetailRpt rpt = OrderDetailRpt.builder()
                 .productName(detailDTO.getProductVariantDTO().getVariantName())
-                .unitPrice(detailDTO.getPrice())
-                .quantity(detailDTO.getQuantity())
-                .subTotal(detailDTO.getPrice().multiply(BigDecimal.valueOf(detailDTO.getQuantity())))
+                .unitPrice(lvUnitPrice)
+                .quantity(lvQuantity)
+                .subTotal(lvUnitPrice.multiply(BigDecimal.valueOf(lvQuantity)))
                 .note(detailDTO.getNote())
                 .build();
             listDetail.add(rpt);

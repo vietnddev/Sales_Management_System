@@ -239,7 +239,8 @@
         }
 
         function createProduct() {
-            let apiURL = mvHostURLCallApi + "/product/create";
+            let params = "?PID=CL";
+            let apiURL = mvHostURLCallApi + "/product/create" + params;
             let productTypeId = $("#productTypeField").val();
             let brandId = $("#brandField").val();
             let productName = $("#productNameField").val();

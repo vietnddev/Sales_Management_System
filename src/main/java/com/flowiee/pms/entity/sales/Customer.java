@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.entity.product.ProductPrice;
 import com.flowiee.pms.entity.product.ProductReview;
 import com.flowiee.pms.model.dto.CustomerDTO;
 
+import com.flowiee.pms.utils.constants.ContactType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
@@ -95,6 +97,32 @@ public class Customer extends BaseEntity implements Serializable {
 			.build();
 		customer.setId(dto.getId());
 		return customer;
+	}
+
+	public CustomerContact getContact(ContactType contactType) {
+		if (getListCustomerContact() != null) {
+			for (CustomerContact contact : getListCustomerContact()) {
+				if (contactType.name().equals(contact.getCode()))
+					return contact;
+			}
+			return null;
+		}
+		return null;
+	}
+
+	public String getContactPhone() {
+		CustomerContact contact = getContact(ContactType.P);
+		return contact != null ? contact.getValue() : null;
+	}
+
+	public String getContactEmail() {
+		CustomerContact contact = getContact(ContactType.E);
+		return contact != null ? contact.getValue() : null;
+	}
+
+	public String getContactAddress() {
+		CustomerContact contact = getContact(ContactType.A);
+		return contact != null ? contact.getValue() : null;
 	}
 
 	@Override

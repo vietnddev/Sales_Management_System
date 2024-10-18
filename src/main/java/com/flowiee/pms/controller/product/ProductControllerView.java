@@ -78,7 +78,7 @@ public class ProductControllerView extends BaseController {
         modelAndView.addObject("bienTheSanPhamId", variantId);
         modelAndView.addObject("bienTheSanPham", productVariant.get());
         modelAndView.addObject("listImageOfSanPhamBienThe", mvProductImageService.getImageOfProductVariant(variantId));
-        FileStorage imageActive = mvProductImageService.findImageActiveOfProductVariant(variantId);
+        FileStorage imageActive = productVariant.get().getImage();//mvProductImageService.findImageActiveOfProductVariant(variantId);
         if (imageActive == null) {
             imageActive = new FileStorage();
         }

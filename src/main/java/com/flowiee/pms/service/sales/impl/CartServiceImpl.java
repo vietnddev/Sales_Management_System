@@ -6,7 +6,6 @@ import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
@@ -35,14 +34,13 @@ public class CartServiceImpl extends BaseService implements CartService {
     OrderCartRepository mvCartRepository;
     CartItemsRepository mvCartItemsRepository;
     ProductVariantService mvProductVariantService;
-    ProductPriceRepository mvProductPriceRepository;
 
     @Override
     public List<OrderCart> findCartByAccountId(Long accountId) {
         List<OrderCart> listCart = mvCartRepository.findByAccountId(accountId);
         for (OrderCart cart : listCart) {
             for (Items item : cart.getListItems()) {
-                ProductPrice itemPrice = mvProductPriceRepository.findPricePresent(null, item.getProductDetail().getId());
+                ProductPrice itemPrice = item.getProductDetail().getVariantPrice();//mvProductPriceRepository.findPricePresent(null, item.getProductDetail().getId());
                 if (itemPrice != null) {
                     PriceType priceType = PriceType.valueOf(item.getPriceType());
                     if (priceType.equals(PriceType.L)) {
@@ -127,16 +125,18 @@ public class CartServiceImpl extends BaseService implements CartService {
                 Items items = mvCartItemsService.findItemByCartAndProductVariant(cartId, productVariant.get().getId());
                 mvCartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
             } else {
-                ProductPrice productVariantPrice = mvProductPriceRepository.findPricePresent(null, Long.parseLong(productVariantId));
+                ProductPrice productVariantPrice = productVariant.get().getVariantPrice();//mvProductPriceRepository.findPricePresent(null, Long.parseLong(productVariantId));
                 if (productVariantPrice == null) {
                     throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productVariant.get().getVariantName()));
                 }
+                BigDecimal lvRetailPrice = productVariantPrice.getRetailPrice();
+                BigDecimal lvRetailPriceDiscount = productVariantPrice.getRetailPriceDiscount();
                 Items items = Items.builder()
                     .orderCart(new OrderCart(cartId))
                     .productDetail(new ProductDetail(Integer.parseInt(productVariantId)))
                     .priceType(PriceType.L.name())
-                    .price(productVariantPrice.getRetailPriceDiscount() != null ? productVariantPrice.getRetailPriceDiscount() : productVariantPrice.getRetailPrice())
-                    .priceOriginal(productVariantPrice.getRetailPrice())
+                    .price(lvRetailPriceDiscount != null ? lvRetailPriceDiscount : lvRetailPrice)
+                    .priceOriginal(lvRetailPrice)
                     .extraDiscount(BigDecimal.ZERO)
                     .quantity(1)
                     .note("")
@@ -160,18 +160,24 @@ public class CartServiceImpl extends BaseService implements CartService {
             if (itemToUpdate.getQuantity() > productVariant.getAvailableSalesQty()) {
                 throw new BadRequestException("This item's quantity is over available quantity!");
             }
-            ProductPrice productVariantPrice = mvProductPriceRepository.findPricePresent(null, productVariant.getId());
+            ProductPrice productVariantPrice = productVariant.getVariantPrice();//mvProductPriceRepository.findPricePresent(null, productVariant.getId());
+            String lvPriceType = itemToUpdate.getPriceType();
+            BigDecimal lvRetailPrice = productVariantPrice.getRetailPrice();
+            BigDecimal lvRetailPriceDiscount = productVariantPrice.getRetailPriceDiscount();
+            BigDecimal lvWholesalePrice = productVariantPrice.getWholesalePrice();
+            BigDecimal lvWholesalePriceDiscount = productVariantPrice.getWholesalePriceDiscount();
+
             item.setNote(itemToUpdate.getNote());
             item.setQuantity(itemToUpdate.getQuantity());
-            if (itemToUpdate.getPriceType() != null && (!item.getPriceType().equals(itemToUpdate.getPriceType()))) {
-                if (itemToUpdate.getPriceType().equals(PriceType.L.name())) {
-                    item.setPrice(productVariantPrice.getRetailPriceDiscount());
-                    item.setPriceOriginal(productVariantPrice.getRetailPrice());
+            if (lvPriceType != null && (!item.getPriceType().equals(lvPriceType))) {
+                if (lvPriceType.equals(PriceType.L.name())) {
+                    item.setPrice(lvRetailPriceDiscount);
+                    item.setPriceOriginal(lvRetailPrice);
                     item.setPriceType(PriceType.L.name());
                 }
-                if (itemToUpdate.getPriceType().equals(PriceType.S.name())) {
-                    item.setPrice(productVariantPrice.getWholesalePriceDiscount());
-                    item.setPriceOriginal(productVariantPrice.getWholesalePrice());
+                if (lvPriceType.equals(PriceType.S.name())) {
+                    item.setPrice(lvWholesalePriceDiscount);
+                    item.setPriceOriginal(lvWholesalePrice);
                     item.setPriceType(PriceType.S.name());
                 }
             }

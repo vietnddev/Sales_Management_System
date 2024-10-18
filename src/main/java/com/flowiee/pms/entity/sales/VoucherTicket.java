@@ -28,7 +28,7 @@ public class VoucherTicket extends BaseEntity implements Serializable {
     @JoinColumn(name = "voucher_info_id", nullable = false)
     VoucherInfo voucherInfo;
 
-    @Column(name = "code", nullable = false, length = 15)
+    @Column(name = "code", nullable = false, length = 15, unique = true)
     String code;
 
     @Column(name = "length", nullable = false)

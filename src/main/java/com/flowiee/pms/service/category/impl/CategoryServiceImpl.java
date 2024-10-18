@@ -53,18 +53,18 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Transactional
     @Override
-    public Category update(Category inputCategory, Long categoryId) {
-        Optional<Category> categoryOptional = this.findById(categoryId);
-        if (categoryOptional.isEmpty()) {
+    public Category update(Category pCategory, Long categoryId) {
+        Optional<Category> categoryOpt = this.findById(categoryId);
+        if (categoryOpt.isEmpty()) {
             throw new BadRequestException();
         }
-        Category categoryBefore = ObjectUtils.clone(categoryOptional.get());
+        Category categoryBefore = ObjectUtils.clone(categoryOpt.get());
 
-        categoryOptional.get().setName(inputCategory.getName());
-        categoryOptional.get().setNote(inputCategory.getNote());
-        if (inputCategory.getSort() != null) categoryOptional.get().setSort(inputCategory.getSort());
+        categoryOpt.get().setName(pCategory.getName());
+        categoryOpt.get().setNote(pCategory.getNote());
+        if (pCategory.getSort() != null) categoryOpt.get().setSort(pCategory.getSort());
 
-        Category categorySaved = mvCategoryRepository.save(categoryOptional.get());
+        Category categorySaved = mvCategoryRepository.save(categoryOpt.get());
 
         String logTitle = "Cập nhật thông tin danh mục " + categorySaved.getType() + ": " + categorySaved.getName();
         ChangeLog changeLog = new ChangeLog(categoryBefore, categorySaved);

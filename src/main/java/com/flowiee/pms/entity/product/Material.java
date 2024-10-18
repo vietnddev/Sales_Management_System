@@ -41,7 +41,7 @@ public class Material extends BaseEntity implements Serializable {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
-    @Column(name = "code", length = 20)
+    @Column(name = "code", length = 20, unique = false)
     String code;
 
     @Column(name = "name", nullable = false)
@@ -95,6 +95,27 @@ public class Material extends BaseEntity implements Serializable {
                 .build();
         material.setId(dto.getId());
         return material;
+    }
+
+    public FileStorage getImage(Long pImageId) {
+        if (getListImages() != null) {
+            return getListImages().stream()
+                    .filter(image -> image.getId().equals(pImageId))
+                    .findAny()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    public FileStorage getImage() {
+        if (getListImages() != null) {
+            for (FileStorage image : getListImages()) {
+                if (image.isActive())
+                    return image;
+            }
+            return null;
+        }
+        return null;
     }
 
 	@Override

@@ -38,17 +38,19 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderServiceImpl extends BaseService implements OrderService {
-    CartService mvCartService;
-    OrderRepository    mvOrderRepository;
-    CartItemsService   mvCartItemsService;
-    OrderItemsService  mvOrderItemsService;
-    OrderQRCodeService mvOrderQRCodeService;
-    CategoryRepository mvCategoryRepository;
-    CustomerRepository mvCustomerRepository;
+    CartService           mvCartService;
+    OrderRepository       mvOrderRepository;
+    CartItemsService      mvCartItemsService;
+    OrderItemsService     mvOrderItemsService;
+    OrderQRCodeService    mvOrderQRCodeService;
+    CategoryRepository    mvCategoryRepository;
+    CustomerRepository    mvCustomerRepository;
     OrderHistoryService   mvOrderHistoryService;
     VoucherTicketService  mvVoucherTicketService;
     LedgerReceiptService  mvLedgerReceiptService;
     ProductVariantService mvProductVariantService;
+
+    BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     @Override
     public List<OrderDTO> findAll() {
@@ -90,11 +92,15 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Transactional
     @Override
     public OrderDTO save(OrderDTO request) {
+        Long lvPayMethodId = request.getPayMethodId();
+        BigDecimal lvAmountDiscount = request.getAmountDiscount();
+        String lvVoucherUsedCode = request.getVoucherUsedCode();
+        Long lvCustomerId = request.getCustomerId();
         try {
             //Insert order
             Order order = Order.builder()
                 .code(getNextOrderCode())
-                .customer(new Customer(request.getCustomerId()))
+                .customer(new Customer(lvCustomerId))
                 .kenhBanHang(new Category(request.getSalesChannelId(), null))
                 .nhanVienBanHang(new Account(request.getCashierId()))
                 .note(request.getNote())
@@ -104,10 +110,10 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .receiverPhone(request.getReceiverPhone())
                 .receiverEmail(request.getReceiverEmail())
                 .receiverAddress(request.getReceiverAddress())
-                .paymentMethod(request.getPayMethodId() != null ? new Category(request.getPayMethodId(), null) : null)
+                .paymentMethod(lvPayMethodId != null ? new Category(lvPayMethodId, null) : null)
                 .paymentStatus(false)
-                .voucherUsedCode(ObjectUtils.isNotEmpty(request.getVoucherUsedCode()) ? request.getVoucherUsedCode() : null)
-                .amountDiscount(request.getAmountDiscount() != null ? request.getAmountDiscount() : BigDecimal.ZERO)
+                .voucherUsedCode(ObjectUtils.isNotEmpty(lvVoucherUsedCode) ? lvVoucherUsedCode : null)
+                .amountDiscount(lvAmountDiscount != null ? lvAmountDiscount : BigDecimal.ZERO)
                 .packagingCost(BigDecimal.ZERO)
                 .shippingCost(BigDecimal.ZERO)
                 .giftWrapCost(BigDecimal.ZERO)
@@ -124,28 +130,31 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             Optional<OrderCart> cart = mvCartService.findById(request.getCartId());
             if (cart.isPresent()) {
                 for (Items items : cart.get().getListItems()) {
-                    Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(items.getProductDetail().getId());
+                    Long lvProductVariantId = items.getProductDetail().getId();
+                    BigDecimal lvExtraDiscount = items.getExtraDiscount();
+                    Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(lvProductVariantId);
                     if (productDetail.isPresent()) {
+                        int lvItemQuantity = mvCartItemsService.findQuantityOfItem(items.getOrderCart().getId() , lvProductVariantId);
                         OrderDetail orderDetail = OrderDetail.builder()
                             .order(orderSaved)
                             .productDetail(productDetail.get())
-                            .quantity(mvCartItemsService.findQuantityOfItem(items.getOrderCart().getId() , productDetail.get().getId()))
+                            .quantity(lvItemQuantity)
                             .status(true)
                             .note(items.getNote())
                             .price(items.getPrice())
                             .priceOriginal(items.getPriceOriginal())
-                            .extraDiscount(items.getExtraDiscount() != null ? items.getExtraDiscount() : BigDecimal.ZERO)
+                            .extraDiscount(lvExtraDiscount != null ? lvExtraDiscount : BigDecimal.ZERO)
                             .priceType(items.getPriceType())
                             .build();
                         OrderDetail orderDetailSaved = mvOrderItemsService.save(orderDetail);
 
-                        totalAmountOfOrder = totalAmountOfOrder.add(orderDetailSaved.getPrice().multiply(BigDecimal.valueOf(orderDetailSaved.getQuantity())));
+                        totalAmountOfOrder = totalAmountOfOrder.add(orderDetailSaved.getPrice().multiply(BigDecimal.valueOf(lvItemQuantity)));
                     }
                 }
             }
 
             //Update voucher ticket used status
-            VoucherTicket voucherTicket = mvVoucherTicketService.findTicketByCode((request.getVoucherUsedCode()));
+            VoucherTicket voucherTicket = mvVoucherTicketService.findTicketByCode((lvVoucherUsedCode));
             if (voucherTicket != null) {
 //                String statusCode = voucherService.checkTicketToUse(request.getVoucherUsedCode());
 //                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(statusCode)) {
@@ -161,8 +170,8 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
             //Accumulate bonus points for customer
             if (request.getAccumulateBonusPoints() != null && request.getAccumulateBonusPoints()) {
-                BigDecimal bonusPoints = totalAmountOfOrder.subtract(orderSaved.getAmountDiscount()).divide(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN);
-                mvCustomerRepository.updateBonusPoint(orderSaved.getCustomer().getId(), bonusPoints.intValue());
+                BigDecimal bonusPoints = totalAmountOfOrder.subtract(orderSaved.getAmountDiscount()).divide(ONE_HUNDRED).setScale(0, BigDecimal.ROUND_DOWN);
+                mvCustomerRepository.updateBonusPoint(lvCustomerId, bonusPoints.intValue());
             }
 
             //Sau khi đã lưu đơn hàng thì xóa all items
@@ -186,7 +195,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
         orderToUpdate.setNote(dto.getNote());
-        orderToUpdate.setTrangThaiDonHang(mvCategoryRepository.findById(dto.getOrderStatusId()).get());
+        orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId()));
         Order orderUpdated = mvOrderRepository.save(orderToUpdate);
 
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);

@@ -30,7 +30,15 @@
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT}}" class="nav-link"><i class="nav-icon mr-3"></i>
-                                    <p>Danh sách sản phẩm</p></a>
+                                    <p>Quần áo</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{${URL_PRODUCT}}" class="nav-link"><i class="nav-icon mr-3"></i>
+                                    <p>Đồ lưu niệm</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{${URL_PRODUCT}}" class="nav-link"><i class="nav-icon mr-3"></i>
+                                    <p>Hoa quả</p></a>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{${URL_PRODUCT_COMBO}}" class="nav-link"><i class="nav-icon mr-3"></i>

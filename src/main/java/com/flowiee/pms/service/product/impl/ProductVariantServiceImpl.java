@@ -55,6 +55,8 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     ProductDetailRepository mvProductVariantRepository;
     ProductDetailTempRepository mvProductVariantTempRepository;
 
+    BigDecimal ZERO = BigDecimal.ZERO;
+
     @Override
     public List<ProductVariantDTO> findAll() {
         return this.findAll(-1, -1, null, null, null, null, null, null).getContent();
@@ -69,8 +71,8 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         List<ProductDetail> productVariants = mvProductVariantRepository.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
         List<ProductVariantDTO> productVariantDTOs = ProductVariantConvert.entitiesToDTOs(productVariants);
         for (ProductVariantDTO dto : productVariantDTOs) {
-            ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
-            setPriceInfo(dto, productPrice);
+            //ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
+            setPriceInfo(dto, dto.getVariantPrice());
         }
         return new PageImpl<>(productVariantDTOs, pageable, productVariants.size());
     }
@@ -80,8 +82,8 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         Optional<ProductDetail> productVariant = mvProductVariantRepository.findById(pProductVariantId);
         if (productVariant.isPresent()) {
             ProductVariantDTO dto = ProductVariantConvert.entityToDTO(productVariant.get());
-            ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
-            setPriceInfo(dto, productPrice);
+            //ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
+            setPriceInfo(dto, dto.getVariantPrice());
             return Optional.of(dto);
         }
         return Optional.empty();
@@ -91,22 +93,33 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     public ProductVariantDTO save(ProductVariantDTO inputDTO) {
         try {
             ProductDetail pVariant = ProductVariantConvert.dtoToEntity(inputDTO);
-            pVariant.setSoldQty(pVariant.getSoldQty() != null ? pVariant.getSoldQty() : 0);
-            pVariant.setStorageQty(pVariant.getStorageQty() != null ? pVariant.getStorageQty() : 0);
-            pVariant.setDefectiveQty(pVariant.getDefectiveQty() != null ? pVariant.getDefectiveQty() : 0);
+            String lvVariantCode = ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : CommonUtils.genProductCode();
+            int lvSoldQty = pVariant.getSoldQty() != null ? pVariant.getSoldQty() : 0;
+            int lvStorageQty = pVariant.getStorageQty() != null ? pVariant.getStorageQty() : 0;
+            int lvDefectiveQty = pVariant.getDefectiveQty() != null ? pVariant.getDefectiveQty() : 0;
+
+            pVariant.setSoldQty(lvSoldQty);
+            pVariant.setStorageQty(lvStorageQty);
+            pVariant.setDefectiveQty(lvDefectiveQty);
             pVariant.setStatus(ProductStatus.A.name());
-            pVariant.setVariantCode(ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : CommonUtils.genProductCode());
+            pVariant.setVariantCode(lvVariantCode);
             ProductDetail productDetailSaved = mvProductVariantRepository.save(pVariant);
 
             ProductPriceDTO priceDTO = inputDTO.getPrice();
-            ProductPrice productVariantPriceSaved = mvProductPriceRepository.save(ProductPrice.builder()
+            BigDecimal lvRetailPrice = priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : ZERO;
+            BigDecimal lvRetailPriceDiscount = priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice();
+            BigDecimal lvWholesalePrice = priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : ZERO;
+            BigDecimal lvWholesalePriceDiscount = priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice();
+            BigDecimal lvPurchasePrice = priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : ZERO;
+            BigDecimal lvCostPrice = priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : ZERO;
+            mvProductPriceRepository.save(ProductPrice.builder()
                     .productVariant(productDetailSaved)
-                    .retailPrice(priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : BigDecimal.ZERO)
-                    .retailPriceDiscount(priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice())
-                    .wholesalePrice(priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : BigDecimal.ZERO)
-                    .wholesalePriceDiscount(priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice())
-                    .purchasePrice(priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : BigDecimal.ZERO)
-                    .costPrice(priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : BigDecimal.ZERO)
+                    .retailPrice(lvRetailPrice)
+                    .retailPriceDiscount(lvRetailPriceDiscount)
+                    .wholesalePrice(lvWholesalePrice)
+                    .wholesalePriceDiscount(lvWholesalePriceDiscount)
+                    .purchasePrice(lvPurchasePrice)
+                    .costPrice(lvCostPrice)
                     .state(ProductPrice.STATE_ACTIVE)
                     .build());
 
@@ -182,14 +195,20 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             }
 
             ProductPriceDTO priceDTO = productDetail.getPrice();
+            BigDecimal lvRetailPrice = priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : ZERO;
+            BigDecimal lvRetailPriceDiscount = priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice();
+            BigDecimal lvWholesalePrice = priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : ZERO;
+            BigDecimal lvWholesalePriceDiscount = priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice();
+            BigDecimal lvPurchasePrice = priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : ZERO;
+            BigDecimal lvCostPrice = priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : ZERO;
             mvProductPriceRepository.save(ProductPrice.builder()
                     .productVariant(productVariantUpdated)
-                    .retailPrice(priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : BigDecimal.ZERO)
-                    .retailPriceDiscount(priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice())
-                    .wholesalePrice(priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : BigDecimal.ZERO)
-                    .wholesalePriceDiscount(priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice())
-                    .purchasePrice(priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : BigDecimal.ZERO)
-                    .costPrice(priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : BigDecimal.ZERO)
+                    .retailPrice(lvRetailPrice)
+                    .retailPriceDiscount(lvRetailPriceDiscount)
+                    .wholesalePrice(lvWholesalePrice)
+                    .wholesalePriceDiscount(lvWholesalePriceDiscount)
+                    .purchasePrice(lvPurchasePrice)
+                    .costPrice(lvCostPrice)
                     .state(ProductPrice.STATE_ACTIVE)
                     .build());
 

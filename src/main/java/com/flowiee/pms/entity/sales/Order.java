@@ -30,7 +30,7 @@ public class Order extends BaseEntity implements Serializable {
 	@Serial
 	static final long serialVersionUID = 1L;
 
-	@Column(name = "code", length = 20, nullable = false)
+	@Column(name = "code", length = 20, nullable = false, unique = true)
 	String code;
 
 	@Column(name = "receiver_name")
@@ -160,6 +160,17 @@ public class Order extends BaseEntity implements Serializable {
 			}
 		}
 		return totalItems;
+	}
+
+	public FileStorage getQRCode() {
+		if (getListImageQR() != null) {
+			for (FileStorage codeQR : getListImageQR()) {
+				if (codeQR.isActive())
+					return codeQR;
+			}
+			return null;
+		}
+		return null;
 	}
 
 	@Override

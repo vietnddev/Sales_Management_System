@@ -124,13 +124,17 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         if (customer.getPhoneDefault() != null || customer.getEmailDefault() != null || customer.getAddressDefault() != null) {
             List<CustomerContact> contacts = mvCustomerContactService.findContacts(customerId);
             for (CustomerContact contact : contacts) {
-                if ("P".equals(contact.getCode()) && "Y".equals(contact.getIsDefault()) && contact.isStatus()) {
+                String code = contact.getCode();
+                boolean isStatus = contact.isStatus();
+                boolean isDefault = "Y".equals(contact.getIsDefault());
+
+                if ("P".equals(code) && isDefault && isStatus) {
                     phoneDefault = contact;
                 }
-                if ("E".equals(contact.getCode()) && "Y".equals(contact.getIsDefault()) && contact.isStatus()) {
+                if ("E".equals(code) && isDefault && isStatus) {
                     emailDefault = contact;
                 }
-                if ("A".equals(contact.getCode()) && "Y".equals(contact.getIsDefault()) && contact.isStatus()) {
+                if ("A".equals(code) && isDefault && isStatus) {
                     addressDefault = contact;
                 }
             }

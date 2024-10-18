@@ -61,4 +61,25 @@ public class ProductCombo extends BaseEntity implements Serializable {
 
     @Transient
     List<ProductVariantDTO> applicableProducts;
+
+    public FileStorage getImage(Long pImageId) {
+        if (getListImages() != null) {
+            return getListImages().stream()
+                    .filter(image -> image.getId().equals(pImageId))
+                    .findAny()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    public FileStorage getImage() {
+        if (getListImages() != null) {
+            for (FileStorage image : getListImages()) {
+                if (image.isActive())
+                    return image;
+            }
+            return null;
+        }
+        return null;
+    }
 }

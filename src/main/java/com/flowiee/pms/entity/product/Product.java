@@ -30,7 +30,7 @@ public class Product extends BaseEntity implements Serializable {
     @Serial
 	static final long serialVersionUID = 1L;
 
-    @Column(name = "PID")
+    @Column(name = "PID", nullable = false)
     String PID;
 
     @JsonIgnore
@@ -109,9 +109,52 @@ public class Product extends BaseEntity implements Serializable {
         this.productName = name;
     }
 
+    public ProductPrice getPrice(Long pPriceId) {
+        if (getListProductBasePrice() != null) {
+            for (ProductPrice price : getListProductBasePrice()) {
+                Long lvPriceId = price.getId();
+                if (lvPriceId.equals(pPriceId))
+                    return price;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public ProductPrice getPrice() {
+        if (getListProductBasePrice() != null) {
+            for (ProductPrice price : getListProductBasePrice()) {
+                if (ProductPrice.STATE_ACTIVE.equals(price.getState()))
+                    return price;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public FileStorage getImage(Long pImageId) {
+        if (getListImages() != null) {
+            return getListImages().stream()
+                    .filter(image -> image.getId().equals(pImageId))
+                    .findAny()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    public FileStorage getImage() {
+        if (getListImages() != null) {
+            for (FileStorage image : getListImages()) {
+                if (image.isActive())
+                    return image;
+            }
+            return null;
+        }
+        return null;
+    }
+
 	@Override
 	public String toString() {
-		return "Product [id=" + super.id + ", productType=" + productType + ", brand=" + brand + ", productName=" + productName + ", unit="
-				+ unit + ", status=" + status + "]";
+		return "Product [id=" + super.id + ", productType=" + productType + ", brand=" + brand + ", productName=" + productName + ", unit=" + unit + ", status=" + status + "]";
 	}
 }

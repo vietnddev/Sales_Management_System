@@ -94,9 +94,12 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             throw new BadRequestException();
         }
         try {
+            LocalDateTime lvStartTime = LocalDateTime.parse(promotionInfoDTO.getStartTimeStr() + "T00:00");
+            LocalDateTime lvEndTime = LocalDateTime.parse(promotionInfoDTO.getEndTimeStr() + "T00:00");
+
             PromotionInfo promotionInfo = PromotionInfo.fromDTO(promotionInfoDTO);
-            promotionInfo.setStartTime(LocalDateTime.parse(promotionInfoDTO.getStartTimeStr() + "T00:00"));
-            promotionInfo.setEndTime(LocalDateTime.parse(promotionInfoDTO.getEndTimeStr() + "T00:00"));
+            promotionInfo.setStartTime(lvStartTime);
+            promotionInfo.setEndTime(lvEndTime);
 
             PromotionInfo promotionInfoSaved = mvPromotionInfoRepository.save(promotionInfo);
             for (ProductDTO product : promotionInfoDTO.getApplicableProducts()) {
@@ -119,9 +122,12 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             if (inputDTO == null || promotionId == null || this.findById(promotionId).isEmpty()) {
                 throw new ResourceNotFoundException("Product promotion not found!");
             }
+            LocalDateTime lvStartTime = LocalDateTime.parse(inputDTO.getStartTimeStr() + "T00:00");
+            LocalDateTime lvEndTime = LocalDateTime.parse(inputDTO.getEndTimeStr() + "T00:00");
+
             PromotionInfo promotionInfo = PromotionInfo.fromDTO(inputDTO);
-            promotionInfo.setStartTime(LocalDateTime.parse(inputDTO.getStartTimeStr() + "T00:00"));
-            promotionInfo.setEndTime(LocalDateTime.parse(inputDTO.getEndTimeStr() + "T00:00"));
+            promotionInfo.setStartTime(lvStartTime);
+            promotionInfo.setEndTime(lvEndTime);
             promotionInfo.setId(promotionId);
             PromotionInfo promotionInfoSaved = mvPromotionInfoRepository.save(promotionInfo);
             return mvModelMapper.map(promotionInfoSaved, PromotionInfoDTO.class);

@@ -1,20 +1,18 @@
 package com.flowiee.pms.service.system.impl;
 
+import com.flowiee.pms.config.StartUp;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.utils.ChangeLog;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.system.ConfigService;
 
 import com.flowiee.pms.service.system.LanguageService;
-import com.flowiee.pms.utils.constants.CategoryType;
-import com.flowiee.pms.utils.constants.MasterObject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -77,9 +75,19 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
             mvLanguageService.reloadMessage("en");
             //Reload shopInfo
 
-            return "Completed";
+            SystemConfig resUploadPathConfigMdl = mvSysConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
+            if (resUploadPathConfigMdl != null) {
+                StartUp.mvResourceUploadPath = resUploadPathConfigMdl.getValue();
+            }
+
+            int i = 1;
+            return new StringBuilder()
+                    .append("Completed the following tasks: ")
+                    .append("\n " + i++ + ". ").append("Reload message vi & en")
+                    .append("\n " + i++ + ". ").append("Reload resource upload path")
+                    .toString();
         } catch (RuntimeException ex) {
-            throw new AppException("An error occurred while refresh app", ex);
+            throw new AppException("An error occurred while refreshing app configuration", ex);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.storage.Storage;
@@ -40,9 +41,9 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class TicketExportServiceImpl extends BaseService implements TicketExportService {
-    OrderRepository        mvOrderRepository;
-    OrderItemsService      mvOrderItemsService;
-    TicketExportRepository mvTicketExportRepository;
+    OrderRepository             mvOrderRepository;
+    OrderItemsService           mvOrderItemsService;
+    TicketExportRepository      mvTicketExportRepository;
     ProductHistoryService       mvProductHistoryService;
     ProductQuantityService      mvProductQuantityService;
     ProductDetailTempRepository mvProductVariantTempRepository;
@@ -61,10 +62,14 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         Page<TicketExport> ticketExportPage = mvTicketExportRepository.findAll(storageId, pageable);
         for (TicketExport ticketExport : ticketExportPage.getContent()) {
             BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketExport.getListProductVariantTemp());
-            ticketExport.setTotalValue(totalValueAndItems[0]);
-            ticketExport.setTotalItems(totalValueAndItems[1].intValue());
+            BigDecimal lvTotalValue = totalValueAndItems[0];
+            int lvTotalItems = totalValueAndItems[1].intValue();
+            String lvNote = ticketExport.getNote() != null ? ticketExport.getNote() : "";
+
+            ticketExport.setTotalValue(lvTotalValue);
+            ticketExport.setTotalItems(lvTotalItems);
             ticketExport.setStorageName(ticketExport.getStorage().getName());
-            ticketExport.setNote(ticketExport.getNote() != null ? ticketExport.getNote() : "");
+            ticketExport.setNote(lvNote);
         }
         return ticketExportPage;
     }
@@ -79,8 +84,11 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
         BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketExportOpt.get().getListProductVariantTemp());
-        ticketExportOpt.get().setTotalValue(totalValueAndItems[0]);
-        ticketExportOpt.get().setTotalItems(totalValueAndItems[1].intValue());
+        BigDecimal lvTotalValue = totalValueAndItems[0];
+        int lvTotalItems = totalValueAndItems[1].intValue();
+
+        ticketExportOpt.get().setTotalValue(lvTotalValue);
+        ticketExportOpt.get().setTotalItems(lvTotalItems);
         ticketExportOpt.get().setExportTimeStr(ticketExportOpt.get().getExportTime().format(formatter));
         return ticketExportOpt;
     }
@@ -156,8 +164,8 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 
     @Transactional
     @Override
-    public TicketExport update(TicketExport ticket, Long ticketExportId) {
-        ticket.setId(ticketExportId);
+    public TicketExport update(TicketExport pTicket, Long ticketExportId) {
+        pTicket.setId(ticketExportId);
         Optional<TicketExport> ticketExportOptional = this.findById(ticketExportId);
         if (ticketExportOptional.isEmpty()) {
             throw new BadRequestException();
@@ -166,22 +174,23 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         if (TicketExportStatus.COMPLETED.name().equals(ticketExportToUpdate.getStatus()) || TicketExportStatus.CANCEL.name().equals(ticketExportToUpdate.getStatus())) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        ticketExportToUpdate.setTitle(ticket.getTitle());
-        ticketExportToUpdate.setNote(ticket.getNote());
-        ticketExportToUpdate.setStatus(ticket.getStatus());
+        ticketExportToUpdate.setTitle(pTicket.getTitle());
+        ticketExportToUpdate.setNote(pTicket.getNote());
+        ticketExportToUpdate.setStatus(pTicket.getStatus());
         TicketExport ticketExportUpdated = mvTicketExportRepository.save(ticketExportToUpdate);
 
         if (TicketExportStatus.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
             for (ProductVariantTemp productVariantTemp : ticketExportUpdated.getListProductVariantTemp()) {
+                ProductDetail lvProductVariant = productVariantTemp.getProductVariant();
                 int soldQtyInOrder = productVariantTemp.getQuantity();
-                mvProductQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, productVariantTemp.getProductVariant().getId());
+                mvProductQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, lvProductVariant.getId());
                 //Save log
-                int storageQty = productVariantTemp.getProductVariant().getStorageQty();
-                int soldQty = productVariantTemp.getProductVariant().getSoldQty();
+                int storageQty = lvProductVariant.getStorageQty();
+                int soldQty = lvProductVariant.getSoldQty();
                 ProductHistory productHistory = ProductHistory.builder()
-                    .product(productVariantTemp.getProductVariant().getProduct())
-                    .productDetail(productVariantTemp.getProductVariant())
-                    .title("Cập nhật số lượng cho [" + productVariantTemp.getProductVariant().getVariantName() + "] - " + ticket.getTitle())
+                    .product(lvProductVariant.getProduct())
+                    .productDetail(lvProductVariant)
+                    .title("Cập nhật số lượng cho [" + lvProductVariant.getVariantName() + "] - " + pTicket.getTitle())
                     .field("Storage Qty | Sold Qty")
                     .oldValue(storageQty + " | " + soldQty)
                     .newValue((storageQty - soldQtyInOrder) +  " | " + (soldQty + soldQtyInOrder))
@@ -219,11 +228,12 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         int totalItems = 0;
         if (pProductVariantTempList != null) {
             for (ProductVariantTemp p : pProductVariantTempList) {
+                BigDecimal lvProductVariantTempQty = new BigDecimal(p.getQuantity());
                 if (p.getTicketImport() != null && p.getPurchasePrice() != null) {
-                    totalValue = totalValue.add(p.getPurchasePrice().multiply(new BigDecimal(p.getQuantity())));
+                    totalValue = totalValue.add(p.getPurchasePrice().multiply(lvProductVariantTempQty));
                 }
                 if (p.getTicketExport() != null && p.getSellPrice() != null) {
-                    totalValue = totalValue.add(p.getSellPrice().multiply(new BigDecimal(p.getQuantity())));
+                    totalValue = totalValue.add(p.getSellPrice().multiply(lvProductVariantTempQty));
                 }
                 totalItems = totalItems + p.getQuantity();
             }

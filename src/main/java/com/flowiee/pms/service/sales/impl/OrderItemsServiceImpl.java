@@ -116,9 +116,13 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             }
             OrderDetail orderItemBefore = ObjectUtils.clone(orderDetailOpt.get());
 
-            orderDetailOpt.get().setQuantity(orderDetail.getQuantity());
-            orderDetailOpt.get().setExtraDiscount(orderDetail.getExtraDiscount());
-            orderDetailOpt.get().setNote(orderDetail.getNote());
+            int lvQuantity = orderDetail.getQuantity();
+            BigDecimal lvExtraDiscount = orderDetail.getExtraDiscount();
+            String lvNote = orderDetail.getNote();
+
+            orderDetailOpt.get().setQuantity(lvQuantity);
+            orderDetailOpt.get().setExtraDiscount(lvExtraDiscount);
+            orderDetailOpt.get().setNote(lvNote);
             OrderDetail orderItemUpdated = mvOrderDetailRepository.save(orderDetailOpt.get());
 
             String logTitle = "Cập nhật đơn hàng " + orderItemUpdated.getOrder().getCode();

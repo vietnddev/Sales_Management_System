@@ -21,7 +21,8 @@ public class ProductStatisticsServiceImpl extends BaseService implements Product
 
     @Override
     public Integer findProductVariantTotalQtySell(Long productId) {
-        return mvProductVariantRepository.findTotalQtySell(productId);
+        Integer totalSellQty = mvProductVariantRepository.findTotalQtySell(productId);
+        return totalSellQty != null ? totalSellQty : 0;
     }
 
     @Override

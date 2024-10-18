@@ -60,12 +60,12 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     }
 
     @Override
-    public PromotionApplyDTO update(PromotionApplyDTO PromotionApplyDTO, Long id) {
+    public PromotionApplyDTO update(PromotionApplyDTO promotionApplyDTO, Long id) {
         if (this.findById(id).isEmpty()) {
             throw new BadRequestException();
         }
-        PromotionApplyDTO.setId(id);
-        return mvPromotionApplyRepository.save(PromotionApplyDTO);
+        promotionApplyDTO.setId(id);
+        return mvPromotionApplyRepository.save(promotionApplyDTO);
     }
 
     @Override

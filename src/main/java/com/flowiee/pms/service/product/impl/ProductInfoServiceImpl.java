@@ -39,7 +39,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     ProductRepository mvProductRepository;
     CategoryRepository mvCategoryRepository;
     VoucherApplyService mvVoucherApplyService;
-    ProductImageService mvProductImageService;
+    //ProductImageService mvProductImageService;
     ProductVariantService mvProductVariantService;
     ProductHistoryService mvProductHistoryService;
     ProductStatisticsService mvProductStatisticsService;
@@ -89,11 +89,30 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
+    public ProductDTO saveClothes(ProductDTO productDTO) {
+        productDTO.setPID(PID.CLOTHES.getId());
+        return save(productDTO);
+    }
+
+    @Override
+    public ProductDTO saveSouvenir(ProductDTO productDTO) {
+        productDTO.setPID(PID.SOUVENIR.getId());
+        return save(productDTO);
+    }
+
+    @Override
+    public ProductDTO saveFruit(ProductDTO productDTO) {
+        productDTO.setPID(PID.FRUIT.getId());
+        return save(productDTO);
+    }
+
+    @Override
     public Optional<ProductDTO> findById(Long id) {
-        Optional<Product> product = mvProductRepository.findById(id);
-        if (product.isPresent()) {
-            ProductDescription productDescription = product.get().getProductDescription();
-            return Optional.of(ProductConvert.convertToDTO(product.get(), productDescription != null ? productDescription.getDescription() : null));
+        Optional<Product> productOpt = mvProductRepository.findById(id);
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            ProductDescription productDescription = product.getProductDescription();
+            return Optional.of(ProductConvert.convertToDTO(product, productDescription != null ? productDescription.getDescription() : null));
         }
         return Optional.empty();
     }
@@ -102,12 +121,12 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     public ProductDTO save(ProductDTO product) {
         try {
             Product productToSave = ProductConvert.convertToEntity(product);
-            productToSave.setCreatedBy(CommonUtils.getUserPrincipal().getId());
+            //productToSave.setCreatedBy(CommonUtils.getUserPrincipal().getId());
             productToSave.setStatus(ProductStatus.I.name());
             Product productSaved = mvProductRepository.save(productToSave);
 
             ProductDescription productDescription = null;
-            if (product.getDescription() != null) {
+            if (ObjectUtils.isNotEmpty(product.getDescription())) {
                 productDescription = mvProductDescriptionRepository.save(ProductDescription.builder()
                         .product(productSaved)
                         .description(product.getDescription()).build());
@@ -117,7 +136,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             logger.info("Insert product success! {}", product);
             return ProductConvert.convertToDTO(productSaved, productDescription.getDescription());
         } catch (RuntimeException ex) {
-            throw new AppException("Insert product fail!", ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 
@@ -128,26 +147,28 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         if (productOpt.isEmpty()) {
             throw new BadRequestException();
         }
+        Product lvProduct = productOpt.get();
         Product productBefore = ObjectUtils.clone(productOpt.get());
-        productOpt.get().setId(productId);
-        productOpt.get().setProductName(productDTO.getProductName());
-        productOpt.get().setProductType(mvCategoryRepository.findById(productDTO.getProductTypeId()).get());
-        productOpt.get().setUnit(mvCategoryRepository.findById(productDTO.getUnitId()).get());
-        productOpt.get().setBrand(mvCategoryRepository.findById(productDTO.getBrandId()).get());
-        productOpt.get().setStatus(productDTO.getStatus());
 
-        ProductDescription productDescription = productOpt.get().getProductDescription();
+        //product.setId(productId);
+        lvProduct.setProductName(productDTO.getProductName());
+        lvProduct.setProductType(new Category(productDTO.getProductTypeId()));
+        lvProduct.setUnit(new Category(productDTO.getUnitId()));
+        lvProduct.setBrand(new Category(productDTO.getBrandId()));
+        lvProduct.setStatus(productDTO.getStatus());
+
+        ProductDescription productDescription = lvProduct.getProductDescription();
         if (productDescription != null) {
             productDescription.setDescription(productDTO.getDescription());
         } else {
             productDescription = ProductDescription.builder()
-                .product(productOpt.get())
+                .product(lvProduct)
                 .description(productDTO.getDescription()).build();
         }
         ProductDescription productDescriptionUpdated = mvProductDescriptionRepository.save(productDescription);
 
-        productOpt.get().setProductDescription(productDescriptionUpdated);
-        Product productUpdated = mvProductRepository.save(productOpt.get());
+        lvProduct.setProductDescription(productDescriptionUpdated);
+        Product productUpdated = mvProductRepository.save(lvProduct);
 
         String logTitle = "Cập nhật sản phẩm: " + productUpdated.getProductName();
         ChangeLog changeLog = new ChangeLog(productBefore, productUpdated);
@@ -187,7 +208,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             return;
         }
         for (ProductDTO p : products) {
-            FileStorage imageActive = mvProductImageService.findImageActiveOfProduct(p.getId());
+            FileStorage imageActive = p.getImage();//mvProductImageService.findImageActiveOfProduct(p.getId());
             if (imageActive != null) {
                 p.setImageActive("/" + imageActive.getDirectoryPath() + "/" + imageActive.getStorageName());
             }
@@ -209,15 +230,19 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         for (ProductDTO p : products) {
             LinkedHashMap<String, String> variantInfo = new LinkedHashMap<>();
             int totalQtyStorage = 0;
+            int totalDefective = 0;
+            int totalQtySell = mvProductStatisticsService.findProductVariantTotalQtySell(p.getId());
+
             for (Category color : mvCategoryRepository.findColorOfProduct(p.getId())) {
                 StringBuilder sizeName = new StringBuilder();
                 List<Category> listSize = mvCategoryRepository.findSizeOfColorOfProduct(p.getId(), color.getId());
                 for (int i = 0; i < listSize.size(); i++) {
-                    int qtyStorage = mvProductStatisticsService.findProductVariantQuantityBySizeOfEachColor(p.getId(), color.getId(), listSize.get(i).getId());
+                    Category categorySize = listSize.get(i);
+                    int qtyStorage = mvProductStatisticsService.findProductVariantQuantityBySizeOfEachColor(p.getId(), color.getId(), categorySize.getId());
                     if (i == listSize.size() - 1) {
-                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")");
+                        sizeName.append(categorySize.getName()).append(" (").append(qtyStorage).append(")");
                     } else {
-                        sizeName.append(listSize.get(i).getName()).append(" (").append(qtyStorage).append(")").append(", ");
+                        sizeName.append(categorySize.getName()).append(" (").append(qtyStorage).append(")").append(", ");
                     }
                     totalQtyStorage += qtyStorage;
                 }
@@ -225,8 +250,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             }
             p.setProductVariantInfo(variantInfo);
             p.setTotalQtyStorage(totalQtyStorage);
-            p.setTotalQtySell(mvProductStatisticsService.findProductVariantTotalQtySell(p.getId()));
-            int totalDefective = 0;
+            p.setTotalQtySell(totalQtySell);
             p.setTotalQtyAvailableSales(totalQtyStorage - totalDefective);
         }
     }

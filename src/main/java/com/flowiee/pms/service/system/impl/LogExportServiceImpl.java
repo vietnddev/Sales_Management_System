@@ -19,6 +19,8 @@ import java.util.List;
 public class LogExportServiceImpl extends BaseExportService {
     SystemLogService mvSystemLogService;
 
+    private DateTimeFormatter mvDateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
     @Override
     protected void writeData(Object pCondition) {
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
@@ -33,7 +35,7 @@ public class LogExportServiceImpl extends BaseExportService {
             row.createCell(2).setCellValue(systemLog.getTitle());
             row.createCell(3).setCellValue(systemLog.getContent());
             row.createCell(4).setCellValue(systemLog.getContentChange());
-            row.createCell(5).setCellValue(systemLog.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            row.createCell(5).setCellValue(systemLog.getCreatedAt().format(mvDateTimeFormatter));
             row.createCell(6).setCellValue(systemLog.getIp());
 
             setBorderCell(row, 0, 6);

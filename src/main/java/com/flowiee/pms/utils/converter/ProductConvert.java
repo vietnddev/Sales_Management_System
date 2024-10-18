@@ -15,6 +15,7 @@ public class ProductConvert {
             return null;
         }
         Product outputEntity = Product.builder()
+            .PID(inputDTO.getPID())
             .productName(inputDTO.getProductName())
             //.description(inputDTO.getDescription())
             .status(inputDTO.getStatus())
@@ -70,6 +71,8 @@ public class ProductConvert {
             dto.setSoldQty(null);
             dto.setCreatedAt(inputEntity.getCreatedAt());
             dto.setCreatedBy(inputEntity.getCreatedBy());
+
+            dto.setListImages(inputEntity.getListImages());
         }
         return dto;
     }

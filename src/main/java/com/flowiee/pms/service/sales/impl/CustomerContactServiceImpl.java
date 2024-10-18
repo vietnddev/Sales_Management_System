@@ -49,15 +49,16 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
         if (pContact == null || pContact.getCustomer() == null) {
             throw new ResourceNotFoundException("Customer not found!");
         }
-        Optional<CustomerContact> contact = this.findById(contactId);
-        if (contact.isEmpty()) {
+        Optional<CustomerContact> contactOpt = this.findById(contactId);
+        if (contactOpt.isEmpty()) {
             throw new BadRequestException("Contact not found!");
         }
-        contact.get().setCode(pContact.getCode());
-        contact.get().setValue(pContact.getValue());
-        contact.get().setNote(pContact.getNote());
-        contact.get().setIsDefault(pContact.getIsDefault());
-        return mvCustomerContactRepository.save(contact.get());
+        CustomerContact contact = contactOpt.get();
+        contact.setCode(pContact.getCode());
+        contact.setValue(pContact.getValue());
+        contact.setNote(pContact.getNote());
+        contact.setIsDefault(pContact.getIsDefault());
+        return mvCustomerContactRepository.save(contact);
     }
 
     @Override
