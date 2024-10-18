@@ -89,6 +89,24 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
+    public ProductDTO saveClothes(ProductDTO productDTO) {
+        productDTO.setPID(PID.CLOTHES.getId());
+        return save(productDTO);
+    }
+
+    @Override
+    public ProductDTO saveSouvenir(ProductDTO productDTO) {
+        productDTO.setPID(PID.SOUVENIR.getId());
+        return save(productDTO);
+    }
+
+    @Override
+    public ProductDTO saveFruit(ProductDTO productDTO) {
+        productDTO.setPID(PID.FRUIT.getId());
+        return save(productDTO);
+    }
+
+    @Override
     public Optional<ProductDTO> findById(Long id) {
         Optional<Product> product = mvProductRepository.findById(id);
         if (product.isPresent()) {
@@ -107,7 +125,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             Product productSaved = mvProductRepository.save(productToSave);
 
             ProductDescription productDescription = null;
-            if (product.getDescription() != null) {
+            if (ObjectUtils.isNotEmpty(product.getDescription())) {
                 productDescription = mvProductDescriptionRepository.save(ProductDescription.builder()
                         .product(productSaved)
                         .description(product.getDescription()).build());
@@ -117,7 +135,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             logger.info("Insert product success! {}", product);
             return ProductConvert.convertToDTO(productSaved, productDescription.getDescription());
         } catch (RuntimeException ex) {
-            throw new AppException("Insert product fail!", ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
     }
 

@@ -30,7 +30,7 @@ public class Product extends BaseEntity implements Serializable {
     @Serial
 	static final long serialVersionUID = 1L;
 
-    @Column(name = "PID")
+    @Column(name = "PID", nullable = false)
     String PID;
 
     @JsonIgnore

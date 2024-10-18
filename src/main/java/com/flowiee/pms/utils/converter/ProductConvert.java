@@ -15,6 +15,7 @@ public class ProductConvert {
             return null;
         }
         Product outputEntity = Product.builder()
+            .PID(inputDTO.getPID())
             .productName(inputDTO.getProductName())
             //.description(inputDTO.getDescription())
             .status(inputDTO.getStatus())

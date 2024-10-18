@@ -15,5 +15,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findAllByReceiveId(@Param("accountId") Long accountId);
 
     @Query(value = "select * from notification n where n.receive=:accountId order by n.id desc fetch next :limit row only", nativeQuery = true)
-    List<Notification> findLimitByReceiveId(@Param("accountId") Long accountId, @Param("limit") Long limit);
+    List<Notification> findLimitByReceiveId(@Param("accountId") Long accountId, @Param("limit") Integer limit);
 }
