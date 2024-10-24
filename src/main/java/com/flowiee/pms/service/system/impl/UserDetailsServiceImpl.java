@@ -173,4 +173,21 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	public Account findByUsername(String username) {
 		return mvAccountRepository.findByUsername(username);
 	}
+
+	@Override
+	public Account getUserByResetTokens(String token) {
+		return mvAccountRepository.findByResetTokens(token);
+	}
+
+	@Override
+	public void updateTokenForResetPassword(String email, String resetToken) {
+		Account account = mvAccountRepository.findByEmail(email);
+		account.setResetTokens(resetToken);
+		mvAccountRepository.save(account);
+	}
+
+	@Override
+	public void resetPassword(Account account) {
+		mvAccountRepository.save(account);
+	}
 }
