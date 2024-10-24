@@ -68,6 +68,9 @@ public class Account extends BaseEntity implements Serializable {
 	@JoinColumn(name = "branch_id", nullable = false)
 	Branch branch;
 
+	@Column(name = "reset_tokens", unique = true)
+	String resetTokens;
+
 	@Column(name = "status")
 	boolean status;
 

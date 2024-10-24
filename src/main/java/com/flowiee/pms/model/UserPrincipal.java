@@ -40,6 +40,7 @@ public class UserPrincipal extends Account implements UserDetails {
         this.isAccountNonLocked = true;
         this.isCredentialsNonExpired = true;
         this.isEnabled = true;
+        this.setEmail(account.getEmail());
     }
 
     public void setAuthorities(Set<GrantedAuthority> grantedAuthorities) {
