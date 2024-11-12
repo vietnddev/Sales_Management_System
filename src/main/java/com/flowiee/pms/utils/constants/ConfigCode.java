@@ -16,5 +16,7 @@ public enum ConfigCode {
     maxSizeFileUpload,
     extensionAllowedFileUpload,
     sendEmailReportDaily,
-    resourceUploadPath
+    resourceUploadPath,
+    deleteSystemLog,
+    dayDeleteSystemLog
 }

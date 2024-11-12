@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface EventLogRepository extends JpaRepository<EventLog, Long> {
@@ -21,4 +22,7 @@ public interface EventLogRepository extends JpaRepository<EventLog, Long> {
                   @Param("httpMethod") String httpMethod,
                   @Param("requestUrl") String requestUrl,
                   @Param("startTime") LocalDateTime startTime);
+
+    @Query("from EventLog el where el.createdTime <= :createdTime")
+    List<EventLog> getEventLogFrom(@Param("createdTime") LocalDateTime createdTime);
 }

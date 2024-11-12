@@ -178,6 +178,8 @@ public class StartUp {
 			cnf.add(initDefaultAudit(ConfigCode.extensionAllowedFileUpload, "Định dạng file được phép upload", null));
 			cnf.add(initDefaultAudit(ConfigCode.sendEmailReportDaily, "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
 			cnf.add(initDefaultAudit(ConfigCode.resourceUploadPath, "Thư mực chứa tệp upload", null));
+			cnf.add(initDefaultAudit(ConfigCode.deleteSystemLog, "Xóa nhật ký hệ thống tự động", "N"));
+			cnf.add(initDefaultAudit(ConfigCode.dayDeleteSystemLog, "Thời gian xóa nhật ký hệ thống, các nhật ký có thời gian tạo từ >= ? ngày sẽ được xóa tự động", "100"));
 			mvConfigRepository.saveAll(cnf);
 		}
 		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);
