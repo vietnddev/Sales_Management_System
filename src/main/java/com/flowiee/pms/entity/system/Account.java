@@ -6,13 +6,17 @@ import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.entity.sales.Order;
+import com.flowiee.pms.utils.constants.AccountStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Builder
 @Entity
@@ -27,7 +31,7 @@ public class Account extends BaseEntity implements Serializable {
 	@Serial
 	static final long serialVersionUID = 1L;
 
-	@Column(name = "username", nullable = false)
+	@Column(name = "username", nullable = false, unique = true)
 	String username;
 
 	@JsonIgnore
@@ -40,10 +44,10 @@ public class Account extends BaseEntity implements Serializable {
 	@Column(name = "sex", nullable = false)
 	boolean sex;
 
-	@Column(name = "phone_number")
+	@Column(name = "phone_number", length = 15, unique = true)
 	String phoneNumber;
 
-	@Column(name = "email")
+	@Column(name = "email", length = 50, unique = true)
 	String email;
 
 	@Column(name = "address")
@@ -71,8 +75,14 @@ public class Account extends BaseEntity implements Serializable {
 	@Column(name = "reset_tokens", unique = true)
 	String resetTokens;
 
+	@Column(name = "password_expire_date")
+	LocalDate passwordExpireDate;
+
+	@Column(name = "fail_logon_count")
+	Integer failLogonCount;
+
 	@Column(name = "status")
-	boolean status;
+	String status;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
@@ -126,6 +136,25 @@ public class Account extends BaseEntity implements Serializable {
 			return null;
 		}
 		return null;
+	}
+
+	public boolean isPasswordExpired() {
+		return passwordExpireDate != null && passwordExpireDate.isBefore(LocalDate.now());
+	}
+
+	public boolean isNormal() {
+		Assert.notNull(status, "Status not null!");
+		return Objects.equals(AccountStatus.N.name(), status);
+	}
+
+	public boolean isLocked() {
+		Assert.notNull(status, "Status not null!");
+		return Objects.equals(AccountStatus.L.name(), status);
+	}
+
+	public boolean isClosed() {
+		Assert.notNull(status, "Status not null!");
+		return Objects.equals(AccountStatus.C.name(), status);
 	}
 
 	@Override

@@ -36,20 +36,21 @@ public class TicketExportControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public ModelAndView viewDetail(@PathVariable("id") Long ticketExportId) {
-        Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
-        if (ticketExport.isEmpty()) {
+        Optional<TicketExport> ticketExportOpt = mvTicketExportService.findById(ticketExportId);
+        if (ticketExportOpt.isEmpty()) {
             throw new ResourceNotFoundException("Ticket export not found!");
         }
+        TicketExport ticketExport = ticketExportOpt.get();
         LinkedHashMap<String, String> ticketExportStatus = new LinkedHashMap<>();
-        ticketExportStatus.put(ticketExport.get().getStatus(), TicketExportStatus.valueOf(ticketExport.get().getStatus()).getLabel());
-        if (ticketExport.get().getStatus().equals(TicketExportStatus.DRAFT.name())) {
+        ticketExportStatus.put(ticketExport.getStatus(), TicketExportStatus.valueOf(ticketExport.getStatus()).getLabel());
+        if (ticketExport.isDraftStatus()) {
             ticketExportStatus.put(TicketExportStatus.COMPLETED.name(), TicketExportStatus.COMPLETED.getLabel());
             ticketExportStatus.put(TicketExportStatus.CANCEL.name(), TicketExportStatus.CANCEL.getLabel());
         }
         ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_EXPORT_DETAIL.getTemplate());
         modelAndView.addObject("ticketExportId", ticketExportId);
         modelAndView.addObject("ticketExportStatus", ticketExportStatus);
-        modelAndView.addObject("ticketExportDetail", ticketExport.get());
+        modelAndView.addObject("ticketExportDetail", ticketExport);
         return baseView(modelAndView);
     }
 }

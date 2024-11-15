@@ -133,11 +133,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
             if (voucherInfo.isEmpty()) {
                 throw new AppException();
             }
-            if (VoucherStatus.A.name().equals(voucherInfo.get().getStatus())) {
-                statusTicket = VoucherStatus.A.getLabel();
-            } else if (VoucherStatus.I.name().equals(voucherInfo.get().getStatus())) {
-                statusTicket = VoucherStatus.I.getLabel();
-            }
+            statusTicket = voucherInfo.get().isActiveStatus() ? VoucherStatus.A.getLabel() : VoucherStatus.I.getLabel();
         } else {
             statusTicket = "Invalid!";
         }

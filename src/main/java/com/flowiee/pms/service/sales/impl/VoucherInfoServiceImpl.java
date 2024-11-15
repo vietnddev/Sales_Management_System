@@ -176,13 +176,13 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
 
     private String generateRandomKeyVoucher(int lengthOfKey, String voucherType) {
         String characters = "";
-        if (VoucherType.NUMBER.name().equals(voucherType)) {
+        if (isNumberType(voucherType)) {
             characters = "0123456789";
         }
-        if (VoucherType.TEXT.name().equals(voucherType)) {
+        if (isTextType(voucherType)) {
             characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         }
-        if (VoucherType.BOTH.name().equals(voucherType)) {
+        if (isBothType(voucherType)) {
             characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         }
 
@@ -206,5 +206,16 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
         } else {
             return VoucherStatus.I.getLabel();
         }
+    }
+
+    private boolean isNumberType(String voucherType) {
+        return VoucherType.NUMBER.name().equals(voucherType);
+    }
+
+    private boolean isTextType(String voucherType) {
+        return VoucherType.TEXT.name().equals(voucherType);
+    }
+    private boolean isBothType(String voucherType) {
+        return VoucherType.BOTH.name().equals(voucherType);
     }
 }

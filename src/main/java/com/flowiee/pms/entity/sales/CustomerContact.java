@@ -2,8 +2,10 @@ package com.flowiee.pms.entity.sales;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.utils.constants.ContactType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -41,6 +43,21 @@ public class CustomerContact extends BaseEntity implements Serializable {
 
     @Column(name = "is_used")
     boolean isUsed;
+
+    public boolean isPhoneContact() {
+        Assert.notNull(code, "Contact type is null!");
+        return ContactType.P.name().equals(code);
+    }
+
+    public boolean isEmailContact() {
+        Assert.notNull(code, "Contact type is null!");
+        return ContactType.E.name().equals(code);
+    }
+
+    public boolean isAddressContact() {
+        Assert.notNull(code, "Contact type is null!");
+        return ContactType.A.name().equals(code);
+    }
 
 	@Override
 	public String toString() {

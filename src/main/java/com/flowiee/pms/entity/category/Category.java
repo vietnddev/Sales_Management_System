@@ -140,6 +140,10 @@ public class Category extends BaseEntity implements Serializable {
 		this.name = name;
 	}
 
+	public boolean isDefault() {
+		return (isDefault == null || isDefault.isBlank()) ? false : "Y".equals(isDefault.trim());
+	}
+
 	@Override
 	public String toString() {
 		return "Category [id= " + super.id + ", name=" + name + "]";

@@ -7,7 +7,7 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.BranchService;
 import com.flowiee.pms.service.system.GroupAccountService;
-import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.constants.AccountStatus;
 import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.model.role.ActionModel;
@@ -99,7 +99,7 @@ public class AccountControllerView extends BaseController {
         if (account.isEmpty()) {
             throw new ResourceNotFoundException("Account not found!");
         }
-        account.get().setStatus(false);
+        account.get().setStatus(AccountStatus.C.name());
         accountService.save(account.get());
         return new ModelAndView("redirect:/sys/tai-khoan");
     }

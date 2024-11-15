@@ -43,22 +43,23 @@ public class TicketImportControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public ModelAndView viewDetail(@PathVariable("id") Long ticketImportId) {
-        Optional<TicketImport> ticketImport = mvTicketImportService.findById(ticketImportId);
-        if (ticketImport.isEmpty()) {
+        Optional<TicketImport> ticketImportOpt = mvTicketImportService.findById(ticketImportId);
+        if (ticketImportOpt.isEmpty()) {
             throw new ResourceNotFoundException("Ticket import not found!");
         }
+        TicketImport ticketImport = ticketImportOpt.get();
 
         List<Supplier> suppliers = new ArrayList<>();
-        if (ticketImport.get().getSupplier() != null) {
-            suppliers.add(new Supplier(ticketImport.get().getSupplier().getId(), ticketImport.get().getSupplier().getName()));
+        if (ticketImport.getSupplier() != null) {
+            suppliers.add(new Supplier(ticketImport.getSupplier().getId(), ticketImport.getSupplier().getName()));
         } else {
             suppliers.add(new Supplier(-1, "Chọn nhà cung cấp"));
         }
-        suppliers.addAll(mvSupplierService.findAll(-1, -1, ticketImport.get().getSupplier() != null ? List.of(ticketImport.get().getSupplier().getId()) : null).getContent());
+        suppliers.addAll(mvSupplierService.findAll(-1, -1, ticketImport.getSupplier() != null ? List.of(ticketImport.getSupplier().getId()) : null).getContent());
 
         ModelAndView modelAndView = new ModelAndView(Pages.STG_TICKET_IMPORT_DETAIL.getTemplate());
         modelAndView.addObject("ticketImportId", ticketImportId);
-        modelAndView.addObject("ticketImportDetail", ticketImport.get());
+        modelAndView.addObject("ticketImportDetail", ticketImport);
         modelAndView.addObject("listProductVariant", mvProductVariantService.findAll());
         modelAndView.addObject("listMaterial", mvMaterialService.findAll());
         modelAndView.addObject("listSupplier", suppliers);

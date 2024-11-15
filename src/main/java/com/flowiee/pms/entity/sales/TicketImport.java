@@ -11,6 +11,7 @@ import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.model.dto.TicketImportDTO;
+import com.flowiee.pms.utils.constants.TicketImportStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -116,6 +117,14 @@ public class TicketImport extends BaseEntity implements Serializable {
             .build();
         ticketImport.setId(dto.getId());
         return ticketImport;
+    }
+
+    public boolean isCompletedStatus() {
+        return TicketImportStatus.COMPLETED.name().equals(status);
+    }
+
+    public boolean isCancelStatus() {
+        return TicketImportStatus.CANCEL.name().equals(status);
     }
 
 	@Override

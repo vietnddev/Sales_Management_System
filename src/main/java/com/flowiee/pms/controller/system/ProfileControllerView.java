@@ -12,8 +12,6 @@ import com.flowiee.pms.entity.system.Account;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,16 +47,12 @@ public class ProfileControllerView extends BaseController {
 	}
 
 	@PostMapping( "/sys/profile/update")
-	public ModelAndView updateProfile(@AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("account") Account accountEntity) {
-		String username = userDetails.getUsername();
-		String password = accountService.findByUsername(username).getPassword();
-		long accountID = accountService.findByUsername(username).getId();
-
-		accountEntity.setId(accountID);
-		accountEntity.setUsername(username);
-		accountEntity.setPassword(password);
-		accountEntity.setStatus(true);
-		accountService.save(accountEntity);
+	public ModelAndView updateProfile(@ModelAttribute("account") Account pAccount) {
+		Account account = accountService.findByUsername(pAccount.getUsername());
+		account.setPhoneNumber(pAccount.getPhoneNumber());
+		account.setEmail(pAccount.getEmail());
+		account.setAddress(pAccount.getAddress());
+		accountService.update(account, account.getId());
 
 		return new ModelAndView("redirect:/profile");
 	}
@@ -79,11 +73,7 @@ public class ProfileControllerView extends BaseController {
 		BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 		if (bCrypt.matches(password_old, accountService.findByUsername(profile.get().getUsername()).getPassword())) {
 			if (password_new.equals(password_renew)) {
-				accountEntity.setId(accountService.findByUsername(profile.get().getUsername()).getId());
-				accountEntity.setUsername(profile.get().getUsername());
-				accountEntity.setFullName(accountService.findByUsername(profile.get().getUsername()).getFullName());
-				accountEntity.setPassword(bCrypt.encode(password_new));
-				accountEntity.setStatus(true);
+				profile.get().setPassword(bCrypt.encode(password_new));
 				accountService.save(accountEntity);
 
 				redirectAttributes.addAttribute("message", "Cập nhật thành công!");

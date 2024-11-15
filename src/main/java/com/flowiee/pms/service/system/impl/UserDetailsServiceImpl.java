@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.SystemLog;
+import com.flowiee.pms.exception.AccountLockedException;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.AccountRole;
@@ -46,6 +47,13 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 		Account accountEntity = this.findByUsername(username);
 		UserPrincipal userPrincipal = null;
 		if (accountEntity != null) {
+			if (accountEntity.isLocked()) {
+				throw new AccountLockedException();
+			}
+			if (accountEntity.isPasswordExpired()) {
+				throw new AppException("Password has expired for operator " + accountEntity.getUsername());
+			}
+
 			userPrincipal = new UserPrincipal(accountEntity);
 
 			Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

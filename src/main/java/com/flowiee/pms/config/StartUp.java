@@ -1,5 +1,6 @@
 package com.flowiee.pms.config;
 
+import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.entity.system.Account;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.flowiee.pms.utils.FileUtils;
+import com.flowiee.pms.utils.constants.AccountStatus;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import com.flowiee.pms.utils.constants.EndPoint;
 import com.opencsv.*;
@@ -102,8 +104,11 @@ public class StartUp {
 
 	private void loadShopInfo() {
 		ShopInfo shopInfo = new ShopInfo();
-		List<String> listCode = List.of("shopName", "shopEmail", "shopPhoneNumber", "shopAddress", "shopLogoUrl");
-		List<SystemConfig> systemConfigList = mvConfigRepository.findByCode(listCode);
+		List<SystemConfig> systemConfigList = mvConfigRepository.findByCode(List.of(ConfigCode.shopName.name(),
+																					ConfigCode.shopEmail.name(),
+																					ConfigCode.shopPhoneNumber.name(),
+																					ConfigCode.shopAddress.name(),
+																					ConfigCode.shopLogoUrl.name()));
 		for (SystemConfig sysConfig : systemConfigList) {
 			switch (sysConfig.getCode()) {
 				case "shopName":
@@ -154,7 +159,7 @@ public class StartUp {
 	private void configResourcePath() {
 		SystemConfig systemConfig = mvConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
 		if (systemConfig != null) {
-			mvResourceUploadPath = systemConfig.getValue();
+			mvResourceUploadPath = systemConfig.getValue().trim();
 		}
 	}
 
@@ -163,23 +168,23 @@ public class StartUp {
 		SystemConfig flagConfigObj = mvConfigRepository.findByCode(flagConfigCode);
 		if (flagConfigObj == null) {
 			List<SystemConfig> cnf = new ArrayList<>();
-			cnf.add(initDefaultAudit(ConfigCode.initData, "Initialize initial data for the system", "Y"));
-			cnf.add(initDefaultAudit(ConfigCode.shopName, "Tên cửa hàng", "Flowiee"));
-			cnf.add(initDefaultAudit(ConfigCode.shopEmail, "Email", "nguyenducviet0684@gmail.com"));
-			cnf.add(initDefaultAudit(ConfigCode.shopPhoneNumber, "Số điện thoại", "(+84) 706 820 684"));
-			cnf.add(initDefaultAudit(ConfigCode.shopAddress, "Địa chỉ", "Phường 7, Quận 8, Thành phố Hồ Chí Minh"));
-			cnf.add(initDefaultAudit(ConfigCode.shopLogoUrl, "Logo", null));
-			cnf.add(initDefaultAudit(ConfigCode.emailHost, "Email host", "smtp"));
-			cnf.add(initDefaultAudit(ConfigCode.emailPort, "Email port", "587"));
-			cnf.add(initDefaultAudit(ConfigCode.emailUser, "Email username", null));
-			cnf.add(initDefaultAudit(ConfigCode.emailPass, "Email password", null));
-			cnf.add(initDefaultAudit(ConfigCode.sysTimeOut, "Thời gian timeout", "3600"));
-			cnf.add(initDefaultAudit(ConfigCode.maxSizeFileUpload, "Dung lượng file tối đa cho phép upload", null));
-			cnf.add(initDefaultAudit(ConfigCode.extensionAllowedFileUpload, "Định dạng file được phép upload", null));
-			cnf.add(initDefaultAudit(ConfigCode.sendEmailReportDaily, "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
-			cnf.add(initDefaultAudit(ConfigCode.resourceUploadPath, "Thư mực chứa tệp upload", null));
-			cnf.add(initDefaultAudit(ConfigCode.deleteSystemLog, "Xóa nhật ký hệ thống tự động", "N"));
-			cnf.add(initDefaultAudit(ConfigCode.dayDeleteSystemLog, "Thời gian xóa nhật ký hệ thống, các nhật ký có thời gian tạo từ >= ? ngày sẽ được xóa tự động", "100"));
+			cnf.add(initConfigModel(ConfigCode.initData, "Initialize initial data for the system", "Y"));
+			cnf.add(initConfigModel(ConfigCode.shopName, "Tên cửa hàng", "Flowiee"));
+			cnf.add(initConfigModel(ConfigCode.shopEmail, "Email", "nguyenducviet0684@gmail.com"));
+			cnf.add(initConfigModel(ConfigCode.shopPhoneNumber, "Số điện thoại", "(+84) 706 820 684"));
+			cnf.add(initConfigModel(ConfigCode.shopAddress, "Địa chỉ", "Phường 7, Quận 8, Thành phố Hồ Chí Minh"));
+			cnf.add(initConfigModel(ConfigCode.shopLogoUrl, "Logo", null));
+			cnf.add(initConfigModel(ConfigCode.emailHost, "Email host", "smtp"));
+			cnf.add(initConfigModel(ConfigCode.emailPort, "Email port", "587"));
+			cnf.add(initConfigModel(ConfigCode.emailUser, "Email username", null));
+			cnf.add(initConfigModel(ConfigCode.emailPass, "Email password", null));
+			cnf.add(initConfigModel(ConfigCode.sysTimeOut, "Thời gian timeout", "3600"));
+			cnf.add(initConfigModel(ConfigCode.maxSizeFileUpload, "Dung lượng file tối đa cho phép upload", null));
+			cnf.add(initConfigModel(ConfigCode.extensionAllowedFileUpload, "Định dạng file được phép upload", null));
+			cnf.add(initConfigModel(ConfigCode.sendEmailReportDaily, "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
+			cnf.add(initConfigModel(ConfigCode.resourceUploadPath, "Thư mực chứa tệp upload", null));
+			cnf.add(initConfigModel(ConfigCode.deleteSystemLog, "Xóa nhật ký hệ thống tự động", "N"));
+			cnf.add(initConfigModel(ConfigCode.dayDeleteSystemLog, "Thời gian xóa nhật ký hệ thống, các nhật ký có thời gian tạo từ >= ? ngày sẽ được xóa tự động", "100"));
 			mvConfigRepository.saveAll(cnf);
 		}
 		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);
@@ -193,15 +198,14 @@ public class StartUp {
 		List<Category> listCategory = new ArrayList<>();
 		for (String[] row : csvReader.readAll()) {
 			//System.out.println(String.join(", ", row));
-			Category category = new Category();
-			category.setType(row[0]);
-			category.setCode(row[1]);
-			category.setName(row[2]);
-			category.setStatus(Boolean.parseBoolean(row[3]));
-			category.setIsDefault(row[4]);
-			category.setEndpoint(row[5]);
-			category.setCreatedBy(-1l);
-			category.setLastUpdatedBy("SA");
+			Category category = Category.builder()
+				.type(row[0])
+				.code(row[1])
+				.name(row[2])
+				.status(Boolean.parseBoolean(row[3]))
+				.isDefault(row[4])
+				.endpoint(row[5]).build();
+				initModelWithDefaultAudit(category);
 			listCategory.add(category);
 		}
 		listCategory.remove(0);//header
@@ -209,64 +213,57 @@ public class StartUp {
 		fileReader.close();
 		csvReader.close();
 		//Init branch
-		Branch branch = new Branch(null, "MAIN", "Trụ sở");
-		branch.setCreatedBy(-1l);
-		branch.setLastUpdatedBy("SA");
+		Branch branch = Branch.builder().branchCode("MAIN").branchName("Trụ sở").build();
+		initModelWithDefaultAudit(branch);
 		Branch branchSaved = mvBranchRepository.save(branch);
 		//Init group account
-		GroupAccount groupAccountManager = new GroupAccount(null, "MANAGER", "Quản lý cửa hàng");
-		groupAccountManager.setCreatedBy(-1l);
-		groupAccountManager.setLastUpdatedBy("SA");
+		GroupAccount groupAccountManager = GroupAccount.builder().groupCode("MANAGER").groupName("Quản lý cửa hàng").build();
+		initModelWithDefaultAudit(groupAccountManager);
 		GroupAccount groupManagerSaved = mvGroupAccountRepository.save(groupAccountManager);
 
-		GroupAccount groupAccountStaff = new GroupAccount(null, "STAFF", "Nhân viên bán hàng");
-		groupAccountStaff.setCreatedBy(-1l);
-		groupAccountStaff.setLastUpdatedBy("SA");
+		GroupAccount groupAccountStaff = GroupAccount.builder().groupCode("STAFF").groupName("Nhân viên bán hàng").build();
+		initModelWithDefaultAudit(groupAccountStaff);
 		GroupAccount groupStaffSaved = mvGroupAccountRepository.save(groupAccountStaff);
 		//Init admin account
-		Account adminAccount = new Account();
-		adminAccount.setUsername(AppConstants.ADMINISTRATOR);
-		adminAccount.setPassword(CommonUtils.encodePassword("123456"));
-		adminAccount.setFullName("Administrator");
-		adminAccount.setSex(true);
-		adminAccount.setRole("ADMIN");
-		adminAccount.setBranch(branchSaved);
-		adminAccount.setGroupAccount(groupManagerSaved);
-		adminAccount.setStatus(true);
-		adminAccount.setCreatedBy(-1l);
-		adminAccount.setLastUpdatedBy("SA");
+		Account adminAccount = Account.builder()
+			.username(AppConstants.ADMINISTRATOR).password(CommonUtils.encodePassword("123456"))
+			.fullName("Administrator").sex(true)
+			.role("ADMIN")
+			.branch(branchSaved).groupAccount(groupManagerSaved)
+			.status(AccountStatus.N.name())
+			.build();
+			initModelWithDefaultAudit(adminAccount);
 		mvAccountRepository.save(adminAccount);
 
-		Account staffAccount = new Account();
-		staffAccount.setUsername("staff");
-		staffAccount.setPassword(CommonUtils.encodePassword("123456"));
-		staffAccount.setFullName("Staff");
-		staffAccount.setSex(true);
-		staffAccount.setRole("USER");
-		staffAccount.setBranch(branchSaved);
-		staffAccount.setGroupAccount(groupStaffSaved);
-		staffAccount.setStatus(true);
-		staffAccount.setCreatedBy(-1l);
-		staffAccount.setLastUpdatedBy("SA");
+		Account staffAccount = Account.builder()
+			.username("staff").password(CommonUtils.encodePassword("123456"))
+			.fullName("Staff").sex(true)
+			.role("USER")
+			.branch(branchSaved).groupAccount(groupStaffSaved)
+			.status(AccountStatus.N.name())
+			.build();
+			initModelWithDefaultAudit(staffAccount);
 		mvAccountRepository.save(staffAccount);
 		//Init customer
-		Customer customer = new Customer();
-		customer.setCustomerName("Khách vãng lai");
-		customer.setDateOfBirth(LocalDate.of(2000, 1, 8));
-		customer.setSex(true);
-		customer.setCreatedBy(-1l);
-		customer.setLastUpdatedBy("SA");
+		Customer customer = Customer.builder().customerName("Khách vãng lai")
+				.dateOfBirth(LocalDate.of(2000, 1, 8)).sex(true).build();
+			initModelWithDefaultAudit(customer);
 		mvCustomerRepository.save(customer);
 
 		systemConfigInitData.setValue("Y");
 		mvConfigRepository.save(systemConfigInitData);
 	}
 
-	private SystemConfig initDefaultAudit(ConfigCode code, String name, String value) {
+	private SystemConfig initConfigModel(ConfigCode code, String name, String value) {
 		SystemConfig systemConfig = new SystemConfig(code, name, value);
-		systemConfig.setCreatedBy(-1l);
-		systemConfig.setLastUpdatedBy("SA");
+		initModelWithDefaultAudit(systemConfig);
 		return systemConfig;
+	}
+
+	private BaseEntity initModelWithDefaultAudit(BaseEntity baseEntity) {
+		baseEntity.setCreatedBy(-1l);
+		baseEntity.setLastUpdatedBy("SA");
+		return baseEntity;
 	}
 
 	public static String getResourceUploadPath() {

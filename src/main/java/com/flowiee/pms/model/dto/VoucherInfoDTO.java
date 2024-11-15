@@ -2,11 +2,13 @@ package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
+import com.flowiee.pms.utils.constants.VoucherStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.util.Assert;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -28,6 +30,16 @@ public class VoucherInfoDTO extends VoucherInfo implements Serializable {
     String status;
     List<VoucherTicket> listVoucherTicket;
     List<ProductDTO> applicableProducts;
+
+    public boolean isActiveStatus() {
+        Assert.notNull(status, "Status is null!");
+        return VoucherStatus.A.name().equals(status);
+    }
+
+    public boolean isInActiveStatus() {
+        Assert.notNull(status, "Status is null!");
+        return VoucherStatus.I.name().equals(status);
+    }
 
 	@Override
 	public String toString() {

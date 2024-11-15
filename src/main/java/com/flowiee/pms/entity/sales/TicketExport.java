@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
+import com.flowiee.pms.utils.constants.TicketExportStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -74,4 +75,16 @@ public class TicketExport extends BaseEntity implements Serializable {
 
     @Transient
     String exportTimeStr;
+
+    public boolean isDraftStatus() {
+        return TicketExportStatus.DRAFT.name().equals(status);
+    }
+
+    public boolean isCompletedStatus() {
+        return TicketExportStatus.COMPLETED.name().equals(status);
+    }
+
+    public boolean isCancelStatus() {
+        return TicketExportStatus.CANCEL.name().equals(status);
+    }
 }

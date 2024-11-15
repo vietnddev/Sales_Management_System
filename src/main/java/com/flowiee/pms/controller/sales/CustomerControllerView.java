@@ -60,9 +60,9 @@ public class CustomerControllerView extends BaseController {
         }
         List<CustomerContact> listContacts = mvCustomerContactService.findContacts(customerId);
         listContacts.forEach(c -> {
-            if (ContactType.P.name().equals(c.getCode())) c.setCode(ContactType.P.getLabel());
-            if (ContactType.E.name().equals(c.getCode())) c.setCode(ContactType.E.getLabel());
-            if (ContactType.A.name().equals(c.getCode())) c.setCode(ContactType.A.getLabel());
+            if (c.isPhoneContact()) c.setCode(ContactType.P.getLabel());
+            if (c.isEmailContact()) c.setCode(ContactType.E.getLabel());
+            if (c.isAddressContact()) c.setCode(ContactType.A.getLabel());
         });
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_CUSTOMER_DETAIL.getTemplate());
         modelAndView.addObject("customerDetail", customerDTO.get());

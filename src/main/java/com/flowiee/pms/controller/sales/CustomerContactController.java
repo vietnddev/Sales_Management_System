@@ -38,15 +38,9 @@ public class CustomerContactController extends BaseController {
             }
             List<CustomerContact> listContacts = mvCustomerContactService.findContacts(customerId);
             for (CustomerContact c : listContacts) {
-                if (ContactType.P.name().equals(c.getCode())) {
-                    c.setCode(ContactType.P.getLabel());
-                }
-                if (ContactType.E.name().equals(c.getCode())) {
-                    c.setCode(ContactType.E.getLabel());
-                }
-                if (ContactType.A.name().equals(c.getCode())) {
-                    c.setCode(ContactType.A.getLabel());
-                }
+                if (c.isPhoneContact()) c.setCode(ContactType.P.getLabel());
+                if (c.isEmailContact()) c.setCode(ContactType.E.getLabel());
+                if (c.isAddressContact()) c.setCode(ContactType.A.getLabel());
             }
             return success(listContacts);
         } catch (RuntimeException ex) {

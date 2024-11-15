@@ -124,17 +124,16 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         if (customer.getPhoneDefault() != null || customer.getEmailDefault() != null || customer.getAddressDefault() != null) {
             List<CustomerContact> contacts = mvCustomerContactService.findContacts(customerId);
             for (CustomerContact contact : contacts) {
-                String code = contact.getCode();
                 boolean isStatus = contact.isStatus();
                 boolean isDefault = "Y".equals(contact.getIsDefault());
 
-                if ("P".equals(code) && isDefault && isStatus) {
+                if (contact.isPhoneContact() && isDefault && isStatus) {
                     phoneDefault = contact;
                 }
-                if ("E".equals(code) && isDefault && isStatus) {
+                if (contact.isEmailContact() && isDefault && isStatus) {
                     emailDefault = contact;
                 }
-                if ("A".equals(code) && isDefault && isStatus) {
+                if (contact.isAddressContact() && isDefault && isStatus) {
                     addressDefault = contact;
                 }
             }
@@ -146,7 +145,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             } else if (customer.getPhoneDefault() != null && !customer.getPhoneDefault().isEmpty()) {
                 phoneDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
-                    .code("P")
+                    .code(ContactType.P.name())
                     .value(customer.getPhoneDefault())
                     .isDefault("Y")
                     .status(true).build();
@@ -160,7 +159,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             } else if (customer.getEmailDefault() != null && !customer.getEmailDefault().isEmpty()) {
                 emailDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
-                    .code("E")
+                    .code(ContactType.E.name())
                     .value(customer.getEmailDefault())
                     .isDefault("Y")
                     .status(true).build();
@@ -174,7 +173,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             } else if (customer.getAddressDefault() != null && !customer.getAddressDefault().isEmpty()) {
                 addressDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
-                    .code("A")
+                    .code(ContactType.A.name())
                     .value(customer.getAddressDefault())
                     .isDefault("Y")
                     .status(true).build();

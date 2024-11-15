@@ -147,7 +147,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             throw new BadRequestException();
         }
         TicketImport ticketImport = ticketImportOpt.get();
-        if (TicketImportStatus.COMPLETED.name().equals(ticketImport.getStatus()) || TicketImportStatus.CANCEL.name().equals(ticketImport.getStatus())) {
+        if (ticketImport.isCompletedStatus() || ticketImport.isCancelStatus()) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
 
@@ -158,7 +158,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         ticketImport.setStatus(pTicketImport.getStatus());
 
         TicketImport ticketImportUpdated = mvTicketImportRepo.save(ticketImport);
-        if (TicketImportStatus.COMPLETED.name().equals(ticketImportUpdated.getStatus())) {
+        if (ticketImportUpdated.isCompletedStatus()) {
             if (ObjectUtils.isNotEmpty(ticketImportUpdated.getListProductVariantTemps())) {
                 for (ProductVariantTemp p : ticketImportUpdated.getListProductVariantTemps()) {
                     long lvProductVariantId = p.getProductVariant().getId();

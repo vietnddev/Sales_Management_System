@@ -50,22 +50,23 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView findDonHangDetail(@PathVariable("id") Long orderId) {
-        Optional<OrderDTO> orderDetail = mvOrderService.findById(orderId);
-        if (orderId <= 0 || orderDetail.isEmpty()) {
+        Optional<OrderDTO> orderDetailOpt = mvOrderService.findById(orderId);
+        if (orderId <= 0 || orderDetailOpt.isEmpty()) {
             throw new ResourceNotFoundException("Order not found!");
         }
-        List<Category> orderStatus = new ArrayList<>(List.of(new Category(orderDetail.get().getOrderStatusId(), orderDetail.get().getOrderStatusName())));
-        orderStatus.addAll(mvCategoryService.findOrderStatus(orderDetail.get().getOrderStatusId()));
+        OrderDTO orderDetail = orderDetailOpt.get();
+        List<Category> orderStatus = new ArrayList<>(List.of(new Category(orderDetail.getOrderStatusId(), orderDetail.getOrderStatusName())));
+        orderStatus.addAll(mvCategoryService.findOrderStatus(orderDetail.getOrderStatusId()));
 
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_DETAIL.getTemplate());
         modelAndView.addObject("orderDetailId", orderId);
-        modelAndView.addObject("orderDetail", orderDetail.get());
-        modelAndView.addObject("listOrderDetail", orderDetail.get().getListOrderDetailDTO());
+        modelAndView.addObject("orderDetail", orderDetail);
+        modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetailDTO());
         modelAndView.addObject("listPaymentMethod", mvCategoryService.findSubCategory(CategoryType.PAYMENT_METHOD, null, null, -1, -1).getContent());
         modelAndView.addObject("orderStatus", orderStatus);
-        modelAndView.addObject("allowEditItem", mvOrderStatusCanModifyItem.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
-        modelAndView.addObject("allowEditGeneral", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
-        modelAndView.addObject("allowDoPay", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.get().getTrangThaiDonHang().getCode()));
+        modelAndView.addObject("allowEditItem", mvOrderStatusCanModifyItem.contains(orderDetail.getTrangThaiDonHang().getCode()));
+        modelAndView.addObject("allowEditGeneral", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.getTrangThaiDonHang().getCode()));
+        modelAndView.addObject("allowDoPay", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.getTrangThaiDonHang().getCode()));
 
         return baseView(modelAndView);
     }

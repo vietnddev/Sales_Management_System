@@ -18,5 +18,6 @@ public enum ConfigCode {
     sendEmailReportDaily,
     resourceUploadPath,
     deleteSystemLog,
-    dayDeleteSystemLog
+    dayDeleteSystemLog,
+    failLogonCount
 }
