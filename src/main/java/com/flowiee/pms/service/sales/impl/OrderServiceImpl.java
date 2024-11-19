@@ -1,12 +1,17 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.flowiee.pms.config.TemplateSendEmail;
+import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.entity.system.Account;
+import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
+import com.flowiee.pms.repository.system.ConfigRepository;
+import com.flowiee.pms.service.system.MailMediaService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.OrderDTO;
@@ -19,9 +24,7 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -32,34 +35,38 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderServiceImpl extends BaseService implements OrderService {
-    CartService           mvCartService;
-    OrderRepository       mvOrderRepository;
-    CartItemsService      mvCartItemsService;
-    OrderItemsService     mvOrderItemsService;
-    OrderQRCodeService    mvOrderQRCodeService;
-    CategoryRepository    mvCategoryRepository;
-    CustomerRepository    mvCustomerRepository;
-    OrderHistoryService   mvOrderHistoryService;
-    VoucherTicketService  mvVoucherTicketService;
-    LedgerReceiptService  mvLedgerReceiptService;
-    ProductVariantService mvProductVariantService;
+    private final CartService           mvCartService;
+    private final OrderRepository       mvOrderRepository;
+    private final ConfigRepository      mvConfigRepository;
+    private final MailMediaService      mvMailMediaService;
+    private final CartItemsService      mvCartItemsService;
+    private final OrderItemsService     mvOrderItemsService;
+    private final OrderQRCodeService    mvOrderQRCodeService;
+    private final CategoryRepository    mvCategoryRepository;
+    private final CustomerRepository    mvCustomerRepository;
+    private final OrderHistoryService   mvOrderHistoryService;
+    private final TicketImportService   mvTicketImportService;
+    private final VoucherTicketService  mvVoucherTicketService;
+    private final LedgerReceiptService  mvLedgerReceiptService;
+    private final LedgerPaymentService  mvLedgerPaymentService;
+    private final ProductVariantService mvProductVariantService;
 
     BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     @Override
     public List<OrderDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null, null, null, null, null, null, null, null, null).getContent();
+        return this.findAll(-1, -1, null, null, null, OrderStatus.ALL, null, null, null, null, null, null, null, null, null).getContent();
     }
 
     @Override
     public Page<OrderDTO> findAll(int pPageSize, int pPageNum, String pTxtSearch, Long pOrderId, Long pPaymentMethodId,
-                                  Long pOrderStatusId, Long pSalesChannelId, Long pSellerId, Long pCustomerId,
+                                  OrderStatus pOrderStatus, Long pSalesChannelId, Long pSellerId, Long pCustomerId,
                                   Long pBranchId, Long pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
         Pageable pageable = Pageable.unpaged();
         if (pPageSize >= 0 && pPageNum >= 0) {
@@ -76,7 +83,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             pOrderTimeFrom = lvFromDateToDate[0];
             pOrderTimeTo = lvFromDateToDate[1];
         }
-        Page<Order> orders = mvOrderRepository.findAll(pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pOrderTimeFrom, pOrderTimeTo, pageable);
+        Page<Order> orders = mvOrderRepository.findAll(pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pOrderTimeFrom, pOrderTimeTo, pageable);
         return new PageImpl<>(OrderDTO.fromOrders(orders.getContent()), pageable, orders.getTotalElements());
     }
 
@@ -105,7 +112,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .nhanVienBanHang(new Account(request.getCashierId()))
                 .note(request.getNote())
                 .orderTime(request.getOrderTime() != null ? request.getOrderTime() : LocalDateTime.now())
-                .trangThaiDonHang(new Category(request.getOrderStatusId(), null))
+                //.trangThaiDonHang(new Category(request.getOrderStatusId(), null))
                 .receiverName(request.getReceiverName())
                 .receiverPhone(request.getReceiverPhone())
                 .receiverEmail(request.getReceiverEmail())
@@ -119,6 +126,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .giftWrapCost(BigDecimal.ZERO)
                 .codFee(BigDecimal.ZERO)
                 .isGiftWrapped(false)
+                .orderStatus(getDefaultOrderStatus())
                 .build();
             Order orderSaved = mvOrderRepository.save(order);
 
@@ -187,6 +195,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
     }
 
+    @Transactional
     @Override
     public OrderDTO update(OrderDTO dto, Long id) {
         Order orderToUpdate = mvOrderRepository.findById(id).orElse(null);
@@ -195,9 +204,30 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
         orderToUpdate.setNote(dto.getNote());
-        orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId()));
+        //orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId()));
+        orderToUpdate.setOrderStatus(dto.getOrderStatus());
         Order orderUpdated = mvOrderRepository.save(orderToUpdate);
 
+        //After updated
+        OrderStatus lvOrderStatus = orderUpdated.getOrderStatus();
+        Long lvStorageId = orderUpdated.getTicketExport().getStorage().getId();
+        boolean isNeedRefund = false;
+        switch (lvOrderStatus) {
+            case CNCL:
+                SystemConfig lvSendNotifyConfig = mvConfigRepository.findByCode(ConfigCode.sendNotifyCustomerOnOrderConfirmation.name());
+                if (lvSendNotifyConfig != null && lvSendNotifyConfig.isYesOption())
+                    sendNotifyCustomerOnOrderConfirmation(orderUpdated);
+                break;
+            case RTND:
+                mvTicketImportService.restockReturnedItems(lvStorageId, orderUpdated.getCode());
+                if (isNeedRefund) {
+                    //create ledger transaction record for export
+
+                }
+                break;
+        }
+
+        //Log
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
         mvOrderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", id, null);
         systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật đơn hàng", changeLog);
@@ -246,7 +276,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .tranContent(receiptType)
                 .paymentMethod(dto.get().getPaymentMethod())
                 .fromToName(dto.get().getCustomer().getCustomerName())
-                .amount(Order.calTotalAmount(dto.get().getListOrderDetail()))
+                .amount(dto.get().calTotalAmountDiscount())
                 .build());
         logger.info("End generate receipt issued when completed an order");
 
@@ -310,5 +340,46 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         lvEndTime = pToDate;
 
         return new LocalDateTime[] {lvStartTime, lvEndTime};
+    }
+
+    private void sendNotifyCustomerOnOrderConfirmation(Order pOrderInfo) {
+        String lvDestination = pOrderInfo.getReceiverEmail();
+        if (pOrderInfo.getReceiverEmail() == null || pOrderInfo.getReceiverEmail().isBlank())
+            return;
+
+        Map<String, Object> lvNotificationParameter = new HashMap<>();
+        lvNotificationParameter.put(NotificationType.SendNotifyCustomerOnOrderConfirmation.name(), lvDestination);
+        lvNotificationParameter.put("customerName", pOrderInfo.getCustomer().getCustomerName());
+        lvNotificationParameter.put("orderTime", pOrderInfo.getOrderTime().format(DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy")));
+        lvNotificationParameter.put("deliveryAddress", pOrderInfo.getReceiverAddress());
+        lvNotificationParameter.put("deliveryPhoneNumber", pOrderInfo.getReceiverPhone());
+        lvNotificationParameter.put("deliveryEmail", pOrderInfo.getReceiverEmail());
+        lvNotificationParameter.put("totalOrderValue", pOrderInfo.calTotalAmountDiscount());
+
+        StringBuilder lvRowsBuilder = new StringBuilder("");
+        StringBuilder lvRowBuilder = new StringBuilder();
+        int i = 1;
+        for (OrderDetail lvItem : pOrderInfo.getListOrderDetail()) {
+            ProductDetail lvProductDetail = lvItem.getProductDetail();
+            BigDecimal lvUnitPrice = lvItem.getPrice();
+            int lvQuantity = lvItem.getQuantity();
+            lvRowBuilder.append("<tr>");
+            lvRowBuilder.append("<td>").append(i++).append("</td>");
+            lvRowBuilder.append("<td>").append(lvProductDetail.getVariantName()).append("</td>");
+            lvRowBuilder.append("<td>").append(lvUnitPrice).append("</td>");
+            lvRowBuilder.append("<td>").append(lvQuantity).append("</td>");
+            lvRowBuilder.append("<td>").append(lvUnitPrice.multiply(new BigDecimal(lvQuantity))).append("</td>");
+            lvRowBuilder.append("<td>").append(lvItem.getNote()).append("</td>");
+            lvRowBuilder.append("</tr>");
+            lvRowsBuilder.append(lvRowBuilder.toString());
+            lvRowBuilder.setLength(0);
+        }
+        lvNotificationParameter.put("orderDetails", lvRowsBuilder.toString());
+
+        mvMailMediaService.send(NotificationType.SendNotifyCustomerOnOrderConfirmation, lvNotificationParameter);
+    }
+
+    private OrderStatus getDefaultOrderStatus() {
+        return OrderStatus.PEND;
     }
 }

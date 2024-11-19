@@ -1,0 +1,9 @@
+general-email-notification:
+  templates:
+    - type: SendNotifyCustomerOnOrderConfirmation
+      path: src/main/resources/templates/emailAlert/orderConfirmation.html
+      encoding: UTF-8
+      subject: "[FLOWIEE] Đơn hàng của bạn đã được xác nhận"
+      sender: ""
+      bcc: ""
+      cc: ""

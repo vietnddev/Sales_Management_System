@@ -194,9 +194,9 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
                     return true;
                 break;
             case "PAYMENT_METHOD":
-                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
-                    return true;
-                }
+//                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
+//                    return true;
+//                }
                 if (ObjectUtils.isNotEmpty(category.get().getListPaymentMethod())) {
                     return true;
                 }
@@ -222,9 +222,9 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
                 }
                 break;
             case "ORDER_STATUS":
-                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
-                    return true;
-                }
+//                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
+//                    return true;
+//                }
                 break;
             default:
                 //throw new IllegalStateException("Unexpected value: " + category.get().getType());

@@ -5,7 +5,9 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.utils.ChangeLog;
+import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.service.BaseService;
@@ -63,28 +65,51 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
     @Override
     public String refreshApp() {
         try {
-            //
+            //Reload system configs
+            ShopInfo lvShopInfo = CommonUtils.mvShopInfo != null ? CommonUtils.mvShopInfo : new ShopInfo();
+            for (SystemConfig systemConfig : this.findAll()) {
+                ConfigCode lvConfigCode = ConfigCode.valueOf(systemConfig.getCode());
+                String lvConfigValue = systemConfig.getValue();
+
+                if (lvConfigCode == null) continue;
+
+                if (ConfigCode.resourceUploadPath.equals(lvConfigCode)) StartUp.mvResourceUploadPath = lvConfigValue;
+                if (ConfigCode.shopName.equals(lvConfigCode))           lvShopInfo.setName(lvConfigValue);
+                if (ConfigCode.shopPhoneNumber.equals(lvConfigCode))    lvShopInfo.setPhoneNumber(lvConfigValue);
+                if (ConfigCode.shopEmail.equals(lvConfigCode))          lvShopInfo.setEmail(lvConfigValue);
+                if (ConfigCode.shopAddress.equals(lvConfigCode))        lvShopInfo.setAddress(lvConfigValue);
+                if (ConfigCode.shopLogoUrl.equals(lvConfigCode))        lvShopInfo.setLogoUrl(lvConfigValue);
+            }
+            CommonUtils.mvShopInfo = lvShopInfo;
+
+            //Reload category label
             List<Category> rootCategories = mvCategoryService.findRootCategory();
             for (Category c : rootCategories) {
                 if (c.getType() != null && !c.getType().trim().isEmpty()) {
                     CategoryType.valueOf(c.getType()).setLabel(c.getName());
                 }
             }
-            //
+
+            //Reload order status
+            List<Category> lvOrderStatusList = mvCategoryService.findOrderStatus(null);
+            for (Category lvCategory : lvOrderStatusList) {
+                if (Category.ROOT_LEVEL.equals(lvCategory.getCode()))
+                    continue;
+                OrderStatus lvOrderStatus = OrderStatus.get(lvCategory.getCode());
+                if (lvOrderStatus != null) {
+                    lvOrderStatus.setDescription(lvCategory.getNote());
+                }
+            }
+
+            //Reload message
             mvLanguageService.reloadMessage("vi");
             mvLanguageService.reloadMessage("en");
-            //Reload shopInfo
-
-            SystemConfig resUploadPathConfigMdl = mvSysConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
-            if (resUploadPathConfigMdl != null) {
-                StartUp.mvResourceUploadPath = resUploadPathConfigMdl.getValue();
-            }
 
             int i = 1;
             return new StringBuilder()
                     .append("Completed the following tasks: ")
                     .append("\n " + i++ + ". ").append("Reload message vi & en")
-                    .append("\n " + i++ + ". ").append("Reload resource upload path")
+                    .append("\n " + i++ + ". ").append("Reload system configs")
                     .toString();
         } catch (RuntimeException ex) {
             throw new AppException("An error occurred while refreshing app configuration", ex);
@@ -93,7 +118,7 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
 
     @Override
     public List<SystemConfig> getSystemConfigs(String[] configCodes) {
-        return List.of();
+        return getSystemConfigs(List.of(configCodes));
     }
 
     @Override

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    table {
+        border: 0.75px solid #000000;
+        border-collapse: collapse;
+    }
+    tr {
+        height: 13px;
+    }
+    td {
+        width: 170px;
+        border-right-style: solid;
+        border-right-width: 0.75px;
+        border-bottom-style: solid;
+        border-bottom-width: 0.75px;
+        padding-right: 5px;
+        padding-left: 5px;
+        vertical-align: top;
+    }
+</style>
+<body>
+    <p>Dear [%customerName%],</p>
+    <p>Đơn hàng của bạn đã được xác nhận, thông tin chi tiết như sau:</p>
+    <p>Thời gian: [%orderTime%]<p/>
+    <p>Địa chỉ nhận hàng: [%deliveryAddress%]<p/>
+    <p>Số điện thoại: [%deliveryPhoneNumber%]<p/>
+    <p>Email: [%deliveryEmail%]<p/>
+    <table cellspacing="0" cellpadding="0">
+        <tr>
+            <td>Stt</td>
+            <td>Tên sản phẩm</td>
+            <td>Đơn giá</td>
+            <td>Số lượng</td>
+            <td>Thành tiền</td>
+            <td>Ghi chú</td>
+        </tr>
+        [%orderDetails%]
+        <tr>
+            <td colspan="5" style="text-align: right">[%totalOrderValue%]</td>
+            <td></td>
+        </tr>
+    </table>
+    <br/>
+    <p> Flowiee.</p>
+</body>
+</html>

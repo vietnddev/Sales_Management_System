@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
+import com.flowiee.pms.utils.constants.OrderStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -111,16 +112,20 @@ public class Order extends BaseEntity implements Serializable {
 	@JoinColumn(name = "ticket_export_id")
 	TicketExport ticketExport;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "status", nullable = false)
-	Category trangThaiDonHang;
+//	@JsonIgnore
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "status", nullable = false)
+//	Category trangThaiDonHang;
 
 	@Column(name = "cancellation_date")
 	LocalDateTime cancellationDate;
 
 	@Column(name = "cancellation_reason")
 	String cancellationReason;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "order_status", length = 10)
+	OrderStatus orderStatus;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
@@ -138,18 +143,18 @@ public class Order extends BaseEntity implements Serializable {
 		super.id = id;
 	}
 
-	public static BigDecimal calTotalAmount(List<OrderDetail> orderItems) {
+	public BigDecimal calTotalAmount() {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		if (orderItems != null) {
-			for (OrderDetail d : orderItems) {
+		if (listOrderDetail != null) {
+			for (OrderDetail d : listOrderDetail) {
 				totalAmount = totalAmount.add((d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity()))).subtract(d.getExtraDiscount()));
 			}
 		}
 		return totalAmount;
 	}
 
-	public static BigDecimal calTotalAmountDiscount(BigDecimal totalAmount, BigDecimal amountDiscount) {
-		return totalAmount.subtract(amountDiscount);
+	public BigDecimal calTotalAmountDiscount() {
+		return calTotalAmount().subtract(amountDiscount);
 	}
 
 	public static int calTotalProduct(List<OrderDetail> orderItems) {
@@ -180,6 +185,6 @@ public class Order extends BaseEntity implements Serializable {
 				+ ", ghiChu=" + note + ", orderTime=" + orderTime
 				+ ", voucherUsedCode=" + voucherUsedCode + ", amountDiscount=" + amountDiscount
 				+ ", nhanVienBanHang=" + nhanVienBanHang
-				+ ", kenhBanHang=" + kenhBanHang + ", trangThaiDonHang=" + trangThaiDonHang + "]";
+				+ ", kenhBanHang=" + kenhBanHang + ", orderStatus=" + orderStatus + "]";
 	}
 }

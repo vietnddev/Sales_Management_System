@@ -4,6 +4,8 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.MaterialTemp;
+import com.flowiee.pms.entity.sales.Order;
+import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.Account;
@@ -13,6 +15,8 @@ import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
+import com.flowiee.pms.repository.sales.OrderRepository;
+import com.flowiee.pms.repository.storage.StorageRepository;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.repository.sales.MaterialTempRepository;
@@ -49,11 +53,13 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     RoleService                 mvRoleService;
     AccountService              mvAccountService;
     MaterialService             mvMaterialService;
+    OrderRepository             mvOrderRepository;
+    StorageRepository           mvStorageRepository;
     NotificationService         mvNotificationService;
     GroupAccountService         mvGroupAccountService;
-    MaterialTempRepository      mvMaterialTempRepo;
-    TicketImportRepository      mvTicketImportRepo;
     ProductQuantityService      mvProductQuantityService;
+    MaterialTempRepository      mvMaterialTempRepository;
+    TicketImportRepository      mvTicketImportRepository;
     ProductDetailRepository     mvProductVariantRepository;
     ProductDetailTempRepository mvProductVariantTempRepository;
 
@@ -68,7 +74,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         if (pageSize >= 0 && pageNum >= 0) {
             pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
         }
-        Page<TicketImport> ticketImportPage = mvTicketImportRepo.findAll(pText, pSupplierId, pPaymentMethod, pPayStatus, pImportStatus, pStorageId, pageable);
+        Page<TicketImport> ticketImportPage = mvTicketImportRepository.findAll(pText, pSupplierId, pPaymentMethod, pPayStatus, pImportStatus, pStorageId, pageable);
         for (TicketImport ticketImport : ticketImportPage.getContent()) {
             BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketImport.getListProductVariantTemps(), ticketImport.getListMaterialTemps());
             BigDecimal lvTotalValue = totalValueAndItems[0];
@@ -81,7 +87,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public Optional<TicketImport> findById(Long entityId) {
-        Optional<TicketImport> ticketImport = mvTicketImportRepo.findById(entityId);
+        Optional<TicketImport> ticketImport = mvTicketImportRepository.findById(entityId);
         if (ticketImport.isEmpty()) {
             return Optional.empty();
         }
@@ -98,7 +104,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         if (entity == null) {
             throw new BadRequestException();
         }
-        TicketImport ticketImportSaved = mvTicketImportRepo.save(entity);
+        TicketImport ticketImportSaved = mvTicketImportRepository.save(entity);
         Storage storage = ticketImportSaved.getStorage();
         if (storage != null) {
             if (storage.getHoldableQty() != null && storage.getHoldWarningPercent() != null) {
@@ -157,7 +163,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         ticketImport.setNote(pTicketImport.getNote());
         ticketImport.setStatus(pTicketImport.getStatus());
 
-        TicketImport ticketImportUpdated = mvTicketImportRepo.save(ticketImport);
+        TicketImport ticketImportUpdated = mvTicketImportRepository.save(ticketImport);
         if (ticketImportUpdated.isCompletedStatus()) {
             if (ObjectUtils.isNotEmpty(ticketImportUpdated.getListProductVariantTemps())) {
                 for (ProductVariantTemp p : ticketImportUpdated.getListProductVariantTemps()) {
@@ -170,7 +176,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                 for (MaterialTemp m : ticketImportUpdated.getListMaterialTemps()) {
                     long lvMaterialId = m.getMaterial().getId();
                     mvMaterialService.updateQuantity(m.getQuantity(), lvMaterialId, "I");
-                    mvMaterialTempRepo.updateStorageQuantity(lvMaterialId, m.getQuantity());
+                    mvMaterialTempRepository.updateStorageQuantity(lvMaterialId, m.getQuantity());
                 }
             }
         }
@@ -183,7 +189,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         if (ticketImport.isEmpty()) {
             throw new BadRequestException("Ticket import not found!");
         }
-        mvTicketImportRepo.deleteById(entityId);
+        mvTicketImportRepository.deleteById(entityId);
 
         systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_IM, MasterObject.TicketImport, "Xóa phiếu nhập hàng", ticketImport.get().getTitle());
 
@@ -192,7 +198,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public TicketImport findDraftImportPresent(Long createdBy) {
-        return mvTicketImportRepo.findDraftGoodsImportPresent(TicketImportStatus.DRAFT.name(), createdBy);
+        return mvTicketImportRepository.findDraftGoodsImportPresent(TicketImportStatus.DRAFT.name(), createdBy);
     }
 
     @Override
@@ -218,7 +224,7 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             throw new BadRequestException();
         }
         ticketImport.get().setStatus(status);
-        return mvTicketImportRepo.save(ticketImport.get());
+        return mvTicketImportRepository.save(ticketImport.get());
     }
 
     @Override
@@ -260,12 +266,12 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                 continue;
             }
             Material material = materialOpt.get();
-            MaterialTemp temp = mvMaterialTempRepo.findMaterialInGoodsImport(ticketImportId, material.getId());
+            MaterialTemp temp = mvMaterialTempRepository.findMaterialInGoodsImport(ticketImportId, material.getId());
             int defaultQuantity = 1;
             if (temp != null) {
-                mvMaterialTempRepo.updateQuantityIncrease(temp.getId(), defaultQuantity);
+                mvMaterialTempRepository.updateQuantityIncrease(temp.getId(), defaultQuantity);
             } else {
-                MaterialTemp materialTempAdded = mvMaterialTempRepo.save(MaterialTemp.builder()
+                MaterialTemp materialTempAdded = mvMaterialTempRepository.save(MaterialTemp.builder()
                         .ticketImport(new TicketImport(ticketImportId))
                         .material(material)
                         .quantity(defaultQuantity)
@@ -275,6 +281,21 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
             }
         }
         return listAdded;
+    }
+
+    @Override
+    public void restockReturnedItems(Long pStorageId, String pOrderCode) {
+        Optional<Storage> lvStorageOpt = mvStorageRepository.findById(pStorageId);
+        if (lvStorageOpt.isEmpty()) return;
+        Order lvOrder = mvOrderRepository.findByOrderCode(pOrderCode);
+        if (lvOrder == null) return;
+
+        TicketExport lvTicketExport = lvOrder.getTicketExport();
+        for (ProductVariantTemp productVariantTmp : lvTicketExport.getListProductVariantTemp()) {
+            long lvProductVariantId = productVariantTmp.getProductVariant().getId();
+            int lvStockQuantity = productVariantTmp.getQuantity();
+            mvProductQuantityService.updateProductVariantQuantityIncrease(lvStockQuantity, lvProductVariantId);
+        }
     }
 
     private BigDecimal[] getTotalValueAndItems(List<ProductVariantTemp> pProductVariantTempList, List<MaterialTemp> pMaterialTempList) {

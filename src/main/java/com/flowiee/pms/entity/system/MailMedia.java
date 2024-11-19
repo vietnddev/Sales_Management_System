@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Builder
 @Entity
 @Table(name = "mail_media")
 @NoArgsConstructor
@@ -39,7 +40,7 @@ public class MailMedia implements Serializable {
     private boolean isHtml;
 
     @Column(name = "priority", nullable = false)
-    private Long priority;
+    private Integer priority;
 
     @Column(name = "attachment")
     private String attachment;

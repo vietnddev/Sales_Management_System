@@ -2,6 +2,7 @@ package com.flowiee.pms.repository.sales;
 
 import com.flowiee.pms.entity.sales.Order;
 
+import com.flowiee.pms.utils.constants.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select distinct o from Order o " +
            "left join Customer c on c.id = o.customer.id " +
            "left join Category sc on sc.id = o.kenhBanHang.id and sc.type = 'SALES_CHANNEL' " +
-           "left join Category os on os.id = o.trangThaiDonHang.id and os.type = 'ORDER_STATUS' " +
+           "left join Category os on os.id = o.orderStatus and os.type = 'ORDER_STATUS' " +
            "left join Category pm on pm.id = o.paymentMethod.id and pm.type = 'PAYMENT_METHOD' " +
            "left join FileStorage f on f.order.id = o.id " +
            "left join Account a on a.id = o.createdBy " +
@@ -26,7 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
            "and (:txtSearch is null or (o.receiverName like %:txtSearch%)) " +
            "and (:orderId is null or o.id=:orderId) " +
            "and (:paymentMethodId is null or o.paymentMethod.id=:paymentMethodId) " +
-           "and (:orderStatusId is null or o.trangThaiDonHang.id=:orderStatusId) " +
+           "and (:orderStatus is null or o.orderStatus=:orderStatus) " +
            "and (:salesChannelId is null or o.kenhBanHang.id=:salesChannelId) " +
            "and (:sellerId is null or o.nhanVienBanHang.id=:sellerId) " +
            "and (:customerId is null or o.customer.id=:customerId) " +
@@ -36,7 +37,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findAll(@Param("txtSearch") String txtSearch,
                         @Param("orderId") Long orderId,
                         @Param("paymentMethodId") Long paymentMethodId,
-                        @Param("orderStatusId") Long orderStatusId,
+                        @Param("orderStatus") OrderStatus orderStatus,
                         @Param("salesChannelId") Long salesChannelId,
                         @Param("sellerId") Long sellerId,
                         @Param("customerId") Long customerId,

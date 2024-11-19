@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
+import com.flowiee.pms.utils.constants.OrderStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,7 +48,7 @@ public class OrderDTO extends Order implements Serializable {
 	List<OrderDetailDTO> listOrderDetailDTO;
 
 	public OrderDTO(Long id, String code, LocalDateTime orderTime, String receiptName, String receiptPhone, String receiptEmail, String receiptAddress,
-					Customer customer, Category salesChannel, Category paymentMethod, Account cashier, Category orderStatus) {
+					Customer customer, Category salesChannel, Category paymentMethod, Account cashier, OrderStatus orderStatus) {
 		this.id = id;
 		setCode(code);
 		setOrderTime(orderTime);
@@ -59,12 +60,13 @@ public class OrderDTO extends Order implements Serializable {
 		setKenhBanHang(salesChannel);
 		setPaymentMethod(paymentMethod);
 		setNhanVienBanHang(cashier);
-		setTrangThaiDonHang(orderStatus);
+		//setTrangThaiDonHang(orderStatus);
+		setOrderStatus(orderStatus);
 	}
 
 	public static OrderDTO fromOrder(Order order) {
 		OrderDTO dto = new OrderDTO(order.getId(), order.getCode(), order.getOrderTime(), order.getReceiverName(), order.getReceiverPhone(), order.getReceiverEmail(), order.getReceiverAddress(),
-									order.getCustomer(), order.getKenhBanHang(), order.getPaymentMethod(), order.getNhanVienBanHang(), order.getTrangThaiDonHang());
+									order.getCustomer(), order.getKenhBanHang(), order.getPaymentMethod(), order.getNhanVienBanHang(), order.getOrderStatus());
 		dto.setCreatedAt(order.getCreatedAt());
 
 		dto.setCustomerId(order.getCustomer().getId());
@@ -73,8 +75,9 @@ public class OrderDTO extends Order implements Serializable {
 		dto.setSalesChannelId(order.getKenhBanHang().getId());
 		dto.setSalesChannelName(order.getKenhBanHang().getName());
 
-		dto.setOrderStatusId(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getId() : null);
-		dto.setOrderStatusName(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getName() : null);
+		//dto.setOrderStatusId(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getId() : null);
+		//dto.setOrderStatusName(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getName() : null);
+		dto.setOrderStatus(dto.getOrderStatus());
 
 		dto.setPayMethodId(dto.getPaymentMethod() != null ? order.getPaymentMethod().getId() : null);
 		dto.setPayMethodName(dto.getPaymentMethod() != null ? order.getPaymentMethod().getName() : null);
@@ -90,8 +93,8 @@ public class OrderDTO extends Order implements Serializable {
 		}
 
 		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : new BigDecimal(0));
-		dto.setTotalAmount(calTotalAmount(order.getListOrderDetail()));
-		dto.setTotalAmountDiscount(calTotalAmountDiscount(dto.getTotalAmount(), dto.getAmountDiscount()));
+		dto.setTotalAmount(order.calTotalAmount());
+		dto.setTotalAmountDiscount(order.calTotalAmountDiscount());
 		dto.setTotalProduct(calTotalProduct(order.getListOrderDetail()));
 		dto.setVoucherUsedCode(order.getVoucherUsedCode());
 		dto.setPaymentStatus(order.getPaymentStatus() != null && order.getPaymentStatus());
@@ -101,6 +104,7 @@ public class OrderDTO extends Order implements Serializable {
 		dto.setNote(order.getNote());
 
 		dto.setListOrderDetailDTO(OrderDetailDTO.fromOrderDetails(order.getListOrderDetail()));
+		dto.setListOrderDetail(order.getListOrderDetail());
 
 		return dto;
 	}

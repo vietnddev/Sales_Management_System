@@ -9,6 +9,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.OrderStatus;
 import com.flowiee.pms.utils.constants.TemplateExport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +48,7 @@ public class OrderController extends BaseController {
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public AppResponse<List<OrderDTO>> findAllOrders(@RequestParam(value = "orderId", required = false) Long pOrderId,
                                                      @RequestParam(value = "paymentMethodId", required = false) Long pPaymentMethodId,
-                                                     @RequestParam(value = "orderStatusId", required = false) Long pOrderStatusId,
+                                                     @RequestParam(value = "orderStatusId", required = false) OrderStatus pOrderStatus,
                                                      @RequestParam(value = "salesChannelId", required = false) Long pSalesChannelId,
                                                      @RequestParam(value = "groupCustomerId", required = false) Long pGroupCustomerId,
                                                      @RequestParam(value = "sellerId", required = false) Long pSellerId,
@@ -58,7 +59,7 @@ public class OrderController extends BaseController {
                                                      @RequestParam("pageSize") int pageSize,
                                                      @RequestParam("pageNum") int pageNum) {
         try {
-            Page<OrderDTO> orderPage = mvOrderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatusId, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
+            Page<OrderDTO> orderPage = mvOrderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
             return success(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "order"), ex);

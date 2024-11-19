@@ -21,4 +21,6 @@ public interface TicketImportService extends BaseCurdService<TicketImport> {
     List<ProductVariantTemp> addProductToTicket(Long ticketImportId, List<Long> productVariantIds);
 
     List<MaterialTemp> addMaterialToTicket(Long ticketImportId, List<Long> materialIds);
+
+    void restockReturnedItems(Long pStorageId, String pOrderCode);
 }

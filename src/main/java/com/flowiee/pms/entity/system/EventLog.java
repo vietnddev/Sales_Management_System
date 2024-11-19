@@ -33,10 +33,10 @@ public class EventLog implements Serializable {
     @Column(name = "request_url")
     private String requestUrl;
 
-    @Column(name = "request_param")
+    @Column(name = "request_param", length = 999)
     private String requestParam;
 
-    @Column(name = "request_body")
+    @Column(name = "request_body", length = 2000)
     private String requestBody;
 
     @Column(name = "created_by")

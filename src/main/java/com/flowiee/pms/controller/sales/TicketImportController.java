@@ -117,4 +117,12 @@ public class TicketImportController extends BaseController {
             throw new AppException(String.format(ErrorCode.UPDATE_ERROR_OCCURRED.getDescription(), "ticket_import"), ex);
         }
     }
+
+//    @Operation(summary = "Nhập lại kho đơn hoàn")
+//    @PostMapping("/restock-returned-items")
+//    @PreAuthorize("@vldModuleSales.importGoods(true)")
+//    public AppResponse<String> restockReturnedItems(@RequestParam("storageId") Long pStorageId, @RequestParam("orderCode") String pOrderCode) {
+//        mvTicketImportService.restockReturnedItems(pStorageId, pOrderCode);
+//        return success("Nhập hoàn thành công!");
+//    }
 }

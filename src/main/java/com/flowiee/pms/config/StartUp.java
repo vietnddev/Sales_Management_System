@@ -8,7 +8,6 @@ import com.flowiee.pms.entity.system.Branch;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.model.ServerInfo;
-import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.repository.system.AccountRepository;
@@ -19,8 +18,7 @@ import com.flowiee.pms.service.system.*;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -29,12 +27,15 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.AccountStatus;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import com.flowiee.pms.utils.constants.EndPoint;
+import com.flowiee.pms.utils.constants.NotificationType;
 import com.opencsv.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -54,32 +55,58 @@ import org.springframework.context.event.EventListener;
 public class StartUp {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	ConfigRepository mvConfigRepository;
-	BranchRepository mvBranchRepository;
-	AccountRepository mvAccountRepository;
-	LanguageService mvLanguageService;
-	CustomerRepository mvCustomerRepository;
-	CategoryRepository mvCategoryRepository;
+	ConfigRepository       mvConfigRepository;
+	BranchRepository       mvBranchRepository;
+	AccountRepository      mvAccountRepository;
+	LanguageService        mvLanguageService;
+	CustomerRepository     mvCustomerRepository;
+	CategoryRepository     mvCategoryRepository;
 	GroupAccountRepository mvGroupAccountRepository;
+	ConfigService          configService;
+	TemplateSendEmail      templateSendEmail;
 
-	public static LocalDateTime START_APP_TIME;
-	public static String mvResourceUploadPath = null;
+	public static LocalDateTime                                     START_APP_TIME;
+	public static String                                            mvResourceUploadPath      = null;
+	public static Map<NotificationType, TemplateSendEmail.Template> mvGeneralEmailTemplateMap = new HashMap<>();
 
     @Bean
     CommandLineRunner init() {
     	return args -> {
 			initData();
-			loadShopInfo();
 			configReport();
             configEndPoint();
-            configResourcePath();
+            configService.refreshApp();
+			logger.info("Finish loads system configs");
 
-			logger.info("Start downloading vi messages");
+			//logger.info("Start downloading vi messages");
 			loadLanguageMessages("en");
 			logger.info("Finish downloading vi messages");
-			logger.info("Start downloading en message");
+			//logger.info("Start downloading en message");
 			loadLanguageMessages("vi");
 			logger.info("Finish downloading en message");
+
+			List<TemplateSendEmail.Template> lvGeneralMailTemplates = templateSendEmail.getGeneralMailTemplates();
+			lvGeneralMailTemplates.forEach(lvTemplate -> {
+				NotificationType lvNotificationType = NotificationType.valueOf(lvTemplate.getType());
+				String lvEncoding = lvTemplate.getEncoding();
+				String lvTemplatePath = lvTemplate.getPath();
+				StringBuilder lvTemplateContent = new StringBuilder("");
+				if (Files.exists(Path.of(lvTemplatePath))) {
+					byte[] lvBuf = new byte[1024];
+					try (BufferedInputStream lvIs = new BufferedInputStream(new FileInputStream(new File(lvTemplatePath)));
+						 ByteArrayOutputStream lvOs = new ByteArrayOutputStream()) {
+						int lvBytesRead = -1;
+						while ((lvBytesRead = lvIs.read(lvBuf)) != -1) {
+							lvOs.write(lvBuf, 0, lvBytesRead);
+						}
+						lvTemplateContent.append(new String(lvOs.toByteArray(), lvEncoding));
+					} catch (IOException e) {
+						logger.warn(e.getMessage(), e);
+					}
+				}
+				lvTemplate.setTemplateContent(lvTemplateContent.toString());
+				mvGeneralEmailTemplateMap.put(lvNotificationType, lvTemplate);
+			});
 
 			START_APP_TIME = LocalDateTime.now();
         };
@@ -101,35 +128,6 @@ public class StartUp {
     private void loadLanguageMessages(String langCode) {
         mvLanguageService.reloadMessage(langCode);
     }
-
-	private void loadShopInfo() {
-		ShopInfo shopInfo = new ShopInfo();
-		List<SystemConfig> systemConfigList = mvConfigRepository.findByCode(List.of(ConfigCode.shopName.name(),
-																					ConfigCode.shopEmail.name(),
-																					ConfigCode.shopPhoneNumber.name(),
-																					ConfigCode.shopAddress.name(),
-																					ConfigCode.shopLogoUrl.name()));
-		for (SystemConfig sysConfig : systemConfigList) {
-			switch (sysConfig.getCode()) {
-				case "shopName":
-					shopInfo.setName(sysConfig.getName());
-					break;
-				case "shopEmail":
-					shopInfo.setEmail(sysConfig.getName());
-					break;
-				case "shopPhoneNumber":
-					shopInfo.setPhoneNumber(sysConfig.getName());
-					break;
-				case "shopAddress":
-					shopInfo.setAddress(sysConfig.getName());
-					break;
-				case "shopLogoUrl":
-					shopInfo.setLogoUrl(sysConfig.getName());
-					break;
-            }
-		}
-		CommonUtils.mvShopInfo = shopInfo;
-	}
 
 	private void configReport() {
 		String templateExportTempStr = FileUtils.excelTemplatePath + "/temp";
@@ -156,13 +154,6 @@ public class StartUp {
 		}
 	}
 
-	private void configResourcePath() {
-		SystemConfig systemConfig = mvConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
-		if (systemConfig != null) {
-			mvResourceUploadPath = systemConfig.getValue().trim();
-		}
-	}
-
 	private void initData() throws Exception {
 		String flagConfigCode = ConfigCode.initData.name();
 		SystemConfig flagConfigObj = mvConfigRepository.findByCode(flagConfigCode);
@@ -185,6 +176,7 @@ public class StartUp {
 			cnf.add(initConfigModel(ConfigCode.resourceUploadPath, "Thư mực chứa tệp upload", null));
 			cnf.add(initConfigModel(ConfigCode.deleteSystemLog, "Xóa nhật ký hệ thống tự động", "N"));
 			cnf.add(initConfigModel(ConfigCode.dayDeleteSystemLog, "Thời gian xóa nhật ký hệ thống, các nhật ký có thời gian tạo từ >= ? ngày sẽ được xóa tự động", "100"));
+			cnf.add(initConfigModel(ConfigCode.sendNotifyCustomerOnOrderConfirmation, "Gửi email thông báo đến khách hàng khi đơn hàng đã được xác nhận", "N"));
 			mvConfigRepository.saveAll(cnf);
 		}
 		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);

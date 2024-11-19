@@ -1,12 +1,10 @@
 package com.flowiee.pms.utils;
 
-import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.ServerInfo;
 import com.flowiee.pms.model.ShopInfo;
 import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.utils.constants.CategoryType;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -179,17 +177,6 @@ public class CommonUtils {
 
     public static String genProductCode() {
         return CommonUtils.now("yyyyMMddHHmmss");
-    }
-
-    public static String trim(String str) {
-        if (ObjectUtils.isEmpty(str)) {
-            return "";
-        }
-        str = str.trim();
-        if ("null".equals(str)) {
-            str = null;
-        }
-        return str;
     }
 
     public static CategoryType getCategoryEnum(String name) {

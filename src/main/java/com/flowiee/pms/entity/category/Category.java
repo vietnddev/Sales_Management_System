@@ -29,6 +29,9 @@ public class Category extends BaseEntity implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
+	public static final String ROOT_LEVEL = "ROOT";
+	public static final String SUB_LEVEL = "SUB";
+
 	@Column(name = "type", length = 20, nullable = false)
 	String type;
 
@@ -94,9 +97,9 @@ public class Category extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY)
 	List<Order> listOrderPayment;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
-	List<Order> listTrangThaiDonHang;
+//	@JsonIgnore
+//	@OneToMany(mappedBy = "trangThaiDonHang", fetch = FetchType.LAZY)
+//	List<Order> listTrangThaiDonHang;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "productType", fetch = FetchType.LAZY)
