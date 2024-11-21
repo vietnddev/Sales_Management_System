@@ -54,4 +54,12 @@ public interface IVldModuleSales {
     boolean updateLedgerTransaction(boolean throwException);
 
     boolean readGeneralLedger(boolean throwException);
+
+    boolean readLoyaltyProgram(boolean throwException);
+
+    boolean insertLoyaltyProgram(boolean throwException);
+
+    boolean updateLoyaltyProgram(boolean throwException);
+
+    boolean deleteLoyaltyProgram(boolean throwException);
 }

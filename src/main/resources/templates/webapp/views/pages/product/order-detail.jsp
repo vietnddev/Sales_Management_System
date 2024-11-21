@@ -188,7 +188,7 @@
                                                             <th>Trạng thái đơn hàng</th>
                                                             <td class="form-group">
                                                                 <select class="custom-select" id="orderStatusField">
-                                                                    <option th:each="d : ${orderStatus}" th:value="${d.id}" th:text="${d.name}"></option>
+                                                                    <option th:each="d : ${orderStatus}" th:value="${d.key}" th:text="${d.value}"></option>
                                                                 </select>
                                                             </td>
                                                         </tr>
@@ -456,7 +456,7 @@
                         data: JSON.stringify(
                             {
                                 note : $("#noteField").val(),
-                                orderStatusId: $("#orderStatusField").val()
+                                orderStatus: $("#orderStatusField").val()
                             }
                         ),
                         success: function (response, textStatus, jqXHR) {

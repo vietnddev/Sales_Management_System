@@ -80,6 +80,14 @@ public class Customer extends BaseEntity implements Serializable {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	List<CustomerContact> listCustomerContact;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+	List<LoyaltyTransaction> loyaltyTransactionList;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+	List<GiftRedemption> giftRedemptionList;
+
 	public Customer(long id) {
 		super.id = id;
 	}

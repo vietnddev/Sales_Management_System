@@ -1,0 +1,63 @@
+package com.flowiee.pms.controller.sales;
+
+import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.entity.sales.LoyaltyProgram;
+import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.service.sales.LoyaltyProgramService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("${app.api.prefix}/loyalty-programs")
+@Tag(name = "Order API", description = "Quản lý đơn hàng")
+@RequiredArgsConstructor
+public class LoyaltyProgramController extends BaseController {
+    private final LoyaltyProgramService loyaltyProgramService;
+
+    @GetMapping
+    @PreAuthorize("@vldModuleSales.readOrder(true)")
+    public AppResponse<List<LoyaltyProgram>> getAllPrograms() {
+        return success(loyaltyProgramService.findAll());
+    }
+
+    @GetMapping("/active")
+    @PreAuthorize("@vldModuleSales.readOrder(true)")
+    public AppResponse<List<LoyaltyProgram>> getActivePrograms() {
+        return success(loyaltyProgramService.getActivePrograms());
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("@vldModuleSales.readOrder(true)")
+    public AppResponse<LoyaltyProgram> getProgramById(@PathVariable Long id) {
+        Optional<LoyaltyProgram> lvLoyaltyProgramOpt = loyaltyProgramService.findById(id);
+        if (lvLoyaltyProgramOpt.isEmpty()) {
+            throw new ResourceNotFoundException("Loyalty program not found!");
+        }
+        return success(lvLoyaltyProgramOpt.get());
+    }
+
+    @PostMapping
+    @PreAuthorize("@vldModuleSales.readOrder(true)")
+    public AppResponse<LoyaltyProgram> createProgram(@RequestBody LoyaltyProgram program) {
+        return success(loyaltyProgramService.save(program));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("@vldModuleSales.readOrder(true)")
+    public AppResponse<LoyaltyProgram> updateProgram(@PathVariable Long id, @RequestBody LoyaltyProgram program) {
+        return success(loyaltyProgramService.update(program, id));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@vldModuleSales.readOrder(true)")
+    public AppResponse<String> deleteProgram(@PathVariable Long id) {
+        return success(loyaltyProgramService.delete(id));
+    }
+}

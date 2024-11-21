@@ -1,6 +1,8 @@
 package com.flowiee.pms.service;
 
+import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.service.system.SystemLogService;
+import com.flowiee.pms.utils.CoreUtils;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
@@ -15,4 +17,11 @@ public class BaseService {
 
     @Autowired
     SystemLogService systemLogService;
+
+    public static boolean isConfigAvailable(SystemConfig pSystemConfig) {
+        if (pSystemConfig == null || CoreUtils.isNullStr(pSystemConfig.getValue())) {
+            return false;
+        }
+        return true;
+    }
 }

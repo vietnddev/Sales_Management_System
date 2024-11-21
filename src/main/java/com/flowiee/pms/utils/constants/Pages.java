@@ -1,57 +1,57 @@
 package com.flowiee.pms.utils.constants;
 
 public enum Pages {
-    CTG_CATEGORY(MODULE.SYSTEM, "category"),
-    CTG_CATEGORY_DETAIL(MODULE.SYSTEM, "category-detail"),
-    SYS_LOGIN(MODULE.SYSTEM, "login"),
-    SYS_ACCOUNT(MODULE.SYSTEM, "account"),
-    SYS_ACCOUNT_DETAIL(MODULE.SYSTEM, "account-detail"),
-    SYS_GR_ACC(MODULE.SYSTEM, "group-account"),
-    SYS_GR_ACC_DETAIL(MODULE.SYSTEM, "group-account-detail"),
-    SYS_LOG(MODULE.SYSTEM, "log"),
-    SYS_ROLE(MODULE.SYSTEM, "role"),
-    SYS_CONFIG(MODULE.SYSTEM, "config"),
-    SYS_NOTIFICATION(MODULE.SYSTEM, "notification"),
-    SYS_PROFILE(MODULE.SYSTEM, "profile"),
-    SYS_UNAUTHORIZED(MODULE.SYSTEM, "unauthorized"),
-    SYS_ERROR(MODULE.SYSTEM, "error"),
+    CTG_CATEGORY("category",                            MODULE.SYSTEM),
+    CTG_CATEGORY_DETAIL("category-detail",              MODULE.SYSTEM),
+    SYS_LOGIN("login",                                  MODULE.SYSTEM),
+    SYS_ACCOUNT("account",                              MODULE.SYSTEM),
+    SYS_ACCOUNT_DETAIL("account-detail",                MODULE.SYSTEM),
+    SYS_GR_ACC("group-account",                         MODULE.SYSTEM),
+    SYS_GR_ACC_DETAIL("group-account-detail",           MODULE.SYSTEM),
+    SYS_LOG("log",                                      MODULE.SYSTEM),
+    SYS_ROLE("role",                                    MODULE.SYSTEM),
+    SYS_CONFIG("config",                                MODULE.SYSTEM),
+    SYS_NOTIFICATION("notification",                    MODULE.SYSTEM),
+    SYS_PROFILE("profile",                              MODULE.SYSTEM),
+    SYS_UNAUTHORIZED("unauthorized",                    MODULE.SYSTEM),
+    SYS_ERROR("error",                                  MODULE.SYSTEM),
 
-    PRO_DASHBOARD(MODULE.PRODUCT, "dashboard"),
-    PRO_GALLERY(MODULE.PRODUCT, "gallery"),
-    PRO_PRODUCT(MODULE.PRODUCT, "product"),
-    PRO_PRODUCT_INFO(MODULE.PRODUCT, "product-info"),
-    PRO_PRODUCT_VARIANT(MODULE.PRODUCT, "product-variant"),
-    PRO_VOUCHER(MODULE.PRODUCT, "vouchers"),
-    PRO_VOUCHER_DETAIL(MODULE.PRODUCT, "voucher-detail"),
-    PRO_ORDER(MODULE.PRODUCT, "order"),
-    PRO_ORDER_DETAIL(MODULE.PRODUCT, "order-detail"),
-    PRO_ORDER_SELL(MODULE.PRODUCT, "sell"),
-    PRO_CUSTOMER(MODULE.PRODUCT, "customer"),
-    PRO_CUSTOMER_DETAIL(MODULE.PRODUCT, "customer-detail"),
-    PRO_SUPPLIER(MODULE.PRODUCT, "supplier"),
-    PRO_PROMOTION(MODULE.PRODUCT, "promotion"),
-    PRO_PROMOTION_DETAIL(MODULE.PRODUCT, "promotion-detail"),
-    PRO_COMBO(MODULE.PRODUCT, "product-combo"),
-    PRO_COMBO_DETAIL(MODULE.PRODUCT, "product-combo-detail"),
+    PRO_DASHBOARD("dashboard",                          MODULE.PRODUCT),
+    PRO_GALLERY("gallery",                              MODULE.PRODUCT),
+    PRO_PRODUCT("product",                              MODULE.PRODUCT),
+    PRO_PRODUCT_INFO("product-info",                    MODULE.PRODUCT),
+    PRO_PRODUCT_VARIANT("product-variant",              MODULE.PRODUCT),
+    PRO_VOUCHER("vouchers",                             MODULE.PRODUCT),
+    PRO_VOUCHER_DETAIL("voucher-detail",                MODULE.PRODUCT),
+    PRO_ORDER("order",                                  MODULE.PRODUCT),
+    PRO_ORDER_DETAIL("order-detail",                    MODULE.PRODUCT),
+    PRO_ORDER_SELL("sell",                              MODULE.PRODUCT),
+    PRO_CUSTOMER("customer",                            MODULE.PRODUCT),
+    PRO_CUSTOMER_DETAIL("customer-detail",              MODULE.PRODUCT),
+    PRO_SUPPLIER("supplier",                            MODULE.PRODUCT),
+    PRO_PROMOTION("promotion",                          MODULE.PRODUCT),
+    PRO_PROMOTION_DETAIL("promotion-detail",            MODULE.PRODUCT),
+    PRO_COMBO("product-combo",                          MODULE.PRODUCT),
+    PRO_COMBO_DETAIL("product-combo-detail",            MODULE.PRODUCT),
 
-    SLS_LEDGER(MODULE.SALES, "general-ledger"),
-    SLS_LEDGER_TRANS(MODULE.SALES, "ledger-trans"),
-    SLS_LEDGER_TRANS_DETAIL(MODULE.SALES, "ledger-trans-detail"),
+    SLS_LEDGER("general-ledger",                        MODULE.SALES),
+    SLS_LEDGER_TRANS("ledger-trans",                    MODULE.SALES),
+    SLS_LEDGER_TRANS_DETAIL("ledger-trans-detail",      MODULE.SALES),
 
-    STG_MATERIAL(MODULE.STORAGE, "material"),
-    STG_TICKET_IMPORT(MODULE.STORAGE, "ticket-import"),
-    STG_TICKET_IMPORT_DETAIL(MODULE.STORAGE, "ticket-import-detail"),
-    STG_TICKET_EXPORT(MODULE.STORAGE, "ticket-export"),
-    STG_TICKET_EXPORT_DETAIL(MODULE.STORAGE, "ticket-export-detail"),
-    STG_STORAGE(MODULE.STORAGE, "storage"),
-    STG_STORAGE_DETAIL(MODULE.STORAGE, "storage-detail");
+    STG_MATERIAL("material",                            MODULE.STORAGE),
+    STG_TICKET_IMPORT("ticket-import",                  MODULE.STORAGE),
+    STG_TICKET_IMPORT_DETAIL("ticket-import-detail",    MODULE.STORAGE),
+    STG_TICKET_EXPORT("ticket-export",                  MODULE.STORAGE),
+    STG_TICKET_EXPORT_DETAIL("ticket-export-detail",    MODULE.STORAGE),
+    STG_STORAGE("storage",                              MODULE.STORAGE),
+    STG_STORAGE_DETAIL("storage-detail",                MODULE.STORAGE);
 
-    private final MODULE module;
     private final String template;
+    private final MODULE module;
 
-    Pages(MODULE module, String template) {
-        this.module = module;
+    Pages(String template, MODULE module) {
         this.template = template;
+        this.module = module;
     }
 
     public String getTemplate() {

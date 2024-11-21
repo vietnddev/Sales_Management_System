@@ -30,7 +30,7 @@ public class CustomAuthenticationFailureEventListener implements ApplicationList
             account.setFailLogonCount(account.getFailLogonCount() + 1);
 
             SystemConfig lvFailLogonCountMdl = sysConfigRepository.findByCode(ConfigCode.failLogonCount.name());
-            if (lvFailLogonCountMdl != null && lvFailLogonCountMdl.getValue() != null) {
+            if (BaseService.isConfigAvailable(lvFailLogonCountMdl)) {
                 mvMaxFailLogon = Integer.parseInt(lvFailLogonCountMdl.getValue());
             }
             if (account.getFailLogonCount() >= mvMaxFailLogon) {

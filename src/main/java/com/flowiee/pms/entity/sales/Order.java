@@ -123,6 +123,9 @@ public class Order extends BaseEntity implements Serializable {
 	@Column(name = "cancellation_reason")
 	String cancellationReason;
 
+	@Column(name = "successful_delivery_time")
+	LocalDateTime successfulDeliveryTime;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "order_status", length = 10)
 	OrderStatus orderStatus;

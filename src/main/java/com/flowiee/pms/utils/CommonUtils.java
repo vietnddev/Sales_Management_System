@@ -175,10 +175,6 @@ public class CommonUtils {
         return UserPrincipal.anonymousUser();
     }
 
-    public static String genProductCode() {
-        return CommonUtils.now("yyyyMMddHHmmss");
-    }
-
     public static CategoryType getCategoryEnum(String name) {
         for (CategoryType c : CategoryType.values()) {
             if (c.name().equals(name) || c.name().equals(getCategoryType(name))) {

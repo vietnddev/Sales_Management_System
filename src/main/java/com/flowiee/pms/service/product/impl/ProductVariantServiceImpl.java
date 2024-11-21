@@ -45,17 +45,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductVariantServiceImpl extends BaseService implements ProductVariantService {
-    TicketImportService mvTicketImportService;
-    TicketExportService mvTicketExportService;
-    ProductHistoryService mvProductHistoryService;
-    ProductPriceRepository mvProductPriceRepository;
-    ProductDetailRepository mvProductVariantRepository;
-    ProductDetailTempRepository mvProductVariantTempRepository;
+    private final TicketImportService mvTicketImportService;
+    private final TicketExportService mvTicketExportService;
+    private final ProductHistoryService mvProductHistoryService;
+    private final ProductPriceRepository mvProductPriceRepository;
+    private final ProductDetailRepository mvProductVariantRepository;
+    private final ProductDetailTempRepository mvProductVariantTempRepository;
 
-    BigDecimal ZERO = BigDecimal.ZERO;
+    private BigDecimal ZERO = BigDecimal.ZERO;
 
     @Override
     public List<ProductVariantDTO> findAll() {
@@ -93,7 +92,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     public ProductVariantDTO save(ProductVariantDTO inputDTO) {
         try {
             ProductDetail pVariant = ProductVariantConvert.dtoToEntity(inputDTO);
-            String lvVariantCode = ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : CommonUtils.genProductCode();
+            String lvVariantCode = ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : genProductCode();
             int lvSoldQty = pVariant.getSoldQty() != null ? pVariant.getSoldQty() : 0;
             int lvStorageQty = pVariant.getStorageQty() != null ? pVariant.getStorageQty() : 0;
             int lvDefectiveQty = pVariant.getDefectiveQty() != null ? pVariant.getDefectiveQty() : 0;
@@ -306,5 +305,9 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             }
         }
         return dto;
+    }
+
+    private String genProductCode() {
+        return CommonUtils.now("yyyyMMddHHmmss");
     }
 }

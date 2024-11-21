@@ -18,6 +18,8 @@ public interface OrderService extends BaseCurdService<OrderDTO> {
 
     Optional<OrderDTO> findById(Long orderId);
 
+    OrderDTO findById(Long orderId, boolean throwException);
+
     String doPay(Long orderId, LocalDateTime paymentTime, Long paymentMethod, Float paymentAmount, String paymentNote);
 
     List<Order> findOrdersToday();

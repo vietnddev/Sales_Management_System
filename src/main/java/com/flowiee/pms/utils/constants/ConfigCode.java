@@ -20,5 +20,6 @@ public enum ConfigCode {
     resourceUploadPath,
     deleteSystemLog,
     dayDeleteSystemLog,
-    failLogonCount
+    failLogonCount,
+    returnPeriodDays
 }

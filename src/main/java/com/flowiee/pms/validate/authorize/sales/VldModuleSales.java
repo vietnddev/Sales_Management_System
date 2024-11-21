@@ -140,4 +140,24 @@ public class VldModuleSales extends BaseAuthorize implements IVldModuleSales {
     public boolean readGeneralLedger(boolean throwException) {
         return super.isAuthorized(ACTION.SLS_LEDGER.name(), throwException);
     }
+
+    @Override
+    public boolean readLoyaltyProgram(boolean throwException) {
+        return super.isAuthorized(ACTION.SLS_LEDGER.name(), throwException);
+    }
+
+    @Override
+    public boolean insertLoyaltyProgram(boolean throwException) {
+        return super.isAuthorized(ACTION.SLS_LEDGER.name(), throwException);
+    }
+
+    @Override
+    public boolean updateLoyaltyProgram(boolean throwException) {
+        return super.isAuthorized(ACTION.SLS_LEDGER.name(), throwException);
+    }
+
+    @Override
+    public boolean deleteLoyaltyProgram(boolean throwException) {
+        return super.isAuthorized(ACTION.SLS_LEDGER.name(), throwException);
+    }
 }

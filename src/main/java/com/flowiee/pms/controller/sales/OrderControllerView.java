@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/order")
@@ -51,23 +48,26 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView findDonHangDetail(@PathVariable("id") Long orderId) {
-        Optional<OrderDTO> orderDetailOpt = mvOrderService.findById(orderId);
-        if (orderId <= 0 || orderDetailOpt.isEmpty()) {
-            throw new ResourceNotFoundException("Order not found!");
+        OrderDTO lvOrderDetail = mvOrderService.findById(orderId, true);
+        OrderStatus lvOrderStatus = lvOrderDetail.getOrderStatus();
+
+        List<OrderStatus> orderStatusList = new ArrayList<>(List.of(lvOrderStatus));
+        orderStatusList.addAll(OrderStatus.getAll(lvOrderStatus));
+
+        Map<String, String> statusMap = new LinkedHashMap<>();
+        for (OrderStatus status : orderStatusList) {
+            statusMap.put(status.name(), status.getName());
         }
-        OrderDTO orderDetail = orderDetailOpt.get();
-        List<Category> orderStatus = new ArrayList<>(List.of(new Category(orderDetail.getOrderStatusId(), orderDetail.getOrderStatusName())));
-        orderStatus.addAll(mvCategoryService.findOrderStatus(orderDetail.getOrderStatusId()));
 
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_ORDER_DETAIL.getTemplate());
         modelAndView.addObject("orderDetailId", orderId);
-        modelAndView.addObject("orderDetail", orderDetail);
-        modelAndView.addObject("listOrderDetail", orderDetail.getListOrderDetailDTO());
+        modelAndView.addObject("orderDetail", lvOrderDetail);
+        modelAndView.addObject("listOrderDetail", lvOrderDetail.getListOrderDetailDTO());
         modelAndView.addObject("listPaymentMethod", mvCategoryService.findSubCategory(CategoryType.PAYMENT_METHOD, null, null, -1, -1).getContent());
-        modelAndView.addObject("orderStatus", orderStatus);
-        modelAndView.addObject("allowEditItem", mvOrderStatusCanModifyItem.contains(orderDetail.getOrderStatus()));
-        modelAndView.addObject("allowEditGeneral", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.getOrderStatus()));
-        modelAndView.addObject("allowDoPay", !mvOrderStatusDoesNotAllowModify.contains(orderDetail.getOrderStatus()));
+        modelAndView.addObject("orderStatus", statusMap);
+        modelAndView.addObject("allowEditItem", mvOrderStatusCanModifyItem.contains(lvOrderStatus));
+        modelAndView.addObject("allowEditGeneral", !mvOrderStatusDoesNotAllowModify.contains(lvOrderStatus));
+        modelAndView.addObject("allowDoPay", !mvOrderStatusDoesNotAllowModify.contains(lvOrderStatus));
 
         return baseView(modelAndView);
     }
@@ -110,28 +110,22 @@ public class OrderControllerView extends BaseController {
     @PostMapping("/{orderId}/item/add")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView addItem(@PathVariable("orderId") long orderId, @RequestParam("productVariantSelectedId") String[] productVariantSelectedId) {
-        Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
-        if (orderOpt.isEmpty()) {
-            throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
-        }
-        if (!mvOrderStatusCanModifyItem.contains(orderOpt.get().getOrderStatus())) {
+        OrderDTO lvOrder = mvOrderService.findById(orderId, true);
+        if (!mvOrderStatusCanModifyItem.contains(lvOrder.getOrderStatus())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép chỉnh sửa!");
         }
         if (productVariantSelectedId == null || productVariantSelectedId.length == 0) {
             throw new BadRequestException("Vui lòng chọn sản phẩm!");
         }
-        mvOrderItemsService.save(orderOpt.get(), Arrays.stream(productVariantSelectedId).toList());
+        mvOrderItemsService.save(lvOrder, Arrays.stream(productVariantSelectedId).toList());
         return new ModelAndView("redirect:/order/" + orderId);
     }
 
     @PostMapping("/{orderId}/item/update/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView updateItem(@PathVariable("orderId") long orderId, @PathVariable("itemId") long itemId, @ModelAttribute("items") OrderDetail item) {
-        Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
-        if (orderOpt.isEmpty()) {
-            throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
-        }
-        if (!mvOrderStatusCanModifyItem.contains(orderOpt.get().getOrderStatus())) {
+        OrderDTO lvOrder = mvOrderService.findById(orderId, true);
+        if (!mvOrderStatusCanModifyItem.contains(lvOrder.getOrderStatus())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép chỉnh sửa!");
         }
         if (item.getQuantity() == 0) {
@@ -144,11 +138,8 @@ public class OrderControllerView extends BaseController {
     @PostMapping("/{orderId}/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView deleteItem(@PathVariable("orderId") long orderId, @PathVariable("itemId") long itemId) {
-        Optional<OrderDTO> orderOpt = mvOrderService.findById(orderId);
-        if (orderOpt.isEmpty()) {
-            throw new ResourceNotFoundException("Đơn hàng không tồn tại!");
-        }
-        if (!mvOrderStatusCanDeleteItem.contains(orderOpt.get().getOrderStatus())) {
+        OrderDTO lvOrder = mvOrderService.findById(orderId, true);
+        if (!mvOrderStatusCanDeleteItem.contains(lvOrder.getOrderStatus())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép xóa!");
         }
         mvOrderItemsService.delete(itemId);

@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.system.MailMedia;
 import com.flowiee.pms.repository.system.MailMediaRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.MailMediaService;
+import com.flowiee.pms.utils.SendMailUtils;
 import com.flowiee.pms.utils.constants.NotificationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class MailMediaServiceImpl extends BaseService implements MailMediaServic
         TemplateSendEmail.Template lvTemplate = StartUp.mvGeneralEmailTemplateMap.get(pNotificationType);
         String lvDestination = pNotificationParameter.get(pNotificationType.name()).toString();
         String lvSubject = lvTemplate.getSubject();
-        String lvContent = TemplateSendEmail.replaceTemplateParameter(lvTemplate.getTemplateContent(), pNotificationParameter);
+        String lvContent = SendMailUtils.replaceTemplateParameter(lvTemplate.getTemplateContent(), pNotificationParameter);
         this.send(lvDestination, lvSubject, lvContent);
     }
 }

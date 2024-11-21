@@ -1,6 +1,5 @@
 package com.flowiee.pms.service.sales.impl;
 
-import com.flowiee.pms.config.TemplateSendEmail;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.entity.system.Account;
@@ -36,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -94,6 +94,18 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             return Optional.empty();
         }
         return Optional.of(OrderDTO.fromOrder(orderOptional.get()));
+    }
+
+    @Override
+    public OrderDTO findById(Long pOrderId, boolean throwException) {
+        Optional<OrderDTO> lvOrderOptional = this.findById(pOrderId);
+        if (lvOrderOptional.isPresent()) {
+            return lvOrderOptional.get();
+        }
+        if (throwException) {
+            throw new BadRequestException("Order not found!");
+        }
+        return null;
     }
 
     @Transactional
@@ -203,10 +215,19 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             throw new ResourceNotFoundException("Order not found!");
         }
         Order orderBefore = ObjectUtils.clone(orderToUpdate);
+
+        OrderStatus lvOrderStatusBeforeUpdate = orderBefore.getOrderStatus();
+
+        //Update new info
         orderToUpdate.setNote(dto.getNote());
-        //orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId()));
+//      orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId()));
         orderToUpdate.setOrderStatus(dto.getOrderStatus());
+        if (dto.getOrderStatus().equals(OrderStatus.DLVD))
+            orderToUpdate.setSuccessfulDeliveryTime(dto.getSuccessfulDeliveryTime() != null ? dto.getSuccessfulDeliveryTime() : LocalDateTime.now());
         Order orderUpdated = mvOrderRepository.save(orderToUpdate);
+
+        String lvOrderCode = orderUpdated.getCode();
+        LocalDateTime lvSuccessfulDeliveryTime = orderUpdated.getSuccessfulDeliveryTime();
 
         //After updated
         OrderStatus lvOrderStatus = orderUpdated.getOrderStatus();
@@ -215,14 +236,20 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         switch (lvOrderStatus) {
             case CNCL:
                 SystemConfig lvSendNotifyConfig = mvConfigRepository.findByCode(ConfigCode.sendNotifyCustomerOnOrderConfirmation.name());
-                if (lvSendNotifyConfig != null && lvSendNotifyConfig.isYesOption())
+                if (isConfigAvailable(lvSendNotifyConfig) && lvSendNotifyConfig.isYesOption())
                     sendNotifyCustomerOnOrderConfirmation(orderUpdated);
                 break;
             case RTND:
-                mvTicketImportService.restockReturnedItems(lvStorageId, orderUpdated.getCode());
-                if (isNeedRefund) {
-                    //create ledger transaction record for export
+                SystemConfig lvReturnPeriodDaysMdl = mvConfigRepository.findByCode(ConfigCode.returnPeriodDays.name());
+                if (isConfigAvailable(lvReturnPeriodDaysMdl))
+                    throw new AppException("System has not configured the time allowed to return the order!");
 
+                int lvReturnPeriodDays = Integer.parseInt(lvReturnPeriodDaysMdl.getValue());
+                if (isWithinReturnPeriod(lvSuccessfulDeliveryTime, LocalDateTime.now(), lvReturnPeriodDays)) {
+                    mvTicketImportService.restockReturnedItems(lvStorageId, lvOrderCode);
+                    if (isNeedRefund) {
+                        //create ledger transaction record for export
+                    }
                 }
                 break;
         }
@@ -381,5 +408,10 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     private OrderStatus getDefaultOrderStatus() {
         return OrderStatus.PEND;
+    }
+
+    public boolean isWithinReturnPeriod(LocalDateTime successfulDeliveryTime, LocalDateTime currentDay, int periodDays) {
+        long daysBetween = ChronoUnit.DAYS.between(successfulDeliveryTime, currentDay);
+        return daysBetween < periodDays;
     }
 }

@@ -68,12 +68,24 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     @Override
     public Optional<CustomerDTO> findById(Long id) {
         Optional<Customer> customer = mvCustomerRepository.findById(id);
-        if (customer.isPresent()) {
-            CustomerDTO customerDTO = CustomerDTO.fromCustomer(customer.get());
-            this.setContactDefault(List.of(customerDTO));
-            return Optional.of(customerDTO);
+        if (customer.isEmpty()) {
+            return Optional.empty();
         }
-        throw new BadRequestException();
+        CustomerDTO customerDTO = CustomerDTO.fromCustomer(customer.get());
+        this.setContactDefault(List.of(customerDTO));
+        return Optional.of(customerDTO);
+    }
+
+    @Override
+    public CustomerDTO findById(Long pCustomerId, boolean throwException) {
+        Optional<CustomerDTO> customerDTO = this.findById(pCustomerId);
+        if (customerDTO.isPresent()) {
+            return customerDTO.get();
+        }
+        if (throwException) {
+            throw new ResourceNotFoundException("Customer not found!");
+        } else
+            return null;
     }
 
     @Transactional

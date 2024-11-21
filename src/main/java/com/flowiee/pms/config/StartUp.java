@@ -177,6 +177,7 @@ public class StartUp {
 			cnf.add(initConfigModel(ConfigCode.deleteSystemLog, "Xóa nhật ký hệ thống tự động", "N"));
 			cnf.add(initConfigModel(ConfigCode.dayDeleteSystemLog, "Thời gian xóa nhật ký hệ thống, các nhật ký có thời gian tạo từ >= ? ngày sẽ được xóa tự động", "100"));
 			cnf.add(initConfigModel(ConfigCode.sendNotifyCustomerOnOrderConfirmation, "Gửi email thông báo đến khách hàng khi đơn hàng đã được xác nhận", "N"));
+			cnf.add(initConfigModel(ConfigCode.returnPeriodDays, "Thời gian cho phép đổi trả hàng", "7"));
 			mvConfigRepository.saveAll(cnf);
 		}
 		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);

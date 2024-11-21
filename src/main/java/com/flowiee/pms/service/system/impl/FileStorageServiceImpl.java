@@ -99,7 +99,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     private boolean vldResourceUploadPath(boolean throwException) {
         if (StartUp.getResourceUploadPath() == null) {
             SystemConfig resourceUploadPathConfig = mvConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
-            if (resourceUploadPathConfig != null && ObjectUtils.isNotEmpty(resourceUploadPathConfig.getValue())) {
+            if (isConfigAvailable(resourceUploadPathConfig)) {
                 StartUp.mvResourceUploadPath = resourceUploadPathConfig.getValue();
                 return true;
             } else {

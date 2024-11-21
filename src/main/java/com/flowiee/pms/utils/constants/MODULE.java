@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum MODULE {
+    DASHBOARD("Dashboard"),
     PRODUCT("Quản lý sản phẩm"),
     SALES("Quản lý bán hàng"),
     SYSTEM("Quản trị hệ thống"),

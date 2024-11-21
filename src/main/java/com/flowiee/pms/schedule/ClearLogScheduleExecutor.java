@@ -9,7 +9,6 @@ import com.flowiee.pms.repository.system.EventLogRepository;
 import com.flowiee.pms.repository.system.SystemLogRepository;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,7 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
         }
 
         SystemConfig lvDayDeleteSystemLogConfig = configRepository.findByCode(ConfigCode.dayDeleteSystemLog.name());
-        if (lvDayDeleteSystemLogConfig == null || lvDayDeleteSystemLogConfig.getValue() == null || ObjectUtils.isEmpty(lvDayDeleteSystemLogConfig.getValue())) {
+        if (isConfigAvailable(lvDayDeleteSystemLogConfig)) {
             logger.info("ClearLogScheduleExecutor config " + ConfigCode.dayDeleteSystemLog.name() + " is disable");
             return;
         }
@@ -63,13 +62,7 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
 
     private boolean isEnableDeleteLog() {
         SystemConfig lvDeleteSystemLogConfig = configRepository.findByCode(ConfigCode.deleteSystemLog.name());
-        if (lvDeleteSystemLogConfig == null) {
-            return false;
-        }
-        if (lvDeleteSystemLogConfig.getValue() == null) {
-            return false;
-        }
-        if (!"Y".equals(lvDeleteSystemLogConfig.getValue().trim())) {
+        if (!isConfigAvailable(lvDeleteSystemLogConfig) || !lvDeleteSystemLogConfig.isYesOption()) {
             return false;
         }
         return true;

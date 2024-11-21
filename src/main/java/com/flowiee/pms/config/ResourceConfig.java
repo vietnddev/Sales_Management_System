@@ -10,11 +10,11 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 public class ResourceConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-            .addResourceHandler("/uploads/**")
-            .addResourceLocations("file:/" + System.getProperty("user.dir") + "/" + FileUtils.fileUploadPath)
-            .setCachePeriod(3600)
-            .resourceChain(true)
-            .addResolver(new PathResourceResolver());
+//        registry
+//            .addResourceHandler("/uploads/**")
+//            .addResourceLocations("file:/" + System.getProperty("user.dir") + "/" + FileUtils.fileUploadPath)
+//            .setCachePeriod(3600)
+//            .resourceChain(true)
+//            .addResolver(new PathResourceResolver());
     }
 }

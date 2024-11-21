@@ -2,6 +2,10 @@ package com.flowiee.pms.utils.constants;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 public enum OrderStatus {
     PEND("Pending", ""),                  // Đang chờ xử lý
@@ -42,5 +46,18 @@ public enum OrderStatus {
             }
         }
         return null;
+    }
+
+    public static List<OrderStatus> getAll(OrderStatus exclude) {
+        if (exclude == null) {
+            return List.of(values());
+        }
+        List<OrderStatus> statusList = new ArrayList<>();
+        for (OrderStatus status : values()) {
+            if (!status.equals(exclude)) {
+                statusList.add(status);
+            }
+        }
+        return statusList;
     }
 }
