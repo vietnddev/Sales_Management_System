@@ -68,6 +68,7 @@ public class StartUp {
 	public static LocalDateTime                                     START_APP_TIME;
 	public static String                                            mvResourceUploadPath      = null;
 	public static Map<NotificationType, TemplateSendEmail.Template> mvGeneralEmailTemplateMap = new HashMap<>();
+	public static Map<ConfigCode, SystemConfig>                     mvSystemConfigList        = new HashMap();
 
     @Bean
     CommandLineRunner init() {
@@ -178,6 +179,7 @@ public class StartUp {
 			cnf.add(initConfigModel(ConfigCode.dayDeleteSystemLog, "Thời gian xóa nhật ký hệ thống, các nhật ký có thời gian tạo từ >= ? ngày sẽ được xóa tự động", "100"));
 			cnf.add(initConfigModel(ConfigCode.sendNotifyCustomerOnOrderConfirmation, "Gửi email thông báo đến khách hàng khi đơn hàng đã được xác nhận", "N"));
 			cnf.add(initConfigModel(ConfigCode.returnPeriodDays, "Thời gian cho phép đổi trả hàng", "7"));
+			cnf.add(initConfigModel(ConfigCode.lowStockAlert, "Thông báo cảnh báo hàng tồn kho thấp", "N"));
 			mvConfigRepository.saveAll(cnf);
 		}
 		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);

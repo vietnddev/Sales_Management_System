@@ -50,6 +50,10 @@ public class SystemConfig extends BaseEntity implements Serializable {
 		return value != null && "Y".equals(value.trim());
 	}
 
+	public int getIntValue() {
+		return Integer.parseInt(value);
+	}
+
 	@Override
 	public String toString() {
 		return "SystemConfig [id=" + super.id + ", code=" + code + ", name=" + name + ", value=" + value + ", sort=" + sort + "]";

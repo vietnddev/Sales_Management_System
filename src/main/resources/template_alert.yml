@@ -7,3 +7,10 @@ general-email-notification:
       sender: ""
       bcc: ""
       cc: ""
+    - type: LowStockAlert
+      path: src/main/resources/templates/emailAlert/lowStockAlert.html
+      encoding: UTF-8
+      subject: "[FLOWIEE] Low Stock Alert for product: [%productName%]"
+      sender: ""
+      bcc: ""
+      cc: ""

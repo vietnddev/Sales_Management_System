@@ -52,13 +52,13 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "product_name", nullable = false)
     String productName;
 
-    @Column(name = "origin_country")
+    @Column(name = "origin_country", length = 20)
     String originCountry;
 
     @Column(name = "release_date")
     LocalDate releaseDate;
 
-    @Column(name = "gender")
+    @Column(name = "gender", length = 1)
     String gender;
 
     @Column(name = "storage_instructions")
@@ -69,6 +69,12 @@ public class Product extends BaseEntity implements Serializable {
 
     @Column(name = "is_machine_washable")
     Boolean isMachineWashable;
+
+    @Column(name = "is_sale_off")
+    Boolean isSaleOff;
+
+    @Column(name = "is_hot_trend")
+    Boolean isHotTrend;
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
     ProductDescription productDescription;

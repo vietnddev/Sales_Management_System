@@ -21,5 +21,6 @@ public enum ConfigCode {
     deleteSystemLog,
     dayDeleteSystemLog,
     failLogonCount,
-    returnPeriodDays
+    returnPeriodDays,
+    lowStockAlert
 }

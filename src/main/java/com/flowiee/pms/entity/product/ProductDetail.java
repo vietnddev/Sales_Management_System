@@ -107,8 +107,14 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @Column(name = "pattern")
     String pattern;
 
+    @Column(name = "low_stock_threshold")
+    Integer lowStockThreshold;
+
     @Column(name = "note")
-    String note;
+    String note;//will be remove
+
+    @OneToOne(mappedBy = "productVariant", cascade = CascadeType.ALL)
+    ProductDescription productDescription;
 
     @Column(name = "status", nullable = false)
     String status;

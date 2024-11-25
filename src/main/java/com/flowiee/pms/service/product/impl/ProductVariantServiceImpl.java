@@ -179,6 +179,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         try {
             //Product variant info
             ProductDetail productBeforeUpdate = ObjectUtils.clone(productVariantOptional.get());
+
             ProductDetail productToUpdate = productVariantOptional.get();
             productToUpdate.setVariantName(productDetail.getVariantName());
             productToUpdate.setDefectiveQty(productDetail.getDefectiveQty());
@@ -286,6 +287,15 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             tempDTO.setBranchName(branchName);
         }
         return storageHistoryDTOs;
+    }
+
+    @Override
+    public void updateLowStockThreshold(Long pProductId, int pThreshold) {
+        ProductDetail lvProduct = mvProductVariantRepository.findById(pProductId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        lvProduct.setLowStockThreshold(pThreshold);
+        mvProductVariantRepository.save(lvProduct);
     }
 
     private ProductVariantDTO setPriceInfo(ProductVariantDTO dto, ProductPrice productPrice) {

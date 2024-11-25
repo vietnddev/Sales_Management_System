@@ -64,10 +64,12 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
     @Transactional
     @Override
     public String refreshApp() {
+        ShopInfo lvShopInfo = CommonUtils.mvShopInfo != null ? CommonUtils.mvShopInfo : new ShopInfo();
         try {
             //Reload system configs
-            ShopInfo lvShopInfo = CommonUtils.mvShopInfo != null ? CommonUtils.mvShopInfo : new ShopInfo();
-            for (SystemConfig systemConfig : this.findAll()) {
+            List<SystemConfig> systemConfigList = this.findAll();
+            StartUp.mvSystemConfigList.clear();
+            for (SystemConfig systemConfig : systemConfigList) {
                 ConfigCode lvConfigCode = ConfigCode.valueOf(systemConfig.getCode());
                 String lvConfigValue = systemConfig.getValue();
 
@@ -79,6 +81,8 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
                 if (ConfigCode.shopEmail.equals(lvConfigCode))          lvShopInfo.setEmail(lvConfigValue);
                 if (ConfigCode.shopAddress.equals(lvConfigCode))        lvShopInfo.setAddress(lvConfigValue);
                 if (ConfigCode.shopLogoUrl.equals(lvConfigCode))        lvShopInfo.setLogoUrl(lvConfigValue);
+
+                StartUp.mvSystemConfigList.put(lvConfigCode, systemConfig);
             }
             CommonUtils.mvShopInfo = lvShopInfo;
 

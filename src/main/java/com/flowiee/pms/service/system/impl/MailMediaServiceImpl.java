@@ -53,7 +53,7 @@ public class MailMediaServiceImpl extends BaseService implements MailMediaServic
     public void send(NotificationType pNotificationType, Map<String, Object> pNotificationParameter) {
         TemplateSendEmail.Template lvTemplate = StartUp.mvGeneralEmailTemplateMap.get(pNotificationType);
         String lvDestination = pNotificationParameter.get(pNotificationType.name()).toString();
-        String lvSubject = lvTemplate.getSubject();
+        String lvSubject = SendMailUtils.replaceTemplateParameter(lvTemplate.getSubject(), pNotificationParameter);
         String lvContent = SendMailUtils.replaceTemplateParameter(lvTemplate.getTemplateContent(), pNotificationParameter);
         this.send(lvDestination, lvSubject, lvContent);
     }

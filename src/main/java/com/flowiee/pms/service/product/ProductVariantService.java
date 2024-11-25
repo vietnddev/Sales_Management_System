@@ -13,4 +13,6 @@ public interface ProductVariantService extends BaseCurdService<ProductVariantDTO
     boolean isProductVariantExists(long productId, long colorId, long sizeId, long fabricTypeId);
 
     List<ProductVariantTempDTO> findStorageHistory(Long productVariantId);
+
+    void updateLowStockThreshold(Long productId, int threshold);
 }

@@ -111,20 +111,19 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Transactional
     @Override
     public OrderDTO save(OrderDTO request) {
-        Long lvPayMethodId = request.getPayMethodId();
         BigDecimal lvAmountDiscount = request.getAmountDiscount();
         String lvVoucherUsedCode = request.getVoucherUsedCode();
+        LocalDateTime lvOrderTime = request.getOrderTime();
+        Long lvPayMethodId = request.getPayMethodId();
         Long lvCustomerId = request.getCustomerId();
-        try {
-            //Insert order
-            Order order = Order.builder()
+
+        Order order = Order.builder()
                 .code(getNextOrderCode())
                 .customer(new Customer(lvCustomerId))
                 .kenhBanHang(new Category(request.getSalesChannelId(), null))
                 .nhanVienBanHang(new Account(request.getCashierId()))
                 .note(request.getNote())
-                .orderTime(request.getOrderTime() != null ? request.getOrderTime() : LocalDateTime.now())
-                //.trangThaiDonHang(new Category(request.getOrderStatusId(), null))
+                .orderTime(lvOrderTime != null ? lvOrderTime : LocalDateTime.now())
                 .receiverName(request.getReceiverName())
                 .receiverPhone(request.getReceiverPhone())
                 .receiverEmail(request.getReceiverEmail())
@@ -140,9 +139,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .isGiftWrapped(false)
                 .orderStatus(getDefaultOrderStatus())
                 .build();
-            Order orderSaved = mvOrderRepository.save(order);
 
-            //QRCode
+        try {
+            //Insert order
+            Order orderSaved = mvOrderRepository.save(order);
+            //Create QRCode
             mvOrderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
 
             //Insert items detail
@@ -207,73 +208,90 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         }
     }
 
-    @Transactional
-    @Override
-    public OrderDTO update(OrderDTO dto, Long id) {
-        Order orderToUpdate = mvOrderRepository.findById(id).orElse(null);
-        if (orderToUpdate == null) {
-            throw new ResourceNotFoundException("Order not found!");
-        }
-        Order orderBefore = ObjectUtils.clone(orderToUpdate);
+    private Order beforeUpdateOrder(Order pOrder) {
+        OrderStatus lvOrderStatus = pOrder.getOrderStatus();
+        LocalDateTime lvSuccessfulDeliveryTime = pOrder.getSuccessfulDeliveryTime();
 
-        OrderStatus lvOrderStatusBeforeUpdate = orderBefore.getOrderStatus();
-
-        //Update new info
-        orderToUpdate.setNote(dto.getNote());
-//      orderToUpdate.setTrangThaiDonHang(new Category(dto.getOrderStatusId()));
-        orderToUpdate.setOrderStatus(dto.getOrderStatus());
-        if (dto.getOrderStatus().equals(OrderStatus.DLVD))
-            orderToUpdate.setSuccessfulDeliveryTime(dto.getSuccessfulDeliveryTime() != null ? dto.getSuccessfulDeliveryTime() : LocalDateTime.now());
-        Order orderUpdated = mvOrderRepository.save(orderToUpdate);
-
-        String lvOrderCode = orderUpdated.getCode();
-        LocalDateTime lvSuccessfulDeliveryTime = orderUpdated.getSuccessfulDeliveryTime();
-
-        //After updated
-        OrderStatus lvOrderStatus = orderUpdated.getOrderStatus();
-        Long lvStorageId = orderUpdated.getTicketExport().getStorage().getId();
-        boolean isNeedRefund = false;
         switch (lvOrderStatus) {
-            case CNCL:
-                SystemConfig lvSendNotifyConfig = mvConfigRepository.findByCode(ConfigCode.sendNotifyCustomerOnOrderConfirmation.name());
-                if (isConfigAvailable(lvSendNotifyConfig) && lvSendNotifyConfig.isYesOption())
-                    sendNotifyCustomerOnOrderConfirmation(orderUpdated);
-                break;
             case RTND:
                 SystemConfig lvReturnPeriodDaysMdl = mvConfigRepository.findByCode(ConfigCode.returnPeriodDays.name());
-                if (isConfigAvailable(lvReturnPeriodDaysMdl))
+                if (isConfigAvailable(lvReturnPeriodDaysMdl)) {
                     throw new AppException("System has not configured the time allowed to return the order!");
-
-                int lvReturnPeriodDays = Integer.parseInt(lvReturnPeriodDaysMdl.getValue());
-                if (isWithinReturnPeriod(lvSuccessfulDeliveryTime, LocalDateTime.now(), lvReturnPeriodDays)) {
-                    mvTicketImportService.restockReturnedItems(lvStorageId, lvOrderCode);
-                    if (isNeedRefund) {
-                        //create ledger transaction record for export
-                    }
+                }
+                int lvReturnPeriodDays = lvReturnPeriodDaysMdl.getIntValue();
+                if (!isWithinReturnPeriod(lvSuccessfulDeliveryTime, LocalDateTime.now(), lvReturnPeriodDays)) {
+                    throw new AppException("The return period has expired!");
                 }
                 break;
         }
 
+        return ObjectUtils.clone(pOrder);
+    }
+
+    @Transactional
+    @Override
+    public OrderDTO update(OrderDTO dto, Long pOrderId) {
+        Order orderToUpdate = mvOrderRepository.findById(pOrderId)
+                .orElseThrow(() -> new AppException("Order not found!"));
+        LocalDateTime lvSuccessfulDeliveryTime = dto.getSuccessfulDeliveryTime();
+        OrderStatus lvOrderStatus = dto.getOrderStatus();
+
+        //Validate before update
+        Order orderBefore = beforeUpdateOrder(orderToUpdate);
+
+        //Update new info
+        orderToUpdate.setReceiverName(dto.getReceiverName());
+        orderToUpdate.setReceiverPhone(dto.getReceiverPhone());
+        orderToUpdate.setReceiverEmail(dto.getReceiverEmail());
+        orderToUpdate.setReceiverAddress(dto.getReceiverAddress());
+        orderToUpdate.setNote(dto.getNote());
+        orderToUpdate.setOrderStatus(lvOrderStatus);
+        if (lvOrderStatus.equals(OrderStatus.DLVD))
+            orderToUpdate.setSuccessfulDeliveryTime(lvSuccessfulDeliveryTime != null ? lvSuccessfulDeliveryTime : LocalDateTime.now());
+        Order orderUpdated = mvOrderRepository.save(orderToUpdate);
+
+        //Do something after updated
+        afterUpdatedOrder(orderUpdated);
+
         //Log
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
-        mvOrderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", id, null);
+        mvOrderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", pOrderId, null);
         systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật đơn hàng", changeLog);
         logger.info("Cập nhật đơn hàng {}", dto.toString());
 
         return OrderDTO.fromOrder(orderToUpdate);
     }
 
+    private void afterUpdatedOrder(Order pOrderUpdated) {
+        String lvOrderCode = pOrderUpdated.getCode();
+        OrderStatus lvOrderStatus = pOrderUpdated.getOrderStatus();
+        Long lvStorageId = pOrderUpdated.getTicketExport().getStorage().getId();
+        boolean isNeedRefund = false;
+
+        switch (lvOrderStatus) {
+            case CNCL:
+                SystemConfig lvSendNotifyConfig = mvConfigRepository.findByCode(ConfigCode.sendNotifyCustomerOnOrderConfirmation.name());
+                if (isConfigAvailable(lvSendNotifyConfig) && lvSendNotifyConfig.isYesOption()) {
+                    sendNotifyCustomerOnOrderConfirmation(pOrderUpdated);
+                }
+                break;
+            case RTND:
+                mvTicketImportService.restockReturnedItems(lvStorageId, lvOrderCode);
+                if (isNeedRefund) {
+                    //create ledger transaction record for export
+                }
+                break;
+        }
+    }
+
     @Override
     public String delete(Long id) {
-        Optional<OrderDTO> order = this.findById(id);
-        if (order.isEmpty()) {
-            throw new ResourceNotFoundException("Order not found!");
-        }
-        if (order.get().getPaymentStatus()) {
+        OrderDTO lvOrder = this.findById(id, true);
+        if (lvOrder.getPaymentStatus()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         mvOrderRepository.deleteById(id);
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.Order, "Xóa đơn hàng", order.toString());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.Order, "Xóa đơn hàng", lvOrder.toString());
         logger.info("Xóa đơn hàng orderId={}", id);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -281,11 +299,8 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Transactional
     @Override
     public String doPay(Long orderId, LocalDateTime paymentTime, Long paymentMethod, Float paymentAmount, String paymentNote) {
-        Optional<OrderDTO> dto = this.findById(orderId);
-        if (dto.isEmpty()) {
-            throw new ResourceNotFoundException("Order not found!");
-        }
-        if (dto.get().getPaymentStatus()) {
+        OrderDTO lvOrder = this.findById(orderId, true);
+        if (lvOrder.getPaymentStatus()) {
             throw new BadRequestException("The order has been paid");
         }
         if ((paymentMethod == null || paymentMethod <= 0) || paymentAmount == null) {
@@ -301,9 +316,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .tranType(LedgerTranType.PT.name())
                 .groupObject(groupObject)
                 .tranContent(receiptType)
-                .paymentMethod(dto.get().getPaymentMethod())
-                .fromToName(dto.get().getCustomer().getCustomerName())
-                .amount(dto.get().calTotalAmountDiscount())
+                .paymentMethod(lvOrder.getPaymentMethod())
+                .fromToName(lvOrder.getCustomer().getCustomerName())
+                .amount(lvOrder.calTotalAmountDiscount())
                 .build());
         logger.info("End generate receipt issued when completed an order");
 
