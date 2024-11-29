@@ -121,7 +121,7 @@ public class Order extends BaseEntity implements Serializable {
 	LocalDateTime cancellationDate;
 
 	@Column(name = "cancellation_reason")
-	String cancellationReason;
+	Long cancellationReason;
 
 	@Column(name = "successful_delivery_time")
 	LocalDateTime successfulDeliveryTime;

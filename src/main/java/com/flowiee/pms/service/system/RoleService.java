@@ -14,7 +14,7 @@ public interface RoleService {
 
     List<ActionModel> findAllAction();
 
-    AccountRole findById(Long id);
+    AccountRole findById(Long id, boolean pThrowException);
 
     List<AccountRole> findByAccountId(Long accountId);
 

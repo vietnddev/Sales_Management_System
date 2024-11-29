@@ -6,7 +6,6 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.repository.system.ConfigRepository;
@@ -56,8 +55,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     private final LedgerReceiptService  mvLedgerReceiptService;
     private final LedgerPaymentService  mvLedgerPaymentService;
     private final ProductVariantService mvProductVariantService;
+    private final LoyaltyProgramService mvLoyaltyProgramService;
 
-    BigDecimal ONE_HUNDRED = new BigDecimal(100);
+    private BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     @Override
     public List<OrderDTO> findAll() {
@@ -148,17 +148,17 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
             //Insert items detail
             BigDecimal totalAmountOfOrder = BigDecimal.ZERO;
-            Optional<OrderCart> cart = mvCartService.findById(request.getCartId());
-            if (cart.isPresent()) {
-                for (Items items : cart.get().getListItems()) {
+            OrderCart cart = mvCartService.findById(request.getCartId(), false);
+            if (cart != null) {
+                for (Items items : cart.getListItems()) {
                     Long lvProductVariantId = items.getProductDetail().getId();
                     BigDecimal lvExtraDiscount = items.getExtraDiscount();
-                    Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(lvProductVariantId);
-                    if (productDetail.isPresent()) {
+                    ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, false);
+                    if (productDetail != null) {
                         int lvItemQuantity = mvCartItemsService.findQuantityOfItem(items.getOrderCart().getId() , lvProductVariantId);
                         OrderDetail orderDetail = OrderDetail.builder()
                             .order(orderSaved)
-                            .productDetail(productDetail.get())
+                            .productDetail(productDetail)
                             .quantity(lvItemQuantity)
                             .status(true)
                             .note(items.getNote())
@@ -248,10 +248,14 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         orderToUpdate.setOrderStatus(lvOrderStatus);
         if (lvOrderStatus.equals(OrderStatus.DLVD))
             orderToUpdate.setSuccessfulDeliveryTime(lvSuccessfulDeliveryTime != null ? lvSuccessfulDeliveryTime : LocalDateTime.now());
+        if (lvOrderStatus.equals(OrderStatus.CNCL)) {
+            orderToUpdate.setCancellationReason(dto.getCancellationReason());
+            orderToUpdate.setCancellationDate(LocalDateTime.now());
+        }
         Order orderUpdated = mvOrderRepository.save(orderToUpdate);
 
         //Do something after updated
-        afterUpdatedOrder(orderUpdated);
+        afterUpdatedOrder(orderUpdated, null);
 
         //Log
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
@@ -262,7 +266,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         return OrderDTO.fromOrder(orderToUpdate);
     }
 
-    private void afterUpdatedOrder(Order pOrderUpdated) {
+    private void afterUpdatedOrder(Order pOrderUpdated, Long pLoyaltyProgramId) {
         String lvOrderCode = pOrderUpdated.getCode();
         OrderStatus lvOrderStatus = pOrderUpdated.getOrderStatus();
         Long lvStorageId = pOrderUpdated.getTicketExport().getStorage().getId();
@@ -280,6 +284,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 if (isNeedRefund) {
                     //create ledger transaction record for export
                 }
+                break;
+            case DLVD:
+                mvLoyaltyProgramService.accumulatePoints(pOrderUpdated, pLoyaltyProgramId);
                 break;
         }
     }
@@ -329,6 +336,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Override
     public List<Order> findOrdersToday() {
         return mvOrderRepository.findOrdersToday();
+    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByCustomer(int pageSize, int pageNum, Long pCustomerId) {
+        return this.findAll(pageSize, pageNum, null, null, null, null, null, null, pCustomerId, null, null, null, null, null, null);
     }
 
     private String getNextOrderCode() {

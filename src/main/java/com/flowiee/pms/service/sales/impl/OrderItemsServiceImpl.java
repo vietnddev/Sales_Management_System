@@ -4,7 +4,7 @@ import com.flowiee.pms.entity.product.ProductPrice;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
@@ -52,8 +52,12 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     }
 
     @Override
-    public Optional<OrderDetail> findById(Long orderDetailId) {
-        return mvOrderDetailRepository.findById(orderDetailId);
+    public OrderDetail findById(Long orderDetailId, boolean pThrowException) {
+        Optional<OrderDetail> entityOptional = mvOrderDetailRepository.findById(orderDetailId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"cart item"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -65,20 +69,20 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     public List<OrderDetail> save(OrderDTO pOrderDto, List<String> productVariantIds) {
         List<OrderDetail> itemAdded = new ArrayList<>();
         for (String productVariantId : productVariantIds) {
-            Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(Long.parseLong(productVariantId));
-            if (productDetail.isPresent()) {
-                OrderDetail orderDetail = mvOrderDetailRepository.findByOrderIdAndProductVariantId(pOrderDto.getId(), productDetail.get().getId());
+            ProductVariantDTO productDetail = mvProductVariantService.findById(Long.parseLong(productVariantId), false);
+            if (productDetail != null) {
+                OrderDetail orderDetail = mvOrderDetailRepository.findByOrderIdAndProductVariantId(pOrderDto.getId(), productDetail.getId());
                 if (orderDetail != null) {
                     orderDetail.setQuantity(orderDetail.getQuantity() + 1);
                     itemAdded.add(mvOrderDetailRepository.save(orderDetail));
                 } else {
-                    ProductPrice itemPrice = mvProductPriceRepository.findPricePresent(null, productDetail.get().getId());
+                    ProductPrice itemPrice = mvProductPriceRepository.findPricePresent(null, productDetail.getId());
                     if (itemPrice == null) {
-                        throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productDetail.get().getVariantName()));
+                        throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productDetail.getVariantName()));
                     }
                     itemAdded.add(this.save(OrderDetail.builder()
                             .order(new Order(pOrderDto.getId()))
-                            .productDetail(productDetail.get())
+                            .productDetail(productDetail)
                             .quantity(1)
                             .status(true)
                             .price(itemPrice.getRetailPriceDiscount())
@@ -110,20 +114,18 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     @Override
     public OrderDetail update(OrderDetail orderDetail, Long orderDetailId) {
         try {
-            Optional<OrderDetail> orderDetailOpt = this.findById(orderDetailId);
-            if (orderDetailOpt.isEmpty()) {
-                throw new BadRequestException();
-            }
-            OrderDetail orderItemBefore = ObjectUtils.clone(orderDetailOpt.get());
+            OrderDetail orderDetailOpt = this.findById(orderDetailId, true);
+
+            OrderDetail orderItemBefore = ObjectUtils.clone(orderDetailOpt);
 
             int lvQuantity = orderDetail.getQuantity();
             BigDecimal lvExtraDiscount = orderDetail.getExtraDiscount();
             String lvNote = orderDetail.getNote();
 
-            orderDetailOpt.get().setQuantity(lvQuantity);
-            orderDetailOpt.get().setExtraDiscount(lvExtraDiscount);
-            orderDetailOpt.get().setNote(lvNote);
-            OrderDetail orderItemUpdated = mvOrderDetailRepository.save(orderDetailOpt.get());
+            orderDetailOpt.setQuantity(lvQuantity);
+            orderDetailOpt.setExtraDiscount(lvExtraDiscount);
+            orderDetailOpt.setNote(lvNote);
+            OrderDetail orderItemUpdated = mvOrderDetailRepository.save(orderDetailOpt);
 
             String logTitle = "Cập nhật đơn hàng " + orderItemUpdated.getOrder().getCode();
             ChangeLog changeLog = new ChangeLog(orderItemBefore, orderItemUpdated);
@@ -139,10 +141,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
 
     @Override
     public String delete(Long orderDetailId) {
-        Optional<OrderDetail> orderDetail = this.findById(orderDetailId);
-        if (orderDetail.isEmpty()) {
-            throw new BadRequestException();
-        }
+        OrderDetail orderDetail = this.findById(orderDetailId, true);
         try {
             mvOrderDetailRepository.deleteById(orderDetailId);
             mvSystemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_ORD_D, MasterObject.OrderDetail, "Xóa item of đơn hàng", orderDetail.toString());

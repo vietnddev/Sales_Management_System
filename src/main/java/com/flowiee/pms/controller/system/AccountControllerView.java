@@ -22,9 +22,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/sys/tai-khoan")
@@ -50,16 +52,15 @@ public class AccountControllerView extends BaseController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
     public ModelAndView findDetailAccountById(@PathVariable("id") Long accountId) {
-        Optional<Account> account = accountService.findById(accountId);
-        if (accountId <= 0 || account.isEmpty()) {
-            throw new ResourceNotFoundException("Account not found!");
-        }
-        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ACCOUNT_DETAIL.getTemplate());
+        Account account = accountService.findById(accountId, true);
         List<RoleModel> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
+
+        ModelAndView modelAndView = new ModelAndView(Pages.SYS_ACCOUNT_DETAIL.getTemplate());
         modelAndView.addObject("listRole", roleOfAccount);
-        modelAndView.addObject("accountInfo", account.get());
+        modelAndView.addObject("accountInfo", account);
         modelAndView.addObject("groupAccount", groupAccountService.findAll());
         modelAndView.addObject("listBranch", branchService.findAll());
+
         return baseView(modelAndView);
     }
 
@@ -81,13 +82,8 @@ public class AccountControllerView extends BaseController {
     public ModelAndView update(@ModelAttribute("account") Account accountEntity,
                                @PathVariable("id") Long accountId,
                                HttpServletRequest request) {
-        if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
-            throw new ResourceNotFoundException("Account not found!");
-        }
-        Optional<Account> acc = accountService.findById(accountId);
-        if (acc.isEmpty()) {
-            throw new BadRequestException();
-        }
+        Account account = accountService.findById(accountId, true);
+        //warning -> need to in the feature
         accountService.update(accountEntity, accountId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -95,19 +91,16 @@ public class AccountControllerView extends BaseController {
     @PostMapping(value = "/delete/{id}")
     @PreAuthorize("@vldModuleSystem.deleteAccount(true)")
     public ModelAndView deleteAccount(@PathVariable("id") Long accountId) {
-        Optional<Account> account = accountService.findById(accountId);
-        if (account.isEmpty()) {
-            throw new ResourceNotFoundException("Account not found!");
-        }
-        account.get().setStatus(AccountStatus.C.name());
-        accountService.save(account.get());
+        Account account = accountService.findById(accountId, true);
+        account.setStatus(AccountStatus.C.name());
+        accountService.save(account);
         return new ModelAndView("redirect:/sys/tai-khoan");
     }
 
     @PostMapping("/update-permission/{id}")
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
     public ModelAndView updatePermission(@PathVariable("id") Long accountId, HttpServletRequest request) {
-        if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
+        if (accountId <= 0 || accountService.findById(accountId, true) == null) {
             throw new ResourceNotFoundException("Account not found!");
         }
         roleService.deleteAllRole(null, accountId);
@@ -122,5 +115,20 @@ public class AccountControllerView extends BaseController {
             }
         }
         return new ModelAndView("redirect:/sys/tai-khoan/" + accountId);
+    }
+
+    @GetMapping(value = "/reset-password/{accountId}")
+    public ModelAndView requestResetPassword(@PathVariable("accountId") long accountId, HttpSession session, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
+        Account account = accountService.findById(accountId, true);
+        if (account.getEmail() != null) {
+            if (accountService.sendTokenForResetPassword(account.getEmail(), request)) {
+                session.setAttribute("successMsg", "Please check your email, password reset link has been sent to your email.");
+            } else {
+                session.setAttribute("errorMsg", "Something wrong on server. Email Not Sent!");
+            }
+        } else {
+            throw new BadRequestException("Invalid Email");
+        }
+        return refreshPage(request);
     }
 }

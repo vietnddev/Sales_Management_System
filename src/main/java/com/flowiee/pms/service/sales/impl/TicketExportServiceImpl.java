@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.storage.Storage;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.entity.sales.Order;
@@ -75,10 +76,10 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
     }
 
     @Override
-    public Optional<TicketExport> findById(Long entityId) {
+    public TicketExport findById(Long entityId, boolean pThrowException) {
         Optional<TicketExport> ticketExportOpt = mvTicketExportRepository.findById(entityId);
-        if (ticketExportOpt.isEmpty()) {
-            return Optional.empty();
+        if (ticketExportOpt.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"ticket export"}, null, null);
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -90,7 +91,8 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         ticketExportOpt.get().setTotalValue(lvTotalValue);
         ticketExportOpt.get().setTotalItems(lvTotalItems);
         ticketExportOpt.get().setExportTimeStr(ticketExportOpt.get().getExportTime().format(formatter));
-        return ticketExportOpt;
+
+        return ticketExportOpt.orElse(null);
     }
 
     @Override
@@ -166,12 +168,10 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
     @Override
     public TicketExport update(TicketExport pTicket, Long ticketExportId) {
         pTicket.setId(ticketExportId);
-        Optional<TicketExport> ticketExportOptional = this.findById(ticketExportId);
-        if (ticketExportOptional.isEmpty()) {
-            throw new BadRequestException();
-        }
-        TicketExport ticketExportToUpdate = ticketExportOptional.get();
-        if (TicketExportStatus.COMPLETED.name().equals(ticketExportToUpdate.getStatus()) || TicketExportStatus.CANCEL.name().equals(ticketExportToUpdate.getStatus())) {
+        TicketExport ticketExport = this.findById(ticketExportId, true);
+
+        TicketExport ticketExportToUpdate = ticketExport;
+        if (ticketExportToUpdate.isCompletedStatus() || ticketExportToUpdate.isCancelStatus()) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         ticketExportToUpdate.setTitle(pTicket.getTitle());
@@ -203,11 +203,8 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 
     @Override
     public String delete(Long ticketExportId) {
-        Optional<TicketExport> ticketExportToDelete = this.findById(ticketExportId);
-        if (ticketExportToDelete.isEmpty()) {
-            throw new ResourceNotFoundException("Ticket export not found!");
-        }
-        if (TicketExportStatus.COMPLETED.name().equals(ticketExportToDelete.get().getStatus())) {
+        TicketExport ticketExportToDelete = this.findById(ticketExportId, true);
+        if (TicketExportStatus.COMPLETED.name().equals(ticketExportToDelete.getStatus())) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
 
@@ -218,7 +215,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         }
         mvTicketExportRepository.deleteById(ticketExportId);
 
-        systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_EX, MasterObject.TicketExport, "Xóa phiếu xuất hàng", ticketExportToDelete.get().getTitle());
+        systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_EX, MasterObject.TicketExport, "Xóa phiếu xuất hàng", ticketExportToDelete.getTitle());
 
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

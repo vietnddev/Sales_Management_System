@@ -2,6 +2,7 @@ package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.FileImportHistory;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.AppImportRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.ImportService;
@@ -32,8 +33,12 @@ public class ImportServiceImpl extends BaseService implements ImportService {
     }
 
     @Override
-    public Optional<FileImportHistory> findById(Long importId) {
-        return mvAppImportRepository.findById(importId);
+    public FileImportHistory findById(Long importId, boolean pThrowException) {
+        Optional<FileImportHistory> entityOptional = mvAppImportRepository.findById(importId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"import record"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -55,11 +60,9 @@ public class ImportServiceImpl extends BaseService implements ImportService {
 
     @Override
     public String delete(Long entityId) {
-        Optional<FileImportHistory> fImport = this.findById(entityId);
-        if (fImport.isEmpty()) {
-            throw new BadRequestException();
-        }
-        mvAppImportRepository.deleteById(entityId);
+        FileImportHistory fImport = this.findById(entityId, true);
+
+        mvAppImportRepository.deleteById(fImport.getId());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

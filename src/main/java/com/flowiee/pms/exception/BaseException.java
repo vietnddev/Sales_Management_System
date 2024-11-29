@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 @Getter
 @Setter
 public class BaseException extends RuntimeException {
@@ -42,5 +45,12 @@ public class BaseException extends RuntimeException {
             }
         }
         return lvPrefixCode + lvMessage;
+    }
+
+    public String getFullStackTrace() {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        printStackTrace(pw);
+        return sw.toString();
     }
 }

@@ -70,7 +70,7 @@ public class CategoryController extends BaseController {
     @PutMapping("/update/{categoryId}")
     @PreAuthorize("@vldModuleCategory.updateCategory(true)")
     public AppResponse<Category> updateCategory(@RequestBody Category category, @PathVariable("categoryId") Long categoryId) {
-        if (mvCategoryService.findById(categoryId).isEmpty()) {
+        if (mvCategoryService.findById(categoryId, true) == null) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "category"));
         }
         try {

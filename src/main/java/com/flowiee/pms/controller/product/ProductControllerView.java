@@ -3,7 +3,6 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.ResourceNotFoundException;
@@ -30,7 +29,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/san-pham")
@@ -56,29 +54,25 @@ public class ProductControllerView extends BaseController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView viewGeneralProduct(@PathVariable("id") Long productId) {
-        Optional<ProductDTO> product = mvProductInfoService.findById(productId);
-        if (product.isEmpty()) {
-            throw new ResourceNotFoundException("Product not found!");
-        }
+        ProductDTO product = mvProductInfoService.findById(productId, true);
+
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_PRODUCT_INFO.getTemplate());
         modelAndView.addObject("productId", productId);
-        modelAndView.addObject("detailProducts", product.get());
+        modelAndView.addObject("detailProducts", product);
         return baseView(modelAndView);
     }
 
     @GetMapping(value = "/variant/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public ModelAndView viewDetailProduct(@PathVariable("id") Long variantId) {
-        Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(variantId);
-        if (productVariant.isEmpty()) {
-            throw new BadRequestException();
-        }
+        ProductVariantDTO productVariant = mvProductVariantService.findById(variantId, true);
+
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_PRODUCT_VARIANT.getTemplate());
         modelAndView.addObject("listAttributes", mvProductAttributeService.findAll(-1, -1, variantId).getContent());
         modelAndView.addObject("bienTheSanPhamId", variantId);
-        modelAndView.addObject("bienTheSanPham", productVariant.get());
+        modelAndView.addObject("bienTheSanPham", productVariant);
         modelAndView.addObject("listImageOfSanPhamBienThe", mvProductImageService.getImageOfProductVariant(variantId));
-        FileStorage imageActive = productVariant.get().getImage();//mvProductImageService.findImageActiveOfProductVariant(variantId);
+        FileStorage imageActive = productVariant.getImage();//mvProductImageService.findImageActiveOfProductVariant(variantId);
         if (imageActive == null) {
             imageActive = new FileStorage();
         }
@@ -90,7 +84,7 @@ public class ProductControllerView extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public ModelAndView insertProductAttribute(HttpServletRequest request, @ModelAttribute("thuocTinhSanPham") ProductAttribute productAttribute) {
         mvProductAttributeService.save(productAttribute);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @PostMapping(value = "/attribute/update/{id}")
@@ -98,7 +92,7 @@ public class ProductControllerView extends BaseController {
     public ModelAndView updateProductAttribute(@ModelAttribute("thuocTinhSanPham") ProductAttribute attribute,
                                                @PathVariable("id") Long attributeId,
                                                HttpServletRequest request) {
-        if (mvProductAttributeService.findById(attributeId).isEmpty()) {
+        if (mvProductAttributeService.findById(attributeId, true) == null) {
             throw new ResourceNotFoundException("Product attribute not found!");
         }
         attribute.setId(attributeId);
@@ -137,5 +131,13 @@ public class ProductControllerView extends BaseController {
             model = exportService.exportToExcel(TemplateExport.EX_LIST_OF_PRODUCTS, null, false);
         }
         return ResponseEntity.ok().headers(model.getHttpHeaders()).body(model.getContent());
+    }
+
+    @GetMapping(value = "/held")
+    @PreAuthorize("@vldModuleProduct.readProduct(true)")
+    public ModelAndView viewProductHeld() {
+        ModelAndView modelAndView = new ModelAndView(Pages.PRO_PRODUCT_HELD.getTemplate());
+        modelAndView.addObject("productHeldList", mvProductInfoService.getProductHeldInUnfulfilledOrder());
+        return baseView(modelAndView);
     }
 }

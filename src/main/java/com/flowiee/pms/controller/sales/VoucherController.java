@@ -1,7 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.entity.sales.VoucherInfo;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/voucher")
@@ -58,11 +56,7 @@ public class VoucherController extends BaseController {
     @GetMapping("/{voucherInfoId}")
     @PreAuthorize("@vldModuleSales.readVoucher(true)")
     public AppResponse<VoucherInfoDTO> findDetailVoucherInfo(@PathVariable("voucherInfoId") Long voucherInfoId) {
-        Optional<VoucherInfoDTO> voucherInfoDTO = mvVoucherService.findById(voucherInfoId);
-        if (voucherInfoDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Voucher not found!");
-        }
-        return success(voucherInfoDTO.get());
+        return success(mvVoucherService.findById(voucherInfoId, true));
     }
 
     @Operation(summary = "Create voucher")

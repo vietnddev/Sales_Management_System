@@ -161,7 +161,7 @@
                                                             <td th:text="${donHang.receiverAddress}"></td>
                                                             <td th:text="${donHang.totalAmountDiscount}"></td>
                                                             <td th:text="${donHang.salesChannelName}"></td>
-                                                            <td></td>
+                                                            <td th:text="${donHang.orderStatusName}"></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

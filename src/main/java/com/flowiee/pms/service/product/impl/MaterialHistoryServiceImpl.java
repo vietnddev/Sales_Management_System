@@ -3,6 +3,7 @@ package com.flowiee.pms.service.product.impl;
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.entity.product.MaterialHistory;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.product.MaterialHistoryRepository;
 import com.flowiee.pms.service.product.MaterialHistoryService;
 
@@ -29,8 +30,12 @@ public class MaterialHistoryServiceImpl implements MaterialHistoryService {
     }
 
     @Override
-    public Optional<MaterialHistory> findById(Long entityId) {
-        return mvMaterialHistoryRepository.findById(entityId);
+    public MaterialHistory findById(Long entityId, boolean pThrowException) {
+        Optional<MaterialHistory> entityOptional = mvMaterialHistoryRepository.findById(entityId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"material history"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override

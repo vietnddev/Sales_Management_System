@@ -16,4 +16,8 @@ public interface CustomerService extends BaseCurdService<CustomerDTO> {
     List<CustomerDTO> findCustomerNewInMonth();
 
     List<PurchaseHistory> findPurchaseHistory(Long customerId, Integer year, Integer month);
+
+    Page<CustomerDTO> getVIPCustomers(int pageSize, int pageNum);
+
+    Page<CustomerDTO> getBlackListCustomers(int pageSize, int pageNum);
 }

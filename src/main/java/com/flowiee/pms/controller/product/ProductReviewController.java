@@ -42,7 +42,7 @@ public class ProductReviewController extends BaseController {
     @PutMapping("/update/{reviewId}")
     @PreAuthorize("@vldModuleProduct.updateReview(true)")
     public AppResponse<ProductReview> updateProductReview(@RequestBody ProductReview productReview, @PathVariable("reviewId") Long reviewId) {
-        if (mvProductReviewService.findById(reviewId).isEmpty()) {
+        if (mvProductReviewService.findById(reviewId, true) == null) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "productReview"));
         }
         return success(mvProductReviewService.update(productReview, reviewId));

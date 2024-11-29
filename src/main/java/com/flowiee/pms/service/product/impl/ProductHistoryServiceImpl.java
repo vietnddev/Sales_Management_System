@@ -4,6 +4,7 @@ import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductAttribute;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.product.ProductHistoryRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
@@ -31,8 +32,12 @@ public class ProductHistoryServiceImpl extends BaseService implements ProductHis
     }
 
     @Override
-    public Optional<ProductHistory> findById(Long productHistoryId) {
-        return mvProductHistoryRepository.findById(productHistoryId);
+    public ProductHistory findById(Long productHistoryId, boolean pThrowException) {
+        Optional<ProductHistory> entityOptional = mvProductHistoryRepository.findById(productHistoryId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"product history"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override

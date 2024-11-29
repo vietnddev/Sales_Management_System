@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.product.ProductCombo;
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.CartItemModel;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
@@ -35,8 +36,12 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
     }
 
     @Override
-    public Optional<Items> findById(Long itemId) {
-        return mvCartItemsRepository.findById(itemId);
+    public Items findById(Long itemId, boolean pThrowException) {
+        Optional<Items> entityOptional = mvCartItemsRepository.findById(itemId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"cart item"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -92,7 +97,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
 
     @Override
     public String delete(Long itemId) {
-        if (this.findById(itemId).isEmpty()) {
+        if (this.findById(itemId, true) == null) {
             throw new BadRequestException();
         }
         mvCartItemsRepository.deleteById(itemId);

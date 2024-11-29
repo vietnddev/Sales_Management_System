@@ -29,7 +29,7 @@ public class BranchController extends BaseController {
 
     @Operation(summary = "Find all branches")
     @GetMapping("/all")
-    @PreAuthorize("@vldModuleSystem.readAccount(true)")
+    @PreAuthorize("@vldModuleSystem.readBranch(true)")
     public AppResponse<List<Branch>> findAllBranches() {
         try {
             return success(branchService.findAll());

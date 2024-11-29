@@ -2,10 +2,7 @@ package com.flowiee.pms.controller.system;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.exception.ResourceNotFoundException;
-import com.flowiee.pms.service.product.ProductComboService;
-import com.flowiee.pms.service.product.ProductImageService;
-import com.flowiee.pms.service.product.ProductInfoService;
-import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.service.system.FileStorageService;
@@ -42,37 +39,38 @@ public class FileStorageControllerView extends BaseController {
     ProductImageService   productImageService;
     ProductComboService   productComboService;
     ProductVariantService productVariantService;
+    ProductDamagedService productDamagedService;
 
     @PostMapping("/uploads/san-pham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfProductBase(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long productId) throws Exception {
-        if (productId <= 0 || productInfoService.findById(productId).isEmpty()) {
+        if (productId <= 0 || productInfoService.findById(productId, true) == null) {
             throw new ResourceNotFoundException("Product not found!");
         }
         if (file.isEmpty()) {
             throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageProduct(file, productId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @PostMapping("/uploads/bien-the-san-pham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long productVariantId) throws Exception {
-        if (productVariantId <= 0 || productVariantService.findById(productVariantId).isEmpty()) {
+        if (productVariantId <= 0 || productVariantService.findById(productVariantId, true) == null) {
             throw new ResourceNotFoundException("Product variant not found!");
         }
         if (file.isEmpty()) {
             throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageProductVariant(file, productVariantId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @PostMapping("/file/change-image-sanpham/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView changeFile(@RequestParam("file") MultipartFile file, @PathVariable("id") Long fileId, HttpServletRequest request) {
-        if (fileId <= 0 || fileService.findById(fileId).isEmpty()) {
+        if (fileId <= 0 || fileService.findById(fileId, true) == null) {
             throw new ResourceNotFoundException("Image not found");
         }
         if (file.isEmpty()) {
@@ -85,7 +83,7 @@ public class FileStorageControllerView extends BaseController {
     @PostMapping("/uploads/ticket-import/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfTicketImport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long ticketImportId) throws Exception {
-        if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId).isEmpty()) {
+        if (ticketImportId <= 0 || ticketImportService.findById(ticketImportId, true) == null) {
             throw new ResourceNotFoundException("Ticket import not found!");
         }
         if (file.isEmpty()) {
@@ -98,7 +96,7 @@ public class FileStorageControllerView extends BaseController {
     @PostMapping("/uploads/ticket-export/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfTicketExport(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long ticketExportId) throws Exception {
-        if (ticketExportId <= 0 || ticketExportService.findById(ticketExportId).isEmpty()) {
+        if (ticketExportId <= 0 || ticketExportService.findById(ticketExportId, true) == null) {
             throw new ResourceNotFoundException("Ticket export not found!");
         }
         if (file.isEmpty()) {
@@ -111,14 +109,27 @@ public class FileStorageControllerView extends BaseController {
     @PostMapping("/uploads/product-combo/{id}")
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public ModelAndView uploadImageOfProductCombo(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long productComboId) throws Exception {
-        if (productComboService.findById(productComboId).isEmpty()) {
+        if (productComboService.findById(productComboId, true) == null) {
             throw new ResourceNotFoundException("Combo not found!");
         }
         if (file.isEmpty()) {
             throw new ResourceNotFoundException("File attach doesn't empty!");
         }
         productImageService.saveImageProductCombo(file, productComboId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
+    }
+
+    @PostMapping("/uploads/product-damaged/{id}")
+    @PreAuthorize("@vldModuleProduct.updateImage(true)")
+    public ModelAndView uploadImageOfProductDamaged(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable("id") Long productDamagedId) throws Exception {
+        if (productDamagedService.findById(productDamagedId, true) == null) {
+            throw new ResourceNotFoundException("Product damaged not found!");
+        }
+        if (file.isEmpty()) {
+            throw new ResourceNotFoundException("File attach doesn't empty!");
+        }
+        productImageService.saveImageProductDamaged(file, productDamagedId);
+        return refreshPage(request);
     }
 
     @GetMapping("/uploads/**")//http://host:port/uploads/product/2024/10/3/83cbb1e4-37e9-41f1-8892-1d470ceb0f7c.jpg

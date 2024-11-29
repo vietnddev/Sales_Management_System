@@ -6,10 +6,7 @@ import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
-import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.DataInUseException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.exception.*;
 import com.flowiee.pms.model.dto.ProductPriceDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.utils.ChangeLog;
@@ -27,9 +24,7 @@ import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.utils.converter.ProductVariantConvert;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -77,15 +72,19 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     }
 
     @Override
-    public Optional<ProductVariantDTO> findById(Long pProductVariantId) {
+    public ProductVariantDTO findById(Long pProductVariantId, boolean pThrowException) {
         Optional<ProductDetail> productVariant = mvProductVariantRepository.findById(pProductVariantId);
         if (productVariant.isPresent()) {
             ProductVariantDTO dto = ProductVariantConvert.entityToDTO(productVariant.get());
             //ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
             setPriceInfo(dto, dto.getVariantPrice());
-            return Optional.of(dto);
+            return dto;
         }
-        return Optional.empty();
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"product variant"}, null, null);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -172,15 +171,12 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     @Transactional
     @Override
     public ProductVariantDTO update(ProductVariantDTO productDetail, Long productVariantId) {
-        Optional<ProductDetail> productVariantOptional = mvProductVariantRepository.findById(productVariantId);
-        if (productVariantOptional.isEmpty()) {
-            throw new BadRequestException();
-        }
+        ProductDetail productVariantOptional = this.findById(productVariantId, true);
         try {
             //Product variant info
-            ProductDetail productBeforeUpdate = ObjectUtils.clone(productVariantOptional.get());
+            ProductDetail productBeforeUpdate = ObjectUtils.clone(productVariantOptional);
 
-            ProductDetail productToUpdate = productVariantOptional.get();
+            ProductDetail productToUpdate = productVariantOptional;
             productToUpdate.setVariantName(productDetail.getVariantName());
             productToUpdate.setDefectiveQty(productDetail.getDefectiveQty());
             productToUpdate.setWeight(productDetail.getWeight());
@@ -227,16 +223,13 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Override
     public String delete(Long productVariantId) {
-        Optional<ProductVariantDTO> productDetailToDelete = this.findById(productVariantId);
-        if (productDetailToDelete.isEmpty()) {
-            throw new ResourceNotFoundException("Product variant not found!");
-        }
+        ProductVariantDTO productDetailToDelete = this.findById(productVariantId, true);
         try {
             mvProductVariantRepository.deleteById(productVariantId);
         } catch (ConstraintViolationException ex) {
             throw new DataInUseException("Không thể xóa sản phẩm đã được sử dụng!", ex);
         }
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Xóa biến thể sản phẩm", productDetailToDelete.get().getVariantName());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Xóa biến thể sản phẩm", productDetailToDelete.getVariantName());
         logger.info("Delete productVariant success! {}", productDetailToDelete);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

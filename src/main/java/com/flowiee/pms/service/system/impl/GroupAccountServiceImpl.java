@@ -2,6 +2,7 @@ package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.repository.system.GroupAccountRepository;
@@ -45,11 +46,12 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
     }
 
     @Override
-    public Optional<GroupAccount> findById(Long groupId) {
-        if (groupId == null || groupId <= 0) {
-            return Optional.empty();
+    public GroupAccount findById(Long groupId, boolean pThrowException) {
+        Optional<GroupAccount> groupAccount = mvGroupAccountRepository.findById(groupId);
+        if (groupAccount.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"group account"}, null, null);
         }
-        return mvGroupAccountRepository.findById(groupId);
+        return groupAccount.orElse(null);
     }
 
     @Override
@@ -59,11 +61,9 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
 
     @Override
     public GroupAccount update(GroupAccount groupAccount, Long groupId) {
-        Optional<GroupAccount> groupAccountOpt = this.findById(groupId);
-        if (groupAccountOpt.isEmpty()) {
-            throw new ResourceNotFoundException("Group account not found");
-        }
-        GroupAccount groupAccountBefore = ObjectUtils.clone(groupAccountOpt.get());
+        GroupAccount groupAccountOpt = this.findById(groupId, true);
+
+        GroupAccount groupAccountBefore = ObjectUtils.clone(groupAccountOpt);
 
         groupAccount.setId(groupId);
         GroupAccount groupAccountUpdated = mvGroupAccountRepository.save(groupAccount);
@@ -76,7 +76,7 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
 
     @Override
     public String delete(Long groupId) {
-        if (this.findById(groupId).isEmpty()) {
+        if (this.findById(groupId, true) == null) {
             throw new BadRequestException();
         }
         mvGroupAccountRepository.deleteById(groupId);

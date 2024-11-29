@@ -84,6 +84,12 @@ public enum ACTION {
     SYS_GR_ACC_C("Create account group",        MODULE.SYSTEM.name()),
     SYS_GR_ACC_U("Update account group",        MODULE.SYSTEM.name()),
     SYS_GR_ACC_D("Delete account group",        MODULE.SYSTEM.name()),
+
+    SYS_BRCH_R("View list of branches",         MODULE.SYSTEM.name()),
+    SYS_BRCH_C("Create branch",                 MODULE.SYSTEM.name()),
+    SYS_BRCH_U("Update branch",                 MODULE.SYSTEM.name()),
+    SYS_BRCH_D("Delete branch",                 MODULE.SYSTEM.name()),
+
     SYS_CNF_R("View system config",             MODULE.SYSTEM.name()),
     SYS_CNF_U("Update system config",           MODULE.SYSTEM.name());
 

@@ -5,7 +5,6 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.role.RoleModel;
 import com.flowiee.pms.service.system.AccountService;
@@ -20,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/system/account")
@@ -46,11 +44,7 @@ public class AccountController extends BaseController {
     @GetMapping("/{accountId}")
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
     public AppResponse<Account> findDetailAccount(@PathVariable("accountId") Long accountId) {
-        Optional<Account> account = accountService.findById(accountId);
-        if (account.isEmpty()) {
-            throw new ResourceNotFoundException("Account not found!");
-        }
-        return success(account.get());
+        return success(accountService.findById(accountId, true));
     }
 
     @Operation(summary = "Create account")
@@ -81,7 +75,7 @@ public class AccountController extends BaseController {
     @PreAuthorize("@vldModuleSystem.updateAccount(true)")
     public AppResponse<List<RoleModel>> updatePermission(@RequestBody String[] actions, @PathVariable("accountId") Long accountId) {
         try {
-            if (accountId <= 0 || accountService.findById(accountId).isEmpty()) {
+            if (accountId <= 0 || accountService.findById(accountId, true) == null) {
                 throw new BadRequestException();
             }
 //            roleService.deleteAllRole(accountId);

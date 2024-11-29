@@ -2,6 +2,7 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.sales.LedgerTransaction;
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.sales.LedgerTransactionRepository;
@@ -58,8 +59,12 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
     }
 
     @Override
-    public Optional<LedgerTransaction> findById(Long tranId) {
-        return mvLedgerTransactionRepository.findById(tranId);
+    public LedgerTransaction findById(Long tranId, boolean pThrowException) {
+        Optional<LedgerTransaction> entityOptional = mvLedgerTransactionRepository.findById(tranId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"ledger transaction"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override

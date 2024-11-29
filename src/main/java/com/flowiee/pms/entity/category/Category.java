@@ -125,6 +125,10 @@ public class Category extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "tranContent", fetch = FetchType.LAZY)
 	List<LedgerTransaction> listLedgerTransByTranType;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "groupCustomer", fetch = FetchType.LAZY)
+	List<Customer> listCustomerByGroupCustomer;
+
 	@Transient
 	Integer totalSubRecords;
 

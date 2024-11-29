@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.BaseService;
@@ -42,8 +43,12 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     }
 
     @Override
-    public Optional<FileStorage> findById(Long fileId) {
-        return mvFileRepository.findById(fileId);
+    public FileStorage findById(Long fileId, boolean pThrowException) {
+        Optional<FileStorage> entityOptional = mvFileRepository.findById(fileId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"file model"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Transactional

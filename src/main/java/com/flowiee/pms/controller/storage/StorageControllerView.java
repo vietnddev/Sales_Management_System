@@ -33,14 +33,11 @@ public class StorageControllerView extends BaseController {
     @GetMapping(value = "/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
     public ModelAndView findDetail(@PathVariable("storageId") Long storageId) {
-        Optional<StorageDTO> storage = mvStorageService.findById(storageId);
-        if (storage.isEmpty()) {
-            throw new ResourceNotFoundException("Storage not found!");
-        }
-        System.out.println("storageId: " + storageId);
+        StorageDTO storage = mvStorageService.findById(storageId, true);
+
         ModelAndView modelAndView = new ModelAndView(Pages.STG_STORAGE_DETAIL.getTemplate());
-        modelAndView.addObject("storageId", storage.get().getId());
-        modelAndView.addObject("storage", storage.get());
+        modelAndView.addObject("storageId", storage.getId());
+        modelAndView.addObject("storage", storage);
         return baseView(modelAndView);
     }
 }

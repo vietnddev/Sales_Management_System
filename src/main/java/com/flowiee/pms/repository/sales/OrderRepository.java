@@ -101,4 +101,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("from Order where code = :orderCode")
     Order findByOrderCode(@Param("orderCode") String orderCode);
+
+    @Query("from Order where cancellationReason = :cancellationReason")
+    List<Order> findByCancellationReason(Long cancellationReason);
+
+    @Query("from Order where orderStatus in (:orderStatus)")
+    List<Order> findByOrderStatus(List<OrderStatus> orderStatus);
 }

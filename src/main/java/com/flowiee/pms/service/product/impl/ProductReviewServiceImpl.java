@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.ProductReview;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.product.ProductReviewRepository;
 import com.flowiee.pms.service.BaseService;
@@ -28,8 +29,12 @@ public class ProductReviewServiceImpl extends BaseService implements ProductRevi
     }
 
     @Override
-    public Optional<ProductReview> findById(Long productReviewId) {
-        return mvProductReviewRepository.findById(productReviewId);
+    public ProductReview findById(Long productReviewId, boolean pThrowException) {
+        Optional<ProductReview> entityOptional = mvProductReviewRepository.findById(productReviewId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"product review"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -39,7 +44,7 @@ public class ProductReviewServiceImpl extends BaseService implements ProductRevi
 
     @Override
     public ProductReview update(ProductReview productReview, Long productReviewId) {
-        ProductReview existingReview = mvProductReviewRepository.findById(productReviewId).orElseThrow(() -> new ResourceNotFoundException("Review not found!"));
+        ProductReview existingReview = this.findById(productReviewId, true);
         existingReview.setReviewContent(productReview.getReviewContent());
         existingReview.setRating(productReview.getRating());
         return mvProductReviewRepository.save(existingReview);

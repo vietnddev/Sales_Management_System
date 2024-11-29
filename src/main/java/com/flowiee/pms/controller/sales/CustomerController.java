@@ -56,11 +56,11 @@ public class CustomerController extends BaseController {
     @GetMapping("/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<CustomerDTO> findDetailCustomer(@PathVariable("customerId") Long customerId) {
-        Optional<CustomerDTO> customer = mvCustomerService.findById(customerId);
-        if (customer.isEmpty()) {
+        CustomerDTO customer = mvCustomerService.findById(customerId, true);
+        if (customer == null) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "customer"));
         }
-        return success(customer.get());
+        return success(customer);
     }
 
     @Operation(summary = "Create customer")
@@ -96,7 +96,7 @@ public class CustomerController extends BaseController {
     @GetMapping("/purchase-history/{customerId}")
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<List<PurchaseHistory>> findPurchaseHistory(@PathVariable("customerId") Long customerId, @RequestParam(value = "year", required = false) Integer year) {
-        if (mvCustomerService.findById(customerId).isEmpty()) {
+        if (mvCustomerService.findById(customerId, true) == null) {
             throw new BadRequestException("Customer not found");
         }
         return success(mvCustomerService.findPurchaseHistory(customerId, year, null));

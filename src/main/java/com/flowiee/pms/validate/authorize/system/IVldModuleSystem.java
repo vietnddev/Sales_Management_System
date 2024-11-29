@@ -24,4 +24,12 @@ public interface IVldModuleSystem {
     boolean updateGroupAccount(boolean throwException);
 
     boolean deleteGroupAccount(boolean throwException);
+
+    boolean readBranch(boolean throwException);
+
+    boolean insertBranch(boolean throwException);
+
+    boolean updateBranch(boolean throwException);
+
+    boolean deleteBranch(boolean throwException);
 }

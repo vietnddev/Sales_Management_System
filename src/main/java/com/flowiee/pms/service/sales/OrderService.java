@@ -23,4 +23,6 @@ public interface OrderService extends BaseCurdService<OrderDTO> {
     String doPay(Long orderId, LocalDateTime paymentTime, Long paymentMethod, Float paymentAmount, String paymentNote);
 
     List<Order> findOrdersToday();
+
+    Page<OrderDTO> getOrdersByCustomer(int pageSize, int pageNum, Long pCustomerId);
 }

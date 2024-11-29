@@ -2,11 +2,14 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.config.StartUp;
 import com.flowiee.pms.entity.product.ProductCombo;
+import com.flowiee.pms.entity.product.ProductDamaged;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.repository.product.ProductDamagedRepository;
 import com.flowiee.pms.service.product.ProductComboService;
+import com.flowiee.pms.service.product.ProductDamagedService;
 import com.flowiee.pms.service.system.FileStorageService;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
@@ -22,6 +25,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +47,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
     ProductComboService mvProductComboService;
     ProductVariantService mvProductVariantService;
     FileStorageRepository mvFileStorageRepository;
+    ProductDamagedRepository mvProductDamagedRepository;
 
     @Override
     public List<FileStorage> getImageOfProduct(Long productId) {
@@ -88,6 +93,23 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
 
         FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), null);
         fileInfo.setProductCombo(productCombo.get());
+        FileStorage imageSaved = mvFileStorageService.save(fileInfo);
+
+        Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + imageSaved.getStorageName());
+        fileUpload.transferTo(path);
+
+        return imageSaved;
+    }
+
+    @Override
+    public FileStorage saveImageProductDamaged(MultipartFile fileUpload, long productDamagedId) throws IOException {
+        Optional<ProductDamaged> productDamaged = mvProductDamagedRepository.findById(productDamagedId);
+        if (productDamaged.isEmpty()) {
+            throw new BadRequestException();
+        }
+
+        FileStorage fileInfo = new FileStorage(fileUpload, MODULE.PRODUCT.name(), null);
+        fileInfo.setProductDamaged(productDamaged.get());
         FileStorage imageSaved = mvFileStorageService.save(fileInfo);
 
         Path path = Paths.get(CommonUtils.getPathDirectory(MODULE.PRODUCT) + "/" + imageSaved.getStorageName());

@@ -246,4 +246,24 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         }
         return purchaseHistories;
     }
+
+    @Override
+    public Page<CustomerDTO> getVIPCustomers(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Customer> customers = mvCustomerRepository.findVIPCustomers(pageable);
+        List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(customers.getContent());
+        this.setContactDefault(customerDTOs);
+
+        return new PageImpl<>(customerDTOs, pageable, customerDTOs.size());
+    }
+
+    @Override
+    public Page<CustomerDTO> getBlackListCustomers(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Customer> customers = mvCustomerRepository.findBlackListCustomers(pageable);
+        List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(customers.getContent());
+        this.setContactDefault(customerDTOs);
+
+        return new PageImpl<>(customerDTOs, pageable, customerDTOs.size());
+    }
 }

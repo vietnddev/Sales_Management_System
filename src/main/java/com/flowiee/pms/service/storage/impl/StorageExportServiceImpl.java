@@ -29,15 +29,16 @@ public class StorageExportServiceImpl extends BaseExportService {
     protected void writeData(Object pCondition) {
         Storage lvCondition = (Storage) pCondition;
 
-        Optional<StorageDTO> storage = mvStorageService.findById(lvCondition.getId());
-        if (storage.isEmpty()) return;
+        StorageDTO storage = mvStorageService.findById(lvCondition.getId(), false);
+        if (storage == null)
+            return;
 
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
 
         XSSFCell cellTitleStorage = sheet.getRow(1).getCell(0);
-        cellTitleStorage.setCellValue(cellTitleStorage.getStringCellValue().replace("{storageName}", storage.get().getName()));
+        cellTitleStorage.setCellValue(cellTitleStorage.getStringCellValue().replace("{storageName}", storage.getName()));
 
-        List<StorageItems> listData = mvStorageService.findStorageItems( -1, -1, storage.get().getId(), null).getContent();
+        List<StorageItems> listData = mvStorageService.findStorageItems( -1, -1, storage.getId(), null).getContent();
         for (int i = 0; i < listData.size(); i++) {
             StorageItems storageItems = listData.get(i);
 

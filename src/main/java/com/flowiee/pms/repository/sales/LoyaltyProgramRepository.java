@@ -11,4 +11,7 @@ import java.util.List;
 public interface LoyaltyProgramRepository extends JpaRepository<LoyaltyProgram, Long> {
     @Query("from LoyaltyProgram where isActive = true")
     List<LoyaltyProgram> findActiveProgram();
+
+    @Query("from LoyaltyProgram where isDefault = true")
+    LoyaltyProgram findDefaultProgram();
 }

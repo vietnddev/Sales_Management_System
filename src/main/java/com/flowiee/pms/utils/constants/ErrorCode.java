@@ -12,9 +12,10 @@ public enum ErrorCode {
     DELETE_ERROR_OCCURRED(2003, "An error occurred while delete %s"),
     UNAUTHORIZED(2004, "Unauthorized"),
     ERROR_FORBIDDEN(2005, "You are not authorized to use this function!"),
-    ERROR_NOTFOUND( 2006, "The resource you are accessing dose not found!"),
+    RESOURCE_NOT_FOUND( 2006, "The resource you are accessing dose not found!"),
     ERROR_DATA_LOCKED( 2007, "The resource is currently in use and cannot be update or delete at this time!"),
-    ACCOUNT_LOCKED(2008, "Your account may have been locked due to multiple failed login attempts. Please contact support.");
+    ACCOUNT_LOCKED(2008, "Your account may have been locked due to multiple failed login attempts. Please contact support."),
+    ENTITY_NOT_FOUND(2009, "{0} not found in database!");
 
     private final int code;
     private final String description;

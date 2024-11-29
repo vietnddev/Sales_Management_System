@@ -21,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/stg/ticket-import")
@@ -49,11 +48,11 @@ public class TicketImportController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public AppResponse<TicketImportDTO> findDetail(@PathVariable("id") Long ticketImportId) {
-        Optional<TicketImport> ticketImport = mvTicketImportService.findById(ticketImportId);
-        if (ticketImport.isEmpty()) {
+        TicketImport ticketImport = mvTicketImportService.findById(ticketImportId, false);
+        if (ticketImport == null) {
             throw new ResourceNotFoundException("Ticket import goods not found!");
         }
-        return success(TicketImportDTO.fromTicketImport(ticketImport.get()));
+        return success(TicketImportDTO.fromTicketImport(ticketImport));
     }
 
     @Operation(summary = "Thêm mới phiếu nhập hàng")
@@ -108,7 +107,7 @@ public class TicketImportController extends BaseController {
     @PreAuthorize("@vldModuleSales.importGoods(true)")
     public AppResponse<List<MaterialTemp>> addMaterialToTicket(@PathVariable("id") Long ticketImportId,
                                                                @RequestBody List<Long> materialIds) {
-        if (ticketImportId <= 0 || mvTicketImportService.findById(ticketImportId).isEmpty()) {
+        if (ticketImportId <= 0 || mvTicketImportService.findById(ticketImportId, false) == null) {
             throw new BadRequestException("Goods import to add product not found!");
         }
         try {

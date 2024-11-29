@@ -13,6 +13,7 @@ import com.flowiee.pms.entity.system.AccountRole;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
 import com.flowiee.pms.repository.sales.OrderRepository;
@@ -86,17 +87,19 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     }
 
     @Override
-    public Optional<TicketImport> findById(Long entityId) {
+    public TicketImport findById(Long entityId, boolean pThrowException) {
         Optional<TicketImport> ticketImport = mvTicketImportRepository.findById(entityId);
-        if (ticketImport.isEmpty()) {
-            return Optional.empty();
+        if (ticketImport.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"ticket import"}, null, null);
         }
+
         BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketImport.get().getListProductVariantTemps(), ticketImport.get().getListMaterialTemps());
         BigDecimal lvTotalValue = totalValueAndItems[0];
         int lvTotalItems = totalValueAndItems[1].intValue();
         ticketImport.get().setTotalValue(lvTotalValue);
         ticketImport.get().setTotalItems(lvTotalItems);
-        return ticketImport;
+
+        return ticketImport.orElse(null);
     }
 
     @Override
@@ -123,10 +126,14 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
                     if (ObjectUtils.isNotEmpty(listOfStorageManagersRight)){
                         Set<Account> stgManagersReceiveNtfs = new HashSet<>();
                         for (AccountRole storageManagerRight : listOfStorageManagersRight) {
-                            Optional<GroupAccount> groupAccount = mvGroupAccountService.findById(storageManagerRight.getGroupId());
-                            groupAccount.ifPresent(account -> stgManagersReceiveNtfs.addAll(account.getListAccount()));
-                            Optional<Account> account = mvAccountService.findById(storageManagerRight.getAccountId());
-                            account.ifPresent(stgManagersReceiveNtfs::add);
+                            GroupAccount groupAccount = mvGroupAccountService.findById(storageManagerRight.getGroupId(), false);
+                            if (groupAccount != null) {
+                                stgManagersReceiveNtfs.addAll(groupAccount.getListAccount());
+                            }
+                            Account account = mvAccountService.findById(storageManagerRight.getAccountId(), false);
+                            if (account != null) {
+                                stgManagersReceiveNtfs.add(account);
+                            }
                         }
                         for (Account a : stgManagersReceiveNtfs) {
                             mvNotificationService.save(Notification.builder()
@@ -148,11 +155,8 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public TicketImport update(TicketImport pTicketImport, Long entityId) {
-        Optional<TicketImport> ticketImportOpt = this.findById(entityId);
-        if (ticketImportOpt.isEmpty()) {
-            throw new BadRequestException();
-        }
-        TicketImport ticketImport = ticketImportOpt.get();
+        TicketImport ticketImport = this.findById(entityId, true);
+
         if (ticketImport.isCompletedStatus() || ticketImport.isCancelStatus()) {
             throw new BadRequestException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
@@ -185,13 +189,11 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
 
     @Override
     public String delete(Long entityId) {
-        Optional<TicketImport> ticketImport = this.findById(entityId);
-        if (ticketImport.isEmpty()) {
-            throw new BadRequestException("Ticket import not found!");
-        }
+        TicketImport ticketImport = this.findById(entityId, true);
+
         mvTicketImportRepository.deleteById(entityId);
 
-        systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_IM, MasterObject.TicketImport, "Xóa phiếu nhập hàng", ticketImport.get().getTitle());
+        systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_TICKET_IM, MasterObject.TicketImport, "Xóa phiếu nhập hàng", ticketImport.getTitle());
 
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -219,17 +221,15 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
         if (entityId == null || entityId <= 0) {
             throw new BadRequestException();
         }
-        Optional<TicketImport> ticketImport = this.findById(entityId);
-        if (ticketImport.isEmpty()) {
-            throw new BadRequestException();
-        }
-        ticketImport.get().setStatus(status);
-        return mvTicketImportRepository.save(ticketImport.get());
+        TicketImport ticketImport = this.findById(entityId, true);
+        ticketImport.setStatus(status);
+
+        return mvTicketImportRepository.save(ticketImport);
     }
 
     @Override
     public List<ProductVariantTemp> addProductToTicket(Long ticketImportId, List<Long> productVariantIds) {
-        if (this.findById(ticketImportId).isEmpty()) {
+        if (this.findById(ticketImportId, true) == null) {
             throw new ResourceNotFoundException("Ticket import goods not found!");
         }
         List<ProductVariantTemp> listAdded = new ArrayList<>();
@@ -261,11 +261,10 @@ public class TicketImportServiceImpl extends BaseService implements TicketImport
     public List<MaterialTemp> addMaterialToTicket(Long ticketImportId, List<Long> materialIds) {
         List<MaterialTemp> listAdded = new ArrayList<>();
         for (Long materialId : materialIds) {
-            Optional<Material> materialOpt = mvMaterialService.findById(materialId);
-            if (materialOpt.isEmpty()) {
+            Material material = mvMaterialService.findById(materialId, false);
+            if (material == null) {
                 continue;
             }
-            Material material = materialOpt.get();
             MaterialTemp temp = mvMaterialTempRepository.findMaterialInGoodsImport(ticketImportId, material.getId());
             int defaultQuantity = 1;
             if (temp != null) {

@@ -140,6 +140,10 @@
                             <p>Nhật ký hệ thống</p></a>
                     </li>
                     <li class="nav-item">
+                        <a th:href="@{${URL_SYS_BRANCH}}" class="nav-link"><i class="fa-solid fa-code-branch nav-icon mr-2"></i>
+                            <p>Chi nhánh cửa hàng</p></a>
+                    </li>
+                    <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="fa-solid fa-users nav-icon mr-2"></i>
                             <p>Tài khoản hệ thống<i class="fas fa-angle-left right"></i></p>

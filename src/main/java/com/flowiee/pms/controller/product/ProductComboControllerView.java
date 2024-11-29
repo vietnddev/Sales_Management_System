@@ -33,12 +33,10 @@ public class ProductComboControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
     public ModelAndView findDetail(@PathVariable("id") Long productComboId) {
-        Optional<ProductCombo> productCombo = mvProductComboService.findById(productComboId);
-        if (productCombo.isEmpty()) {
-            throw new ResourceNotFoundException("Combo not found!");
-        }
+        ProductCombo productCombo = mvProductComboService.findById(productComboId, true);
+
         ModelAndView modelAndView = new ModelAndView(Pages.PRO_COMBO_DETAIL.getTemplate());
-        modelAndView.addObject("productComboDetail", productCombo.get());
+        modelAndView.addObject("productComboDetail", productCombo);
         return baseView(modelAndView);
     }
 }

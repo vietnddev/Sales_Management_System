@@ -3,7 +3,6 @@ package com.flowiee.pms.controller.sales;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.PromotionInfo;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import com.flowiee.pms.service.sales.PromotionService;
@@ -18,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/promotion")
@@ -41,11 +39,7 @@ public class PromotionController extends BaseController {
     @GetMapping("/{promotionId}")
     @PreAuthorize("@vldModuleSales.readPromotion(true)")
     public AppResponse<PromotionInfo> findDetailPromotion(@PathVariable("promotionId") Long promotionId) {
-        Optional<PromotionInfoDTO> promotion = mvPromotionService.findById(promotionId);
-        if (promotion.isEmpty()) {
-            throw new BadRequestException("Promotion not found");
-        }
-        return success(promotion.get());
+        return success(mvPromotionService.findById(promotionId, true));
     }
 
     @Operation(summary = "Create promotion")

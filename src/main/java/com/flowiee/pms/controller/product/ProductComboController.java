@@ -3,7 +3,6 @@ package com.flowiee.pms.controller.product;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.product.ProductCombo;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.product.ProductComboService;
 import com.flowiee.pms.utils.constants.ErrorCode;
@@ -17,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/product/combo")
@@ -40,11 +38,8 @@ public class ProductComboController extends BaseController {
     @GetMapping("/{comboId}")
     @PreAuthorize("@vldModuleProduct.readCombo(true)")
     public AppResponse<ProductCombo> findDetailCombo(@PathVariable("comboId") Long comboId) {
-        Optional<ProductCombo> productCombo = mvProductComboService.findById(comboId);
-        if (productCombo.isEmpty()) {
-            throw new BadRequestException("productCombo not found");
-        }
-        return success(productCombo.get());
+        ProductCombo productCombo = mvProductComboService.findById(comboId, true);
+        return success(productCombo);
     }
 
     @Operation(summary = "Create new combo")

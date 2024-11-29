@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/ledger/trans/")
@@ -53,13 +52,13 @@ public class LedgerTransactionControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readLedgerTransaction(true)")
     public ModelAndView findTransactionDetail(@PathVariable("id") Long tranId) {
-        Optional<LedgerTransaction> transaction = mvLedgerReceiptService.findById(tranId);
-        if (transaction.isEmpty()) {
+        LedgerTransaction transaction = mvLedgerReceiptService.findById(tranId, false);
+        if (transaction == null) {
             throw new ResourceNotFoundException("Ledger receipt not found!");
         }
         ModelAndView modelAndView = new ModelAndView(Pages.SLS_LEDGER_TRANS_DETAIL.getTemplate());
         modelAndView.addObject("tranId", tranId);
-        modelAndView.addObject("ledgerTransactionDetail", transaction.get());
+        modelAndView.addObject("ledgerTransactionDetail", transaction);
         return baseView(modelAndView);
     }
 

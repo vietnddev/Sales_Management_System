@@ -25,7 +25,8 @@ public enum CategoryType {
     PAYMENT_STATUS("payment-status", "PAYMENT_STATUS", "Trạng thái thanh toán"),
     COMMUNE("commune", "COMMUNE", "Xã"),
     DISTRICT("district", "DISTRICT", "Huyện"),
-    PROVINCE("province", "PROVINCE", "Tỉnh");
+    PROVINCE("province", "PROVINCE", "Tỉnh"),
+    ORDER_CANCEL_REASON("order-cancel-reason", "ORDER_CANCEL_REASON", "Lý do hủy đơn hàng");
 
     private final String key;
     private final String name;

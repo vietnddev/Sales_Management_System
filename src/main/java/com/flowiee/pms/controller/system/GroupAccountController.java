@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/sys/group-account")
@@ -46,11 +45,7 @@ public class GroupAccountController extends BaseController {
     @GetMapping("/{groupId}")
     @PreAuthorize("@vldModuleSystem.readGroupAccount(true)")
     public AppResponse<GroupAccount> findDetailAccount(@PathVariable("groupId") Long groupId) {
-        Optional<GroupAccount> groupAcc = groupAccountService.findById(groupId);
-        if (groupAcc.isEmpty()) {
-            throw new BadRequestException("Group account not found");
-        }
-        return success(groupAcc.get());
+        return success(groupAccountService.findById(groupId, true));
     }
 
     @Operation(summary = "Create group account")
@@ -97,7 +92,7 @@ public class GroupAccountController extends BaseController {
     @PreAuthorize("@vldModuleSystem.updateGroupAccount(true)")
     public AppResponse<List<RoleModel>> update(@RequestBody List<RoleModel> rights, @PathVariable("groupId") Long groupId) {
         try {
-            if (groupAccountService.findById(groupId).isEmpty()) {
+            if (groupAccountService.findById(groupId, true) == null) {
                 throw new BadRequestException("Group not found");
             }
             return success(roleService.updateRightsOfGroup(rights, groupId));

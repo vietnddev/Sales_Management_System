@@ -76,7 +76,7 @@ public class CartController extends BaseController {
     @PostMapping("/ban-hang/cart/item/add")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView addItemsToCart(@RequestParam("cartId") Long cartId, @RequestParam("bienTheSanPhamId") String[] bienTheSanPhamId) {
-        if (cartId <= 0 || mvCartService.findById(cartId).isEmpty()) {
+        if (cartId <= 0 || mvCartService.findById(cartId, true) == null) {
             throw new ResourceNotFoundException("Cart not found!");
         }
         mvCartService.addItemsToCart(cartId, bienTheSanPhamId);
@@ -88,7 +88,7 @@ public class CartController extends BaseController {
     public ModelAndView updateItemsOfCart(@RequestParam("cartId") Long cartId,
                                           @ModelAttribute("items") Items items,
                                           @PathVariable("itemId") Long itemId) {
-        if (mvCartService.findById(cartId).isEmpty()) {
+        if (mvCartService.findById(cartId, true) == null) {
             throw new ResourceNotFoundException("Cart not found!");
         }
         mvCartService.updateItemsOfCart(items, itemId);
@@ -98,7 +98,7 @@ public class CartController extends BaseController {
     @PostMapping("/ban-hang/cart/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView deleteItemsOfCart(@RequestParam("cartId") Long cartId, @PathVariable("itemId") Long itemId) {
-        if (mvCartService.findById(cartId).isEmpty()) {
+        if (mvCartService.findById(cartId, false) == null) {
             throw new BadRequestException("Sản phẩm cần xóa trong giỏ hàng không tồn tại! cartId=" + cartId + ", itemId=" + itemId);
         }
         mvCartItemsService.delete(itemId);
@@ -108,7 +108,7 @@ public class CartController extends BaseController {
     @PostMapping("/ban-hang/cart/{cartId}/reset")
     @PreAuthorize("@vldModuleSales.insertOrder(true)")
     public ModelAndView resetCart(@PathVariable("cartId") Long cartId) {
-        if (mvCartService.findById(cartId).isEmpty()) {
+        if (mvCartService.findById(cartId, true) == null) {
             throw new BadRequestException("Cart not found! cartId=" + cartId);
         }
         mvCartService.resetCart(cartId);

@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.CustomerContact;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
@@ -40,7 +41,14 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
         if (mvCustomerRepository.findById(customerContact.getCustomer().getId()).isEmpty()) {
             throw new BadRequestException("Customer contact not found!");
         }
+        String lvContactType = customerContact.getCode();
+        String lvContactValue = customerContact.getValue();
+        CustomerContact contactExists = mvCustomerContactRepository.findByContactTypeAndValue(lvContactType, lvContactValue);
+        if (contactExists != null) {
+            throw new BadRequestException(String.format("Customer contact %s existed!", lvContactType));
+        }
         customerContact.setUsed(false);
+
         return mvCustomerContactRepository.save(customerContact);
     }
 
@@ -49,11 +57,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
         if (pContact == null || pContact.getCustomer() == null) {
             throw new ResourceNotFoundException("Customer not found!");
         }
-        Optional<CustomerContact> contactOpt = this.findById(contactId);
-        if (contactOpt.isEmpty()) {
-            throw new BadRequestException("Contact not found!");
-        }
-        CustomerContact contact = contactOpt.get();
+        CustomerContact contact = this.findById(contactId, true);
         contact.setCode(pContact.getCode());
         contact.setValue(pContact.getValue());
         contact.setNote(pContact.getNote());
@@ -63,18 +67,15 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
 
     @Override
     public String delete(Long contactId) {
-        Optional<CustomerContact> customerContact = this.findById(contactId);
-        if (customerContact.isEmpty()) {
-            throw new BadRequestException();
-        }
-        if (customerContact.get().isUsed()) {
+        CustomerContact customerContact = this.findById(contactId, true);
+        if (customerContact.isUsed()) {
             throw new DataInUseException("This contact has been used!");
         }
         mvCustomerContactRepository.deleteById(contactId);
 
-        String contactCode = customerContact.get().getCode();
-        String customerName = customerContact.get().getCustomer().getCustomerName();
-        systemLogService.writeLogDelete(MODULE.SALES, ACTION.PRO_CUS_D, MasterObject.CustomerContact, "Xóa %s của khách hàng %s".formatted(contactCode, customerName), customerContact.get().getValue());
+        String contactCode = customerContact.getCode();
+        String customerName = customerContact.getCustomer().getCustomerName();
+        systemLogService.writeLogDelete(MODULE.SALES, ACTION.PRO_CUS_D, MasterObject.CustomerContact, "Xóa %s của khách hàng %s".formatted(contactCode, customerName), customerContact.getValue());
 
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -88,8 +89,12 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
     }
 
     @Override
-    public Optional<CustomerContact> findById(Long contactId) {
-        return mvCustomerContactRepository.findById(contactId);
+    public CustomerContact findById(Long contactId, boolean pThrowException) {
+        Optional<CustomerContact> entityOptional = mvCustomerContactRepository.findById(contactId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"customer contact"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
         if (mvCustomerRepository.findById(customerId).isEmpty()) {
             throw new ResourceNotFoundException("Customer not found!");
         }
-        if (this.findById(contactId).isEmpty()) {
+        if (this.findById(contactId, true) == null) {
             throw new ResourceNotFoundException("Customer contact not found!");
         }
         CustomerContact customerContactUsingDefault = switch (contactCode) {
@@ -125,21 +130,21 @@ public class CustomerContactServiceImpl extends BaseService implements CustomerC
             customerContactUsingDefault.setIsDefault("N");
             mvCustomerContactRepository.save(customerContactUsingDefault);
         }
-        Optional<CustomerContact> customerContactToUseDefault = this.findById(contactId);
-        if (customerContactToUseDefault.isEmpty()) {
+        CustomerContact customerContactToUseDefault = this.findById(contactId, true);
+        if (customerContactToUseDefault == null) {
             throw new BadRequestException();
         }
-        customerContactToUseDefault.get().setIsDefault("Y");
-        return this.update(customerContactToUseDefault.get(), customerContactToUseDefault.get().getId());
+        customerContactToUseDefault.setIsDefault("Y");
+        return this.update(customerContactToUseDefault, customerContactToUseDefault.getId());
     }
 
     @Override
     public CustomerContact disableContactUnUseDefault(Long contactId) {
-        Optional<CustomerContact> customerContact = this.findById(contactId);
-        if (customerContact.isEmpty()) {
+        CustomerContact customerContact = this.findById(contactId, true);
+        if (customerContact == null) {
             throw new BadRequestException();
         }
-        customerContact.get().setIsDefault("N");
-        return this.update(customerContact.get(), customerContact.get().getId());
+        customerContact.setIsDefault("N");
+        return this.update(customerContact, customerContact.getId());
     }
 }

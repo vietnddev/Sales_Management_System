@@ -1,10 +1,12 @@
 package com.flowiee.pms.service.category.impl;
 
 import com.flowiee.pms.entity.category.Category;
+import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.category.CategoryHistoryRepository;
@@ -30,6 +32,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     CategoryRepository mvCategoryRepository;
     CategoryHistoryService mvCategoryHistoryService;
     CategoryHistoryRepository mvCategoryHistoryRepository;
+    OrderRepository mvOrderRepository;
 
     @Override
     public List<Category> findAll() {
@@ -176,59 +179,73 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Override
     public boolean categoryInUse(Long categoryId) {
-        Optional<Category> category = this.findById(categoryId);
-        if (category.isEmpty()) {
+        Optional<Category> lvCategoryOpt = this.findById(categoryId);
+        if (lvCategoryOpt.isEmpty()) {
             throw new BadRequestException("Category not found!");
         }
-        switch (category.get().getType()) {
-            case "UNIT":
-                if (ObjectUtils.isNotEmpty(category.get().getListUnit())) {
+        Category lvCategoryMdl = lvCategoryOpt.get();
+        CategoryType lvCategoryType = CategoryType.valueOf(lvCategoryMdl.getType().toUpperCase());
+
+        switch (lvCategoryType) {
+            case UNIT:
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListUnit())) {
                     return true;
                 }
-                if (ObjectUtils.isNotEmpty(category.get().getListProductByUnit())) {
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListProductByUnit())) {
                     return true;
                 }
                 break;
-            case "FABRIC_TYPE":
-                if (ObjectUtils.isNotEmpty(category.get().getListFabricType()))
+            case FABRIC_TYPE:
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListFabricType()))
                     return true;
                 break;
-            case "PAYMENT_METHOD":
+            case PAYMENT_METHOD:
 //                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
 //                    return true;
 //                }
-                if (ObjectUtils.isNotEmpty(category.get().getListPaymentMethod())) {
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListPaymentMethod())) {
                     return true;
                 }
                 break;
-            case "SALES_CHANNEL":
-                if (ObjectUtils.isNotEmpty(category.get().getListKenhBanHang())) {
+            case SALES_CHANNEL:
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListKenhBanHang())) {
                     return true;
                 }
                 break;
-            case "SIZE":
-                if (ObjectUtils.isNotEmpty(category.get().getListLoaiKichCo())) {
+            case SIZE:
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListLoaiKichCo())) {
                     return true;
                 }
                 break;
-            case "COLOR":
-                if (ObjectUtils.isNotEmpty(category.get().getListLoaiMauSac())) {
+            case COLOR:
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListLoaiMauSac())) {
                     return true;
                 }
                 break;
-            case "PRODUCT_TYPE":
-                if (ObjectUtils.isNotEmpty(category.get().getListProductByProductType())) {
+            case PRODUCT_TYPE:
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListProductByProductType())) {
                     return true;
                 }
                 break;
-            case "ORDER_STATUS":
+            case ORDER_STATUS:
 //                if (ObjectUtils.isNotEmpty(category.get().getListTrangThaiDonHang())) {
 //                    return true;
 //                }
+                break;
+            case ORDER_CANCEL_REASON:
+                List<Order> orderList = mvOrderRepository.findByCancellationReason(categoryId);
+                if (orderList != null && !orderList.isEmpty()) {
+                    return true;
+                }
+                break;
+            case GROUP_CUSTOMER:
+                if (ObjectUtils.isNotEmpty(lvCategoryMdl.getListCustomerByGroupCustomer())) {
+                    return true;
+                }
                 break;
             default:
                 //throw new IllegalStateException("Unexpected value: " + category.get().getType());
-                logger.info("Unexpected value: " + category.get().getType());
+                logger.info("Unexpected value: " + lvCategoryMdl.getType());
         }
         return false;
     }

@@ -180,6 +180,8 @@ public class StartUp {
 			cnf.add(initConfigModel(ConfigCode.sendNotifyCustomerOnOrderConfirmation, "Gửi email thông báo đến khách hàng khi đơn hàng đã được xác nhận", "N"));
 			cnf.add(initConfigModel(ConfigCode.returnPeriodDays, "Thời gian cho phép đổi trả hàng", "7"));
 			cnf.add(initConfigModel(ConfigCode.lowStockAlert, "Thông báo cảnh báo hàng tồn kho thấp", "N"));
+			cnf.add(initConfigModel(ConfigCode.tokenResetPasswordValidityPeriod, "Thông gian hiệu lực của token đổi mật khẩu (phút)", "60"));
+			cnf.add(initConfigModel(ConfigCode.sendNotifyAdminExceptionRuntime, "Gửi email thông báo đến Admin khi có sự cố hệ thống", "N"));
 			mvConfigRepository.saveAll(cnf);
 		}
 		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);

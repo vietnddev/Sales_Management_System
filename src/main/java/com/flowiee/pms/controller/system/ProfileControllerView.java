@@ -2,8 +2,6 @@ package com.flowiee.pms.controller.system;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.Order;
-import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.Pages;
@@ -24,7 +22,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @RestController
 @RequestMapping
@@ -35,14 +32,13 @@ public class ProfileControllerView extends BaseController {
 
 	@GetMapping("/sys/profile")
 	public ModelAndView showInformation(@ModelAttribute("message") String message) {
-		Optional<Account> profile = accountService.findById(CommonUtils.getUserPrincipal().getId());
-		if (profile.isEmpty()) {
-			throw new ResourceNotFoundException("Account not found in system");
-		}
+		Account profile = accountService.findById(CommonUtils.getUserPrincipal().getId(), true);
+
 		ModelAndView modelAndView = new ModelAndView(Pages.SYS_PROFILE.getTemplate());
 		modelAndView.addObject("message", message);
-		modelAndView.addObject("profile", profile.get());
+		modelAndView.addObject("profile", profile);
 		modelAndView.addObject("listDonHangDaBan", new ArrayList<Order>());
+
 		return baseView(modelAndView);
 	}
 
@@ -65,15 +61,12 @@ public class ProfileControllerView extends BaseController {
 		String password_new = request.getParameter("password_new");
 		String password_renew = request.getParameter("password_renew");
 
-		Optional<Account> profile = accountService.findById(CommonUtils.getUserPrincipal().getId());
-		if (profile.isEmpty()) {
-			throw new BadRequestException();
-		}
+		Account profile = accountService.findById(CommonUtils.getUserPrincipal().getId(), true);
 
 		BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
-		if (bCrypt.matches(password_old, accountService.findByUsername(profile.get().getUsername()).getPassword())) {
+		if (bCrypt.matches(password_old, accountService.findByUsername(profile.getUsername()).getPassword())) {
 			if (password_new.equals(password_renew)) {
-				profile.get().setPassword(bCrypt.encode(password_new));
+				profile.setPassword(bCrypt.encode(password_new));
 				accountService.save(accountEntity);
 
 				redirectAttributes.addAttribute("message", "Cập nhật thành công!");
@@ -86,5 +79,5 @@ public class ProfileControllerView extends BaseController {
 		redirectAttributes.addAttribute("message", "Sai mật khẩu hiện tại!");
 
 		return new ModelAndView("redirect:/profile");
-	}  
-}   
+	}
+}

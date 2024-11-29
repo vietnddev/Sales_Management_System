@@ -2,6 +2,7 @@ package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.Notification;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.NotificationRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.NotificationService;
@@ -40,8 +41,13 @@ public class NotificationServiceImpl extends BaseService implements Notification
     }
 
     @Override
-    public Optional<Notification> findById(Long notificationId) {
-        return mvNotificationRepository.findById(notificationId);
+    public Notification findById(Long notificationId, boolean pThrowException) {
+        Optional<Notification> entityOptional = mvNotificationRepository.findById(notificationId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"cart item"}, null, null);
+        }
+        return entityOptional.orElse(null);
+
     }
 
     @Override
@@ -65,11 +71,8 @@ public class NotificationServiceImpl extends BaseService implements Notification
 
     @Override
     public String delete(Long entityId) {
-        Optional<Notification> notification = this.findById(entityId);
-        if (notification.isEmpty()) {
-            throw new BadRequestException();
-        }
-        mvNotificationRepository.deleteById(entityId);
+        Notification notification = this.findById(entityId, true);
+        mvNotificationRepository.deleteById(notification.getId());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

@@ -3,6 +3,7 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.AccountRole;
 import com.flowiee.pms.entity.system.GroupAccount;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.AccountRepository;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.model.role.*;
@@ -44,8 +45,8 @@ public class AccountRoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleModel> findAllRoleByGroupId(Long groupId) {
-        Optional<GroupAccount> groupAcc = mvGroupAccountService.findById(groupId);
-        if (groupAcc.isEmpty()) {
+        GroupAccount groupAcc = mvGroupAccountService.findById(groupId, false);
+        if (groupAcc == null) {
             return List.of();
         }
         List<RoleModel> listReturn = new ArrayList<>();
@@ -69,8 +70,12 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     @Override
-    public AccountRole findById(Long id) {
-        return mvAccountRoleRepository.findById(id).orElse(null);
+    public AccountRole findById(Long id, boolean pThrowException) {
+        Optional<AccountRole> entityOptional = mvAccountRoleRepository.findById(id);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"role"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
