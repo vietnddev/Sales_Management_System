@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,9 +27,6 @@ public class LoyaltyProgram extends BaseEntity implements Serializable {
     @Column(name = "description")
     String description;
 
-    @Column(name = "point_conversion_rate", nullable = false)
-    BigDecimal pointConversionRate;
-
     @Column(name = "start_date", nullable = false)
     LocalDateTime startDate;
 
@@ -40,9 +36,16 @@ public class LoyaltyProgram extends BaseEntity implements Serializable {
     @Column(name = "is_active", nullable = false)
     boolean isActive;
 
+    @Column(name = "is_default", nullable = false)
+    Boolean isDefault;
+
     @JsonIgnore
     @OneToMany(mappedBy = "loyaltyProgram", fetch = FetchType.LAZY)
     List<LoyaltyTransaction> loyaltyTransactionList;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "loyaltyProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoyaltyRule> loyaltyRuleList;
 
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(endDate);

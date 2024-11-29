@@ -1,6 +1,7 @@
 package com.flowiee.pms.repository.product;
 
 import com.flowiee.pms.entity.product.ProductDetail;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -52,4 +54,10 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, L
 
     @Query("select sum(p.storageQty) from ProductDetail p where p.status = 'A'")
     Integer countTotalQuantity();
+
+    @Query("from ProductDetail p where p.storageQty - p.defectiveQty = 0")
+    Page<ProductDetail> findProductsOutOfStock(Pageable pageable);
+
+    @Query("from ProductDetail p where p.expiryDate = :expiryDate")
+    List<ProductDetail> findByExpiryDate(LocalDate expiryDate);
 }

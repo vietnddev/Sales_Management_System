@@ -13,6 +13,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,10 @@ public class BaseController extends BaseAuthorize {
 		setURLHeader(modelAndView);
 		setURLSidebar(modelAndView);
 		return modelAndView;
+	}
+
+	protected ModelAndView refreshPage(HttpServletRequest request) {
+		return new ModelAndView("redirect:" + request.getHeader("referer"));
 	}
 
 	private void setURLHeader(ModelAndView modelAndView) {

@@ -24,7 +24,7 @@ public class Branch extends BaseEntity implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    @Column(name = "branch_code", nullable = false)
+    @Column(name = "branch_code", nullable = false, unique = true)
     String branchCode;
 
     @Column(name = "branch_name", nullable = false)

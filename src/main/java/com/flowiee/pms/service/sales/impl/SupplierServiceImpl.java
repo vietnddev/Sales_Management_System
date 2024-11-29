@@ -2,7 +2,7 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.sales.Supplier;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.repository.sales.SupplierRepository;
 import com.flowiee.pms.service.BaseService;
@@ -46,8 +46,12 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     }
 
     @Override
-    public Optional<Supplier> findById(Long entityId) {
-        return mvSupplierRepository.findById(entityId);
+    public Supplier findById(Long entityId, boolean pThrowException) {
+        Optional<Supplier> entityOptional = mvSupplierRepository.findById(entityId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"supplier"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -58,11 +62,10 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
 
     @Override
     public Supplier update(Supplier entity, Long entityId) {
-        Optional<Supplier> supplierOptional = this.findById(entityId);
-        if (supplierOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Supplier not found!");
-        }
-        Supplier supplierBefore =  ObjectUtils.clone(supplierOptional.get());
+        Supplier supplier = this.findById(entityId, true);
+
+        Supplier supplierBefore =  ObjectUtils.clone(supplier);
+
         entity.setId(entityId);
         Supplier supplierUpdated = mvSupplierRepository.save(entity);
 

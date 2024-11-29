@@ -3,7 +3,7 @@ general-email-notification:
     - type: SendNotifyCustomerOnOrderConfirmation
       path: src/main/resources/templates/emailAlert/orderConfirmation.html
       encoding: UTF-8
-      subject: "[FLOWIEE] Đơn hàng của bạn đã được xác nhận"
+      subject: "[FLOWIEE] Order confirmation"
       sender: ""
       bcc: ""
       cc: ""
@@ -11,6 +11,20 @@ general-email-notification:
       path: src/main/resources/templates/emailAlert/lowStockAlert.html
       encoding: UTF-8
       subject: "[FLOWIEE] Low Stock Alert for product: [%productName%]"
+      sender: ""
+      bcc: ""
+      cc: ""
+    - type: LeaveApplicationAlert
+      path: src/main/resources/templates/emailAlert/leaveApplicationAlert.html
+      encoding: UTF-8
+      subject: "[FLOWIEE] Leave application"
+      sender: ""
+      bcc: ""
+      cc: ""
+    - type: ProductExpirationAlert
+      path: src/main/resources/templates/emailAlert/productExpiration.html
+      encoding: UTF-8
+      subject: "[FLOWIEE] Product expiration"
       sender: ""
       bcc: ""
       cc: ""

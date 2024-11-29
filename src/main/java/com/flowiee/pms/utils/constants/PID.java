@@ -15,4 +15,16 @@ public enum PID {
         this.id = id;
         this.label = label;
     }
+
+    public static PID get(String pPID) {
+        if (pPID == null || pPID.isBlank()) {
+            return null;
+        }
+        for (PID vPID : values()) {
+            if (vPID.id.equalsIgnoreCase(pPID.trim())) {
+                return vPID;
+            }
+        }
+        return null;
+    }
 }

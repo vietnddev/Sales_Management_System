@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 
-import com.flowiee.pms.entity.product.Material;
-import com.flowiee.pms.entity.product.ProductCombo;
+import com.flowiee.pms.entity.product.*;
 import com.flowiee.pms.entity.sales.Order;
-import com.flowiee.pms.entity.product.Product;
-import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.utils.CommonUtils;
@@ -107,6 +104,10 @@ public class FileStorage extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_combo_id")
     ProductCombo productCombo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_damaged_id")
+    ProductDamaged productDamaged;
 
     @Column(name = "is_active", nullable = false)
     boolean isActive;

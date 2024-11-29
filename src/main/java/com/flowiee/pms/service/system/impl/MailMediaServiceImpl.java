@@ -1,11 +1,12 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.config.StartUp;
+import com.flowiee.pms.config.Core;
 import com.flowiee.pms.config.TemplateSendEmail;
 import com.flowiee.pms.entity.system.MailMedia;
 import com.flowiee.pms.repository.system.MailMediaRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.MailMediaService;
+import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.SendMailUtils;
 import com.flowiee.pms.utils.constants.NotificationType;
 import lombok.RequiredArgsConstructor;
@@ -51,10 +52,12 @@ public class MailMediaServiceImpl extends BaseService implements MailMediaServic
 
     @Override
     public void send(NotificationType pNotificationType, Map<String, Object> pNotificationParameter) {
-        TemplateSendEmail.Template lvTemplate = StartUp.mvGeneralEmailTemplateMap.get(pNotificationType);
+        TemplateSendEmail.Template lvTemplate = Core.mvGeneralEmailTemplateMap.get(pNotificationType);
         String lvDestination = pNotificationParameter.get(pNotificationType.name()).toString();
-        String lvSubject = SendMailUtils.replaceTemplateParameter(lvTemplate.getSubject(), pNotificationParameter);
+        String lvDefaultSubject = SendMailUtils.replaceTemplateParameter(lvTemplate.getSubject(), pNotificationParameter);
+        Object lvCustomSubject = pNotificationParameter.get(MailMedia.SUBJECT);
         String lvContent = SendMailUtils.replaceTemplateParameter(lvTemplate.getTemplateContent(), pNotificationParameter);
-        this.send(lvDestination, lvSubject, lvContent);
+
+        this.send(lvDestination, CoreUtils.isNullStr(lvCustomSubject) ? lvDefaultSubject : lvCustomSubject.toString().trim(), lvContent);
     }
 }

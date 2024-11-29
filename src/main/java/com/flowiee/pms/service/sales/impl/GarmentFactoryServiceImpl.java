@@ -2,6 +2,7 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.sales.GarmentFactory;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.sales.GarmentFactoryRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.GarmentFactoryService;
@@ -27,8 +28,12 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
     }
 
     @Override
-    public Optional<GarmentFactory> findById(Long entityId) {
-        return mvGarmentFactoryRepository.findById(entityId);
+    public GarmentFactory findById(Long entityId, boolean pThrowException) {
+        Optional<GarmentFactory> entityOptional = mvGarmentFactoryRepository.findById(entityId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"garment factory item"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -41,7 +46,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
 
     @Override
     public GarmentFactory update(GarmentFactory entity, Long entityId) {
-        if (this.findById(entityId).isEmpty()) {
+        if (this.findById(entityId, true) == null) {
             throw new BadRequestException();
         }
         entity.setId(entityId);
@@ -50,7 +55,7 @@ public class GarmentFactoryServiceImpl extends BaseService implements GarmentFac
 
     @Override
     public String delete(Long entityId) {
-        if (this.findById(entityId).isEmpty()) {
+        if (this.findById(entityId, true) == null) {
             throw new BadRequestException();
         }
         mvGarmentFactoryRepository.deleteById(entityId);

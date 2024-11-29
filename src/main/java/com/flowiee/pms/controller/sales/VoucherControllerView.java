@@ -42,7 +42,7 @@ public class VoucherControllerView extends BaseController {
         if (voucherInfo == null) {
             throw new BadRequestException("Voucher to update not null!");
         }
-        if (voucherInfoId <= 0 || mvVoucherService.findById(voucherInfoId).isEmpty()) {
+        if (voucherInfoId <= 0 || mvVoucherService.findById(voucherInfoId, true) == null) {
             throw new ResourceNotFoundException("VoucherId invalid!");
         }
         mvVoucherService.update(voucherInfo ,voucherInfoId);

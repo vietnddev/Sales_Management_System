@@ -1,8 +1,7 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.ProductAttribute;
-import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
@@ -47,8 +46,12 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
     }
 
     @Override
-    public Optional<ProductAttribute> findById(Long attributeId) {
-        return mvProductAttributeRepository.findById(attributeId);
+    public ProductAttribute findById(Long attributeId, boolean pThrowException) {
+        Optional<ProductAttribute> entityOptional = mvProductAttributeRepository.findById(attributeId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"product attribute"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -60,11 +63,9 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
 
     @Override
     public ProductAttribute update(ProductAttribute attribute, Long attributeId) {
-        Optional<ProductAttribute> attributeOptional = this.findById(attributeId);
-        if (attributeOptional.isEmpty()) {
-            throw new BadRequestException();
-        }
-        ProductAttribute attributeBefore = ObjectUtils.clone(attributeOptional.get());
+        ProductAttribute attributeOptional = this.findById(attributeId, true);
+        //enhance later
+        ProductAttribute attributeBefore = ObjectUtils.clone(attributeOptional);
         attribute.setId(attributeId);
         ProductAttribute attributeUpdated = mvProductAttributeRepository.save(attribute);
 
@@ -78,12 +79,10 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
 
     @Override
     public String delete(Long attributeId) {
-        Optional<ProductAttribute> attributeToDelete = this.findById(attributeId);
-        if (attributeToDelete.isEmpty()) {
-            throw new ResourceNotFoundException("Product attribute not found!");
-        }
-        mvProductAttributeRepository.deleteById(attributeId);
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductAttribute, "Xóa thuộc tính sản phẩm", attributeToDelete.get().getAttributeName());
+        ProductAttribute attributeToDelete = this.findById(attributeId, true);
+
+        mvProductAttributeRepository.deleteById(attributeToDelete.getId());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductAttribute, "Xóa thuộc tính sản phẩm", attributeToDelete.getAttributeName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 }

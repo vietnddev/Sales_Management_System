@@ -33,7 +33,7 @@ public class CustomerContactController extends BaseController {
     @PreAuthorize("@vldModuleSales.readCustomer(true)")
     public AppResponse<List<CustomerContact>> findContactsOfCustomer(@PathVariable("customerId") Long customerId) {
         try {
-            if (customerId <= 0 || mvCustomerService.findById(customerId).isEmpty()) {
+            if (customerId <= 0 || mvCustomerService.findById(customerId, true) == null) {
                 throw new BadRequestException();
             }
             List<CustomerContact> listContacts = mvCustomerContactService.findContacts(customerId);
@@ -67,7 +67,7 @@ public class CustomerContactController extends BaseController {
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public AppResponse<CustomerContact> updateContact(@RequestBody CustomerContact customerContact, @PathVariable("contactId") Long contactId) {
         try {
-            if (customerContact == null || customerContact.getCustomer() == null || mvCustomerContactService.findById(contactId).isEmpty()) {
+            if (customerContact == null || customerContact.getCustomer() == null || mvCustomerContactService.findById(contactId, true) == null) {
                 throw new BadRequestException();
             }
             return success(mvCustomerContactService.update(customerContact, contactId));
@@ -90,7 +90,7 @@ public class CustomerContactController extends BaseController {
                                                              @RequestParam("contactCode") String contactCode,
                                                              @PathVariable("contactId") Long contactId) {
         try {
-            if (customerId <= 0 || contactId <= 0 || mvCustomerService.findById(customerId).isEmpty() || mvCustomerContactService.findById(contactId).isEmpty()) {
+            if (customerId <= 0 || contactId <= 0 || mvCustomerService.findById(customerId, true) == null || mvCustomerContactService.findById(contactId, true) == null) {
                 throw new BadRequestException();
             }
             return success(mvCustomerContactService.enableContactUseDefault(customerId, contactCode, contactId));
@@ -104,7 +104,7 @@ public class CustomerContactController extends BaseController {
     @PreAuthorize("@vldModuleSales.updateCustomer(true)")
     public AppResponse<CustomerContact> setContactUnUseDefault(@PathVariable("contactId") Long contactId) {
         try {
-            if (contactId <= 0 || mvCustomerContactService.findById(contactId).isEmpty()) {
+            if (contactId <= 0 || mvCustomerContactService.findById(contactId, true) == null) {
                 throw new BadRequestException();
             }
             return success(mvCustomerContactService.disableContactUnUseDefault(contactId));

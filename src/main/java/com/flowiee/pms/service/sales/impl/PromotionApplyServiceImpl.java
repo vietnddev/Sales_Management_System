@@ -1,7 +1,7 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.sales.PromotionApply;
-import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import com.flowiee.pms.repository.sales.PromotionApplyRepository;
 import com.flowiee.pms.service.BaseService;
@@ -43,13 +43,17 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     }
 
     @Override
-    public Optional<PromotionApplyDTO> findById(Long promotionId) {
+    public PromotionApplyDTO findById(Long promotionId, boolean pThrowException) {
         Optional<PromotionApply> promotionApply = mvPromotionApplyRepository.findById(promotionId);
         if (promotionApply.isPresent()) {
             PromotionApplyDTO dto = mvModelMapper.map(promotionApply.get(), PromotionApplyDTO.class);
-            return Optional.of(dto);
+            return dto;
         }
-        return Optional.empty();
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"promotion apply record"}, null, null);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -60,17 +64,15 @@ public class PromotionApplyServiceImpl extends BaseService implements PromotionA
     }
 
     @Override
-    public PromotionApplyDTO update(PromotionApplyDTO promotionApplyDTO, Long id) {
-        if (this.findById(id).isEmpty()) {
-            throw new BadRequestException();
-        }
-        promotionApplyDTO.setId(id);
-        return mvPromotionApplyRepository.save(promotionApplyDTO);
+    public PromotionApplyDTO update(PromotionApplyDTO pPromotionApplyDTO, Long id) {
+        PromotionApplyDTO promotionApplyDTO = this.findById(id, true);
+        //
+        return mvPromotionApplyRepository.save(pPromotionApplyDTO);
     }
 
     @Override
     public String delete(Long entityId) {
-        if (this.findById(entityId).isEmpty()) {
+        if (this.findById(entityId, true) == null) {
             mvPromotionApplyRepository.deleteById(entityId);
         }
         return MessageCode.DELETE_SUCCESS.getDescription();

@@ -6,7 +6,6 @@ import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
-import com.flowiee.pms.model.UserPrincipal;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.service.ExportService;
@@ -27,12 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/product")
@@ -78,24 +75,18 @@ public class ProductController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<ProductDTO> findDetailProduct(@PathVariable("id") Long productId) {
-        Optional<ProductDTO> product = mvProductInfoService.findById(productId);
-        if (product.isEmpty()) {
+        ProductDTO product = mvProductInfoService.findById(productId, true);
+        if (product == null) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
-        return success(product.get());
+        return success(product);
     }
 
     @Operation(summary = "Create clothes product")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleProduct.insertProduct(true)")
     public AppResponse<Product> createProduct(@RequestBody ProductDTO product, @RequestParam("PID") String pPID) {
-        PID lvPID = null;
-        for (PID cst : PID.values()) {
-            if (cst.getId().equals(pPID)) {
-                lvPID = cst;
-                break;
-            }
-        }
+        PID lvPID = PID.get(pPID);
         switch (lvPID) {
             case CLOTHES:
                 return success(mvProductInfoService.saveClothes(product));
@@ -112,7 +103,7 @@ public class ProductController extends BaseController {
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public AppResponse<ProductDTO> updateProduct(@RequestBody ProductDTO product, @PathVariable("id") Long productId) {
-        if (mvProductInfoService.findById(productId).isEmpty()) {
+        if (mvProductInfoService.findById(productId, true) == null) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
         return success(mvProductInfoService.update(product, productId));
@@ -129,7 +120,7 @@ public class ProductController extends BaseController {
     @GetMapping(value = "/{productId}/history")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductHistory>> getHistoryOfProduct(@PathVariable("productId") Long productId) {
-        if (ObjectUtils.isEmpty(mvProductInfoService.findById(productId))) {
+        if (ObjectUtils.isEmpty(mvProductInfoService.findById(productId, true) == null)) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
         return success(mvProductHistoryService.findByProduct(productId));

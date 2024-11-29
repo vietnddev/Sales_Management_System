@@ -6,6 +6,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.repository.system.MailMediaRepository;
 import com.flowiee.pms.repository.system.MailStatusRepository;
 import com.flowiee.pms.service.system.SendMailService;
+import com.flowiee.pms.utils.constants.ScheduleTask;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,14 +19,18 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class MailNotificationScheduleExecutor extends ScheduleExecutor {
-    private final SendMailService sendMailService;
-    private final MailMediaRepository mailMediaRepository;
     private final MailStatusRepository mailStatusRepository;
+    private final MailMediaRepository mailMediaRepository;
+    private final SendMailService sendMailService;
 
     @Scheduled(cron = "*/15 * * * * ?")
     @Override
     public void execute() throws AppException {
-        logger.info("MailNotificationScheduleExecutor start");
+        super.init(ScheduleTask.MailNotification);
+    }
+
+    @Override
+    public void doProcesses() throws AppException {
         int emailSentQty = 0;
         List<MailMedia> emailReadyToSendList = mailMediaRepository.getEmailReadyToSend();
         if (emailReadyToSendList.isEmpty()) {
@@ -63,6 +68,5 @@ public class MailNotificationScheduleExecutor extends ScheduleExecutor {
         } else {
             logger.info(emailSentQty + (emailSentQty == 1 ? " email has been sent." : " emails have been sent."));
         }
-        logger.info("MailNotificationScheduleExecutor end");
     }
 }

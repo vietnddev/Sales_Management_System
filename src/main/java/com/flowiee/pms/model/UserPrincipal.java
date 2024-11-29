@@ -1,6 +1,8 @@
 package com.flowiee.pms.model;
 
 import com.flowiee.pms.entity.system.Account;
+import com.flowiee.pms.utils.AppConstants;
+import com.flowiee.pms.utils.CommonUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -97,5 +99,9 @@ public class UserPrincipal extends Account implements UserDetails {
 
     public static UserPrincipal anonymousUser() {
         return new UserPrincipal(0l, "anonymous", "unknown");
+    }
+
+    public boolean isAdmin() {
+        return AppConstants.ADMINISTRATOR.equals(this.username);
     }
 }

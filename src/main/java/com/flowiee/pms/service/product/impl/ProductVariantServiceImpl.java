@@ -1,18 +1,22 @@
 package com.flowiee.pms.service.product.impl;
 
+import com.flowiee.pms.config.Core;
+import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductPrice;
 import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
-import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.DataInUseException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.entity.system.SystemConfig;
+import com.flowiee.pms.exception.*;
 import com.flowiee.pms.model.dto.ProductPriceDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
+import com.flowiee.pms.service.category.CategoryService;
+import com.flowiee.pms.service.storage.StorageService;
+import com.flowiee.pms.service.system.ConfigService;
 import com.flowiee.pms.utils.ChangeLog;
+import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
@@ -27,9 +31,7 @@ import com.flowiee.pms.service.sales.TicketImportService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.utils.converter.ProductVariantConvert;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -47,14 +49,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductVariantServiceImpl extends BaseService implements ProductVariantService {
+    private final ProductDetailTempRepository mvProductVariantTempRepository;
+    private final ProductDetailRepository mvProductVariantRepository;
+    private final ProductPriceRepository mvProductPriceRepository;
+    private final ProductHistoryService mvProductHistoryService;
     private final TicketImportService mvTicketImportService;
     private final TicketExportService mvTicketExportService;
-    private final ProductHistoryService mvProductHistoryService;
-    private final ProductPriceRepository mvProductPriceRepository;
-    private final ProductDetailRepository mvProductVariantRepository;
-    private final ProductDetailTempRepository mvProductVariantTempRepository;
-
-    private BigDecimal ZERO = BigDecimal.ZERO;
+    private final CategoryService mvCategoryService;
+    private final StorageService mvStorageService;
+    private final ConfigService mvConfigService;
 
     @Override
     public List<ProductVariantDTO> findAll() {
@@ -77,40 +80,46 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     }
 
     @Override
-    public Optional<ProductVariantDTO> findById(Long pProductVariantId) {
+    public ProductVariantDTO findById(Long pProductVariantId, boolean pThrowException) {
         Optional<ProductDetail> productVariant = mvProductVariantRepository.findById(pProductVariantId);
         if (productVariant.isPresent()) {
             ProductVariantDTO dto = ProductVariantConvert.entityToDTO(productVariant.get());
             //ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
             setPriceInfo(dto, dto.getVariantPrice());
-            return Optional.of(dto);
+            return dto;
         }
-        return Optional.empty();
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"product variant"}, null, null);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public ProductVariantDTO save(ProductVariantDTO inputDTO) {
         try {
-            ProductDetail pVariant = ProductVariantConvert.dtoToEntity(inputDTO);
-            String lvVariantCode = ObjectUtils.isNotEmpty(inputDTO.getVariantCode()) ? inputDTO.getVariantCode() : genProductCode();
-            int lvSoldQty = pVariant.getSoldQty() != null ? pVariant.getSoldQty() : 0;
-            int lvStorageQty = pVariant.getStorageQty() != null ? pVariant.getStorageQty() : 0;
-            int lvDefectiveQty = pVariant.getDefectiveQty() != null ? pVariant.getDefectiveQty() : 0;
+            VldModel vldModel = vldCategory(inputDTO.getColorId(), inputDTO.getSizeId(), inputDTO.getFabricTypeId());
 
-            pVariant.setSoldQty(lvSoldQty);
-            pVariant.setStorageQty(lvStorageQty);
-            pVariant.setDefectiveQty(lvDefectiveQty);
+            ProductDetail pVariant = ProductVariantConvert.dtoToEntity(inputDTO);
+            pVariant.setColor(vldModel.getColor());
+            pVariant.setSize(vldModel.getSize());
+            pVariant.setFabricType(vldModel.getFabricType());
+            pVariant.setSoldQty(CoreUtils.coalesce(pVariant.getSoldQty()));
+            pVariant.setStorageQty(CoreUtils.coalesce(pVariant.getStorageQty()));
+            pVariant.setDefectiveQty(CoreUtils.coalesce(pVariant.getDefectiveQty()));
             pVariant.setStatus(ProductStatus.A.name());
-            pVariant.setVariantCode(lvVariantCode);
+            pVariant.setVariantCode(genProductCode(inputDTO.getVariantCode()));
             ProductDetail productDetailSaved = mvProductVariantRepository.save(pVariant);
 
             ProductPriceDTO priceDTO = inputDTO.getPrice();
-            BigDecimal lvRetailPrice = priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : ZERO;
-            BigDecimal lvRetailPriceDiscount = priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice();
-            BigDecimal lvWholesalePrice = priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : ZERO;
-            BigDecimal lvWholesalePriceDiscount = priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice();
-            BigDecimal lvPurchasePrice = priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : ZERO;
-            BigDecimal lvCostPrice = priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : ZERO;
+            BigDecimal lvRetailPrice = CoreUtils.coalesce(priceDTO.getRetailPrice());
+            BigDecimal lvRetailPriceDiscount = CoreUtils.coalesce(priceDTO.getRetailPriceDiscount(), priceDTO.getRetailPrice());
+            BigDecimal lvWholesalePrice = CoreUtils.coalesce(priceDTO.getWholesalePrice());
+            BigDecimal lvWholesalePriceDiscount = CoreUtils.coalesce(priceDTO.getWholesalePriceDiscount(), priceDTO.getWholesalePrice());
+            BigDecimal lvPurchasePrice = CoreUtils.coalesce(priceDTO.getPurchasePrice());
+            BigDecimal lvCostPrice = CoreUtils.coalesce(priceDTO.getCostPrice());
+            vldPrice(lvRetailPrice, lvRetailPriceDiscount, lvWholesalePrice, lvWholesalePriceDiscount, lvPurchasePrice, lvCostPrice);
+
             mvProductPriceRepository.save(ProductPrice.builder()
                     .productVariant(productDetailSaved)
                     .retailPrice(lvRetailPrice)
@@ -123,6 +132,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                     .build());
 
             if (productDetailSaved.getStorageQty() > 0) {
+                Storage lvStorage = mvStorageService.findById(inputDTO.getStorageIdInitStorageQty(), true);
                 String initMessage = "Initialize storage quantity when create new products";
 
                 TicketImport ticketImport = TicketImport.builder()
@@ -131,17 +141,19 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                     .importTime(LocalDateTime.now())
                     .note(initMessage)
                     .status(TicketImportStatus.COMPLETED.name())
-                    .storage(new Storage(inputDTO.getStorageIdInitStorageQty())).build();
+                    .storage(lvStorage).build();
                 TicketImport ticketImportSaved = mvTicketImportService.save(ticketImport);
 
                 ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
                     .ticketImport(ticketImportSaved)
                     .productVariant(productDetailSaved)
                     .quantity(productDetailSaved.getStorageQty())
-                    .note(initMessage).build();
+                    .note(initMessage)
+                    .build();
                 mvProductVariantTempRepository.save(productVariantTemp);
             }
             if (productDetailSaved.getSoldQty() > 0) {
+                Storage lvStorage = mvStorageService.findById(inputDTO.getStorageIdInitStorageQty(), true);
                 String initMessage = "Initialize storage quantity when create new products";
 
                 TicketExport ticketExport = TicketExport.builder()
@@ -150,14 +162,15 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                     .exportTime(LocalDateTime.now())
                     .note(initMessage)
                     .status(TicketExportStatus.COMPLETED.name())
-                    .storage(new Storage(inputDTO.getStorageIdInitStorageQty())).build();
+                    .storage(lvStorage).build();
                 TicketExport ticketExportSaved = mvTicketExportService.save(ticketExport);
 
                 ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
                     .ticketExport(ticketExportSaved)
                     .productVariant(productDetailSaved)
                     .quantity(productDetailSaved.getStorageQty())
-                    .note(initMessage).build();
+                    .note(initMessage)
+                    .build();
                 mvProductVariantTempRepository.save(productVariantTemp);
             }
 
@@ -171,20 +184,18 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Transactional
     @Override
-    public ProductVariantDTO update(ProductVariantDTO productDetail, Long productVariantId) {
-        Optional<ProductDetail> productVariantOptional = mvProductVariantRepository.findById(productVariantId);
-        if (productVariantOptional.isEmpty()) {
-            throw new BadRequestException();
-        }
+    public ProductVariantDTO update(ProductVariantDTO pProductDetail, Long productVariantId) {
+        ProductDetail productVariantOptional = this.findById(productVariantId, true);
+        //VldModel vldModel = vldCategory(pProductDetail.getColorId(), pProductDetail.getSizeId(), pProductDetail.getFabricTypeId());
         try {
             //Product variant info
-            ProductDetail productBeforeUpdate = ObjectUtils.clone(productVariantOptional.get());
+            ProductDetail productBeforeUpdate = ObjectUtils.clone(productVariantOptional);
 
-            ProductDetail productToUpdate = productVariantOptional.get();
-            productToUpdate.setVariantName(productDetail.getVariantName());
-            productToUpdate.setDefectiveQty(productDetail.getDefectiveQty());
-            productToUpdate.setWeight(productDetail.getWeight());
-            productToUpdate.setNote(productDetail.getNote());
+            ProductDetail productToUpdate = productVariantOptional;
+            productToUpdate.setVariantName(pProductDetail.getVariantName());
+            productToUpdate.setDefectiveQty(pProductDetail.getDefectiveQty());
+            productToUpdate.setWeight(pProductDetail.getWeight());
+            productToUpdate.setNote(pProductDetail.getNote());
             ProductDetail productVariantUpdated = mvProductVariantRepository.save(productToUpdate);
 
             //Price
@@ -194,13 +205,15 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                 mvProductPriceRepository.save(productVariantPricePresent);
             }
 
-            ProductPriceDTO priceDTO = productDetail.getPrice();
-            BigDecimal lvRetailPrice = priceDTO.getRetailPrice() != null ? priceDTO.getRetailPrice() : ZERO;
-            BigDecimal lvRetailPriceDiscount = priceDTO.getRetailPriceDiscount() != null ? priceDTO.getRetailPriceDiscount() : priceDTO.getRetailPrice();
-            BigDecimal lvWholesalePrice = priceDTO.getWholesalePrice() != null ? priceDTO.getWholesalePrice() : ZERO;
-            BigDecimal lvWholesalePriceDiscount = priceDTO.getWholesalePriceDiscount() != null ? priceDTO.getWholesalePriceDiscount() : priceDTO.getWholesalePrice();
-            BigDecimal lvPurchasePrice = priceDTO.getPurchasePrice() != null ? priceDTO.getPurchasePrice() : ZERO;
-            BigDecimal lvCostPrice = priceDTO.getCostPrice() != null ? priceDTO.getCostPrice() : ZERO;
+            ProductPriceDTO price = pProductDetail.getPrice();
+            BigDecimal lvRetailPrice = CoreUtils.coalesce(price.getRetailPrice());
+            BigDecimal lvRetailPriceDiscount = CoreUtils.coalesce(price.getRetailPriceDiscount(), price.getRetailPrice());
+            BigDecimal lvWholesalePrice = CoreUtils.coalesce(price.getWholesalePrice());
+            BigDecimal lvWholesalePriceDiscount = CoreUtils.coalesce(price.getWholesalePriceDiscount(), price.getWholesalePrice());
+            BigDecimal lvPurchasePrice = CoreUtils.coalesce(price.getPurchasePrice());
+            BigDecimal lvCostPrice = CoreUtils.coalesce(price.getCostPrice());
+            vldPrice(lvRetailPrice, lvRetailPriceDiscount, lvWholesalePrice, lvWholesalePriceDiscount, lvPurchasePrice, lvCostPrice);
+
             mvProductPriceRepository.save(ProductPrice.builder()
                     .productVariant(productVariantUpdated)
                     .retailPrice(lvRetailPrice)
@@ -221,22 +234,19 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
             return ProductVariantConvert.entityToDTO(productVariantUpdated);
         } catch (Exception e) {
-            throw new AppException("Update productVariant fail! " + productDetail.toString(), e);
+            throw new AppException("Update productVariant fail! " + pProductDetail.toString(), e);
         }
     }
 
     @Override
     public String delete(Long productVariantId) {
-        Optional<ProductVariantDTO> productDetailToDelete = this.findById(productVariantId);
-        if (productDetailToDelete.isEmpty()) {
-            throw new ResourceNotFoundException("Product variant not found!");
-        }
+        ProductVariantDTO productDetailToDelete = this.findById(productVariantId, true);
         try {
             mvProductVariantRepository.deleteById(productVariantId);
         } catch (ConstraintViolationException ex) {
             throw new DataInUseException("Không thể xóa sản phẩm đã được sử dụng!", ex);
         }
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Xóa biến thể sản phẩm", productDetailToDelete.get().getVariantName());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Xóa biến thể sản phẩm", productDetailToDelete.getVariantName());
         logger.info("Delete productVariant success! {}", productDetailToDelete);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
@@ -298,6 +308,21 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         mvProductVariantRepository.save(lvProduct);
     }
 
+    @Override
+    public Page<ProductVariantDTO> getProductsOutOfStock(int pageSize, int pageNum) {
+        Pageable pageable = Pageable.unpaged();
+        if (pageSize >= 0 && pageNum >= 0) {
+            pageable = PageRequest.of(pageNum, pageSize);
+        }
+
+        Page<ProductDetail> productVariants = mvProductVariantRepository.findProductsOutOfStock(pageable);
+        List<ProductVariantDTO> productVariantDTOs = ProductVariantConvert.entitiesToDTOs(productVariants.getContent());
+        for (ProductVariantDTO dto : productVariantDTOs) {
+            setPriceInfo(dto, dto.getVariantPrice());
+        }
+        return new PageImpl<>(productVariantDTOs, pageable, productVariantDTOs.size());
+    }
+
     private ProductVariantDTO setPriceInfo(ProductVariantDTO dto, ProductPrice productPrice) {
         if (dto != null) {
             if (productPrice != null) {
@@ -317,7 +342,57 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
         return dto;
     }
 
-    private String genProductCode() {
-        return CommonUtils.now("yyyyMMddHHmmss");
+    private String genProductCode(String defaultCode) {
+        if (CoreUtils.isNullStr(defaultCode))
+        {
+            return CommonUtils.now("yyyyMMddHHmmss");
+        }
+        return defaultCode;
+    }
+
+    private VldModel vldCategory(Long pColorId, Long pSizeId, Long pFabricTypeId) {
+        Category lvColor = mvCategoryService.findById(pColorId, false);
+        if (lvColor == null)
+            throw new BadRequestException("Color invalid!");
+
+        Category lvSize = mvCategoryService.findById(pSizeId, false);
+        if (lvSize == null)
+            throw new BadRequestException("Size invalid!");
+
+        Category lvFabricType = mvCategoryService.findById(pFabricTypeId, false);
+        if (lvFabricType == null)
+            throw new BadRequestException("Fabric type invalid!");
+
+        VldModel vldModel = new VldModel();
+        vldModel.setColor(lvColor);
+        vldModel.setSize(lvSize);
+        vldModel.setFabricType(lvFabricType);
+
+        return vldModel;
+    }
+
+    private void vldPrice(BigDecimal lvRetailPrice, BigDecimal lvRetailPriceDiscount,
+                          BigDecimal lvWholesalePrice, BigDecimal lvWholesalePriceDiscount,
+                          BigDecimal lvPurchasePrice, BigDecimal lvCostPrice)
+    {
+        if (lvRetailPrice                   == null || lvRetailPrice.doubleValue()            < 0
+                || lvRetailPriceDiscount    == null || lvRetailPriceDiscount.doubleValue()    < 0
+                || lvWholesalePrice         == null || lvWholesalePrice.doubleValue()         < 0
+                || lvWholesalePriceDiscount == null || lvWholesalePriceDiscount.doubleValue() < 0
+                || lvPurchasePrice          == null || lvPurchasePrice.doubleValue()          < 0
+                || lvCostPrice              == null || lvCostPrice.doubleValue()              < 0)
+        {
+            throw new BadRequestException("Price must greater than zero!");
+        }
+        SystemConfig lvConfig = Core.mvSystemConfigList.get(ConfigCode.allowSellPriceLessThanCostPrice);
+        if (isConfigAvailable(lvConfig) && !lvConfig.isYesOption())
+        {
+            double sellingPrice = Math.min(lvRetailPriceDiscount.doubleValue(), lvWholesalePriceDiscount.doubleValue());
+            double costPrice = Math.min(lvPurchasePrice.doubleValue(), lvCostPrice.doubleValue());
+            if (sellingPrice < costPrice)
+            {
+                throw new BadRequestException("Selling price must greater than cost price!");
+            }
+        }
     }
 }

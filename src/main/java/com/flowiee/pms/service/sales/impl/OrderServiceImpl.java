@@ -6,10 +6,12 @@ import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.repository.system.ConfigRepository;
+import com.flowiee.pms.service.category.CategoryService;
+import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.MailMediaService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
@@ -23,6 +25,9 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.*;
@@ -56,8 +61,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     private final LedgerReceiptService  mvLedgerReceiptService;
     private final LedgerPaymentService  mvLedgerPaymentService;
     private final ProductVariantService mvProductVariantService;
+    private final LoyaltyProgramService mvLoyaltyProgramService;
+    private final CategoryService       mvCategoryService;
+    private final CustomerService       mvCustomerService;
+    private final AccountService        mvAccountService;
 
-    BigDecimal ONE_HUNDRED = new BigDecimal(100);
+    private BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     @Override
     public List<OrderDTO> findAll() {
@@ -103,9 +112,56 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             return lvOrderOptional.get();
         }
         if (throwException) {
-            throw new BadRequestException("Order not found!");
+            throw new EntityNotFoundException(new Object[] {"order"}, null, null);
         }
         return null;
+    }
+
+    private VldModel vldBeforeCreateOrder(OrderDTO pOrderInfo, Long pCartId, String pVoucherCode, Long pPaymentMethodId, Long pSaleChannelId, Long pCustomerId, Long pSalesAssistantId) {
+        OrderCart lvCart = mvCartService.findById(pCartId, true);
+        if (ObjectUtils.isEmpty(lvCart.getListItems()))
+            throw new BadRequestException("At least one product in order!");
+
+        Category lvPaymentMethod = mvCategoryService.findById(pPaymentMethodId, false);
+        if (lvPaymentMethod == null || !lvPaymentMethod.getStatus())
+            throw new BadRequestException("Payment method invalid!");
+        Category lvSalesChannel = mvCategoryService.findById(pSaleChannelId, false);
+        if (lvSalesChannel == null || !lvSalesChannel.getStatus())
+            throw new BadRequestException("Sales channel invalid!");
+
+        Customer lvCustomer = mvCustomerService.findById(pCustomerId, true);
+        if (lvCustomer.getIsBlackList())
+            throw new BadRequestException("The customer is on the blacklist!");
+        if (!CoreUtils.isNullStr(pOrderInfo.getReceiverEmail()) &&
+                CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
+            throw new BadRequestException("Email invalid!");
+        if (CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
+            throw new BadRequestException("Phone number invalid!");
+        if (CoreUtils.isNullStr(pOrderInfo.getReceiverAddress()))
+            throw new BadRequestException("Address must not empty!");
+
+        Account lvSalesAssistant = mvAccountService.findById(pSalesAssistantId, false);
+        if (lvSalesAssistant == null || lvSalesAssistant.isClosed())
+            throw new BadRequestException("Sales assistant invalid!");
+
+        VoucherTicket lvVoucherTicket = null;
+        if (!CoreUtils.isNullStr(pVoucherCode)) {
+            lvVoucherTicket = mvVoucherTicketService.findTicketByCode((pVoucherCode));
+            if (lvVoucherTicket == null)
+                throw new BadRequestException("Voucher invalid!");
+            if (lvVoucherTicket.isUsed())
+                throw new BadRequestException("Voucher code already used!");
+        }
+
+        VldModel vldModel = new VldModel();
+        vldModel.setSalesAssistant(lvSalesAssistant);
+        vldModel.setPaymentMethod(lvPaymentMethod);
+        vldModel.setSalesChannel(lvSalesChannel);
+        vldModel.setCustomer(lvCustomer);
+        vldModel.setOrderCart(lvCart);
+        vldModel.setVoucherTicket(lvVoucherTicket);
+
+        return vldModel;
     }
 
     @Transactional
@@ -114,24 +170,34 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         BigDecimal lvAmountDiscount = request.getAmountDiscount();
         String lvVoucherUsedCode = request.getVoucherUsedCode();
         LocalDateTime lvOrderTime = request.getOrderTime();
-        Long lvPayMethodId = request.getPayMethodId();
+        Long lvSaleChannelId = request.getSalesChannelId();
+        Long lvPaymentMethodId = request.getPayMethodId();
         Long lvCustomerId = request.getCustomerId();
+        Long lvSalesAssistantId = request.getCashierId();
+        Long lvCartId = request.getCartId();
+
+        VldModel vldModel = vldBeforeCreateOrder(request, lvCartId, lvVoucherUsedCode, lvPaymentMethodId, lvSaleChannelId, lvCustomerId, lvSalesAssistantId);
+        OrderCart lvCart = vldModel.getOrderCart();
+        VoucherTicket lvVoucherTicket = vldModel.getVoucherTicket();
+        Customer lvCustomer = vldModel.getCustomer();
+        Category lvSalesChannel = vldModel.getSalesChannel();
+        Account lvSalesAssistant = vldModel.getSalesAssistant();
 
         Order order = Order.builder()
                 .code(getNextOrderCode())
-                .customer(new Customer(lvCustomerId))
-                .kenhBanHang(new Category(request.getSalesChannelId(), null))
-                .nhanVienBanHang(new Account(request.getCashierId()))
+                .customer(lvCustomer)
+                .kenhBanHang(lvSalesChannel)
+                .nhanVienBanHang(lvSalesAssistant)
                 .note(request.getNote())
                 .orderTime(lvOrderTime != null ? lvOrderTime : LocalDateTime.now())
                 .receiverName(request.getReceiverName())
                 .receiverPhone(request.getReceiverPhone())
                 .receiverEmail(request.getReceiverEmail())
                 .receiverAddress(request.getReceiverAddress())
-                .paymentMethod(lvPayMethodId != null ? new Category(lvPayMethodId, null) : null)
+                .paymentMethod(new Category(lvPaymentMethodId))
                 .paymentStatus(false)
                 .voucherUsedCode(ObjectUtils.isNotEmpty(lvVoucherUsedCode) ? lvVoucherUsedCode : null)
-                .amountDiscount(lvAmountDiscount != null ? lvAmountDiscount : BigDecimal.ZERO)
+                .amountDiscount(CoreUtils.coalesce(lvAmountDiscount))
                 .packagingCost(BigDecimal.ZERO)
                 .shippingCost(BigDecimal.ZERO)
                 .giftWrapCost(BigDecimal.ZERO)
@@ -140,58 +206,52 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .orderStatus(getDefaultOrderStatus())
                 .build();
 
+        if (lvVoucherTicket != null) {
+            order.setVoucherUsedCode(lvVoucherTicket.getCode());
+            //Update voucher ticket's status to used
+            lvVoucherTicket.setCustomer(lvCustomer);
+            lvVoucherTicket.setActiveTime(new Date());
+            lvVoucherTicket.setUsed(true);
+            mvVoucherTicketService.update(lvVoucherTicket, lvVoucherTicket.getId());
+        }
+
         try {
-            //Insert order
+            //Create order
             Order orderSaved = mvOrderRepository.save(order);
             //Create QRCode
             mvOrderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
-
-            //Insert items detail
-            BigDecimal totalAmountOfOrder = BigDecimal.ZERO;
-            Optional<OrderCart> cart = mvCartService.findById(request.getCartId());
-            if (cart.isPresent()) {
-                for (Items items : cart.get().getListItems()) {
-                    Long lvProductVariantId = items.getProductDetail().getId();
-                    BigDecimal lvExtraDiscount = items.getExtraDiscount();
-                    Optional<ProductVariantDTO> productDetail = mvProductVariantService.findById(lvProductVariantId);
-                    if (productDetail.isPresent()) {
-                        int lvItemQuantity = mvCartItemsService.findQuantityOfItem(items.getOrderCart().getId() , lvProductVariantId);
-                        OrderDetail orderDetail = OrderDetail.builder()
-                            .order(orderSaved)
-                            .productDetail(productDetail.get())
-                            .quantity(lvItemQuantity)
-                            .status(true)
-                            .note(items.getNote())
-                            .price(items.getPrice())
-                            .priceOriginal(items.getPriceOriginal())
-                            .extraDiscount(lvExtraDiscount != null ? lvExtraDiscount : BigDecimal.ZERO)
-                            .priceType(items.getPriceType())
-                            .build();
-                        OrderDetail orderDetailSaved = mvOrderItemsService.save(orderDetail);
-
-                        totalAmountOfOrder = totalAmountOfOrder.add(orderDetailSaved.getPrice().multiply(BigDecimal.valueOf(lvItemQuantity)));
-                    }
+            //Create items detail
+            for (Items items : lvCart.getListItems()) {
+                Long lvProductVariantId = items.getProductDetail().getId();
+                BigDecimal lvExtraDiscount = items.getExtraDiscount();
+                ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, true);
+                int lvItemQuantity = mvCartItemsService.findQuantityOfItem(lvCart.getId() , lvProductVariantId);
+                if (lvItemQuantity <= 0) {
+                    throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productDetail.getVariantName()));
                 }
+                if (lvItemQuantity > productDetail.getAvailableSalesQty()) {
+                    throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productDetail.getVariantName()}, null, getClass(), null);
+                }
+                mvOrderItemsService.save(OrderDetail.builder()
+                        .order(orderSaved)
+                        .productDetail(productDetail)
+                        .quantity(lvItemQuantity)
+                        .status(true)
+                        .note(items.getNote())
+                        .price(items.getPrice())
+                        .priceOriginal(items.getPriceOriginal())
+                        .extraDiscount(CoreUtils.coalesce(lvExtraDiscount))
+                        .priceType(items.getPriceType())
+                        .build());
             }
-
-            //Update voucher ticket used status
-            VoucherTicket voucherTicket = mvVoucherTicketService.findTicketByCode((lvVoucherUsedCode));
-            if (voucherTicket != null) {
-//                String statusCode = voucherService.checkTicketToUse(request.getVoucherUsedCode());
-//                if (AppConstants.VOUCHER_STATUS.ACTIVE.name().equals(statusCode)) {
-//                    orderSaved.setVoucherUsedCode(request.getVoucherUsedCode());
-//                    orderSaved.setAmountDiscount(request.getAmountDiscount());
-//                }
-                voucherTicket.setCustomer(orderSaved.getCustomer());
-                voucherTicket.setActiveTime(new Date());
-                voucherTicket.setUsed(true);
-                mvVoucherTicketService.update(voucherTicket, voucherTicket.getId());
+            BigDecimal totalAmountDiscount = orderSaved.calTotalAmountDiscount();
+            if (totalAmountDiscount.doubleValue() <= 0) {
+                throw new BadRequestException("The value of order must greater than zero!");
             }
-            //orderRepo.save(orderSaved);
 
             //Accumulate bonus points for customer
             if (request.getAccumulateBonusPoints() != null && request.getAccumulateBonusPoints()) {
-                BigDecimal bonusPoints = totalAmountOfOrder.subtract(orderSaved.getAmountDiscount()).divide(ONE_HUNDRED).setScale(0, BigDecimal.ROUND_DOWN);
+                BigDecimal bonusPoints = totalAmountDiscount.subtract(orderSaved.getAmountDiscount()).divide(ONE_HUNDRED).setScale(0, BigDecimal.ROUND_DOWN);
                 mvCustomerRepository.updateBonusPoint(lvCustomerId, bonusPoints.intValue());
             }
 
@@ -206,6 +266,18 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         } catch (RuntimeException ex) {
             throw new AppException("Insert new order fail! order=" + request, ex);
         }
+    }
+
+    private VldModel vldBeforeUpdateOrder(OrderDTO pOrderInfo) {
+        if (!CoreUtils.isNullStr(pOrderInfo.getReceiverEmail()) &&
+                CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
+            throw new BadRequestException("Email invalid!");
+        if (CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
+            throw new BadRequestException("Phone number invalid!");
+        if (CoreUtils.isNullStr(pOrderInfo.getReceiverAddress()))
+            throw new BadRequestException("Address must not empty!");
+
+        return new VldModel();
     }
 
     private Order beforeUpdateOrder(Order pOrder) {
@@ -236,7 +308,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         LocalDateTime lvSuccessfulDeliveryTime = dto.getSuccessfulDeliveryTime();
         OrderStatus lvOrderStatus = dto.getOrderStatus();
 
-        //Validate before update
+        //Validate request data
+        vldBeforeUpdateOrder(dto);
+        //Validate business before update
         Order orderBefore = beforeUpdateOrder(orderToUpdate);
 
         //Update new info
@@ -248,10 +322,14 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         orderToUpdate.setOrderStatus(lvOrderStatus);
         if (lvOrderStatus.equals(OrderStatus.DLVD))
             orderToUpdate.setSuccessfulDeliveryTime(lvSuccessfulDeliveryTime != null ? lvSuccessfulDeliveryTime : LocalDateTime.now());
+        if (lvOrderStatus.equals(OrderStatus.CNCL)) {
+            orderToUpdate.setCancellationReason(dto.getCancellationReason());
+            orderToUpdate.setCancellationDate(LocalDateTime.now());
+        }
         Order orderUpdated = mvOrderRepository.save(orderToUpdate);
 
         //Do something after updated
-        afterUpdatedOrder(orderUpdated);
+        afterUpdatedOrder(orderUpdated, null);
 
         //Log
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
@@ -262,7 +340,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         return OrderDTO.fromOrder(orderToUpdate);
     }
 
-    private void afterUpdatedOrder(Order pOrderUpdated) {
+    private void afterUpdatedOrder(Order pOrderUpdated, Long pLoyaltyProgramId) {
         String lvOrderCode = pOrderUpdated.getCode();
         OrderStatus lvOrderStatus = pOrderUpdated.getOrderStatus();
         Long lvStorageId = pOrderUpdated.getTicketExport().getStorage().getId();
@@ -280,6 +358,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 if (isNeedRefund) {
                     //create ledger transaction record for export
                 }
+                break;
+            case DLVD:
+                mvLoyaltyProgramService.accumulatePoints(pOrderUpdated, pLoyaltyProgramId);
                 break;
         }
     }
@@ -329,6 +410,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     @Override
     public List<Order> findOrdersToday() {
         return mvOrderRepository.findOrdersToday();
+    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByCustomer(int pageSize, int pageNum, Long pCustomerId) {
+        return this.findAll(pageSize, pageNum, null, null, null, null, null, null, pCustomerId, null, null, null, null, null, null);
     }
 
     private String getNextOrderCode() {

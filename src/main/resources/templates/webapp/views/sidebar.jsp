@@ -105,6 +105,11 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a th:href="@{/loyalty-programs}" class="nav-link"><i
+                                class="fa-solid fa-user-tag mr-2"></i>
+                            <p>Tích điểm - đổi thưởng</p></a>
+                    </li>
 
                     <li class="nav-header">
                         <hr class="mt-0 mb-3" style="border-color: darkgrey">
@@ -138,6 +143,10 @@
                     <li class="nav-item">
                         <a th:href="@{${URL_SYS_LOG}}" class="nav-link"><i class="fa-solid fa-clock nav-icon mr-2"></i>
                             <p>Nhật ký hệ thống</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{${URL_SYS_BRANCH}}" class="nav-link"><i class="fa-solid fa-code-branch nav-icon mr-2"></i>
+                            <p>Chi nhánh cửa hàng</p></a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">

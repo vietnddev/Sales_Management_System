@@ -3,7 +3,6 @@ package com.flowiee.pms.controller.storage;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.StorageItems;
@@ -27,7 +26,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/storage")
@@ -61,11 +59,8 @@ public class StorageController extends BaseController {
     @GetMapping("/{storageId}")
     @PreAuthorize("@vldModuleStorage.readStorage(true)")
     public AppResponse<StorageDTO> findDetailStorage(@PathVariable("storageId") Long storageId) {
-        Optional<StorageDTO> storage = mvStorageService.findById(storageId);
-        if (storage.isEmpty()) {
-            throw new ResourceNotFoundException("Storage not found");
-        }
-        return success(storage.get());
+        StorageDTO storage = mvStorageService.findById(storageId, true);
+        return success(storage);
     }
 
     @Operation(summary = "Create storage")

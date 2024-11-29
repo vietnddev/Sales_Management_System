@@ -3,6 +3,7 @@ package com.flowiee.pms.entity.system;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
 
+import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -50,8 +51,11 @@ public class SystemConfig extends BaseEntity implements Serializable {
 		return value != null && "Y".equals(value.trim());
 	}
 
-	public int getIntValue() {
-		return Integer.parseInt(value);
+	public Integer getIntValue() {
+		if (CoreUtils.isNumeric(value)) {
+			return Integer.parseInt(value);
+		}
+		return null;
 	}
 
 	@Override

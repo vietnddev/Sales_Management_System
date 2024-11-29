@@ -1,9 +1,13 @@
 package com.flowiee.pms.exception;
 
+import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @Getter
 @Setter
@@ -18,22 +22,20 @@ public class BaseException extends RuntimeException {
     private HttpStatus httpStatus;
 
     public BaseException(ErrorCode errorCode, Object[] errorMsgParameter, String message, Class sourceClass, Throwable sourceException, boolean isRedirectView) {
-        super((message != null && !message.isBlank()) ? message : errorCode.getDescription(), sourceException);
+        super(CoreUtils.isNullStr(message) ? errorCode.getDescription() : message, sourceException);
         this.errorCode = errorCode;
         this.errorMsgParameter = errorMsgParameter;
         this.message = message;
         this.sourceClass = sourceClass;
         this.sourceException = sourceException;
         this.isRedirectView = isRedirectView;
-        if (errorCode.equals(ErrorCode.ACCOUNT_LOCKED)) {
-            this.httpStatus = HttpStatus.LOCKED;
-        }
+        setHttpStatus(getHttpStatusByErrorCode());
         setMessage(getDisplayMessage());
     }
 
     public String getDisplayMessage() {
         String lvPrefixCode = "[" + errorCode.getCode() + "] ";
-        String lvMessage = (message != null && !message.isBlank()) ? message : errorCode.getDescription();
+        String lvMessage = CoreUtils.isNullStr(message) ? errorCode.getDescription() : message;
         if (errorMsgParameter != null && errorMsgParameter.length > 0) {
             for (int i = 0; i < errorMsgParameter.length; i++) {
                 if (lvMessage.contains("{" + i + "}")) {
@@ -42,5 +44,24 @@ public class BaseException extends RuntimeException {
             }
         }
         return lvPrefixCode + lvMessage;
+    }
+
+    public String getFullStackTrace() {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        printStackTrace(pw);
+        return sw.toString();
+    }
+
+    private HttpStatus getHttpStatusByErrorCode() {
+        HttpStatus httpStatus = null;
+
+        if (errorCode.equals(ErrorCode.ACCOUNT_LOCKED)) {
+            httpStatus = HttpStatus.LOCKED;
+        } else {
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return httpStatus;
     }
 }

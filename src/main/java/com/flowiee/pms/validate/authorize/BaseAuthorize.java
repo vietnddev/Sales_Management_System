@@ -4,6 +4,7 @@ import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.exception.ForbiddenException;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.constants.ACTION;
 import lombok.SneakyThrows;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,14 +30,14 @@ public class BaseAuthorize {
         return authentication.isAuthenticated();
     }
     
-    protected boolean isAuthorized(String action, boolean throwException) {
+    protected boolean isAuthorized(ACTION action, boolean throwException) {
         if (isAuthenticated()) {
             if (AppConstants.ADMINISTRATOR.equals(CommonUtils.getUserPrincipal().getUsername())) {
                 return true;
             }
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             for (GrantedAuthority authority : authentication.getAuthorities()) {
-                if (authority.getAuthority().equals(action)) {
+                if (authority.getAuthority().equals(action.name())) {
                     return true;
                 }
             }
@@ -47,5 +48,12 @@ public class BaseAuthorize {
             }
         }
         throw new AuthenticationException();
+    }
+
+    protected boolean vldAdminRole() {
+        if (CommonUtils.getUserPrincipal().isAdmin()) {
+            return true;
+        }
+        throw new ForbiddenException("This function is for administrator use only!");
     }
 }

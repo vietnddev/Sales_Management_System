@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.GiftCatalog;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.product.GiftCatalogRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.GiftCatalogService;
@@ -22,8 +23,12 @@ public class GiftCatalogServiceImpl extends BaseService implements GiftCatalogSe
     }
 
     @Override
-    public Optional<GiftCatalog> findById(Long entityId) {
-        return giftCatalogRepository.findById(entityId);
+    public GiftCatalog findById(Long entityId, boolean pThrowException) {
+        Optional<GiftCatalog> entityOptional = giftCatalogRepository.findById(entityId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"gift catalog"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override

@@ -1,11 +1,16 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.flowiee.pms.entity.sales.Order;
+import com.flowiee.pms.entity.system.SystemConfig;
+import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.service.system.ConfigService;
+import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.PurchaseHistory;
 import com.flowiee.pms.model.dto.CustomerDTO;
 import com.flowiee.pms.entity.sales.CustomerContact;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
@@ -14,17 +19,18 @@ import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
-import com.flowiee.pms.service.sales.OrderService;
 
 import com.flowiee.pms.utils.CommonUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,11 +41,11 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CustomerServiceImpl extends BaseService implements CustomerService {
-    OrderService mvOrderService;
-    OrderRepository mvOrderRepository;
-    CustomerRepository mvCustomerRepository;
-    CustomerContactService mvCustomerContactService;
     CustomerContactRepository mvCustomerContactRepository;
+    CustomerContactService mvCustomerContactService;
+    CustomerRepository mvCustomerRepository;
+    OrderRepository mvOrderRepository;
+    ConfigService mvConfigService;
 
     @Override
     public List<CustomerDTO> findAll() {
@@ -66,26 +72,18 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
     }
 
     @Override
-    public Optional<CustomerDTO> findById(Long id) {
+    public CustomerDTO findById(Long id, boolean pThrowException) {
         Optional<Customer> customer = mvCustomerRepository.findById(id);
-        if (customer.isEmpty()) {
-            return Optional.empty();
+        if (customer.isPresent()) {
+            CustomerDTO customerDTO = CustomerDTO.fromCustomer(customer.get());
+            this.setContactDefault(List.of(customerDTO));
+            return customerDTO;
         }
-        CustomerDTO customerDTO = CustomerDTO.fromCustomer(customer.get());
-        this.setContactDefault(List.of(customerDTO));
-        return Optional.of(customerDTO);
-    }
-
-    @Override
-    public CustomerDTO findById(Long pCustomerId, boolean throwException) {
-        Optional<CustomerDTO> customerDTO = this.findById(pCustomerId);
-        if (customerDTO.isPresent()) {
-            return customerDTO.get();
-        }
-        if (throwException) {
-            throw new ResourceNotFoundException("Customer not found!");
-        } else
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"customer"}, null, null);
+        } else {
             return null;
+        }
     }
 
     @Transactional
@@ -95,45 +93,79 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             throw new ResourceNotFoundException("Customer not found!");
         }
         Customer customer = Customer.fromCustomerDTO(dto);
+        String lvPhoneDefault = CoreUtils.trim(dto.getPhoneDefault());
+        String lvEmailDefault = CoreUtils.trim(dto.getEmailDefault());
+        String lvAddressDefault = CoreUtils.trim(dto.getAddressDefault());
+        LocalDate lvBirthday = customer.getDateOfBirth();
+
+        if (CoreUtils.isNullStr(customer.getCustomerName()))
+            throw new BadRequestException("Customer name can't empty!");
+        if (CoreUtils.isAnySpecialCharacter(customer.getCustomerName()))
+            throw new BadRequestException("Customer name can't allow include special characters!");
+        if (lvBirthday != null && lvBirthday.isAfter(LocalDate.now()))
+            throw new BadRequestException("Date of birth can't in the future date!");
+
         customer.setCreatedBy(dto.getCreatedBy() != null ? dto.getCreatedBy() : CommonUtils.getUserPrincipal().getId());
         customer.setBonusPoints(0);
         Customer customerInserted = mvCustomerRepository.save(customer);
+
         CustomerContact customerContact = CustomerContact.builder()
                 .customer(new Customer(customerInserted.getId()))
                 .value(dto.getPhoneDefault())
                 .isDefault("Y")
                 .status(true).build();
-        if (dto.getPhoneDefault() != null) {
-            customerContact.setCode("P");
+
+        if (lvPhoneDefault != null) {
+            ContactType lvContactType = ContactType.P;
+
+            if (CoreUtils.validateEmail(lvPhoneDefault))
+                throw new BadRequestException("Phone number invalid");
+            SystemConfig lvConfig = mvConfigService.getSystemConfig(ConfigCode.allowDuplicateCustomerPhoneNumber.name());
+            if (isConfigAvailable(lvConfig) && !lvConfig.isYesOption()) {
+                if ( mvCustomerContactRepository.findByContactTypeAndValue(lvContactType.name(), lvPhoneDefault) != null) {
+                    throw new BadRequestException(String.format("Phone %s already used!", dto.getEmailDefault()));
+                }
+            }
+
+            customerContact.setCode(lvContactType.name());
             mvCustomerContactService.save(customerContact);
         }
-        if (dto.getEmailDefault() != null) {
-            customerContact.setCode("E");
+        if (lvEmailDefault != null) {
+            ContactType lvContactType = ContactType.E;
+
+            if (CoreUtils.validateEmail(lvEmailDefault))
+                throw new BadRequestException("Email invalid");
+            if (mvCustomerContactRepository.findByContactTypeAndValue(lvContactType.name(), lvEmailDefault) != null)
+                throw new BadRequestException(String.format("Email %s already used!", lvEmailDefault));
+
+            customerContact.setCode(lvContactType.name());
             mvCustomerContactService.save(customerContact);
         }
-        if (dto.getAddressDefault() != null) {
-            customerContact.setCode("A");
+        if (lvAddressDefault != null) {
+            ContactType lvContactType = ContactType.E;
+            customerContact.setCode(lvContactType.name());
             mvCustomerContactService.save(customerContact);
         }
+
         systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_CUS_C, MasterObject.Customer, "Thêm mới khách hàng", customer.toString());
         logger.info("Create customer: {}", customer.toString());
+
         return CustomerDTO.fromCustomer(customerInserted);
     }
 
     @Transactional
     @Override
-    public CustomerDTO update(CustomerDTO customer, Long customerId) {
-        if (customer == null || customerId <= 0 || this.findById(customerId).isEmpty()) {
-            throw new ResourceNotFoundException("Customer not found!");
-        }
-        Customer customerToUpdate = Customer.fromCustomerDTO(customer);
-        customerToUpdate.setId(customerId);
-        Customer customerUpdated = mvCustomerRepository.save(customerToUpdate);
+    public CustomerDTO update(CustomerDTO pCustomer, Long customerId) {
+        Customer lvCustomer = this.findById(customerId, true);
+        //lvCustomer.set
+        //lvCustomer.set
+        //lvCustomer.set
+        Customer customerUpdated = mvCustomerRepository.save(lvCustomer);
 
         CustomerContact phoneDefault = null;
         CustomerContact emailDefault = null;
         CustomerContact addressDefault = null;
-        if (customer.getPhoneDefault() != null || customer.getEmailDefault() != null || customer.getAddressDefault() != null) {
+        if (pCustomer.getPhoneDefault() != null || pCustomer.getEmailDefault() != null || pCustomer.getAddressDefault() != null) {
             List<CustomerContact> contacts = mvCustomerContactService.findContacts(customerId);
             for (CustomerContact contact : contacts) {
                 boolean isStatus = contact.isStatus();
@@ -150,65 +182,65 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
                 }
             }
 
-            if (customer.getPhoneDefault() != null && phoneDefault != null) {
-                phoneDefault.setValue(customer.getPhoneDefault());
+            if (pCustomer.getPhoneDefault() != null && phoneDefault != null) {
+                phoneDefault.setValue(pCustomer.getPhoneDefault());
                 //customerContactService.update(phoneDefault, customerId);
                 mvCustomerContactRepository.save(phoneDefault);
-            } else if (customer.getPhoneDefault() != null && !customer.getPhoneDefault().isEmpty()) {
+            } else if (pCustomer.getPhoneDefault() != null && !pCustomer.getPhoneDefault().isEmpty()) {
                 phoneDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
                     .code(ContactType.P.name())
-                    .value(customer.getPhoneDefault())
+                    .value(pCustomer.getPhoneDefault())
                     .isDefault("Y")
                     .status(true).build();
                 mvCustomerContactService.save(phoneDefault);
             }
 
-            if (customer.getEmailDefault() != null && emailDefault != null) {
-                emailDefault.setValue(customer.getEmailDefault());
+            if (pCustomer.getEmailDefault() != null && emailDefault != null) {
+                emailDefault.setValue(pCustomer.getEmailDefault());
                 //customerContactService.update(emailDefault, customerId);
                 mvCustomerContactRepository.save(emailDefault);
-            } else if (customer.getEmailDefault() != null && !customer.getEmailDefault().isEmpty()) {
+            } else if (pCustomer.getEmailDefault() != null && !pCustomer.getEmailDefault().isEmpty()) {
                 emailDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
                     .code(ContactType.E.name())
-                    .value(customer.getEmailDefault())
+                    .value(pCustomer.getEmailDefault())
                     .isDefault("Y")
                     .status(true).build();
                 mvCustomerContactService.save(emailDefault);
             }
 
-            if (customer.getAddressDefault() != null && addressDefault != null) {
-                addressDefault.setValue(customer.getAddressDefault());
+            if (pCustomer.getAddressDefault() != null && addressDefault != null) {
+                addressDefault.setValue(pCustomer.getAddressDefault());
                 //customerContactService.update(addressDefault, customerId);
                 mvCustomerContactRepository.save(addressDefault);
-            } else if (customer.getAddressDefault() != null && !customer.getAddressDefault().isEmpty()) {
+            } else if (pCustomer.getAddressDefault() != null && !pCustomer.getAddressDefault().isEmpty()) {
                 addressDefault = CustomerContact.builder()
                     .customer(new Customer(customerId))
                     .code(ContactType.A.name())
-                    .value(customer.getAddressDefault())
+                    .value(pCustomer.getAddressDefault())
                     .isDefault("Y")
                     .status(true).build();
                 mvCustomerContactService.save(addressDefault);
             }
         }
-        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_CUS_U, MasterObject.Customer, "Cập nhật thông tin khách hàng", customer.toString());
-        logger.info("Update customer info {}", customer.toString());
+        systemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_CUS_U, MasterObject.Customer, "Cập nhật thông tin khách hàng", pCustomer.toString());
+        logger.info("Update customer info {}", pCustomer.toString());
         return CustomerDTO.fromCustomer(customerUpdated);
     }
 
     @Override
     public String delete(Long id) {
-        Optional<CustomerDTO> customer = this.findById(id);
-        if (customer.isEmpty()) {
-            throw new BadRequestException("Customer not found!");
-        }
-        if (!mvOrderService.findAll().isEmpty()) {
+        CustomerDTO customer = this.findById(id, true);
+        List<Order> orderOfCustomer = mvOrderRepository.findByCustomer(customer.getId());
+        if (ObjectUtils.isNotEmpty(orderOfCustomer)) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
-        mvCustomerRepository.deleteById(id);
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CUS_D, MasterObject.Customer, "Xóa khách hàng", customer.get().getCustomerName());
-        logger.info("Deleted customer id={}", id);
+        mvCustomerRepository.deleteById(customer.getId());
+
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CUS_D, MasterObject.Customer, "Xóa khách hàng", customer.getCustomerName());
+        logger.info("Deleted customer id={}", customer.getId());
+
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
@@ -245,5 +277,25 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             purchaseHistories.add(ph);
         }
         return purchaseHistories;
+    }
+
+    @Override
+    public Page<CustomerDTO> getVIPCustomers(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Customer> customers = mvCustomerRepository.findVIPCustomers(pageable);
+        List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(customers.getContent());
+        this.setContactDefault(customerDTOs);
+
+        return new PageImpl<>(customerDTOs, pageable, customerDTOs.size());
+    }
+
+    @Override
+    public Page<CustomerDTO> getBlackListCustomers(int pageSize, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Customer> customers = mvCustomerRepository.findBlackListCustomers(pageable);
+        List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(customers.getContent());
+        this.setContactDefault(customerDTOs);
+
+        return new PageImpl<>(customerDTOs, pageable, customerDTOs.size());
     }
 }

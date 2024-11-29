@@ -8,6 +8,7 @@ import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.repository.system.EventLogRepository;
 import com.flowiee.pms.repository.system.SystemLogRepository;
 import com.flowiee.pms.utils.constants.ConfigCode;
+import com.flowiee.pms.utils.constants.ScheduleTask;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -27,8 +28,11 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
     @Scheduled(cron = "0 0 1 * * ?")
     @Override
     public void execute() throws AppException {
-        logger.info("ClearLogScheduleExecutor start");
+        super.init(ScheduleTask.ClearLog);
+    }
 
+    @Override
+    public void doProcesses() throws AppException{
         if (!isEnableDeleteLog()) {
             logger.info("ClearLogScheduleExecutor config " + ConfigCode.deleteSystemLog.name() + " is disable");
             return;
@@ -41,7 +45,8 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
         }
 
         int lvDayDeleteSystemLog = Integer.parseInt(lvDayDeleteSystemLogConfig.getValue());
-        LocalDateTime lvFromCreatedTime = LocalDateTime.now().minusDays(lvDayDeleteSystemLog).withNano(0).withSecond(0).withMinute(0).withHour(0);
+        LocalDateTime lvFromCreatedTime =
+                LocalDateTime.now().minusDays(lvDayDeleteSystemLog).withNano(0).withSecond(0).withMinute(0).withHour(0);
 
         List<EventLog> eventLogList = eventLogRepository.getEventLogFrom(lvFromCreatedTime);
         for (EventLog eventLog : eventLogList) {
@@ -56,8 +61,6 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
         logger.info("ClearLogScheduleExecutor has completed clearing the system log");
 
         //clear more logs here
-
-        logger.info("ClearLogScheduleExecutor end");
     }
 
     private boolean isEnableDeleteLog() {

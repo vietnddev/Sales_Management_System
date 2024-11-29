@@ -2,7 +2,6 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.TicketExport;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.service.sales.TicketExportService;
 import com.flowiee.pms.utils.constants.TicketExportStatus;
@@ -36,11 +35,7 @@ public class TicketExportControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public ModelAndView viewDetail(@PathVariable("id") Long ticketExportId) {
-        Optional<TicketExport> ticketExportOpt = mvTicketExportService.findById(ticketExportId);
-        if (ticketExportOpt.isEmpty()) {
-            throw new ResourceNotFoundException("Ticket export not found!");
-        }
-        TicketExport ticketExport = ticketExportOpt.get();
+        TicketExport ticketExport = mvTicketExportService.findById(ticketExportId, true);
         LinkedHashMap<String, String> ticketExportStatus = new LinkedHashMap<>();
         ticketExportStatus.put(ticketExport.getStatus(), TicketExportStatus.valueOf(ticketExport.getStatus()).getLabel());
         if (ticketExport.isDraftStatus()) {

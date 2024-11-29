@@ -20,6 +20,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +66,13 @@ public class ProductQuantityServiceImpl extends BaseService implements ProductQu
                     if (isConfigAvailable(lvLowStockAlertMdl) && lvLowStockAlertMdl.isYesOption()) {
                         sendNotifyWarningLowStock(productDetailUpdated);
                     }
+                }
+
+                //Hết hàng
+                if (productDetailUpdated.getAvailableSalesQty() == 0) {
+                    productDetailUpdated.setStatus(ProductStatus.OOS.name());
+                    productDetailUpdated.setOutOfStockDate(LocalDateTime.now());
+                    mvProductVariantRepository.save(productDetailUpdated);
                 }
             }
             mvSystemLogService.writeLogUpdate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Cập nhật số lượng sản phẩm", "productVariantId = " + productVariantId);

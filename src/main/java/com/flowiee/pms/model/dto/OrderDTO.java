@@ -78,6 +78,7 @@ public class OrderDTO extends Order implements Serializable {
 		//dto.setOrderStatusId(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getId() : null);
 		//dto.setOrderStatusName(dto.getPaymentMethod() != null ? order.getTrangThaiDonHang().getName() : null);
 		dto.setOrderStatus(dto.getOrderStatus());
+		dto.setOrderStatusName(dto.getOrderStatus().getName());
 
 		dto.setPayMethodId(dto.getPaymentMethod() != null ? order.getPaymentMethod().getId() : null);
 		dto.setPayMethodName(dto.getPaymentMethod() != null ? order.getPaymentMethod().getName() : null);

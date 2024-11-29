@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 public class VldDashboard extends BaseAuthorize implements IVldDashboard {
     @Override
     public boolean readDashboard(boolean throwException) {
-        return super.isAuthorized(ACTION.READ_DASHBOARD.name(), throwException);
+        return super.isAuthorized(ACTION.READ_DASHBOARD, throwException);
     }
 }

@@ -52,7 +52,7 @@ import org.springframework.context.event.EventListener;
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class StartUp {
+public class Core {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	ConfigRepository       mvConfigRepository;
@@ -62,31 +62,32 @@ public class StartUp {
 	CustomerRepository     mvCustomerRepository;
 	CategoryRepository     mvCategoryRepository;
 	GroupAccountRepository mvGroupAccountRepository;
-	ConfigService          configService;
-	TemplateSendEmail      templateSendEmail;
+	ConfigService          mvConfigService;
+	TemplateSendEmail      mvTemplateSendEmail;
 
 	public static LocalDateTime                                     START_APP_TIME;
 	public static String                                            mvResourceUploadPath      = null;
 	public static Map<NotificationType, TemplateSendEmail.Template> mvGeneralEmailTemplateMap = new HashMap<>();
 	public static Map<ConfigCode, SystemConfig>                     mvSystemConfigList        = new HashMap();
+	public static final ConfigCode                                  mvConfigInitData          = ConfigCode.initData;
 
     @Bean
     CommandLineRunner init() {
     	return args -> {
+    		initConfig();
 			initData();
 			configReport();
             configEndPoint();
-            configService.refreshApp();
+            mvConfigService.refreshApp();
 			logger.info("Finish loads system configs");
 
-			//logger.info("Start downloading vi messages");
 			loadLanguageMessages("en");
 			logger.info("Finish downloading vi messages");
-			//logger.info("Start downloading en message");
+
 			loadLanguageMessages("vi");
 			logger.info("Finish downloading en message");
 
-			List<TemplateSendEmail.Template> lvGeneralMailTemplates = templateSendEmail.getGeneralMailTemplates();
+			List<TemplateSendEmail.Template> lvGeneralMailTemplates = mvTemplateSendEmail.getGeneralMailTemplates();
 			lvGeneralMailTemplates.forEach(lvTemplate -> {
 				NotificationType lvNotificationType = NotificationType.valueOf(lvTemplate.getType());
 				String lvEncoding = lvTemplate.getEncoding();
@@ -108,6 +109,7 @@ public class StartUp {
 				lvTemplate.setTemplateContent(lvTemplateContent.toString());
 				mvGeneralEmailTemplateMap.put(lvNotificationType, lvTemplate);
 			});
+			logger.info("Finish loads template email");
 
 			START_APP_TIME = LocalDateTime.now();
         };
@@ -155,34 +157,26 @@ public class StartUp {
 		}
 	}
 
-	private void initData() throws Exception {
-		String flagConfigCode = ConfigCode.initData.name();
-		SystemConfig flagConfigObj = mvConfigRepository.findByCode(flagConfigCode);
+	private void initConfig() {
+		List<SystemConfig> cnfList = initConfigModels(ConfigCode.values());
+
+		SystemConfig flagConfigObj = mvConfigRepository.findByCode(mvConfigInitData.name());
 		if (flagConfigObj == null) {
-			List<SystemConfig> cnf = new ArrayList<>();
-			cnf.add(initConfigModel(ConfigCode.initData, "Initialize initial data for the system", "Y"));
-			cnf.add(initConfigModel(ConfigCode.shopName, "Tên cửa hàng", "Flowiee"));
-			cnf.add(initConfigModel(ConfigCode.shopEmail, "Email", "nguyenducviet0684@gmail.com"));
-			cnf.add(initConfigModel(ConfigCode.shopPhoneNumber, "Số điện thoại", "(+84) 706 820 684"));
-			cnf.add(initConfigModel(ConfigCode.shopAddress, "Địa chỉ", "Phường 7, Quận 8, Thành phố Hồ Chí Minh"));
-			cnf.add(initConfigModel(ConfigCode.shopLogoUrl, "Logo", null));
-			cnf.add(initConfigModel(ConfigCode.emailHost, "Email host", "smtp"));
-			cnf.add(initConfigModel(ConfigCode.emailPort, "Email port", "587"));
-			cnf.add(initConfigModel(ConfigCode.emailUser, "Email username", null));
-			cnf.add(initConfigModel(ConfigCode.emailPass, "Email password", null));
-			cnf.add(initConfigModel(ConfigCode.sysTimeOut, "Thời gian timeout", "3600"));
-			cnf.add(initConfigModel(ConfigCode.maxSizeFileUpload, "Dung lượng file tối đa cho phép upload", null));
-			cnf.add(initConfigModel(ConfigCode.extensionAllowedFileUpload, "Định dạng file được phép upload", null));
-			cnf.add(initConfigModel(ConfigCode.sendEmailReportDaily, "Gửi mail báo cáo hoạt động kinh doanh hàng ngày", "N"));
-			cnf.add(initConfigModel(ConfigCode.resourceUploadPath, "Thư mực chứa tệp upload", null));
-			cnf.add(initConfigModel(ConfigCode.deleteSystemLog, "Xóa nhật ký hệ thống tự động", "N"));
-			cnf.add(initConfigModel(ConfigCode.dayDeleteSystemLog, "Thời gian xóa nhật ký hệ thống, các nhật ký có thời gian tạo từ >= ? ngày sẽ được xóa tự động", "100"));
-			cnf.add(initConfigModel(ConfigCode.sendNotifyCustomerOnOrderConfirmation, "Gửi email thông báo đến khách hàng khi đơn hàng đã được xác nhận", "N"));
-			cnf.add(initConfigModel(ConfigCode.returnPeriodDays, "Thời gian cho phép đổi trả hàng", "7"));
-			cnf.add(initConfigModel(ConfigCode.lowStockAlert, "Thông báo cảnh báo hàng tồn kho thấp", "N"));
-			mvConfigRepository.saveAll(cnf);
+			mvConfigRepository.saveAll(cnfList);
 		}
-		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(flagConfigCode);
+
+		initNewConfigIfDatabaseNotDefined(cnfList);
+
+		for (SystemConfig systemConfig : mvConfigRepository.findAll()) {
+			ConfigCode lvConfigCode = ConfigCode.valueOf(systemConfig.getCode());
+			if (lvConfigCode == null)
+				continue;
+			mvSystemConfigList.put(lvConfigCode, systemConfig);
+		}
+	}
+
+	private void initData() throws Exception {
+		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(mvConfigInitData.name());
 		if ("Y".equals(systemConfigInitData.getValue())) {
 			return;
 		}
@@ -200,7 +194,7 @@ public class StartUp {
 				.status(Boolean.parseBoolean(row[3]))
 				.isDefault(row[4])
 				.endpoint(row[5]).build();
-				initModelWithDefaultAudit(category);
+				initAudit(category);
 			listCategory.add(category);
 		}
 		listCategory.remove(0);//header
@@ -209,53 +203,59 @@ public class StartUp {
 		csvReader.close();
 		//Init branch
 		Branch branch = Branch.builder().branchCode("MAIN").branchName("Trụ sở").build();
-		initModelWithDefaultAudit(branch);
+		initAudit(branch);
 		Branch branchSaved = mvBranchRepository.save(branch);
 		//Init group account
 		GroupAccount groupAccountManager = GroupAccount.builder().groupCode("MANAGER").groupName("Quản lý cửa hàng").build();
-		initModelWithDefaultAudit(groupAccountManager);
+		initAudit(groupAccountManager);
 		GroupAccount groupManagerSaved = mvGroupAccountRepository.save(groupAccountManager);
 
 		GroupAccount groupAccountStaff = GroupAccount.builder().groupCode("STAFF").groupName("Nhân viên bán hàng").build();
-		initModelWithDefaultAudit(groupAccountStaff);
+		initAudit(groupAccountStaff);
 		GroupAccount groupStaffSaved = mvGroupAccountRepository.save(groupAccountStaff);
 		//Init admin account
 		Account adminAccount = Account.builder()
-			.username(AppConstants.ADMINISTRATOR).password(CommonUtils.encodePassword("123456"))
+			.username(AppConstants.ADMINISTRATOR)
+			.password(CommonUtils.encodePassword(CommonUtils.defaultNewPassword))
 			.fullName("Administrator").sex(true)
 			.role("ADMIN")
 			.branch(branchSaved).groupAccount(groupManagerSaved)
 			.status(AccountStatus.N.name())
 			.build();
-			initModelWithDefaultAudit(adminAccount);
+			initAudit(adminAccount);
 		mvAccountRepository.save(adminAccount);
 
 		Account staffAccount = Account.builder()
-			.username("staff").password(CommonUtils.encodePassword("123456"))
+			.username("staff")
+			.password(CommonUtils.encodePassword(CommonUtils.defaultNewPassword))
 			.fullName("Staff").sex(true)
 			.role("USER")
 			.branch(branchSaved).groupAccount(groupStaffSaved)
 			.status(AccountStatus.N.name())
 			.build();
-			initModelWithDefaultAudit(staffAccount);
+			initAudit(staffAccount);
 		mvAccountRepository.save(staffAccount);
 		//Init customer
 		Customer customer = Customer.builder().customerName("Khách vãng lai")
 				.dateOfBirth(LocalDate.of(2000, 1, 8)).sex(true).build();
-			initModelWithDefaultAudit(customer);
+			initAudit(customer);
 		mvCustomerRepository.save(customer);
 
 		systemConfigInitData.setValue("Y");
 		mvConfigRepository.save(systemConfigInitData);
 	}
 
-	private SystemConfig initConfigModel(ConfigCode code, String name, String value) {
-		SystemConfig systemConfig = new SystemConfig(code, name, value);
-		initModelWithDefaultAudit(systemConfig);
-		return systemConfig;
+	private List<SystemConfig> initConfigModels(ConfigCode[] configs) {
+		List<SystemConfig> systemConfigList = new ArrayList<>();
+    	for (ConfigCode c : configs) {
+			SystemConfig cnfModel = new SystemConfig(c.name(), c.getDescription(), c.getDefaultValue());
+			initAudit(cnfModel);
+			systemConfigList.add(cnfModel);
+		}
+		return systemConfigList;
 	}
 
-	private BaseEntity initModelWithDefaultAudit(BaseEntity baseEntity) {
+	private BaseEntity initAudit(BaseEntity baseEntity) {
 		baseEntity.setCreatedBy(-1l);
 		baseEntity.setLastUpdatedBy("SA");
 		return baseEntity;
@@ -263,5 +263,12 @@ public class StartUp {
 
 	public static String getResourceUploadPath() {
 		return mvResourceUploadPath;
+	}
+
+	private void initNewConfigIfDatabaseNotDefined(List<SystemConfig> initCnfList) {
+		for (SystemConfig sysConfig : initCnfList) {
+			if (mvConfigRepository.findByCode(sysConfig.getCode()) == null)
+				mvConfigRepository.save(sysConfig);
+		}
 	}
 }

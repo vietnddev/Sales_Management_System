@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.*;
 
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.service.BaseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,12 @@ public class LanguageServiceImpl extends BaseService implements LanguageService 
 	}
 
 	@Override
-	public Optional<Language> findById(Long langId) {
-		return mvLanguagesRepository.findById(langId);
+	public Language findById(Long langId, boolean pThrowException) {
+		Optional<Language> entityOptional = mvLanguagesRepository.findById(langId);
+		if (entityOptional.isEmpty() && pThrowException) {
+			throw new EntityNotFoundException(new Object[] {"language message"}, null, null);
+		}
+		return entityOptional.orElse(null);
 	}
 
 	@Override

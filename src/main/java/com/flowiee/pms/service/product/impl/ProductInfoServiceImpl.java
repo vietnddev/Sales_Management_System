@@ -2,15 +2,18 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.*;
+import com.flowiee.pms.entity.sales.Order;
+import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.exception.*;
+import com.flowiee.pms.model.ProductHeld;
 import com.flowiee.pms.repository.product.ProductDescriptionRepository;
+import com.flowiee.pms.repository.sales.OrderRepository;
+import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.ChangeLog;
+import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
-import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.model.dto.VoucherApplyDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.repository.category.CategoryRepository;
@@ -19,7 +22,6 @@ import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
-import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.converter.ProductConvert;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +46,8 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     ProductHistoryService mvProductHistoryService;
     ProductStatisticsService mvProductStatisticsService;
     ProductDescriptionRepository mvProductDescriptionRepository;
+    OrderRepository mvOrderRepository;
+    CategoryService mvCategoryService;
 
     @Override
     public List<ProductDTO> findAll() {
@@ -107,20 +111,29 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     }
 
     @Override
-    public Optional<ProductDTO> findById(Long id) {
+    public ProductDTO findById(Long id, boolean pThrowException) {
         Optional<Product> productOpt = mvProductRepository.findById(id);
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
             ProductDescription productDescription = product.getProductDescription();
-            return Optional.of(ProductConvert.convertToDTO(product, productDescription != null ? productDescription.getDescription() : null));
+            return ProductConvert.convertToDTO(product, productDescription != null ? productDescription.getDescription() : null);
         }
-        return Optional.empty();
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"product base"}, null, null);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public ProductDTO save(ProductDTO product) {
         try {
             Product productToSave = ProductConvert.convertToEntity(product);
+
+            vldCategory(productToSave.getProductType().getId(), productToSave.getBrand().getId(), productToSave.getUnit().getId());
+            if (CoreUtils.isNullStr(productToSave.getProductName()))
+                throw new BadRequestException("Product name is not null!");
+
             //productToSave.setCreatedBy(CommonUtils.getUserPrincipal().getId());
             productToSave.setStatus(ProductStatus.I.name());
             Product productSaved = mvProductRepository.save(productToSave);
@@ -145,16 +158,26 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     public ProductDTO update(ProductDTO productDTO, Long productId) {
         Optional<Product> productOpt = mvProductRepository.findById(productId);
         if (productOpt.isEmpty()) {
-            throw new BadRequestException();
+            throw new AppException(ErrorCode.ENTITY_NOT_FOUND, new Object[]{"product"}, null, getClass(), null);
         }
+
+        Long lvProductTypeId = productDTO.getProductTypeId();
+        Long lvBrandId = productDTO.getBrandId();
+        Long lvUnitId = productDTO.getUnitId();
+
+        VldModel vldModel = vldCategory(lvProductTypeId, lvBrandId, lvUnitId);
+        Category lvProductType = vldModel.getProductType();
+        Category lvBrand = vldModel.getBrand();
+        Category lvUnit = vldModel.getUnit();
+
         Product lvProduct = productOpt.get();
         Product productBefore = ObjectUtils.clone(productOpt.get());
 
         //product.setId(productId);
         lvProduct.setProductName(productDTO.getProductName());
-        lvProduct.setProductType(new Category(productDTO.getProductTypeId()));
-        lvProduct.setUnit(new Category(productDTO.getUnitId()));
-        lvProduct.setBrand(new Category(productDTO.getBrandId()));
+        lvProduct.setProductType(lvProductType);
+        lvProduct.setBrand(lvBrand);
+        lvProduct.setUnit(lvUnit);
         lvProduct.setStatus(productDTO.getStatus());
 
         ProductDescription productDescription = lvProduct.getProductDescription();
@@ -182,15 +205,12 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Override
     public String delete(Long id) {
         try {
-            Optional<ProductDTO> productToDelete = this.findById(id);
-            if (productToDelete.isEmpty()) {
-                throw new ResourceNotFoundException("Product not found!");
-            }
-            if (productInUse(id)) {
+            ProductDTO productToDelete = this.findById(id, true);
+            if (productInUse(productToDelete.getId())) {
                 throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
             }
-            mvProductRepository.deleteById(id);
-            systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_D, MasterObject.Product, "Xóa sản phẩm", productToDelete.get().getProductName());
+            mvProductRepository.deleteById(productToDelete.getId());
+            systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_PRD_D, MasterObject.Product, "Xóa sản phẩm", productToDelete.getProductName());
             logger.info("Delete product success! productId={}", id);
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {
@@ -201,6 +221,39 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Override
     public boolean productInUse(Long productId) throws RuntimeException {
         return !mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent().isEmpty();
+    }
+
+    @Override
+    public List<ProductHeld> getProductHeldInUnfulfilledOrder() {
+        List<ProductHeld> productHeldList = new ArrayList<>();
+        List<Order> orderPage = mvOrderRepository.findByOrderStatus(List.of(OrderStatus.PROC, OrderStatus.DLVD));
+        if (orderPage.isEmpty()) {
+            return productHeldList;
+        }
+        Map<Long, ProductHeld> productHeldMap = new HashMap<>();
+        for (Order ord : orderPage) {
+            for (OrderDetail ordDetail : ord.getListOrderDetail()) {
+                ProductDetail lvProductVariant = ordDetail.getProductDetail();
+                Long lvProductVariantId = lvProductVariant.getId();
+
+                ProductHeld productHeldExisted = productHeldMap.get(lvProductVariantId);
+                if (productHeldExisted != null) {
+                    int currentQuantity = productHeldExisted.getQuantity();
+                    productHeldExisted.setQuantity(currentQuantity + ordDetail.getQuantity());
+                } else {
+                    ProductHeld productHeld = ProductHeld.builder()
+                            .productVariantId(lvProductVariantId)
+                            .productName(lvProductVariant.getVariantName())
+                            .orderCode(ord.getCode())
+                            .quantity(ordDetail.getQuantity())
+                            .orderStatus(ord.getOrderStatus())
+                            .build();
+                    productHeldList.add(productHeld);
+                    productHeldMap.put(lvProductVariantId, productHeld);
+                }
+            }
+        }
+        return productHeldList;
     }
 
     private void setImageActiveAndLoadVoucherApply(List<ProductDTO> products) {
@@ -253,5 +306,26 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             p.setTotalQtySell(totalQtySell);
             p.setTotalQtyAvailableSales(totalQtyStorage - totalDefective);
         }
+    }
+
+    private VldModel vldCategory(Long pProductTypeId, Long pBrandId, Long pUnitId) {
+        Category lvProductType = mvCategoryService.findById(pProductTypeId, false);
+        if (lvProductType == null)
+            throw new BadRequestException("Product type invalid!");
+
+        Category lvBrand = mvCategoryService.findById(pBrandId, false);
+        if (lvBrand == null)
+            throw new BadRequestException("Brand invalid!");
+
+        Category lvUnit = mvCategoryService.findById(pUnitId, false);
+        if (lvUnit == null)
+            throw new BadRequestException("Unit invalid!");
+
+        VldModel vldModel = new VldModel();
+        vldModel.setProductType(lvProductType);
+        vldModel.setBrand(lvBrand);
+        vldModel.setUnit(lvUnit);
+
+        return vldModel;
     }
 }

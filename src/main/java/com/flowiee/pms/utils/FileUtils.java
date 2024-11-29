@@ -1,7 +1,9 @@
 package com.flowiee.pms.utils;
 
-import com.flowiee.pms.config.StartUp;
+import com.flowiee.pms.config.Core;
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.utils.constants.FileExtension;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -23,11 +25,11 @@ import java.util.UUID;
 
 public class FileUtils {
     //public static String rootPath = "src/main/resources/static";
-    public static String fileUploadPath = StartUp.getResourceUploadPath() + "/uploads/";
-    public static String initCsvDataPath = StartUp.getResourceUploadPath() + "/data/csv";
-    public static String reportTemplatePath = StartUp.getResourceUploadPath() + "/report";
-    public static String excelTemplatePath = StartUp.getResourceUploadPath() + "/templates/excel";
-    public static Path logoPath = Paths.get(StartUp.getResourceUploadPath() + "/dist/img/FlowieeLogo.png");
+    public static String fileUploadPath = Core.getResourceUploadPath() + "/uploads/";
+    public static String initCsvDataPath = Core.getResourceUploadPath() + "/data/csv";
+    public static String reportTemplatePath = Core.getResourceUploadPath() + "/report";
+    public static String excelTemplatePath = Core.getResourceUploadPath() + "/templates/excel";
+    public static Path logoPath = Paths.get(Core.getResourceUploadPath() + "/dist/img/FlowieeLogo.png");
 
     public static void createCellCombobox(XSSFWorkbook workbook, XSSFSheet sheet, XSSFSheet hsheet, List<String> listValue, int row, int column, String nameName) {
         //Put các tên danh mục vào column trong sheet danh mục ẩn
@@ -103,9 +105,23 @@ public class FileUtils {
     }
 
     public static String getFileUploadPath() {
-        if (StartUp.getResourceUploadPath() == null) {
+        if (Core.getResourceUploadPath() == null) {
             throw new AppException("The uploaded file saving directory is not configured, please try again later!");
         }
-        return StartUp.getResourceUploadPath() + "/uploads/";
+        return Core.getResourceUploadPath() + "/uploads/";
+    }
+
+    public static boolean isAllowUpload(String fileExtension, boolean throwException, String message) {
+        if (ObjectUtils.isNotEmpty(fileExtension)) {
+            for (FileExtension ext : FileExtension.values()) {
+                if (ext.key().equalsIgnoreCase(fileExtension) && ext.isAllowUpload()) {
+                    return true;
+                }
+            }
+        }
+        if (throwException) {
+            throw new AppException(ErrorCode.FileDoesNotAllowUpload, new Object[]{fileExtension}, message, null, null);
+        }
+        return false;
     }
 }

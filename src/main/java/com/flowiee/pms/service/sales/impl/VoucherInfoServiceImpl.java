@@ -3,14 +3,11 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.entity.sales.VoucherInfo;
 import com.flowiee.pms.entity.sales.VoucherTicket;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.exception.*;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
-import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.exception.DataInUseException;
 import com.flowiee.pms.repository.sales.VoucherInfoRepository;
 
 import com.flowiee.pms.service.BaseService;
@@ -79,14 +76,18 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     }
 
     @Override
-    public Optional<VoucherInfoDTO> findById(Long entityId) {
+    public VoucherInfoDTO findById(Long entityId, boolean pThrowException) {
         Optional<VoucherInfo> voucherInfo = mvVoucherInfoRepository.findById(entityId);
         if (voucherInfo.isPresent()) {
             VoucherInfoDTO dto = mvModelMapper.map(voucherInfo.get(), VoucherInfoDTO.class);
             dto.setStatus(genVoucherStatus(dto.getStartTime(), dto.getEndTime()));
-            return Optional.of(dto);
+            return dto;
         }
-        return Optional.empty();
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"voucher info"}, null, null);
+        } else {
+            return null;
+        }
     }
 
     @Transactional
@@ -143,11 +144,9 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
     @Override
     public VoucherInfoDTO update(VoucherInfoDTO voucherInfo, Long voucherId) {
         try {
-            Optional<VoucherInfoDTO> voucherOpt = this.findById(voucherId);
-            if (voucherOpt.isEmpty()) {
-                throw new ResourceNotFoundException("Voucher not found!");
-            }
-            VoucherInfoDTO voucherInfoBefore = ObjectUtils.clone(voucherOpt.get());
+            VoucherInfoDTO voucherOpt = this.findById(voucherId, true);
+
+            VoucherInfoDTO voucherInfoBefore = ObjectUtils.clone(voucherOpt);
             voucherInfo.setId(voucherId);
             VoucherInfo voucherInfoUpdated = mvVoucherInfoRepository.save(voucherInfo);
 
@@ -162,15 +161,13 @@ public class VoucherInfoServiceImpl extends BaseService implements VoucherServic
 
     @Override
     public String delete(Long voucherId) {
-        Optional<VoucherInfoDTO> voucherInfoBefore = this.findById(voucherId);
-        if (voucherInfoBefore.isEmpty()) {
-            throw new BadRequestException("Voucher not found!");
-        }
+        VoucherInfoDTO voucherInfoBefore = this.findById(voucherId, true);
+
         if (!mvVoucherApplyService.findByVoucherId(voucherId).isEmpty()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
         mvVoucherInfoRepository.deleteById(voucherId);
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_VOU_D, MasterObject.VoucherInfo, "Xóa voucher", voucherInfoBefore.get().getTitle());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_VOU_D, MasterObject.VoucherInfo, "Xóa voucher", voucherInfoBefore.getTitle());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 

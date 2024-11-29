@@ -16,4 +16,6 @@ public interface StorageRepository extends JpaRepository<Storage, Long> {
                    "and (:storageId is null or STORAGE_ID = :storageId) " +
                    "order by IS_PRODUCT desc", nativeQuery = true)
     Page<Object[]> findAllItems(@Param("searchText") String searchText, @Param("storageId") Long storageId, Pageable pageable);
+
+    Storage findByCode(String code);
 }

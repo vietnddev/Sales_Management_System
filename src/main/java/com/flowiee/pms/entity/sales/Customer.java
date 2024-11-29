@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import com.flowiee.pms.entity.product.ProductPrice;
+import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.ProductReview;
 import com.flowiee.pms.model.dto.CustomerDTO;
 
@@ -51,7 +51,7 @@ public class Customer extends BaseEntity implements Serializable {
 	String referralSource;
 
 	@Column(name = "black_list")
-	String isBlackList;
+	Boolean isBlackList;
 
 	@Column(name = "black_list_reason")
 	String blackListReason;
@@ -64,6 +64,14 @@ public class Customer extends BaseEntity implements Serializable {
 
 	@Column(name = "outstanding_balance_amount")
 	BigDecimal outstandingBalanceAmount;
+
+	@Column(name = "is_vip")
+	Boolean isVIP;
+
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_customer_id")
+	Category groupCustomer;
 
 	@JsonIgnore
 	@JsonIgnoreProperties("customer")

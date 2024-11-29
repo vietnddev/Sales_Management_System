@@ -22,6 +22,7 @@ import java.io.Serial;
 public class SystemLog extends BaseEntity implements java.io.Serializable {
 	@Serial
 	static final long serialVersionUID = 1L;
+	public static String EMPTY = "-";
 
 	@Column(name = "module", length = 50, nullable = false)
 	String module;

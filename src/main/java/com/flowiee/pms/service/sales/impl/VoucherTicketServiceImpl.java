@@ -3,6 +3,7 @@ package com.flowiee.pms.service.sales.impl;
 import com.flowiee.pms.entity.sales.VoucherTicket;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.model.dto.VoucherTicketDTO;
 import com.flowiee.pms.repository.sales.VoucherTicketRepository;
@@ -49,8 +50,12 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
     }
 
     @Override
-    public Optional<VoucherTicket> findById(Long voucherTicketId) {
-        return mvVoucherTicketRepository.findById(voucherTicketId);
+    public VoucherTicket findById(Long voucherTicketId, boolean pThrowException) {
+        Optional<VoucherTicket> entityOptional = mvVoucherTicketRepository.findById(voucherTicketId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"voucher ticket"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Transactional
@@ -78,9 +83,9 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
 
     @Override
     public String delete(Long ticketId) {
-        Optional<VoucherTicket> voucherTicket = this.findById(ticketId);
-        if (voucherTicket.isEmpty() || voucherTicket.get().isUsed()) {
-            throw new AppException();
+        VoucherTicket voucherTicket = this.findById(ticketId, true);
+        if (voucherTicket.isUsed()) {
+            throw new AppException("Voucher ticket in use!");
         }
         mvVoucherTicketRepository.deleteById(ticketId);
         return MessageCode.DELETE_SUCCESS.getDescription();
@@ -105,11 +110,11 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
             return new VoucherTicketDTO("N");
         }
         VoucherTicketDTO voucherTicketDTO = mvModelMapper.map(voucherTicket, VoucherTicketDTO.class);
-        Optional<VoucherInfoDTO> voucherInfoDTO = mvVoucherService.findById(voucherTicketDTO.getVoucherInfo().getId());
-        if (voucherInfoDTO.isPresent()) {
+        VoucherInfoDTO voucherInfoDTO = mvVoucherService.findById(voucherTicketDTO.getVoucherInfo().getId(), true);
+        if (voucherInfoDTO != null) {
             LocalDateTime currentTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
-            LocalDateTime startTime = voucherInfoDTO.get().getStartTime().withHour(0).withMinute(0).withSecond(0);
-            LocalDateTime endTime = voucherInfoDTO.get().getEndTime().withHour(0).withMinute(0).withSecond(0);
+            LocalDateTime startTime = voucherInfoDTO.getStartTime().withHour(0).withMinute(0).withSecond(0);
+            LocalDateTime endTime = voucherInfoDTO.getEndTime().withHour(0).withMinute(0).withSecond(0);
             if ((currentTime.isAfter(startTime) || currentTime.isEqual(startTime)) && (currentTime.isBefore(endTime) || currentTime.isEqual(endTime))) {
                 voucherTicketDTO.setAvailable("Y");
             } else {
@@ -129,11 +134,8 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
         String statusTicket = "";
         VoucherTicket ticket = mvVoucherTicketRepository.findByCode(code);
         if (ticket != null) {
-            Optional<VoucherInfoDTO> voucherInfo = mvVoucherService.findById(ticket.getId());
-            if (voucherInfo.isEmpty()) {
-                throw new AppException();
-            }
-            statusTicket = voucherInfo.get().isActiveStatus() ? VoucherStatus.A.getLabel() : VoucherStatus.I.getLabel();
+            VoucherInfoDTO voucherInfo = mvVoucherService.findById(ticket.getId(), true);
+            statusTicket = voucherInfo.isActiveStatus() ? VoucherStatus.A.getLabel() : VoucherStatus.I.getLabel();
         } else {
             statusTicket = "Invalid!";
         }

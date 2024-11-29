@@ -15,4 +15,6 @@ public interface ProductVariantService extends BaseCurdService<ProductVariantDTO
     List<ProductVariantTempDTO> findStorageHistory(Long productVariantId);
 
     void updateLowStockThreshold(Long productId, int threshold);
+
+    Page<ProductVariantDTO> getProductsOutOfStock(int pageSize, int pageNum);
 }

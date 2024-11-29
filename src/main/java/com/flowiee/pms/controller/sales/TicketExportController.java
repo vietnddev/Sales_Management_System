@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/stg/ticket-export")
@@ -43,11 +42,8 @@ public class TicketExportController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<TicketExportDTO> findDetail(@PathVariable("id") Long ticketExportId) {
-        Optional<TicketExport> ticketExport = mvTicketExportService.findById(ticketExportId);
-        if (ticketExport.isEmpty()) {
-            throw new BadRequestException("Data does not exists!");
-        }
-        return success(TicketExportDTO.fromTicketExport(ticketExport.get()));
+        TicketExport ticketExport = mvTicketExportService.findById(ticketExportId, true);
+        return success(TicketExportDTO.fromTicketExport(ticketExport));
     }
 
     @Operation(summary = "Create new ticket")
@@ -68,7 +64,7 @@ public class TicketExportController extends BaseController {
     @PutMapping("/update/{id}")
     @PreAuthorize("@vldModuleSales.exportGoods(true)")
     public AppResponse<TicketExportDTO> updateTicketExport(@RequestBody TicketExport ticketExport, @PathVariable("id") Long ticketExportId) {
-        if (ObjectUtils.isEmpty(mvTicketExportService.findById(ticketExportId))) {
+        if (ObjectUtils.isEmpty(mvTicketExportService.findById(ticketExportId, true))) {
             throw new BadRequestException();
         }
         return success(TicketExportDTO.fromTicketExport(mvTicketExportService.update(ticketExport, ticketExportId)));

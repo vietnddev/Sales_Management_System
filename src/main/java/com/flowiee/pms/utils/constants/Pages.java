@@ -8,6 +8,7 @@ public enum Pages {
     SYS_ACCOUNT_DETAIL("account-detail",                MODULE.SYSTEM),
     SYS_GR_ACC("group-account",                         MODULE.SYSTEM),
     SYS_GR_ACC_DETAIL("group-account-detail",           MODULE.SYSTEM),
+    SYS_BRANCH("branch",                                MODULE.SYSTEM),
     SYS_LOG("log",                                      MODULE.SYSTEM),
     SYS_ROLE("role",                                    MODULE.SYSTEM),
     SYS_CONFIG("config",                                MODULE.SYSTEM),
@@ -21,6 +22,8 @@ public enum Pages {
     PRO_PRODUCT("product",                              MODULE.PRODUCT),
     PRO_PRODUCT_INFO("product-info",                    MODULE.PRODUCT),
     PRO_PRODUCT_VARIANT("product-variant",              MODULE.PRODUCT),
+    PRO_PRODUCT_DAMAGED("product-damaged",              MODULE.PRODUCT),
+    PRO_PRODUCT_HELD("product-held",                    MODULE.PRODUCT),
     PRO_VOUCHER("vouchers",                             MODULE.PRODUCT),
     PRO_VOUCHER_DETAIL("voucher-detail",                MODULE.PRODUCT),
     PRO_ORDER("order",                                  MODULE.PRODUCT),
@@ -34,9 +37,11 @@ public enum Pages {
     PRO_COMBO("product-combo",                          MODULE.PRODUCT),
     PRO_COMBO_DETAIL("product-combo-detail",            MODULE.PRODUCT),
 
-    SLS_LEDGER("general-ledger",                        MODULE.SALES),
-    SLS_LEDGER_TRANS("ledger-trans",                    MODULE.SALES),
-    SLS_LEDGER_TRANS_DETAIL("ledger-trans-detail",      MODULE.SALES),
+    SLS_LEDGER("ledger/general-ledger",                                  MODULE.SALES),
+    SLS_LEDGER_TRANS("ledger/ledger-trans",                              MODULE.SALES),
+    SLS_LEDGER_TRANS_DETAIL("ledger/ledger-trans-detail",                MODULE.SALES),
+    SLS_LOYALTY_PROGRAM("loyalty-program/loyalty-program",               MODULE.SALES),
+    SLS_LOYALTY_PROGRAM_DETAIL("loyalty-program/loyalty-program-detail", MODULE.SALES),
 
     STG_MATERIAL("material",                            MODULE.STORAGE),
     STG_TICKET_IMPORT("ticket-import",                  MODULE.STORAGE),
@@ -67,7 +72,7 @@ public enum Pages {
         } else if (module.equals(MODULE.PRODUCT)) {
             basePath = "/pages/product";
         } else if (module.equals(MODULE.SALES)) {
-            basePath = "/pages/sales/ledger";
+            basePath = "/pages/sales";
         } else if (module.equals(MODULE.STORAGE)) {
             basePath = "/pages/storage";
         }

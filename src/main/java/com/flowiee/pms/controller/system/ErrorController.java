@@ -23,7 +23,7 @@ public class ErrorController extends BaseController {
 
     @GetMapping("/404")
     public ModelAndView notfoundException() {
-        ErrorModel error = new ErrorModel(HttpStatus.FORBIDDEN.value(), ErrorCode.ERROR_NOTFOUND.getDescription());
+        ErrorModel error = new ErrorModel(HttpStatus.FORBIDDEN.value(), ErrorCode.RESOURCE_NOT_FOUND.getDescription());
         ModelAndView modelAndView = new ModelAndView(Pages.SYS_ERROR.getTemplate());
         modelAndView.addObject("error", error);
         return baseView(modelAndView);

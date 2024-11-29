@@ -2,8 +2,6 @@ package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.entity.sales.LoyaltyProgram;
-import com.flowiee.pms.exception.AppException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.service.sales.LoyaltyProgramService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/loyalty-programs")
@@ -36,11 +33,7 @@ public class LoyaltyProgramController extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public AppResponse<LoyaltyProgram> getProgramById(@PathVariable Long id) {
-        Optional<LoyaltyProgram> lvLoyaltyProgramOpt = loyaltyProgramService.findById(id);
-        if (lvLoyaltyProgramOpt.isEmpty()) {
-            throw new ResourceNotFoundException("Loyalty program not found!");
-        }
-        return success(lvLoyaltyProgramOpt.get());
+        return success(loyaltyProgramService.findById(id, true));
     }
 
     @PostMapping

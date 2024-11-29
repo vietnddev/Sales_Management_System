@@ -3,6 +3,7 @@ package com.flowiee.pms.service.storage.impl;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.StorageItems;
@@ -86,7 +87,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
     }
 
     @Override
-    public Optional<StorageDTO> findById(Long storageId) {
+    public StorageDTO findById(Long storageId, boolean pThrowException) {
         Optional<Storage> storageOptional = mvStorageRepository.findById(storageId);
         if (storageOptional.isPresent()) {
             List<StorageItems> storageItemsList = this.findStorageItems(-1, -1, storageId, null).getContent();
@@ -94,14 +95,23 @@ public class StorageServiceImpl extends BaseService implements StorageService {
             storage.setListStorageItems(storageItemsList);
             storage.setTotalItems(storageItemsList.size());
             storage.setTotalInventoryValue(BigDecimal.ZERO);
-            return Optional.of(storage);
+            return storage;
         }
-        return Optional.empty();
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"storage"}, null, null);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public StorageDTO save(StorageDTO inputStorageDTO) {
         Storage storage = StorageConvert.convertToEntity(inputStorageDTO);
+        String lvCode = storage.getCode();
+
+        if (mvStorageRepository.findByCode(lvCode) != null)
+            throw new BadRequestException(String.format("Storage code %s existed!", lvCode));
+
         Storage storageSaved = mvStorageRepository.save(storage);
         return StorageDTO.convertToDTO(storageSaved);
     }
@@ -131,15 +141,12 @@ public class StorageServiceImpl extends BaseService implements StorageService {
     @Override
     public String delete(Long storageId) {
         try {
-            Optional<StorageDTO> storage = this.findById(storageId);
-            if (storage.isEmpty()) {
-                throw new BadRequestException("Storage not found");
-            }
-            if ("Y".equals(storage.get().getStatus())) {
+            StorageDTO storage = this.findById(storageId, true);
+            if ("Y".equals(storage.getStatus())) {
                 return "This storage is in use!";
             }
             mvStorageRepository.deleteById(storageId);
-            systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_STORAGE, MasterObject.Storage, "Xóa kho", storage.get().getName());
+            systemLogService.writeLogDelete(MODULE.STORAGE, ACTION.STG_STORAGE, MasterObject.Storage, "Xóa kho", storage.getName());
             logger.info("Delete storage success! storageId={}", storageId);
             return MessageCode.DELETE_SUCCESS.getDescription();
         } catch (RuntimeException ex) {

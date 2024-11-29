@@ -15,6 +15,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,6 +63,15 @@ public class Account extends BaseEntity implements Serializable {
 	@Column(name = "role")
 	String role;
 
+	@Column(name = "is_fulltime_staff")
+	Boolean isPartTimeStaff;
+
+	@Column(name = "remaining_leave_days")
+	Integer remainingLeaveDays;
+
+	@Column(name = "line_manager_id")
+	Long lineManagerId;
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_account")
@@ -74,6 +84,9 @@ public class Account extends BaseEntity implements Serializable {
 
 	@Column(name = "reset_tokens", unique = true)
 	String resetTokens;
+
+	@Column(name = "reset_token_date")
+	LocalDateTime resetTokenDate;
 
 	@Column(name = "password_expire_date")
 	LocalDate passwordExpireDate;
@@ -103,6 +116,10 @@ public class Account extends BaseEntity implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
 	List<SystemLog> listLog;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
+	List<LeaveApplication> listLeaveApplication;
 
 	@Transient
 	String ip;
@@ -140,6 +157,11 @@ public class Account extends BaseEntity implements Serializable {
 
 	public boolean isPasswordExpired() {
 		return passwordExpireDate != null && passwordExpireDate.isBefore(LocalDate.now());
+	}
+
+	public boolean isResetTokenExpired(int pValidityPeriod) {
+		Assert.notNull(resetTokenDate, "ResetTokenDate not null!");
+		return resetTokenDate.plusMinutes(pValidityPeriod).isBefore(LocalDateTime.now());
 	}
 
 	public boolean isNormal() {

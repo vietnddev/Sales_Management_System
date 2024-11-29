@@ -15,11 +15,13 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -110,6 +112,15 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @Column(name = "low_stock_threshold")
     Integer lowStockThreshold;
 
+    @Column(name = "out_of_stock_date")
+    LocalDateTime outOfStockDate;
+
+    @Column(name = "manufacturing_date")
+    LocalDate manufacturingDate;
+
+    @Column(name = "expiry_date")
+    LocalDate expiryDate;
+
     @Column(name = "note")
     String note;//will be remove
 
@@ -151,6 +162,10 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
     List<ProductPrice> listProductVariantPrice;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+    List<ProductDamaged> productDamagedList;
 
     @Transient
     Integer availableSalesQty;
@@ -205,6 +220,10 @@ public class ProductDetail extends BaseEntity implements Serializable {
             return null;
         }
         return null;
+    }
+
+    public boolean isExpiredDate() {
+        return expiryDate != null && expiryDate.isBefore(LocalDate.now());
     }
 
 	@Override

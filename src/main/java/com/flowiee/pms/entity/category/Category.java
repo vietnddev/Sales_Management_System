@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.sales.*;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.Material;
+import com.flowiee.pms.entity.system.LeaveApplication;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -124,6 +125,14 @@ public class Category extends BaseEntity implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "tranContent", fetch = FetchType.LAZY)
 	List<LedgerTransaction> listLedgerTransByTranType;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "groupCustomer", fetch = FetchType.LAZY)
+	List<Customer> listCustomerByGroupCustomer;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "leaveType", fetch = FetchType.LAZY)
+	List<LeaveApplication> listLeaveApplication;
 
 	@Transient
 	Integer totalSubRecords;

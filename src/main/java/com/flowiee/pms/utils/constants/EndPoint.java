@@ -31,6 +31,7 @@ public enum EndPoint {
     URL_SYS_LOG("/sys/log", "SIDEBAR", true),
     URL_SYS_GR_ACCOUNT("/sys/group-account", "SIDEBAR", true),
     URL_SYS_ACCOUNT("/sys/tai-khoan", "SIDEBAR", true),
+    URL_SYS_BRANCH("/sys/branch", "SIDEBAR", true),
     URL_STG_STORAGE("/storage", "SIDEBAR", true),
 
     URL_STG_MATERIAL_IMPORT("/stg/material/import", "MAIN", true),

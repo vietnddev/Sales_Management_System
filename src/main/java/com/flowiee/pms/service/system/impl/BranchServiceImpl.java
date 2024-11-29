@@ -1,6 +1,7 @@
 package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.Branch;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.BranchRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.BranchService;
@@ -25,8 +26,12 @@ public class BranchServiceImpl extends BaseService implements BranchService {
     }
 
     @Override
-    public Optional<Branch> findById(Long branchId) {
-        return mvBranchRepository.findById(branchId);
+    public Branch findById(Long branchId, boolean pThrowException) {
+        Optional<Branch> entityOptional = mvBranchRepository.findById(branchId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"branch"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.Material;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
@@ -48,8 +49,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     }
 
     @Override
-    public Optional<Material> findById(Long entityId) {
-        return mvMaterialRepository.findById(entityId);
+    public Material findById(Long entityId, boolean pThrowException) {
+        Optional<Material> entityOptional = mvMaterialRepository.findById(entityId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"material"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -61,14 +66,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
     @Override
     public Material update(Material entity, Long materialId) {
-        if (entity == null || materialId == null || materialId <= 0) {
-            throw new BadRequestException();
-        }
-        Optional<Material> materialOptional = this.findById(materialId);
-        if (materialOptional.isEmpty()) {
-            throw new BadRequestException();
-        }
-        Material materialBefore = ObjectUtils.clone(materialOptional.get());
+        Material materialOptional = this.findById(materialId, true);
+
+        Material materialBefore = ObjectUtils.clone(materialOptional);
         entity.setId(materialId);
         Material materialUpdated = mvMaterialRepository.save(entity);
 
@@ -83,15 +83,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
     @Override
     public String delete(Long entityId) {
-        Optional<Material> materialToDelete = this.findById(entityId);
-        if (materialToDelete.isEmpty()) {
-            throw new BadRequestException("Material not found!");
-        }
-        mvMaterialRepository.deleteById(entityId);
+        Material materialToDelete = this.findById(entityId, true);
+
+        mvMaterialRepository.deleteById(materialToDelete.getId());
 
         String logTitle = "Xóa nguyên vật liệu";
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, "Xóa nguyên vật liệu", materialToDelete.get().getName());
-        logger.info("{}: {}", logTitle, materialToDelete.get().getName());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.STG_MAT_U, MasterObject.Material, "Xóa nguyên vật liệu", materialToDelete.getName());
+        logger.info("{}: {}", logTitle, materialToDelete.getName());
 
         return MessageCode.DELETE_SUCCESS.getDescription();
     }

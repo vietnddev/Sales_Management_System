@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.product;
 
+import com.flowiee.pms.model.ProductHeld;
 import com.flowiee.pms.service.BaseCurdService;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.entity.product.Product;
@@ -26,4 +27,6 @@ public interface ProductInfoService extends BaseCurdService<ProductDTO> {
     ProductDTO saveFruit(ProductDTO productDTO);
 
     boolean productInUse(Long productId);
+
+    List<ProductHeld> getProductHeldInUnfulfilledOrder();
 }

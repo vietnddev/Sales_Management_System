@@ -35,6 +35,7 @@ public class RestControllerAspect {
     private final Logger mvLogger = LoggerFactory.getLogger(getClass());
     private final EventLogRepository mvEventLogRepository;
     private ThreadLocal<RequestContext> mvRequestContext = ThreadLocal.withInitial(RequestContext::new); // Tạo ThreadLocal để lưu thông tin của request
+    private final String endPointLoginPage = "/sys/login";
 
     @Getter
     @Setter
@@ -58,6 +59,9 @@ public class RestControllerAspect {
         //Save request info into db
         Signature signature = joinPoint.getSignature();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String lvUsername = isLoginPage(attributes) ? null : CommonUtils.getUserPrincipal().getUsername();
+        String lvIpAddress = isLoginPage(attributes) ? null : CommonUtils.getUserPrincipal().getIp();
+
         EventLog eventLog = mvEventLogRepository.save(EventLog.builder()
                 .httpMethod(getHttpMethod(attributes))// Lấy tên HTTP method (GET, POST, etc.)
                 .processClass(signature.getDeclaringTypeName())
@@ -65,17 +69,17 @@ public class RestControllerAspect {
                 .requestUrl(getRequestUrl(attributes))
                 .requestParam(getRequestParam(attributes))
                 .requestBody(getRequestBody(joinPoint))
-                .createdBy(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getUsername())
+                .createdBy(lvUsername)
                 .createdTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(startTime), ZoneId.systemDefault()))
-                .ipAddress(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getIp())
+                .ipAddress(lvIpAddress)
                 .application(CommonUtils.productID)
                 .build());
 
         RequestContext lvRequestContext = mvRequestContext.get();
         lvRequestContext.setRequestId(eventLog.getRequestId());
         lvRequestContext.setStartTime(startTime);
-        lvRequestContext.setUsername(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getUsername());
-        lvRequestContext.setIp(getRequestUrl(attributes).contains("/sys/login") ? null : CommonUtils.getUserPrincipal().getIp());
+        lvRequestContext.setUsername(lvUsername);
+        lvRequestContext.setIp(lvIpAddress);
         mvRequestContext.set(lvRequestContext);
     }
 
@@ -147,5 +151,9 @@ public class RestControllerAspect {
             }
         }
         return null;
+    }
+
+    private boolean isLoginPage(ServletRequestAttributes attributes) {
+        return getRequestUrl(attributes).contains(endPointLoginPage);
     }
 }

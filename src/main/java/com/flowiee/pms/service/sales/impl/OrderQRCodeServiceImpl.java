@@ -40,7 +40,7 @@ public class OrderQRCodeServiceImpl extends BaseService implements OrderQRCodeSe
                     .originalName(imageQRCodeName)
                     .customizeName(imageQRCodeName)
                     .storageName(currentTime + "_" + imageQRCodeName)
-                    .extension(FileExtension.PNG.getLabel())
+                    .extension(FileExtension.PNG.getKey())
                     .directoryPath(CommonUtils.getPathDirectory(MODULE.PRODUCT).substring(CommonUtils.getPathDirectory(MODULE.PRODUCT).indexOf("uploads")))
                     .order(new Order(orderId))
                     .account(new Account(CommonUtils.getUserPrincipal().getId()))

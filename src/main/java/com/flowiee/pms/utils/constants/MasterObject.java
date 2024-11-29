@@ -1,6 +1,7 @@
 package com.flowiee.pms.utils.constants;
 
 public enum MasterObject {
+    Master,
     Order,
     OrderDetail,
     Material,

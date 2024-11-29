@@ -41,8 +41,8 @@ public class ProductImageController extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public AppResponse<FileStorage> uploadImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("productId") Long productId) {
         try {
-            if (productId <= 0 || mvProductInfoService.findById(productId).isEmpty()) {
-                throw new BadRequestException();
+            if (productId <= 0 || mvProductInfoService.findById(productId, true) == null) {
+                //throw new BadRequestException();
             }
             if (file.isEmpty()) {
                 throw new FileNotFoundException();
@@ -60,7 +60,7 @@ public class ProductImageController extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public AppResponse<FileStorage> uploadImageOfProductVariant(@RequestParam("file") MultipartFile file, @PathVariable("productId") Long productVariantId) {
         try {
-            if (productVariantId <= 0 || mvProductVariantService.findById(productVariantId).isEmpty()) {
+            if (productVariantId <= 0 || mvProductVariantService.findById(productVariantId, true) == null) {
                 throw new BadRequestException();
             }
             if (file.isEmpty()) {
@@ -93,7 +93,7 @@ public class ProductImageController extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public AppResponse<FileStorage> changeImageOfProduct(@RequestParam("file") MultipartFile file, @PathVariable("imageId") Long imageId) {
         try {
-            if (imageId <= 0 || mvFileStorageService.findById(imageId).isEmpty()) {
+            if (imageId <= 0 || mvFileStorageService.findById(imageId, true) == null) {
                 throw new BadRequestException("Image not found");
             }
             if (file.isEmpty()) {
@@ -123,7 +123,7 @@ public class ProductImageController extends BaseController {
     @PreAuthorize("@vldModuleProduct.updateImage(true)")
     public AppResponse<FileStorage> changeFile(@RequestParam("file") MultipartFile fileUpload, @PathVariable("imageId") Long imageId) {
         try {
-            if (imageId <= 0 || mvFileStorageService.findById(imageId).isEmpty()) {
+            if (imageId <= 0 || mvFileStorageService.findById(imageId, true) == null) {
                 throw new BadRequestException();
             }
             if (fileUpload.isEmpty()) {

@@ -8,26 +8,26 @@ import org.springframework.stereotype.Component;
 public class VldModuleCategory extends BaseAuthorize implements IVldModuleCategory {
     @Override
     public boolean readCategory(boolean throwException) {
-        return super.isAuthorized(ACTION.CTG_R.name(), throwException);
+        return super.isAuthorized(ACTION.CTG_R, throwException);
     }
 
     @Override
     public boolean insertCategory(boolean throwException) {
-        return super.isAuthorized(ACTION.CTG_C.name(), throwException);
+        return super.isAuthorized(ACTION.CTG_C, throwException);
     }
 
     @Override
     public boolean updateCategory(boolean throwException) {
-        return super.isAuthorized(ACTION.CTG_U.name(), throwException);
+        return super.isAuthorized(ACTION.CTG_U, throwException);
     }
 
     @Override
     public boolean deleteCategory(boolean throwException) {
-        return super.isAuthorized(ACTION.CTG_D.name(), throwException);
+        return super.isAuthorized(ACTION.CTG_D, throwException);
     }
 
     @Override
     public boolean importCategory(boolean throwException) {
-        return super.isAuthorized(ACTION.CTG_I.name(), throwException);
+        return super.isAuthorized(ACTION.CTG_I, throwException);
     }
 }

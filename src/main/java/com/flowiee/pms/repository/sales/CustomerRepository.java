@@ -39,4 +39,10 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Modifying
     @Query("update Customer c set c.bonusPoints = (c.bonusPoints + :bnsPoints) where c.id = :customerId")
     void updateBonusPoint(@Param("customerId") Long customerId, @Param("bnsPoints") int bonusPoints);
+
+    @Query("from Customer c where c.isVIP = true")
+    Page<Customer> findVIPCustomers(Pageable pageable);
+
+    @Query("from Customer c where c.isBlackList = true")
+    Page<Customer> findBlackListCustomers(Pageable pageable);
 }

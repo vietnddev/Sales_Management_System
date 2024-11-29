@@ -14,6 +14,9 @@ import java.io.Serializable;
 @Setter
 public class MailMedia implements Serializable {
     public static String EMAIL_ADDRESS_SPERATOR = ";";
+    public static String SUBJECT = "emailSubject";
+    public static String DESTINATION = "emailDestination";
+    public static String ROWs = "ROWs";
     public static int P_HIGH = 0;
     public static int P_MEDIUM = 1;
     public static int P_LOW = 2;

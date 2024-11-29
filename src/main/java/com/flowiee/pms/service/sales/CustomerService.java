@@ -11,9 +11,11 @@ import java.util.List;
 public interface CustomerService extends BaseCurdService<CustomerDTO> {
     Page<CustomerDTO> findAll(int pageSize, int pageNum, String name, String sex, Date birthday, String phone, String email, String address);
 
-    CustomerDTO findById(Long pCustomerId, boolean throwException);
-
     List<CustomerDTO> findCustomerNewInMonth();
 
     List<PurchaseHistory> findPurchaseHistory(Long customerId, Integer year, Integer month);
+
+    Page<CustomerDTO> getVIPCustomers(int pageSize, int pageNum);
+
+    Page<CustomerDTO> getBlackListCustomers(int pageSize, int pageNum);
 }

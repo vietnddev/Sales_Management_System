@@ -2,7 +2,7 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.entity.product.ProductCombo;
 import com.flowiee.pms.entity.product.ProductComboApply;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.product.ProductComboApplyRepository;
 import com.flowiee.pms.service.product.ProductVariantService;
@@ -59,14 +59,18 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
     }
 
     @Override
-    public Optional<ProductCombo> findById(Long comboId) {
+    public ProductCombo findById(Long comboId, boolean pThrowException) {
         Optional<ProductCombo> productCombo = mvProductComboRepository.findById(comboId);
         if (productCombo.isPresent()) {
             List<ProductCombo> productComboList = List.of(productCombo.get());
             setProductIncludes(productComboList);
-            productCombo = Optional.of(productComboList.get(0));
+            return productComboList.get(0);
         }
-        return productCombo;
+        if (pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"product combo"}, null, null);
+        } else {
+            return productCombo.orElse(null);
+        }
     }
 
     @Transactional
@@ -89,11 +93,9 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
 
     @Override
     public ProductCombo update(ProductCombo productCombo, Long comboId) {
-        Optional<ProductCombo> optional = this.findById(comboId);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("Combo not found");
-        }
-        ProductCombo comboBeforeChange = ObjectUtils.clone(optional.get());
+        ProductCombo optional = this.findById(comboId, true);
+
+        ProductCombo comboBeforeChange = ObjectUtils.clone(optional);
 
         productCombo.setId(comboId);
         ProductCombo comboUpdated = mvProductComboRepository.save(productCombo);
@@ -106,12 +108,9 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
 
     @Override
     public String delete(Long comboId) {
-        Optional<ProductCombo> comboBefore = this.findById(comboId);
-        if (comboBefore.isEmpty()) {
-            throw new ResourceNotFoundException("Product combo not found!");
-        }
-        mvProductComboRepository.deleteById(comboId);
-        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Cập nhật combo sản phẩm", comboBefore.get().getComboName());
+        ProductCombo comboBefore = this.findById(comboId, true);
+        mvProductComboRepository.deleteById(comboBefore.getId());
+        systemLogService.writeLogDelete(MODULE.PRODUCT, ACTION.PRO_CBO_C, MasterObject.ProductCombo, "Cập nhật combo sản phẩm", comboBefore.getComboName());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
@@ -119,9 +118,9 @@ public class ProductComboServiceImpl extends BaseService implements ProductCombo
         for (ProductCombo productCombo : productComboPage) {
             List<ProductVariantDTO> applicableProducts = new ArrayList<>();
             for (ProductComboApply applicableProduct : mvProductComboApplyRepository.findByComboId(productCombo.getId())) {
-                Optional<ProductVariantDTO> productVariantDTO = mvProductVariantService.findById(applicableProduct.getProductVariantId());
-                if (productVariantDTO.isPresent()) {
-                    applicableProducts.add(productVariantDTO.get());
+                ProductVariantDTO productVariantDTO = mvProductVariantService.findById(applicableProduct.getProductVariantId(), false);
+                if (productVariantDTO != null) {
+                    applicableProducts.add(productVariantDTO);
                 }
             }
             productCombo.setApplicableProducts(applicableProducts);

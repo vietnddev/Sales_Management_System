@@ -1,8 +1,8 @@
 package com.flowiee.pms.service.sales.impl;
 
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.dto.VoucherApplyDTO;
 import com.flowiee.pms.entity.sales.VoucherApply;
-import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.sales.VoucherApplyRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
@@ -44,8 +44,12 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public Optional<VoucherApply> findById(Long id) {
-        return mvVoucherApplyRepository.findById(id);
+    public VoucherApply findById(Long id, boolean pThrowException) {
+        Optional<VoucherApply> entityOptional = mvVoucherApplyRepository.findById(id);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"voucher apply"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Override
@@ -54,19 +58,18 @@ public class VoucherApplyServiceImpl extends BaseService implements VoucherApply
     }
 
     @Override
-    public VoucherApply update(VoucherApply voucherApply, Long id) {
-        if (this.findById(id).isEmpty()) {
-            throw new BadRequestException();
-        }
-        voucherApply.setId(id);
+    public VoucherApply update(VoucherApply pVoucherApply, Long id) {
+        VoucherApply voucherApply = this.findById(id, true);
+        //voucherApply.set
+        //voucherApply.set
+        //voucherApply.set
         return mvVoucherApplyRepository.save(voucherApply);
     }
 
     @Override
     public String delete(Long entityId) {
-        if (this.findById(entityId).isEmpty()) {
-            mvVoucherApplyRepository.deleteById(entityId);
-        }
+        VoucherApply voucherApply = this.findById(entityId, true);
+        mvVoucherApplyRepository.deleteById(voucherApply.getId());
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 

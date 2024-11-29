@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
@@ -64,8 +65,12 @@ public class CartServiceImpl extends BaseService implements CartService {
     }
 
     @Override
-    public Optional<OrderCart> findById(Long id) {
-        return mvCartRepository.findById(id);
+    public OrderCart findById(Long id, boolean pThrowException) {
+        Optional<OrderCart> optionalCart = mvCartRepository.findById(id);
+        if (optionalCart.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"cart"}, null, null);
+        }
+        return optionalCart.orElse(null);
     }
 
     @Override
@@ -78,7 +83,7 @@ public class CartServiceImpl extends BaseService implements CartService {
 
     @Override
     public OrderCart update(OrderCart cart, Long cartId) {
-        if (this.findById(cartId).isEmpty()) {
+        if (this.findById(cartId, true) == null) {
             throw new BadRequestException();
         }
         cart.setId(cartId);
@@ -87,7 +92,7 @@ public class CartServiceImpl extends BaseService implements CartService {
 
     @Override
     public String delete(Long cartId) {
-        if (this.findById(cartId).isEmpty()) {
+        if (this.findById(cartId, true) == null) {
             throw new BadRequestException();
         }
         mvCartRepository.deleteById(cartId);
@@ -109,25 +114,28 @@ public class CartServiceImpl extends BaseService implements CartService {
     @Transactional
     @Override
     public void resetCart(Long cartId) {
-        Optional<OrderCart> cartOptional = this.findById(cartId);
-        cartOptional.ifPresent(orderCart -> mvCartItemsRepository.deleteAllItems(orderCart.getId()));
+        OrderCart cart = this.findById(cartId, true);
+        mvCartItemsRepository.deleteAllItems(cart.getId());
     }
 
     @Override
     public void addItemsToCart(Long cartId, String[] productVariantIds) {
         List<String> listProductVariantId = Arrays.stream(productVariantIds).toList();
         for (String productVariantId : listProductVariantId) {
-            Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(Long.parseLong(productVariantId));
-            if (productVariant.isEmpty()) {
+            ProductVariantDTO productVariant = mvProductVariantService.findById(Long.parseLong(productVariantId), false);
+            if (productVariant == null) {
                 continue;
             }
-            if (this.isItemExistsInCart(cartId, productVariant.get().getId())) {
-                Items items = mvCartItemsService.findItemByCartAndProductVariant(cartId, productVariant.get().getId());
+            if (productVariant.getAvailableSalesQty() == 0) {
+                throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productVariant.getVariantName()}, null, getClass(), null);
+            }
+            if (this.isItemExistsInCart(cartId, productVariant.getId())) {
+                Items items = mvCartItemsService.findItemByCartAndProductVariant(cartId, productVariant.getId());
                 mvCartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
             } else {
-                ProductPrice productVariantPrice = productVariant.get().getVariantPrice();//mvProductPriceRepository.findPricePresent(null, Long.parseLong(productVariantId));
+                ProductPrice productVariantPrice = productVariant.getVariantPrice();//mvProductPriceRepository.findPricePresent(null, Long.parseLong(productVariantId));
                 if (productVariantPrice == null) {
-                    throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productVariant.get().getVariantName()));
+                    throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productVariant.getVariantName()));
                 }
                 BigDecimal lvRetailPrice = productVariantPrice.getRetailPrice();
                 BigDecimal lvRetailPriceDiscount = productVariantPrice.getRetailPriceDiscount();
@@ -148,17 +156,13 @@ public class CartServiceImpl extends BaseService implements CartService {
 
     @Override
     public void updateItemsOfCart(Items itemToUpdate, Long itemId) {
-        Optional<Items> itemOptional = mvCartItemsService.findById(itemId);
-        if (itemOptional.isEmpty()) {
-            throw new BadRequestException("Item not found!");
-        }
-        Items item = itemOptional.get();
+        Items item = mvCartItemsService.findById(itemId, true);
         if (itemToUpdate.getQuantity() <= 0) {
             mvCartItemsService.delete(item.getId());
         } else {
             ProductDetail productVariant = item.getProductDetail();
             if (itemToUpdate.getQuantity() > productVariant.getAvailableSalesQty()) {
-                throw new BadRequestException("This item's quantity is over available quantity!");
+                throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productVariant.getVariantName()}, null, getClass(), null);
             }
             ProductPrice productVariantPrice = productVariant.getVariantPrice();//mvProductPriceRepository.findPricePresent(null, productVariant.getId());
             String lvPriceType = itemToUpdate.getPriceType();

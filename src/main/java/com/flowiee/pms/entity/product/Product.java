@@ -6,7 +6,6 @@ import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.FileStorage;
-import com.flowiee.pms.utils.constants.PID;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
@@ -106,6 +105,10 @@ public class Product extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "productBase", fetch = FetchType.LAZY)
     List<ProductPrice> listProductBasePrice;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    List<ProductDamaged> productDamagedList;
 
     public Product(long id) {
         super.id = id;

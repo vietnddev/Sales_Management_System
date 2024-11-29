@@ -1,23 +1,24 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.config.StartUp;
+import com.flowiee.pms.config.Core;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.system.FileStorageService;
 
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,16 +43,20 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     }
 
     @Override
-    public Optional<FileStorage> findById(Long fileId) {
-        return mvFileRepository.findById(fileId);
+    public FileStorage findById(Long fileId, boolean pThrowException) {
+        Optional<FileStorage> entityOptional = mvFileRepository.findById(fileId);
+        if (entityOptional.isEmpty() && pThrowException) {
+            throw new EntityNotFoundException(new Object[] {"file model"}, null, null);
+        }
+        return entityOptional.orElse(null);
     }
 
     @Transactional
     @Override
     public FileStorage save(FileStorage fileStorage) {
-        FileStorage fileStorageSaved = mvFileRepository.save(fileStorage);
-
+        FileUtils.isAllowUpload(fileStorage.getExtension(), true, null);
         vldResourceUploadPath(true);
+        FileStorage fileStorageSaved = mvFileRepository.save(fileStorage);
         Path pathDest = Paths.get(CommonUtils.getPathDirectory(fileStorageSaved.getModule().toUpperCase()) + File.separator + fileStorageSaved.getStorageName());
         try {
             saveFileAttach(fileStorage.getFileAttach(), pathDest);
@@ -64,7 +69,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
 
     @Override
     public FileStorage update(FileStorage entity, Long entityId) {
-        return null;
+        throw new AppException("Method does not support!");
     }
 
     @Override
@@ -89,7 +94,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
             throw new BadRequestException("File not found!");
         }
         mvFileRepository.deleteById(fileId);
-        File file = new File(StartUp.getResourceUploadPath() + "/" + fileStorage.get().getDirectoryPath() + "/" + fileStorage.get().getStorageName());
+        File file = new File(Core.getResourceUploadPath() + "/" + fileStorage.get().getDirectoryPath() + "/" + fileStorage.get().getStorageName());
         if (file.exists() && file.delete()) {
             return MessageCode.DELETE_SUCCESS.getDescription();
         }
@@ -97,10 +102,10 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     }
 
     private boolean vldResourceUploadPath(boolean throwException) {
-        if (StartUp.getResourceUploadPath() == null) {
+        if (Core.getResourceUploadPath() == null) {
             SystemConfig resourceUploadPathConfig = mvConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
             if (isConfigAvailable(resourceUploadPathConfig)) {
-                StartUp.mvResourceUploadPath = resourceUploadPathConfig.getValue();
+                Core.mvResourceUploadPath = resourceUploadPathConfig.getValue();
                 return true;
             } else {
                 if (throwException) {

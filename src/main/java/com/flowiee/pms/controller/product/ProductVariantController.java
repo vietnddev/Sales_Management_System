@@ -18,13 +18,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/product")
@@ -54,11 +53,11 @@ public class ProductVariantController extends BaseController {
     @GetMapping("/variant/{id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Long productVariantId) {
-        Optional<ProductVariantDTO> productVariant = mvProductVariantService.findById(productVariantId);
-        if (productVariant.isEmpty()) {
+        ProductVariantDTO productVariant = mvProductVariantService.findById(productVariantId, true);
+        if (productVariant == null) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
         }
-        return success(productVariant.get());
+        return success(productVariant);
     }
 
     @Operation(summary = "Create product variant")
@@ -76,7 +75,7 @@ public class ProductVariantController extends BaseController {
     @PutMapping("/variant/update/{id}")
     @PreAuthorize("@vldModuleProduct.updateProduct(true)")
     public AppResponse<ProductDetail> updateProductVariant(@RequestBody ProductVariantDTO productVariant, @PathVariable("id") Long productVariantId) {
-        if (mvProductVariantService.findById(productVariantId).isEmpty()) {
+        if (mvProductVariantService.findById(productVariantId, true) == null) {
             throw new ResourceNotFoundException("Product variant not found!");
         }
         return success(mvProductVariantService.update(productVariant, productVariantId));
@@ -93,7 +92,7 @@ public class ProductVariantController extends BaseController {
     @GetMapping(value = "/variant/price/history/{Id}")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductHistory>> getHistoryPriceOfProductDetail(@PathVariable("Id") Long productVariantId) {
-        if (ObjectUtils.isEmpty(mvProductVariantService.findById(productVariantId))) {
+        if (mvProductVariantService.findById(productVariantId, true) == null) {
             throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product history"));
         }
         return success(mvProductHistoryService.findPriceChange(productVariantId));
@@ -106,7 +105,7 @@ public class ProductVariantController extends BaseController {
                                            @RequestParam(value = "originalPrice", required = false) BigDecimal originalPrice,
                                            @RequestParam(value = "discountPrice", required = false) BigDecimal discountPrice) {
         try {
-            if (mvProductVariantService.findById(productVariantId).isEmpty()) {
+            if (mvProductVariantService.findById(productVariantId, true) == null) {
                 throw new BadRequestException();
             }
             return success(mvProductPriceService.updateProductPrice(productVariantId, originalPrice, discountPrice));
@@ -138,5 +137,14 @@ public class ProductVariantController extends BaseController {
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
+    }
+
+    @Operation(summary = "Get list of product out of stock")
+    @GetMapping("/variant/out-of-stock")
+    @PreAuthorize("@vldModuleProduct.readProduct(true)")
+    public AppResponse<List<ProductVariantDTO>> getProductsOutOfStock(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                                      @RequestParam(value = "pageNum", required = false) Integer pageNum) {
+        Page<ProductVariantDTO> productVariantDTOPage = mvProductVariantService.getProductsOutOfStock(-1, -1);
+        return success(productVariantDTOPage.getContent(), pageNum, pageSize, productVariantDTOPage.getTotalPages(), productVariantDTOPage.getTotalElements());
     }
 }
