@@ -114,6 +114,8 @@ public class CommonUtils {
                 path.append("category");
             } else if (MODULE.STORAGE.name().equals(systemModule)) {
                 path.append("storage");
+            } else if ("data-temp".equals(systemModule)) {
+                path.append("data-temp");
             }
             path.append("/" + LocalDateTime.now().getYear());
             path.append("/" + LocalDateTime.now().getMonth().getValue());

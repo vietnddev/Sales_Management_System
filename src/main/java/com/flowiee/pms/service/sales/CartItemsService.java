@@ -9,7 +9,9 @@ import java.util.List;
 public interface CartItemsService extends BaseCurdService<Items> {
     List<CartItemModel> findAllItemsForSales();
 
-    Integer findQuantityOfItem(Long cartId, Long productVariantId);
+    Integer findQuantityOfItemProduct(Long cartId, Long productVariantId);
+
+    Integer findQuantityOfItemCombo(Long cartId, Long comboId);
 
     Items findItemByCartAndProductVariant(Long cartId, Long productVariantId);
 

@@ -16,6 +16,7 @@ public enum Pages {
     SYS_PROFILE("profile",                              MODULE.SYSTEM),
     SYS_UNAUTHORIZED("unauthorized",                    MODULE.SYSTEM),
     SYS_ERROR("error",                                  MODULE.SYSTEM),
+    SYS_DATA_TEMP("data-temp",                          MODULE.SYSTEM),
 
     PRO_DASHBOARD("dashboard",                          MODULE.PRODUCT),
     PRO_GALLERY("gallery",                              MODULE.PRODUCT),

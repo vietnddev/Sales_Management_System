@@ -4,7 +4,7 @@ import com.flowiee.pms.config.Core;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductPrice;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
@@ -144,13 +144,13 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                     .storage(lvStorage).build();
                 TicketImport ticketImportSaved = mvTicketImportService.save(ticketImport);
 
-                ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
+                ProductVariantExim productVariantExim = ProductVariantExim.builder()
                     .ticketImport(ticketImportSaved)
                     .productVariant(productDetailSaved)
                     .quantity(productDetailSaved.getStorageQty())
                     .note(initMessage)
                     .build();
-                mvProductVariantTempRepository.save(productVariantTemp);
+                mvProductVariantTempRepository.save(productVariantExim);
             }
             if (productDetailSaved.getSoldQty() > 0) {
                 Storage lvStorage = mvStorageService.findById(inputDTO.getStorageIdInitStorageQty(), true);
@@ -165,13 +165,13 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
                     .storage(lvStorage).build();
                 TicketExport ticketExportSaved = mvTicketExportService.save(ticketExport);
 
-                ProductVariantTemp productVariantTemp = ProductVariantTemp.builder()
+                ProductVariantExim productVariantExim = ProductVariantExim.builder()
                     .ticketExport(ticketExportSaved)
                     .productVariant(productDetailSaved)
                     .quantity(productDetailSaved.getStorageQty())
                     .note(initMessage)
                     .build();
-                mvProductVariantTempRepository.save(productVariantTemp);
+                mvProductVariantTempRepository.save(productVariantExim);
             }
 
             systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_PRD_U, MasterObject.ProductVariant, "Thêm mới biến thể sản phẩm", pVariant.toStringInsert());
@@ -259,7 +259,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Override
     public List<ProductVariantTempDTO> findStorageHistory(Long productVariantId) {
-        List<ProductVariantTemp> storageHistory = mvProductVariantTempRepository.findByProductVariantId(productVariantId);
+        List<ProductVariantExim> storageHistory = mvProductVariantTempRepository.findByProductVariantId(productVariantId);
         List<ProductVariantTempDTO> storageHistoryDTOs = ProductVariantTempDTO.convertToDTOs(storageHistory);
         if (ObjectUtils.isEmpty(storageHistoryDTOs)) {
             return List.of();

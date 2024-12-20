@@ -32,7 +32,25 @@
                                             <h3 class="card-title"><strong>CẤU HÌNH HỆ THỐNG</strong></h3>
                                         </div>
                                         <div class="col-4 text-right">
+                                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalCrawlerData">Crawler data</button>
                                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalRefreshApp">Refresh app</button>
+                                        </div>
+                                        <div class="modal fade" id="modalCrawlerData">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <strong class="modal-title">Notification</strong>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure!
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                        <button type="button" class="btn btn-primary" id="btnCrawlerData">Yes</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="modal fade" id="modalRefreshApp">
                                             <div class="modal-dialog">
@@ -130,10 +148,19 @@
         let mvSort = $("#sortField");
 
         $(document).ready(function() {
+            createListener();
             loadConfigs();
             updateConfig();
             refreshApp();
         });
+
+        function createListener() {
+            $("#btnCrawlerData").on("click", function () {
+                crawlerData();
+                $(this).prop('disabled', true);
+                alert("System is crawling data.");
+            })
+        }
 
         function refreshApp() {
             $("#btnRefreshApp").on("click", function () {
@@ -211,6 +238,19 @@
                 }
             }).fail(function () {
                 showErrorModal("Could not connect to the server");
+            });
+        }
+
+        function crawlerData() {
+            let apiURL = mvHostURLCallApi + '/sys/crawler-data';
+            $.post(apiURL, function (response) {
+                if (response.status === "OK") {
+                    let message = response.message;
+                    alert(message);
+                    $("#btnCrawlerData").prop('disabled', false);
+                }
+            }).fail(function (xhr) {
+                showErrorModal($.parseJSON(xhr.responseText).message);
             });
         }
     </script>

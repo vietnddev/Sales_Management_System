@@ -173,6 +173,8 @@ public class Core {
 				continue;
 			mvSystemConfigList.put(lvConfigCode, systemConfig);
 		}
+
+		mvResourceUploadPath = mvSystemConfigList.get(ConfigCode.resourceUploadPath).getValue();
 	}
 
 	private void initData() throws Exception {

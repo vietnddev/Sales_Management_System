@@ -2,15 +2,18 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.product.ProductCombo;
 import com.flowiee.pms.entity.sales.Items;
+import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.CartItemModel;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
+import com.flowiee.pms.repository.sales.OrderCartRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.product.ProductComboService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
+import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CartItemsServiceImpl extends BaseService implements CartItemsService {
+    OrderCartRepository cartRepository;
     CartItemsRepository mvCartItemsRepository;
     ProductComboService mvProductComboService;
     ProductVariantService mvProductVariantService;
@@ -47,30 +51,49 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
     @Override
     public List<CartItemModel> findAllItemsForSales() {
         List<CartItemModel> cartItemModelList = new ArrayList<>();
+        OrderCart cart = cartRepository.findByAccountId(CommonUtils.getUserPrincipal().getId()).get(0);
         List<ProductCombo> productCombos = mvProductComboService.findAll();
         List<ProductVariantDTO> productVariantDTOs = mvProductVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent();
         for (ProductCombo productCbo : productCombos) {
+            int availableQty = productCbo.getQuantity();
+            if (availableQty < 1)
+                continue;
             cartItemModelList.add(CartItemModel.builder()
                     .itemId(productCbo.getId())
                     .productComboId(productCbo.getId())
                     .productVariantId(-1l)
-                    .itemName(productCbo.getComboName() + " - hiện còn " + productCbo.getQuantity())
+                    .itemName("[Cb] " + productCbo.getComboName() + " - còn " + availableQty)
                     .build());
         }
         for (ProductVariantDTO productVrt : productVariantDTOs) {
+            int availableSalesQty = productVrt.getAvailableSalesQty();
+            if (availableSalesQty < 1) {
+                continue;
+            }
+            Items item = findItemByCartAndProductVariant(cart.getId(), productVrt.getId());// item in cart
+            if (item != null) {
+                if (findQuantityOfItemProduct(cart.getId(), productVrt.getId()) >= availableSalesQty) {
+                    continue;
+                }
+            }
             cartItemModelList.add(CartItemModel.builder()
                     .itemId(productVrt.getId())
                     .productComboId(-1l)
                     .productVariantId(productVrt.getId())
-                    .itemName(productVrt.getVariantName() + " - hiện còn " + productVrt.getAvailableSalesQty())
+                    .itemName(productVrt.getVariantName() + " - còn " + availableSalesQty)
                     .build());
         }
         return cartItemModelList;
     }
 
     @Override
-    public Integer findQuantityOfItem(Long cartId, Long productVariantId) {
+    public Integer findQuantityOfItemProduct(Long cartId, Long productVariantId) {
         return mvCartItemsRepository.findQuantityByProductVariantId(cartId, productVariantId);
+    }
+
+    @Override
+    public Integer findQuantityOfItemCombo(Long cartId, Long comboId) {
+        return mvCartItemsRepository.findQuantityByProductVariantId(cartId, comboId);//It is wrong now, will fix in the future
     }
 
     @Override

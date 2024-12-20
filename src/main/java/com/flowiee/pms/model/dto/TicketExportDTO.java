@@ -1,6 +1,6 @@
 package com.flowiee.pms.model.dto;
 
-import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.entity.sales.TicketExport;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,8 +19,8 @@ public class TicketExportDTO extends TicketExport implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
-    List<OrderDTO> listOrderDTO;
-    List<ProductVariantTemp> listProductTemp;
+    List<OrderDTO>           listOrderDTO;
+    List<ProductVariantExim> listProductTemp;
 
     public static TicketExportDTO fromTicketExport(TicketExport t) {
         TicketExportDTO dto = new TicketExportDTO();

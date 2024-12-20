@@ -1,7 +1,7 @@
 package com.flowiee.pms.model.dto;
 
 import com.flowiee.pms.entity.product.MaterialTemp;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.entity.sales.TicketImport;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,9 +25,9 @@ public class TicketImportDTO extends TicketImport implements Serializable {
     Long paymentMethodId;
     String paymentMethodName;
     Long storageId;
-    String storageName;
-    List<ProductVariantTemp> listProductVariantTemp;
-    List<MaterialTemp> listMaterialTemp;
+    String                   storageName;
+    List<ProductVariantExim> listProductVariantTemp;
+    List<MaterialTemp>       listMaterialTemp;
 
     public static TicketImportDTO fromTicketImport(TicketImport ticketImport) {
         TicketImportDTO dto = new TicketImportDTO();

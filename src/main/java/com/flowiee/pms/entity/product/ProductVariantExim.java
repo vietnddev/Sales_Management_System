@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductVariantTemp extends BaseEntity implements Serializable {
+public class ProductVariantExim extends BaseEntity implements Serializable {
     @Serial
 	static final long serialVersionUID = 1L;
 

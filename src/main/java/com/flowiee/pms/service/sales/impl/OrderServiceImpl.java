@@ -225,7 +225,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 Long lvProductVariantId = items.getProductDetail().getId();
                 BigDecimal lvExtraDiscount = items.getExtraDiscount();
                 ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, true);
-                int lvItemQuantity = mvCartItemsService.findQuantityOfItem(lvCart.getId() , lvProductVariantId);
+                int lvItemQuantity = mvCartItemsService.findQuantityOfItemProduct(lvCart.getId() , lvProductVariantId);
                 if (lvItemQuantity <= 0) {
                     throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productDetail.getVariantName()));
                 }
