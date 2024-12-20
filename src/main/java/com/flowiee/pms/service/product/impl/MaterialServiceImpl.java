@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -41,10 +40,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
     @Override
     public Page<Material> findAll(int pageSize, int pageNum, Long supplierId, Long unitId, String code, String name, String location, String status) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("name").ascending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("name").ascending());
         return mvMaterialRepository.findAll(supplierId, unitId, code, name, location, status, pageable);
     }
 

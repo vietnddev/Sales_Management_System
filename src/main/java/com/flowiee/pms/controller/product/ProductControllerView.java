@@ -97,7 +97,7 @@ public class ProductControllerView extends BaseController {
         }
         attribute.setId(attributeId);
         mvProductAttributeService.update(attribute, attributeId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @DeleteMapping(value = "/attribute/delete/{id}")
@@ -115,7 +115,7 @@ public class ProductControllerView extends BaseController {
             throw new ResourceNotFoundException("Product variant or image not found!");
         }
         mvProductImageService.setImageActiveOfProductVariant(productVariantId, imageId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @GetMapping("/export")

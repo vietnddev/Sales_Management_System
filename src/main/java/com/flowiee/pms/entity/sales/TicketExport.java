@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flowiee.pms.entity.BaseEntity;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.utils.constants.TicketExportStatus;
@@ -58,7 +58,7 @@ public class TicketExport extends BaseEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)
-    List<ProductVariantTemp> listProductVariantTemp;
+    List<ProductVariantExim> listProductVariantTemp;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketExport", fetch = FetchType.LAZY)

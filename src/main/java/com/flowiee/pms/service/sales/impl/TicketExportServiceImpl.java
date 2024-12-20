@@ -1,11 +1,10 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.product.ProductDetail;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.exception.EntityNotFoundException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.product.ProductHistory;
@@ -26,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -56,10 +54,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
 
     @Override
     public Page<TicketExport> findAll(int pageSize, int pageNum, Long storageId) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("exportTime").descending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("exportTime").descending());
         Page<TicketExport> ticketExportPage = mvTicketExportRepository.findAll(storageId, pageable);
         for (TicketExport ticketExport : ticketExportPage.getContent()) {
             BigDecimal[] totalValueAndItems = getTotalValueAndItems(ticketExport.getListProductVariantTemp());
@@ -152,7 +147,7 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
             mvOrderRepository.updateTicketExportInfo(order.getId(), ticketExportSaved.getId());
             List<OrderDetail> orderDetails = mvOrderItemsService.findByOrderId(order.getId());
             for (OrderDetail item : orderDetails) {
-                mvProductVariantTempRepository.save(ProductVariantTemp.builder()
+                mvProductVariantTempRepository.save(ProductVariantExim.builder()
                         .ticketExport(ticketExportSaved)
                         .productVariant(item.getProductDetail())
                         .sellPrice(item.getPrice())
@@ -180,9 +175,9 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         TicketExport ticketExportUpdated = mvTicketExportRepository.save(ticketExportToUpdate);
 
         if (TicketExportStatus.COMPLETED.name().equals(ticketExportUpdated.getStatus())) {
-            for (ProductVariantTemp productVariantTemp : ticketExportUpdated.getListProductVariantTemp()) {
-                ProductDetail lvProductVariant = productVariantTemp.getProductVariant();
-                int soldQtyInOrder = productVariantTemp.getQuantity();
+            for (ProductVariantExim productVariantExim : ticketExportUpdated.getListProductVariantTemp()) {
+                ProductDetail lvProductVariant = productVariantExim.getProductVariant();
+                int soldQtyInOrder = productVariantExim.getQuantity();
                 mvProductQuantityService.updateProductVariantQuantityDecrease(soldQtyInOrder, lvProductVariant.getId());
                 //Save log
                 int storageQty = lvProductVariant.getStorageQty();
@@ -220,11 +215,11 @@ public class TicketExportServiceImpl extends BaseService implements TicketExport
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
-    private BigDecimal[] getTotalValueAndItems(List<ProductVariantTemp> pProductVariantTempList) {
+    private BigDecimal[] getTotalValueAndItems(List<ProductVariantExim> pProductVariantEximList) {
         BigDecimal totalValue = BigDecimal.ZERO;
         int totalItems = 0;
-        if (pProductVariantTempList != null) {
-            for (ProductVariantTemp p : pProductVariantTempList) {
+        if (pProductVariantEximList != null) {
+            for (ProductVariantExim p : pProductVariantEximList) {
                 BigDecimal lvProductVariantTempQty = new BigDecimal(p.getQuantity());
                 if (p.getTicketImport() != null && p.getPurchasePrice() != null) {
                     totalValue = totalValue.add(p.getPurchasePrice().multiply(lvProductVariantTempQty));

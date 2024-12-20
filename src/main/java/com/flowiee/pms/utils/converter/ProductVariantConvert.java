@@ -60,7 +60,11 @@ public class ProductVariantConvert {
         outputDTO.setColorName(inputEntity.getColor().getName());
         outputDTO.setSizeId(inputEntity.getSize().getId());
         outputDTO.setSizeName(inputEntity.getSize().getName());
-        outputDTO.setFabricTypeName(inputEntity.getFabricType().getName());
+        if (inputEntity.getFabricType() != null) {
+            outputDTO.setFabricType(inputEntity.getFabricType());
+            outputDTO.setFabricTypeId(inputEntity.getFabricType().getId());
+            outputDTO.setFabricTypeName(inputEntity.getFabricType().getName());
+        }
         if (ObjectUtils.isNotEmpty(inputEntity.getGarmentFactory())) {
             outputDTO.setGarmentFactoryId(inputEntity.getGarmentFactory().getId());
             outputDTO.setGarmentFactoryName(inputEntity.getGarmentFactory().getName());

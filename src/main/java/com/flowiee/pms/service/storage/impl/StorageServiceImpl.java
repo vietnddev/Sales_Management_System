@@ -18,7 +18,6 @@ import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -42,10 +41,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
 
     @Override
     public Page<StorageDTO> findAll(int pageSize, int pageNum) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageNum >= 0 && pageSize >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize);
-        }
+        Pageable pageable = getPageable(pageNum, pageSize);
         Page<Storage> storages = mvStorageRepository.findAll(pageable);
         return new PageImpl<>(StorageDTO.convertToDTOs(storages.getContent()), pageable, storages.getTotalElements());
     }
@@ -55,10 +51,7 @@ public class StorageServiceImpl extends BaseService implements StorageService {
         Optional<Storage> storage = mvStorageRepository.findById(storageId);
         if (storage.isEmpty())
             throw new BadRequestException("Storage not found");
-        Pageable pageable = Pageable.unpaged();
-        if (pageNum >= 0 && pageSize >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize);
-        }
+        Pageable pageable = getPageable(pageNum, pageSize);
         Page<Object[]> storageItemsRawData = mvStorageRepository.findAllItems(searchText, storageId, pageable);
         List<StorageItems> storageItems = new ArrayList<>();
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()

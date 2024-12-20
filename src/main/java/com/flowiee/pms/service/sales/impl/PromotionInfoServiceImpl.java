@@ -45,10 +45,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
 
     @Override
     public Page<PromotionInfoDTO> findAll(int pageSize, int pageNum, String pTitle, LocalDateTime pStartTime, LocalDateTime pEndTime, String pStatus) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("createdAt").descending());
         if (pEndTime == null) {
             pEndTime = LocalDateTime.of(2100, 12, 31, 0, 0);
         }

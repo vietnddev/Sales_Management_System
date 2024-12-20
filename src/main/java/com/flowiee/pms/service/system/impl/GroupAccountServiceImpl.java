@@ -3,7 +3,6 @@ package com.flowiee.pms.service.system.impl;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.repository.system.GroupAccountRepository;
 import com.flowiee.pms.service.BaseService;
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -38,10 +36,7 @@ public class GroupAccountServiceImpl extends BaseService implements GroupAccount
 
     @Override
     public Page<GroupAccount> findAll(int pageSize, int pageNum) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("groupName").ascending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("groupName").ascending());
         return mvGroupAccountRepository.findAll(pageable);
     }
 

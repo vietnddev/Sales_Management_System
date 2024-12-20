@@ -85,7 +85,7 @@ public class AccountControllerView extends BaseController {
         Account account = accountService.findById(accountId, true);
         //warning -> need to in the feature
         accountService.update(accountEntity, accountId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @PostMapping(value = "/delete/{id}")

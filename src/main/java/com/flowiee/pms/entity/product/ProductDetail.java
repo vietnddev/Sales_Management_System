@@ -15,7 +15,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -157,7 +156,7 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    List<ProductVariantTemp> listProductVariantTemp;
+    List<ProductVariantExim> listProductVariantTemp;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)

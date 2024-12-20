@@ -45,7 +45,7 @@ public class BaseController extends BaseAuthorize {
 	}
 
 	protected ModelAndView refreshPage(HttpServletRequest request) {
-		return new ModelAndView("redirect:" + request.getHeader("referer"));
+		return  new ModelAndView("redirect:" + request.getHeader("referer"));
 	}
 
 	private void setURLHeader(ModelAndView modelAndView) {

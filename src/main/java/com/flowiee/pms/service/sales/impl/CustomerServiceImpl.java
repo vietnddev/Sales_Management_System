@@ -54,10 +54,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
 
     @Override
     public Page<CustomerDTO> findAll(int pageSize, int pageNum, String name, String sex, Date birthday, String phone, String email, String address) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("customerName").ascending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("customerName").ascending());
         Page<Customer> customers = mvCustomerRepository.findAll(name, sex, birthday, phone, email, address, pageable);
         List<CustomerDTO> customerDTOs = CustomerDTO.fromCustomers(customers.getContent());
         this.setContactDefault(customerDTOs);

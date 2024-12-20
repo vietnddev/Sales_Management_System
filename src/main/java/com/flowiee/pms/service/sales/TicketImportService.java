@@ -1,9 +1,9 @@
 package com.flowiee.pms.service.sales;
 
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.service.BaseCurdService;
 import com.flowiee.pms.entity.product.MaterialTemp;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketImport;
 import org.springframework.data.domain.Page;
 
@@ -18,7 +18,7 @@ public interface TicketImportService extends BaseCurdService<TicketImport> {
 
     TicketImport updateStatus(Long entityId, String status);
 
-    List<ProductVariantTemp> addProductToTicket(Long ticketImportId, List<Long> productVariantIds);
+    List<ProductVariantExim> addProductToTicket(Long ticketImportId, List<Long> productVariantIds);
 
     List<MaterialTemp> addMaterialToTicket(Long ticketImportId, List<Long> materialIds);
 

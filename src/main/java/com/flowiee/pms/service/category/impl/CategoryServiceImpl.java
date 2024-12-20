@@ -112,10 +112,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
     @Override
     public Page<Category> findSubCategory(CategoryType categoryType, Long parentId, List<Long> ignoreIds, int pageSize, int pageNum) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("createdAt").descending());
         Page<Category> categoryPage = mvCategoryRepository.findSubCategory(categoryType.name(), parentId, ignoreIds, pageable);
         for (Category c : categoryPage.getContent()) {
             String statusName = CategoryStatus.I.getLabel();

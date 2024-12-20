@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -42,10 +41,7 @@ public class VoucherTicketServiceImpl extends BaseService implements VoucherTick
 
     @Override
     public Page<VoucherTicket> findAll(int pageSize, int pageNum, Long voucherId) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("id").ascending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("id").ascending());
         return mvVoucherTicketRepository.findByVoucherId(voucherId, pageable);
     }
 

@@ -9,12 +9,14 @@ import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.service.system.SystemLogService;
 import com.flowiee.pms.utils.CoreUtils;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,6 +26,20 @@ public class BaseService {
 
     @Autowired
     SystemLogService systemLogService;
+
+    protected Pageable getPageable(int pageNum, int pageSize) {
+        return getPageable(pageNum, pageSize, null);
+    }
+
+    protected Pageable getPageable(int pageNum, int pageSize, Sort sort) {
+        if (pageSize >= 0 && pageNum >= 0) {
+            if (sort == null) {
+                return PageRequest.of(pageNum, pageSize);
+            }
+            return PageRequest.of(pageNum, pageSize, sort);
+        }
+        return Pageable.unpaged();
+    }
 
     public static boolean isConfigAvailable(SystemConfig pSystemConfig) {
         if (pSystemConfig == null || CoreUtils.isNullStr(pSystemConfig.getValue())) {

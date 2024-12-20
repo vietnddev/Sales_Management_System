@@ -48,4 +48,10 @@ public class SystemControllerView extends BaseController {
         configService.update(config, configId);
         return new ModelAndView("redirect:/he-thong/config");
     }
+
+    @GetMapping("/data-temp")
+    @PreAuthorize("@vldModuleSystem.readConfig(true)")
+    public ModelAndView getDataCrawled() {
+        return baseView(new ModelAndView(Pages.SYS_DATA_TEMP.getTemplate()));
+    }
 }

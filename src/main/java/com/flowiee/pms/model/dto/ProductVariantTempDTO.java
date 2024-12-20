@@ -1,6 +1,6 @@
 package com.flowiee.pms.model.dto;
 
-import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductVariantTempDTO extends ProductVariantTemp implements Serializable {
+public class ProductVariantTempDTO extends ProductVariantExim implements Serializable {
     @Serial
     static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class ProductVariantTempDTO extends ProductVariantTemp implements Seriali
     String changeQty;
     String branchName;
 
-    public static ProductVariantTempDTO convertToDTO(ProductVariantTemp inputEntity) {
+    public static ProductVariantTempDTO convertToDTO(ProductVariantExim inputEntity) {
         ProductVariantTempDTO outputDTO = new ProductVariantTempDTO();
         outputDTO.setId(inputEntity.getId());
         outputDTO.setProductVariant(inputEntity.getProductVariant());
@@ -55,10 +55,10 @@ public class ProductVariantTempDTO extends ProductVariantTemp implements Seriali
         return outputDTO;
     }
 
-    public static List<ProductVariantTempDTO> convertToDTOs(List<ProductVariantTemp> inputEntities) {
+    public static List<ProductVariantTempDTO> convertToDTOs(List<ProductVariantExim> inputEntities) {
         List<ProductVariantTempDTO> outputDTOs = new ArrayList<>();
         if (ObjectUtils.isNotEmpty(inputEntities)) {
-            for (ProductVariantTemp dto : inputEntities) {
+            for (ProductVariantExim dto : inputEntities) {
                 outputDTOs.add(convertToDTO(dto));
             }
         }

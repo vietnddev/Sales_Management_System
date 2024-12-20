@@ -1,11 +1,11 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.dto.TicketImportDTO;
 import com.flowiee.pms.entity.product.MaterialTemp;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
@@ -93,7 +93,7 @@ public class TicketImportController extends BaseController {
     @Operation(summary = "Add sản phẩm vào phiếu nhập hàng")
     @PostMapping("/{id}/add-product")
     @PreAuthorize("@vldModuleSales.importGoods(true)")
-    public AppResponse<List<ProductVariantTemp>> addProductVariantToTicket(@PathVariable("id") Long ticketImportId,
+    public AppResponse<List<ProductVariantExim>> addProductVariantToTicket(@PathVariable("id") Long ticketImportId,
                                                                            @RequestBody List<Long> productVariantIds) {
         return success(mvTicketImportService.addProductToTicket(ticketImportId, productVariantIds));
     }

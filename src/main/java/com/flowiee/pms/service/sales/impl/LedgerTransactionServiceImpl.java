@@ -15,7 +15,6 @@ import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -37,10 +36,7 @@ public class LedgerTransactionServiceImpl extends BaseService implements LedgerT
 
     @Override
     public Page<LedgerTransaction> findAll(int pageSize, int pageNum, LocalDate fromDate, LocalDate toDate) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("createdAt").descending());
         Page<LedgerTransaction> ledgerTransactions = mvLedgerTransactionRepository.findAll(getTranType(), null, null, pageable);
         for (LedgerTransaction trans : ledgerTransactions) {
             for (LedgerTranStatus transStatus : LedgerTranStatus.values()) {

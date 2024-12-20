@@ -34,20 +34,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
-    VoucherService mvVoucherInfoService;
-    ProductRepository mvProductRepository;
-    CategoryRepository mvCategoryRepository;
-    VoucherApplyService mvVoucherApplyService;
+    private final ProductDescriptionRepository mvProductDescriptionRepository;
+    private final ProductStatisticsService mvProductStatisticsService;
+    private final ProductVariantService mvProductVariantService;
+    private final ProductHistoryService mvProductHistoryService;
+    private final VoucherApplyService mvVoucherApplyService;
+    private final CategoryRepository mvCategoryRepository;
+    private final ProductRepository mvProductRepository;
+    private final VoucherService mvVoucherInfoService;
+    private final OrderRepository mvOrderRepository;
+    private final CategoryService mvCategoryService;
     //ProductImageService mvProductImageService;
-    ProductVariantService mvProductVariantService;
-    ProductHistoryService mvProductHistoryService;
-    ProductStatisticsService mvProductStatisticsService;
-    ProductDescriptionRepository mvProductDescriptionRepository;
-    OrderRepository mvOrderRepository;
-    CategoryService mvCategoryService;
 
     @Override
     public List<ProductDTO> findAll() {
@@ -57,10 +56,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Override
     public Page<ProductDTO> findAll(PID pPID , int pageSize, int pageNum, String pTxtSearch, Long pBrand, Long pProductType,
                                     Long pColor, Long pSize, Long pUnit, String pStatus) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("createdAt").descending());
         Page<Product> products = mvProductRepository.findAll(pPID.getId(), pTxtSearch, pBrand, pProductType, pColor, pSize, pUnit, pStatus, pageable);
         List<ProductDTO> productDTOs = ProductConvert.convertToDTOs(products);
         this.setImageActiveAndLoadVoucherApply(productDTOs);

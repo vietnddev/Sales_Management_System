@@ -10,15 +10,13 @@ import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.ChangeLog;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.MODULE;
+import com.flowiee.pms.utils.CoreUtils;
+import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.sales.OrderDetailRepository;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.OrderHistoryService;
 import com.flowiee.pms.service.sales.OrderItemsService;
 import com.flowiee.pms.service.system.SystemLogService;
-import com.flowiee.pms.utils.constants.MasterObject;
-import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -88,7 +86,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
                             .price(itemPrice.getRetailPriceDiscount())
                             .priceOriginal(itemPrice.getRetailPrice())
                             .extraDiscount(BigDecimal.ZERO)
-                            .priceType("L")
+                            .priceType(PriceType.L.name())
                             .build()));
                 }
             }
@@ -98,10 +96,8 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
 
     @Override
     public OrderDetail save(OrderDetail orderDetail) {
+        orderDetail.setExtraDiscount(CoreUtils.coalesce(orderDetail.getExtraDiscount(), BigDecimal.ZERO));
         try {
-            if (orderDetail.getExtraDiscount() == null) {
-                orderDetail.setExtraDiscount(BigDecimal.ZERO);
-            }
             OrderDetail orderDetailSaved = mvOrderDetailRepository.save(orderDetail);
             mvSystemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.OrderDetail, "Thêm mới item vào đơn hàng", orderDetail.toString());
             logger.info("{}: Thêm mới item vào đơn hàng {}", OrderServiceImpl.class.getName(), orderDetail.toString());

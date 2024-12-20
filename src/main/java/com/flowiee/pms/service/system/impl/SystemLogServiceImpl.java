@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,10 +27,7 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public Page<SystemLog> findAll(int pageSize, int pageNum) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("createdAt").descending());
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("createdAt").descending());
         Page<SystemLog> logs = mvSystemLogRepository.findAll(pageable);
         for (SystemLog systemLog : logs.getContent()) {
             systemLog.setAccountName(systemLog.getAccount() != null ? systemLog.getAccount().getFullName() : "");

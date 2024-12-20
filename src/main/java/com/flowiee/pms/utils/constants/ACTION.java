@@ -95,6 +95,8 @@ public enum ACTION {
     SYS_CNF_R("View system config",             MODULE.SYSTEM.name()),
     SYS_CNF_U("Update system config",           MODULE.SYSTEM.name()),
 
+    SYS_DATA_CRAWLER("Crawler temp data",       MODULE.SYSTEM.name()),
+    SYS_DATA_MERGE("Merge temp data",           MODULE.SYSTEM.name()),
     SYS_REFRESH_APP("Refresh application",      MODULE.SYSTEM.name());
 
     private final String label;

@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -38,10 +37,7 @@ public class ProductAttributeServiceImpl extends BaseService implements ProductA
 
     @Override
     public Page<ProductAttribute> findAll(int pageSize, int pageNum, Long pProductDetailId) {
-        Pageable pageable = Pageable.unpaged();
-        if (pageSize >= 0 && pageNum >= 0) {
-            pageable = PageRequest.of(pageNum, pageSize, Sort.by("sort"));
-        }
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("sort"));
         return mvProductAttributeRepository.findByProductVariantId(pProductDetailId, pageable);
     }
 

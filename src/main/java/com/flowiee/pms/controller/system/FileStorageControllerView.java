@@ -77,7 +77,7 @@ public class FileStorageControllerView extends BaseController {
             throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.changeImageProduct(file, fileId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @PostMapping("/uploads/ticket-import/{id}")
@@ -90,7 +90,7 @@ public class FileStorageControllerView extends BaseController {
             throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageTicketImport(file, ticketImportId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @PostMapping("/uploads/ticket-export/{id}")
@@ -103,7 +103,7 @@ public class FileStorageControllerView extends BaseController {
             throw new ResourceNotFoundException("File attach not found!");
         }
         productImageService.saveImageTicketExport(file, ticketExportId);
-        return new ModelAndView("redirect:" + request.getHeader("referer"));
+        return refreshPage(request);
     }
 
     @PostMapping("/uploads/product-combo/{id}")

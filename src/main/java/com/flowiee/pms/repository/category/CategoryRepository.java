@@ -54,4 +54,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query("from Category c where c.type = :type and c.code = :code")
     Category findByTypeAndCode(@Param("type") String type, @Param("code") String code);
+
+    @Query("from Category c where c.type = :type and lower(trim(c.name)) = lower(:name)")
+    Category findByTypeAndName(@Param("type") String type, @Param("name") String name);
 }

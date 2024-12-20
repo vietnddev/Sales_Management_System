@@ -7,7 +7,7 @@ import com.flowiee.pms.entity.BaseEntity;
 
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.MaterialTemp;
-import com.flowiee.pms.entity.product.ProductVariantTemp;
+import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.model.dto.TicketImportDTO;
@@ -83,7 +83,7 @@ public class TicketImport extends BaseEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)
-    List<ProductVariantTemp> listProductVariantTemps;
+    List<ProductVariantExim> listProductVariantTemps;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticketImport", fetch = FetchType.LAZY)

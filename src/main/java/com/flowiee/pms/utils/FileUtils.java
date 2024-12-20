@@ -111,6 +111,13 @@ public class FileUtils {
         return Core.getResourceUploadPath() + "/uploads/";
     }
 
+    public static String getImageTempPath() {
+        if (Core.getResourceUploadPath() == null) {
+            throw new AppException("The uploaded file saving directory is not configured, please try again later!");
+        }
+        return Core.getResourceUploadPath() + "/data-temp/";
+    }
+
     public static boolean isAllowUpload(String fileExtension, boolean throwException, String message) {
         if (ObjectUtils.isNotEmpty(fileExtension)) {
             for (FileExtension ext : FileExtension.values()) {

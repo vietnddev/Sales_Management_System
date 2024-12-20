@@ -77,10 +77,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     public Page<OrderDTO> findAll(int pPageSize, int pPageNum, String pTxtSearch, Long pOrderId, Long pPaymentMethodId,
                                   OrderStatus pOrderStatus, Long pSalesChannelId, Long pSellerId, Long pCustomerId,
                                   Long pBranchId, Long pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
-        Pageable pageable = Pageable.unpaged();
-        if (pPageSize >= 0 && pPageNum >= 0) {
-            pageable = PageRequest.of(pPageNum, pPageSize, Sort.by(pSortBy != null ? pSortBy : "orderTime").descending());
-        }
+        Pageable pageable = getPageable(pPageNum, pPageSize, Sort.by(pSortBy != null ? pSortBy : "orderTime").descending());
         if (pOrderTimeFrom == null) {
             pOrderTimeFrom = LocalDateTime.of(1900, 1, 1, 0, 0, 0);
         }
@@ -225,7 +222,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 Long lvProductVariantId = items.getProductDetail().getId();
                 BigDecimal lvExtraDiscount = items.getExtraDiscount();
                 ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, true);
-                int lvItemQuantity = mvCartItemsService.findQuantityOfItem(lvCart.getId() , lvProductVariantId);
+                int lvItemQuantity = mvCartItemsService.findQuantityOfItemProduct(lvCart.getId() , lvProductVariantId);
                 if (lvItemQuantity <= 0) {
                     throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productDetail.getVariantName()));
                 }
