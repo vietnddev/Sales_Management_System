@@ -186,7 +186,7 @@ public class ProductImageServiceImpl extends BaseService implements ProductImage
         FileStorage fileToChange = fileOptional;
         //Delete file vật lý cũ
         try {
-            File file = new File(Core.getResourceUploadPath() + "/" + fileToChange.getDirectoryPath() + "/" + fileToChange.getStorageName());
+            File file = new File(Core.getResourceUploadPath() + FileUtils.getImageUrl(fileToChange, true));
             if (file.exists()) {
                 file.delete();
             }

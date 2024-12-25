@@ -50,6 +50,9 @@ public class Items extends BaseEntity implements Serializable {
     @Column(name = "extra_discount")
     BigDecimal extraDiscount;
 
+    @Transient
+    Long productVariantId;
+
 	@Override
 	public String toString() {
 		return "Items [id=" + super.id + ", quantity=" + quantity + ", orderCart=" + orderCart + "]";

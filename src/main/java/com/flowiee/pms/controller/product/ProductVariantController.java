@@ -12,6 +12,7 @@ import com.flowiee.pms.model.dto.ProductVariantTempDTO;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
+import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,8 +39,11 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Find all variants")
     @GetMapping("/variant/all")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<List<ProductVariantDTO>> findProductVariants() {
-        return success(mvProductVariantService.findAll());
+    public AppResponse<List<ProductVariantDTO>> findProductVariants(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                                    @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                                                    @RequestParam(value = "readyForSales", required = false) Boolean readyForSales) {
+        Page<ProductVariantDTO> data = mvProductVariantService.findAll(CoreUtils.coalesce(pageSize), CoreUtils.coalesce(pageNum) - 1, null, null, null, null, null, readyForSales);
+        return success(data.getContent(), data.getNumber() + 1, data.getSize(), data.getTotalPages(), data.getTotalElements());
     }
 
     @Operation(summary = "Find all variants of product")
@@ -54,9 +58,6 @@ public class ProductVariantController extends BaseController {
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<ProductVariantDTO> findDetailProductVariant(@PathVariable("id") Long productVariantId) {
         ProductVariantDTO productVariant = mvProductVariantService.findById(productVariantId, true);
-        if (productVariant == null) {
-            throw new ResourceNotFoundException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "product"));
-        }
         return success(productVariant);
     }
 

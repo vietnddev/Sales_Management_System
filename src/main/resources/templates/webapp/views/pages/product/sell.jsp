@@ -9,6 +9,18 @@
         .table td, th {
             vertical-align: middle;
         }
+        .modal-dialog.modal-xl {
+            max-width: 1400px; /* Tăng chiều rộng của modal */
+        }
+        .modal-content {
+            margin: auto; /* Canh giữa modal */
+        }
+        .modal-dialog {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* Đảm bảo modal luôn căn giữa */
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -52,7 +64,9 @@
                                                             <th>Giảm thêm</th>
                                                             <th>Số lượng</th>
                                                             <th>Thành tiền</th>
-                                                            <th></th>
+                                                            <th>
+                                                                <button class="btn btn-sm btn-primary w-100" id="btnAddItems">Chọn sản phẩm</button>
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -239,6 +253,7 @@
             </section>
         </div>
         <div th:replace="modal_fragments :: confirm_modal"></div>
+        <div th:replace="pages/product/fragments/product-fragments :: searchProductModal"></div>
 
         <div th:replace="footer :: footer"><!-- Nhúng các file JavaScript vào --></div>
 
@@ -247,6 +262,7 @@
         <div th:replace="header :: scripts"><!-- Nhúng các file JavaScript vào --></div>
 
         <script th:src="@{/js/order/CreateNewOrder.js}"></script>
+        <script th:src="@{/js/product/SearchProductModal.js}"></script>
     </div>
 
     <script type="text/javascript">
@@ -263,12 +279,25 @@
         $('#isUseVoucherBlock').hide();
 
         $(document).ready(function () {
+            createListener();
             loadCustomers();
             loadReceiveInformationToForm();
             createOrder();
             checkVoucherIsAvailable();
             useVoucher();
         });
+
+        function createListener() {
+            $("#btnAddItems").on("click", function () {
+                $("#searchProductModal").modal();
+                setupSearchModalInCreateOrderPage();
+            });
+
+            $("#btnSubmitProductOnSearchModal").on("click", function () {
+                submitProductOnSearchModal("createOrder");
+                //$("#searchProductModal").modal("hide");
+            });
+        }
 
         async function loadCustomers() {
             let selectElement = $('#customerField');

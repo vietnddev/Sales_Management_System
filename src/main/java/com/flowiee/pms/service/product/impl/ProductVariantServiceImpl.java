@@ -8,14 +8,17 @@ import com.flowiee.pms.entity.product.ProductVariantExim;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
+import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.*;
 import com.flowiee.pms.model.dto.ProductPriceDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
+import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.CoreUtils;
+import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
@@ -35,6 +38,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +47,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +55,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     private final ProductDetailTempRepository mvProductVariantTempRepository;
     private final ProductDetailRepository mvProductVariantRepository;
     private final ProductPriceRepository mvProductPriceRepository;
+    private final FileStorageRepository mvFileStorageRepository;
     private final ProductHistoryService mvProductHistoryService;
     private final TicketImportService mvTicketImportService;
     private final TicketExportService mvTicketExportService;
@@ -63,14 +69,18 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Override
     public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Long pProductId, Long pTicketImport, Long pColor, Long pSize, Long pFabricType, Boolean pAvailableForSales) {
-        Pageable pageable = getPageable(pageNum, pageSize);
-        List<ProductDetail> productVariants = mvProductVariantRepository.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
-        List<ProductVariantDTO> productVariantDTOs = ProductVariantConvert.entitiesToDTOs(productVariants);
-        for (ProductVariantDTO dto : productVariantDTOs) {
-            //ProductPrice productPrice = mvProductPriceRepository.findPricePresent(null, dto.getId());
-            setPriceInfo(dto, dto.getVariantPrice());
-        }
-        return new PageImpl<>(productVariantDTOs, pageable, productVariants.size());
+        Pageable pageable = getPageable(pageNum, pageSize, Sort.by("variantName").ascending());
+        Page<ProductDetail> productVariantPage = mvProductVariantRepository.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
+        
+        List<ProductVariantDTO> pDTOs = productVariantPage.getContent().stream()
+        	    .map(ProductVariantConvert::entityToDTO)
+        	    .peek(dto -> {
+        	        setPriceInfo(dto, dto.getVariantPrice());
+        	        setImageSrc(dto);
+        	    })
+        	    .collect(Collectors.toList());
+        
+        return new PageImpl<>(pDTOs, pageable, productVariantPage.getTotalElements());
     }
 
     @Override
@@ -293,6 +303,18 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             }
         }
         return dto;
+    }
+
+    private ProductVariantDTO setImageSrc(ProductVariantDTO productVariantInfo) {
+        if (productVariantInfo == null) {
+            return null;
+        }
+        FileStorage imageModel = mvFileStorageRepository.findActiveImage(null, productVariantInfo.getId());
+        if (imageModel == null) {
+            return productVariantInfo;
+        }
+        productVariantInfo.setImageSrc(FileUtils.getImageUrl(imageModel, true));
+        return productVariantInfo;
     }
 
     private String genProductCode(String defaultCode) {

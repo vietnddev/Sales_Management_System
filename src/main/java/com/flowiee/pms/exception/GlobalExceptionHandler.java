@@ -91,6 +91,7 @@ public class GlobalExceptionHandler extends BaseController {
     @ExceptionHandler
     public ResponseEntity<AppResponse<?>> exceptionHandler(RuntimeException ex) {
         mvLogger.error(ex.getMessage(), ex);
+        ex.printStackTrace();
         notifyEmail(ex.getMessage());
         return ResponseEntity.internalServerError().body(fail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
     }

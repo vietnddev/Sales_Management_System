@@ -93,6 +93,7 @@ public class CrawlerService extends BaseService {
                 if (sizeMdl == null) {
                     sizeMdl = getRandomSize(fullSizeList, sizeNameSaved);
                 }
+                String lvSku = p.getProductCode().equals(p.getSku()) ? p.getSku() + skuIndex : p.getSku();
 
                 String[] colorList = CoreUtils.trim(p.getColor()).split("-");
                 List<String> colorNameSaved = new ArrayList<>();
@@ -105,7 +106,7 @@ public class CrawlerService extends BaseService {
                     ProductDetail productVariantSaved = productVariantRepository.save(ProductDetail.builder()
                             .product(productSaved)
                             .variantCode(p.getProductCode())
-                            .sku(p.getProductCode().equals(p.getSku()) ? p.getSku() + skuIndex : p.getSku())
+                            .sku(lvSku)
                             .variantName(p.getProductName() + " - " + colorMdl.getName() +  " - " + sizeMdl.getName())
                             .size(sizeMdl)
                             .color(colorMdl)

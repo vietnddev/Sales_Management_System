@@ -457,5 +457,59 @@
                 </div>
             </div>
         </div>
+
+        <div th:fragment="searchProductModal">
+            <div class="modal fade" id="searchProductModal">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <strong class="modal-title">Tìm sản phẩm</strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body p-3">
+                            <div class="card-header p-0">
+                                <div class="row col-12 input-group mb-3 p-0">
+                                    <div class="col-6 mr-1">
+                                        <input class="form-control" id="txtFilter"/>
+                                    </div>
+                                    <div class="col-5 row mr-1">
+                                        <select class="col form-control custom-select search-selection mr-1" id="brandSearchModal"></select>
+                                        <select class="col form-control custom-select search-selection mr-1" id="colorSearchModal"></select>
+                                        <select class="col form-control custom-select search-selection mr-1" id="sizeSearchModal"></select>
+                                    </div>
+                                    <button class="col-1 btn btn-info form-control" id="btnSearchModal">
+                                        <i class="fa-solid fa-magnifying-glass mr-2"></i>Tìm
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body align-items-center p-0">
+                                <table class="table table-bordered" style="margin-bottom: 0">
+                                    <thead>
+                                        <th>STT</th>
+                                        <th><input type="checkbox" id="cbxChooseAllProduct" style="width: 25px; height: 25px"></th>
+                                        <th><button class="btn btn-sm btn-primary w-100" id="btnSubmitProductOnSearchModal">Chọn</button></th>
+                                        <th>Hình ảnh</th>
+                                        <th>Mã sản phẩm</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Màu sắc</th>
+                                        <th>Kích cỡ</th>
+                                        <th>Chất liệu</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá bán</th>
+                                        <th>Chi nhánh</th>
+                                    </thead>
+                                    <tbody id="productListTbl"></tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                <div th:replace="fragments :: pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

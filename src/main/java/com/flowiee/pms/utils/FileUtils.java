@@ -1,6 +1,7 @@
 package com.flowiee.pms.utils;
 
 import com.flowiee.pms.config.Core;
+import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.FileExtension;
@@ -130,5 +131,13 @@ public class FileUtils {
             throw new AppException(ErrorCode.FileDoesNotAllowUpload, new Object[]{fileExtension}, message, null, null);
         }
         return false;
+    }
+
+    public static String getImageUrl(FileStorage imageModel, boolean addLeadingSlash) {
+        if (imageModel == null) {
+            return null;
+        }
+        String imageUrl = imageModel.getDirectoryPath() + "/" + imageModel.getStorageName();
+        return addLeadingSlash ? "/" + imageUrl : imageUrl;
     }
 }

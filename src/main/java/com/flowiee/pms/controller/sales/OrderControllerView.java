@@ -1,6 +1,5 @@
 package com.flowiee.pms.controller.sales;
 
-import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.dto.OrderDTO;
@@ -8,7 +7,6 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.sales.*;
 import com.flowiee.pms.controller.BaseController;
 import com.flowiee.pms.service.category.CategoryService;
-import com.flowiee.pms.exception.ResourceNotFoundException;
 
 import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.OrderStatus;
@@ -48,6 +46,7 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView findDonHangDetail(@PathVariable("id") Long orderId) {
+        System.out.println("alo");
         OrderDTO lvOrderDetail = mvOrderService.findById(orderId, true);
         OrderStatus lvOrderStatus = lvOrderDetail.getOrderStatus();
 

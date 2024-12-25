@@ -65,22 +65,24 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
                     .itemName("[Cb] " + productCbo.getComboName() + " - còn " + availableQty)
                     .build());
         }
+        Long cartId = cart.getId();
         for (ProductVariantDTO productVrt : productVariantDTOs) {
+            Long productVariantId = productVrt.getId();
             int availableSalesQty = productVrt.getAvailableSalesQty();
             if (availableSalesQty < 1) {
                 continue;
             }
-            Items item = findItemByCartAndProductVariant(cart.getId(), productVrt.getId());// item in cart
+            Items item = findItemByCartAndProductVariant(cartId, productVariantId);// item in cart
             if (item != null) {
-                if (findQuantityOfItemProduct(cart.getId(), productVrt.getId()) >= availableSalesQty) {
+                if (findQuantityOfItemProduct(cartId, productVariantId) >= availableSalesQty) {
                     continue;
                 }
             }
             cartItemModelList.add(CartItemModel.builder()
-                    .itemId(productVrt.getId())
+                    .itemId(productVariantId)
                     .productComboId(-1l)
-                    .productVariantId(productVrt.getId())
-                    .itemName(productVrt.getVariantName() + " - còn " + availableSalesQty)
+                    .productVariantId(productVariantId)
+                    .itemName(new StringBuilder(productVrt.getVariantName()).append(" - còn ").append(availableSalesQty).toString())
                     .build());
         }
         return cartItemModelList;

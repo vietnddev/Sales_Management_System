@@ -148,6 +148,7 @@ public class Core {
 		CommonUtils.mvEndPointHeaderConfig.clear();
 		CommonUtils.mvEndPointSideBarConfig.clear();
 		for (EndPoint e : EndPoint.values()) {
+
 			if (e.getType().equals("HEADER") && e.isStatus()) {
 				CommonUtils.mvEndPointHeaderConfig.put(e.name(), e.getValue());
 			}

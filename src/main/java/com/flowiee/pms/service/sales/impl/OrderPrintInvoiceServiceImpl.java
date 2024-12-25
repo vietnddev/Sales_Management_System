@@ -64,7 +64,7 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
         parameterMap.put("nowDate", new Date());
         FileStorage f = mvOrderQRCodeService.findQRCodeOfOrder(dto.getId());
         if (f != null) {
-            Path barcodePath = Path.of(Core.getResourceUploadPath() + "/" + f.getDirectoryPath() + "/" + f.getStorageName());
+            Path barcodePath = Path.of(Core.getResourceUploadPath() + FileUtils.getImageUrl(f, true));
             if (barcodePath.toFile().exists()) {
                 parameterMap.put("barcode", barcodePath);
             }
@@ -78,14 +78,13 @@ public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPr
         for (OrderDetailDTO detailDTO : dto.getListOrderDetailDTO()) {
             BigDecimal lvUnitPrice = detailDTO.getPrice();
             int lvQuantity = detailDTO.getQuantity();
-            OrderDetailRpt rpt = OrderDetailRpt.builder()
-                .productName(detailDTO.getProductVariantDTO().getVariantName())
-                .unitPrice(lvUnitPrice)
-                .quantity(lvQuantity)
-                .subTotal(lvUnitPrice.multiply(BigDecimal.valueOf(lvQuantity)))
-                .note(detailDTO.getNote())
-                .build();
-            listDetail.add(rpt);
+            listDetail.add(OrderDetailRpt.builder()
+                    .productName(detailDTO.getProductVariantDTO().getVariantName())
+                    .unitPrice(lvUnitPrice)
+                    .quantity(lvQuantity)
+                    .subTotal(lvUnitPrice.multiply(BigDecimal.valueOf(lvQuantity)))
+                    .note(detailDTO.getNote())
+                    .build());
         }
 
         try {

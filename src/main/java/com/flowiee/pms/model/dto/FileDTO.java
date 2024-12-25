@@ -2,6 +2,7 @@ package com.flowiee.pms.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flowiee.pms.entity.system.FileStorage;
+import com.flowiee.pms.utils.FileUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +55,7 @@ public class FileDTO extends FileStorage implements Serializable{
             dto.setModule(fileStorage.getModule());
             dto.setNote(fileStorage.getNote());
             dto.setUploadBy(fileStorage.getAccount().getUsername());
-            dto.setSrc(fileStorage.getDirectoryPath() + "/" + fileStorage.getStorageName());
+            dto.setSrc(FileUtils.getImageUrl(fileStorage, false));
             //dto.setIsActive(fileStorage.isActive());
             dto.setStatus(fileStorage.isStatus());
             dto.setSize(fileStorage.getFileSize());

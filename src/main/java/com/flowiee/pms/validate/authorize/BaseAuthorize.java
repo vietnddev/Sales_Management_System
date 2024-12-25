@@ -35,9 +35,10 @@ public class BaseAuthorize {
             if (AppConstants.ADMINISTRATOR.equals(CommonUtils.getUserPrincipal().getUsername())) {
                 return true;
             }
+            String actionName = action.name();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             for (GrantedAuthority authority : authentication.getAuthorities()) {
-                if (authority.getAuthority().equals(action.name())) {
+                if (authority.getAuthority().equals(actionName)) {
                     return true;
                 }
             }

@@ -220,14 +220,15 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             //Create items detail
             for (Items items : lvCart.getListItems()) {
                 Long lvProductVariantId = items.getProductDetail().getId();
-                BigDecimal lvExtraDiscount = items.getExtraDiscount();
+                BigDecimal lvExtraDiscount = CoreUtils.coalesce(items.getExtraDiscount());
                 ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, true);
+                String productVariantName = productDetail.getVariantName();
                 int lvItemQuantity = mvCartItemsService.findQuantityOfItemProduct(lvCart.getId() , lvProductVariantId);
                 if (lvItemQuantity <= 0) {
-                    throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productDetail.getVariantName()));
+                    throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productVariantName));
                 }
                 if (lvItemQuantity > productDetail.getAvailableSalesQty()) {
-                    throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productDetail.getVariantName()}, null, getClass(), null);
+                    throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productVariantName}, null, getClass(), null);
                 }
                 mvOrderItemsService.save(OrderDetail.builder()
                         .order(orderSaved)
@@ -237,7 +238,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                         .note(items.getNote())
                         .price(items.getPrice())
                         .priceOriginal(items.getPriceOriginal())
-                        .extraDiscount(CoreUtils.coalesce(lvExtraDiscount))
+                        .extraDiscount(lvExtraDiscount)
                         .priceType(items.getPriceType())
                         .build());
             }

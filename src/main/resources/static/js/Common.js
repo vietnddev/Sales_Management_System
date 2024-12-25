@@ -114,6 +114,7 @@ function updateTableContentWhenOnClickPagination(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, 1);
+        changePage();
     });
 
     $('#previousPage').on('click', function() {
@@ -121,20 +122,25 @@ function updateTableContentWhenOnClickPagination(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, $('#paginationInfo').attr("pageNum") - 1);
+        changePage();
     });
 
     $('#nextPage').on('click', function() {
+        console.log("next")
         if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
             return;
         }
         loadNewDataMethod(lvPageSize, parseInt($('#paginationInfo').attr("pageNum")) + 1);
+        changePage();
     });
 
     $('#lastPage').on('click', function() {
+        console.log("last")
         if ($('#paginationInfo').attr("pageNum") === $('#paginationInfo').attr("totalPage")) {
             return;
         }
         loadNewDataMethod(lvPageSize, $('#paginationInfo').attr("totalPage"));
+        changePage();
     });
 }
 
@@ -154,6 +160,7 @@ function updateTableContentWhenOnClickPagination2(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, 1);
+        changePage();
     });
 
     $('#previousPage2').on('click', function() {
@@ -161,6 +168,7 @@ function updateTableContentWhenOnClickPagination2(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, $('#paginationInfo2').attr("pageNum") - 1);
+        changePage();
     });
 
     $('#nextPage2').on('click', function() {
@@ -168,6 +176,7 @@ function updateTableContentWhenOnClickPagination2(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, parseInt($('#paginationInfo2').attr("pageNum")) + 1);
+        changePage();
     });
 
     $('#lastPage2').on('click', function() {
@@ -175,6 +184,7 @@ function updateTableContentWhenOnClickPagination2(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, $('#paginationInfo2').attr("totalPage"));
+        changePage();
     });
 }
 
@@ -194,6 +204,7 @@ function updateTableContentWhenOnClickPagination3(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, 1);
+        changePage();
     });
 
     $('#previousPage3').on('click', function() {
@@ -201,6 +212,7 @@ function updateTableContentWhenOnClickPagination3(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, $('#paginationInfo3').attr("pageNum") - 1);
+        changePage();
     });
 
     $('#nextPage3').on('click', function() {
@@ -208,6 +220,7 @@ function updateTableContentWhenOnClickPagination3(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, parseInt($('#paginationInfo3').attr("pageNum")) + 1);
+        changePage();
     });
 
     $('#lastPage3').on('click', function() {
@@ -215,7 +228,13 @@ function updateTableContentWhenOnClickPagination3(loadNewDataMethod) {
             return;
         }
         loadNewDataMethod(lvPageSize, $('#paginationInfo3').attr("totalPage"));
+        changePage();
     });
+}
+
+function changePage() {
+    mvProductSearchModalListSelected = [];
+    $('#cbxChooseAllProduct').prop("checked", false);
 }
 
 //Search tool
@@ -371,4 +390,9 @@ function setupSelectMultiple() {
         //Date range picker
         $('#reservation').daterangepicker()
     })
+}
+
+function setupSearchSelector(element, defaultOption, endPoint) {
+    clearSearchSelection(element, defaultOption);
+    downloadCategoryForSelection(element, endPoint);
 }

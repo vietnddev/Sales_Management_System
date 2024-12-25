@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
+import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.OrderStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -90,7 +91,7 @@ public class OrderDTO extends Order implements Serializable {
 
 		if (ObjectUtils.isNotEmpty(order.getListImageQR())) {
 			FileStorage imageQRCode = order.getListImageQR().get(0);
-			dto.setQrCode(imageQRCode.getDirectoryPath() + "/" + imageQRCode.getStorageName());
+			dto.setQrCode(FileUtils.getImageUrl(imageQRCode, false));
 		}
 
 		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : new BigDecimal(0));

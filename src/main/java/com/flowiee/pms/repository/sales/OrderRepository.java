@@ -2,6 +2,7 @@ package com.flowiee.pms.repository.sales;
 
 import com.flowiee.pms.entity.sales.Order;
 
+import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,24 +17,22 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query("select distinct o from Order o " +
-           "left join Customer c on c.id = o.customer.id " +
-           "left join Category sc on sc.id = o.kenhBanHang.id and sc.type = 'SALES_CHANNEL' " +
-           "left join Category os on os.id = o.orderStatus and os.type = 'ORDER_STATUS' " +
-           "left join Category pm on pm.id = o.paymentMethod.id and pm.type = 'PAYMENT_METHOD' " +
-           "left join FileStorage f on f.order.id = o.id " +
-           "left join Account a on a.id = o.createdBy " +
-           "where 1=1 " +
-           "and (:txtSearch is null or (o.receiverName like %:txtSearch%)) " +
-           "and (:orderId is null or o.id=:orderId) " +
-           "and (:paymentMethodId is null or o.paymentMethod.id=:paymentMethodId) " +
-           "and (:orderStatus is null or o.orderStatus=:orderStatus) " +
-           "and (:salesChannelId is null or o.kenhBanHang.id=:salesChannelId) " +
-           "and (:sellerId is null or o.nhanVienBanHang.id=:sellerId) " +
-           "and (:customerId is null or o.customer.id=:customerId) " +
-           "and (:branchId is null or a.branch.id = :branchId) " +
-           "and (:groupCustomerId is null or 1=1) " +
-           "and ((trunc(o.orderTime) >= trunc(:orderTimeFrom)) and (trunc(o.orderTime) <= trunc(:orderTimeTo)))")
+    @Query(value = "select distinct o from Order o " +
+            "left join o.customer c " +
+            "left join o.kenhBanHang sc on sc.type = 'SALES_CHANNEL' " +
+            "left join o.paymentMethod pm on pm.type = 'PAYMENT_METHOD' " +
+            "left join FileStorage f on f.order.id = o.id " +
+            "left join Account a on a.id = o.createdBy " +
+            "where (:txtSearch is null or (o.receiverName like %:txtSearch%)) " +
+            "and (:orderId is null or o.id=:orderId) " +
+            "and (:paymentMethodId is null or o.paymentMethod.id=:paymentMethodId) " +
+            "and (:orderStatus is null or o.orderStatus = :orderStatus) " + // So sánh trực tiếp với enum
+            "and (:salesChannelId is null or o.kenhBanHang.id=:salesChannelId) " +
+            "and (:sellerId is null or o.nhanVienBanHang.id=:sellerId) " +
+            "and (:customerId is null or o.customer.id=:customerId) " +
+            "and (:branchId is null or a.branch.id = :branchId) " +
+            "and (:groupCustomerId is null or 1=1) " +
+            "and ((trunc(o.orderTime) >= trunc(:orderTimeFrom)) and (trunc(o.orderTime) <= trunc(:orderTimeTo)))")
     Page<Order> findAll(@Param("txtSearch") String txtSearch,
                         @Param("orderId") Long orderId,
                         @Param("paymentMethodId") Long paymentMethodId,

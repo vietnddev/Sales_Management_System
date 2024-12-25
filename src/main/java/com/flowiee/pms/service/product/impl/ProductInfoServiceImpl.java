@@ -12,6 +12,7 @@ import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.CoreUtils;
+import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.VoucherApplyDTO;
@@ -259,7 +260,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
         for (ProductDTO p : products) {
             FileStorage imageActive = p.getImage();//mvProductImageService.findImageActiveOfProduct(p.getId());
             if (imageActive != null) {
-                p.setImageActive("/" + imageActive.getDirectoryPath() + "/" + imageActive.getStorageName());
+                p.setImageActive(FileUtils.getImageUrl(imageActive, true));
             }
             List<Long> listVoucherInfoId = new ArrayList<>();
             for (VoucherApplyDTO voucherApplyDTO : mvVoucherApplyService.findByProductId(p.getId())) {
@@ -285,10 +286,11 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             for (Category color : mvCategoryRepository.findColorOfProduct(p.getId())) {
                 StringBuilder sizeName = new StringBuilder();
                 List<Category> listSize = mvCategoryRepository.findSizeOfColorOfProduct(p.getId(), color.getId());
-                for (int i = 0; i < listSize.size(); i++) {
+                int sizeLength = listSize.size();
+                for (int i = 0; i < sizeLength; i++) {
                     Category categorySize = listSize.get(i);
                     int qtyStorage = mvProductStatisticsService.findProductVariantQuantityBySizeOfEachColor(p.getId(), color.getId(), categorySize.getId());
-                    if (i == listSize.size() - 1) {
+                    if (i == sizeLength - 1) {
                         sizeName.append(categorySize.getName()).append(" (").append(qtyStorage).append(")");
                     } else {
                         sizeName.append(categorySize.getName()).append(" (").append(qtyStorage).append(")").append(", ");

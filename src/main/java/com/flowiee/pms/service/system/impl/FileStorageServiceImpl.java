@@ -94,7 +94,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
             throw new BadRequestException("File not found!");
         }
         mvFileRepository.deleteById(fileId);
-        File file = new File(Core.getResourceUploadPath() + "/" + fileStorage.get().getDirectoryPath() + "/" + fileStorage.get().getStorageName());
+        File file = new File(Core.getResourceUploadPath() + FileUtils.getImageUrl(fileStorage.get(), true));
         if (file.exists() && file.delete()) {
             return MessageCode.DELETE_SUCCESS.getDescription();
         }
