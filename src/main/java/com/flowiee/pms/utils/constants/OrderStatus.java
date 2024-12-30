@@ -2,9 +2,7 @@ package com.flowiee.pms.utils.constants;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Getter
 public enum OrderStatus {
@@ -59,5 +57,13 @@ public enum OrderStatus {
             }
         }
         return statusList;
+    }
+
+    public static LinkedHashMap<String, String> getAllMap(OrderStatus exclude) {
+        LinkedHashMap<String, String> statusMap = new LinkedHashMap<>();
+        for (OrderStatus status : getAll(exclude)) {
+            statusMap.put(status.name(), status.getName());
+        }
+        return statusMap;
     }
 }

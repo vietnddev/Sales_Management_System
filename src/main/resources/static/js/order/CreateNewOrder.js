@@ -23,18 +23,18 @@ function createOrder() {
         let apiURL = mvHostURLCallApi + '/order/insert';
         let body = {
             customerId: customerId,
-            cashierId : accountId,
+            salesAssistantId : accountId,
             salesChannelId: salesChannelId,
-            payMethodId: paymentMethodId,
-            orderStatusId : orderStatusId,
+            paymentMethodId: paymentMethodId,
+            orderStatus : orderStatusId,
             note : note,
-            orderTimeStr : orderTime,
+            orderTime : orderTime,
             cartId : cartId,
-            receiverName : receiveName,
-            receiverPhone : receivePhoneNumber,
-            receiverEmail : receiveEmail,
-            receiverAddress : receiveAddress,
-            voucherUsedCode : mvVoucherCode,
+            recipientName : receiveName,
+            recipientPhone : receivePhoneNumber,
+            recipientEmail : receiveEmail,
+            shippingAddress : receiveAddress,
+            voucherUsed : mvVoucherCode,
             amountDiscount : mvAmountDiscount
         }
         $.ajax({

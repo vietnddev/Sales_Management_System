@@ -104,6 +104,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
 
         customer.setCreatedBy(dto.getCreatedBy() != null ? dto.getCreatedBy() : CommonUtils.getUserPrincipal().getId());
         customer.setBonusPoints(0);
+        customer.setIsBlackList(false);
         Customer customerInserted = mvCustomerRepository.save(customer);
 
         CustomerContact customerContact = CustomerContact.builder()
@@ -115,7 +116,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         if (lvPhoneDefault != null) {
             ContactType lvContactType = ContactType.P;
 
-            if (CoreUtils.validateEmail(lvPhoneDefault))
+            if (!CoreUtils.validateEmail(lvPhoneDefault))
                 throw new BadRequestException("Phone number invalid");
             SystemConfig lvConfig = mvConfigService.getSystemConfig(ConfigCode.allowDuplicateCustomerPhoneNumber.name());
             if (isConfigAvailable(lvConfig) && !lvConfig.isYesOption()) {
@@ -130,7 +131,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         if (lvEmailDefault != null) {
             ContactType lvContactType = ContactType.E;
 
-            if (CoreUtils.validateEmail(lvEmailDefault))
+            if (!CoreUtils.validateEmail(lvEmailDefault))
                 throw new BadRequestException("Email invalid");
             if (mvCustomerContactRepository.findByContactTypeAndValue(lvContactType.name(), lvEmailDefault) != null)
                 throw new BadRequestException(String.format("Email %s already used!", lvEmailDefault));

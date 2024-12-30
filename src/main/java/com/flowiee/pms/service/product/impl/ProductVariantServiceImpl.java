@@ -5,6 +5,7 @@ import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductPrice;
 import com.flowiee.pms.entity.product.ProductVariantExim;
+import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
@@ -13,8 +14,10 @@ import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.*;
 import com.flowiee.pms.model.dto.ProductPriceDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
+import com.flowiee.pms.repository.sales.OrderCartRepository;
 import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.category.CategoryService;
+import com.flowiee.pms.service.sales.CartService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.CoreUtils;
@@ -35,6 +38,8 @@ import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.utils.converter.ProductVariantConvert;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -61,26 +66,44 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     private final TicketExportService mvTicketExportService;
     private final CategoryService mvCategoryService;
     private final StorageService mvStorageService;
+    private final OrderCartRepository mvCartRepository;
+    @Autowired
+    @Lazy
+    private CartService mvCartService;
 
     @Override
     public List<ProductVariantDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null, null).getContent();
+        return this.findAll(-1, -1, null, null, null, null, null, null, false).getContent();
     }
 
     @Override
-    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Long pProductId, Long pTicketImport, Long pColor, Long pSize, Long pFabricType, Boolean pAvailableForSales) {
+    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Long pProductId, Long pTicketImport, Long pColor, Long pSize, Long pFabricType, Boolean pAvailableForSales, boolean checkInAnyCart) {
         Pageable pageable = getPageable(pageNum, pageSize, Sort.by("variantName").ascending());
         Page<ProductDetail> productVariantPage = mvProductVariantRepository.findAll(pProductId, pColor, pSize, pFabricType, pAvailableForSales, pageable);
-        
+
         List<ProductVariantDTO> pDTOs = productVariantPage.getContent().stream()
         	    .map(ProductVariantConvert::entityToDTO)
         	    .peek(dto -> {
         	        setPriceInfo(dto, dto.getVariantPrice());
         	        setImageSrc(dto);
+                    OrderCart currentCart = getCurrentCart(checkInAnyCart);
+                    if (currentCart != null) {
+                        dto.setCurrentInCart(mvCartService.isItemExistsInCart(currentCart.getId(), dto.getId()));
+                    }
         	    })
         	    .collect(Collectors.toList());
         
         return new PageImpl<>(pDTOs, pageable, productVariantPage.getTotalElements());
+    }
+
+    private OrderCart getCurrentCart(boolean checkInAnyCart) {
+        if (checkInAnyCart) {
+            List<OrderCart> cartList = mvCartRepository.findByAccountId(CommonUtils.getUserPrincipal().getId());
+            if (ObjectUtils.isNotEmpty(cartList)) {
+                return cartList.get(0);
+            }
+        }
+        return null;
     }
 
     @Override

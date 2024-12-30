@@ -44,6 +44,7 @@ public class ProductVariantDTO extends ProductDetail implements Serializable {
     Long storageIdInitSoldQty;
     ProductPriceDTO price;
     String imageSrc;
+    Boolean currentInCart;
 
 	@Override
 	public String toString() {

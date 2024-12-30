@@ -30,7 +30,9 @@ public enum ConfigCode {
     shopName("Tên cửa hàng", "Flowiee"),
     shopPhoneNumber("Số điện thoại", "(+84) 706 820 684"),
     sysTimeOut("Thời gian timeout", "3600"),
-    tokenResetPasswordValidityPeriod("Thông gian hiệu lực của token đổi mật khẩu (phút)", "60");
+    tokenResetPasswordValidityPeriod("Thông gian hiệu lực của token đổi mật khẩu (phút)", "60"),
+    generateNewPasswordDefault("Mật khẩu mặc định", "123456"),
+    byPassLogin("Không kiểm tra mật khẩu khi đăng nhập", "Y");
 
     private String description;
     private String defaultValue;

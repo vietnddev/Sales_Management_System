@@ -42,7 +42,7 @@ public class ProductVariantController extends BaseController {
     public AppResponse<List<ProductVariantDTO>> findProductVariants(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                     @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                                     @RequestParam(value = "readyForSales", required = false) Boolean readyForSales) {
-        Page<ProductVariantDTO> data = mvProductVariantService.findAll(CoreUtils.coalesce(pageSize), CoreUtils.coalesce(pageNum) - 1, null, null, null, null, null, readyForSales);
+        Page<ProductVariantDTO> data = mvProductVariantService.findAll(CoreUtils.coalesce(pageSize), CoreUtils.coalesce(pageNum) - 1, null, null, null, null, null, readyForSales, true);
         return success(data.getContent(), data.getNumber() + 1, data.getSize(), data.getTotalPages(), data.getTotalElements());
     }
 
@@ -50,7 +50,7 @@ public class ProductVariantController extends BaseController {
     @GetMapping("/{productId}/variants")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Long productId) {
-        return success(mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent());
+        return success(mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null, false).getContent());
     }
 
     @Operation(summary = "Find detail product variant")

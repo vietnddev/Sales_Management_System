@@ -53,7 +53,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         List<CartItemModel> cartItemModelList = new ArrayList<>();
         OrderCart cart = cartRepository.findByAccountId(CommonUtils.getUserPrincipal().getId()).get(0);
         List<ProductCombo> productCombos = mvProductComboService.findAll();
-        List<ProductVariantDTO> productVariantDTOs = mvProductVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent();
+        List<ProductVariantDTO> productVariantDTOs = mvProductVariantService.findAll(-1, -1, null, null, null, null, null, true, false).getContent();
         for (ProductCombo productCbo : productCombos) {
             int availableQty = productCbo.getQuantity();
             if (availableQty < 1)

@@ -34,7 +34,7 @@ public class CommonUtils {
     public static ServerInfo mvServerInfo;
     public static final String productID = "SMS";
     public static String defaultCountryCode = "VN";
-    public static String defaultNewPassword = "123456";
+    public static String defaultNewPassword;
 
     public static String formatToVND(Object currency) {
         @SuppressWarnings("deprecation")

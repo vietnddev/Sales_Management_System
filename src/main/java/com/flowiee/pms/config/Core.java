@@ -176,6 +176,7 @@ public class Core {
 		}
 
 		mvResourceUploadPath = mvSystemConfigList.get(ConfigCode.resourceUploadPath).getValue();
+		CommonUtils.defaultNewPassword = mvSystemConfigList.get(ConfigCode.generateNewPasswordDefault).getValue();
 	}
 
 	private void initData() throws Exception {

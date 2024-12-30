@@ -217,7 +217,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public boolean productInUse(Long productId) throws RuntimeException {
-        return !mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null).getContent().isEmpty();
+        return !mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null, false).getContent().isEmpty();
     }
 
     @Override

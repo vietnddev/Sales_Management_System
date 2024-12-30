@@ -25,9 +25,6 @@ import com.flowiee.pms.utils.*;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.repository.sales.OrderRepository;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.*;
@@ -65,8 +62,6 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     private final CategoryService       mvCategoryService;
     private final CustomerService       mvCustomerService;
     private final AccountService        mvAccountService;
-
-    private BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     @Override
     public List<OrderDTO> findAll() {
@@ -129,10 +124,9 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         Customer lvCustomer = mvCustomerService.findById(pCustomerId, true);
         if (lvCustomer.getIsBlackList())
             throw new BadRequestException("The customer is on the blacklist!");
-        if (!CoreUtils.isNullStr(pOrderInfo.getReceiverEmail()) &&
-                CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
+        if (!CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
             throw new BadRequestException("Email invalid!");
-        if (CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
+        if (!CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
             throw new BadRequestException("Phone number invalid!");
         if (CoreUtils.isNullStr(pOrderInfo.getReceiverAddress()))
             throw new BadRequestException("Address must not empty!");
@@ -212,65 +206,61 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             mvVoucherTicketService.update(lvVoucherTicket, lvVoucherTicket.getId());
         }
 
-        try {
-            //Create order
-            Order orderSaved = mvOrderRepository.save(order);
-            //Create QRCode
-            mvOrderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
-            //Create items detail
-            for (Items items : lvCart.getListItems()) {
-                Long lvProductVariantId = items.getProductDetail().getId();
-                BigDecimal lvExtraDiscount = CoreUtils.coalesce(items.getExtraDiscount());
-                ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, true);
-                String productVariantName = productDetail.getVariantName();
-                int lvItemQuantity = mvCartItemsService.findQuantityOfItemProduct(lvCart.getId() , lvProductVariantId);
-                if (lvItemQuantity <= 0) {
-                    throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productVariantName));
-                }
-                if (lvItemQuantity > productDetail.getAvailableSalesQty()) {
-                    throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productVariantName}, null, getClass(), null);
-                }
-                mvOrderItemsService.save(OrderDetail.builder()
-                        .order(orderSaved)
-                        .productDetail(productDetail)
-                        .quantity(lvItemQuantity)
-                        .status(true)
-                        .note(items.getNote())
-                        .price(items.getPrice())
-                        .priceOriginal(items.getPriceOriginal())
-                        .extraDiscount(lvExtraDiscount)
-                        .priceType(items.getPriceType())
-                        .build());
+        //Create order
+        Order orderSaved = mvOrderRepository.save(order);
+        //Create QRCode
+        mvOrderQRCodeService.saveQRCodeOfOrder(orderSaved.getId());
+        //Create items detail
+        List<OrderDetail> itemsList = new ArrayList<>();
+        for (Items items : lvCart.getListItems()) {
+            Long lvProductVariantId = items.getProductDetail().getId();
+            BigDecimal lvExtraDiscount = CoreUtils.coalesce(items.getExtraDiscount());
+            ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, true);
+            String productVariantName = productDetail.getVariantName();
+            int lvItemQuantity = mvCartItemsService.findQuantityOfItemProduct(lvCart.getId(), lvProductVariantId);
+            if (lvItemQuantity <= 0) {
+                throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productVariantName));
             }
-            BigDecimal totalAmountDiscount = orderSaved.calTotalAmountDiscount();
-            if (totalAmountDiscount.doubleValue() <= 0) {
-                throw new BadRequestException("The value of order must greater than zero!");
+            if (lvItemQuantity > productDetail.getAvailableSalesQty()) {
+                throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productVariantName}, null, getClass(), null);
             }
-
-            //Accumulate bonus points for customer
-            if (request.getAccumulateBonusPoints() != null && request.getAccumulateBonusPoints()) {
-                BigDecimal bonusPoints = totalAmountDiscount.subtract(orderSaved.getAmountDiscount()).divide(ONE_HUNDRED).setScale(0, BigDecimal.ROUND_DOWN);
-                mvCustomerRepository.updateBonusPoint(lvCustomerId, bonusPoints.intValue());
-            }
-
-            //Sau khi đã lưu đơn hàng thì xóa all items
-            mvCartItemsService.deleteAllItems();
-
-            //Log
-            systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.Order, "Thêm mới đơn hàng", orderSaved.getCode());
-            logger.info("Insert new order success! insertBy={}", CommonUtils.getUserPrincipal().getUsername());
-
-            return OrderDTO.fromOrder(orderSaved);
-        } catch (RuntimeException ex) {
-            throw new AppException("Insert new order fail! order=" + request, ex);
+            itemsList.add(mvOrderItemsService.save(OrderDetail.builder()
+                    .order(orderSaved)
+                    .productDetail(productDetail)
+                    .quantity(lvItemQuantity)
+                    .status(true)
+                    .note(items.getNote())
+                    .price(items.getPrice())
+                    .priceOriginal(items.getPriceOriginal())
+                    .extraDiscount(lvExtraDiscount)
+                    .priceType(items.getPriceType())
+                    .build()));
         }
+        BigDecimal totalAmountDiscount = OrderUtils.calTotalAmount(itemsList, orderSaved.getAmountDiscount());
+        if (totalAmountDiscount.doubleValue() <= 0) {
+            throw new BadRequestException("The value of order must greater than zero!");
+        }
+
+        //Accumulate bonus points for customer
+        if (request.getAccumulateBonusPoints() != null && request.getAccumulateBonusPoints()) {
+            int bonusPoints = OrderUtils.calBonusPoints(totalAmountDiscount.subtract(orderSaved.getAmountDiscount()));
+            mvCustomerRepository.updateBonusPoint(lvCustomerId, bonusPoints);
+        }
+
+        //Sau khi đã lưu đơn hàng thì xóa all items
+        mvCartItemsService.deleteAllItems();
+
+        //Log
+        systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_ORD_C, MasterObject.Order, "Thêm mới đơn hàng", orderSaved.getCode());
+        logger.info("Insert new order success! insertBy={}", CommonUtils.getUserPrincipal().getUsername());
+
+        return OrderDTO.fromOrder(orderSaved);
     }
 
     private VldModel vldBeforeUpdateOrder(OrderDTO pOrderInfo) {
-        if (!CoreUtils.isNullStr(pOrderInfo.getReceiverEmail()) &&
-                CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
+        if (!CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
             throw new BadRequestException("Email invalid!");
-        if (CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
+        if (!CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
             throw new BadRequestException("Phone number invalid!");
         if (CoreUtils.isNullStr(pOrderInfo.getReceiverAddress()))
             throw new BadRequestException("Address must not empty!");
@@ -397,7 +387,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .tranContent(receiptType)
                 .paymentMethod(lvOrder.getPaymentMethod())
                 .fromToName(lvOrder.getCustomer().getCustomerName())
-                .amount(lvOrder.calTotalAmountDiscount())
+                .amount(OrderUtils.calTotalAmount(lvOrder.getListOrderDetail(), lvOrder.getAmountDiscount()))
                 .build());
         logger.info("End generate receipt issued when completed an order");
 
@@ -480,7 +470,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         lvNotificationParameter.put("deliveryAddress", pOrderInfo.getReceiverAddress());
         lvNotificationParameter.put("deliveryPhoneNumber", pOrderInfo.getReceiverPhone());
         lvNotificationParameter.put("deliveryEmail", pOrderInfo.getReceiverEmail());
-        lvNotificationParameter.put("totalOrderValue", pOrderInfo.calTotalAmountDiscount());
+        lvNotificationParameter.put("totalOrderValue", OrderUtils.calTotalAmount(pOrderInfo.getListOrderDetail(), pOrderInfo.getAmountDiscount()));
 
         StringBuilder lvRowsBuilder = new StringBuilder("");
         StringBuilder lvRowBuilder = new StringBuilder();

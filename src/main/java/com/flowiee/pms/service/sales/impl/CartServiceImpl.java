@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
+import com.flowiee.pms.model.payload.CartItemsReq;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
@@ -19,6 +20,7 @@ import com.flowiee.pms.service.sales.CartService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,6 +151,54 @@ public class CartServiceImpl extends BaseService implements CartService {
                     .quantity(1)
                     .note("")
                     .build();
+                mvCartItemsService.save(items);
+            }
+        }
+    }
+
+    @Transactional
+    @Override
+    public void addItemsToCart(CartItemsReq cartItemsReq) {
+        Long lvCartId = cartItemsReq.getCartId();
+        OrderCart orderCart = findById(lvCartId, true);
+
+        List<Items> itemsList = cartItemsReq.getItems();
+        if (ObjectUtils.isEmpty(itemsList)) {
+            throw new BadRequestException("Please choose at least one product!");
+        }
+
+        for (Items item : itemsList) {
+            ProductVariantDTO lvProductVariant = mvProductVariantService.findById(item.getProductVariantId(), false);
+            if (lvProductVariant == null) {
+                continue;
+            }
+            Integer lvItemQty = item.getQuantity();
+            if (lvItemQty <= 0) {
+                throw new BadRequestException("Vui lòng nhập số lượng cho sản phẩm: " + lvProductVariant.getVariantName());
+            }
+            if (lvProductVariant.getAvailableSalesQty() == 0 || lvProductVariant.getAvailableSalesQty() < lvItemQty) {
+                throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{lvProductVariant.getVariantName()}, null, getClass(), null);
+            }
+            if (this.isItemExistsInCart(lvCartId, lvProductVariant.getId())) {
+                Items items = mvCartItemsService.findItemByCartAndProductVariant(lvCartId, lvProductVariant.getId());
+                mvCartItemsService.increaseItemQtyInCart(items.getId(), items.getQuantity() + 1);
+            } else {
+                ProductPrice productVariantPrice = lvProductVariant.getVariantPrice();//mvProductPriceRepository.findPricePresent(null, Long.parseLong(productVariantId));
+                if (productVariantPrice == null) {
+                    throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", lvProductVariant.getVariantName()));
+                }
+                BigDecimal lvRetailPrice = productVariantPrice.getRetailPrice();
+                BigDecimal lvRetailPriceDiscount = productVariantPrice.getRetailPriceDiscount();
+                Items items = Items.builder()
+                        .orderCart(orderCart)
+                        .productDetail(lvProductVariant)
+                        .priceType(PriceType.L.name())
+                        .price(lvRetailPriceDiscount != null ? lvRetailPriceDiscount : lvRetailPrice)
+                        .priceOriginal(lvRetailPrice)
+                        .extraDiscount(BigDecimal.ZERO)
+                        .quantity(lvItemQty)
+                        .note("")
+                        .build();
                 mvCartItemsService.save(items);
             }
         }

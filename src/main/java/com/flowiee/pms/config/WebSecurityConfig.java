@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
@@ -26,6 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
+
+	public DevAuthBypassFilter devAuthBypassFilter() {
+		return new DevAuthBypassFilter();
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -67,18 +72,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 				.and()
 				//Page login
-				.formLogin().loginPage(EndPoint.URL_LOGIN.getValue()).permitAll()
+				.formLogin()
+					.loginPage(EndPoint.URL_LOGIN.getValue()).permitAll()
+					.loginProcessingUrl(getAuthEndPoint())
+					.failureUrl(EndPoint.URL_LOGIN.getValue() + "?success=fail")
+					.permitAll()
 				//Login OK thì redirect vào page danh sách sản phẩm
 				.defaultSuccessUrl("/")
-				.failureUrl(EndPoint.URL_LOGIN.getValue() + "?success=fail")
-				.loginProcessingUrl("/j_spring_security_check")
 				.authenticationDetailsSource(authenticationDetailsSource())
 				.and()
+				.addFilterBefore(devAuthBypassFilter(), UsernamePasswordAuthenticationFilter.class)
 				.httpBasic()
 				.and()
 				.logout()
-				.logoutUrl(EndPoint.URL_LOGOUT.getValue()) // Endpoint cho đăng xuất
-				.logoutSuccessUrl(EndPoint.URL_LOGIN.getValue()) // Đường dẫn sau khi đăng xuất thành công
+					.logoutUrl(EndPoint.URL_LOGOUT.getValue()) // Endpoint cho đăng xuất
+					.logoutSuccessUrl(EndPoint.URL_LOGIN.getValue()) // Đường dẫn sau khi đăng xuất thành công
 				.deleteCookies("JSESSIONID") // Xóa cookies sau khi đăng xuất
 				.invalidateHttpSession(true) // Hủy phiên làm việc
 				.and()
@@ -96,4 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		};
 //	}
 
+	public static String getAuthEndPoint() {
+		return "/j_spring_security_check";
+	}
 }

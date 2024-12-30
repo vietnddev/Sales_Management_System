@@ -13,6 +13,7 @@ import com.flowiee.pms.service.sales.CartItemsService;
 import com.flowiee.pms.service.sales.CartService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.constants.OrderStatus;
 import com.flowiee.pms.utils.constants.Pages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +24,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -57,6 +61,7 @@ public class CartControllerView extends BaseController {
         //modelAndView.addObject("listProductVariant", mvProductVariantService.findAll(-1, -1, null, null, null, null, null, true).getContent());
         //modelAndView.addObject("listItemsForSales", mvCartItemsService.findAllItemsForSales());
         //modelAndView.addObject("listItemsForSales", List.of(CartItemModel.builder().build()));
+        modelAndView.addObject("orderStatusMap", OrderStatus.getAllMap(null));
 
         double totalAmountWithoutDiscount = mvCartService.calTotalAmountWithoutDiscount(listOrderCart.get(0).getId());
         double amountDiscount = 0;

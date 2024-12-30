@@ -26,8 +26,9 @@ function getListOfProductsOnSearchModal(pageSize, pageNum) {
             mvProductSearchModalList = [];
             $.each(data, function (index, d) {
                 mvProductSearchModalList[d.id] = d;
+                let bgRowColor = d.currentInCart ? "lightcyan" : "none";
                 contentTable.append(`
-                    <tr>
+                    <tr style="background-color: ${bgRowColor}">
                         <td>${index + 1}</td>
                         <td>
                             <input type="checkbox" class="cbxChooseProduct" style="width: 25px; height: 25px" productVariantId="${d.id}">
@@ -37,9 +38,11 @@ function getListOfProductsOnSearchModal(pageSize, pageNum) {
                              min="1" max="100"
                              style="width: 60px; height: 34px">
                         </td>
-                        <td><img src="${d.imageSrc}" style="width: 50px; height: 50px; border-radius: 5px"></td>
+                        <td><img src="${d.imageSrc != null ? d.imageSrc : '#'}" style="width: 50px; height: 50px; border-radius: 5px"></td>
                         <td><a href="/san-pham/variant/${d.id}">${d.variantCode}</a></td>
-                        <td><span class="productVariantNameRowTbl" productVariantId="${d.id}">${d.variantName}</span></td>
+                        <td>
+                            <span class="productVariantNameRowTbl" productVariantId="${d.id}" id="productVariantName-${d.id}">${d.variantName}</span>
+                        </td>
                         <td>${d.colorName}</td>
                         <td>${d.sizeName}</td>
                         <td>${d.fabricTypeName}</td>
@@ -61,18 +64,23 @@ function getListOfProductsOnSearchModal(pageSize, pageNum) {
     setupSearchSelector($('#sizeSearchModal'), 'Chọn size', mvHostURLCallApi + '/category/size');
 }
 
+let getItemName = (itemId) => {
+    return $("#productVariantName-" + itemId).text();
+}
+
+let getItemQuantity = (itemId) => {
+    return $("#productQuantity-" + itemId).val();
+}
+
 function chooseProductOnSearchModal() {
     //Choose one product
     $(document).on('click', ".cbxChooseProduct", function() {
         let productVariantId = $(this).attr("productVariantId");
-        console.log("productVariantId: " + productVariantId)
         let isChecked = $(this).is(':checked');
-        console.log("checked: " + isChecked)
-
-        let quantity = $("#productQuantity-" + productVariantId).val()
         let productModel = {
             productVariantId: productVariantId,
-            quantity: quantity
+            productVariantName: getItemName(productVariantId),
+            quantity: getItemQuantity(productVariantId)
         }
 
         if (isChecked) {
@@ -82,7 +90,6 @@ function chooseProductOnSearchModal() {
                 return item.productVariantId !== productModel.productVariantId;
             })
         }
-        console.log(mvProductSearchModalListSelected)
     });
 
     //Choose all products in one page
@@ -91,10 +98,10 @@ function chooseProductOnSearchModal() {
         $('.cbxChooseProduct').each(function() {
             $(this).prop("checked", isChecked);
             let productVariantId = $(this).attr("productVariantId");
-            let quantity = $("#productQuantity-" + productVariantId).val()
             let productModel = {
                 productVariantId: productVariantId,
-                quantity: quantity
+                productVariantName: getItemName(productVariantId),
+                quantity: getItemQuantity(productVariantId)
             }
             if (isChecked) {
                 mvProductSearchModalListSelected.push(productModel);
@@ -104,7 +111,6 @@ function chooseProductOnSearchModal() {
                 })
             }
         });
-        console.log(mvProductSearchModalListSelected)
     });
 }
 
@@ -113,7 +119,13 @@ function submitProductOnSearchModal(functionId) {
         alert("Vui lòng chọn sản phẩm!");
         return;
     }
-    console.log(mvProductSearchModalListSelected)
+
+    $.each(mvProductSearchModalListSelected, function (index, d) {
+        let lvProductVariantId = d.productVariantId;
+        d.productVariantName = getItemName(lvProductVariantId);
+        d.quantity = getItemQuantity(lvProductVariantId);
+    });
+
     if (functionId === "createOrder") {
         let apiURL = mvHostURLCallApi + '/sls/cart/add-items';
         let body = {
@@ -128,6 +140,7 @@ function submitProductOnSearchModal(functionId) {
             success: function (response) {
                 if (response.status === "OK") {
                     alert(response.message)
+                    window.location.reload();
                 }
             },
             error: function (xhr) {
@@ -135,5 +148,4 @@ function submitProductOnSearchModal(functionId) {
             }
         });
     }
-    console.log(mvProductSearchModalListSelected)
 }

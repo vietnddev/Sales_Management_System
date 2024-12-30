@@ -6,6 +6,7 @@ import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.model.payload.CreateOrderReq;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.utils.constants.ErrorCode;
@@ -79,11 +80,11 @@ public class OrderController extends BaseController {
 
     @Operation(summary = "Create new order")
     @PostMapping("/insert")
-    public AppResponse<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+    public AppResponse<OrderDTO> createOrder(@RequestBody CreateOrderReq request) {
         try {
-            return success(mvOrderService.save(orderDTO));
+            return success(mvOrderService.save(request.toDTO()));
         } catch (RuntimeException ex) {
-            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "order"), ex);
+            throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "order") + "\n" + ex.getMessage(), ex);
         }
     }
 

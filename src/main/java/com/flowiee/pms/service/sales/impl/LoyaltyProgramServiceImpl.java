@@ -8,6 +8,7 @@ import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.sales.*;
 import com.flowiee.pms.service.BaseService;
 import com.flowiee.pms.service.sales.LoyaltyProgramService;
+import com.flowiee.pms.utils.OrderUtils;
 import com.flowiee.pms.utils.constants.LoyaltyTransactionType;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.RequiredArgsConstructor;
@@ -115,7 +116,8 @@ public class LoyaltyProgramServiceImpl extends BaseService implements LoyaltyPro
         if (lvCustomerOpt.isEmpty())
             throw new ResourceNotFoundException("Customer not found!");
 
-        BigDecimal lvPoints = getPoints(pOrder.calTotalAmountDiscount(), lvLoyaltyProgram);
+        BigDecimal lvTotalAmount = OrderUtils.calTotalAmount(pOrder.getListOrderDetail(), pOrder.getAmountDiscount());
+        BigDecimal lvPoints = getPoints(lvTotalAmount, lvLoyaltyProgram);
         if (lvPoints.doubleValue() <= 0)
             throw new BadRequestException("Points must be greater than zero!");
 

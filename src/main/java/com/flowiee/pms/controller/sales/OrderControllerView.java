@@ -46,7 +46,6 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView findDonHangDetail(@PathVariable("id") Long orderId) {
-        System.out.println("alo");
         OrderDTO lvOrderDetail = mvOrderService.findById(orderId, true);
         OrderStatus lvOrderStatus = lvOrderDetail.getOrderStatus();
 

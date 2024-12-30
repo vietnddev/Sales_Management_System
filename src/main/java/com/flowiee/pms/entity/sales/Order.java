@@ -146,30 +146,6 @@ public class Order extends BaseEntity implements Serializable {
 		super.id = id;
 	}
 
-	public BigDecimal calTotalAmount() {
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		if (listOrderDetail != null) {
-			for (OrderDetail d : listOrderDetail) {
-				totalAmount = totalAmount.add((d.getPrice().multiply(BigDecimal.valueOf(d.getQuantity()))).subtract(d.getExtraDiscount()));
-			}
-		}
-		return totalAmount;
-	}
-
-	public BigDecimal calTotalAmountDiscount() {
-		return calTotalAmount().subtract(amountDiscount);
-	}
-
-	public static int calTotalProduct(List<OrderDetail> orderItems) {
-		int totalItems = 0;
-		if (orderItems != null) {
-			for (OrderDetail d : orderItems) {
-				totalItems += d.getQuantity();
-			}
-		}
-		return totalItems;
-	}
-
 	public FileStorage getQRCode() {
 		if (getListImageQR() != null) {
 			for (FileStorage codeQR : getListImageQR()) {

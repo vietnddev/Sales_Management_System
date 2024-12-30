@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.utils.FileUtils;
+import com.flowiee.pms.utils.OrderUtils;
 import com.flowiee.pms.utils.constants.OrderStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -95,9 +96,9 @@ public class OrderDTO extends Order implements Serializable {
 		}
 
 		dto.setAmountDiscount(order.getAmountDiscount() != null ? order.getAmountDiscount() : new BigDecimal(0));
-		dto.setTotalAmount(order.calTotalAmount());
-		dto.setTotalAmountDiscount(order.calTotalAmountDiscount());
-		dto.setTotalProduct(calTotalProduct(order.getListOrderDetail()));
+		dto.setTotalAmount(OrderUtils.calTotalAmount(order.getListOrderDetail(), BigDecimal.ZERO));
+		dto.setTotalAmountDiscount(OrderUtils.calTotalAmount(order.getListOrderDetail(), order.getAmountDiscount()));
+		dto.setTotalProduct(OrderUtils.countTotalItems(order.getListOrderDetail()));
 		dto.setVoucherUsedCode(order.getVoucherUsedCode());
 		dto.setPaymentStatus(order.getPaymentStatus() != null && order.getPaymentStatus());
 		dto.setPaymentTime(order.getPaymentTime());
