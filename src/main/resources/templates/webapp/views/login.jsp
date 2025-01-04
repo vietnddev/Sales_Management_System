@@ -22,7 +22,7 @@
             <div class="card-body login-card-body" style="border-radius: 20px">
                 <form th:action="@{/j_spring_security_check}" method="post">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="username" id="username" placeholder="Username" required/>
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Username"/>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>

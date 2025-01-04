@@ -9,12 +9,12 @@ import com.flowiee.pms.model.CartItemModel;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.repository.sales.OrderCartRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.ProductComboService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.service.sales.CartItemsService;
-import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.constants.MessageCode;
+import com.flowiee.pms.common.utils.CommonUtils;
+import com.flowiee.pms.common.enumeration.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -137,7 +137,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
 
     @Transactional
     @Override
-    public void deleteAllItems() {
-        mvCartItemsRepository.deleteAllItems();
+    public void deleteAllItems(Long cartId) {
+        mvCartItemsRepository.deleteAllItems(cartId);
     }
 }

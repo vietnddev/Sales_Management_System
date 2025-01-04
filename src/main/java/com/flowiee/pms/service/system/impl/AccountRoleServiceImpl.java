@@ -5,13 +5,14 @@ import com.flowiee.pms.entity.system.AccountRole;
 import com.flowiee.pms.entity.system.GroupAccount;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.AccountRepository;
-import com.flowiee.pms.utils.constants.ACTION;
+import com.flowiee.pms.common.enumeration.ACTION;
 import com.flowiee.pms.model.role.*;
 import com.flowiee.pms.repository.system.AccountRoleRepository;
+import com.flowiee.pms.security.UserRightsTemp;
 import com.flowiee.pms.service.system.GroupAccountService;
 import com.flowiee.pms.service.system.RoleService;
 
-import com.flowiee.pms.utils.constants.MessageCode;
+import com.flowiee.pms.common.enumeration.MessageCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +30,7 @@ public class AccountRoleServiceImpl implements RoleService {
     AccountRepository     mvAccountRepository;
     GroupAccountService   mvGroupAccountService;
     AccountRoleRepository mvAccountRoleRepository;
+    UserRightsTemp        mvUserRightsTemp;
 
     @Override
     public List<RoleModel> findAllRoleByAccountId(Long accountId) {
@@ -89,12 +91,24 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     @Override
-    public String updatePermission(String moduleKey, String actionKey, Long accountId) {
-        mvAccountRoleRepository.save(AccountRole.builder()
-                .module(moduleKey)
-                .action(actionKey)
-                .accountId(accountId)
-                .build());
+    public String updatePermission(Account pAccount, List<ActionModel> pActionModelList) {
+        long lvAccountId = pAccount.getId();
+        String lvUsername = pAccount.getUsername();
+
+        this.deleteAllRole(null, lvAccountId);
+
+        List<String> lvRightsList = new ArrayList<>();
+        for (ActionModel lvRightModel : pActionModelList) {
+            String lvRight = lvRightModel.getActionKey();
+            mvAccountRoleRepository.save(AccountRole.builder()
+                    .module(lvRightModel.getModuleKey())
+                    .action(lvRight)
+                    .accountId(lvAccountId)
+                    .build());
+            lvRightsList.add(lvRight);
+        }
+        mvUserRightsTemp.addTempRights(lvUsername, lvRightsList);
+
         return MessageCode.UPDATE_SUCCESS.getDescription();
     }
 
@@ -108,7 +122,8 @@ public class AccountRoleServiceImpl implements RoleService {
         if (groupId == null && accountId == null) {
             throw new IllegalArgumentException("groupId and accountId cannot be null");
         }
-        mvAccountRoleRepository.deleteAll(groupId, accountId);
+        mvAccountRoleRepository.deleteByAccountId(accountId);
+        mvAccountRoleRepository.deleteByGroupAccountId(groupId);
         return MessageCode.DELETE_SUCCESS.getDescription();
     }
 
@@ -142,10 +157,21 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     private RoleModel initRoleModel(Long pGroupId, Long pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
+        AccountRole lvAccountRole = null;
+        try {
+            lvAccountRole = mvAccountRoleRepository.isAuthorized(pGroupId, pAccountId, pModuleKey, pActionKey);
+        } catch (RuntimeException ex) {
+            System.out.println("pGroupId " + pGroupId);
+            System.out.println("pAccountId " + pAccountId);
+            System.out.println("pModuleKey " + pModuleKey);
+            System.out.println("pActionKey " + pActionKey);
+            ex.printStackTrace();
+        }
+
         return RoleModel.builder()
                 .module(ModuleModel.builder().moduleKey(pModuleKey).moduleLabel(pModuleLabel).build())
                 .action(ActionModel.builder().moduleKey(pModuleKey).actionKey(pActionKey).actionLabel(pActionLabel).build())
-                .isAuthor((mvAccountRoleRepository.isAuthorized(pGroupId, pAccountId, pModuleKey, pActionKey)) != null)
+                .isAuthor(lvAccountRole != null)
                 .groupId(pGroupId)
                 .accountId(pAccountId)
                 .build();

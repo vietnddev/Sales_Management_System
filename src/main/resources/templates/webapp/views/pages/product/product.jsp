@@ -239,12 +239,12 @@
         }
 
         function createProduct() {
-            let params = "?PID=CL";
+            let params = "?PID_=CL";
             let apiURL = mvHostURLCallApi + "/product/create" + params;
-            let productTypeId = $("#productTypeField").val();
-            let brandId = $("#brandField").val();
+            let productTypeId = parseInt($("#productTypeField").val());
+            let brandId = parseInt($("#brandField").val());
             let productName = $("#productNameField").val();
-            let unitId = $("#unitField").val();
+            let unitId = parseInt($("#unitField").val());
             let body = {productTypeId: productTypeId, brandId: brandId, productName: productName, unitId: unitId};
             $.ajax({
                 url: apiURL,

@@ -1,5 +1,6 @@
 package com.flowiee.pms.schedule;
 
+import com.flowiee.pms.common.utils.SysConfigUtils;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.system.MailMedia;
 import com.flowiee.pms.entity.system.SystemConfig;
@@ -8,10 +9,10 @@ import com.flowiee.pms.repository.product.ProductDetailRepository;
 import com.flowiee.pms.repository.system.AccountRepository;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.service.system.MailMediaService;
-import com.flowiee.pms.utils.AppConstants;
-import com.flowiee.pms.utils.constants.ConfigCode;
-import com.flowiee.pms.utils.constants.NotificationType;
-import com.flowiee.pms.utils.constants.ScheduleTask;
+import com.flowiee.pms.common.constants.Constants;
+import com.flowiee.pms.common.enumeration.ConfigCode;
+import com.flowiee.pms.common.enumeration.NotificationType;
+import com.flowiee.pms.common.enumeration.ScheduleTask;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,7 +36,7 @@ public class NotifyProductExpiryScheduleExecutor extends ScheduleExecutor {
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")//Run at 0h every day
     @Override
-    public void execute() throws AppException {
+    public void init() throws AppException {
         super.init(ScheduleTask.NotifyProductExpiry);
     }
 
@@ -43,7 +44,7 @@ public class NotifyProductExpiryScheduleExecutor extends ScheduleExecutor {
     public void doProcesses() throws AppException{
         SystemConfig lvDaySendNotifyBeforeProductExpiry =
                 configRepository.findByCode(ConfigCode.daySendNotifyBeforeProductExpiry.name());
-        if (!isConfigAvailable(lvDaySendNotifyBeforeProductExpiry)) {
+        if (!SysConfigUtils.isValid(lvDaySendNotifyBeforeProductExpiry)) {
             return;
         }
         int lvDayBeforeExpiry = lvDaySendNotifyBeforeProductExpiry.getIntValue();
@@ -75,7 +76,7 @@ public class NotifyProductExpiryScheduleExecutor extends ScheduleExecutor {
             lvRowsBuilder.append(lvRowBuilder.toString());
             lvRowBuilder.setLength(0);
         }
-        String lvEmailDestination = accountRepository.findByUsername(AppConstants.ADMINISTRATOR).getEmail();
+        String lvEmailDestination = accountRepository.findByUsername(Constants.ADMINISTRATOR).getEmail();
         String lvExpiryDate = pExpiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         String lvShortDescription = pExpired ? String.format("Danh sách sản phẩm đã hết hạn sử dụng từ ngày %s:", lvExpiryDate)
                 : String.format("Danh sách sản phẩm sắp hết hạn sử dụng vào ngày %s:", lvExpiryDate);

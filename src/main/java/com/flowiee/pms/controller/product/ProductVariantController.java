@@ -1,6 +1,7 @@
 package com.flowiee.pms.controller.product;
 
-import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.base.controller.BaseController;
+import com.flowiee.pms.common.constants.Constants;
 import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.AppException;
@@ -12,8 +13,8 @@ import com.flowiee.pms.model.dto.ProductVariantTempDTO;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductPriceService;
 import com.flowiee.pms.service.product.ProductVariantService;
-import com.flowiee.pms.utils.CoreUtils;
-import com.flowiee.pms.utils.constants.ErrorCode;
+import com.flowiee.pms.common.utils.CoreUtils;
+import com.flowiee.pms.common.enumeration.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
@@ -39,10 +40,14 @@ public class ProductVariantController extends BaseController {
     @Operation(summary = "Find all variants")
     @GetMapping("/variant/all")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
-    public AppResponse<List<ProductVariantDTO>> findProductVariants(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                                                    @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                                                    @RequestParam(value = "readyForSales", required = false) Boolean readyForSales) {
-        Page<ProductVariantDTO> data = mvProductVariantService.findAll(CoreUtils.coalesce(pageSize), CoreUtils.coalesce(pageNum) - 1, null, null, null, null, null, readyForSales, true);
+    public AppResponse<List<ProductVariantDTO>> findProductVariants(@RequestParam(name = Constants.PAGE_SIZE, required = false, defaultValue = Constants.DEFAULT_PSIZE) Integer pageSize,
+                                                                    @RequestParam(name = Constants.PAGE_NUM, required = false, defaultValue = Constants.DEFAULT_PNUM) Integer pageNum,
+                                                                    @RequestParam(value = "readyForSales", required = false) Boolean readyForSales,
+                                                                    @RequestParam(value = "productId", required = false) Long productId,
+                                                                    @RequestParam(value = "colorId", required = false) Long pColorId,
+                                                                    @RequestParam(value = "sizeId", required = false) Long pSizeId,
+                                                                    @RequestParam(value = "fabricTypeId", required = false) Long fabricTypeId) {
+        Page<ProductVariantDTO> data = mvProductVariantService.findAll(CoreUtils.coalesce(pageSize), CoreUtils.coalesce(pageNum) - 1, productId, null, pColorId, pSizeId, fabricTypeId, readyForSales, true);
         return success(data.getContent(), data.getNumber() + 1, data.getSize(), data.getTotalPages(), data.getTotalElements());
     }
 

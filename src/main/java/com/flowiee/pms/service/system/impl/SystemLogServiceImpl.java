@@ -1,16 +1,16 @@
 package com.flowiee.pms.service.system.impl;
 
 import com.flowiee.pms.entity.system.SystemLog;
-import com.flowiee.pms.utils.ChangeLog;
+import com.flowiee.pms.common.ChangeLog;
 import com.flowiee.pms.repository.system.SystemLogRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.system.SystemLogService;
 
-import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.constants.ACTION;
-import com.flowiee.pms.utils.constants.LogType;
-import com.flowiee.pms.utils.constants.MODULE;
-import com.flowiee.pms.utils.constants.MasterObject;
+import com.flowiee.pms.common.utils.CommonUtils;
+import com.flowiee.pms.common.enumeration.ACTION;
+import com.flowiee.pms.common.enumeration.LogType;
+import com.flowiee.pms.common.enumeration.MODULE;
+import com.flowiee.pms.common.enumeration.MasterObject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

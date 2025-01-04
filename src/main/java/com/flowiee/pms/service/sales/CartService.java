@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.model.payload.CartItemsReq;
-import com.flowiee.pms.service.BaseCurdService;
+import com.flowiee.pms.base.service.BaseCurdService;
 import com.flowiee.pms.entity.sales.OrderCart;
 
 public interface CartService extends BaseCurdService<OrderCart> {

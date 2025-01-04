@@ -1,5 +1,6 @@
 package com.flowiee.pms.schedule;
 
+import com.flowiee.pms.common.utils.SysConfigUtils;
 import com.flowiee.pms.entity.system.EventLog;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.entity.system.SystemLog;
@@ -7,8 +8,8 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.repository.system.EventLogRepository;
 import com.flowiee.pms.repository.system.SystemLogRepository;
-import com.flowiee.pms.utils.constants.ConfigCode;
-import com.flowiee.pms.utils.constants.ScheduleTask;
+import com.flowiee.pms.common.enumeration.ConfigCode;
+import com.flowiee.pms.common.enumeration.ScheduleTask;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -27,20 +28,19 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
     @Transactional
     @Scheduled(cron = "0 0 1 * * ?")
     @Override
-    public void execute() throws AppException {
+    public void init() throws AppException {
+        enableLog = true;
         super.init(ScheduleTask.ClearLog);
     }
 
     @Override
-    public void doProcesses() throws AppException{
+    public void doProcesses() throws AppException {
         if (!isEnableDeleteLog()) {
-            logger.info("ClearLogScheduleExecutor config " + ConfigCode.deleteSystemLog.name() + " is disable");
             return;
         }
 
         SystemConfig lvDayDeleteSystemLogConfig = configRepository.findByCode(ConfigCode.dayDeleteSystemLog.name());
-        if (isConfigAvailable(lvDayDeleteSystemLogConfig)) {
-            logger.info("ClearLogScheduleExecutor config " + ConfigCode.dayDeleteSystemLog.name() + " is disable");
+        if (SysConfigUtils.isValid(lvDayDeleteSystemLogConfig)) {
             return;
         }
 
@@ -65,7 +65,7 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
 
     private boolean isEnableDeleteLog() {
         SystemConfig lvDeleteSystemLogConfig = configRepository.findByCode(ConfigCode.deleteSystemLog.name());
-        if (!isConfigAvailable(lvDeleteSystemLogConfig) || !lvDeleteSystemLogConfig.isYesOption()) {
+        if (!SysConfigUtils.isYesOption(lvDeleteSystemLogConfig)) {
             return false;
         }
         return true;

@@ -212,17 +212,16 @@
             $("#btn-insert-update-submit").on("click", function () {
                 let actionType = $(this).attr("actionType");
                 let applicableProducts = [];
-                $.each(mvApplicableProductIds.val(), function (index, d) {
-                    applicableProducts.push({id : d});
+                $.each(mvApplicableProductIds.val(), function (index, productId) {
+                    applicableProducts.push(productId);
                 })
                 let promotion = {
-                    id : mvId,
                     title : mvTitle.val(),
-                    discountPercent : mvDiscountPercent.val(),
-                    discountPrice : mvDiscountPrice.val(),
-                    discountPriceMax : mvDiscountPriceMax.val(),
-                    startTimeStr : mvStartTime.val(),
-                    endTimeStr : mvEndTime.val(),
+                    discountPercent : parseInt(mvDiscountPercent.val()),
+                    discountPrice : parseFloat(mvDiscountPrice.val()),
+                    discountPriceMax : parseFloat(mvDiscountPriceMax.val()),
+                    startTime : mvStartTime.val(),
+                    endTime : mvEndTime.val(),
                     description : mvDescription.val(),
                     applicableProducts : applicableProducts
                 }
