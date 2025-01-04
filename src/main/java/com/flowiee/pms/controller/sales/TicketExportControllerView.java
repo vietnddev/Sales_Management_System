@@ -1,6 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
-import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.base.controller.BaseController;
 import com.flowiee.pms.entity.sales.TicketExport;
 import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.service.sales.TicketExportService;

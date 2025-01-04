@@ -4,7 +4,7 @@ import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.dto.VoucherApplyDTO;
 import com.flowiee.pms.entity.sales.VoucherApply;
 import com.flowiee.pms.repository.sales.VoucherApplyRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 
 import com.flowiee.pms.utils.constants.MessageCode;

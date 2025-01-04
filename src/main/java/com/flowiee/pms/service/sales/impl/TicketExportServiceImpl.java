@@ -13,7 +13,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.repository.product.ProductDetailTempRepository;
 import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.repository.sales.TicketExportRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.sales.OrderItemsService;

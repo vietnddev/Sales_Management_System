@@ -3,11 +3,12 @@ package com.flowiee.pms.entity.sales;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flowiee.pms.entity.BaseEntity;
+import com.flowiee.pms.base.entity.BaseEntity;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.utils.constants.OrderStatus;
+import com.flowiee.pms.utils.constants.PriorityLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -102,7 +103,7 @@ public class Order extends BaseEntity implements Serializable {
 	String paymentNote;
 
 	@Column(name = "payment_amount")
-	Float paymentAmount;
+	BigDecimal paymentAmount;
 
 	@Column(name = "cod_fee")
 	BigDecimal codFee;
@@ -127,6 +128,10 @@ public class Order extends BaseEntity implements Serializable {
 	LocalDateTime successfulDeliveryTime;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "priority_level")
+	PriorityLevel priorityLevel;
+
+	@Enumerated(EnumType.STRING)
 	@Column(name = "order_status", length = 10)
 	OrderStatus orderStatus;
 
@@ -141,6 +146,10 @@ public class Order extends BaseEntity implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	List<FileStorage> listImageQR;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	List<CustomerDebt> customerDebtList;
 
 	public Order(long id) {
 		super.id = id;

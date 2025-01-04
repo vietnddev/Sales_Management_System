@@ -35,7 +35,7 @@ public class NotifyProductExpiryScheduleExecutor extends ScheduleExecutor {
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")//Run at 0h every day
     @Override
-    public void execute() throws AppException {
+    public void init() throws AppException {
         super.init(ScheduleTask.NotifyProductExpiry);
     }
 
@@ -43,7 +43,7 @@ public class NotifyProductExpiryScheduleExecutor extends ScheduleExecutor {
     public void doProcesses() throws AppException{
         SystemConfig lvDaySendNotifyBeforeProductExpiry =
                 configRepository.findByCode(ConfigCode.daySendNotifyBeforeProductExpiry.name());
-        if (!isConfigAvailable(lvDaySendNotifyBeforeProductExpiry)) {
+        if (!configAvailable(lvDaySendNotifyBeforeProductExpiry)) {
             return;
         }
         int lvDayBeforeExpiry = lvDaySendNotifyBeforeProductExpiry.getIntValue();

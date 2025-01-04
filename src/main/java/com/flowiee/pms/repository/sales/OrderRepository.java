@@ -2,7 +2,6 @@ package com.flowiee.pms.repository.sales;
 
 import com.flowiee.pms.entity.sales.Order;
 
-import com.flowiee.pms.utils.constants.CategoryType;
 import com.flowiee.pms.utils.constants.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Modifying
     @Query("update Order set paymentTime=:paymentTime, paymentMethod.id=:paymentMethod, paymentAmount=:paymentAmount, paymentNote=:paymentNote, paymentStatus = true where id=:orderId")
-    void updatePaymentStatus(@Param("orderId") Long orderId, @Param("paymentTime") LocalDateTime paymentTime, @Param("paymentMethod") Long paymentMethod, @Param("paymentAmount") Float paymentAmount, @Param("paymentNote") String paymentNote);
+    void updatePaymentStatus(@Param("orderId") Long orderId, @Param("paymentTime") LocalDateTime paymentTime, @Param("paymentMethod") Long paymentMethod, @Param("paymentAmount") BigDecimal paymentAmount, @Param("paymentNote") String paymentNote);
 
 //    @Query("select " +
 //           "sum(case when extract(month from o.thoiGianDatHang) = 1 then o.totalAmountDiscount else 0 end) as JAN, " +
@@ -109,4 +109,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("from Order where customer.id = :customerId")
     List<Order> findByCustomer(@Param("customerId") Long customerId);
+
+    @Query("from Order where successfulDeliveryTime between :fromDate and :toDate")
+    List<Order> findBySuccessfulDeliveryTime(@Param("fromDate") LocalDateTime pFromDate, @Param("toDate") LocalDateTime pToDate);
+
+    @Query("from Order o where o.kenhBanHang.id = :salesChannelId")
+    List<Order> countBySalesChannel(@Param("salesChannelId") Long salesChannelId);
+
+    @Query("from Order o where o.kenhBanHang.code = :salesChannelCode")
+    List<Order> countBySalesChannel(@Param("salesChannelCode") String salesChannelCode);
 }

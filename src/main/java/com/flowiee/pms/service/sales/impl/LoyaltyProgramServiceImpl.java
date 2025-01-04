@@ -6,7 +6,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
 import com.flowiee.pms.repository.sales.*;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.sales.LoyaltyProgramService;
 import com.flowiee.pms.utils.OrderUtils;
 import com.flowiee.pms.utils.constants.LoyaltyTransactionType;

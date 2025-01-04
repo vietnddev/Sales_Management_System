@@ -6,16 +6,18 @@ import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.PromotionApplyDTO;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
 import com.flowiee.pms.repository.sales.PromotionInfoRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.ProductInfoService;
 import com.flowiee.pms.service.sales.PromotionApplyService;
 import com.flowiee.pms.service.sales.PromotionService;
+import com.flowiee.pms.service.system.MailMediaService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.MessageCode;
 import com.flowiee.pms.utils.constants.PromotionStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.*;
@@ -33,6 +35,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PromotionInfoServiceImpl extends BaseService implements PromotionService {
     ModelMapper             mvModelMapper;
+    MailMediaService        mvMailMediaService;
     ProductInfoService      mvProductInfoService;
     PromotionApplyService   mvPromotionApplyService;
     PromotionInfoRepository mvPromotionInfoRepository;
@@ -156,6 +159,21 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
             return PromotionStatus.A.getLabel();
         } else {
             return PromotionStatus.I.getLabel();
+        }
+    }
+
+    @Override
+    public void notifyToCustomer(List<Long> pCustomerIdList, Long pPromotionId) {
+        if (ObjectUtils.isEmpty(pCustomerIdList)) {
+            throw new BadRequestException("Vui lòng chọn khách hàng cần gửi thông báo!");
+        }
+
+        PromotionInfoDTO lvPromotionInfo = this.findById(pPromotionId, true);
+        String lvPromotionName = lvPromotionInfo.getTitle();
+
+        for (Long lvCustomerId : pCustomerIdList) {
+            //write more business here
+            //mvMailMediaService.send(null, null);
         }
     }
 }

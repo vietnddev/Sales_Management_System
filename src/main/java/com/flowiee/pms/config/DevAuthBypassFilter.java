@@ -1,7 +1,8 @@
 package com.flowiee.pms.config;
 
+import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.constants.ConfigCode;
+import com.flowiee.pms.utils.CoreUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -25,12 +26,13 @@ public class DevAuthBypassFilter implements Filter {
             String servletPath = wrappedRequest.getServletPath();
 
             if (WebSecurityConfig.getAuthEndPoint().equals(servletPath)) {
-                String username = wrappedRequest.getParameter("username");
-                if (username != null) {
-                    boolean lvSystemByPass = Core.mvSystemConfigList.get(ConfigCode.byPassLogin).isYesOption();
-                    if (lvSystemByPass && mvSystemByPass) {
-                        wrappedRequest.setParameter("password", CommonUtils.defaultNewPassword);
+                if (mvSystemByPass) {
+                    String username = CoreUtils.trim(wrappedRequest.getParameter("username"));
+                    if (CoreUtils.isNullStr(username)) {
+                        username = AppConstants.ADMINISTRATOR;
                     }
+                    wrappedRequest.setParameter("username", username);
+                    wrappedRequest.setParameter("password", CommonUtils.defaultNewPassword);
                 }
             }
 

@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.config.Core;
+import com.flowiee.pms.base.system.Core;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.entity.system.SystemLog;
@@ -11,7 +11,7 @@ import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.system.ConfigRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.system.ConfigService;
 
@@ -74,7 +74,7 @@ public class ConfigServiceImpl extends BaseService implements ConfigService {
             List<SystemConfig> systemConfigList = this.findAll();
             Core.mvSystemConfigList.clear();
             for (SystemConfig systemConfig : systemConfigList) {
-                ConfigCode lvConfigCode = ConfigCode.valueOf(systemConfig.getCode());
+                ConfigCode lvConfigCode = ConfigCode.get(systemConfig.getCode());
                 String lvConfigValue = systemConfig.getValue();
 
                 if (lvConfigCode == null) continue;

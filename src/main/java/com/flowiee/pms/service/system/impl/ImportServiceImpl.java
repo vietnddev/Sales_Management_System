@@ -4,7 +4,7 @@ import com.flowiee.pms.entity.system.FileImportHistory;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.AppImportRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.system.ImportService;
 
 import com.flowiee.pms.utils.constants.MessageCode;

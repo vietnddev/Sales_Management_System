@@ -16,7 +16,7 @@ import com.flowiee.pms.entity.sales.Customer;
 import com.flowiee.pms.repository.sales.CustomerContactRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.repository.sales.OrderRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.sales.CustomerContactService;
 import com.flowiee.pms.service.sales.CustomerService;
 
@@ -105,6 +105,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
         customer.setCreatedBy(dto.getCreatedBy() != null ? dto.getCreatedBy() : CommonUtils.getUserPrincipal().getId());
         customer.setBonusPoints(0);
         customer.setIsBlackList(false);
+        customer.setIsVIP(dto.getIsVIP() != null ? dto.getIsVIP() : false);
         Customer customerInserted = mvCustomerRepository.save(customer);
 
         CustomerContact customerContact = CustomerContact.builder()
@@ -119,7 +120,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
             if (!CoreUtils.validateEmail(lvPhoneDefault))
                 throw new BadRequestException("Phone number invalid");
             SystemConfig lvConfig = mvConfigService.getSystemConfig(ConfigCode.allowDuplicateCustomerPhoneNumber.name());
-            if (isConfigAvailable(lvConfig) && !lvConfig.isYesOption()) {
+            if (configAvailable(lvConfig) && !lvConfig.isYesOption()) {
                 if ( mvCustomerContactRepository.findByContactTypeAndValue(lvContactType.name(), lvPhoneDefault) != null) {
                     throw new BadRequestException(String.format("Phone %s already used!", dto.getEmailDefault()));
                 }

@@ -6,7 +6,7 @@ import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.utils.constants.ACTION;
 import com.flowiee.pms.utils.constants.MODULE;
 import com.flowiee.pms.repository.sales.LedgerTransactionRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.sales.LedgerTransactionService;
 import com.flowiee.pms.utils.constants.LedgerTranStatus;
 import com.flowiee.pms.utils.constants.MasterObject;

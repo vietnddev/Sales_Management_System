@@ -1,8 +1,6 @@
 package com.flowiee.pms.validate.authorize.system;
 
-import com.flowiee.pms.exception.ForbiddenException;
-import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.validate.authorize.BaseAuthorize;
+import com.flowiee.pms.base.auth.BaseAuthorize;
 import com.flowiee.pms.utils.constants.ACTION;
 import org.springframework.stereotype.Component;
 

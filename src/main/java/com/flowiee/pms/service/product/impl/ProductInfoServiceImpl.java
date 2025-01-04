@@ -19,14 +19,12 @@ import com.flowiee.pms.model.dto.VoucherApplyDTO;
 import com.flowiee.pms.model.dto.VoucherInfoDTO;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.product.ProductRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.*;
 import com.flowiee.pms.service.sales.VoucherApplyService;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.utils.converter.ProductConvert;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -38,8 +36,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ProductInfoServiceImpl extends BaseService implements ProductInfoService {
     private final ProductDescriptionRepository mvProductDescriptionRepository;
-    private final ProductStatisticsService mvProductStatisticsService;
-    private final ProductVariantService mvProductVariantService;
+    private final ProductStatisticsService_0   mvProductStatisticsService;
+    private final ProductVariantService        mvProductVariantService;
     private final ProductHistoryService mvProductHistoryService;
     private final VoucherApplyService mvVoucherApplyService;
     private final CategoryRepository mvCategoryRepository;
@@ -144,7 +142,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
             systemLogService.writeLogCreate(MODULE.PRODUCT, ACTION.PRO_PRD_C, MasterObject.Product, "Thêm mới sản phẩm", product.getProductName());
             logger.info("Insert product success! {}", product);
-            return ProductConvert.convertToDTO(productSaved, productDescription.getDescription());
+            return ProductConvert.convertToDTO(productSaved, productDescription != null ? productDescription.getDescription() : null);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "product"), ex);
         }
@@ -251,6 +249,11 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
             }
         }
         return productHeldList;
+    }
+
+    @Override
+    public List<ProductDTO> getDiscontinuedProducts() {
+        return findAll(null, -1, -1, null, null, null, null, null, null, ProductStatus.I.name()).getContent();
     }
 
     private void setImageActiveAndLoadVoucherApply(List<ProductDTO> products) {

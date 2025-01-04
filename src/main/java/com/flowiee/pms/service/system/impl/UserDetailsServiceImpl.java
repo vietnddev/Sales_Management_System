@@ -11,10 +11,10 @@ import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.*;
-import com.flowiee.pms.model.UserPrincipal;
+import com.flowiee.pms.config.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
 import com.flowiee.pms.repository.system.SystemLogRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
 
@@ -30,7 +30,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
@@ -234,7 +233,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			return false;
 
 		SystemConfig lvTokenResetValidityMdl = mvConfigService.getSystemConfig(ConfigCode.tokenResetPasswordValidityPeriod.name());
-		if (!isConfigAvailable(lvTokenResetValidityMdl) || lvAccount.isResetTokenExpired(lvTokenResetValidityMdl.getIntValue())) {
+		if (!configAvailable(lvTokenResetValidityMdl) || lvAccount.isResetTokenExpired(lvTokenResetValidityMdl.getIntValue())) {
 			throw new BadRequestException("Token for reset password has expired!");
 		}
 

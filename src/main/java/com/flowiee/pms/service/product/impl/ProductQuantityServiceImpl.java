@@ -11,7 +11,7 @@ import com.flowiee.pms.service.system.MailMediaService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.ProductQuantityService;
 import com.flowiee.pms.service.system.SystemLogService;
 import lombok.AccessLevel;
@@ -63,7 +63,7 @@ public class ProductQuantityServiceImpl extends BaseService implements ProductQu
 
                 if (lvLowStockThreshold != null && productDetailUpdated.getStorageQty() <= lvLowStockThreshold) {
                     SystemConfig lvLowStockAlertMdl = mvConfigService.getSystemConfig(ConfigCode.lowStockAlert.name());
-                    if (isConfigAvailable(lvLowStockAlertMdl) && lvLowStockAlertMdl.isYesOption()) {
+                    if (configAvailable(lvLowStockAlertMdl) && lvLowStockAlertMdl.isYesOption()) {
                         sendNotifyWarningLowStock(productDetailUpdated);
                     }
                 }

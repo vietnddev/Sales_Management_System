@@ -1,12 +1,12 @@
 package com.flowiee.pms.exception;
 
-import com.flowiee.pms.config.Core;
-import com.flowiee.pms.controller.BaseController;
+import com.flowiee.pms.base.system.Core;
+import com.flowiee.pms.base.controller.BaseController;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.repository.system.AccountRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.system.MailMediaService;
 import com.flowiee.pms.utils.AppConstants;
 import com.flowiee.pms.utils.CoreUtils;
@@ -105,7 +105,7 @@ public class GlobalExceptionHandler extends BaseController {
 
     private void notifyEmail(String message) {
         SystemConfig lvNotifyFlag = Core.mvSystemConfigList.get(ConfigCode.sendNotifyAdminExceptionRuntime);
-        if (BaseService.isConfigAvailable(lvNotifyFlag) && lvNotifyFlag.isYesOption()) {
+        if (BaseService.configAvailable(lvNotifyFlag) && lvNotifyFlag.isYesOption()) {
             Account account = accountRepository.findByUsername(AppConstants.ADMINISTRATOR);
             if (account == null || CoreUtils.isNullStr(account.getEmail())) {
                 return;

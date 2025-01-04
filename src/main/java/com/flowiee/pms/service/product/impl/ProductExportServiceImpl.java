@@ -1,7 +1,7 @@
 package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.model.dto.ProductVariantDTO;
-import com.flowiee.pms.service.BaseExportService;
+import com.flowiee.pms.base.service.BaseExportService;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.CommonUtils;
 import lombok.AccessLevel;

@@ -1,5 +1,6 @@
 package com.flowiee.pms.service;
 
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.repository.system.AccountRepository;
@@ -30,7 +31,7 @@ public class CustomAuthenticationFailureEventListener implements ApplicationList
             account.setFailLogonCount(account.getFailLogonCount() + 1);
 
             SystemConfig lvFailLogonCountMdl = sysConfigRepository.findByCode(ConfigCode.failLogonCount.name());
-            if (BaseService.isConfigAvailable(lvFailLogonCountMdl)) {
+            if (BaseService.configAvailable(lvFailLogonCountMdl)) {
                 mvMaxFailLogon = Integer.parseInt(lvFailLogonCountMdl.getValue());
             }
             if (account.getFailLogonCount() >= mvMaxFailLogon) {

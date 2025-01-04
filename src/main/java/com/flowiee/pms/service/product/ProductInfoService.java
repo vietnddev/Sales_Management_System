@@ -1,7 +1,7 @@
 package com.flowiee.pms.service.product;
 
 import com.flowiee.pms.model.ProductHeld;
-import com.flowiee.pms.service.BaseCurdService;
+import com.flowiee.pms.base.service.BaseCurdService;
 import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.entity.product.Product;
 import com.flowiee.pms.utils.constants.PID;
@@ -29,4 +29,6 @@ public interface ProductInfoService extends BaseCurdService<ProductDTO> {
     boolean productInUse(Long productId);
 
     List<ProductHeld> getProductHeldInUnfulfilledOrder();
+
+    List<ProductDTO> getDiscontinuedProducts();
 }

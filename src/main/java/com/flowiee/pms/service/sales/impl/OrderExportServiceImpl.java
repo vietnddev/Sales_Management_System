@@ -1,7 +1,7 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.model.dto.OrderDTO;
-import com.flowiee.pms.service.BaseExportService;
+import com.flowiee.pms.base.service.BaseExportService;
 import com.flowiee.pms.service.sales.OrderService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

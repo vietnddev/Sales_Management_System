@@ -59,4 +59,7 @@ public interface ProductDetailRepository extends JpaRepository <ProductDetail, L
 
     @Query("from ProductDetail p where p.expiryDate = :expiryDate")
     List<ProductDetail> findByExpiryDate(LocalDate expiryDate);
+
+    @Query("from ProductDetail p where p.defectiveQty > 0")
+    List<ProductDetail> findDefective();
 }

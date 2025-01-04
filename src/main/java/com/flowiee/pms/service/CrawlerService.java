@@ -1,5 +1,6 @@
 package com.flowiee.pms.service;
 
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.product.*;
 import com.flowiee.pms.entity.system.SystemLog;

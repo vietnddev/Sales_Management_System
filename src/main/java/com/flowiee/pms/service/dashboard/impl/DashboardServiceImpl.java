@@ -3,14 +3,15 @@ package com.flowiee.pms.service.dashboard.impl;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.model.*;
 import com.flowiee.pms.model.dto.CustomerDTO;
-import com.flowiee.pms.service.BaseService;
-import com.flowiee.pms.service.product.ProductStatisticsService;
+import com.flowiee.pms.base.service.BaseService;
+import com.flowiee.pms.service.product.ProductStatisticsService_0;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.dashboard.DashboardService;
 
 import com.flowiee.pms.service.sales.OrderService;
 import com.flowiee.pms.service.sales.OrderStatisticsService;
 import com.flowiee.pms.utils.CommonUtils;
+import com.flowiee.pms.utils.CoreUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,8 +29,8 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
     EntityManager mvEntityManager;
     OrderService mvOrderService;
     CustomerService mvCustomerService;
-    OrderStatisticsService mvOrderStatisticsService;
-    ProductStatisticsService mvProductStatisticsService;
+    OrderStatisticsService     mvOrderStatisticsService;
+    ProductStatisticsService_0 mvProductStatisticsService;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -80,7 +81,7 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
         List<Object[]> productsTopSellResultList = productsTopSellSQLQuery.getResultList();
         LinkedHashMap<String, Integer> productsTopSell = new LinkedHashMap<>();
         for (Object[] data : productsTopSellResultList) {
-            productsTopSell.put(String.valueOf(data[0]), Integer.parseInt(String.valueOf(data[1])));
+            productsTopSell.put(CoreUtils.trim(data[0]), Integer.parseInt(CoreUtils.trim(data[1])));
         }
         mvEntityManager.close();
 
@@ -108,7 +109,8 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
         List<Object[]> revenueMonthOfYearSQLResultList = revenueMonthOfYearSQLQuery.getResultList();
         LinkedHashMap<Integer, Float> revenueMonthOfYear = new LinkedHashMap<>();
         for (int i = 0; i < revenueMonthOfYearSQLResultList.size(); i++) {
-            revenueMonthOfYear.put(Integer.parseInt(String.valueOf(revenueMonthOfYearSQLResultList.get(i)[0])), Float.parseFloat(String.valueOf(revenueMonthOfYearSQLResultList.get(i)[1] != null ? revenueMonthOfYearSQLResultList.get(i)[1] : 0)));
+            revenueMonthOfYear.put(Integer.parseInt(CoreUtils.trim(revenueMonthOfYearSQLResultList.get(i)[0])),
+                    Float.parseFloat(CoreUtils.trim(revenueMonthOfYearSQLResultList.get(i)[1] != null ? revenueMonthOfYearSQLResultList.get(i)[1] : 0)));
         }
         mvEntityManager.close();
 
@@ -141,7 +143,7 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
         List<Object[]> revenueDayOfMonthSQLResultList = revenueDayOfMonthSQLQuery.getResultList();
         LinkedHashMap<String, Float> revenueDayOfMonth = new LinkedHashMap<>();
         for (int i = 0; i < revenueDayOfMonthSQLResultList.size(); i++) {
-            revenueDayOfMonth.put("Day " + (i + 1), Float.parseFloat(String.valueOf(revenueDayOfMonthSQLResultList.get(i)[1])));
+            revenueDayOfMonth.put("Day " + (i + 1), Float.parseFloat(CoreUtils.trim(revenueDayOfMonthSQLResultList.get(i)[1])));
         }
         mvEntityManager.close();
 
@@ -159,7 +161,7 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
         List<Object[]> revenueBySalesChannelResultList = revenueBySalesChannelQuery.getResultList();
         LinkedHashMap<String, Float> revenueSalesChannel = new LinkedHashMap<>();
         for (Object[] data : revenueBySalesChannelResultList) {
-            revenueSalesChannel.put(String.valueOf(data[0]), Float.parseFloat(String.valueOf(data[2])));
+            revenueSalesChannel.put(CoreUtils.trim(data[0]), Float.parseFloat(CoreUtils.trim(data[2])));
         }
         mvEntityManager.close();
 

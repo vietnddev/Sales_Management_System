@@ -27,20 +27,19 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
     @Transactional
     @Scheduled(cron = "0 0 1 * * ?")
     @Override
-    public void execute() throws AppException {
+    public void init() throws AppException {
+        enableLog = true;
         super.init(ScheduleTask.ClearLog);
     }
 
     @Override
-    public void doProcesses() throws AppException{
+    public void doProcesses() throws AppException {
         if (!isEnableDeleteLog()) {
-            logger.info("ClearLogScheduleExecutor config " + ConfigCode.deleteSystemLog.name() + " is disable");
             return;
         }
 
         SystemConfig lvDayDeleteSystemLogConfig = configRepository.findByCode(ConfigCode.dayDeleteSystemLog.name());
-        if (isConfigAvailable(lvDayDeleteSystemLogConfig)) {
-            logger.info("ClearLogScheduleExecutor config " + ConfigCode.dayDeleteSystemLog.name() + " is disable");
+        if (configAvailable(lvDayDeleteSystemLogConfig)) {
             return;
         }
 
@@ -65,7 +64,7 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
 
     private boolean isEnableDeleteLog() {
         SystemConfig lvDeleteSystemLogConfig = configRepository.findByCode(ConfigCode.deleteSystemLog.name());
-        if (!isConfigAvailable(lvDeleteSystemLogConfig) || !lvDeleteSystemLogConfig.isYesOption()) {
+        if (!configAvailable(lvDeleteSystemLogConfig) || !lvDeleteSystemLogConfig.isYesOption()) {
             return false;
         }
         return true;

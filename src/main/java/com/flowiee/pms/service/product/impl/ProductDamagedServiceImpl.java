@@ -8,7 +8,7 @@ import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.product.ProductDamagedRepository;
 import com.flowiee.pms.repository.product.ProductDetailRepository;
 import com.flowiee.pms.repository.product.ProductRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.ProductDamagedService;
 import com.flowiee.pms.service.product.ProductImageService;
 import com.flowiee.pms.utils.constants.MessageCode;

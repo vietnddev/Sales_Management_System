@@ -9,7 +9,7 @@ import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.model.StorageItems;
 import com.flowiee.pms.model.dto.StorageDTO;
 import com.flowiee.pms.repository.storage.StorageRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.storage.StorageService;
 import com.flowiee.pms.utils.converter.StorageConvert;
 import lombok.AccessLevel;

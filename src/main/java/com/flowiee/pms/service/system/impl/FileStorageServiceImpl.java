@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.config.Core;
+import com.flowiee.pms.base.system.Core;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
@@ -8,7 +8,7 @@ import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.repository.system.FileStorageRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.system.FileStorageService;
 
 import com.flowiee.pms.utils.CommonUtils;
@@ -104,7 +104,7 @@ public class FileStorageServiceImpl extends BaseService implements FileStorageSe
     private boolean vldResourceUploadPath(boolean throwException) {
         if (Core.getResourceUploadPath() == null) {
             SystemConfig resourceUploadPathConfig = mvConfigRepository.findByCode(ConfigCode.resourceUploadPath.name());
-            if (isConfigAvailable(resourceUploadPathConfig)) {
+            if (configAvailable(resourceUploadPathConfig)) {
                 Core.mvResourceUploadPath = resourceUploadPathConfig.getValue();
                 return true;
             } else {

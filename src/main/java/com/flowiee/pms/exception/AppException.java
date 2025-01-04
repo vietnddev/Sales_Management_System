@@ -1,5 +1,6 @@
 package com.flowiee.pms.exception;
 
+import com.flowiee.pms.base.exception.BaseException;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;

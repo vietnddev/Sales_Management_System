@@ -6,7 +6,7 @@ import com.flowiee.pms.entity.product.ProductDetail;
 import com.flowiee.pms.entity.product.ProductHistory;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.repository.product.ProductHistoryRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.ProductHistoryService;
 import com.flowiee.pms.utils.constants.MessageCode;
 import lombok.AccessLevel;

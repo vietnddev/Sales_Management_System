@@ -1,10 +1,10 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.config.Core;
+import com.flowiee.pms.base.system.Core;
 import com.flowiee.pms.config.TemplateSendEmail;
 import com.flowiee.pms.entity.system.MailMedia;
 import com.flowiee.pms.repository.system.MailMediaRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.system.MailMediaService;
 import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.SendMailUtils;

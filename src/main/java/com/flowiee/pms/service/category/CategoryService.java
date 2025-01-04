@@ -1,6 +1,6 @@
 package com.flowiee.pms.service.category;
 
-import com.flowiee.pms.service.BaseCurdService;
+import com.flowiee.pms.base.service.BaseCurdService;
 
 import java.util.List;
 

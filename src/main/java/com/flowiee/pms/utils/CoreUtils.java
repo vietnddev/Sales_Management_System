@@ -13,15 +13,12 @@ public class CoreUtils {
     public static final int NUMERIC = 1;
     public static final int STRING = 2;
 
+    public static String trim(Object obj) {
+        return obj == null ? "" : trim(obj.toString());
+    }
+
     public static String trim(String str) {
-        if (ObjectUtils.isEmpty(str)) {
-            return "";
-        }
-        str = str.trim();
-        if ("null".equals(str)) {
-            str = null;
-        }
-        return str;
+        return str == null ? "" : trim(str, CoreUtils.STRING);
     }
 
     public static String trim(String pvValue, int pvType) {

@@ -8,7 +8,7 @@ import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.payload.LeaveApplicationReq;
 import com.flowiee.pms.repository.system.LeaveApplicationRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.category.CategoryService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.LeaveApplicationService;

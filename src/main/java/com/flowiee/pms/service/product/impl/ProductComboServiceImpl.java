@@ -9,7 +9,7 @@ import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.product.ProductComboRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.product.ProductComboService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

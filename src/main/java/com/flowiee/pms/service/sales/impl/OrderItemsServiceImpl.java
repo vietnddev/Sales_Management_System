@@ -13,7 +13,7 @@ import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.CoreUtils;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.repository.sales.OrderDetailRepository;
-import com.flowiee.pms.service.BaseService;
+import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.sales.OrderHistoryService;
 import com.flowiee.pms.service.sales.OrderItemsService;
 import com.flowiee.pms.service.system.SystemLogService;
