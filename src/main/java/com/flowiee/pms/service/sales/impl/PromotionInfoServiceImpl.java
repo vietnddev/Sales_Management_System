@@ -49,13 +49,10 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
     @Override
     public Page<PromotionInfoDTO> findAll(int pageSize, int pageNum, String pTitle, LocalDateTime pStartTime, LocalDateTime pEndTime, String pStatus) {
         Pageable pageable = getPageable(pageNum, pageSize, Sort.by("createdAt").descending());
-        if (pEndTime == null) {
-            pEndTime = LocalDateTime.of(2100, 12, 31, 0, 0);
-        }
-        if (pStartTime == null) {
-            pStartTime = LocalDateTime.of(1900, 1, 1, 0, 0);
-        }
-        Page<PromotionInfo> pagePromotionInfos = mvPromotionInfoRepository.findAll(pTitle, pStartTime, pEndTime, pStatus, pageable);
+        LocalDateTime lvStartTime = getFilterStartTime(pStartTime);
+        LocalDateTime lvEndTime = getFilterEndTime(pEndTime);
+
+        Page<PromotionInfo> pagePromotionInfos = mvPromotionInfoRepository.findAll(pTitle, lvStartTime, lvEndTime, pStatus, pageable);
 
         Type listType = new TypeToken<List<PromotionInfoDTO>>() {}.getType();
         List<PromotionInfoDTO> promotionInfoDTOs = mvModelMapper.map(pagePromotionInfos.getContent(), listType);
@@ -105,6 +102,7 @@ public class PromotionInfoServiceImpl extends BaseService implements PromotionSe
 
             PromotionInfo promotionInfoSaved = mvPromotionInfoRepository.save(promotionInfo);
             for (ProductDTO product : promotionInfoDTO.getApplicableProducts()) {
+                mvProductInfoService.findById(product.getId(), true);
                 PromotionApplyDTO promotionApply = new PromotionApplyDTO();
                 promotionApply.setPromotionId(promotionInfoSaved.getId());
                 promotionApply.setProductId(product.getId());

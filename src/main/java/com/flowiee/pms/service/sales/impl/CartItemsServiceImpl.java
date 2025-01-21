@@ -137,7 +137,7 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
 
     @Transactional
     @Override
-    public void deleteAllItems() {
-        mvCartItemsRepository.deleteAllItems();
+    public void deleteAllItems(Long cartId) {
+        mvCartItemsRepository.deleteAllItems(cartId);
     }
 }

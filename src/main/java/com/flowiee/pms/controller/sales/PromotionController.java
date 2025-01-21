@@ -4,7 +4,9 @@ import com.flowiee.pms.base.controller.BaseController;
 import com.flowiee.pms.entity.sales.PromotionInfo;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.AppResponse;
+import com.flowiee.pms.model.dto.ProductDTO;
 import com.flowiee.pms.model.dto.PromotionInfoDTO;
+import com.flowiee.pms.model.payload.CreatePromotionReq;
 import com.flowiee.pms.service.sales.PromotionService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -45,9 +50,9 @@ public class PromotionController extends BaseController {
     @Operation(summary = "Create promotion")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleSales.insertPromotion(true)")
-    public AppResponse<PromotionInfoDTO> createPromotion(@RequestBody PromotionInfoDTO promotion) {
+    public AppResponse<PromotionInfoDTO> createPromotion(@RequestBody CreatePromotionReq request) {
         try {
-            return success(mvPromotionService.save(promotion));
+            return success(mvPromotionService.save(request.toPromotionInfoDTO()));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "promotion"), ex);
         }

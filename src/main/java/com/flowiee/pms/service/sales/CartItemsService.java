@@ -17,5 +17,5 @@ public interface CartItemsService extends BaseCurdService<Items> {
 
     void increaseItemQtyInCart(Long itemId, int quantity);
 
-    void deleteAllItems();
+    void deleteAllItems(Long cartId);
 }

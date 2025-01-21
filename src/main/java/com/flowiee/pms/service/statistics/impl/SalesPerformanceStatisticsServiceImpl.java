@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +35,7 @@ public class SalesPerformanceStatisticsServiceImpl extends BaseService implement
         for (Account employee : employeeList) {
             List<Order> orderList = orderRepository.findAll(null, null, null, null, null,
                     employee.getId(), null, null, null,
-                    LocalDateTime.of(1900, 1, 1, 0, 0, 0),
-                    LocalDateTime.of(2100, 12, 1, 0, 0, 0), Pageable.unpaged()).getContent();
+                    getFilterStartTime(null), getFilterEndTime(null), Pageable.unpaged()).getContent();
 
             String lvEmployeeName = employee.getFullName();
             GroupAccount lvGroupEmployee = employee.getGroupAccount();

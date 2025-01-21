@@ -1,13 +1,16 @@
 package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.entity.product.ProductPrice;
+import com.flowiee.pms.entity.sales.Items;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
+import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
+import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.service.product.ProductVariantService;
 import com.flowiee.pms.utils.ChangeLog;
 import com.flowiee.pms.utils.CoreUtils;
@@ -43,6 +46,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     @NonFinal
     @Lazy
     ProductVariantService mvProductVariantService;
+    CartItemsRepository   mvCartItemsRepository;
 
     @Override
     public List<OrderDetail> findAll() {
@@ -92,6 +96,38 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
             }
         }
         return itemAdded;
+    }
+
+    @Override
+    public List<OrderDetail> save(Long pCartId, Long pOrderId, List<Items> pItemsList) {
+        List<OrderDetail> lvOrderDetailList = new ArrayList<>();
+        if (pItemsList == null || pItemsList.isEmpty()) {
+            return lvOrderDetailList;
+        }
+        for (Items items : pItemsList) {
+            Long lvProductVariantId = items.getProductDetail().getId();
+            ProductVariantDTO productDetail = mvProductVariantService.findById(lvProductVariantId, true);
+            String productVariantName = productDetail.getVariantName();
+            int lvItemQuantity = mvCartItemsRepository.findQuantityByProductVariantId(pCartId, lvProductVariantId);
+            if (lvItemQuantity <= 0) {
+                throw new BadRequestException(String.format("The quantity of product %s must greater than zero!", productVariantName));
+            }
+            if (lvItemQuantity > productDetail.getAvailableSalesQty()) {
+                throw new AppException(ErrorCode.ProductOutOfStock, new Object[]{productVariantName}, null, getClass(), null);
+            }
+            lvOrderDetailList.add(save(OrderDetail.builder()
+                    .order(new Order(pOrderId))
+                    .productDetail(productDetail)
+                    .quantity(lvItemQuantity)
+                    .status(true)
+                    .note(items.getNote())
+                    .price(items.getPrice())
+                    .priceOriginal(items.getPriceOriginal())
+                    .extraDiscount(CoreUtils.coalesce(items.getExtraDiscount()))
+                    .priceType(items.getPriceType())
+                    .build()));
+        }
+        return lvOrderDetailList;
     }
 
     @Override

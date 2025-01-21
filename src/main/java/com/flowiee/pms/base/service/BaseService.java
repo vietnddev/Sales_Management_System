@@ -131,6 +131,20 @@ public class BaseService {
         return new LocalDateTime[] {lvStartTime, lvEndTime};
     }
 
+    protected LocalDateTime getFilterStartTime(LocalDateTime pTime) {
+        if (pTime != null) {
+            return pTime;
+        }
+        return LocalDateTime.of(1900, 1, 1, 0, 0, 0);
+    }
+
+    protected LocalDateTime getFilterEndTime(LocalDateTime pTime) {
+        if (pTime != null) {
+            return pTime;
+        }
+        return LocalDateTime.of(2100, 12, 1, 0, 0, 0);
+    }
+
     @Data
     protected class VldModel {
         private Account       salesAssistant;
