@@ -17,6 +17,7 @@ import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.repository.sales.OrderCartRepository;
 import com.flowiee.pms.repository.system.FileStorageRepository;
 import com.flowiee.pms.service.category.CategoryService;
+import com.flowiee.pms.service.product.GenerateBarcodeService;
 import com.flowiee.pms.service.sales.CartService;
 import com.flowiee.pms.service.sales.GenerateQRCodeService;
 import com.flowiee.pms.service.storage.StorageService;
@@ -75,6 +76,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
     @Autowired
     @Lazy
     private CartService mvCartService;
+    private final GenerateBarcodeService mvGenerateBarcodeService;
 
     @Override
     public List<ProductVariantDTO> findAll() {
@@ -152,6 +154,13 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             } catch (IOException | WriterException e ) {
                 e.printStackTrace();
                 logger.error(String.format("Can't generate QR Code for Product %s", productDetailSaved.getVariantCode()), e);
+            }
+
+            try {
+                mvGenerateBarcodeService.generateBarcode(productDetailSaved.getId());
+            } catch (IOException | WriterException e ) {
+                e.printStackTrace();
+                logger.error(String.format("Can't generate Barcode for Product %s", productDetailSaved.getVariantCode()), e);
             }
 
             if (productDetailSaved.getStorageQty() > 0) {

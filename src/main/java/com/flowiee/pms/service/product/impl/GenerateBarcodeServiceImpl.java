@@ -58,7 +58,7 @@ public class GenerateBarcodeServiceImpl extends BaseGenerateService implements G
         FileStorage lvBarcodeModel = getFileModel(lvProduct, MODULE.PRODUCT, null, pProductVariantId);
         FileStorage lvBarcodeSaved = mvFileStorageRepository.save(lvBarcodeModel);
 
-        Path lvGenPath = Paths.get(super.getGenPath(MODULE.PRODUCT) + "/" + lvBarcodeSaved);
+        Path lvGenPath = Paths.get(super.getGenPath(MODULE.PRODUCT) + "/" + lvBarcodeSaved.getStorageName());
         byte[] contentByteArr = generateBarcode(getGenContent(lvProduct), mvBarcodeFormat, lvGenPath);
         String contentBase64 = Base64.getEncoder().encodeToString(contentByteArr);
 

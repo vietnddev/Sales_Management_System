@@ -8,6 +8,7 @@ import com.flowiee.pms.entity.sales.VoucherTicket;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.model.dto.VoucherTicketDTO;
+import com.flowiee.pms.model.payload.CreateVoucherReq;
 import com.flowiee.pms.service.sales.VoucherService;
 import com.flowiee.pms.service.sales.VoucherTicketService;
 import com.flowiee.pms.utils.constants.ErrorCode;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,11 +64,11 @@ public class VoucherController extends BaseController {
     @Operation(summary = "Create voucher")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleSales.insertVoucher(true)")
-    public AppResponse<VoucherInfo> createVoucher(@RequestBody VoucherInfoDTO voucherInfoDTO) {
-        if (voucherInfoDTO.getApplicableProducts().isEmpty()) {
+    public AppResponse<VoucherInfo> createVoucher(@RequestBody CreateVoucherReq request) {
+        if (ObjectUtils.isEmpty(request.getApplicableProducts())) {
             throw new BadRequestException("Sản phẩm được áp dụng không được rỗng!");
         }
-        return success(mvVoucherService.save(voucherInfoDTO));
+        return success(mvVoucherService.save(request.toPromotionInfoDTO()));
     }
 
     @Operation(summary = "Update voucher")
