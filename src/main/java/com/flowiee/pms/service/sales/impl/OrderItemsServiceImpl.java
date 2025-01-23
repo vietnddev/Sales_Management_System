@@ -7,7 +7,6 @@ import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
-import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
@@ -68,12 +67,12 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
     }
 
     @Override
-    public List<OrderDetail> save(OrderDTO pOrderDto, List<String> productVariantIds) {
+    public List<OrderDetail> save(Order pOrder, List<String> productVariantIds) {
         List<OrderDetail> itemAdded = new ArrayList<>();
         for (String productVariantId : productVariantIds) {
             ProductVariantDTO productDetail = mvProductVariantService.findById(Long.parseLong(productVariantId), false);
             if (productDetail != null) {
-                OrderDetail orderDetail = mvOrderDetailRepository.findByOrderIdAndProductVariantId(pOrderDto.getId(), productDetail.getId());
+                OrderDetail orderDetail = mvOrderDetailRepository.findByOrderIdAndProductVariantId(pOrder.getId(), productDetail.getId());
                 if (orderDetail != null) {
                     orderDetail.setQuantity(orderDetail.getQuantity() + 1);
                     itemAdded.add(mvOrderDetailRepository.save(orderDetail));
@@ -83,7 +82,7 @@ public class OrderItemsServiceImpl extends BaseService implements OrderItemsServ
                         throw new AppException(String.format("Sản phẩm %s chưa được thiết lập giá bán!", productDetail.getVariantName()));
                     }
                     itemAdded.add(this.save(OrderDetail.builder()
-                            .order(new Order(pOrderDto.getId()))
+                            .order(new Order(pOrder.getId()))
                             .productDetail(productDetail)
                             .quantity(1)
                             .status(true)

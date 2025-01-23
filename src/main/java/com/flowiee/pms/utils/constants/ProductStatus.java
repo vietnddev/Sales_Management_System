@@ -4,12 +4,18 @@ import lombok.Getter;
 
 @Getter
 public enum ProductStatus {
-    A("Đang kinh doanh"),
-    I("Ngừng kinh doanh"),
-    OOS("Hết hàng");//Out of stock
-    private final String label;
+    ACT("Đang kinh doanh"),
+    INA("Ngừng kinh doanh"),
+    DIS("Ngừng kinh doanh"),
+    OOS("Hết hàng");
+
+    private String label;
 
     ProductStatus(String label) {
+        this.label = label;
+    }
+
+    public void setLabel(String label) {
         this.label = label;
     }
 }

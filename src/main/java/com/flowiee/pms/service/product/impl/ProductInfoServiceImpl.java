@@ -81,7 +81,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
     @Override
     public List<Product> findProductsIdAndProductName() {
         List<Product> products = new ArrayList<>();
-        for (Object[] objects : mvProductRepository.findIdAndName(ProductStatus.A.name())) {
+        for (Object[] objects : mvProductRepository.findIdAndName(ProductStatus.ACT.name())) {
             products.add(new Product(Integer.parseInt(String.valueOf(objects[0])), String.valueOf(objects[1])));
         }
         return products;
@@ -130,7 +130,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
                 throw new BadRequestException("Product name is not null!");
 
             //productToSave.setCreatedBy(CommonUtils.getUserPrincipal().getId());
-            productToSave.setStatus(ProductStatus.I.name());
+            productToSave.setStatus(ProductStatus.ACT);
             Product productSaved = mvProductRepository.save(productToSave);
 
             ProductDescription productDescription = null;
@@ -253,7 +253,7 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public List<ProductDTO> getDiscontinuedProducts() {
-        return findAll(null, -1, -1, null, null, null, null, null, null, ProductStatus.I.name()).getContent();
+        return findAll(null, -1, -1, null, null, null, null, null, null, ProductStatus.INA.name()).getContent();
     }
 
     private void setImageActiveAndLoadVoucherApply(List<ProductDTO> products) {

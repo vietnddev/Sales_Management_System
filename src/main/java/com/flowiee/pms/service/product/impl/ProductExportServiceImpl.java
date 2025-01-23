@@ -36,7 +36,7 @@ public class ProductExportServiceImpl extends BaseExportService {
             row.createCell(7).setCellValue(CommonUtils.formatToVND(productVariant.getDiscountPrice()));
             row.createCell(8).setCellValue(productVariant.getStorageQty());
             row.createCell(9).setCellValue(productVariant.getSoldQty());
-            row.createCell(10).setCellValue(productVariant.getStatus());
+            row.createCell(10).setCellValue(productVariant.getStatus().getLabel());
 
             setBorderCell(row, 0, 10);
         }

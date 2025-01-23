@@ -141,7 +141,7 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
             pVariant.setSoldQty(CoreUtils.coalesce(pVariant.getSoldQty()));
             pVariant.setStorageQty(CoreUtils.coalesce(pVariant.getStorageQty()));
             pVariant.setDefectiveQty(CoreUtils.coalesce(pVariant.getDefectiveQty()));
-            pVariant.setStatus(ProductStatus.A.name());
+            pVariant.setStatus(ProductStatus.ACT);
             pVariant.setVariantCode(genProductCode(inputDTO.getVariantCode()));
             pVariant.setSku(generateSKUCode());
             ProductDetail productDetailSaved = mvProductVariantRepository.save(pVariant);

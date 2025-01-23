@@ -5,7 +5,6 @@ import com.flowiee.pms.entity.sales.CustomerDebt;
 import com.flowiee.pms.entity.sales.LedgerTransaction;
 import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.exception.BadRequestException;
-import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerDebtRepository;
 import com.flowiee.pms.repository.sales.OrderRepository;
@@ -36,7 +35,7 @@ public class OrderPayServiceImpl extends BaseService implements OrderPayService 
     @Transactional
     @Override
     public String doPay(Long orderId, LocalDateTime paymentTime, Long paymentMethod, BigDecimal paymentAmount, String paymentNote) {
-        OrderDTO lvOrder = orderService.findById(orderId, true);
+        Order lvOrder = orderService.findById(orderId, true);
 
         validate(lvOrder, paymentMethod, paymentAmount);
 
@@ -74,7 +73,7 @@ public class OrderPayServiceImpl extends BaseService implements OrderPayService 
         return MessageCode.UPDATE_SUCCESS.getDescription();
     }
 
-    private void validate(OrderDTO pOrderInfo, Long pPaymentMethod, BigDecimal pPaymentAmount) {
+    private void validate(Order pOrderInfo, Long pPaymentMethod, BigDecimal pPaymentAmount) {
         if (Boolean.TRUE.equals(pOrderInfo.getPaymentStatus()))
             throw new BadRequestException("The order has been paid");
 

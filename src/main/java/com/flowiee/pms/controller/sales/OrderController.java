@@ -1,12 +1,14 @@
 package com.flowiee.pms.controller.sales;
 
 import com.flowiee.pms.base.controller.BaseController;
-import com.flowiee.pms.exception.ResourceNotFoundException;
+import com.flowiee.pms.entity.sales.Order;
+import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.AppResponse;
 import com.flowiee.pms.model.EximModel;
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.payload.CreateOrderReq;
+import com.flowiee.pms.model.payload.UpdateOrderReq;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.sales.OrderPayService;
 import com.flowiee.pms.service.sales.OrderService;
@@ -32,7 +34,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${app.api.prefix}/order")
@@ -63,8 +64,8 @@ public class OrderController extends BaseController {
                                                      @RequestParam("pageSize") int pageSize,
                                                      @RequestParam("pageNum") int pageNum) {
         try {
-            Page<OrderDTO> orderPage = mvOrderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
-            return success(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
+            Page<Order> orderPage = mvOrderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
+            return success(OrderDTO.fromOrders(orderPage.getContent()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "order"), ex);
         }
@@ -73,19 +74,17 @@ public class OrderController extends BaseController {
     @Operation(summary = "Find detail order")
     @GetMapping("/{orderId}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
-    public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Long orderId) {
-        Optional<OrderDTO> orderDTO = mvOrderService.findById(orderId);
-        if (orderDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Order not found!");
-        }
-        return success(orderDTO.get());
+    public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Long pOrderId) {
+        Order lvOrder = mvOrderService.findById(pOrderId, true);
+        return success(OrderDTO.fromOrder(lvOrder));
     }
 
     @Operation(summary = "Create new order")
     @PostMapping("/insert")
     public AppResponse<OrderDTO> createOrder(@RequestBody CreateOrderReq request) {
         try {
-            return success(mvOrderService.save(request.toDTO()));
+            Order lvOrderCreated = mvOrderService.save(request);
+            return success(OrderDTO.fromOrder(lvOrderCreated));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "order") + "\n" + ex.getMessage(), ex);
         }
@@ -94,8 +93,9 @@ public class OrderController extends BaseController {
     @Operation(summary = "Update order")
     @PutMapping("/update/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
-    public AppResponse<OrderDTO> update(@RequestBody OrderDTO order, @PathVariable("orderId") Long orderId) {
-        return success(mvOrderService.update(order, orderId));
+    public AppResponse<OrderDTO> update(@RequestBody UpdateOrderReq pRequest, @PathVariable("orderId") Long pOrderId) {
+        Order lvOrderUpdated = mvOrderService.update(pRequest, pOrderId);
+        return success(OrderDTO.fromOrder(lvOrderUpdated));
     }
 
     @DeleteMapping("/delete/{orderId}")
@@ -124,10 +124,13 @@ public class OrderController extends BaseController {
     }
 
     @GetMapping("/scan/QR-Code/{code}")
-    public ModelAndView findOrderInfoByQRCode(@PathVariable("code") String code) {
+    public ModelAndView findOrderInfoByQRCode(@PathVariable("code") String pOrderCode) {
         try {
-            //Xử lý code thành id
-            return new ModelAndView().addObject("orderInfo", mvOrderService.findById(null));
+            Order lvOrder = mvOrderService.getOrderByCode(pOrderCode);
+            if (lvOrder == null) {
+                throw new EntityNotFoundException(new Object[]{"order"}, null, null);
+            }
+            return new ModelAndView().addObject("orderInfo", lvOrder);
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "scan order"), ex);
         }

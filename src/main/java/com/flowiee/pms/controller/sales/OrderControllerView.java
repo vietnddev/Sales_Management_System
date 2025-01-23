@@ -1,5 +1,6 @@
 package com.flowiee.pms.controller.sales;
 
+import com.flowiee.pms.entity.sales.Order;
 import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.model.dto.OrderDTO;
@@ -46,7 +47,7 @@ public class OrderControllerView extends BaseController {
     @GetMapping("/{id}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public ModelAndView findDonHangDetail(@PathVariable("id") Long orderId) {
-        OrderDTO lvOrderDetail = mvOrderService.findById(orderId, true);
+        OrderDTO lvOrderDetail = OrderDTO.fromOrder(mvOrderService.findById(orderId, true));
         OrderStatus lvOrderStatus = lvOrderDetail.getOrderStatus();
 
         List<OrderStatus> orderStatusList = new ArrayList<>(List.of(lvOrderStatus));
@@ -93,13 +94,10 @@ public class OrderControllerView extends BaseController {
     }
 
     @GetMapping("/print-invoice/{id}")
-    public void exportToPDF(@PathVariable("id") Long orderId, HttpServletResponse response) {
+    public void exportToPDF(@PathVariable("id") Long pOrderId, HttpServletResponse response) {
         try {
-            Optional<OrderDTO> orderDTO = mvOrderService.findById(orderId);
-            if (orderDTO.isEmpty()) {
-                throw new BadRequestException();
-            }
-            mvPrintInvoiceService.printInvoicePDF(orderId, null, true, response);
+            Order lvOrder = mvOrderService.findById(pOrderId, true);
+            mvPrintInvoiceService.printInvoicePDF(lvOrder, null, true, response);
         } catch (RuntimeException ex) {
             throw new AppException(ex);
         }
@@ -108,7 +106,7 @@ public class OrderControllerView extends BaseController {
     @PostMapping("/{orderId}/item/add")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView addItem(@PathVariable("orderId") long orderId, @RequestParam("productVariantSelectedId") String[] productVariantSelectedId) {
-        OrderDTO lvOrder = mvOrderService.findById(orderId, true);
+        Order lvOrder = mvOrderService.findById(orderId, true);
         if (!mvOrderStatusCanModifyItem.contains(lvOrder.getOrderStatus())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép chỉnh sửa!");
         }
@@ -122,7 +120,7 @@ public class OrderControllerView extends BaseController {
     @PostMapping("/{orderId}/item/update/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView updateItem(@PathVariable("orderId") long orderId, @PathVariable("itemId") long itemId, @ModelAttribute("items") OrderDetail item) {
-        OrderDTO lvOrder = mvOrderService.findById(orderId, true);
+        Order lvOrder = mvOrderService.findById(orderId, true);
         if (!mvOrderStatusCanModifyItem.contains(lvOrder.getOrderStatus())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép chỉnh sửa!");
         }
@@ -136,7 +134,7 @@ public class OrderControllerView extends BaseController {
     @PostMapping("/{orderId}/item/delete/{itemId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public ModelAndView deleteItem(@PathVariable("orderId") long orderId, @PathVariable("itemId") long itemId) {
-        OrderDTO lvOrder = mvOrderService.findById(orderId, true);
+        Order lvOrder = mvOrderService.findById(orderId, true);
         if (!mvOrderStatusCanDeleteItem.contains(lvOrder.getOrderStatus())) {
             throw new BadRequestException("Đơn hàng đang ở trạng thái không cho phép xóa!");
         }

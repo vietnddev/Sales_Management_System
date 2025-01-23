@@ -6,6 +6,8 @@ import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
+import com.flowiee.pms.model.payload.CreateOrderReq;
+import com.flowiee.pms.model.payload.UpdateOrderReq;
 import com.flowiee.pms.repository.sales.CustomerRepository;
 import com.flowiee.pms.repository.system.ConfigRepository;
 import com.flowiee.pms.service.category.CategoryService;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -60,12 +63,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     private BigDecimal mvDefaultCodFee = BigDecimal.ZERO;
 
     @Override
-    public List<OrderDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, OrderStatus.ALL, null, null, null, null, null, null, null, null, null).getContent();
+    public List<Order> findAll() {
+        return findAll(-1, -1, null, null, null, null, null, null, null, null, null, null, null, null, null).getContent();
     }
 
     @Override
-    public Page<OrderDTO> findAll(int pPageSize, int pPageNum, String pTxtSearch, Long pOrderId, Long pPaymentMethodId,
+    public Page<Order> findAll(int pPageSize, int pPageNum, String pTxtSearch, Long pOrderId, Long pPaymentMethodId,
                                   OrderStatus pOrderStatus, Long pSalesChannelId, Long pSellerId, Long pCustomerId,
                                   Long pBranchId, Long pGroupCustomerId, String pDateFilter, LocalDateTime pOrderTimeFrom, LocalDateTime pOrderTimeTo, String pSortBy) {
         Pageable pageable = getPageable(pPageNum, pPageSize, Sort.by(pSortBy != null ? pSortBy : "orderTime").descending());
@@ -77,21 +80,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
             lvOrderTimeTo = lvFromDateToDate[1];
         }
         Page<Order> orders = mvOrderRepository.findAll(pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, lvOrderTimeFrom, lvOrderTimeTo, pageable);
-        return new PageImpl<>(OrderDTO.fromOrders(orders.getContent()), pageable, orders.getTotalElements());
+        return new PageImpl<>(orders.getContent(), pageable, orders.getTotalElements());
     }
 
     @Override
-    public Optional<OrderDTO> findById(Long orderId) {
-        Optional<Order> orderOptional = mvOrderRepository.findById(orderId);
-        if (orderOptional.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(OrderDTO.fromOrder(orderOptional.get()));
-    }
-
-    @Override
-    public OrderDTO findById(Long pOrderId, boolean throwException) {
-        Optional<OrderDTO> lvOrderOptional = this.findById(pOrderId);
+    public Order findById(Long pOrderId, boolean throwException) {
+        Optional<Order> lvOrderOptional = mvOrderRepository.findById(pOrderId);
         if (lvOrderOptional.isPresent()) {
             return lvOrderOptional.get();
         }
@@ -101,7 +95,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         return null;
     }
 
-    private VldModel vldBeforeCreateOrder(OrderDTO pOrderInfo, Long pCartId, String pVoucherCode, Long pPaymentMethodId, Long pSaleChannelId, Long pCustomerId, Long pSalesAssistantId) {
+    private VldModel vldBeforeCreateOrder(CreateOrderReq pOrderRequest, Long pCartId, String pVoucherCode, Long pPaymentMethodId, Long pSaleChannelId, Long pCustomerId, Long pSalesAssistantId) {
         OrderCart lvCart = mvCartService.findById(pCartId, true);
         if (ObjectUtils.isEmpty(lvCart.getListItems()))
             throw new BadRequestException("At least one product in the order!");
@@ -116,11 +110,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         Customer lvCustomer = mvCustomerService.findById(pCustomerId, true);
         if (lvCustomer.getIsBlackList())
             throw new BadRequestException("The customer is on the blacklist!");
-        if (!CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
+        if (!CoreUtils.validateEmail(pOrderRequest.getRecipientEmail()))
             throw new BadRequestException("Email invalid!");
-        if (!CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
+        if (!CoreUtils.validatePhoneNumber(pOrderRequest.getRecipientPhone(), CommonUtils.defaultCountryCode))
             throw new BadRequestException("Phone number invalid!");
-        if (CoreUtils.isNullStr(pOrderInfo.getReceiverAddress()))
+        if (CoreUtils.isNullStr(pOrderRequest.getShippingAddress()))
             throw new BadRequestException("Address must not empty!");
 
         Account lvSalesAssistant = mvAccountService.findById(pSalesAssistantId, false);
@@ -149,14 +143,16 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Transactional
     @Override
-    public OrderDTO save(OrderDTO request) {
+    public Order save(CreateOrderReq request) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
+
         BigDecimal lvAmountDiscount = request.getAmountDiscount();
-        String lvVoucherUsedCode = request.getVoucherUsedCode();
-        LocalDateTime lvOrderTime = request.getOrderTime();
+        String lvVoucherUsedCode = request.getVoucherUsed();
+        LocalDateTime lvOrderTime = LocalDateTime.parse(request.getOrderTime(), formatter);
         Long lvCartId = request.getCartId();
 
-        VldModel vldModel = vldBeforeCreateOrder(request, lvCartId, lvVoucherUsedCode, request.getPayMethodId(),
-                request.getSalesChannelId(), request.getCustomerId(), request.getCashierId());
+        VldModel vldModel = vldBeforeCreateOrder(request, lvCartId, lvVoucherUsedCode, request.getPaymentMethodId(),
+                request.getSalesChannelId(), request.getCustomerId(), request.getSalesAssistantId());
         OrderCart lvCart = vldModel.getOrderCart();
         VoucherTicket lvVoucherTicket = vldModel.getVoucherTicket();
         Customer lvCustomer = vldModel.getCustomer();
@@ -168,10 +164,10 @@ public class OrderServiceImpl extends BaseService implements OrderService {
                 .nhanVienBanHang(vldModel.getSalesAssistant())
                 .note(request.getNote())
                 .orderTime(lvOrderTime != null ? lvOrderTime : LocalDateTime.now())
-                .receiverName(request.getReceiverName())
-                .receiverPhone(request.getReceiverPhone())
-                .receiverEmail(request.getReceiverEmail())
-                .receiverAddress(request.getReceiverAddress())
+                .receiverName(request.getRecipientName())
+                .receiverPhone(request.getRecipientPhone())
+                .receiverEmail(request.getRecipientEmail())
+                .receiverAddress(request.getShippingAddress())
                 .paymentMethod(vldModel.getPaymentMethod())
                 .paymentStatus(false)
                 .voucherUsedCode(ObjectUtils.isNotEmpty(lvVoucherUsedCode) ? lvVoucherUsedCode : null)
@@ -226,12 +222,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         return OrderDTO.fromOrder(lvOrderSaved);
     }
 
-    private VldModel vldBeforeUpdateOrder(OrderDTO pOrderInfo) {
-        if (!CoreUtils.validateEmail(pOrderInfo.getReceiverEmail()))
+    private VldModel vldBeforeUpdateOrder(UpdateOrderReq pOrderRequest) {
+        if (!CoreUtils.validateEmail(pOrderRequest.getRecipientEmail()))
             throw new BadRequestException("Email invalid!");
-        if (!CoreUtils.validatePhoneNumber(pOrderInfo.getReceiverPhone(), CommonUtils.defaultCountryCode))
+        if (!CoreUtils.validatePhoneNumber(pOrderRequest.getRecipientPhone(), CommonUtils.defaultCountryCode))
             throw new BadRequestException("Phone number invalid!");
-        if (CoreUtils.isNullStr(pOrderInfo.getReceiverAddress()))
+        if (CoreUtils.isNullStr(pOrderRequest.getShippingAddress()))
             throw new BadRequestException("Address must not empty!");
 
         return new VldModel();
@@ -259,30 +255,22 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Transactional
     @Override
-    public OrderDTO update(OrderDTO dto, Long pOrderId) {
+    public Order update(UpdateOrderReq request, Long pOrderId) {
         Order orderToUpdate = mvOrderRepository.findById(pOrderId)
                 .orElseThrow(() -> new AppException("Order not found!"));
-        LocalDateTime lvSuccessfulDeliveryTime = dto.getSuccessfulDeliveryTime();
-        OrderStatus lvOrderStatus = dto.getOrderStatus();
+        LocalDateTime lvSuccessfulDeliveryTime = request.getSuccessfulDeliveryTime();
 
         //Validate request data
-        vldBeforeUpdateOrder(dto);
+        vldBeforeUpdateOrder(request);
         //Validate business before update
         Order orderBefore = beforeUpdateOrder(orderToUpdate);
 
         //Update new info
-        orderToUpdate.setReceiverName(dto.getReceiverName());
-        orderToUpdate.setReceiverPhone(dto.getReceiverPhone());
-        orderToUpdate.setReceiverEmail(dto.getReceiverEmail());
-        orderToUpdate.setReceiverAddress(dto.getReceiverAddress());
-        orderToUpdate.setNote(dto.getNote());
-        orderToUpdate.setOrderStatus(lvOrderStatus);
-        if (lvOrderStatus.equals(OrderStatus.DLVD))
-            orderToUpdate.setSuccessfulDeliveryTime(lvSuccessfulDeliveryTime != null ? lvSuccessfulDeliveryTime : LocalDateTime.now());
-        if (lvOrderStatus.equals(OrderStatus.CNCL)) {
-            orderToUpdate.setCancellationReason(dto.getCancellationReason());
-            orderToUpdate.setCancellationDate(LocalDateTime.now());
-        }
+        orderToUpdate.setReceiverName(request.getRecipientName());
+        orderToUpdate.setReceiverPhone(request.getRecipientPhone());
+        orderToUpdate.setReceiverEmail(request.getRecipientEmail());
+        orderToUpdate.setReceiverAddress(request.getShippingAddress());
+        orderToUpdate.setNote(request.getNote());
         Order orderUpdated = mvOrderRepository.save(orderToUpdate);
 
         //Do something after updated
@@ -292,7 +280,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
         ChangeLog changeLog = new ChangeLog(orderBefore, orderUpdated);
         mvOrderHistoryService.save(changeLog.getLogChanges(), "Cập nhật đơn hàng", pOrderId, null);
         systemLogService.writeLogUpdate(MODULE.SALES, ACTION.PRO_ORD_U, MasterObject.Order, "Cập nhật đơn hàng", changeLog);
-        logger.info("Cập nhật đơn hàng {}", dto.toString());
+        logger.info("Cập nhật đơn hàng {}", orderUpdated.toString());
 
         return OrderDTO.fromOrder(orderToUpdate);
     }
@@ -324,7 +312,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Override
     public String delete(Long id) {
-        OrderDTO lvOrder = this.findById(id, true);
+        Order lvOrder = this.findById(id, true);
         if (lvOrder.getPaymentStatus()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());
         }
@@ -340,8 +328,32 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     }
 
     @Override
-    public Page<OrderDTO> getOrdersByCustomer(int pageSize, int pageNum, Long pCustomerId) {
+    public Page<Order> getOrdersByCustomer(int pageSize, int pageNum, Long pCustomerId) {
         return this.findAll(pageSize, pageNum, null, null, null, null, null, null, pCustomerId, null, null, null, null, null, null);
+    }
+
+    @Override
+    public String updateOrderStatus(Long pOrderId, OrderStatus pOrderStatus, LocalDateTime pSuccessfulDeliveryTime, Long cancellationReasonId) {
+        Order lvOrder = this.findById(pOrderId, true);
+        if (lvOrder.getOrderStatus().equals(pOrderStatus)) {
+            throw new BadRequestException(String.format("Order status is %s now!", pOrderStatus.getName()));
+        }
+
+        lvOrder.setOrderStatus(pOrderStatus);
+        if (pOrderStatus.equals(OrderStatus.DLVD))
+            lvOrder.setSuccessfulDeliveryTime(pSuccessfulDeliveryTime != null ? pSuccessfulDeliveryTime : LocalDateTime.now());
+        if (pOrderStatus.equals(OrderStatus.CNCL)) {
+            lvOrder.setCancellationReason(cancellationReasonId);
+            lvOrder.setCancellationDate(LocalDateTime.now());
+        }
+
+        mvOrderRepository.save(lvOrder);
+        return "Updated successfully!";
+    }
+
+    @Override
+    public Order getOrderByCode(String pOrderCode) {
+        return mvOrderRepository.findByOrderCode(pOrderCode);
     }
 
     private String getNextOrderCode() {
