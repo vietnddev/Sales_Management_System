@@ -34,7 +34,7 @@ public class MailNotificationScheduleExecutor extends ScheduleExecutor {
         int emailSentQty = 0;
         List<MailMedia> emailReadyToSendList = mailMediaRepository.getEmailReadyToSend();
         for (MailMedia mailMedia : emailReadyToSendList) {
-            String[] emailDestinationArray = mailMedia.getDestination().split(MailMedia.EMAIL_ADDRESS_SPERATOR);
+            String[] emailDestinationArray = mailMedia.getDestination().split(MailMedia.EMAIL_ADDRESS_SEPARATOR);
             String errorMsg = null;
             String sendStatus = "success";
             try {

@@ -33,7 +33,7 @@ public class MailMediaServiceImpl extends BaseService implements MailMediaServic
 
     @Override
     public void send(String pDestination, String pSubject, String pMessage, String pLanguage, boolean pIsHtml, int pPriority) {
-        String[] emailDestinationArray = pDestination.split(MailMedia.EMAIL_ADDRESS_SPERATOR);
+        String[] emailDestinationArray = pDestination.split(MailMedia.EMAIL_ADDRESS_SEPARATOR);
         Set<String> lvRecipients = new HashSet<>();
         for (String emailDestination : emailDestinationArray) {
             lvRecipients.add(emailDestination.trim());

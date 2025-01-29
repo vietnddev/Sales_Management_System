@@ -2,7 +2,7 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.model.dto.OrderDTO;
 import com.flowiee.pms.base.service.BaseExportService;
-import com.flowiee.pms.service.sales.OrderService;
+import com.flowiee.pms.service.sales.OrderReadService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -14,7 +14,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class OrderExportServiceImpl extends BaseExportService {
-    private final OrderService mvOrderService;
+    private final OrderReadService mvOrderReadService;
 
     private DateTimeFormatter DF_DDMMYYYY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -22,7 +22,7 @@ public class OrderExportServiceImpl extends BaseExportService {
     protected void writeData(Object pCondition) {
         XSSFSheet sheet = mvWorkbook.getSheetAt(0);
 
-        List<OrderDTO> listData = OrderDTO.fromOrders(mvOrderService.findAll());
+        List<OrderDTO> listData = OrderDTO.fromOrders(mvOrderReadService.findAll());
         for (int i = 0; i < listData.size(); i++) {
             OrderDTO orderDTO = listData.get(i);
             XSSFRow row = sheet.createRow(i + 4);

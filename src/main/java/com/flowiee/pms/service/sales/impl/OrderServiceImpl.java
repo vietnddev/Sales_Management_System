@@ -40,7 +40,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class OrderServiceImpl extends BaseService implements OrderService {
+public class OrderServiceImpl extends BaseService implements OrderReadService, OrderWriteService {
     private final SendCustomerNotificationService mvSendCustomerNotificationService;
     private final CartService           mvCartService;
     private final OrderRepository       mvOrderRepository;
@@ -143,7 +143,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Transactional
     @Override
-    public Order save(CreateOrderReq request) {
+    public Order createOrder(CreateOrderReq request) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
 
         BigDecimal lvAmountDiscount = request.getAmountDiscount();
@@ -255,7 +255,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
     @Transactional
     @Override
-    public Order update(UpdateOrderReq request, Long pOrderId) {
+    public Order updateOrder(UpdateOrderReq request, Long pOrderId) {
         Order orderToUpdate = mvOrderRepository.findById(pOrderId)
                 .orElseThrow(() -> new AppException("Order not found!"));
         LocalDateTime lvSuccessfulDeliveryTime = request.getSuccessfulDeliveryTime();
@@ -311,7 +311,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
     }
 
     @Override
-    public String delete(Long id) {
+    public String deleteOrder(Long id) {
         Order lvOrder = this.findById(id, true);
         if (lvOrder.getPaymentStatus()) {
             throw new DataInUseException(ErrorCode.ERROR_DATA_LOCKED.getDescription());

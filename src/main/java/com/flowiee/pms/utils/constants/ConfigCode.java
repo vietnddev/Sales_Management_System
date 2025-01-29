@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ConfigCode {
+    adminEmailRecipientExceptionNotification(MODULE.SYSTEM, "Email nhận thông báo khi có sự số hệ thống", "vietnd.stg008@gmail.com"),
     allowSellPriceLessThanCostPrice(MODULE.SALES, "Cho phép giá bán ra thấp hơn giá nhập", "Y"),
     allowDuplicateCustomerPhoneNumber(MODULE.SALES, "Cho phép trùng số điện thoại của khách hàng", "N"),
     daySendNotifyBeforeProductExpiry(MODULE.PRODUCT, "Thời gian gửi thông báo trước khi sản phẩm hết hạn sử dụng", "10"),

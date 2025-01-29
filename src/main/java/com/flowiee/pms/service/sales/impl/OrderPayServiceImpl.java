@@ -11,7 +11,7 @@ import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.sales.LedgerReceiptService;
 import com.flowiee.pms.service.sales.OrderPayService;
-import com.flowiee.pms.service.sales.OrderService;
+import com.flowiee.pms.service.sales.OrderReadService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.OrderUtils;
 import com.flowiee.pms.utils.constants.*;
@@ -30,12 +30,12 @@ public class OrderPayServiceImpl extends BaseService implements OrderPayService 
     private final LedgerReceiptService mvLedgerReceiptService;
     private final CategoryRepository categoryRepository;
     private final OrderRepository orderRepository;
-    private final OrderService orderService;
+    private final OrderReadService orderReadService;
 
     @Transactional
     @Override
     public String doPay(Long orderId, LocalDateTime paymentTime, Long paymentMethod, BigDecimal paymentAmount, String paymentNote) {
-        Order lvOrder = orderService.findById(orderId, true);
+        Order lvOrder = orderReadService.findById(orderId, true);
 
         validate(lvOrder, paymentMethod, paymentAmount);
 

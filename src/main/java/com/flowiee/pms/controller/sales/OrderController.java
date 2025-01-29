@@ -11,7 +11,8 @@ import com.flowiee.pms.model.payload.CreateOrderReq;
 import com.flowiee.pms.model.payload.UpdateOrderReq;
 import com.flowiee.pms.service.ExportService;
 import com.flowiee.pms.service.sales.OrderPayService;
-import com.flowiee.pms.service.sales.OrderService;
+import com.flowiee.pms.service.sales.OrderReadService;
+import com.flowiee.pms.service.sales.OrderWriteService;
 import com.flowiee.pms.utils.constants.ErrorCode;
 import com.flowiee.pms.utils.constants.OrderStatus;
 import com.flowiee.pms.utils.constants.TemplateExport;
@@ -41,7 +42,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderController extends BaseController {
-    OrderService  mvOrderService;
+    OrderReadService mvOrderReadService;
+    OrderWriteService mvOrderWriteService;
     @Autowired
     @NonFinal
     @Qualifier("orderExportServiceImpl")
@@ -64,7 +66,7 @@ public class OrderController extends BaseController {
                                                      @RequestParam("pageSize") int pageSize,
                                                      @RequestParam("pageNum") int pageNum) {
         try {
-            Page<Order> orderPage = mvOrderService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
+            Page<Order> orderPage = mvOrderReadService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId, pDateFilter, null, null, null);
             return success(OrderDTO.fromOrders(orderPage.getContent()), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.SEARCH_ERROR_OCCURRED.getDescription(), "order"), ex);
@@ -75,7 +77,7 @@ public class OrderController extends BaseController {
     @GetMapping("/{orderId}")
     @PreAuthorize("@vldModuleSales.readOrder(true)")
     public AppResponse<OrderDTO> findOrderDetail(@PathVariable("orderId") Long pOrderId) {
-        Order lvOrder = mvOrderService.findById(pOrderId, true);
+        Order lvOrder = mvOrderReadService.findById(pOrderId, true);
         return success(OrderDTO.fromOrder(lvOrder));
     }
 
@@ -83,7 +85,7 @@ public class OrderController extends BaseController {
     @PostMapping("/insert")
     public AppResponse<OrderDTO> createOrder(@RequestBody CreateOrderReq request) {
         try {
-            Order lvOrderCreated = mvOrderService.save(request);
+            Order lvOrderCreated = mvOrderWriteService.createOrder(request);
             return success(OrderDTO.fromOrder(lvOrderCreated));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "order") + "\n" + ex.getMessage(), ex);
@@ -94,7 +96,7 @@ public class OrderController extends BaseController {
     @PutMapping("/update/{orderId}")
     @PreAuthorize("@vldModuleSales.updateOrder(true)")
     public AppResponse<OrderDTO> update(@RequestBody UpdateOrderReq pRequest, @PathVariable("orderId") Long pOrderId) {
-        Order lvOrderUpdated = mvOrderService.update(pRequest, pOrderId);
+        Order lvOrderUpdated = mvOrderWriteService.updateOrder(pRequest, pOrderId);
         return success(OrderDTO.fromOrder(lvOrderUpdated));
     }
 
@@ -102,7 +104,7 @@ public class OrderController extends BaseController {
     @PreAuthorize("@vldModuleSales.deleteOrder(true)")
     public AppResponse<String> deleteOrder(@PathVariable("orderId") Long orderId) {
         //Check them trang thai
-        return success(mvOrderService.delete(orderId));
+        return success(mvOrderWriteService.deleteOrder(orderId));
     }
 
     @PutMapping("/do-pay/{orderId}")
@@ -126,7 +128,7 @@ public class OrderController extends BaseController {
     @GetMapping("/scan/QR-Code/{code}")
     public ModelAndView findOrderInfoByQRCode(@PathVariable("code") String pOrderCode) {
         try {
-            Order lvOrder = mvOrderService.getOrderByCode(pOrderCode);
+            Order lvOrder = mvOrderReadService.getOrderByCode(pOrderCode);
             if (lvOrder == null) {
                 throw new EntityNotFoundException(new Object[]{"order"}, null, null);
             }

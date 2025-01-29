@@ -8,7 +8,7 @@ import com.flowiee.pms.service.product.ProductStatisticsService_0;
 import com.flowiee.pms.service.sales.CustomerService;
 import com.flowiee.pms.service.dashboard.DashboardService;
 
-import com.flowiee.pms.service.sales.OrderService;
+import com.flowiee.pms.service.sales.OrderReadService;
 import com.flowiee.pms.service.sales.OrderStatisticsService;
 import com.flowiee.pms.utils.CommonUtils;
 import com.flowiee.pms.utils.CoreUtils;
@@ -27,7 +27,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DashboardServiceImpl extends BaseService implements DashboardService {
     EntityManager mvEntityManager;
-    OrderService mvOrderService;
+    OrderReadService mvOrderReadService;
     CustomerService mvCustomerService;
     OrderStatisticsService     mvOrderStatisticsService;
     ProductStatisticsService_0 mvProductStatisticsService;
@@ -171,7 +171,7 @@ public class DashboardServiceImpl extends BaseService implements DashboardServic
         String revenueToday = CommonUtils.formatToVND(mvOrderStatisticsService.findRevenueToday());
         String revenueThisMonth = CommonUtils.formatToVND(mvOrderStatisticsService.findRevenueThisMonth());
         List<CustomerDTO> customersNew = mvCustomerService.findCustomerNewInMonth();
-        List<Order> ordersToday = mvOrderService.findOrdersToday();
+        List<Order> ordersToday = mvOrderReadService.findOrdersToday();
 
         logger.info("Finished loadDashboard(): " + CommonUtils.now("YYYY/MM/dd HH:mm:ss"));
 

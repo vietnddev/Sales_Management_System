@@ -10,7 +10,7 @@ import com.flowiee.pms.model.dto.OrderDetailDTO;
 import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.sales.OrderPrintInvoiceService;
 import com.flowiee.pms.service.sales.GenerateQRCodeService;
-import com.flowiee.pms.service.sales.OrderService;
+import com.flowiee.pms.service.sales.OrderReadService;
 import com.flowiee.pms.utils.FileUtils;
 import com.flowiee.pms.utils.ReportUtils;
 import lombok.AccessLevel;
@@ -33,7 +33,7 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class OrderPrintInvoiceServiceImpl extends BaseService implements OrderPrintInvoiceService {
-    OrderService       mvOrderService;
+    OrderReadService mvOrderReadService;
     GenerateQRCodeService mvGenerateQRCodeService;
 
     @Override

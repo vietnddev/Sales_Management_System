@@ -21,6 +21,8 @@ public class BaseException extends RuntimeException {
     private String     view;
     private HttpStatus httpStatus;
 
+    public BaseException() {}
+
     public BaseException(ErrorCode errorCode, Object[] errorMsgParameter, String message, Class sourceClass, Throwable sourceException, boolean isRedirectView) {
         super(CoreUtils.isNullStr(message) ? errorCode.getDescription() : message, sourceException);
         this.errorCode = errorCode;

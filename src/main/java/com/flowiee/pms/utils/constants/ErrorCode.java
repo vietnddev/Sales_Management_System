@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ErrorCode {
     SYSTEM_ERROR(1080, "System error. Please contact support."),
     SYSTEM_BUSY(1081, "System busy, please try later!"),
+    DATA_ALREADY_EXISTS(1998, "Data already exists"),
     GET_ERROR_OCCURRED(1999, "An error occurred while get %s"),
     SEARCH_ERROR_OCCURRED(2000, "An error occurred while search %s"),
     CREATE_ERROR_OCCURRED(2001, "An error occurred while create %s"),
