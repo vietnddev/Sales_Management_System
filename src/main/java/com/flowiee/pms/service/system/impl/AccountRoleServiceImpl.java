@@ -142,10 +142,20 @@ public class AccountRoleServiceImpl implements RoleService {
     }
 
     private RoleModel initRoleModel(Long pGroupId, Long pAccountId, String pModuleKey, String pModuleLabel, String pActionKey, String pActionLabel) {
+        AccountRole lvAccountRole = null;
+        try {
+            lvAccountRole = mvAccountRoleRepository.isAuthorized(pGroupId, pAccountId, pModuleKey, pActionKey);
+        } catch (RuntimeException ex) {
+            System.out.println("pGroupId " + pGroupId);
+            System.out.println("pAccountId " + pAccountId);
+            System.out.println("pModuleKey " + pModuleKey);
+            System.out.println("pActionKey " + pActionKey);
+        }
+
         return RoleModel.builder()
                 .module(ModuleModel.builder().moduleKey(pModuleKey).moduleLabel(pModuleLabel).build())
                 .action(ActionModel.builder().moduleKey(pModuleKey).actionKey(pActionKey).actionLabel(pActionLabel).build())
-                .isAuthor((mvAccountRoleRepository.isAuthorized(pGroupId, pAccountId, pModuleKey, pActionKey)) != null)
+                .isAuthor(lvAccountRole != null)
                 .groupId(pGroupId)
                 .accountId(pAccountId)
                 .build();

@@ -12,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -167,11 +166,6 @@ public class CommonUtils {
         cellStyle.setFont(fontStyle);
 
         return cellStyle;
-    }
-
-    public static String encodePassword(String pwd) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder.encode(pwd);
     }
 
     public static UserPrincipal getUserPrincipal() {

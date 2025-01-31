@@ -4,15 +4,15 @@ import com.flowiee.pms.base.controller.BaseController;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.DataExistsException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
-import com.flowiee.pms.service.system.AccountService;
-import com.flowiee.pms.service.system.BranchService;
-import com.flowiee.pms.service.system.GroupAccountService;
+import com.flowiee.pms.model.dto.AccountDTO;
+import com.flowiee.pms.model.dto.BranchDTO;
+import com.flowiee.pms.model.dto.GroupAccountDTO;
+import com.flowiee.pms.service.system.*;
 import com.flowiee.pms.utils.constants.AccountStatus;
 import com.flowiee.pms.utils.constants.Pages;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.model.role.ActionModel;
 import com.flowiee.pms.model.role.RoleModel;
-import com.flowiee.pms.service.system.RoleService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +37,9 @@ public class AccountControllerView extends BaseController {
     BranchService       branchService;
     AccountService      accountService;
     GroupAccountService groupAccountService;
+    ResetPasswordService resetPasswordService;
+
+    AccountDTO accountDTO = new AccountDTO();
 
     @GetMapping
     @PreAuthorize("@vldModuleSystem.readAccount(true)")
@@ -55,11 +58,13 @@ public class AccountControllerView extends BaseController {
         Account account = accountService.findById(accountId, true);
         List<RoleModel> roleOfAccount = roleService.findAllRoleByAccountId(accountId);
 
+        account.getBranch().getBranchName();
+
         ModelAndView modelAndView = new ModelAndView(Pages.SYS_ACCOUNT_DETAIL.getTemplate());
         modelAndView.addObject("listRole", roleOfAccount);
-        modelAndView.addObject("accountInfo", account);
-        modelAndView.addObject("groupAccount", groupAccountService.findAll());
-        modelAndView.addObject("listBranch", branchService.findAll());
+        modelAndView.addObject("accountInfo", accountDTO.toDTO(account));
+        modelAndView.addObject("groupAccount", GroupAccountDTO.toDTOs(groupAccountService.findAll()));
+        modelAndView.addObject("listBranch", BranchDTO.toDTOs(branchService.findAll()));
 
         return baseView(modelAndView);
     }
@@ -121,7 +126,7 @@ public class AccountControllerView extends BaseController {
     public ModelAndView requestResetPassword(@PathVariable("accountId") long accountId, HttpSession session, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
         Account account = accountService.findById(accountId, true);
         if (account.getEmail() != null) {
-            if (accountService.sendTokenForResetPassword(account.getEmail(), request)) {
+            if (resetPasswordService.sendToken(account.getEmail(), request)) {
                 session.setAttribute("successMsg", "Please check your email, password reset link has been sent to your email.");
             } else {
                 session.setAttribute("errorMsg", "Something wrong on server. Email Not Sent!");

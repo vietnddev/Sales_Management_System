@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.flowiee.pms.utils.FileUtils;
+import com.flowiee.pms.utils.PasswordUtils;
 import com.flowiee.pms.utils.constants.AccountStatus;
 import com.flowiee.pms.utils.constants.ConfigCode;
 import com.flowiee.pms.utils.constants.EndPoint;
@@ -221,7 +222,7 @@ public class Core {
 		//Init admin account
 		Account adminAccount = Account.builder()
 			.username(AppConstants.ADMINISTRATOR)
-			.password(CommonUtils.encodePassword(CommonUtils.defaultNewPassword))
+			.password(PasswordUtils.encodePassword(CommonUtils.defaultNewPassword))
 			.fullName("Administrator").sex(true)
 			.role("ADMIN")
 			.branch(branchSaved).groupAccount(groupManagerSaved)
@@ -232,7 +233,7 @@ public class Core {
 
 		Account staffAccount = Account.builder()
 			.username("staff")
-			.password(CommonUtils.encodePassword(CommonUtils.defaultNewPassword))
+			.password(PasswordUtils.encodePassword(CommonUtils.defaultNewPassword))
 			.fullName("Staff").sex(true)
 			.role("USER")
 			.branch(branchSaved).groupAccount(groupStaffSaved)

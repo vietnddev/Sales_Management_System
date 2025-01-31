@@ -1,15 +1,10 @@
 package com.flowiee.pms.service.system.impl;
 
-import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.exception.*;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.AccountRole;
-import com.flowiee.pms.service.system.ConfigService;
-import com.flowiee.pms.service.system.MailMediaService;
-import com.flowiee.pms.utils.ChangeLog;
-import com.flowiee.pms.utils.CommonUtils;
-import com.flowiee.pms.utils.CoreUtils;
+import com.flowiee.pms.utils.*;
 import com.flowiee.pms.utils.constants.*;
 import com.flowiee.pms.config.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
@@ -18,7 +13,6 @@ import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.service.system.AccountService;
 import com.flowiee.pms.service.system.RoleService;
 
-import com.flowiee.pms.utils.AppConstants;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,11 +24,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -45,9 +37,6 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	RoleService mvRoleService;
 	AccountRepository mvAccountRepository;
 	SystemLogRepository mvSystemLogRepository;
-	MailMediaService mvMailMediaService;
-	ConfigService mvConfigService;
-	PasswordEncoder mvPasswordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -133,7 +122,7 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 			throw new DataExistsException(String.format("Email %s existed!", email));
 
 		account.setRole(AppConstants.ADMINISTRATOR.equals(lvRole) ? "ADMIN" : "USER");
-		account.setPassword(CommonUtils.encodePassword(lvPassword));
+		account.setPassword(PasswordUtils.encodePassword(lvPassword));
 		Account accountSaved = mvAccountRepository.save(account);
 
 		systemLogService.writeLogCreate(MODULE.SYSTEM, ACTION.SYS_ACC_C, MasterObject.Account, "Thêm mới account", username);
@@ -189,59 +178,5 @@ public class UserDetailsServiceImpl extends BaseService implements UserDetailsSe
 	@Override
 	public Account findByUsername(String username) {
 		return mvAccountRepository.findByUsername(username);
-	}
-
-	@Override
-	public Account getUserByResetTokens(String token) {
-		return mvAccountRepository.findByResetTokens(token);
-	}
-
-	@Override
-	public void updateTokenForResetPassword(String email, String resetToken) {
-		Account account = mvAccountRepository.findByEmail(email);
-		account.setResetTokens(resetToken);
-		mvAccountRepository.save(account);
-	}
-
-	@Override
-	public boolean sendTokenForResetPassword(String pEmail, HttpServletRequest pRequest) {
-		if (pEmail == null || pEmail.isBlank()) {
-			throw new BadRequestException("Invalid email!");
-		}
-		String resetToken = UUID.randomUUID().toString();
-		this.updateTokenForResetPassword(pEmail, resetToken);
-		//URL Like This : http://localhost:8080/reset-password?token=dfjdlkfjsldfdlfkdflkdfjdlk
-		String fullURL = pRequest.getRequestURL().toString();
-		String resetPwdURL = fullURL.replace(pRequest.getServletPath(), "") + "/reset-password?token=" + resetToken;
-
-		logger.info("Reset password for email " + pEmail + " with token " + resetToken + ", resetPwdURL: " + resetPwdURL);
-
-		String subject = "Password Reset for FLOWIEE account";
-		String content = "<p>Hello, </p>" +
-				"<p>You have requested to reset your password. </p> " +
-				"<p>Please click the link to change your password:</p>" +
-				"<p><a href=\"" + resetPwdURL + "\">Change my password</a></p>";
-		mvMailMediaService.send(pEmail, subject, content);
-
-		return true;
-	}
-
-	@Override
-	public boolean resetPasswordWithToken(String pToken, String pNewPassword) {
-		Account lvAccount = this.getUserByResetTokens(pToken);
-		if (lvAccount == null)
-			return false;
-
-		SystemConfig lvTokenResetValidityMdl = mvConfigService.getSystemConfig(ConfigCode.tokenResetPasswordValidityPeriod.name());
-		if (!configAvailable(lvTokenResetValidityMdl) || lvAccount.isResetTokenExpired(lvTokenResetValidityMdl.getIntValue())) {
-			throw new BadRequestException("Token for reset password has expired!");
-		}
-
-		String lvNewPassword = mvPasswordEncoder.encode(pNewPassword);
-		lvAccount.setPassword(lvNewPassword);
-		lvAccount.setResetTokens(null);
-		mvAccountRepository.save(lvAccount);
-
-		return true;
 	}
 }
