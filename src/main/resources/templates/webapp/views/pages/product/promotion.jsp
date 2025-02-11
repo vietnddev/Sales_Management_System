@@ -115,7 +115,7 @@
                                             </div>
                                             <div class="modal-footer justify-content-end">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                                <button type="button" class="btn btn-primary" id="btn-insert-update-submit">Lưu</button>
+                                                <button type="button" class="btn btn-primary" id="btn-insert-update-submit-">Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -152,14 +152,14 @@
             loadPromotions(mvPageSizeDefault, 1);
             updateTableContentWhenOnClickPagination(loadPromotions);
 
-            loadProducts();
-            preCreateStorage();
-            preUpdateStorage();
-            submitInsertOrUpdate();
-            deleteStorage();
+            //loadProducts();
+            //preCreateStorage();
+            //preUpdateStorage();
+            //submitInsertOrUpdate();
+            //deleteStorage();
         });
 
-        function loadProducts() {
+        /*function loadProducts() {
             let apiURL = mvHostURLCallApi + '/product/all';
             let params = {fullInfo: false}
             $.get(apiURL, params, function (response) {
@@ -275,7 +275,7 @@
                 let apiURL = mvHostURLCallApi + "/promotion/delete/" + mvId;
                 callApiDelete(apiURL);
             });
-        }
+        }*/
 
         function loadPromotions(pageSize, pageNum) {
             let apiURL = mvHostURLCallApi + '/promotion/all';

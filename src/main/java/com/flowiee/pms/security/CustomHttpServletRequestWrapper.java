@@ -1,4 +1,6 @@
 package com.flowiee.pms.security;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.HashMap;
@@ -29,5 +31,12 @@ public class CustomHttpServletRequestWrapper extends HttpServletRequestWrapper {
             return customParams.get(name);
         }
         return super.getParameterValues(name);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("customParams", customParams)
+                .toString();
     }
 }

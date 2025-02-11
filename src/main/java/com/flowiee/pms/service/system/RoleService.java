@@ -30,4 +30,6 @@ public interface RoleService {
     List<RoleModel> updateRightsOfGroup(List<RoleModel> rights, Long groupId);
 
     List<AccountRole> findByAction(ACTION action);
+
+    boolean checkTempRights(String pAccountId, String pRight);
 }

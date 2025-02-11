@@ -2,7 +2,6 @@ package com.flowiee.pms.service.product.impl;
 
 import com.flowiee.pms.common.utils.SysConfigUtils;
 import com.flowiee.pms.entity.product.ProductDetail;
-import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AppException;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.service.system.ConfigService;
@@ -54,8 +53,7 @@ public class ProductQuantityServiceImpl extends BaseService implements ProductQu
                 ProductDetail productDetailUpdated = mvProductVariantRepository.save(lvProductDetail);
 
                 if (lvLowStockThreshold != null && productDetailUpdated.getStorageQty() <= lvLowStockThreshold) {
-                    SystemConfig lvLowStockAlertMdl = mvConfigService.getSystemConfig(ConfigCode.lowStockAlert.name());
-                    if (SysConfigUtils.isYesOption(lvLowStockAlertMdl)) {
+                    if (SysConfigUtils.isYesOption(ConfigCode.lowStockAlert)) {
                         sendOperatorNotificationService.notifyWarningLowStock(productDetailUpdated);
                     }
                 }

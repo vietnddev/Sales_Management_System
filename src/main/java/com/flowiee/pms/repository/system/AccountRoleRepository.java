@@ -42,4 +42,8 @@ public interface AccountRoleRepository extends JpaRepository<AccountRole, Long> 
            "and (:module is null or r.module=:module) " +
            "and (:action is null or r.action=:action)")
     List<AccountRole> findByModuleAndAction(@Param("module") String module, @Param("action") String action);
+
+    @Modifying
+    @Query("delete from AccountRole where action = :action and accountId = :accountId")
+    void deleteByActionAndAccountId(@Param("action") String pAction, @Param("accountId") Long pAccountId);
 }

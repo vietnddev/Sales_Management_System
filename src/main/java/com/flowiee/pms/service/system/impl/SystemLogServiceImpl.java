@@ -1,5 +1,6 @@
 package com.flowiee.pms.service.system.impl;
 
+import com.flowiee.pms.common.utils.CoreUtils;
 import com.flowiee.pms.entity.system.SystemLog;
 import com.flowiee.pms.common.ChangeLog;
 import com.flowiee.pms.repository.system.SystemLogRepository;
@@ -63,14 +64,19 @@ public class SystemLogServiceImpl extends BaseService implements SystemLogServic
 
     @Override
     public SystemLog writeLog(MODULE module, ACTION function, MasterObject object, LogType mode, String title, String content, String contentChange) {
+        String lvContent = CoreUtils.isNullStr(content) ? SystemLog.EMPTY : CoreUtils.trim(content);
+        String lvContentChange = CoreUtils.isNullStr(contentChange) ? SystemLog.EMPTY : CoreUtils.trim(contentChange);
+        if (lvContent.equals(lvContentChange)) {
+            lvContent = "Nothing change";
+        }
         return mvSystemLogRepository.save(SystemLog.builder()
                 .module(module.name())
                 .function(function.name())
                 .object(object.name())
                 .mode(mode.name())
                 .title(title)
-                .content(content)
-                .contentChange(contentChange)
+                .content(lvContent)
+                .contentChange(lvContentChange)
                 .ip(CommonUtils.getUserPrincipal().getIp())
                 .account(CommonUtils.getUserPrincipal().toEntity())
                 .build());

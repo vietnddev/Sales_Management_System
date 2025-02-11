@@ -22,6 +22,7 @@ public enum MasterObject {
     LedgerPayment,
     LedgerTransaction,
     Account,
+    AccountRole,
     GroupAccount,
     SystemConfig,
     Category

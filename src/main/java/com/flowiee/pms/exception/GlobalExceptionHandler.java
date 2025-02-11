@@ -36,8 +36,7 @@ public class GlobalExceptionHandler extends BaseController {
             return;
         }
 
-        SystemConfig lvNotifyFlag = Core.mvSystemConfigList.get(ConfigCode.sendNotifyAdminExceptionRuntime);
-        if (!SysConfigUtils.isYesOption(lvNotifyFlag)) {
+        if (!SysConfigUtils.isYesOption(ConfigCode.sendNotifyAdminExceptionRuntime)) {
             return;
         }
 

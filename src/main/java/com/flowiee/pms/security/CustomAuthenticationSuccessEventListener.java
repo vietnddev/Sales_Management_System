@@ -1,7 +1,6 @@
-package com.flowiee.pms.service;
+package com.flowiee.pms.security;
 
 import com.flowiee.pms.entity.system.Account;
-import com.flowiee.pms.security.UserPrincipal;
 import com.flowiee.pms.repository.system.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;

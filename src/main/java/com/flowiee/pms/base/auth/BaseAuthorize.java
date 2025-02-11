@@ -1,16 +1,14 @@
 package com.flowiee.pms.base.auth;
 
-import com.flowiee.pms.base.system.Core;
 import com.flowiee.pms.common.enumeration.ConfigCode;
 import com.flowiee.pms.common.utils.SysConfigUtils;
-import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.AuthenticationException;
 import com.flowiee.pms.exception.ForbiddenException;
 import com.flowiee.pms.common.constants.Constants;
 import com.flowiee.pms.common.utils.CommonUtils;
 import com.flowiee.pms.common.enumeration.ACTION;
-import com.flowiee.pms.security.UserRightsTemp;
 import com.flowiee.pms.security.UserSession;
+import com.flowiee.pms.service.system.RoleService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BaseAuthorize {
     @Autowired
-    private UserRightsTemp userRightsTemp;
+    private RoleService roleService;
     @Autowired
     private UserSession userSession;
 
@@ -58,9 +56,8 @@ public class BaseAuthorize {
                 }
             }
 
-            SystemConfig lvForceApplyRightsCnf = Core.mvSystemConfigList.get(ConfigCode.forceApplyAccountRightsNoNeedReLogin);
-            if (SysConfigUtils.isYesOption(lvForceApplyRightsCnf)) {
-                if (userRightsTemp.checkRight(lvActor, lvActionName)) {
+            if (SysConfigUtils.isYesOption(ConfigCode.forceApplyAccountRightsNoNeedReLogin)) {
+                if (roleService.checkTempRights(lvActor, lvActionName)) {
                     return true;
                 }
             }

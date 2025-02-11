@@ -1,5 +1,7 @@
 package com.flowiee.pms.common.enumeration;
 
+import java.util.Arrays;
+
 public enum ACTION {
     READ_DASHBOARD("Xem dashboard",             MODULE.DASHBOARD.name()),
 
@@ -73,6 +75,7 @@ public enum ACTION {
 
     SYS_LOGIN("Login",                          MODULE.SYSTEM.name()),
     SYS_ROLE_R("View list of system rights",    MODULE.SYSTEM.name()),
+    SYS_ROLE_U("Update rights",                 MODULE.SYSTEM.name()),
     SYS_LOG_R("View list of system logs",       MODULE.SYSTEM.name()),
     SYS_ACC_R("View list of accounts",          MODULE.SYSTEM.name()),
     SYS_ACC_C("Create account",                 MODULE.SYSTEM.name()),
@@ -124,5 +127,12 @@ public enum ACTION {
         if (MODULE.PRODUCT.name().equals(module)) return MODULE.PRODUCT.getLabel();
         if (MODULE.SYSTEM.name().equals(module)) return MODULE.SYSTEM.getLabel();
         return null;
+    }
+
+    public static ACTION get(String pName) {
+        return Arrays.stream(ACTION.values())
+                .filter(a -> a.name().equals(pName))
+                .findFirst()
+                .orElse(null);
     }
 }

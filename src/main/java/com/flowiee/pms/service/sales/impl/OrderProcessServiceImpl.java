@@ -4,7 +4,6 @@ import com.flowiee.pms.base.service.BaseService;
 import com.flowiee.pms.common.enumeration.TransactionGoodsType;
 import com.flowiee.pms.common.utils.SysConfigUtils;
 import com.flowiee.pms.entity.sales.Order;
-import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.model.dto.TransactionGoodsDTO;
 import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.repository.system.ConfigRepository;
@@ -44,8 +43,7 @@ public class OrderProcessServiceImpl extends BaseService implements OrderProcess
         lvOrder.setCancellationDate(LocalDateTime.now());
         Order lvOrderUpdated = orderRepository.save(lvOrder);
 
-        SystemConfig lvSendNotifyConfig = configRepository.findByCode(ConfigCode.sendNotifyCustomerOnOrderConfirmation.name());
-        if (SysConfigUtils.isYesOption(lvSendNotifyConfig)) {
+        if (SysConfigUtils.isYesOption(ConfigCode.sendNotifyCustomerOnOrderConfirmation)) {
             sendCustomerNotificationService.notifyOrderConfirmation(lvOrderUpdated, lvOrderUpdated.getReceiverEmail());
         }
 

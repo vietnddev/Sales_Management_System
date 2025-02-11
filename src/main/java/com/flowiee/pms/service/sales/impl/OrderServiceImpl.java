@@ -324,8 +324,7 @@ public class OrderServiceImpl extends BaseService implements OrderReadService, O
 
         switch (lvOrderStatus) {
             case CNCL:
-                SystemConfig lvSendNotifyConfig = mvConfigRepository.findByCode(ConfigCode.sendNotifyCustomerOnOrderConfirmation.name());
-                if (SysConfigUtils.isYesOption(lvSendNotifyConfig)) {
+                if (SysConfigUtils.isYesOption(ConfigCode.sendNotifyCustomerOnOrderConfirmation)) {
                     mvSendCustomerNotificationService.notifyOrderConfirmation(pOrderUpdated, pOrderUpdated.getReceiverEmail());
                 }
                 break;

@@ -2,7 +2,6 @@ package com.flowiee.pms.service.sales.impl;
 
 import com.flowiee.pms.common.utils.SysConfigUtils;
 import com.flowiee.pms.entity.sales.Order;
-import com.flowiee.pms.entity.system.SystemConfig;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.exception.ResourceNotFoundException;
@@ -120,8 +119,7 @@ public class CustomerServiceImpl extends BaseService implements CustomerService 
 
             if (!CoreUtils.validateEmail(lvPhoneDefault))
                 throw new BadRequestException("Phone number invalid");
-            SystemConfig lvConfig = mvConfigService.getSystemConfig(ConfigCode.allowDuplicateCustomerPhoneNumber.name());
-            if (!SysConfigUtils.isYesOption(lvConfig)) {
+            if (!SysConfigUtils.isYesOption(ConfigCode.allowDuplicateCustomerPhoneNumber)) {
                 if ( mvCustomerContactRepository.findByContactTypeAndValue(lvContactType.name(), lvPhoneDefault) != null) {
                     throw new BadRequestException(String.format("Phone %s already used!", dto.getEmailDefault()));
                 }

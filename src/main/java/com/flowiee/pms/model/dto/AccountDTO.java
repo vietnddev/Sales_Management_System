@@ -1,15 +1,12 @@
 package com.flowiee.pms.model.dto;
 
-import com.flowiee.pms.common.utils.FileUtils;
 import com.flowiee.pms.entity.system.Account;
 import com.flowiee.pms.entity.system.Branch;
-import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.entity.system.GroupAccount;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -57,15 +54,7 @@ public class AccountDTO implements Serializable {
         dto.setPhoneNumber(pAccount.getPhoneNumber());
         dto.setEmail(pAccount.getEmail());
         dto.setAddress(pAccount.getAddress());
-
-        FileStorage lvAvatarMdl = pAccount.getAvatar();
-        String lvAvatarStr = "";
-        if (lvAvatarMdl != null) {
-            File f = FileUtils.getFileUploaded(lvAvatarMdl);
-            if (f.exists()) lvAvatarStr = f.getPath();
-        }
-        dto.setAvatar(lvAvatarStr);
-
+        dto.setAvatar("");
         dto.setRemark(pAccount.getRemark());
         dto.setRole(pAccount.getRole());
         dto.setIsPartTimeStaff(pAccount.getIsPartTimeStaff());

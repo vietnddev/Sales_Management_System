@@ -64,8 +64,7 @@ public class ClearLogScheduleExecutor extends ScheduleExecutor {
     }
 
     private boolean isEnableDeleteLog() {
-        SystemConfig lvDeleteSystemLogConfig = configRepository.findByCode(ConfigCode.deleteSystemLog.name());
-        if (!SysConfigUtils.isYesOption(lvDeleteSystemLogConfig)) {
+        if (!SysConfigUtils.isYesOption(ConfigCode.deleteSystemLog)) {
             return false;
         }
         return true;

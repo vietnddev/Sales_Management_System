@@ -27,10 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.flowiee.pms.common.utils.FileUtils;
 import com.flowiee.pms.common.utils.PasswordUtils;
@@ -50,6 +47,7 @@ import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -65,7 +63,8 @@ public class Core {
 	CategoryRepository     mvCategoryRepository;
 	GroupAccountRepository mvGroupAccountRepository;
 	ConfigService          mvConfigService;
-	TemplateSendEmail 	   mvTemplateSendEmail;
+	TemplateSendEmail      mvTemplateSendEmail;
+	Environment            mvEnvironment;
 
 	public static LocalDateTime                                     START_APP_TIME;
 	public static String                                            mvResourceUploadPath      = null;
@@ -76,6 +75,9 @@ public class Core {
     @Bean
     CommandLineRunner init() {
     	return args -> {
+			String[] lvActiveProfiles = mvEnvironment.getActiveProfiles();
+			logger.info("Running in {} environment", lvActiveProfiles[0].toUpperCase());
+
     		initConfig();
 			initData();
 			configReport();
@@ -194,7 +196,8 @@ public class Core {
 				.type(row[0])
 				.code(row[1])
 				.name(row[2])
-				.status(Boolean.parseBoolean(row[3]))
+				//.status(Boolean.parseBoolean(row[3]))
+				.status(true)
 				.isDefault(row[4])
 				.endpoint(row[5]).build();
 				initAudit(category);

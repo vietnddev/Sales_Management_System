@@ -105,6 +105,8 @@ public class StorageServiceImpl extends BaseService implements StorageService {
         if (mvStorageRepository.findByCode(lvCode) != null)
             throw new BadRequestException(String.format("Storage code %s existed!", lvCode));
 
+        storage.setStatus("Y");
+
         Storage storageSaved = mvStorageRepository.save(storage);
         return StorageDTO.convertToDTO(storageSaved);
     }

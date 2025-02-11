@@ -66,9 +66,9 @@ public class StorageController extends BaseController {
     @Operation(summary = "Create storage")
     @PostMapping("/create")
     @PreAuthorize("@vldModuleStorage.insertStorage(true)")
-    public AppResponse<StorageDTO> createStorage(@RequestBody StorageDTO storage) {
+    public AppResponse<StorageDTO> createStorage(StorageDTO storageDTO) {
         try {
-            return success(mvStorageService.save(storage));
+            return success(mvStorageService.save(storageDTO));
         } catch (RuntimeException ex) {
             throw new AppException(String.format(ErrorCode.CREATE_ERROR_OCCURRED.getDescription(), "storage"), ex);
         }

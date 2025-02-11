@@ -11,15 +11,12 @@ public class OrderUtils {
     private static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     public static BigDecimal calTotalAmount(List<Order> orderList) {
-        BigDecimal lvAmount = BigDecimal.ZERO;
-        if (orderList == null) {
-            return lvAmount;
+        if (orderList == null || orderList.isEmpty()) {
+            return ZERO;
         }
-        for (Order lvOrder : orderList) {
-            BigDecimal lvOrderValue = calTotalAmount(lvOrder.getListOrderDetail(), lvOrder.getAmountDiscount());
-            lvAmount = lvAmount.add(lvOrderValue);
-        }
-        return lvAmount;
+        return orderList.stream()
+                .map(order -> calTotalAmount(order.getListOrderDetail(), order.getAmountDiscount()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public static BigDecimal calTotalAmount(List<OrderDetail> orderDetails, BigDecimal amountDiscount) {
