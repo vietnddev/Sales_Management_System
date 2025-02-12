@@ -6,6 +6,7 @@ import com.flowiee.pms.entity.sales.OrderCart;
 import com.flowiee.pms.exception.BadRequestException;
 import com.flowiee.pms.exception.EntityNotFoundException;
 import com.flowiee.pms.model.CartItemModel;
+import com.flowiee.pms.model.ProductVariantParameter;
 import com.flowiee.pms.model.dto.ProductVariantDTO;
 import com.flowiee.pms.repository.sales.CartItemsRepository;
 import com.flowiee.pms.repository.sales.OrderCartRepository;
@@ -53,7 +54,11 @@ public class CartItemsServiceImpl extends BaseService implements CartItemsServic
         List<CartItemModel> cartItemModelList = new ArrayList<>();
         OrderCart cart = cartRepository.findByAccountId(CommonUtils.getUserPrincipal().getId()).get(0);
         List<ProductCombo> productCombos = mvProductComboService.findAll();
-        List<ProductVariantDTO> productVariantDTOs = mvProductVariantService.findAll(-1, -1, null, null, null, null, null, true, false).getContent();
+        List<ProductVariantDTO> productVariantDTOs = mvProductVariantService.findAll(ProductVariantParameter.builder()
+                .availableForSales(true)
+                .checkInAnyCart(false)
+                .build()
+        ).getContent();
         for (ProductCombo productCbo : productCombos) {
             int availableQty = productCbo.getQuantity();
             if (availableQty < 1)

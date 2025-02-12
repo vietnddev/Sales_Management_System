@@ -66,13 +66,19 @@ public class OrderController extends BaseController {
                                                      @RequestParam(value = "branchId", required = false) Long pBranchId,
                                                      @RequestParam(value = "dateFilter", required = false) String pDateFilter,
                                                      @RequestParam(value = "txtSearch", required = false) String pTxtSearch,
-                                                     @RequestParam(value = "fromDate", required = false) String pFromDate,
-                                                     @RequestParam(value = "toDate", required = false) String pToDate,
+                                                     @RequestParam(name = "fromDate", required = false) String pFromDate,
+                                                     @RequestParam(name = "toDate", required = false) String pToDate,
                                                      @RequestParam(name = Constants.PAGE_SIZE, required = false, defaultValue = Constants.DEFAULT_PSIZE) int pageSize,
                                                      @RequestParam(name = Constants.PAGE_NUM, required = false, defaultValue = Constants.DEFAULT_PNUM) int pageNum) {
         try {
-            LocalDateTime lvFromDate = DateTimeUtil.convertStringToDateTime(pFromDate, DateTimeUtil.FORMAT_DATE);
-            LocalDateTime lvToDate = DateTimeUtil.convertStringToDateTime(pToDate, DateTimeUtil.FORMAT_DATE);
+            LocalDateTime lvFromDate = DateTimeUtil.MIN_TIME;
+            if (!CoreUtils.isNullStr(pFromDate)) {
+                lvFromDate = DateTimeUtil.convertStringToDateTime(pFromDate, DateTimeUtil.FORMAT_DATE);
+            }
+            LocalDateTime lvToDate = DateTimeUtil.MAX_TIME;
+            if (!CoreUtils.isNullStr(pFromDate)) {
+                lvToDate = DateTimeUtil.convertStringToDateTime(pToDate, DateTimeUtil.FORMAT_DATE);
+            }
             Page<OrderDTO> orderPage = mvOrderReadService.findAll(pageSize, pageNum - 1, pTxtSearch, pOrderId, pPaymentMethodId, pOrderStatus, pSalesChannelId, pSellerId, pCustomerId, pBranchId, pGroupCustomerId,
                     pDateFilter, lvFromDate, lvToDate, null);
             return success(orderPage.getContent(), pageNum, pageSize, orderPage.getTotalPages(), orderPage.getTotalElements());

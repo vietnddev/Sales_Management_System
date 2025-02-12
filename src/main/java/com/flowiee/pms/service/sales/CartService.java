@@ -3,7 +3,7 @@ package com.flowiee.pms.service.sales;
 import java.util.List;
 
 import com.flowiee.pms.entity.sales.Items;
-import com.flowiee.pms.model.payload.CartItemsReq;
+import com.flowiee.pms.model.payload.CartReq;
 import com.flowiee.pms.base.service.BaseCurdService;
 import com.flowiee.pms.entity.sales.OrderCart;
 
@@ -18,7 +18,7 @@ public interface CartService extends BaseCurdService<OrderCart> {
 
     void addItemsToCart(Long cartId, String[] productVariantIds);
 
-    void addItemsToCart(CartItemsReq cartItemsReq);
+    void addItemsToCart(CartReq cartReq);
 
     void updateItemsOfCart(Items items, Long itemId);
 }

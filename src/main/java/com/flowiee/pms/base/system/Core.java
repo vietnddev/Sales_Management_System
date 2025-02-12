@@ -84,13 +84,13 @@ public class Core {
             configEndPoint();
 
             mvConfigService.refreshApp();
-			logger.info("Finish loads system configs");
+			logger.info("System configuration loading finished");
 
 			mvLanguageService.reloadMessage("en");
-			logger.info("Finish downloading vi messages");
+			logger.info("Downloading of en messages finished");
 
 			mvLanguageService.reloadMessage("vi");
-			logger.info("Finish downloading en message");
+			logger.info("Downloading of vi messages finished");
 
 			List<TemplateSendEmail.Template> lvGeneralMailTemplates = mvTemplateSendEmail.getGeneralMailTemplates();
 			lvGeneralMailTemplates.forEach(lvTemplate -> {
@@ -114,7 +114,7 @@ public class Core {
 				lvTemplate.setTemplateContent(lvTemplateContent.toString());
 				mvGeneralEmailTemplateMap.put(lvNotificationType, lvTemplate);
 			});
-			logger.info("Finish loads template email");
+			logger.info("Email template loading finished");
 
 			START_APP_TIME = LocalDateTime.now();
         };

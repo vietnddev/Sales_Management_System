@@ -7,6 +7,7 @@ import com.flowiee.pms.entity.sales.OrderDetail;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.*;
 import com.flowiee.pms.model.ProductHeld;
+import com.flowiee.pms.model.ProductVariantParameter;
 import com.flowiee.pms.repository.product.ProductDescriptionRepository;
 import com.flowiee.pms.repository.sales.OrderRepository;
 import com.flowiee.pms.service.category.CategoryService;
@@ -242,7 +243,11 @@ public class ProductInfoServiceImpl extends BaseService implements ProductInfoSe
 
     @Override
     public boolean productInUse(Long productId) throws RuntimeException {
-        return !mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null, false).getContent().isEmpty();
+        return !mvProductVariantService.findAll(ProductVariantParameter.builder()
+                .productId(productId)
+                .checkInAnyCart(false)
+                .build()
+        ).getContent().isEmpty();
     }
 
     @Override

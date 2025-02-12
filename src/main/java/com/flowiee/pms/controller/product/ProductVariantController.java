@@ -42,12 +42,14 @@ public class ProductVariantController extends BaseController {
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductVariantDTO>> findProductVariants(@RequestParam(name = Constants.PAGE_SIZE, required = false, defaultValue = Constants.DEFAULT_PSIZE) Integer pageSize,
                                                                     @RequestParam(name = Constants.PAGE_NUM, required = false, defaultValue = Constants.DEFAULT_PNUM) Integer pageNum,
+                                                                    @RequestParam(value = "txtSearch", required = false) String pTxtSearch,
                                                                     @RequestParam(value = "readyForSales", required = false) Boolean readyForSales,
                                                                     @RequestParam(value = "productId", required = false) Long productId,
+                                                                    @RequestParam(value = "brandId", required = false) Long pBrandId,
                                                                     @RequestParam(value = "colorId", required = false) Long pColorId,
                                                                     @RequestParam(value = "sizeId", required = false) Long pSizeId,
                                                                     @RequestParam(value = "fabricTypeId", required = false) Long fabricTypeId) {
-        Page<ProductVariantDTO> data = mvProductVariantService.findAll(CoreUtils.coalesce(pageSize), CoreUtils.coalesce(pageNum) - 1, productId, null, pColorId, pSizeId, fabricTypeId, readyForSales, true);
+        Page<ProductVariantDTO> data = mvProductVariantService.findAll(CoreUtils.coalesce(pageSize), CoreUtils.coalesce(pageNum) - 1, pTxtSearch, productId, null, pBrandId, pColorId, pSizeId, fabricTypeId, readyForSales, true);
         return success(data.getContent(), data.getNumber() + 1, data.getSize(), data.getTotalPages(), data.getTotalElements());
     }
 
@@ -55,7 +57,7 @@ public class ProductVariantController extends BaseController {
     @GetMapping("/{productId}/variants")
     @PreAuthorize("@vldModuleProduct.readProduct(true)")
     public AppResponse<List<ProductVariantDTO>> findVariantsOfProduct(@PathVariable("productId") Long productId) {
-        return success(mvProductVariantService.findAll(-1, -1, productId, null, null, null, null, null, false).getContent());
+        return success(mvProductVariantService.findAll(-1, -1, null, productId, null, null, null, null, null, null, false).getContent());
     }
 
     @Operation(summary = "Find detail product variant")

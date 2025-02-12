@@ -62,13 +62,18 @@ public class RestControllerAspect {
         String lvUsername = isLoginPage(attributes) ? null : CommonUtils.getUserPrincipal().getUsername();
         String lvIpAddress = isLoginPage(attributes) ? null : CommonUtils.getUserPrincipal().getIp();
 
+        String lvRequestBody = getRequestBody(joinPoint);
+        if (lvRequestBody.length() > 4000) {
+            lvRequestBody = lvRequestBody.substring(0, 3996) + " ...";
+        }
+
         EventLog eventLog = mvEventLogRepository.save(EventLog.builder()
                 .httpMethod(getHttpMethod(attributes))// Lấy tên HTTP method (GET, POST, etc.)
                 .processClass(signature.getDeclaringTypeName())
                 .processMethod(signature.getName())
                 .requestUrl(getRequestUrl(attributes))
                 .requestParam(getRequestParam(attributes))
-                .requestBody(getRequestBody(joinPoint))
+                .requestBody(lvRequestBody)
                 .createdBy(lvUsername)
                 .createdTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(startTime), ZoneId.systemDefault()))
                 .ipAddress(lvIpAddress)
@@ -104,7 +109,7 @@ public class RestControllerAspect {
         if (attributes != null) {
             return attributes.getRequest().getMethod();
         }
-        return null;
+        return "";
     }
 
     private String getRequestUrl(ServletRequestAttributes attributes) {
@@ -112,7 +117,7 @@ public class RestControllerAspect {
             HttpServletRequest httpServletRequest = attributes.getRequest();
             return httpServletRequest.getRequestURL().toString();
         }
-        return null;
+        return "";
     }
 
     private String getRequestParam(ServletRequestAttributes attributes) {
@@ -131,7 +136,7 @@ public class RestControllerAspect {
             }
             return paramsStr;
         }
-        return null;
+        return "";
     }
 
     private String getRequestBody(JoinPoint joinPoint) {
@@ -150,7 +155,7 @@ public class RestControllerAspect {
                 }
             }
         }
-        return null;
+        return "";
     }
 
     private boolean isLoginPage(ServletRequestAttributes attributes) {

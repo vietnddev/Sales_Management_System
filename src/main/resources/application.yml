@@ -17,3 +17,6 @@ spring:
     suffix: .jsp
     cache: false
     encoding: UTF-8
+
+  banner:
+    location: classpath:banner.txt

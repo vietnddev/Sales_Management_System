@@ -11,6 +11,7 @@ import com.flowiee.pms.entity.sales.TicketImport;
 import com.flowiee.pms.entity.storage.Storage;
 import com.flowiee.pms.entity.system.FileStorage;
 import com.flowiee.pms.exception.*;
+import com.flowiee.pms.model.ProductVariantParameter;
 import com.flowiee.pms.model.dto.ProductPriceDTO;
 import com.flowiee.pms.repository.product.ProductPriceRepository;
 import com.flowiee.pms.repository.sales.OrderCartRepository;
@@ -84,18 +85,28 @@ public class ProductVariantServiceImpl extends BaseService implements ProductVar
 
     @Override
     public List<ProductVariantDTO> findAll() {
-        return this.findAll(-1, -1, null, null, null, null, null, null, false).getContent();
+        return this.findAll(-1, -1, null, null, null, null, null, null, null, null, false).getContent();
     }
 
     @Override
-    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, Long pProductId, Long pTicketImport, Long pColorId, Long pSizeId, Long pFabricTypeId, Boolean pAvailableForSales, boolean checkInAnyCart) {
+    public Page<ProductVariantDTO> findAll(ProductVariantParameter pParameter) {
+        return this.findAll(pParameter.getPageSize(), pParameter.getPageNum(), pParameter.getTxtSerch(), pParameter.getProductId(),
+                pParameter.getTicketImportId(), pParameter.getBrandId(), pParameter.getColorId(), pParameter.getSizeId(),
+                pParameter.getProductId(), pParameter.getAvailableForSales(), pParameter.getCheckInAnyCart());
+    }
+
+    @Override
+    public Page<ProductVariantDTO> findAll(int pageSize, int pageNum, String pTxtSearch, Long pProductId, Long pTicketImport, Long pBrandId, Long pColorId, Long pSizeId, Long pFabricTypeId, Boolean pAvailableForSales, boolean checkInAnyCart) {
         Pageable lvPageable = getPageable(pageNum, pageSize, Sort.by("variantName").ascending());
         CriteriaBuilder lvCriteriaBuilder = mvEntityManager.getCriteriaBuilder();
         CriteriaQuery<ProductDetail> lvCriteriaQuery = lvCriteriaBuilder.createQuery(ProductDetail.class);
         Root<ProductDetail> lvRoot = lvCriteriaQuery.from(ProductDetail.class);
 
         List<Predicate> lvPredicates = new ArrayList<>();
+        addLikeCondition(lvCriteriaBuilder, lvPredicates, pTxtSearch,
+                lvRoot.get("variantCode"), lvRoot.get("variantName"));
         addEqualCondition(lvCriteriaBuilder, lvPredicates, lvRoot.get("product").get("id"), pProductId);
+        addEqualCondition(lvCriteriaBuilder, lvPredicates, lvRoot.get("product").get("brand").get("id"), pBrandId);
         addEqualCondition(lvCriteriaBuilder, lvPredicates, lvRoot.get("color").get("id"), pColorId);
         addEqualCondition(lvCriteriaBuilder, lvPredicates, lvRoot.get("size").get("id"), pSizeId);
         addEqualCondition(lvCriteriaBuilder, lvPredicates, lvRoot.get("fabricType").get("id"), pFabricTypeId);

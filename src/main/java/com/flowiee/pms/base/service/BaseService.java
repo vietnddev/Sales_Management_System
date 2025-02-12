@@ -158,7 +158,7 @@ public class BaseService {
             Path<String>... fields) {
         if (value != null) {
             List<Predicate> likePredicates = Arrays.stream(fields)
-                    .map(field -> cb.like(field, "%" + value + "%"))
+                    .map(field -> cb.like(cb.lower(field), "%" + value.toLowerCase() + "%"))
                     .toList();
             predicates.add(cb.or(likePredicates.toArray(new Predicate[0])));
         }
