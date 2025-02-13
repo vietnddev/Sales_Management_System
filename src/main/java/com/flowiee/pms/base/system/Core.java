@@ -1,22 +1,16 @@
 package com.flowiee.pms.base.system;
 
 import com.flowiee.pms.base.entity.BaseEntity;
+import com.flowiee.pms.common.utils.CoreUtils;
 import com.flowiee.pms.config.TemplateSendEmail;
 import com.flowiee.pms.entity.category.Category;
 import com.flowiee.pms.entity.sales.Customer;
-import com.flowiee.pms.entity.system.Account;
-import com.flowiee.pms.entity.system.Branch;
-import com.flowiee.pms.entity.system.GroupAccount;
-import com.flowiee.pms.entity.system.SystemConfig;
+import com.flowiee.pms.entity.system.*;
 import com.flowiee.pms.model.ServerInfo;
 import com.flowiee.pms.repository.category.CategoryRepository;
 import com.flowiee.pms.repository.sales.CustomerRepository;
-import com.flowiee.pms.repository.system.AccountRepository;
-import com.flowiee.pms.repository.system.BranchRepository;
-import com.flowiee.pms.repository.system.ConfigRepository;
-import com.flowiee.pms.repository.system.GroupAccountRepository;
+import com.flowiee.pms.repository.system.*;
 import com.flowiee.pms.service.system.*;
-import com.flowiee.pms.common.constants.Constants;
 import com.flowiee.pms.common.utils.CommonUtils;
 
 import java.io.*;
@@ -25,20 +19,25 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import com.flowiee.pms.common.utils.FileUtils;
 import com.flowiee.pms.common.utils.PasswordUtils;
-import com.flowiee.pms.common.enumeration.AccountStatus;
 import com.flowiee.pms.common.enumeration.ConfigCode;
 import com.flowiee.pms.common.enumeration.EndPoint;
 import com.flowiee.pms.common.enumeration.NotificationType;
-import com.opencsv.*;
-import lombok.AccessLevel;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.exception.ConstraintViolationException;
 import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,29 +47,56 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class Core {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	ConfigRepository       mvConfigRepository;
-	BranchRepository       mvBranchRepository;
-	AccountRepository      mvAccountRepository;
-	LanguageService        mvLanguageService;
-	CustomerRepository     mvCustomerRepository;
-	CategoryRepository     mvCategoryRepository;
-	GroupAccountRepository mvGroupAccountRepository;
-	ConfigService          mvConfigService;
-	TemplateSendEmail      mvTemplateSendEmail;
-	Environment            mvEnvironment;
+	private final ConfigRepository       mvConfigRepository;
+	private final BranchRepository       mvBranchRepository;
+	private final AccountRepository      mvAccountRepository;
+	private final LanguageService        mvLanguageService;
+	private final CustomerRepository     mvCustomerRepository;
+	private final CategoryRepository     mvCategoryRepository;
+	private final GroupAccountRepository mvGroupAccountRepository;
+	private final ConfigService          mvConfigService;
+	private final TemplateSendEmail      mvTemplateSendEmail;
+	private final Environment            mvEnvironment;
+	private final ScheduleRepository 	 mvScheduleRepository;
 
 	public static LocalDateTime                                     START_APP_TIME;
 	public static String                                            mvResourceUploadPath      = null;
 	public static Map<NotificationType, TemplateSendEmail.Template> mvGeneralEmailTemplateMap = new HashMap<>();
 	public static Map<ConfigCode, SystemConfig>                     mvSystemConfigList        = new HashMap();
 	public static final ConfigCode                                  mvConfigInitData          = ConfigCode.initData;
+
+	private static final int CATEGORY_TYPE_COL_INDEX = 0;
+	private static final int CATEGORY_CODE_COL_INDEX = 1;
+	private static final int CATEGORY_NAME_COL_INDEX = 2;
+	private static final int CATEGORY_STATUS_COL_INDEX = 3;
+	private static final int CATEGORY_ISDEFAULT_COL_INDEX = 4;
+	private static final int CATEGORY_ENDPOINT_COL_INDEX = 5;
+	private static final int BRANCH_CODE_COL_INDEX = 0;
+	private static final int BRANCH_NAME_COL_INDEX = 1;
+	private static final int GROUP_ACCOUNT_CODE_COL_INDEX = 0;
+	private static final int GROUP_ACCOUNT_NAME_COL_INDEX = 1;
+	private static final int ACCOUNT_USERNAME_COL_INDEX = 0;
+	private static final int ACCOUNT_PASSWORD_COL_INDEX = 1;
+	private static final int ACCOUNT_FULLNAME_COL_INDEX = 2;
+	private static final int ACCOUNT_SEX_COL_INDEX = 3;
+	private static final int ACCOUNT_ROLE_COL_INDEX = 4;
+	private static final int ACCOUNT_BRANCH_CODE_COL_INDEX = 5;
+	private static final int ACCOUNT_GROUPACCOUNT_CODE_COL_INDEX = 6;
+	private static final int ACCOUNT_STATUS_COL_INDEX = 7;
+	private static final int CUSTOMER_CODE_COL_INDEX = 0;
+	private static final int CUSTOMER_NAME_COL_INDEX = 1;
+	private static final int CUSTOMER_SEX_COL_INDEX = 2;
+	private static final int SCHEDULE_ID_COL_INDEX = 0;
+	private static final int SCHEDULE_NAME_COL_INDEX = 1;
+	private static final int SCHEDULE_ENABLE_COL_INDEX = 2;
 
     @Bean
     CommandLineRunner init() {
@@ -180,72 +206,130 @@ public class Core {
 		CommonUtils.defaultNewPassword = mvSystemConfigList.get(ConfigCode.generateNewPasswordDefault).getValue();
 	}
 
-	private void initData() throws Exception {
+	@Transactional
+	void initData() throws Exception {
 		SystemConfig systemConfigInitData = mvConfigRepository.findByCode(mvConfigInitData.name());
 		if ("Y".equals(systemConfigInitData.getValue())) {
 			return;
 		}
 		//Init category
-		CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
-		FileReader fileReader = new FileReader(FileUtils.getFileDataCategoryInit());
-		CSVReader csvReader = new CSVReaderBuilder(fileReader).withCSVParser(parser).build();
-		List<Category> listCategory = new ArrayList<>();
-		for (String[] row : csvReader.readAll()) {
-			//System.out.println(String.join(", ", row));
-			Category category = Category.builder()
-				.type(row[0])
-				.code(row[1])
-				.name(row[2])
-				//.status(Boolean.parseBoolean(row[3]))
-				.status(true)
-				.isDefault(row[4])
-				.endpoint(row[5]).build();
+		File lvCsvDataFile = FileUtils.getFileDataCategoryInit();
+		CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+		FileReader lvFileReader = new FileReader(lvCsvDataFile);
+		CSVReader lvCsvReader = new CSVReaderBuilder(lvFileReader).withCSVParser(parser).build();
+		List<Category> lvListCategory = new ArrayList<>();
+		int lineCsv = 0;
+		for (String[] row : lvCsvReader.readAll()) {
+			if (lineCsv > 0) {//header
+				Category category = Category.builder()
+						.type(CoreUtils.trim(row[CATEGORY_TYPE_COL_INDEX]))
+						.code(CoreUtils.trim(row[CATEGORY_CODE_COL_INDEX]))
+						.name(CoreUtils.trim(row[CATEGORY_NAME_COL_INDEX]))
+						.status(true)//.status(Boolean.parseBoolean(CoreUtils.trim(row[CATEGORY_STATUS_COL_INDEX])))
+						.isDefault(CoreUtils.trim(row[CATEGORY_ISDEFAULT_COL_INDEX]))
+						.endpoint(CoreUtils.trim(row[CATEGORY_ENDPOINT_COL_INDEX]))
+						.build();
 				initAudit(category);
-			listCategory.add(category);
+				lvListCategory.add(category);
+			}
+			lineCsv ++;
 		}
-		listCategory.remove(0);//header
-		mvCategoryRepository.saveAll(listCategory);
-		fileReader.close();
-		csvReader.close();
-		//Init branch
-		Branch branch = Branch.builder().branchCode("MAIN").branchName("Trụ sở").build();
-		initAudit(branch);
-		Branch branchSaved = mvBranchRepository.save(branch);
-		//Init group account
-		GroupAccount groupAccountManager = GroupAccount.builder().groupCode("MANAGER").groupName("Quản lý cửa hàng").build();
-		initAudit(groupAccountManager);
-		GroupAccount groupManagerSaved = mvGroupAccountRepository.save(groupAccountManager);
+		lvListCategory.remove(0);//header
+		mvCategoryRepository.saveAll(lvListCategory);
+		lvFileReader.close();
+		lvCsvReader.close();
 
-		GroupAccount groupAccountStaff = GroupAccount.builder().groupCode("STAFF").groupName("Nhân viên bán hàng").build();
-		initAudit(groupAccountStaff);
-		GroupAccount groupStaffSaved = mvGroupAccountRepository.save(groupAccountStaff);
-		//Init admin account
-		Account adminAccount = Account.builder()
-			.username(Constants.ADMINISTRATOR)
-			.password(PasswordUtils.encodePassword(CommonUtils.defaultNewPassword))
-			.fullName("Administrator").sex(true)
-			.role("ADMIN")
-			.branch(branchSaved).groupAccount(groupManagerSaved)
-			.status(AccountStatus.N.name())
-			.build();
-			initAudit(adminAccount);
-		mvAccountRepository.save(adminAccount);
-
-		Account staffAccount = Account.builder()
-			.username("staff")
-			.password(PasswordUtils.encodePassword(CommonUtils.defaultNewPassword))
-			.fullName("Staff").sex(true)
-			.role("USER")
-			.branch(branchSaved).groupAccount(groupStaffSaved)
-			.status(AccountStatus.N.name())
-			.build();
-			initAudit(staffAccount);
-		mvAccountRepository.save(staffAccount);
-		//Init customer
-		Customer customer = Customer.builder().customerName("Khách vãng lai")
-				.dateOfBirth(LocalDate.of(2000, 1, 8)).sex(true).build();
-			initAudit(customer);
-		mvCustomerRepository.save(customer);
+		String[] lvSheets = new String[]{"BRANCH", "GROUP_ACCOUNT", "ACCOUNT", "CUSTOMER", "SCHEDULE"};
+		File lvXlsxDataFile = FileUtils.getFileDataSystemInit();
+		XSSFWorkbook lvWorkbook = new XSSFWorkbook(lvXlsxDataFile);
+		for (String lvSheetName : lvSheets) {
+			XSSFSheet lvSheet = lvWorkbook.getSheet(lvSheetName);
+			if (lvSheet == null) {
+				continue;
+			}
+			switch (lvSheetName) {
+				case "BRANCH":
+					for (int i = 0; i < lvSheet.getPhysicalNumberOfRows(); i++) {
+						XSSFRow lvRow = lvSheet.getRow(i + 1);
+						if (lvRow == null) continue;
+						Branch lvBranch = Branch.builder()
+								.branchCode(getValue(lvRow, BRANCH_CODE_COL_INDEX))
+								.branchName(getValue(lvRow, BRANCH_NAME_COL_INDEX))
+								.build();
+						initAudit(lvBranch);
+						try {
+							mvBranchRepository.save(lvBranch);
+						} catch (DataIntegrityViolationException ex) {}
+					}
+					break;
+				case "GROUP_ACCOUNT":
+					for (int i = 0; i < lvSheet.getPhysicalNumberOfRows(); i++) {
+						XSSFRow lvRow = lvSheet.getRow(i + 1);
+						if (lvRow == null) continue;
+						GroupAccount lvGroupAccount = GroupAccount.builder()
+								.groupCode(getValue(lvRow, GROUP_ACCOUNT_CODE_COL_INDEX))
+								.groupName(getValue(lvRow, GROUP_ACCOUNT_NAME_COL_INDEX))
+								.build();
+						initAudit(lvGroupAccount);
+						try {
+							mvGroupAccountRepository.save(lvGroupAccount);
+						} catch (DataIntegrityViolationException ex) {}
+					}
+					break;
+				case "ACCOUNT":
+					for (int i = 0; i < lvSheet.getPhysicalNumberOfRows(); i++) {
+						XSSFRow lvRow = lvSheet.getRow(i + 1);
+						if (lvRow == null) continue;
+						String lvBranchCode = getValue(lvRow, ACCOUNT_BRANCH_CODE_COL_INDEX);
+						String lvGroupCode = getValue(lvRow, ACCOUNT_GROUPACCOUNT_CODE_COL_INDEX);
+						Account lvAccount = Account.builder()
+								.username(getValue(lvRow, ACCOUNT_USERNAME_COL_INDEX))
+								.password(PasswordUtils.encodePassword(getValue(lvRow, ACCOUNT_PASSWORD_COL_INDEX)))
+								.fullName(getValue(lvRow, ACCOUNT_FULLNAME_COL_INDEX))
+								.sex(getValue(lvRow, ACCOUNT_SEX_COL_INDEX).equals("M"))
+								.role(getValue(lvRow, ACCOUNT_ROLE_COL_INDEX))
+								.branch(mvBranchRepository.findByCode(lvBranchCode))
+								.groupAccount(mvGroupAccountRepository.findByCode(lvGroupCode))
+								.status(getValue(lvRow, ACCOUNT_STATUS_COL_INDEX))
+								.build();
+						initAudit(lvAccount);
+						try {
+							mvAccountRepository.save(lvAccount);
+						} catch (DataIntegrityViolationException ex) {}
+					}
+					break;
+				case "CUSTOMER":
+					for (int i = 0; i < lvSheet.getPhysicalNumberOfRows(); i++) {
+						XSSFRow lvRow = lvSheet.getRow(i + 1);
+						if (lvRow == null) continue;
+						Customer lvCustomer = Customer.builder()
+								.code(getValue(lvRow, CUSTOMER_CODE_COL_INDEX))
+								.customerName(getValue(lvRow, CUSTOMER_NAME_COL_INDEX))
+								.dateOfBirth(LocalDate.now())
+								.sex(getValue(lvRow, CUSTOMER_SEX_COL_INDEX).equals("M"))
+								.build();
+						initAudit(lvCustomer);
+						try {
+							mvCustomerRepository.save(lvCustomer);
+						} catch (DataIntegrityViolationException ex) {}
+					}
+					break;
+				case "SCHEDULE":
+					for (int i = 0; i < lvSheet.getPhysicalNumberOfRows(); i++) {
+						XSSFRow lvRow = lvSheet.getRow(i + 1);
+						if (lvRow == null) continue;
+						try {
+							mvScheduleRepository.save(Schedule.builder()
+									.scheduleId(getValue(lvRow, SCHEDULE_ID_COL_INDEX))
+									.scheduleName(getValue(lvRow, SCHEDULE_NAME_COL_INDEX))
+									.enable(getValue(lvRow, SCHEDULE_ENABLE_COL_INDEX).equals("Y"))
+									.build());
+						} catch (DataIntegrityViolationException ex) {}
+					}
+					break;
+			}
+		}
+		lvWorkbook.close();
 
 		systemConfigInitData.setValue("Y");
 		mvConfigRepository.save(systemConfigInitData);
@@ -276,5 +360,9 @@ public class Core {
 			if (mvConfigRepository.findByCode(sysConfig.getCode()) == null)
 				mvConfigRepository.save(sysConfig);
 		}
+	}
+
+	private String getValue(XSSFRow pRow, int pIndex) {
+    	return CoreUtils.trim(pRow.getCell(pIndex).toString());
 	}
 }

@@ -28,7 +28,8 @@ import java.util.UUID;
 public class FileUtils {
     public static String resourceStaticPath = "src/main/resources/static";
     public static String fileUploadPath = Core.getResourceUploadPath() + "/uploads/";
-    public static String initCsvDataPath = Core.getResourceUploadPath() + "/data/csv";
+    public static String initCsvDataPath = resourceStaticPath + "/data/csv";
+    public static String initXlsxDataPath = resourceStaticPath + "/data/excel";
     public static String reportTemplatePath = resourceStaticPath + "/report";
     public static String excelTemplatePath = resourceStaticPath + "/templates/excel";
     public static Path logoPath = Paths.get(resourceStaticPath + "/dist/img/FlowieeLogo.png");
@@ -89,6 +90,10 @@ public class FileUtils {
 
     public static File getFileDataCategoryInit() {
         return Paths.get(initCsvDataPath + "/Category.csv").toFile();
+    }
+
+    public static File getFileDataSystemInit() {
+        return Paths.get(initXlsxDataPath + "/SystemDataInit.xlsx").toFile();
     }
 
     public static String getFileExtension(String fileName) {
