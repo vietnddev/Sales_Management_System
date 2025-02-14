@@ -5,18 +5,6 @@ server:
     session:
       timeout: 3600
 spring:
-  # Database
-  jpa:
-    hibernate:
-      ddl-auto: update
-    naming:
-      physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    show-sql: false
-    properties:
-      hibernate:
-        show_sql: false
-        format_sql: false
-
   # MySQL TTL
   # datasource:
   #   driver-class-name: com.mysql.cj.jdbc.Driver
@@ -71,8 +59,3 @@ spring:
   devtools:
     restart:
       enabled: true
-
-# App API prefix
-app:
-  api:
-    prefix: /api/v1

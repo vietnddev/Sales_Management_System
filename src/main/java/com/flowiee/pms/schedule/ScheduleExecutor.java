@@ -55,6 +55,7 @@ public abstract class ScheduleExecutor extends BaseService {
         if (schedule.isEmpty() || !schedule.get().isEnable()) {
             //logger.warn(String.format("Schedule %s is not defined in the database!", lvScheduleTask.name()));
             //throw new AppException(String.format("Schedule %s is not defined in the database!", lvScheduleTask.name()));
+            return;
         }
         mvScheduleStatus = scheduleStatusRepository.save(ScheduleStatus.builder()
                 .schedule(schedule.get())

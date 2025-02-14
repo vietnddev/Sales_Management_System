@@ -23,6 +23,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.flowiee.pms.common.utils.FileUtils;
 import com.flowiee.pms.common.utils.PasswordUtils;
@@ -355,10 +356,19 @@ public class Core {
 		return mvResourceUploadPath;
 	}
 
-	private void initNewConfigIfDatabaseNotDefined(List<SystemConfig> initCnfList) {
-		for (SystemConfig sysConfig : initCnfList) {
-			if (mvConfigRepository.findByCode(sysConfig.getCode()) == null)
-				mvConfigRepository.save(sysConfig);
+	private void initNewConfigIfDatabaseNotDefined(List<SystemConfig> pInitCnfList) {
+		//Current configs
+		List<SystemConfig> lvSystemConfigList = mvConfigRepository.findByCode(pInitCnfList.stream().
+				map(SystemConfig::getCode)
+				.collect(Collectors.toList()));
+		List<String> lvConfigCodeList = lvSystemConfigList.stream()
+				.map(SystemConfig::getCode)
+				.collect(Collectors.toList());
+		//Auto add new configs if not define yet
+		for (SystemConfig lvSystemConfig  : pInitCnfList) {
+			if (!lvConfigCodeList.contains(lvSystemConfig.getCode())) {
+				mvConfigRepository.save(lvSystemConfig);
+			}
 		}
 	}
 
