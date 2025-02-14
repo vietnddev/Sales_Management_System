@@ -1,21 +1,20 @@
-This software provides a range of diverse and practical functions. Integrated with features for managing products, orders, creating orders, inventory management, and discount voucher management, the system facilitates comprehensive management from clothing to production materials. Additionally, flexible system administration capabilities and the ability to export data and print invoices streamline your business processes.
+## 🛠 **Tech Stack**
+### **Backend**
+- Java (Spring Boot, Spring Security, JPA/Hibernate)
+- RESTful API Development
+- AOP (Aspect-Oriented Programming)
+- Thymeleaf (Spring Boot Template Engine)
+- Logging
+- Maven
+- Swagger
 
-Main functions of the system: ...
+### **Database**
+- Oracle
+- Query Optimization, Indexing, Views
 
-Some technologies are used:
-+ Java, Javascript
-+ Spring Boot, Spring Security, Spring Data JPA
-+ Maven, Thymeleaf, Log4j
-+ Oracle database
-+ HTML, CSS, Bootstrap, JQuery
-
-Setup the software:
-+ Install JDK 19, maven
-+ Install Oracle and change config to connect in application.properties file
-+ Change config port, send mail,... in application.properties file
-
-Login:
-+ URL: http://host:port/sys/login
+### **Frontend & Other**
+- JavaScript (JQuery, AJAX)
+- HTML/CSS, Bootstrap
 
 If you have any questions, please contact me by email: nguyenducviet0684@gmail.com
 

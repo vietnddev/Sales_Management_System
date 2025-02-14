@@ -1,7 +1,11 @@
+#API prefix
+app:
+  api:
+    prefix: /api/v1
+#spring config
 spring:
   profiles:
     active: dev
-
   application:
     name: sms
   main:
@@ -10,13 +14,26 @@ spring:
       static-locations:
         - classpath:/static/**
         - file:/static/uploads/**
-
   # Config package chứa file view JSP
   thymeleaf:
     prefix: classpath:/templates/webapp/views/
     suffix: .jsp
     cache: false
     encoding: UTF-8
-
+  #banner
   banner:
     location: classpath:banner.txt
+  # Database
+  jpa:
+    hibernate:
+      ddl-auto: none
+#    naming:
+#      physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    properties:
+#      hibernate:
+#        format_sql: false
+#Log
+logging:
+  level:
+    org.hibernate.SQL: DEBUG  #Log câu SQL
+    #org.hibernate.type.descriptor.sql.BasicBinder: TRACE  #Log tham số truyền vào
